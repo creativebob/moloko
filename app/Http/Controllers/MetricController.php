@@ -26,7 +26,7 @@ class MetricController extends Controller
     }
 
     /**
-     * Показать форму для создания нового ресурса.
+     * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
@@ -63,19 +63,19 @@ class MetricController extends Controller
     }
 
     /**
-     * Отображение указанного ресурса.
+     * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        // $metric = Metric::with('values')->findOrFail($id);
+        // $metric = Metric::with('values')->find($id);
         // dd($metric);
     }
 
     /**
-     * Показать форму для редактирования указанного ресурса.
+     * Show the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -86,7 +86,7 @@ class MetricController extends Controller
     }
 
     /**
-     * Обновление указанного ресурса в хранилище.
+     * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -98,7 +98,7 @@ class MetricController extends Controller
     }
 
     /**
-     * Удаление указанного ресурса из хранилища.
+     * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -114,7 +114,7 @@ class MetricController extends Controller
 
     public function ajax_get_metric(Request $request)
     {
-        $metric = Metric::findOrFail($request->id);
+        $metric = Metric::find($request->id);
 
         if ($metric) {
             return view('products.common.metrics.metric', [

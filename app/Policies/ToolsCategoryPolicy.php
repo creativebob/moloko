@@ -48,9 +48,7 @@ class ToolsCategoryPolicy
 
     public function delete(User $user, Model $model)
     {
-        if ($model->system == 1) {
-            return false;
-        }
+
 
         if ($model->tools->count() > 0) {
             return false;

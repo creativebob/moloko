@@ -1,43 +1,57 @@
 <template>
-    <label>{{ title }}
-        <input
-            type="tel"
-            v-model="phone"
-            v-mask="'# (###) ###-##-##'"
-            :placeholder="placeholder"
-            :name="name"
-            class="phone-field"
-            :id="id"
-            :autofocus="autofocus"
-            :required="required"
-            :disabled="disabled"
-            :readonly="curReadonly"
-            maxlength="17"
-            pattern ="8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}"
-            autocomplete="off"
-            @dblclick="curReadonly = false"
-        >
-        <span class="form-error">{{ error }}</span>
-    </label>
-
+<!--    <vue-mask-->
+<!--        class="form-control"-->
+<!--        v-model="date"-->
+<!--        mask="00/00/0000"-->
+<!--        :raw="false"-->
+<!--        :options="options">-->
+<!--    </vue-mask>-->
+    <input
+        type="tel"
+        v-model="number"
+        :placeholder="placeholder"
+        :name="name"
+        v-mask="'9 (999) 999-99-99'"
+        :id="id"
+        :autofocus="autofocus"
+        :required="required"
+        :disabled="disabled"
+        maxlength="17"
+        pattern ="8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}"
+        autocomplete="off"
+        @input="input"
+        @change="change"
+        @focus="focus"
+        @blur="blur"
+        @keydown.enter.prevent="onEnter"
+        @dblclick="curReadonly = false"
+    >
+<!--    class="phone-field"-->
+<!--    mask="8 (000) 00-00-000"-->
+<!--    v-mask="'# (###) ###-##-##'"-->
 </template>
 
 <script>
-    import VueMaskDirective from 'v-mask'
+    import AwesomeMask from 'awesome-mask'
+    // import Inputmask from "inputmask";
+    // import { VueMaskDirective } from 'v-mask'
+    // import vueMask from 'vue-jquery-mask';
+    // import VueInputMask from 'vue-inputmask'
 
     export default {
+        // components: {
+        //     vueMask
+        // },
         props: {
-            title: {
-                type: String,
-                default: 'Телефон'
-            },
             name: {
                 type: String,
                 default: 'main_phone'
             },
-            value: {
-                type: [String, Number],
-                default: ''
+            phone: {
+                type: Object,
+                default: () => ({
+                    phone: null
+                })
             },
             placeholder: {
                 type: String,
@@ -67,25 +81,43 @@
                 type: Boolean,
                 default: false
             },
-            error: {
-                type: String,
-                default: 'Введите телефон'
-            }
         },
         data() {
             return {
-                phone: this.value,
+                number: this.phone.phone,
+            }
+        },
+        mounted() {
 
-                // TODO - 07.09.20 - На лидах заморочка с номером
-                curReadonly: this.readonly
+        },
+        methods: {
+            update(value) {
+                this.number = value;
+            },
+            focus() {
+                this.$emit('focus', this.number);
+            },
+            blur() {
+                this.$emit('blur', this.number);
+            },
+            input() {
+                // TODO - 14.09.20 - Здесь нужно валидировать получаемое значение
+                this.$emit('input', this.number);
+            },
+            change() {
+                this.$emit('change', this.number);
+            },
+            onEnter() {
+                this.$emit('enter', this.number);
             }
         },
         directives: {
-            'mask': {
-                bind: function (el) {
-                    VueMaskDirective;
-                }
-            },
+            'mask': AwesomeMask
+            // 'mask': {
+            //     bind: function (el) {
+            //         VueInputMask;
+            //     }
+            // },
         },
 
     }

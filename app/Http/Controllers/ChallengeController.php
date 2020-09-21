@@ -179,7 +179,7 @@ class ChallengeController extends Controller
 
         if ($challenge) {
 
-            $item = $request->model::findOrFail($request->id);
+            $item = $request->model::find($request->id);
 
             // Сохранение отношения
             $item->challenges()->save($challenge);
@@ -213,7 +213,7 @@ class ChallengeController extends Controller
 
             $item = $request->model::with(['challenges' => function ($query) {
                 $query->with('challenge_type')->whereNull('status')->orderBy('deadline_date', 'asc');
-            }])->findOrFail($request->id);
+            }])->find($request->id);
 
             $challenges = $item->challenges;
 
@@ -238,7 +238,7 @@ class ChallengeController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_name, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $challenge = Challenge::moderatorLimit($answer)->findOrFail($id);
+        $challenge = Challenge::moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $challenge);
@@ -257,7 +257,7 @@ class ChallengeController extends Controller
         if ($challenge) {
 
             if($challenge->subject_type == 'App\Lead') {
-                $lead = Lead::findOrFail($challenge->subject_id);
+                $lead = Lead::find($challenge->subject_id);
                 $lead->decrement('challenges_active_count');
             }
 
@@ -289,7 +289,7 @@ class ChallengeController extends Controller
                 // Если задача для лида
                 if ($challenge->subject_type == 'App\Lead') {
 
-                    $lead = Lead::findOrFail($challenge->subject_id);
+                    $lead = Lead::find($challenge->subject_id);
                     $message = lead_info($message, $lead);
                 }
 
@@ -322,10 +322,10 @@ class ChallengeController extends Controller
         $user = $request->user();
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $challenge = Challenge::findOrFail($id);
+        $challenge = Challenge::find($id);
 
         if ($challenge->subject_type == 'App\Lead') {
-            $lead = Lead::findOrFail($challenge->subject_id);
+            $lead = Lead::find($challenge->subject_id);
         }
 
         // Подключение политики
@@ -349,7 +349,7 @@ class ChallengeController extends Controller
             // Если задача для лида
             if ($challenge->subject_type == 'App\Lead') {
 
-                $lead = Lead::findOrFail($challenge->subject_id);
+                $lead = Lead::find($challenge->subject_id);
                 $message = lead_info($message, $lead);
             }
 

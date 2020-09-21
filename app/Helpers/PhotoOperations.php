@@ -44,7 +44,7 @@ function save_photo($request, $directory, $name, $album_id = null, $id = null, $
     // dd($width);
 
     if ($id) {
-        $photo = Photo::findOrFail($id);
+        $photo = Photo::find($id);
 
         if ($photo) {
             foreach (['small', 'medium', 'large', 'original'] as $value) {
@@ -132,7 +132,7 @@ function savePhoto($request, $item) {
         $directory = $item->company_id . '/media/' . $item->getTable() . '/' . $item->id . '/img';
 
         if (isset($item->photo_id)) {
-            $photo = Photo::findOrFail($item->photo_id);
+            $photo = Photo::find($item->photo_id);
 
             if ($photo) {
                 foreach (['small', 'medium', 'large', 'original'] as $value) {

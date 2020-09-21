@@ -25,7 +25,7 @@ class CreateCompaniesTable extends Migration
 
             $table->string('email')->nullable()->comment('Почта');
 
-            $table->string('inn', 12)->nullable()->comment('ИНН компании');
+            $table->string('inn', 12)->nullable()->comment('ИНН');
             $table->string('kpp', 9)->nullable()->comment('КПП');
 
             $table->string('ogrn', 15)->nullable()->comment('Основной государственный регистрационный номер');

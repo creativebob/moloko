@@ -29,11 +29,11 @@
 
 @endsection
 
-@section('scripts')
+@push('scripts')
     @include('includes.scripts.ckeditor')
     @include('includes.scripts.inputs-mask')
     @include('includes.scripts.pickmeup-script')
     @include('includes.scripts.upload-file')
-@endsection
+    @endpush
 
 

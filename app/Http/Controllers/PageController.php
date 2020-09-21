@@ -54,7 +54,7 @@ class PageController extends Controller
         ->paginate(30);
         // dd($navigations);
 
-        $site = Site::findOrFail($site_id);
+        $site = Site::find($site_id);
 
         return view('pages.index', [
             'pages' => $pages,
@@ -70,7 +70,7 @@ class PageController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        $site = Site::findOrFail($site_id);
+        $site = Site::find($site_id);
 
         return view('pages.create', [
             'page' => Page::make(),
@@ -93,7 +93,7 @@ class PageController extends Controller
         $page->alias = empty($request->alias) ? Str::slug($request->title) : $request->alias;
 
         // Cохраняем / обновляем фото
-        $photo_id = $this->getPhotoId($request, $page);
+        $photo_id = $this->getPhotoId($page);
         $page->photo_id = $photo_id;
         $page->save();
 
@@ -118,13 +118,13 @@ class PageController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $page = Page::moderatorLimit($answer)->where('site_id', $site_id)->findOrFail($id);
+        $page = Page::moderatorLimit($answer)->where('site_id', $site_id)->find($id);
         // dd($page);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $page);
 
-        $site = Site::findOrFail($site_id);
+        $site = Site::find($site_id);
 
 
         return view('pages.edit', [
@@ -143,7 +143,7 @@ class PageController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $page = Page::moderatorLimit($answer)->findOrFail($id);
+        $page = Page::moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $page);
@@ -168,7 +168,7 @@ class PageController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $page = Page::moderatorLimit($answer)->findOrFail($id);
+        $page = Page::moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $page);

@@ -29,9 +29,9 @@
 
 @endsection
 
-@section('scripts')
+@push('scripts')
   @include('includes.scripts.inputs-mask')
   @include('includes.scripts.pickmeup-script')
-@endsection
+  @endpush
 
 

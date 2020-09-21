@@ -3,133 +3,94 @@
 namespace App\Http\Controllers;
 
 use App\Exports\ClientsExport;
-use Maatwebsite\Excel\Facades\Excel;
-use App\ClientsLoyaltiesScore;
+use App\Http\Controllers\System\Traits\Companable;
+use App\Http\Controllers\System\Traits\Directorable;
+use App\Http\Controllers\System\Traits\Locationable;
+use App\Http\Controllers\System\Traits\Phonable;
+use App\Http\Controllers\System\Traits\Userable;
 use App\Http\Controllers\Traits\Photable;
+use App\Manufacturer;
+use App\Supplier;
+use Maatwebsite\Excel\Facades\Excel;
 use App\User;
-use App\Department;
-use App\Staffer;
-use App\Employee;
-use App\Role;
 use App\Lead;
-
 use App\Client;
-use App\Loyalty;
-
 use App\Dealer;
 use App\Company;
-use App\Page;
-use App\Sector;
-use App\Booklist;
-use App\List_item;
-use App\Schedule;
-use App\Worktime;
-use App\Location;
-use App\ScheduleEntity;
-use App\Country;
-use App\ProcessesType;
-use App\Phone;
-
-// Модели которые отвечают за работу с правами + политики
-use App\Policies\CompanyPolicy;
-use App\Policies\DealerPolicy;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Auth;
-
-// Запросы и их валидация
 use Illuminate\Http\Request;
-
-use App\Http\Requests\System\CompanyRequest;
 use App\Http\Requests\System\ClientRequest;
-use App\Http\Requests\System\UserStoreRequest;
-
-use App\Http\Requests\System\SupplierRequest;
-
-// Общие классы
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Storage;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
-
-// Подрубаем трейт записи и обновления компании
-use App\Http\Controllers\Traits\CompanyControllerTrait;
-use App\Http\Controllers\Traits\UserControllerTrait;
-use App\Http\Controllers\Traits\LeadControllerTrait;
-use App\Http\Controllers\Traits\DepartmentControllerTrait;
 
 class ClientController extends Controller
 {
+    protected $entityAlias;
+    protected $entityDependence;
 
     /**
      * ClientController constructor.
-     * @param Client $client
      */
     public function __construct()
     {
         $this->middleware('auth');
-        $this->class = Client::class;
-        $this->model = 'App\Client';
-        $this->entity_alias = with(new $this->class)->getTable();
-        $this->entity_dependence = false;
+        $this->entityAlias = 'clients';
+        $this->entityDependence = false;
     }
 
-    // Подключаем трейт записи и обновления компании
-    use CompanyControllerTrait;
-    use UserControllerTrait;
-    use LeadControllerTrait;
-    use DepartmentControllerTrait;
-	use Photable;
+    use Locationable;
+    use Phonable;
+    use Photable;
+    use Companable;
+    use Directorable;
+    use Userable;
 
+    /**
+     * Display a listing of the resource.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function index(Request $request)
     {
-
-        $filter_url = autoFilter($request, $this->entity_alias);
-        if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
+        $filter_url = autoFilter($request, $this->entityAlias);
+        if (($filter_url != null) && ($request->filter != 'active')) {
+            return Redirect($filter_url);
+        };
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Client::class);
 
-        // Получаем авторизованного пользователя
-        $user = $request->user();
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // -------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------------------------
-
         $clients = Client::with([
             'author',
             'clientable.main_phones',
             'loyalty',
             'leads'
         ])
-        // ->withCount(['orders' => function($q) {
-        //     $q->whereNull('draft');
-        // }])
             ->companiesLimit($answer)
-        // ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+            // ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
             ->moderatorLimit($answer)
             ->authors($answer)
             ->systemItem($answer)
-            ->where('orders_count', '>', 0)
-//            ->whereNotNull('first_order_date')
+//            ->where('orders_count', '>', 0)
+            ->where('archive', false)
             ->filter()
-        // ->filter($request, 'city_id', 'location')
-        // ->filter($request, 'sector_id')
             ->booklistFilter($request)
             ->orderBy('moderation', 'desc')
             ->orderBy('id', 'desc')
             ->paginate(30);
+//        dd($clients);
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter = setFilter($this->entity_alias, $request, [
+        $filter = setFilter($this->entityAlias, $request, [
             // 'city',                 // Город
             // 'sector',               // Направление деятельности
             'booklist'              // Списки пользователя
@@ -137,99 +98,521 @@ class ClientController extends Controller
 
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
-
-
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entityAlias);
 
-        return view('clients.index', compact('clients', 'pageInfo', 'user'));
+        return view('system.pages.clients.index', compact('clients', 'pageInfo'));
     }
 
-    public function createClientCompany(Request $request)
-    {
+    // Компания (Юр. лицо)
 
-        //Подключение политики
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function createClientCompany()
+    {
+        // Подключение политики
         $this->authorize(getmethod('create'), Client::class);
         $this->authorize(getmethod('create'), Company::class);
 
         // Создаем новый экземляр клиента
-        $client = new Client;
-
-        // Создаем новый экземляр компании
-        $company = new Company;
+        $client = Client::make();
+        $company = Company::make();
 
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entityAlias);
 
-        return view('clients.create_client_company', compact('company', 'client', 'pageInfo'));
-
+        return view('system.pages.clients.companies.create', compact('client', 'company', 'pageInfo'));
     }
 
-    public function createClientUser(Request $request)
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function storeClientCompany(Request $request)
     {
-
-        //Подключение политики
-        $this->authorize(getmethod('create'), Client::class);
-        $this->authorize(getmethod('create'), User::class);
-
-        // Создаем новый экземляр клиента
-        $client = new Client;
-
-        // Создаем новый экземляр пользователя
-        $user = new User;
-
-        // Инфо о странице
-        $pageInfo = pageInfo($this->entity_alias);
-
-        $auth_user = Auth::user();
-
-        return view('clients.create_client_user', compact('user', 'client', 'pageInfo', 'auth_user'));
-
-    }
-
-    public function storeCompany(CompanyRequest $request)
-    {
-
         // Подключение политики
         $this->authorize(getmethod('store'), CLient::class);
         $this->authorize(getmethod('store'), Company::class);
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('store'));
+        logs('companies')->info('============ НАЧАЛО СОЗДАНИЯ КОМПАНИИ КЛИЕНТА ===============');
 
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
+        $company = $this->storeCompany();
 
-        // Скрываем бога
-        $user_id = hideGod($user);
+        if ($request->set_user == 1) {
+            $this->getDirector($company);
+        }
 
-        // Отдаем работу по созданию новой компании трейту
-        $new_company = $this->createCompany($request);
+        $data = $request->input();
+        $data['clientable_id'] = $company->id;
+        $data['clientable_type'] = 'App\Company';
+        $data['description'] = $request->client_description;
 
-        $client = new Client;
-        $client->clientable_id = $new_company->id;
-        $client->clientable_type = 'App\Company';
-        $client->company_id = $request->user()->company->id;
+        $client = Client::create($data);
 
-        // Запись информации по клиенту:
-        $client->description = $request->description_client;
-        $client->loyalty_id = $request->loyalty_id;
+        $this->checkChanges($client);
 
-        $client->save();
+        $this->setStatuses($company);
 
-        return redirect('/admin/clients');
+        logs('companies')->info("Создана компания клиент. Id: [{$client->id}]");
+        logs('companies')->info('============ КОНЕЦ СОЗДАНИЯ КОМПАНИИ КЛИЕНТА ===============
+        
+        ');
+
+        return redirect()->route('clients.index');
     }
 
-
-    public function storeUser(UserStoreRequest $request)
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function editClientCompany($id)
     {
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('edit'));
 
+        // ГЛАВНЫЙ ЗАПРОС:
+        $client = Client::with([
+            'loyalty_score',
+            'clientable' => function ($q) {
+                $q->with([
+                    'director.user.main_phones',
+                    'location.city',
+                    'schedules.worktimes',
+                    'sector',
+                    'settings',
+                    'processes_types'
+                ]);
+            }
+        ])
+            ->moderatorLimit($answer)
+            ->authors($answer)
+            ->systemItem($answer)
+            ->find($id);
+//        dd($client);
+
+        if (empty($client)) {
+            abort(403, __('errors.not_found'));
+        }
+
+        $company = $client->clientable;
+//        dd($company);
+
+        // Подключение политики
+        $this->authorize(getmethod('edit'), $client);
+        $this->authorize(getmethod('edit'), $company);
+
+        // Инфо о странице
+        $pageInfo = pageInfo($this->entityAlias);
+
+        return view('system.pages.clients.companies.edit', compact('client', 'company', 'pageInfo'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function updateClientCompany(Request $request, $id)
+    {
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('update'));
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $client = Client::with([
+            'clientable'
+        ])
+            ->moderatorLimit($answer)
+            ->authors($answer)
+            ->systemItem($answer)
+            ->find($id);
+//        dd($client);
+
+        if (empty($client)) {
+            abort(403, __('errors.not_found'));
+        }
+
+        $company = $client->clientable;
+//        dd($company);
+
+        // Подключение политики
+        $this->authorize(getmethod('update'), $client);
+        $this->authorize(getmethod('update'), $company);
+
+        logs('companies')->info('============ НАЧАЛО ОБНОВЛЕНИЯ КОМПАНИИ КЛИЕНТА ===============');
+
+        // TODO - 15.09.20 - Должна быть проерка на внешний контроль, так же на шаблоне не должны давать провалиться в компанию
+        $company = $this->updateCompany($company);
+
+        if ($request->set_user == 1) {
+            $this->getDirector($company);
+        }
+
+        // Обновление информации по клиенту:
+        $data = $request->input();
+        $data['description'] = $request->client_description;
+        $res = $client->update($data);
+
+        if (!$res) {
+            abort(403, __('errors.update'));
+        }
+
+        $this->checkChanges($client);
+
+
+
+        logs('companies')->info("Обновлена компания клиент. Id: [{$client->id}]");
+        logs('companies')->info('============ КОНЕЦ ОБНОВЛЕНИЯ КОМПАНИИ КЛИЕНТА ===============
+        
+            ');
+
+        return redirect()->route('clients.index');
+    }
+
+    // Пользователь (Физ. лицо)
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function createClientUser()
+    {
+        // Подключение политики
+        $this->authorize(getmethod('create'), Client::class);
+        $this->authorize(getmethod('create'), User::class);
+
+        // Создаем новый экземляр клиента
+        $client = Client::make();
+        $user = User::make();
+
+        // Инфо о странице
+        $pageInfo = pageInfo($this->entityAlias);
+
+        return view('system.pages.clients.users.create', compact('user', 'client', 'pageInfo'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function storeClientUser(Request $request)
+    {
         // Подключение политики
         $this->authorize(getmethod('store'), Client::class);
         $this->authorize(getmethod('store'), User::class);
 
+        // TODO - 16.09.20 - Обсудить, коммент к карточке
+        $res = $this->checkUserByPhone($this->entityAlias);
+        if ($res) {
+            return back()
+                ->withErrors(['msg' => 'Пользователь уже существует']);
+        }
+
+        logs('users')->info('============ НАЧАЛО СОЗДАНИЯ ПОЛЬЗОВАТЕЛЯ КЛИЕНТА ===============');
+
+        $user = $this->storeUser();
+
+        $data = $request->input();
+        $data['clientable_id'] = $user->id;
+        $data['clientable_type'] = 'App\User';
+        $data['description'] = $request->client_description;
+
+        $client = Client::create($data);
+
+        $this->checkChanges($client);
+
+        logs('users')->info("Создан пользователь клиент. Id: [{$client->id}]");
+        logs('users')->info('============ КОНЕЦ СОЗДАНИЯ ПОЛЬЗОВАТЕЛЯ КЛИЕНТА ===============
+        
+        ');
+
+        return redirect()->route('clients.index');
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function editClientUser($id)
+    {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('store'));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $client = Client::with([
+            'loyalty_score',
+            'clientable' => function ($q) {
+                $q->with([
+                    'location.city',
+                    'photo',
+                    'main_phones',
+                    'extra_phones'
+                ]);
+            }
+        ])
+            ->moderatorLimit($answer)
+            ->authors($answer)
+            ->systemItem($answer)
+            ->find($id);
+//        dd($client);
+
+        if (empty($client)) {
+            abort(403, __('errors.not_found'));
+        }
+
+        $user = $client->clientable;
+//        dd($user);
+
+        // Подключение политики
+        $this->authorize(getmethod('edit'), $client);
+        $this->authorize(getmethod('edit'), $user);
+
+        // Инфо о странице
+        $pageInfo = pageInfo($this->entityAlias);
+
+        return view('system.pages.clients.users.edit', compact('client', 'user', 'pageInfo'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function updateClientUser(Request $request, $id)
+    {
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('update'));
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $client = Client::with([
+            'clientable'
+        ])
+            ->moderatorLimit($answer)
+            ->authors($answer)
+            ->systemItem($answer)
+            ->find($id);
+//        dd($client);
+
+        if (empty($client)) {
+            abort(403, __('errors.not_found'));
+        }
+
+        $user = $client->clientable;
+//        dd($user);
+
+        // Подключение политики
+        $this->authorize(getmethod('update'), $client);
+        $this->authorize(getmethod('update'), $user);
+
+        logs('companies')->info('============ НАЧАЛО ОБНОВЛЕНИЯ ПОЛЬЗОВАТЕЛЯ КЛИЕНТА ===============');
+
+        $user = $this->updateUser($user);
+
+        // Обновление информации по клиенту:
+        $data = $request->input();
+        $data['description'] = $request->client_description;
+        $res = $client->update($data);
+
+        if (!$res) {
+            abort(403, __('errors.update'));
+        }
+
+        $this->checkChanges($client);
+
+        logs('companies')->info("Обновлен пользователь клиент. Id: [{$client->id}]");
+        logs('companies')->info('============ КОНЕЦ ОБНОВЛЕНИЯ ПОЛЬЗОВАТЕЛЯ КЛИЕНТА ===============
+        
+        ');
+
+        return redirect()->route('clients.index');
+    }
+
+    /**
+     * Архивирование указанного ресурса
+     *
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function archive($id)
+    {
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('delete'));
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $client = Client::moderatorLimit($answer)
+            ->find($id);
+
+        if (empty($client)) {
+            abort(403, __('errors.not_found'));
+        }
+
+        // Подключение политики
+        $this->authorize(getmethod('destroy'), $client);
+
+        $client->archive = true;
+        $client->editor_id = hideGod(auth()->user());
+        $client->save();
+
+        if (!$client) {
+            abort(403, __('errors.archive'));
+        }
+
+        return redirect()->route('clients.index');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param $id
+     */
+    public function destroy($id)
+    {
+        //
+    }
+
+    /**
+     * Проверка изменений по состоянию клиента
+     *
+     * @param $client
+     */
+    public function checkChanges($client)
+    {
+        $this->checkLoyaltyScore($client);
+        $this->checkActualBlacklist($client);
+    }
+
+    /**
+     * Проверка изменений по лояльости клиента
+     *
+     * @param $client
+     */
+    public function checkLoyaltyScore($client)
+    {
+        $request = request();
+        $client->load('loyalty_score');
+        if (isset($request->loyalty_score)) {
+            if (isset($client->loyalty_score)) {
+                if ($client->loyalty_score->loyalty_score != $request->loyalty_score)
+                    $client->loyalties_scores()->create([
+                        'loyalty_score' => $request->loyalty_score
+                    ]);
+            } else {
+                $client->loyalties_scores()->create([
+                    'loyalty_score' => $request->loyalty_score
+                ]);
+            }
+        }
+    }
+
+    /**
+     * Проверка изменений по черному списку клиента
+     *
+     * @param $client
+     */
+    public function checkActualBlacklist($client)
+    {
+        $request = request();
+        $client->load('actual_blacklist');
+        if (isset($client->actual_blacklist)) {
+            if ($request->is_blacklist == 0) {
+                $client->actual_blacklist->update([
+                    'end_date' => today(),
+                ]);
+            }
+        } else {
+            if ($request->is_blacklist == 1) {
+                $client->blacklists()->create();
+            }
+        }
+    }
+
+    /**
+     * Поиск
+     *
+     * @param $search
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function search($search)
+    {
+
+        $results = Client::with([
+            'clientable.location.city'
+        ])
+            ->whereHasMorph('clientable',
+                [
+                    User::class,
+                    Company::class
+                ],
+                function ($q) use ($search) {
+                    $q->where('name', 'LIKE', '%' . $search . '%')
+                        ->orWhereHas('phones', function ($q) use ($search) {
+                            $q->where('phone', $search)
+                                ->orWhere('crop', $search);
+                        });
+                })
+            ->oldest('created_at')
+            ->get();
+
+        return response()->json($results);
+    }
+
+    /**
+     * Выгрузка клиенской базы в excel (с учетом фильтра)
+     *
+     * @return \Maatwebsite\Excel\BinaryFileResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    public function excelExport()
+    {
+        return Excel::download(new ClientsExport(), 'Клиенты.xlsx');
+    }
+
+    // Непонятные методы
+    public function checkcompany(Request $request)
+    {
+        $company = Company::where('inn', $request->inn)->first();
+
+        if (!isset($company)) {
+            return 0;
+        } else {
+            return $company->name;
+        };
+    }
+
+    public function store(ClientRequest $request)
+    {
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), Client::class);
+        $this->authorize(getmethod(__FUNCTION__), Company::class);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -237,23 +620,44 @@ class ClientController extends Controller
         // Скрываем бога
         $user_id = hideGod($user);
 
-        // Отдаем работу по созданию новой компании трейту
-        $new_user = $this->createUser($request);
-
         $client = new Client;
-        $client->clientable_id = $new_user->id;
-        $client->clientable_type = 'App\User';
+
+        // Создание нового клиента =========================================================
+
+        // Компания
+        $new_company = new Company;
+
+        // Отдаем работу по созданию новой компании трейту
+        $company = $this->createCompany($request, $new_company);
+
+        $new_user = new User;
+
+        // Отдаем работу по созданию нового юзера трейту
+        $user = $this->createUser($request, $new_user);
+
         $client->company_id = $request->user()->company->id;
+        $client->clientable_id = $company->id;
 
         // Запись информации по клиенту:
-        $client->description = $request->description_client;
-        $client->loyalty_id = $request->loyalty_id;
+        // ...
 
-        $client->is_vip = $request->is_vip;
 
-        $client->save();
+//        $manufacturer->save();
 
-        return redirect('/admin/clients');
+        return redirect('/admin/manufacturers');
+    }
+
+    public function show($id)
+    {
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $dealer = Dealer::moderatorLimit($answer)->find($id);
+
+        // Подключение политики
+        $this->authorize('view', $dealer);
+        return view('dealers.show', compact('dealer'));
     }
 
     public function ajax_create(Request $request)
@@ -271,12 +675,12 @@ class ClientController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
 
-        $lead = Lead::findOrFail($request->lead_id);
+        $lead = Lead::find($request->lead_id);
 
         // Чистка номера
         $main_phone = cleanPhone($request->main_phone);
 
-        if(($request->company_name != null)||($lead->private_status == 1)){
+        if (($request->company_name != null) || ($lead->private_status == 1)) {
 
             // ======================= РАБОТАЕМ С КОМПАНИЯМИ ============================
             $lead->private_status = 1;
@@ -306,56 +710,55 @@ class ClientController extends Controller
 
         }
 
-            // Обработка входящих данных ------------------------------------------
-            $mass_names = getNameUser($request->name);
+        // Обработка входящих данных ------------------------------------------
+        $mass_names = getNameUser($request->name);
 
-            $search_user = User::whereHas('phones', function($q) use ($main_phone){
-                $q->where('phone', $main_phone);
-            })->first();
+        $search_user = User::whereHas('phones', function ($q) use ($main_phone) {
+            $q->where('phone', $main_phone);
+        })->first();
 
-            // Если не найден, то создаем
-            if(!isset($search_user)){
+        // Если не найден, то создаем
+        if (!isset($search_user)) {
 
-                $new_user = $this->createUserByPhone($request->main_phone);
+            $new_user = $this->createUserByPhone($request->main_phone);
 
-                // ПОДСТАНОВКА в случае отсутствия
+            // ПОДСТАНОВКА в случае отсутствия
 
-                $new_user->first_name = $mass_names['first_name'] ?? $request->name ?? 'Укажите фамилию';
-                $new_user->second_name = $mass_names['second_name'] ?? null;
-                $new_user->patronymic = $mass_names['patronymic'] ?? null;
-                $new_user->gender = $mass_names['gender'] ?? 1;
+            $new_user->first_name = $mass_names['first_name'] ?? $request->name ?? 'Укажите фамилию';
+            $new_user->second_name = $mass_names['second_name'] ?? null;
+            $new_user->patronymic = $mass_names['patronymic'] ?? null;
+            $new_user->gender = $mass_names['gender'] ?? 1;
 
-                $new_user->email = $request->email;
-                $new_user->save();
+            $new_user->email = $request->email;
+            $new_user->save();
 
-            } else {
+        } else {
 
-                // Log::info('ПОДТВЕРЖДАЕМ ЗАПИСЬ ОТЧЕСТВА: ' . $new_user->patronymic);
-                $new_user = $search_user;
+            // Log::info('ПОДТВЕРЖДАЕМ ЗАПИСЬ ОТЧЕСТВА: ' . $new_user->patronymic);
+            $new_user = $search_user;
 
-                if($new_user->first_name == null){
-                    if(isset($mass_names['first_name'])){
-                        $new_user->first_name = $mass_names['first_name'];
-                        $new_user->gender = $mass_names['gender'];
-                    }
+            if ($new_user->first_name == null) {
+                if (isset($mass_names['first_name'])) {
+                    $new_user->first_name = $mass_names['first_name'];
+                    $new_user->gender = $mass_names['gender'];
                 }
+            }
 
-                if($new_user->second_name == null){
-                    if(isset($mass_names['second_name'])){
-                        $new_user->second_name = $mass_names['second_name'];
-                    }
+            if ($new_user->second_name == null) {
+                if (isset($mass_names['second_name'])) {
+                    $new_user->second_name = $mass_names['second_name'];
                 }
+            }
 
-                if($new_user->patronymic == null){
-                    if(isset($mass_names['patronymic'])){
-                        $new_user->patronymic = $mass_names['patronymic'];
-                    }
+            if ($new_user->patronymic == null) {
+                if (isset($mass_names['patronymic'])) {
+                    $new_user->patronymic = $mass_names['patronymic'];
                 }
+            }
 
-                $new_user->save();
+            $new_user->save();
 
-            };
-
+        };
 
 
         // Получаем данные для авторизованного пользователя
@@ -380,12 +783,12 @@ class ClientController extends Controller
 
         Log::info('Попытка создания реквизитов клиента. Приват статус: ' . $request->private_status);
 
-        if($request->private_status){
+        if ($request->private_status) {
 
             Log::info('Видим, что это компания');
             $new_company = $this->createCompany($request);
 
-            if($request->lead_type_id == 2){
+            if ($request->lead_type_id == 2) {
 
                 Log::info('Видим, что это дилерский лид');
                 $client = new Client;
@@ -447,12 +850,12 @@ class ClientController extends Controller
             $main_phone = cleanPhone($request->main_phone);
             Log::info('Вычистили номер телефона: ' . $main_phone);
 
-            $user_for_client = User::whereHas('main_phones', function($q) use ($main_phone){
+            $user_for_client = User::whereHas('main_phones', function ($q) use ($main_phone) {
                 $q->where('phone', $main_phone);
             })->first();
 
             // Если не найден, то создаем
-            if(!isset($user_for_client)){
+            if (!isset($user_for_client)) {
                 Log::info('Пользователь с таким номером телефона не встречается - будем создавать юзера!');
 
                 $user_for_client = $this->createUser($request);
@@ -469,7 +872,7 @@ class ClientController extends Controller
             $client = Client::where('clientable_id', $user_for_client->id)->where('clientable_type', 'App\User')->first();
 
 
-            if(!isset($client)){
+            if (!isset($client)) {
 
                 Log::info('Будем создавать клиента');
                 $client = new Client;
@@ -488,7 +891,7 @@ class ClientController extends Controller
         }
 
         // После создания клиента необходимо связать его с лидом
-        $lead = Lead::findOrFail($request->lead_id);
+        $lead = Lead::find($request->lead_id);
         $lead->client_id = $client->id;
 
         // Выводим из черновика, так как создали юзера / клиента и связали с лидом
@@ -497,7 +900,7 @@ class ClientController extends Controller
         $this->updateLead($request, $lead);
 
         // Если для лида еще не указали имя, берем его из карточки реквизитов
-        if($lead->name == null){
+        if ($lead->name == null) {
 
             $lead_first_name = $user_for_client->first_name ?? 'Имя';
             $lead_second_name = $user_for_client->second_name ?? 'Фамилия';
@@ -515,304 +918,6 @@ class ClientController extends Controller
         }
 
         return 'Ок';
-    }
-
-
-    public function store(ClientRequest $request)
-    {
-
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Client::class);
-        $this->authorize(getmethod(__FUNCTION__), Company::class);
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        // Скрываем бога
-        $user_id = hideGod($user);
-
-        $client = new Client;
-
-        // Создание нового клиента =========================================================
-
-        // Компания
-        $new_company = new Company;
-
-        // Отдаем работу по созданию новой компании трейту
-        $company = $this->createCompany($request, $new_company);
-
-        $new_user = new User;
-
-        // Отдаем работу по созданию нового юзера трейту
-        $user = $this->createUser($request, $new_user);
-
-        $client->company_id = $request->user()->company->id;
-        $client->clientable_id = $company->id;
-
-        // Запись информации по клиенту:
-        // ...
-
-
-        $manufacturer->save();
-
-        return redirect('/admin/manufacturers');
-    }
-
-
-    public function show($id)
-    {
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $dealer = Dealer::moderatorLimit($answer)->findOrFail($id);
-
-        // Подключение политики
-        $this->authorize('view', $dealer);
-        return view('dealers.show', compact('dealer'));
-    }
-
-
-    public function edit(Client $request, $id)
-    {
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $client = Client::with([
-            'loyalty_score'
-        ])
-        ->moderatorLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer)
-        ->findOrFail($id);
-//        dd($client);
-
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $client);
-
-        // Инфо о странице
-        $pageInfo = pageInfo($this->entity_alias);
-
-
-        // ПОЛУЧАЕМ КОМПАНИЮ ------------------------------------------------------------------------------------------------
-        if($client->clientable_type == 'App\Company'){
-
-            $company_id = $client->clientable->id;
-
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer_company = operator_right('companies', false, getmethod(__FUNCTION__));
-
-            $company = Company::with('location.city', 'schedules.worktimes', 'sector', 'processes_types')
-            // ->moderatorLimit($answer_company)
-            // ->authors($answer_company)
-            // ->systemItem($answer_company)
-            ->findOrFail($company_id);
-
-            $this->authorize(getmethod(__FUNCTION__), $company);
-
-            return view('clients.edit_client_company', compact('client', 'pageInfo'));
-        }
-
-        // ПОЛУЧАЕМ ФИЗ ЛИЦО ---------------------------------------------------------------------------------
-        if($client->clientable_type == 'App\User'){
-
-
-            $user_id = $client->clientable->id;
-
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer_user = operator_right('users', true, getmethod(__FUNCTION__));
-
-            $user = User::with(
-            'location.city',
-            'photo',
-            'main_phones',
-            'extra_phones'
-            )->moderatorLimit($answer_user)
-            ->findOrFail($user_id);
-
-            $this->authorize(getmethod(__FUNCTION__), $user);
-
-//            dd($client);
-
-            return view('clients.edit_client_user', compact('client', 'user', 'pageInfo'));
-        }
-
-
-    }
-
-
-    public function update(SupplierRequest $request, $id)
-    {
-//        dd($request);
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $client = Client::moderatorLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer)
-        ->findOrFail($id);
-
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $client);
-
-
-        // ПОЛУЧАЕМ КОМПАНИЮ ------------------------------------------------------------------------------------------------
-        if($client->clientable_type == 'App\Company'){
-
-            $company_id = $client->clientable->id;
-
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer_company = operator_right('companies', false, getmethod(__FUNCTION__));
-
-            // ГЛАВНЫЙ ЗАПРОС:
-            $company = Company::with('location', 'schedules.worktimes')->moderatorLimit($answer_company)->findOrFail($company_id);
-
-            // Подключение политики
-            $this->authorize(getmethod(__FUNCTION__), $company);
-
-            // Отдаем работу по редактировнию компании трейту
-            $this->updateCompany($request, $client->clientable);
-
-        }
-
-        if($client->clientable_type == 'App\User'){
-
-            $user_id = $client->clientable->id;
-
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer_user = operator_right('users', false, getmethod(__FUNCTION__));
-
-            // ГЛАВНЫЙ ЗАПРОС:
-            $user = User::moderatorLimit($answer_user)->findOrFail($user_id);
-
-            // Подключение политики
-            $this->authorize(getmethod(__FUNCTION__), $user);
-
-            // Отдаем работу по редактировнию юзера трейту
-            $this->updateUser($request, $client->clientable);
-
-        }
-
-        // Обновление информации по клиенту:
-        $client->description = $request->description_client;
-        $client->loyalty_id = $request->loyalty_id;
-
-        $client->discount = $request->discount;
-        $client->points = $request->points;
-
-        $client->is_vip = $request->is_vip;
-
-        $client->save();
-
-        $client->load('loyalty_score');
-        if (isset($request->loyalty_score)) {
-            if (isset($client->loyalty_score)) {
-                if ($client->loyalty_score->loyalty_score != $request->loyalty_score)
-                    $client->loyalties_scores()->create([
-                        'loyalty_score' => $request->loyalty_score
-                    ]);
-            } else {
-                $client->loyalties_scores()->create([
-                    'loyalty_score' => $request->loyalty_score
-                ]);
-            }
-
-        }
-
-        $client->load('actual_blacklist');
-        if (isset($client->actual_blacklist)) {
-            if ($request->is_blacklist == 0) {
-                $client->actual_blacklist->update([
-                    'end_date' => today(),
-                ]);
-            }
-        } else {
-            if ($request->is_blacklist == 1) {
-                $client->blacklists()->create();
-            }
-        }
-
-        return redirect('/admin/clients');
-    }
-
-
-    public function destroy(Request $request, $id)
-    {
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $client = Client::moderatorLimit($answer)->findOrFail($id);
-
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $client);
-
-        if ($client) {
-
-            $user = $request->user();
-
-            // Скрываем бога
-            $user_id = hideGod($user);
-            $client->editor_id = $user_id;
-            $client->save();
-
-            $client = Client::destroy($id);
-
-            // Удаляем компанию с обновлением
-            if($client) {
-                return redirect('/admin/clients');
-
-            } else {
-                abort(403, 'Ошибка при удалении клиента');
-            }
-
-        } else {
-            abort(403, 'Клиент не найден');
-        }
-    }
-
-    public function search(Request $request, $search)
-    {
-
-        $results = Client::with([
-            'clientable'
-        ])
-            ->whereHasMorph('clientable', [User::class, Company::class], function ($q) use ($search) {
-            $q->where('name', 'LIKE', '%' . $search . '%')
-                ->orWhereHas('phones', function($q) use ($search) {
-                    $q->where('phone', $search)
-                        ->orWhere('crop', $search);
-                });
-        })
-
-            ->orderBy('created_at')
-            ->get();
-
-        return response()->json($results);
-    }
-
-    public function checkcompany(Request $request)
-    {
-        $company = Company::where('inn', $request->inn)->first();
-
-        if(!isset($company)) {
-            return 0;
-        } else {
-            return $company->name;};
-    }
-
-    public function excel()
-    {
-        return Excel::download(new ClientsExport(), 'Клиенты.xlsx');
-
     }
 
 }

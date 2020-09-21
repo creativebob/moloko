@@ -48,9 +48,7 @@ class ContainersCategoryPolicy
 
     public function delete(User $user, Model $model)
     {
-        if ($model->system == 1) {
-            return false;
-        }
+
 
         if ($model->containers->count() > 0) {
             return false;

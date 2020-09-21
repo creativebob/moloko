@@ -176,7 +176,7 @@ class AlbumController extends Controller
             'photo_settings',
         ])
         ->moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
-        ->findOrFail($id);
+        ->find($id);
         // dd($album);
 
         // Подключение политики
@@ -194,7 +194,7 @@ class AlbumController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
         $album = Album::with('photo_settings')
         ->moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
-        ->findOrFail($id);
+        ->find($id);
 
         // dd($album);
 
@@ -214,7 +214,7 @@ class AlbumController extends Controller
     public function destroy(Request $request, $id)
     {
 
-        $album = Album::with('photos')->moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))->findOrFail($id);
+        $album = Album::with('photos')->moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $album);
@@ -279,7 +279,7 @@ class AlbumController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, 'index');
 
         $album = Album::moderatorLimit($answer )
-        ->findOrFail($request->album_id);
+        ->find($request->album_id);
 
         return view('news.albums.album', compact('album'));
     }

@@ -5,7 +5,7 @@
                 <digit-component
                     name="price"
                     :value="price"
-                    @change="changePrice"
+                    @input="changePrice"
                     ref="priceComponent"
                     :required="true"
                 ></digit-component>
@@ -17,7 +17,7 @@
                     name="discount_percent"
                     :value="discountPercent"
                     :limit="100"
-                    @change="changeDiscountPercent"
+                    @input="changeDiscountPercent"
                     ref="discountPercentComponent"
                 ></digit-component>
             </label>
@@ -28,7 +28,7 @@
                     name="discount_currency"
                     :value="discountCurrency"
                     :limit="price"
-                    @change="changeDiscountCurrency"
+                    @input="changeDiscountCurrency"
                     ref="discountCurrencyComponent"
                 ></digit-component>
             </label>

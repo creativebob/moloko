@@ -2,8 +2,10 @@
 
 namespace App;
 
+use App\Models\System\Traits\Archiveable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -58,16 +60,16 @@ class Client extends Model
         'clientable_id',
         'clientable_type',
 
+        'loyalty_id',
         'description',
+
         'discount',
         'points',
 
         'source_id',
-        'loyalty_score',
 
         'is_vip',
         'is_vip_abc',
-        'is_blacklist',
 
         'is_lost',
 
@@ -192,10 +194,14 @@ class Client extends Model
     }
 
 
-    // Фильтры
+    /**
+     * Фильтр
+     *
+     * @param $query
+     * @return mixed
+     */
     public function scopeFilter($query)
     {
-
         if (! is_null(request('lost'))) {
             $query->where('is_lost', request('lost'));
         }
@@ -212,7 +218,6 @@ class Client extends Model
             if (!$blacklist) {
                 $query->doesntHave('actual_blacklist');
             }
-
         }
 
         if (request('sources')) {
@@ -240,6 +245,7 @@ class Client extends Model
         if (request('orders_count_min')) {
             $query->where('orders_count', '>=', request('orders_count_min'));
         }
+
         if (request('orders_count_max')) {
             $query->where('orders_count', '<=', request('orders_count_max'));
         }
@@ -247,6 +253,7 @@ class Client extends Model
         if (request('purchase_frequency_min')) {
             $query->where('purchase_frequency', '>=', request('purchase_frequency_min'));
         }
+
         if (request('purchase_frequency_max')) {
             $query->where('purchase_frequency', '<=', request('purchase_frequency_max'));
         }
@@ -254,6 +261,7 @@ class Client extends Model
         if (request('customer_equity_min')) {
             $query->where('customer_equity', '>=', request('customer_equity_min'));
         }
+
         if (request('customer_equity_max')) {
             $query->where('customer_equity', '<=', request('customer_equity_max'));
         }
@@ -261,6 +269,7 @@ class Client extends Model
         if (request('average_order_value_min')) {
             $query->where('average_order_value', '>=', request('average_order_value_min'));
         }
+
         if (request('average_order_value_max')) {
             $query->where('average_order_value', '<=', request('average_order_value_max'));
         }
@@ -268,6 +277,7 @@ class Client extends Model
         if (request('customer_value_min')) {
             $query->where('customer_value', '>=', request('customer_value_min'));
         }
+
         if (request('customer_value_max')) {
             $query->where('customer_value', '<=', request('customer_value_max'));
         }
@@ -275,6 +285,7 @@ class Client extends Model
         if (request('discount_min')) {
             $query->where('discount', '>=', request('discount_min'));
         }
+
         if (request('discount_max')) {
             $query->where('discount', '<=', request('discount_max'));
         }
@@ -282,6 +293,7 @@ class Client extends Model
         if (request('points_min')) {
             $query->where('points', '>=', request('points_min'));
         }
+
         if (request('points_max')) {
             $query->where('points', '<=', request('points_max'));
         }
@@ -296,6 +308,7 @@ class Client extends Model
         if (request('first_order_date_min')) {
             $query->whereDate('first_order_date', '>=', Carbon::createFromFormat('d.m.Y', request()->first_order_date_min));
         }
+
         if (request('first_order_date_max')) {
             $query->whereDate('first_order_date', '<=', Carbon::createFromFormat('d.m.Y', request()->first_order_date_max));
         }
@@ -303,6 +316,7 @@ class Client extends Model
         if (request('last_order_date_min')) {
             $query->whereDate('last_order_date', '>=', Carbon::createFromFormat('d.m.Y', request()->last_order_date_min));
         }
+
         if (request('last_order_date_max')) {
             $query->whereDate('last_order_date', '<=', Carbon::createFromFormat('d.m.Y', request()->last_order_date_max));
         }
@@ -315,6 +329,7 @@ class Client extends Model
                $q->whereDate('birthday_date', '>=', Carbon::createFromFormat('d.m.Y', request()->birthday_date_min));
             });
         }
+
         if (request('birthday_date_max')) {
             $query->whereHasMorph(
                 'clientable',
@@ -330,6 +345,7 @@ class Client extends Model
                 $q->whereDate('registered_date', '>=', Carbon::createFromFormat('d.m.Y', request()->estimate_date_min));
             });
         }
+
         if (request('estimate_date_max')) {
             $query->whereHas('estimates', function ($q) {
                 $q->whereDate('registered_date', '<=', Carbon::createFromFormat('d.m.Y', request()->estimate_date_max));
@@ -339,7 +355,9 @@ class Client extends Model
         if (! is_null(request('gender'))) {
             $query->whereHasMorph(
                 'clientable',
-                [User::class],
+                [
+                    User::class
+                ],
                 function ($q) {
                 $q->where('gender', request()->gender);
             });
@@ -348,7 +366,10 @@ class Client extends Model
         if (request('cities')) {
             $query->whereHasMorph(
                 'clientable',
-                [Company::class, User::class],
+                [
+                    Company::class,
+                    User::class
+                ],
                 function ($q) {
                 $q->whereHas('location', function ($q) {
                     $q->whereHas('city', function ($q) {
@@ -360,8 +381,6 @@ class Client extends Model
 
 //        dd($query->toSql());
 
-
         return $query;
     }
-
 }

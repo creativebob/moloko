@@ -25,9 +25,9 @@
 
 @endsection
 
-@section('scripts')
+@push('scripts')
 @include('includes.scripts.inputs-mask')
 @include('stocks.scripts')
 {{-- Проверка поля на существование --}}
 @include('includes.scripts.check', ['entity' => 'stocks'])
-@endsection
+@endpush

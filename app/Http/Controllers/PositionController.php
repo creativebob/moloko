@@ -25,7 +25,7 @@ class PositionController extends Controller
     }
 
     /**
-     * Отображение списка ресурсов
+     * Display a listing of the resource.
      *
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
@@ -89,7 +89,7 @@ class PositionController extends Controller
     }
 
     /**
-     * Показать форму для создания нового ресурса
+     * Show the form for creating a new resource.
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
@@ -107,7 +107,7 @@ class PositionController extends Controller
     }
 
     /**
-     * Сохранение только что созданного ресурса в хранилище
+     * Store a newly created resource in storage.
      *
      * @param PositionRequest $request
      * @return \Illuminate\Http\RedirectResponse
@@ -145,7 +145,7 @@ class PositionController extends Controller
     }
 
     /**
-     * Отображение указанного ресурса
+     * Display the specified resource.
      *
      * @param $id
      */
@@ -155,7 +155,7 @@ class PositionController extends Controller
     }
 
     /**
-     * Показать форму для редактирования указанного ресурса
+     * Show the form for editing the specified resource.
      *
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -167,7 +167,7 @@ class PositionController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $position = Position::moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $position);
@@ -179,7 +179,7 @@ class PositionController extends Controller
     }
 
     /**
-     * Обновление указанного ресурса в хранилище
+     * Update the specified resource in storage.
      *
      * @param PositionRequest $request
      * @param $id
@@ -193,7 +193,7 @@ class PositionController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $position = Position::moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $position);
@@ -227,7 +227,7 @@ class PositionController extends Controller
 //
 //                    if (count($notifications_sync['attached']) > 0) {
 //                        $notifications_message .= "Вам стали доступны оповещения:\r\n";
-//                        $notifications = Notification::findOrFail($notifications_sync['attached']);
+//                        $notifications = Notification::find($notifications_sync['attached']);
 //                        foreach ($notifications as $notification) {
 //                            $notifications_message .= "   ".$notification->name."\r\n";
 //                        }
@@ -235,7 +235,7 @@ class PositionController extends Controller
 //
 //                    if (count($notifications_sync['detached']) > 0) {
 //                        $notifications_message .= "Вам больше недоступны оповещения:\r\n";
-//                        $notifications = Notification::findOrFail($notifications_sync['detached']);
+//                        $notifications = Notification::find($notifications_sync['detached']);
 //                        foreach ($notifications as $notification) {
 //                            $notifications_message .= "   ".$notification->name."\r\n";
 //                        }
@@ -294,7 +294,7 @@ class PositionController extends Controller
     }
 
     /**
-     * Удаление указанного ресурса из хранилища
+     * Remove the specified resource from storage.
      *
      * @param $id
      */
@@ -319,7 +319,7 @@ class PositionController extends Controller
             'actual_staff'
         ])
             ->moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         if ($position) {
             // Подключение политики

@@ -35,12 +35,12 @@
 @include('includes.modals.modal-delete-ajax')
 @endsection
 
-@section('scripts')
+@push('scripts')
 	@include('includes.scripts.inputs-mask')
 	@include('posts.scripts')
 	@include('includes.scripts.pickmeup-script')
 	@include('includes.scripts.upload-file')
 	@include('includes.scripts.delete-from-page-script')
-@endsection
+    @endpush
 
 

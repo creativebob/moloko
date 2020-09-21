@@ -165,7 +165,7 @@ class StockGoodsController extends Controller
         Log::channel('operations')
         ->info('============================== НАЧИНАЕМ ЗАПИСЬ ТОВАРА ==============================');
 
-        $goods_category = GoodsCategory::findOrFail($request->category_id);
+        $goods_category = GoodsCategory::find($request->category_id);
         // dd($goods_category->load('groups'));
         $article = $this->storeArticle($request, $goods_category);
 
@@ -231,7 +231,7 @@ class StockGoodsController extends Controller
 
         // Главный запрос
         $cur_goods = Goods::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $cur_goods);
@@ -277,7 +277,7 @@ class StockGoodsController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $cur_goods = Goods::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
         // dd($cur_goods);
 
         $article = $cur_goods->article;
@@ -356,7 +356,7 @@ class StockGoodsController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $cur_goods = Goods::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize('delete', $cur_goods);

@@ -48,7 +48,7 @@ class BooklistController extends Controller
 
         //     // ГЛАВНЫЙ ЗАПРОС:
 
-        //     $booklist = Booklist::findOrFail($request->booklist_new_id);
+        //     $booklist = Booklist::find($request->booklist_new_id);
         //     $booklist->booklist_name = $request->new_booklist;
         //     $booklist->author_id = Auth::user()->id;
         //     $booklist->entity_alias = $request->entity_alias;
@@ -176,7 +176,7 @@ class BooklistController extends Controller
             $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
             // ГЛАВНЫЙ ЗАПРОС:
-            $booklist = Booklist::moderatorLimit($answer)->findOrFail($id);
+            $booklist = Booklist::moderatorLimit($answer)->find($id);
 
             // Подключение политики
             $this->authorize(getmethod(__FUNCTION__), $booklist);

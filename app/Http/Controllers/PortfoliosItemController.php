@@ -30,7 +30,7 @@ class PortfoliosItemController extends Controller
     use Photable;
 
     /**
-     * Отображение списка ресурсов.
+     * Display a listing of the resource.
      *
      * @param Request $request
      * @param $portfolio_id
@@ -85,7 +85,7 @@ class PortfoliosItemController extends Controller
             );
         }
 
-        $portfolio = Portfolio::findOrFail($portfolio_id);
+        $portfolio = Portfolio::find($portfolio_id);
 
         // Стандартный шаблон для отображения
 
@@ -105,7 +105,7 @@ class PortfoliosItemController extends Controller
     }
 
     /**
-     * Показать форму для создания нового ресурса.
+     * Show the form for creating a new resource.
      *
      * @param Request $request
      * @param $portfolio_id
@@ -158,7 +158,7 @@ class PortfoliosItemController extends Controller
     }
 
     /**
-     * Отображение указанного ресурса.
+     * Display the specified resource.
      *
      * @param $id
      */
@@ -168,7 +168,7 @@ class PortfoliosItemController extends Controller
     }
 
     /**
-     * Показать форму для редактирования указанного ресурса.
+     * Show the form for editing the specified resource.
      *
      * @param $portfolio_id
      * @param $id
@@ -181,12 +181,12 @@ class PortfoliosItemController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $portfolios_item = PortfoliosItem::moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $portfolios_item);
 
-        $portfolio = Portfolio::findOrFail($portfolio_id);
+        $portfolio = Portfolio::find($portfolio_id);
 
         return view('system.pages.portfolios_items.edit', [
             'portfolios_item' => $portfolios_item,
@@ -196,7 +196,7 @@ class PortfoliosItemController extends Controller
     }
 
     /**
-     * Обновление указанного ресурса в хранилище.
+     * Update the specified resource in storage.
      *
      * @param PortfoliosItemUpdateRequest $request
      * @param $portfolio_id
@@ -211,13 +211,13 @@ class PortfoliosItemController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $portfolios_item = PortfoliosItem::moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $portfolios_item);
 
         $data = $request->validated();
-        $data['photo_id'] = $this->getPhotoId($request, $portfolios_item);
+        $data['photo_id'] = $this->getPhotoId($portfolios_item);
         $result = $portfolios_item->update($data);
 
         if ($result) {
@@ -233,7 +233,7 @@ class PortfoliosItemController extends Controller
     }
 
     /**
-     * Удаление указанного ресурса из хранилища.
+     * Remove the specified resource from storage.
      *
      * @param Request $request
      * @param $portfolio_id
@@ -248,7 +248,7 @@ class PortfoliosItemController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $portfolios_item = PortfoliosItem::moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $portfolios_item);
@@ -290,7 +290,7 @@ class PortfoliosItemController extends Controller
                     });
             }
         ])
-            ->findOrFail($request->id);
+            ->find($request->id);
 //         dd($portfolios_item);
 
         return view('leads.catalogs.prices_goods', compact('portfolios_item'));

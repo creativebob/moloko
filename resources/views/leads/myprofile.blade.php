@@ -339,13 +339,13 @@
 @include('includes.modals.modal-delete-ajax')
 @endsection
 
-@section('scripts')
-@include('users.scripts')
+@push('scripts')
+@include('system.pages.marketings.users.scripts')
 @include('includes.scripts.cities-list')
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.pickmeup-script')
 @include('includes.scripts.delete-from-page-script')
 @include('includes.scripts.upload-file')
-@endsection
+@endpush
 
 

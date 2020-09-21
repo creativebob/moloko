@@ -123,7 +123,7 @@ class SiteController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('update'));
 
         $site = Site::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
         // dd($site);
 
         // Подключение политики
@@ -143,7 +143,7 @@ class SiteController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $site = Site::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
         // dd($site);
 
         // Подключение политики
@@ -162,7 +162,7 @@ class SiteController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $site = Site::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $site);
@@ -198,7 +198,7 @@ class SiteController extends Controller
             'navigations',
         ])
         ->moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $site);
@@ -219,7 +219,7 @@ class SiteController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('update'));
 
         $site = Site::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
         // dd($site);
 
         // Подключение политики
@@ -235,7 +235,7 @@ class SiteController extends Controller
 
     public function getSite($id)
     {
-        $site = Site::findOrFail($id);
+        $site = Site::find($id);
         return $site;
     }
 }

@@ -17,11 +17,11 @@
 @section('content')
 
   {{ Form::open(['url' => '/admin/booklists', 'data-abide', 'novalidate']) }}
-    @include('users.form', ['submitButtonText' => 'Добавить пользователя', 'param' => ''])
+    @include('system.pages.marketings.users.form', ['submitButtonText' => 'Добавить пользователя', 'param' => ''])
   {{ Form::close() }}
 
 @endsection
-@include('users.scripts')
+@include('system.pages.marketings.users.scripts')
 
 
 

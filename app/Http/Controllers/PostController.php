@@ -263,7 +263,7 @@ class PostController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $post = Post::moderatorLimit($answer)->findOrFail($id);
+        $post = Post::moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $post);
@@ -298,7 +298,7 @@ class PostController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $post = Post::moderatorLimit($answer)->findOrFail($id);
+        $post = Post::moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $post);
@@ -433,7 +433,7 @@ class PostController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $post = Post::withCount('albums')->moderatorLimit($answer)->findOrFail($id);
+        $post = Post::withCount('albums')->moderatorLimit($answer)->find($id);
         // dd($post);
 
         // Подключение политики

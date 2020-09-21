@@ -57,6 +57,10 @@ class CreateEstimatesServicesItemsTable extends Migration
             $table->decimal('estimate_discount', 10, 2)->default(0)->comment('Скидкка по смете');
             $table->decimal('total_estimate_discount', 10, 2)->default(0)->comment('Сумма с скидкой по смете');
 
+            $table->decimal('client_discount_percent', 10, 2)->default(0)->comment('Скидка клиента (%)');
+            $table->decimal('client_discount_currency', 10, 2)->default(0)->comment('Скидка клиента (валюта)');
+            $table->decimal('total_client_discount', 10, 2)->default(0)->comment('Сумма со скидкой клиента');
+
             $table->decimal('margin_percent', 10,2)->default(0)->comment('Процент маржи');
             $table->decimal('margin_currency', 10, 2)->default(0)->comment('Сумма маржи');
 

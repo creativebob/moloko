@@ -25,7 +25,7 @@ class PhotoController extends Controller
             // Обновляем id альбома
             $entity = Entity::whereAlias($request->entity)->first();
             $model = 'App\\'.$entity->model;
-            $item = $model::with('album')->findOrFail($request->id);
+            $item = $model::with('album')->find($request->id);
 
 
             if (isset($item->album)) {

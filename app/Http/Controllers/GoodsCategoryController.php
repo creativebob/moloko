@@ -168,7 +168,7 @@ class GoodsCategoryController extends Controller
             // 'compositions'
         ])
         ->moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 //         dd($goods_category);
 
         // Подключение политики
@@ -203,13 +203,13 @@ class GoodsCategoryController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $goods_category = GoodsCategory::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $goods_category);
 
         $data = $request->input();
-        $data['photo_id'] = $this->getPhotoId($request, $goods_category);
+        $data['photo_id'] = $this->getPhotoId($goods_category);
         $result = $goods_category->update($data);
 
         if ($result) {
@@ -253,7 +253,7 @@ class GoodsCategoryController extends Controller
             'goods'
         ])
         ->moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $goods_category);

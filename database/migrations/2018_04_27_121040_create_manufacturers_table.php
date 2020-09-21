@@ -19,7 +19,7 @@ class CreateManufacturersTable extends Migration
             $table->bigInteger('manufacturer_id')->nullable()->unsigned()->comment('ID контрагента');
             $table->foreign('manufacturer_id')->references('id')->on('companies');
 
-            $table->text('description_manufacturer')->nullable()->comment('Описание производителя');
+            $table->text('manufacturer')->nullable()->comment('Описание производителя');
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

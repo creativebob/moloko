@@ -24,7 +24,7 @@ class EstimatesServicesItemController extends Controller
     }
 
     /**
-     * Отображение списка ресурсов.
+     * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
@@ -34,7 +34,7 @@ class EstimatesServicesItemController extends Controller
     }
 
     /**
-     * Показать форму для создания нового ресурса.
+     * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
@@ -53,7 +53,7 @@ class EstimatesServicesItemController extends Controller
     {
         $success = true;
 
-        $prices_service = PricesService::findOrFail($request->price_id);
+        $prices_service = PricesService::find($request->price_id);
         $prices_service->load('product');
 
         if ($prices_service->product->serial == 1) {
@@ -119,7 +119,7 @@ class EstimatesServicesItemController extends Controller
     }
 
     /**
-     * Отображение указанного ресурса.
+     * Display the specified resource.
      *
      * @param  \App\EstimatesGoodsItem  $estimatesItem
      * @return \Illuminate\Http\Response
@@ -130,7 +130,7 @@ class EstimatesServicesItemController extends Controller
     }
 
     /**
-     * Показать форму для редактирования указанного ресурса.
+     * Show the form for editing the specified resource.
      *
      * @param  \App\EstimatesGoodsItem  $estimatesItem
      * @return \Illuminate\Http\Response
@@ -141,7 +141,7 @@ class EstimatesServicesItemController extends Controller
     }
 
     /**
-     * Обновление указанного ресурса в хранилище.
+     * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\EstimatesGoodsItem  $estimatesItem
@@ -149,7 +149,7 @@ class EstimatesServicesItemController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $estimates_services_item = EstimatesServicesItem::findOrFail($id);
+        $estimates_services_item = EstimatesServicesItem::find($id);
         // dd($estimates_goods_item);
 
         $result = $estimates_services_item->update([
@@ -166,7 +166,7 @@ class EstimatesServicesItemController extends Controller
     }
 
     /**
-     * Удаление указанного ресурса из хранилища.
+     * Remove the specified resource from storage.
      *
      * @param  \App\EstimatesGoodsItem  $estimatesItem
      * @return \Illuminate\Http\Response
@@ -177,7 +177,7 @@ class EstimatesServicesItemController extends Controller
             'product',
             'document',
         ])
-            ->findOrFail($id);
+            ->find($id);
 
         $result = $estimates_services_item->forceDelete();
         $this->estimateUpdate($estimates_services_item->estimate);

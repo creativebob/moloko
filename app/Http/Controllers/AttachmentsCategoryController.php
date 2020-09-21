@@ -132,7 +132,7 @@ class AttachmentsCategoryController extends Controller
             'manufacturers',
         ])
             ->moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
         // dd($attachments_category);
 
         // Подключение политики
@@ -167,13 +167,13 @@ class AttachmentsCategoryController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $attachments_category = AttachmentsCategory::moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $attachments_category);
 
         $data = $request->input();
-        $data['photo_id'] = $this->getPhotoId($request, $attachments_category);
+        $data['photo_id'] = $this->getPhotoId($attachments_category);
         $result = $attachments_category->update($data);
 
         if ($result) {
@@ -203,7 +203,7 @@ class AttachmentsCategoryController extends Controller
             'attachments'
         ])
             ->moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $attachments_category);

@@ -110,7 +110,7 @@ public function update(Request $request, $id)
     $user = $request->user();
     // Удаляем ajax
     // Проверяем содержит ли область вложенные населенные пункты
-    $region = Region::with('areas', 'cities')->moderatorLimit($answer)->findOrFail($id);
+    $region = Region::with('areas', 'cities')->moderatorLimit($answer)->find($id);
     // Подключение политики
     $this->authorize('delete', $region);
     if ((count($region->areas) > 0) || (count($region->cities) > 0)) {

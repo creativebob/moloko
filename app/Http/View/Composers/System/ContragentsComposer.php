@@ -31,7 +31,7 @@ class ContragentsComposer
                 }
             ])
             ->moderatorLimit($answer)
-            ->findOrFail(Auth::user()->company_id);
+            ->find(Auth::user()->company_id);
 
             // dd($company->$name);
 

@@ -65,7 +65,7 @@ trait Processable
             break;
 
             case 'mode-select':
-                $processes_group = ProcessesGroup::findOrFail($request->group_id);
+                $processes_group = ProcessesGroup::find($request->group_id);
             break;
         }
 
@@ -81,33 +81,33 @@ trait Processable
             // Смотрим статичную категорию id 3 (Время), если пришла она по переводим к выбранному коэффициенту
             if($data['units_category_id'] == 3) {
 
-                $unit = Unit::findOrFail($data['unit_id']);
+                $unit = Unit::find($data['unit_id']);
                 $length = $unit->ratio;
                 $data['length'] = $length;
 
 //            } elseif ($data['units_category_id'] == 5) {
 //
-//                $unit = Unit::findOrFail($data['unit_id']);
+//                $unit = Unit::find($data['unit_id']);
 //                $volume = $unit->ratio;
 //                $data['volume'] = $volume;
 
             } else {
 
                 // Если нет, то умножаем пришедший вес на количество чего либо
-                // $extra_unit = Unit::findOrFail($data['extra_unit_id']);
+                // $extra_unit = Unit::find($data['extra_unit_id']);
 
 
                 // Если не пришло кол-во веса, значит у пользователя его не запросили, так как планируеться измерять
                 // в единицах веса. Установим единицу!
 
 //                if(isset($data['weight'])){
-//                    $weight_unit = Unit::findOrFail($data['unit_weight_id']);
+//                    $weight_unit = Unit::find($data['unit_weight_id']);
 //                    $weight = $data['weight'] * $weight_unit->ratio;
 //                    $data['weight'] = $weight;
 //                };
 //
 //                if(isset($data['volume'])){
-//                    $volume_unit = Unit::findOrFail($data['unit_volume_id']);
+//                    $volume_unit = Unit::find($data['unit_volume_id']);
 //                    $volume = $data['volume'] * $volume_unit->ratio;
 //                    $data['volume'] = $volume;
 //                };
@@ -182,14 +182,14 @@ trait Processable
                 }
 
                  if ($request->has('unit_length_id')) {
-                     $unit = Unit::findOrFail($request->unit_length_id);
+                     $unit = Unit::find($request->unit_length_id);
                      $length = $data['length'] * $unit->ratio;
                      $data['length'] = $length;
                  }
 
                 $data['draft'] = $request->draft;
 
-                $photo_id = $this->getPhotoId($request, $process);
+                $photo_id = $this->getPhotoId($process);
                 $data['photo_id'] = $photo_id;
 
                 // Если ошибок и совпадений нет, то обновляем процесс
@@ -480,7 +480,7 @@ trait Processable
                 ->first(['model']);
             $model = 'App\\'.$entity->model;
 
-            $new_category = $model::findOrFail($category_id);
+            $new_category = $model::find($category_id);
             $new_category->groups()->attach($request->processes_group_id);
 
             $item->update([

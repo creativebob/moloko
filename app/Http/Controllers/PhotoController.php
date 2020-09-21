@@ -138,7 +138,7 @@ class PhotoController extends Controller
 
         $photo = Photo::with('album')
         ->moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $photo);
@@ -158,7 +158,7 @@ class PhotoController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $photo = Photo::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $photo);
@@ -200,7 +200,7 @@ class PhotoController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
         $photo = Photo::with('album')
         ->moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $photo);
@@ -237,7 +237,7 @@ class PhotoController extends Controller
 
         $item = $model::with('album.photos')
         // ->moderatorLimit($answer)
-        ->findOrFail($request->id);
+        ->find($request->id);
         // dd($item);
 
         $album = $item->album;
@@ -257,7 +257,7 @@ class PhotoController extends Controller
             // Обновляем id альбома
             $entity = Entity::whereAlias($request->entity)->first();
             $model = 'App\\'.$entity->model;
-            $item = $model::with('album')->findOrFail($request->id);
+            $item = $model::with('album')->find($request->id);
 
             if (isset($item->album)) {
                 $album = $item->album;
@@ -302,7 +302,7 @@ class PhotoController extends Controller
 
         $photo = Photo::with('album')
         ->moderatorLimit($answer )
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         // $this->authorize(getmethod('edit'), $photo);
@@ -317,7 +317,7 @@ class PhotoController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('update'));
 
         $photo = Photo::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         // $this->authorize('update', $photo);
@@ -344,7 +344,7 @@ class PhotoController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $photo = Photo::moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         $album = $photo->album;
 

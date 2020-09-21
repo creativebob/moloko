@@ -2,103 +2,85 @@
 
 namespace App\Http\Controllers;
 
-// Модели
+use App\Http\Controllers\System\Traits\Companable;
+use App\Http\Controllers\System\Traits\Directorable;
+use App\Http\Controllers\System\Traits\Locationable;
+use App\Http\Controllers\System\Traits\Phonable;
 use App\Http\Controllers\Traits\Photable;
-use App\User;
 use App\Company;
-use App\Bank;
-use App\BankAccount;
-use App\Page;
-use App\Sector;
-use App\Folder;
-use App\Booklist;
-use App\List_item;
-use App\Schedule;
-use App\Worktime;
-use App\Location;
-use App\ScheduleEntity;
-use App\Supplier;
-use App\Manufacturer;
-use App\Country;
-use App\ProcessesType;
-use App\Phone;
-
-// Транслитерация
-use Illuminate\Support\Str;
-
-// Модели которые отвечают за работу с правами + политики
-use App\Policies\CompanyPolicy;
-use App\Policies\SupplierPolicy;
-use App\Policies\ManufacturerPolicy;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Auth;
-
-// Общие классы
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Cookie;
-
-// Запросы и их валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\System\CompanyRequest;
-
-// Прочие необходимые классы
-use Illuminate\Support\Facades\Storage;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
-
-// Подрубаем трейт записи и обновления компании
-use App\Http\Controllers\Traits\CompanyControllerTrait;
-use App\Http\Controllers\Traits\UserControllerTrait;
-use App\Http\Controllers\Traits\DepartmentControllerTrait;
 
 class CompanyController extends Controller
 {
 
-    // Сущность над которой производит операции контроллер
-    protected $entity_name = 'companies';
-    protected $entity_dependence = false;
+    protected $entityAlias;
+    protected $entityDependence;
 
-    // Подключаем трейт записи и обновления компании
-    use CompanyControllerTrait;
-    use UserControllerTrait;
-    use DepartmentControllerTrait;
-	use Photable;
+    /**
+     * CompanyController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->entityAlias = 'companies';
+        $this->entityDependence = false;
+    }
 
+    use Locationable;
+    use Phonable;
+    use Photable;
+    use Companable;
+    use Directorable;
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function index(Request $request)
     {
-
-        $filter_url = autoFilter($request, $this->entity_name);
+        $filter_url = autoFilter($request, $this->entityAlias);
         if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Company::class);
 
-        // Получаем авторизованного пользователя
-        $user = $request->user();
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // ------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // ------------------------------------------------------------------------------------------------------------
-
-        $companies = Company::with('author', 'location.city', 'sector', 'we_suppliers', 'we_manufacturers', 'we_clients', 'main_phones', 'legal_form', 'director')
+        $companies = Company::with([
+            'author',
+            'location.city',
+            'sector',
+            'we_suppliers',
+            'we_manufacturers',
+            'we_clients',
+            'main_phones',
+            'legal_form',
+            'director'
+        ])
         ->companiesLimit($answer)
         ->moderatorLimit($answer)
         ->authors($answer)
-        ->systemItem($answer)
-        ->filter($request, 'city_id', 'location')
-        ->filter($request, 'sector_id')
-        ->booklistFilter($request)
-        ->orderBy('sort', 'asc')
+//        ->systemItem($answer)
+//        ->filter($request, 'city_id', 'location')
+//        ->filter($request, 'sector_id')
+//        ->booklistFilter($request)
+        ->oldest('sort')
         ->paginate(30);
+//        dd($companies);
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter = setFilter($this->entity_name, $request, [
+        $filter = setFilter($this->entityAlias, $request, [
             'author',               // Автор записи
             'sector',               // Направление деятельности
             'booklist'              // Списки пользователя
@@ -106,167 +88,142 @@ class CompanyController extends Controller
 
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
-        // dd($companies->get(3)->director->user->name_reverse);
-
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_name);
-        return view('companies.index', compact('companies', 'pageInfo', 'filter', 'user'));
+        $pageInfo = pageInfo($this->entityAlias);
+
+        return view('system.pages.companies.index', compact('companies', 'pageInfo', 'filter'));
     }
 
-    public function create(Request $request)
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function create()
     {
-
-        //Подключение политики
+        // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Company::class);
 
-        // Подключение политики
-        $company = new Company;
-        $user = new User;
-        $auth_user = Auth::user();
+        $company = Company::make();
 
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entityAlias);
 
-
-
-        return view('companies.create', compact('company', 'user', 'auth_user', 'pageInfo'));
+        return view('system.pages.companies.create', compact('company', 'pageInfo'));
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param CompanyRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function store(CompanyRequest $request)
     {
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Company::class);
 
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
+        logs('companies')->info('============ НАЧАЛО СОЗДАНИЯ КОМПАНИИ ===============');
 
-        // Скрываем бога
-        $user_id = hideGod($user);
+        $company = $this->storeCompany();
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // Отдаем работу по созданию новой компании трейту
-        $new_company = $this->createCompany($request);
-        $new_company->save();
-
-        // Следом автоматически создаем первый филиал у компании
-        $new_department = $this->createFirstDepartment($new_company, $request);
-
-        // Чистка номера
-        $main_phone = cleanPhone($request->main_phone);
-
-        $new_user = User::whereHas('main_phones', function($q) use ($main_phone){
-            $q->where('phone', $main_phone);
-        })->first();
-
-        Log::info('Поискали номер телефона в базе...');
-
-        // Если не найден, то создаем
-        if(!isset($new_user)){
-
-            $new_user = $this->createUserByPhone($request->user_phone, $request, $new_company);
-
-            $new_user->location_id = create_location($request, $request->country_id_default, $request->user_city_id, $request->user_address);
-            $new_user->user_type = 1; // Делаем его внутренним пользователем системы
-            $new_user->save();
-            Log::info('Создали юзера');
-
-            // Дописываем юзеру недостающие данные
-            $new_user->company_id = $new_company->id;
-            $new_user->filial_id = $new_department->id;
-
-            $new_user->site_id = 1;
-            $new_user->author_id = hideGod(auth()->user());
-
-            $new_user->save();
-
-        } else {
-
-            Log::info('Найден пользователь с таким номером телефона. ID: ' . $new_user);
-
+        if ($request->set_user == 1) {
+            $this->getDirector($company);
         }
 
-        // Создаем штатную единицу директора и устраиваем на нее юзера
-        $employee = $this->createDirector($new_company, $new_department, $new_user);
-        Log::info('Вот директор: ' . $employee);
+        $this->setStatuses($company);
 
+        logs('companies')->info('============ КОНЕЦ СОЗДАНИЯ КОМПАНИИ ===============');
 
-        $new_company->currencies()->sync($request->currencies);
-        $new_company->settings()->sync($request->settings);
-
-        return redirect('/admin/companies');
+        return redirect()->route('companies.index');
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function show($id)
     {
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $company = Company::moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize('view', $company);
 
-        return view('companies.show', compact('company'));
+        return view('system.pages.companies.show', compact('company'));
     }
 
-    public function edit(Request $request, $id)
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function edit($id)
     {
 
-        // Получаем данные для авторизованного пользователя
-        $user_auth = $request->user();
-
-        // Скрываем бога
-        $user_auth_id = hideGod($user_auth);
-        $company_id = $user_auth->company_id;
-
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         $company = Company::with([
+            'main_phones',
             'extra_phones',
+            'location.city',
+            'director.user.main_phone',
+            'photo',
+            'white',
+            'black',
+            'color',
+            'settings',
             'bank_accounts.bank',
-            'settings'
+            'schedules.worktimes',
+
+            'client',
+            'supplier',
+            'manufacturer'
         ])
         ->moderatorLimit($answer)
         ->authors($answer)
-        ->systemItem($answer)
-        ->findOrFail($id);
+//        ->systemItem($answer)
+        ->find($id);
 //        dd($company);
 
-        $user = $company->director->user;
-        // dd($user);
+        if (empty($company)) {
+            abort(403,__('errors.not_found'));
+        }
 
         $this->authorize(getmethod(__FUNCTION__), $company);
 
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entityAlias);
 
-        return view('companies.edit', compact('company', 'pageInfo', 'user'));
+        return view('system.pages.companies.edit', compact('company', 'pageInfo'));
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param CompanyRequest $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function update(CompanyRequest $request, $id)
     {
-
-        // Получаем авторизованного пользователя
-        $user = $request->user();
-
-        // Скрываем бога
-        $user_id = hideGod($user);
-
-        // Компания пользователя
-        $user_company = $user->company;
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $company = Company::with([
@@ -278,59 +235,58 @@ class CompanyController extends Controller
         ])
         ->moderatorLimit($answer)
         ->authors($answer)
-        ->systemItem($answer)
-        ->findOrFail($id);
+//        ->systemItem($answer)
+        ->find($id);
+
+        if (empty($company)) {
+            abort(403,__('errors.not_found'));
+        }
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $company);
 
-        // Отдаем работу по редактировнию компании трейту
-        $this->updateCompany($request, $company);
+        // TODO - 15.09.20 - Должна быть проерка на внешний контроль, так же на шаблоне не должны давать провалиться в компанию
+        $company = $this->updateCompany($company);
 
-        $company->currencies()->sync($request->currencies);
-        $company->settings()->sync($request->settings);
+        if ($request->set_user == 1) {
+            $this->getDirector($company);
+        }
 
-        return redirect('/admin/companies');
+        return redirect()->route('companies.index');
     }
 
-
-    public function destroy(Request $request, $id)
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function destroy($id)
     {
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $company = Company::moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
-        ->findOrFail($id);
+        ->find($id);
+
+        if (empty($company)) {
+            abort(403,__('errors.not_found'));
+        }
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $company);
 
-        if($company) {
+        $res = $company->delete();
 
-            $user = $request->user();
-            $user_id = hideGod($user);
-
-            $company->editor_id = $user_id;
-            $company->save();
-
-            $company = Company::destroy($id);
-
-            // Удаляем компанию с обновлением
-            if($company) {
-
-                return redirect('/admin/companies');
-
-            } else {
-                abort(403, 'Ошибка при удалении компании');
-            }
-
-        } else {
-            abort(403, 'Компания не найдена');
+        if (!$res) {
+            abort(403,__('errors.destroy'));
         }
+
+        return redirect()->route('companies.index');
     }
 
     // ------------------------------------------- Ajax ---------------------------------------------

@@ -28,7 +28,7 @@
             <digit-component
                 v-if="change"
                 :value="priceGoods.price"
-                @change="changePrice"
+                @input="changePrice"
                 @enter="updateItem"
                 @blur="change = false"
             ></digit-component>

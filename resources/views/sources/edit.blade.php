@@ -29,10 +29,10 @@
 @include('includes.modals.modal-rule-delete')
 @endsection
 
-@section('scripts')
+@push('scripts')
 @include('includes.scripts.modal-rule-delete-script')
 @include('includes.scripts.inputs-mask')
 @include('stages.scripts')
-@endsection
+@endpush
 
 

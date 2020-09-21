@@ -9,23 +9,25 @@
         @endphp
 
         <div class="cell small-6">
-            <pickmeup-component
-                name="{{ $nameMin }}"
-                title="от:"
-                @isset(request()->$nameMin)
-                value="{{ \Carbon\Carbon::createFromFormat('d.m.Y', request()->$nameMin) }}"
-                @endisset
-            ></pickmeup-component>
+            <label>от:
+                <pickmeup-component
+                    name="{{ $nameMin }}"
+                    @isset(request()->$nameMin)
+                        value="{{ \Carbon\Carbon::createFromFormat('d.m.Y', request()->$nameMin) }}"
+                    @endisset
+                ></pickmeup-component>
+            </label>
         </div>
 
         <div class="cell small-6">
-            <pickmeup-component
-                name="{{ $nameMax }}"
-                title="до:"
-                @isset(request()->$nameMax)
-                value="{{ \Carbon\Carbon::createFromFormat('d.m.Y', request()->$nameMax) }}"
-                @endisset
-            ></pickmeup-component>
+            <label>до:
+                <pickmeup-component
+                    name="{{ $nameMax }}"
+                    @isset(request()->$nameMax)
+                        value="{{ \Carbon\Carbon::createFromFormat('d.m.Y', request()->$nameMax) }}"
+                    @endisset
+                ></pickmeup-component>
+            </label>
         </div>
 
     </div>

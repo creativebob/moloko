@@ -36,7 +36,7 @@ class OutcomeController extends Controller
     use Photable;
 
     /**
-     * Отображение списка ресурсов
+     * Display a listing of the resource.
      *
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
@@ -93,7 +93,7 @@ class OutcomeController extends Controller
     }
 
     /**
-     * Показать форму для создания нового ресурса
+     * Show the form for creating a new resource.
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
@@ -111,7 +111,7 @@ class OutcomeController extends Controller
     }
 
     /**
-     * Сохранение только что созданного ресурса в хранилище
+     * Store a newly created resource in storage.
      *
      * @param OutcomeRequest $request
      * @return \Illuminate\Http\RedirectResponse
@@ -125,7 +125,7 @@ class OutcomeController extends Controller
         $data = $request->validated();
         $outcome = Outcome::create($data);
 
-        $outcome->photo_id = $this->getPhotoId($request, $outcome);
+        $outcome->photo_id = $this->getPhotoId($outcome);
         $outcome->save();
 
         if ($outcome) {
@@ -137,7 +137,7 @@ class OutcomeController extends Controller
     }
 
     /**
-     * Отображение указанного ресурса
+     * Display the specified resource.
      *
      * @param Request $request
      * @param $id
@@ -148,7 +148,7 @@ class OutcomeController extends Controller
     }
 
     /**
-     * Показать форму для редактирования указанного ресурса
+     * Show the form for editing the specified resource.
      *
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -160,7 +160,7 @@ class OutcomeController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $outcome = Outcome::moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
         // dd($outcome);
 
         // Подключение политики
@@ -177,7 +177,7 @@ class OutcomeController extends Controller
     }
 
     /**
-     * Обновление указанного ресурса в хранилище
+     * Update the specified resource in storage.
      *
      * @param OutcomeRequest $request
      * @param $id
@@ -190,14 +190,14 @@ class OutcomeController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $outcome = Outcome::moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
         // dd($outcome);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $outcome);
 
         $data = $request->validated();
-        $data['photo_id'] = $this->getPhotoId($request, $outcome);
+        $data['photo_id'] = $this->getPhotoId($outcome);
         $outcome->update($data);
 
         if ($outcome) {
@@ -208,7 +208,7 @@ class OutcomeController extends Controller
     }
 
     /**
-     * Удаление указанного ресурса из хранилища
+     * Remove the specified resource from storage.
      *
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
@@ -220,7 +220,7 @@ class OutcomeController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $outcome = Outcome::moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $outcome);

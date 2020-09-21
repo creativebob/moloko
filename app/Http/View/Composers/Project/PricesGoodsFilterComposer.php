@@ -15,7 +15,7 @@ class PricesGoodsFilterComposer
             'items_public',
             'prices.goods_public.article.attachments.article.group'
         ])
-            ->findOrFail($view->catalogs_goods_id);
+            ->find($view->catalogs_goods_id);
 //        dd($catalog_goods);
 
 //        $catalog_goods = $view->catalog_goods->load([

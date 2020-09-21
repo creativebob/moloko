@@ -24,7 +24,7 @@ class PromotionController extends Controller
     use Photable;
 
     /**
-     * Отображение списка ресурсов.
+     * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
@@ -80,7 +80,7 @@ class PromotionController extends Controller
     }
 
     /**
-     * Показать форму для создания нового ресурса.
+     * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
@@ -110,7 +110,7 @@ class PromotionController extends Controller
         $data = $request->input();
         $promotion = Promotion::create($data);
 
-        $promotion->photo_id = $this->getPhotoId($request, $promotion);
+        $promotion->photo_id = $this->getPhotoId($promotion);
 
         $names = [
             'tiny',
@@ -142,7 +142,7 @@ class PromotionController extends Controller
     }
 
     /**
-     * Отображение указанного ресурса.
+     * Display the specified resource.
      *
      * @param  \App\Promotion  $promotion
      * @return \Illuminate\Http\Response
@@ -153,7 +153,7 @@ class PromotionController extends Controller
     }
 
     /**
-     * Показать форму для редактирования указанного ресурса.
+     * Show the form for editing the specified resource.
      *
      * @param  \App\Promotion  $promotion
      * @return \Illuminate\Http\Response
@@ -184,7 +184,7 @@ class PromotionController extends Controller
             'prices_goods.goods.article'
         ])
         ->moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 //         dd($promotion);
 
         // Подключение политики
@@ -197,7 +197,7 @@ class PromotionController extends Controller
     }
 
     /**
-     * Обновление указанного ресурса в хранилище.
+     * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Promotion  $promotion
@@ -219,13 +219,13 @@ class PromotionController extends Controller
             'large_x',
         ])
         ->moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $promotion);
 
         $data = $request->input();
-        $data['photo_id'] = $this->getPhotoId($request, $promotion);;
+        $data['photo_id'] = $this->getPhotoId($promotion);;
 
         switch ($data['mode']) {
             case 'photo':
@@ -265,7 +265,7 @@ class PromotionController extends Controller
     }
 
     /**
-     * Удаление указанного ресурса из хранилища.
+     * Remove the specified resource from storage.
      *
      * @param  \App\Promotion  $promotion
      * @return \Illuminate\Http\Response
@@ -276,7 +276,7 @@ class PromotionController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $promotion = Promotion::moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $promotion);

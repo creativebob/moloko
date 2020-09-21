@@ -192,7 +192,7 @@ class WorkflowController extends Controller
         Log::channel('operations')
         ->info('========================================== НАЧИНАЕМ ЗАПИСЬ РАБОЧЕГО ПРОЦЕССА ==============================================');
 
-        $workflows_category = WorkflowsCategory::findOrFail($request->category_id);
+        $workflows_category = WorkflowsCategory::find($request->category_id);
         // dd($workflows_category->load('groups'));
         $process = $this->storeProcess($request, $workflows_category);
 
@@ -246,7 +246,7 @@ class WorkflowController extends Controller
 
         // Главный запрос
         $workflow = Workflow::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
         // dd($workflow);
 
         // Подключение политики
@@ -298,7 +298,7 @@ class WorkflowController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
         $workflow = Workflow::with('process')
         ->moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
         // dd($workflow);
 
         // Подключение политики
@@ -376,7 +376,7 @@ class WorkflowController extends Controller
             'compositions.service',
         ])
         ->moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod('destroy'), $workflow);
@@ -401,7 +401,7 @@ class WorkflowController extends Controller
 
     public function replicate(Request $request, $id)
     {
-        $workflow = Workflow::findOrFail($id);
+        $workflow = Workflow::find($id);
 
         $workflow->load('process');
         $process = $workflow->process;
@@ -455,7 +455,7 @@ class WorkflowController extends Controller
             'process.group.unit',
             'category'
         ])
-        ->findOrFail($request->id);
+        ->find($request->id);
 
         return view('products.processes_categories.services_categories.workflows.workflow_tr', compact('workflow'));
     }

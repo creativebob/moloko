@@ -3,7 +3,6 @@
 namespace App\Observers\System;
 
 use App\Client;
-
 use App\Observers\System\Traits\Commonable;
 
 class ClientObserver
@@ -11,20 +10,24 @@ class ClientObserver
 
     use Commonable;
 
+    /**
+     * Handle the client "creating" event.
+     *
+     * @param Client $client
+     */
     public function creating(Client $client)
     {
-        // TODO - 04.03.20 - display false для клиентов, пока закооментил методы, раскомментить при рефакторе контроллера
-        $client->display = false;
         $this->store($client);
+        $client->display = false;
     }
 
+    /**
+     * Handle the client "updating" event.
+     *
+     * @param Client $client
+     */
     public function updating(Client $client)
     {
-//        $this->update($client);
-    }
-
-    public function deleting(Client $client)
-    {
-//        $this->destroy($client);
+        $this->update($client);
     }
 }

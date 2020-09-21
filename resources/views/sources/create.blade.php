@@ -22,10 +22,10 @@
 
 @endsection
 
-@section('scripts')
+@push('scripts')
   @include('includes.scripts.inputs-mask')
   @include('stages.scripts')
-@endsection
+  @endpush
 
 
 

@@ -19,7 +19,7 @@
   {{ Form::model($user, ['url' => '/admin/booklists/'.$booklist->id, 'data-abide', 'novalidate']) }}
   {{ method_field('PATCH') }}
 
-    @include('users.form', ['submitButtonText' => 'Редактировать пользователя', 'param'=>''])
+    @include('system.pages.marketings.users.form', ['submitButtonText' => 'Редактировать пользователя', 'param'=>''])
 
   {{ Form::close() }}
 
@@ -62,7 +62,7 @@
 @include('includes.scripts.modal-delete-ajax')
 @endsection
 
-@section('scripts')
+@push('scripts')
   @include('includes.scripts.inputs-mask')
   @include('includes.scripts.pickmeup-script')
 <script type="application/javascript">
@@ -96,5 +96,5 @@
 
 {{-- Скрипт модалки удаления --}}
 @include('includes.scripts.modal-delete-ajax-script')
-@endsection
+  @endpush
 

@@ -193,7 +193,7 @@ class ServiceController extends Controller
         Log::channel('operations')
         ->info('========================================== НАЧИНАЕМ ЗАПИСЬ УСЛУГИ ==============================================');
 
-        $services_category = ServicesCategory::findOrFail($request->category_id);
+        $services_category = ServicesCategory::find($request->category_id);
         // dd($services_category->load('groups'));
         $process = $this->storeProcess($request, $services_category);
 
@@ -249,7 +249,7 @@ class ServiceController extends Controller
 
         // Главный запрос
         $service = Service::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
         // dd($service);
 
         // Подключение политики
@@ -300,7 +300,7 @@ class ServiceController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $service = Service::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
         // dd($service);
 
         // Подключение политики
@@ -366,7 +366,7 @@ class ServiceController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $service = Service::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod('destroy'), $service);
@@ -391,7 +391,7 @@ class ServiceController extends Controller
 
     public function replicate(Request $request, $id)
     {
-        $service = Service::findOrFail($id);
+        $service = Service::find($id);
 
         $service->load('process');
         $process = $service->process;

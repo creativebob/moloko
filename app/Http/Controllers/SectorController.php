@@ -121,7 +121,7 @@ class SectorController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $sector = Sector::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $sector);
@@ -141,7 +141,7 @@ class SectorController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $sector = Sector::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $sector);
@@ -166,7 +166,7 @@ class SectorController extends Controller
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $sector = Sector::with('childs', 'companies')->moderatorLimit($answer)->findOrFail($id);
+        $sector = Sector::with('childs', 'companies')->moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $sector);

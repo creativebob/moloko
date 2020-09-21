@@ -26,14 +26,14 @@
 
 @endsection
 
-@section('scripts')
+@push('scripts')
   @include('includes.scripts.cities-list')
   @include('includes.scripts.inputs-mask')
   @include('includes.scripts.pickmeup-script')
   @include('includes.scripts.upload-file')
   @include('includes.scripts.delete-from-page-script')
   @include('leads.scripts')
-@endsection
+  @endpush
 
 
 

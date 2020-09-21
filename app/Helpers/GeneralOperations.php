@@ -251,21 +251,21 @@ function isDomainAvailible($domain)
  * Define an inverse one-to-one or many relationship.
  *
  * @param  $request
- * @param  integer  $country_id
- * @param  integer  $city_id
+ * @param  integer  $countryId
+ * @param  integer  $cityId
  * @param  string  $address
  * @return variable;
  */
 
-function create_location($request, $country_id = 1, $city_id = 1, $address = null, $zip_code = null)
+function create_location($request, $countryId = 1, $cityId = 1, $address = null, $zipCode = null)
 {
     // Ищем или создаем локацию
     $location = Location::with('city')
         ->firstOrCreate([
-            'country_id' => $request->country_id ?? $country_id,
-            'city_id' => $request->city_id ?? $city_id,
+            'country_id' => $request->country_id ?? $countryId,
+            'city_id' => $request->city_id ?? $cityId,
             'address' => $request->address ?? $address,
-            'zip_code' => $request->zip_code ?? $zip_code
+            'zip_code' => $request->zip_code ?? $zipCode
         ], [
             'author_id' => hideGod($request->user())
         ]);

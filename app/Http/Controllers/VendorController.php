@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Company;
-use App\Http\Controllers\Traits\CompanyControllerTrait;
+use App\Http\Controllers\System\Traits\Companable;
+use App\Http\Controllers\System\Traits\Directorable;
+use App\Http\Controllers\System\Traits\Locationable;
+use App\Http\Controllers\System\Traits\Phonable;
 use App\Http\Controllers\Traits\Photable;
 use App\Http\Requests\System\CompanyRequest;
 use App\Http\Requests\System\VendorRequest;
@@ -14,26 +17,27 @@ use Illuminate\Http\Request;
 class VendorController extends Controller
 {
 
+    protected $entityAlias;
+    protected $entityDependence;
+
     /**
      * VendorController constructor.
-     * @param Vendor $vendor
      */
-    public function __construct(Vendor $vendor)
+    public function __construct()
     {
         $this->middleware('auth');
-        $this->vendor = $vendor;
-        $this->class = Vendor::class;
-        $this->model = 'App\Vendor';
-        $this->entity_alias = with(new $this->class)->getTable();
-        $this->entity_dependence = false;
+        $this->entityAlias = 'vendors';
+        $this->entityDependence = false;
     }
 
-    // Подключаем трейт записи и обновления компании
-    use CompanyControllerTrait;
+    use Locationable;
+    use Phonable;
     use Photable;
+    use Companable;
+    use Directorable;
 
     /**
-     * Отображение списка ресурсов.
+     * Display a listing of the resource.
      *
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
@@ -41,34 +45,27 @@ class VendorController extends Controller
      */
     public function index(Request $request)
     {
-        $filter_url = autoFilter($request, $this->entity_alias);
-        if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
+        $filter_url = autoFilter($request, $this->entityAlias);
+        if (($filter_url != null) && ($request->filter != 'active')) {
+            return Redirect($filter_url);
+        };
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Vendor::class);
 
-        // Получаем авторизованного пользователя
-        $user = $request->user();
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // -------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------------------------
-
-
-        // $vendors = vendor::with('author', 'company')
-        // ->companiesLimit($answer)
-        // ->where('company_id', '!=', null)
-
-
         $vendors = Vendor::with([
             'supplier' => function ($q) {
                 $q->with([
                     'company' => function ($q) {
                         $q->with([
-                           'location.country',
+                            'main_phones',
+                            'location',
                             'sector',
                             'legal_form'
                         ]);
@@ -78,18 +75,13 @@ class VendorController extends Controller
             'author',
         ])
             ->companiesLimit($answer)
-            ->where('archive', 0)
+            ->where('archive', false)
             ->moderatorLimit($answer)
             ->authors($answer)
             ->systemItem($answer)
-            ->whereHas('supplier', function ($q) use ($request) {
-                $q->whereHas('company', function($q) use ($request){
-                    $q->filter($request, 'country_id', 'location');
-                });
-            })
             ->booklistFilter($request)
-            ->orderBy('moderation', 'desc')
-            ->orderBy('sort', 'asc')
+//            ->orderBy('moderation', 'desc')
+            ->oldest('sort')
             ->paginate(30);
 //        dd($vendors);
 
@@ -97,7 +89,7 @@ class VendorController extends Controller
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter = setFilter($this->entity_alias, $request, [
+        $filter = setFilter($this->entityAlias, $request, [
 //            'vendor_country', // Страна производителя
 //            'sector',               // Направление деятельности
             'booklist'              // Списки пользователя
@@ -106,13 +98,13 @@ class VendorController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entityAlias);
 
-        return view('vendors.index', compact('vendors', 'pageInfo', 'filter', 'user'));
+        return view('system.pages.erp.vendors.index', compact('vendors', 'pageInfo', 'filter'));
     }
 
     /**
-     * Показать форму для создания нового ресурса.
+     * Show the form for creating a new resource.
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
@@ -126,9 +118,10 @@ class VendorController extends Controller
         $vendor = Vendor::make();
         $company = Company::make();
 
-        $pageInfo = pageInfo($this->entity_alias);
+        // Инфо о странице
+        $pageInfo = pageInfo($this->entityAlias);
 
-        return view('vendors.create', compact('company', 'vendor', 'pageInfo'));
+        return view('system.pages.erp.vendors.create', compact('vendor', 'company', 'pageInfo'));
     }
 
     /**
@@ -138,99 +131,92 @@ class VendorController extends Controller
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function store(CompanyRequest $request)
+    public function store(Request $request)
     {
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Vendor::class);
         $this->authorize(getmethod(__FUNCTION__), Company::class);
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        logs('companies')->info('============ НАЧАЛО СОЗДАНИЯ ПРОДАВЦА ===============');
 
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
+        $company = $this->storeCompany();
 
-        // Скрываем бога
-        $user_id = hideGod($user);
-
-
-        // Отдаем работу по созданию новой компании трейту
-        $company = $this->createCompany($request);
-
-        $company->currencies()->sync($request->currencies);
+        if ($request->set_user == 1) {
+//            $this->getDirector($company);
+        }
 
         // Создаем связь
         $supplier = Supplier::create([
-            'company_id' => auth()->user()->company->id,
             'supplier_id' => $company->id
         ]);
 
-        $vendor = Vendor::create([
-            'company_id' => auth()->user()->company->id,
-            'supplier_id' => $supplier->id,
-            'description' => $request->description,
-            'status' => $request->status
-        ]);
+        $data = $request->input();
+        $data['supplier_id'] = $supplier->id;
+        $data['description'] = $request->vendor_description;
+
+        $vendor = Vendor::create($data);
+
+        logs('companies')->info("Создан продавец. Id: [{$vendor->id}]");
+        logs('companies')->info('============ КОНЕЦ СОЗДАНИЯ ПРОДАВЦА ===============
+        
+        ');
 
         return redirect()->route('vendors.index');
     }
 
     /**
-     * Отображение указанного ресурса.
+     * Show the form for editing the specified resource.
      *
-     * @param $id
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Показать форму для редактирования указанного ресурса.
-     *
-     * @param Request $request
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function edit(Request $request, $id)
+    public function edit($id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $vendor = Vendor::moderatorLimit($answer)
-            ->authors($answer)
-            ->systemItem($answer)
-            ->findOrFail($id);
-
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $vendor);
-
-        // ПОЛУЧАЕМ КОМПАНИЮ ------------------------------------------------------------------------------------------------
-        $company_id = $vendor->company->id;
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_company = operator_right('company', false, getmethod(__FUNCTION__));
-
-        $company = Company::with('location.city', 'schedules.worktimes', 'sector', 'processes_types')
+        $vendor = Vendor::with([
+            'supplier' => function ($q) {
+                $q->with([
+                    'company' => function ($q) {
+                        $q->with([
+                            'location.city',
+                            'schedules.worktimes',
+                            'sector',
+                            'processes_types',
+                            'manufacturers'
+                        ]);
+                    }
+                ]);
+            }
+        ])
             ->moderatorLimit($answer)
             ->authors($answer)
             ->systemItem($answer)
-            ->findOrFail($company_id);
+            ->find($id);
+//        dd($vendor);
 
+        if (empty($vendor)) {
+            abort(403, __('errors.not_found'));
+        }
+
+        $company = $vendor->supplier->company;
+//        dd($company);
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $vendor);
         $this->authorize(getmethod(__FUNCTION__), $company);
 
-
-
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entityAlias);
 
-        return view('vendors.edit', compact('vendor', 'pageInfo'));
+        return view('system.pages.erp.vendors.edit', compact('vendor', 'company', 'pageInfo'));
     }
 
     /**
-     * Обновление указанного ресурса в хранилище.
+     * Update the specified resource in storage.
      *
      * @param VendorRequest $request
      * @param $id
@@ -240,87 +226,94 @@ class VendorController extends Controller
     public function update(VendorRequest $request, $id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $vendor = Vendor::moderatorLimit($answer)
+        $vendor = Vendor::with([
+            'supplier' => function ($q) {
+                $q->with([
+                    'company' => function ($q) {
+                        $q->with([
+                            'location.city',
+                            'schedules.worktimes',
+                            'sector',
+                            'processes_types',
+                            'manufacturers'
+                        ]);
+                    }
+                ]);
+            }
+        ])
+            ->moderatorLimit($answer)
             ->authors($answer)
             ->systemItem($answer)
-            ->findOrFail($id);
+            ->find($id);
 //        dd($vendor);
 
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $vendor);
+        if (empty($vendor)) {
+            abort(403, __('errors.not_found'));
+        }
 
-        $company_id = $vendor->supplier->company->id;
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_company = operator_right('companies', false, getmethod(__FUNCTION__));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $company = Company::with('location', 'schedules.worktimes')->moderatorLimit($answer_company)->findOrFail($company_id);
+        $company = $vendor->supplier->company;
 //        dd($company);
 
         // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $vendor);
         $this->authorize(getmethod(__FUNCTION__), $company);
 
-        // Отдаем работу по редактировнию компании трейту
-        $this->updateCompany($request, $vendor->supplier->company, $vendor);
+        logs('companies')->info('============ НАЧАЛО ОБНОВЛЕНИЯ ПРОДАВЦА ===============');
+
+        // TODO - 15.09.20 - Должна быть проерка на внешний контроль, так же на шаблоне не должны давать провалиться в компанию
+        $company = $this->updateCompany($company);
 
         $data = $request->input();
-        $vendor->update($data);
+        $data['description'] = $request->vendor_description;
+        $res = $vendor->update($data);
 
-        $vendor->supplier->company->currencies()->sync($request->currencies);
+        if (!$res) {
+            abort(403, __('errors.update'));
+        }
+
+        logs('companies')->info("Обновлен продавец. Id: [{$vendor->id}]");
+        logs('companies')->info('============ КОНЕЦ ОБНОВЛЕНИЯ ПРОДАВЦА ===============
+        
+        ');
 
         return redirect()->route('vendors.index');
     }
 
     /**
-     * Удаление указанного ресурса из хранилища.
+     * Архивирование указанного ресурса
      *
-     * @param Request $request
      * @param $id
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function destroy(Request $request, $id)
+    public function archive($id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('delete'));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $vendor = Vendor::moderatorLimit($answer)->findOrFail($id);
+        $vendor = Vendor::moderatorLimit($answer)
+            ->find($id);
+//        dd($vendor);
+
+        if (empty($vendor)) {
+            abort(403, __('errors.not_found'));
+        }
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $vendor);
+        $this->authorize(getmethod('destroy'), $vendor);
 
-        if ($vendor) {
+        $vendor->archive = true;
+        $vendor->editor_id = hideGod(auth()->user());
+        $vendor->save();
 
-            $user = $request->user();
-
-            // Скрываем бога
-            $user_id = hideGod($user);
-
-            $vendor->editor_id = $user_id;
-
-            // Архивируем связь
-            $vendor->archive = 1;
-
-            $vendor->save();
-
-            // Удаляем наглухо: мягко
-            // $vendor = vendor::destroy($id);
-
-            // Удаляем компанию с обновлением
-            if($vendor) {
-                return redirect()->route('vendors.index');
-
-            } else {
-                abort(403, 'Ошибка при удалении поставщика');
-            }
-
-        } else {
-            abort(403, 'Поставщик не найдена');
+        if (!$vendor) {
+            abort(403, __('errors.archive'));
         }
+
+        return redirect()->route('vendors.index');
     }
 }

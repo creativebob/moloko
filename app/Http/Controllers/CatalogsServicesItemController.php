@@ -30,7 +30,7 @@ class CatalogsServicesItemController extends Controller
     use Photable;
 
     /**
-     * Отображение списка ресурсов.
+     * Display a listing of the resource.
      *
      * @param Request $request
      * @param $catalog_id
@@ -84,7 +84,7 @@ class CatalogsServicesItemController extends Controller
             );
         }
 
-        $catalog_service = CatalogsService::findOrFail($catalog_id);
+        $catalog_service = CatalogsService::find($catalog_id);
 
         // Отдаем на шаблон
         return view('catalogs_services_items.index', [
@@ -97,7 +97,7 @@ class CatalogsServicesItemController extends Controller
     }
 
     /**
-     * Показать форму для создания нового ресурса.
+     * Show the form for creating a new resource.
      *
      * @param Request $request
      * @param $catalog_id
@@ -150,7 +150,7 @@ class CatalogsServicesItemController extends Controller
     }
 
     /**
-     * Отображение указанного ресурса.
+     * Display the specified resource.
      *
      * @param $id
      */
@@ -160,7 +160,7 @@ class CatalogsServicesItemController extends Controller
     }
 
     /**
-     * Показать форму для редактирования указанного ресурса.
+     * Show the form for editing the specified resource.
      *
      * @param Request $request
      * @param $catalog_id
@@ -174,13 +174,13 @@ class CatalogsServicesItemController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $catalogs_services_item = CatalogsServicesItem::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
         // dd($catalogs_services_item);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $catalogs_services_item);
 
-        $catalog_service = CatalogsService::findOrFail($catalog_id);
+        $catalog_service = CatalogsService::find($catalog_id);
 
         return view('catalogs_services_items.edit', [
             'catalogs_services_item' => $catalogs_services_item,
@@ -191,7 +191,7 @@ class CatalogsServicesItemController extends Controller
     }
 
     /**
-     * Обновление указанного ресурса в хранилище.
+     * Update the specified resource in storage.
      *
      * @param CatalogsServicesItemUpdateRequest $request
      * @param $catalog_id
@@ -206,13 +206,13 @@ class CatalogsServicesItemController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $catalogs_services_item = CatalogsServicesItem::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $catalogs_services_item);
 
         $data = $request->input();
-        $data['photo_id'] = $this->getPhotoId($request, $catalogs_services_item);
+        $data['photo_id'] = $this->getPhotoId($catalogs_services_item);
         $result = $catalogs_services_item->update($data);
 
         if ($result) {
@@ -230,7 +230,7 @@ class CatalogsServicesItemController extends Controller
     }
 
     /**
-     * Удаление указанного ресурса из хранилища.
+     * Remove the specified resource from storage.
      *
      * @param Request $request
      * @param $catalog_id
@@ -245,7 +245,7 @@ class CatalogsServicesItemController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $catalogs_services_item = CatalogsServicesItem::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $catalogs_services_item);
@@ -290,7 +290,7 @@ class CatalogsServicesItemController extends Controller
         // --------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // --------------------------------------------------------------------------------------------------------------
-        $catalog = CatalogsService::with('goods', 'raws', 'services')->findOrFail($catalog_id);
+        $catalog = CatalogsService::with('goods', 'raws', 'services')->find($catalog_id);
         // dd($catalog->goods->keyBy('id')->toArray());
 
         $result_search_goods = Goods::with('goods_article')
@@ -365,7 +365,7 @@ class CatalogsServicesItemController extends Controller
 
         // Добавление связи
         $catalog = CatalogsService::with('goods', 'raws', 'services')
-        ->findOrFail($catalog_id);
+        ->find($catalog_id);
         // return $catalog->count();
 
         $catalog->$product_type()->attach($product_id, ['display' => 1]);
@@ -375,7 +375,7 @@ class CatalogsServicesItemController extends Controller
                 $query->orderBy('catalog_products.sort', 'asc');
             }
         ])
-        ->findOrFail($catalog_id);
+        ->find($catalog_id);
 
         return view('catalog_products.content_core', compact('catalog'));
     }
@@ -397,7 +397,7 @@ class CatalogsServicesItemController extends Controller
                     });
                 }
             ])
-        ->findOrFail($request->id);
+        ->find($request->id);
         // dd($catalogs_services_item);
 
         return view('leads.catalogs.prices_services', compact('catalogs_services_item'));

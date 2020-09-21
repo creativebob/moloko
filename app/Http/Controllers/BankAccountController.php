@@ -33,7 +33,7 @@ class BankAccountController extends Controller
 
         // Подключение политики
         // $this->authorize(getmethod(__FUNCTION__), BankAccount::class);
-        $company = Company::findOrFail($request->company_id);
+        $company = Company::find($request->company_id);
 
         $bank_account = new BankAccount;
         $bank_company = new Company;
@@ -96,7 +96,7 @@ class BankAccountController extends Controller
                 $bank_account->load('bank');
             }
 
-            // $company = Company::with('bank_accounts')->findOrFail($request->company_id);
+            // $company = Company::with('bank_accounts')->find($request->company_id);
 
         }
 
@@ -117,9 +117,9 @@ class BankAccountController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $bank_account = BankAccount::moderatorLimit($answer)->findOrFail($request->bank_account_id);
-        $bank_company = Company::findOrFail($bank_account->bank_id);
-        $company = Company::findOrFail($bank_account->holder_id);
+        $bank_account = BankAccount::moderatorLimit($answer)->find($request->bank_account_id);
+        $bank_company = Company::find($bank_account->bank_id);
+        $company = Company::find($bank_account->holder_id);
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -145,7 +145,7 @@ class BankAccountController extends Controller
         // $answer = operator_right($this->entity_name, $this->entity_dependence, 'update');
 
         // Получаем редактируемый банковский аккаунт
-        $bank_account = BankAccount::findOrFail($request->bank_account_id);
+        $bank_account = BankAccount::find($request->bank_account_id);
 
         // Проверка: изменен ли БИК банка
         if($request->bank_bic != $bank_account->bank->bic){
@@ -178,7 +178,7 @@ class BankAccountController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $bank_account = BankAccount::moderatorLimit($answer)->findOrFail($id);
+        $bank_account = BankAccount::moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $bank_account);

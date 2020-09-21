@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\System\Traits\Locationable;
+use App\Http\Controllers\System\Traits\Phonable;
+use App\Http\Controllers\System\Traits\Userable;
 use App\Http\Controllers\Traits\UserControllerTrait;
 use App\Http\Controllers\Traits\Photable;
 use App\Http\Requests\System\EmployeeRequest;
@@ -15,26 +18,25 @@ use App\Http\Requests\System\UserUpdateRequest;
 class EmployeeController extends Controller
 {
 
+    protected $entityAlias;
+    protected $entityDependence;
     /**
      * EmployeeController constructor.
-     * @param Employee $employee
      */
-    public function __construct(Employee $employee)
+    public function __construct()
     {
         $this->middleware('auth');
-        $this->employee = $employee;
-        $this->class = Employee::class;
-        $this->model = 'App\Employee';
-        $this->entity_alias = with(new $this->class)->getTable();
-        $this->entity_dependence = true;
+        $this->entityAlias = 'employees';
+        $this->entityDependence = true;
     }
 
-	use Photable;
-    // Подключаем трейт записи и обновления компании
-    use UserControllerTrait;
+    use Locationable;
+    use Phonable;
+    use Photable;
+    use Userable;
 
     /**
-     * Отображение списка ресурсов
+     * Display a listing of the resource.
      *
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
@@ -43,14 +45,14 @@ class EmployeeController extends Controller
     public function index(Request $request)
     {
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), Employee::class);
 
         // Включение контроля активного фильтра
-        $filter_url = autoFilter($request, $this->entity_alias);
+        $filter_url = autoFilter($request, $this->entityAlias);
         if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // Смотрим сколько филиалов в компании
         $user = $request->user();
@@ -98,9 +100,9 @@ class EmployeeController extends Controller
             });
         })
 
-        ->orderBy('moderation', 'desc')
-        ->orderBy('dismissal_date', 'asc')
-        ->orderBy('sort', 'asc')
+//        ->orderBy('moderation', 'desc')
+        ->oldest('dismissal_date')
+        ->oldest('sort')
         ->paginate(30);
 //        dd($employees);
 
@@ -108,7 +110,7 @@ class EmployeeController extends Controller
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter = setFilter($this->entity_alias, $request, [
+        $filter = setFilter($this->entityAlias, $request, [
             'position',             // Должность
             'department',           // Отдел
             'date_interval',        // Дата
@@ -120,104 +122,81 @@ class EmployeeController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entityAlias);
 
         return view('system.pages.hr.employees.index', compact('employees', 'pageInfo', 'filter'));
     }
 
     /**
-     * Показать форму для создания нового ресурса
+     * Show the form for creating a new resource.
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function create()
     {
-        //Подключение политики
-        $this->authorize(getmethod('create'), Employee::class);
-        $this->authorize(getmethod('create'), User::class);
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), Employee::class);
+        $this->authorize(getmethod(__FUNCTION__), User::class);
 
         // Создаем новый экземляр дилера
         $employee = Employee::make();
-
-        // Создаем новый экземляр пользователя
-        $user = new User;
+        $user = User::make();
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
-        $list_empty_staff = Staffer::moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer)
-        ->whereNull('user_id')
-        ->get();
-
-        $list_user_employees = Employee::with('user')
+        $list_user_employees = Employee::with([
+            'user'
+        ])
+            ->where('user_id', $employee->user_id)
         ->moderatorLimit($answer)
-        ->where('user_id', $employee->user_id)
         ->get();
 
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entityAlias);
 
-        $auth_user = \Auth::user();
-
-        return view('system.pages.hr.employees.create', compact('user', 'employee', 'pageInfo', 'list_empty_staff', 'list_user_employees', 'auth_user'));
+        return view('system.pages.hr.employees.create', compact('user', 'employee', 'pageInfo', 'list_user_employees'));
     }
 
     /**
-     * Сохранение только что созданного ресурса в хранилище
+     * Store a newly created resource in storage.
      *
      * @param UserStoreRequest $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function store(EmployeeRequest $request, UserStoreRequest $request_user)
+//    public function store(EmployeeRequest $request, UserStoreRequest $request_user)
+    public function store(Request $request)
     {
-
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), Employee::class);
+        $this->authorize(getmethod(__FUNCTION__), User::class);
 
-        logs('hr')->info('Будем создавать сотрудника: все необходимые права есть');
+        // TODO - 16.09.20 - Обсудить, коммент к карточке
+        $res = $this->checkUserByPhone($this->entityAlias);
+        if ($res) {
+            return back()
+                ->withErrors(['msg' => 'Пользователь уже существует']);
+        }
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        logs('users')->info('============ НАЧАЛО СОЗДАНИЯ СОТРУДНИКА ===============');
 
-        // Получаем данные для авторизованного пользователя
-        $user_auth = auth()->user();
-
-        // Скрываем бога
-        $user_id = hideGod($user_auth);
+        $user = $this->storeUser();
 
         $staff = Staffer::with([
             'position',
             'department'
-        ])->findOrFail($request_user->staffer_id);
+        ])
+            ->find($request->staffer_id);
 
-        logs('hr')
-            ->info("Занимаем должность");
-
-        // Проверяем: свободна ли ставка  =====================================================
-        logs('hr')->info('Проверяем: свободна ли ставка?');
-
-        if ($staff->user_id != null) {
+        if ($staff->user_id) {
             abort(403, "Ставка не свободна!");
-        } else {
-            logs('hr')->info('Ставка свободна!');
-        };
+        }
 
-        // Отдаем работу по созданию нового юзера трейту, с указанием id сайта для привязки
-        $user = $this->createUser($request_user, 1);
-
-        logs('hr')
-            ->info("Cоздаем сотрудника");
-
-        $data = $request->validated();
+        $data = $request->input();
         $data['user_id'] = $user->id;
         $employee = Employee::create($data);
-
-
 
         $staff->update([
             'user_id' => $user->id
@@ -225,21 +204,13 @@ class EmployeeController extends Controller
 
         $this->employment($user, $employee, $staff);
 
+        logs('users')->info('============ КОНЕЦ СОЗДАНИЯ СОТРУДНИКА ===============');
+
         return redirect()->route('employees.index');
     }
 
     /**
-     * Отображение указанного ресурса
-     *
-     * @param $id
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Показать форму для редактирования указанного ресурса
+     * Show the form for editing the specified resource.
      *
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -249,7 +220,7 @@ class EmployeeController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias,  $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias,  $this->entityDependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $employee = Employee::with([
@@ -261,15 +232,11 @@ class EmployeeController extends Controller
         ->authors($answer)
         ->systemItem($answer)
         ->moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         $list_user_employees = Employee::with('user')
         ->moderatorLimit($answer)
         ->where('user_id', $employee->user_id)
-        ->get();
-
-        $list_empty_staff = Staffer::moderatorLimit($answer)
-        ->whereNull('user_id')
         ->get();
 
         // Подключение политики
@@ -277,13 +244,13 @@ class EmployeeController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $employee->user);
 
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entityAlias);
 
-        return view('system.pages.hr.employees.edit', compact('employee', 'pageInfo', 'list_user_employees', 'list_empty_staff'));
+        return view('system.pages.hr.employees.edit', compact('employee', 'pageInfo', 'list_user_employees'));
     }
 
     /**
-     * Обновление указанного ресурса в хранилище
+     * Update the specified resource in storage.
      *
      * @param UserUpdateRequest $request
      * @param $id
@@ -294,7 +261,7 @@ class EmployeeController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias,  $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias,  $this->entityDependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $employee = Employee::moderatorLimit($answer)
@@ -302,7 +269,7 @@ class EmployeeController extends Controller
         ->authors($answer)
         ->systemItem($answer)
         ->with('user', 'staffer')
-        ->findOrFail($id);
+        ->find($id);
 
         $user = $employee->user;
         $staffer = $employee->staffer;
@@ -318,7 +285,7 @@ class EmployeeController extends Controller
         $user = $this->updateUser($request, $user);
 
 
-        $photo_id = $this->getPhotoId($request, $user);
+        $photo_id = $this->getPhotoId($user);
         $user->photo_id = $photo_id;
         $user->save();
 
@@ -351,7 +318,7 @@ class EmployeeController extends Controller
                 // Проверяем: свободна ли ставка  =====================================================
                 logs('hr')->info('Проверяем: свободна ли ставка?');
 
-                $staff = Staffer::with('position.roles')->findOrFail($request->staff_id);
+                $staff = Staffer::with('position.roles')->find($request->staff_id);
                 // dd($staff);
 
                 if($staff->user_id != null){
@@ -407,7 +374,7 @@ class EmployeeController extends Controller
     }
 
     /**
-     * Удаление указанного ресурса из хранилища
+     * Remove the specified resource from storage.
      *
      * @param $id
      */
@@ -426,14 +393,14 @@ class EmployeeController extends Controller
     public function dismissal(Request $request)
     {
         // Подключение политики
-        $this->authorize(getmethod('index'), $this->class);
+        $this->authorize(getmethod('index'), Employee::class);
 
         // Включение контроля активного фильтра
-        $filter_url = autoFilter($request, $this->entity_alias);
+        $filter_url = autoFilter($request, $this->entityAlias);
         if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('index'));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('index'));
 
         // Смотрим сколько филиалов в компании
         $user = $request->user();
@@ -499,7 +466,7 @@ class EmployeeController extends Controller
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter = setFilter($this->entity_alias, $request, [
+        $filter = setFilter($this->entityAlias, $request, [
             'position',             // Должность
             'department',           // Отдел
             'date_interval',        // Дата
@@ -512,7 +479,7 @@ class EmployeeController extends Controller
         // -----------------------------------------------------------
 
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entityAlias);
 
         $pageInfo->title = 'Уволенные сотрудники';
         $pageInfo->name = 'Уволенные сотрудники';
@@ -524,10 +491,10 @@ class EmployeeController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias,  $this->entity_dependence, 'update');
+        $answer = operator_right($this->entityAlias,  $this->entityDependence, 'update');
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $employee = Employee::with('user', 'staffer')->moderatorLimit($answer)->findOrFail($request->employee_id);
+        $employee = Employee::with('user', 'staffer')->moderatorLimit($answer)->find($request->employee_id);
 
         // Подключение политики
         $this->authorize(getmethod('update'), $employee);
@@ -539,10 +506,10 @@ class EmployeeController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias,  $this->entity_dependence, 'update');
+        $answer = operator_right($this->entityAlias,  $this->entityDependence, 'update');
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $employee = Employee::with('user', 'staffer')->moderatorLimit($answer)->findOrFail($request->employee_id);
+        $employee = Employee::with('user', 'staffer')->moderatorLimit($answer)->find($request->employee_id);
 
         $this->dismiss($employee, $request->dismissal_date, $request->dismissal_description);
 
@@ -560,7 +527,7 @@ class EmployeeController extends Controller
         $answer_staff = operator_right('staff',  true, 'index');
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::moderatorLimit($answer_user)->findOrFail($request->user_id);
+        $user = User::moderatorLimit($answer_user)->find($request->user_id);
 
         $list_empty_staff = Staffer::moderatorLimit($answer_staff)->whereNull('user_id')->get();
 
@@ -578,8 +545,8 @@ class EmployeeController extends Controller
         // $answer_staff = operator_right('staff',  true, 'index');
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::moderatorLimit($answer_user)->findOrFail($request->user_id);
-        $staff = Staffer::with('position', 'department')->findOrFail($request->staff_id);
+        $user = User::moderatorLimit($answer_user)->find($request->user_id);
+        $staff = Staffer::with('position', 'department')->find($request->staff_id);
 
         $new_employee = $this->employment($user, $request->employment_date, $staff);
         logs('hr')->info('Устроили нового сотрудника');
@@ -620,7 +587,7 @@ class EmployeeController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias,  $this->entity_dependence, 'update');
+        $answer = operator_right($this->entityAlias,  $this->entityDependence, 'update');
 
         $staff = $employee->staffer;
         $user = $employee->user;

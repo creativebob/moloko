@@ -46,22 +46,22 @@
 
                         <div class="grid-x grid-padding-x">
                             <div class="small-6 cell">
-
-                                <pickmeup-component
-                                    name="begin_date"
-                                    title="Начало публикации"
-                                    value="{{ $promotion->begin_date }}"
-                                    :required="true"
-                                ></pickmeup-component>
-
+                                <label>Начало публикации
+                                    <pickmeup-component
+                                        name="begin_date"
+                                        value="{{ $promotion->begin_date }}"
+                                        :required="true"
+                                    ></pickmeup-component>
+                                </label>
                             </div>
                             <div class="small-6 cell">
-                                <pickmeup-component
-                                    name="end_date"
-                                    title="Окончание публикации"
-                                    value="{{ $promotion->end_date }}"
-                                    :required="true"
-                                ></pickmeup-component>
+                                <label>Окончание публикации
+                                    <pickmeup-component
+                                        name="end_date"
+                                        value="{{ $promotion->end_date }}"
+                                        :required="true"
+                                    ></pickmeup-component>
+                                </label>
                             </div>
                         </div>
 

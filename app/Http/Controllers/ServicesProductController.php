@@ -176,7 +176,7 @@ class ServicesProductController extends Controller
 
         $services_product = ServicesProduct::with(['services_category'])
         ->moderatorLimit($answer_services_products)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $services_product);
@@ -212,7 +212,7 @@ class ServicesProductController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $services_product = ServicesProduct::moderatorLimit($answer)->findOrFail($id);
+        $services_product = ServicesProduct::moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $services_product);
@@ -271,7 +271,7 @@ class ServicesProductController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $services_product = ServicesProduct::with('services')->moderatorLimit($answer)->findOrFail($id);
+        $services_product = ServicesProduct::with('services')->moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $services_product);
@@ -396,7 +396,7 @@ class ServicesProductController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('index'));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $product = Product::with('album.photos')->moderatorLimit($answer)->findOrFail($id);
+        $product = Product::with('album.photos')->moderatorLimit($answer)->find($id);
         // dd($product);
 
         // Подключение политики
@@ -414,7 +414,7 @@ class ServicesProductController extends Controller
     public function get_product_inputs(Request $request)
     {
 
-        $product = Product::with('metrics.property', 'compositions')->findOrFail(1);
+        $product = Product::with('metrics.property', 'compositions')->find(1);
 
         // $request->product_id
 
@@ -476,7 +476,7 @@ class ServicesProductController extends Controller
 
         $id = $request->id;
 
-        $services_category = ServicesCategory::withCount('services_products')->with('services_products')->findOrFail($id);
+        $services_category = ServicesCategory::withCount('services_products')->with('services_products')->find($id);
 
 
         if ($services_category->services_products_count > 0) {

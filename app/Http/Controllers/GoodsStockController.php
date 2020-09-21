@@ -20,7 +20,7 @@ class GoodsStockController extends Controller
     }
 
     /**
-     * Отображение списка ресурсов.
+     * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
@@ -59,7 +59,7 @@ class GoodsStockController extends Controller
     }
 
     /**
-     * Показать форму для создания нового ресурса.
+     * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
@@ -80,7 +80,7 @@ class GoodsStockController extends Controller
     }
 
     /**
-     * Отображение указанного ресурса.
+     * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -91,7 +91,7 @@ class GoodsStockController extends Controller
     }
 
     /**
-     * Показать форму для редактирования указанного ресурса.
+     * Show the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -102,7 +102,7 @@ class GoodsStockController extends Controller
     }
 
     /**
-     * Обновление указанного ресурса в хранилище.
+     * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -114,7 +114,7 @@ class GoodsStockController extends Controller
     }
 
     /**
-     * Удаление указанного ресурса из хранилища.
+     * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response

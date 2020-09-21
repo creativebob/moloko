@@ -23,12 +23,12 @@
 
 @endsection
 
-@section('scripts')
+@push('scripts')
 @include('includes.scripts.inputs-mask')
 @include('albums.scripts')
 {{-- Проверка поля на существование --}}
 @include('includes.scripts.check', ['entity' => 'albums'])
-@endsection
+@endpush
 
 
 

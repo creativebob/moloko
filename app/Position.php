@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\System\Traits\Quietlable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
@@ -28,6 +29,7 @@ class Position extends Model
 
     // Включаем кеш
     use Cachable;
+    use Quietlable;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
@@ -48,6 +50,8 @@ class Position extends Model
         'name',
         'description',
 
+        'direction',
+
         'page_id',
         'sector_id',
         'direct_status',
@@ -55,9 +59,6 @@ class Position extends Model
         'display',
         'system',
         'moderation',
-
-        // TODO - 13.04.20 - Удалить, разлочено для обновы
-        'company_id'
     ];
 
     // Получаем районы и города области.

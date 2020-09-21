@@ -42,9 +42,7 @@ class SitePolicy
 
     public function delete(User $user, Model $model)
     {
-        if ($model->system == 1) {
-            return false;
-        }
+
 
         if ($model->pages->count() > 0) {
             return false;

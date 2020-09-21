@@ -157,7 +157,7 @@ class StageController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $stage = Stage::with('rules.field.entity')->moderatorLimit($answer)->findOrFail($id);
+        $stage = Stage::with('rules.field.entity')->moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $stage);
@@ -188,7 +188,7 @@ class StageController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $stage = Stage::moderatorLimit($answer)->findOrFail($id);
+        $stage = Stage::moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $stage);
@@ -230,7 +230,7 @@ class StageController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $stage = Stage::moderatorLimit($answer)->findOrFail($id);
+        $stage = Stage::moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $stage);

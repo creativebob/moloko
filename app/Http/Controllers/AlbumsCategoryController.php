@@ -120,7 +120,7 @@ class AlbumsCategoryController extends Controller
     public function edit($id)
     {
 
-        $albums_category = AlbumsCategory::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))->findOrFail($id);
+        $albums_category = AlbumsCategory::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $albums_category);
@@ -140,13 +140,13 @@ class AlbumsCategoryController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $albums_category = AlbumsCategory::moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $albums_category);
 
         $data = $request->input();
-        $data['photo_id'] = $this->getPhotoId($request, $albums_category);
+        $data['photo_id'] = $this->getPhotoId($albums_category);
         $result = $albums_category->update($data);
 
         if ($result) {
@@ -172,7 +172,7 @@ class AlbumsCategoryController extends Controller
             'albums'
         ])
             ->moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $albums_category);

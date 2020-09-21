@@ -17,7 +17,7 @@
                     :id="'inupt-' + name + '-' + item.id + '-value'"
                     classes="compact"
                     :required="true"
-                    @change="changeValue"
+                    @input="changeValue"
                     ref="valueComponent"
                 ></digit-component>
                 <label :for="'inupt-' + name + '-' + item.id + '-value'" class="text-to-placeholder">{{ unitForLabel }}</label>
@@ -34,7 +34,7 @@
                     :id="'inupt-' + name + '-' + item.id + '-useful'"
                     classes="compact"
                     :required="true"
-                    @change="changeUseful"
+                    @input="changeUseful"
                     ref="usefulComponent"
                 ></digit-component>
                 <label :for="'inupt-' + name + '-' + item.id + '-useful'" class="text-to-placeholder">{{ unitForLabel }}</label>

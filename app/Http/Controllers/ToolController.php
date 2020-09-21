@@ -268,7 +268,7 @@ class ToolController extends Controller
         Log::channel('operations')
         ->info('========================================== НАЧИНАЕМ ЗАПИСЬ ИНСТРУМЕНТА ==============================================');
 
-        $tools_category = ToolsCategory::findOrFail($request->category_id);
+        $tools_category = ToolsCategory::find($request->category_id);
         // dd($goods_category->load('groups'));
         $article = $this->storeArticle($request, $tools_category);
 
@@ -326,7 +326,7 @@ class ToolController extends Controller
 
         // Главный запрос
         $tool = Tool::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
         // dd($tool);
 
         // Подключение политики
@@ -362,7 +362,7 @@ class ToolController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $tool = Tool::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
         // dd($tool);
 
         // Подключение политики
@@ -418,7 +418,7 @@ class ToolController extends Controller
             'compositions.goods',
         ])
         ->moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod('destroy'), $tool);

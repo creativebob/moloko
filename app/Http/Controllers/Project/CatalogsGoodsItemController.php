@@ -12,7 +12,7 @@ class CatalogsGoodsItemController extends Controller
     use Commonable;
 
     /**
-     * Отображение списка ресурсов.
+     * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
@@ -22,7 +22,7 @@ class CatalogsGoodsItemController extends Controller
     }
 
     /**
-     * Отображение указанного ресурса.
+     * Display the specified resource.
      *
      * @param  string  $url
      * @return \Illuminate\Http\Response

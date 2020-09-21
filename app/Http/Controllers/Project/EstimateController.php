@@ -14,7 +14,7 @@ class EstimateController extends Controller
     use Commonable;
 
     /**
-     * Отображение списка ресурсов.
+     * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
@@ -52,7 +52,7 @@ class EstimateController extends Controller
     }
 
     /**
-     * Показать форму для создания нового ресурса.
+     * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
@@ -73,7 +73,7 @@ class EstimateController extends Controller
     }
 
     /**
-     * Отображение указанного ресурса.
+     * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -85,7 +85,7 @@ class EstimateController extends Controller
 		    ->whereHas('lead', function($q){
 			    $q->where('user_id', Auth::user()->id);
 		    })
-		    ->findOrFail($id);
+		    ->find($id);
 
         $site = $this->site;
 
@@ -97,7 +97,7 @@ class EstimateController extends Controller
     }
 
     /**
-     * Показать форму для редактирования указанного ресурса.
+     * Show the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -108,7 +108,7 @@ class EstimateController extends Controller
     }
 
     /**
-     * Обновление указанного ресурса в хранилище.
+     * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -120,7 +120,7 @@ class EstimateController extends Controller
     }
 
     /**
-     * Удаление указанного ресурса из хранилища.
+     * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response

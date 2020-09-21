@@ -55,7 +55,7 @@
 @include('includes.modals.modal-delete-ajax')
 @endsection
 
-@section('scripts')
+@push('scripts')
 
 {{-- Скрипты --}}
 @include('includes.menu_views.scripts')
@@ -80,4 +80,4 @@
 
 {{-- Скрипт чекбоксов --}}
 @include('includes.scripts.checkbox_control_menu')
-@endsection
+@endpush

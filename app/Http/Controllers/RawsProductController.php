@@ -144,7 +144,7 @@ class RawsProductController extends Controller
     {
 
        $raws_product = RawsProduct::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $raws_product);
@@ -159,7 +159,7 @@ class RawsProductController extends Controller
     {
 
        $raws_product = RawsProduct::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
-       ->findOrFail($id);
+       ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $raws_product);
@@ -190,7 +190,7 @@ class RawsProductController extends Controller
 
         $raws_product = RawsProduct::withCount('raws_articles')
         ->moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $raws_product);
@@ -263,7 +263,7 @@ class RawsProductController extends Controller
 
         $id = $request->id;
 
-        $goods_category = RawsCategory::withCount('products')->with('products')->findOrFail($id);
+        $goods_category = RawsCategory::withCount('products')->with('products')->find($id);
 
         if ($goods_category->goods_products_count > 0) {
 

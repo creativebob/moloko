@@ -55,9 +55,7 @@ class ArticlesGroupPolicy
             return false;
         }
 
-        if ($model->system == 1) {
-            return false;
-        }
+
     }
 
     public function moderator(User $user, Model $model)

@@ -44,7 +44,7 @@ class NavigationController extends Controller
         ->paginate(30);
         // dd($navigations);
 
-        $site = Site::findOrFail($site_id);
+        $site = Site::find($site_id);
 
         return view('navigations.index', [
             'navigations' => $navigations,
@@ -61,7 +61,7 @@ class NavigationController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        $site = Site::findOrFail($site_id);
+        $site = Site::find($site_id);
 
         return view('navigations.create', [
             'navigation' => new $this->class,
@@ -134,12 +134,12 @@ class NavigationController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $navigation = Navigation::moderatorLimit($answer)->findOrFail($id);
+        $navigation = Navigation::moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $navigation);
 
-        $site = Site::findOrFail($site_id);
+        $site = Site::find($site_id);
 
         return view('navigations.edit', [
             'navigation' => $navigation,
@@ -156,7 +156,7 @@ class NavigationController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $navigation = Navigation::moderatorLimit($answer)->findOrFail($id);
+        $navigation = Navigation::moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $navigation);
@@ -197,7 +197,7 @@ class NavigationController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
         $navigation = Navigation::with('menus')
         ->moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $navigation);

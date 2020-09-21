@@ -112,7 +112,7 @@
 
 @endsection
 
-@section('scripts')
+@push('scripts')
 {{-- Скрипт сортировки и перетаскивания для таблицы --}}
 @include('includes.scripts.tablesorter-script')
 @include('includes.scripts.sortable-table-script')
@@ -130,4 +130,4 @@
 @include('includes.scripts.modal-delete-script')
 @include('includes.scripts.delete-ajax-script')
 
-@endsection
+@endpush

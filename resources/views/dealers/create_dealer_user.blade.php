@@ -21,7 +21,7 @@
 @section('content')
 
   {{ Form::open(['route' => 'dealers.storeUser', 'data-abide', 'novalidate', 'class' => 'form-check-city', 'files' => 'true']) }}
-    @include('users.form', ['submitButtonText' => 'Добавить дилера', 'param' => ''])
+    @include('system.pages.marketings.users.form', ['submitButtonText' => 'Добавить дилера', 'param' => ''])
   {{ Form::close() }}
 
 @endsection
@@ -34,14 +34,14 @@
     @include('includes.modals.modal-delete-ajax')
 @endsection
 
-@section('scripts')
-    @include('users.scripts')
+@push('scripts')
+    @include('system.pages.marketings.users.scripts')
     @include('includes.scripts.inputs-mask')
     @include('includes.scripts.pickmeup-script')
     @include('includes.scripts.delete-from-page-script')
     @include('includes.scripts.upload-file')
     @include('includes.scripts.extra-phone')
-@endsection
+@endpush
 
 
 

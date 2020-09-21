@@ -60,8 +60,8 @@ class MenuController extends Controller
             );
         }
 
-        $site = Site::findOrFail($site_id);
-        $navigation = Navigation::findOrFail($navigation_id);
+        $site = Site::find($site_id);
+        $navigation = Navigation::find($navigation_id);
 
         // Отдаем на шаблон
         return view('menus.index', [
@@ -130,7 +130,7 @@ class MenuController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $menu = Menu::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $menu);
@@ -153,13 +153,13 @@ class MenuController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $menu = Menu::moderatorLimit($answer)->findOrFail($id);
+        $menu = Menu::moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $menu);
 
         $data = $request->input();
-        $data['photo_id'] = $this->getPhotoId($request, $menu);
+        $data['photo_id'] = $this->getPhotoId($menu);
         $result = $menu->update($data);
 
         if ($result) {
@@ -185,7 +185,7 @@ class MenuController extends Controller
             'childs'
         ])
         ->moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $menu);

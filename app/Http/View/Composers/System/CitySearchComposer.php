@@ -10,20 +10,6 @@ class CitySearchComposer
 {
 	public function compose(View $view)
 	{
-//        $cities = City::with([
-//            'area:id,name',
-//            'region:id,name',
-//            'country:id,name'
-//        ])
-//            ->get([
-//                'id',
-//                'name',
-//                'area_id',
-//                'region_id',
-//                'country_id'
-//            ]);
-//         dd($cities);
-
         $item = $view->item;
         $item->load([
             'location' => function ($q) {
@@ -33,21 +19,18 @@ class CitySearchComposer
         $location = $item->location;
 
         if (is_null($location)) {
-            if (\Auth::user()->location) {
-                $city = \Auth::user()->location->city;
+            if (auth()->user()->location) {
+                $city = auth()->user()->location->city;
             } else {
                 $city = collect((object) [
-                    'id' => null
+                    'id' => null,
+                    'name' => null
                 ]);
             }
         } else {
             $city = $location->city;
         }
 //        dd($city);
-
-
-//        $required = is_null($view->required) ? false : true;
-//        dd($required);
 
         return $view->with(compact('city'));
     }

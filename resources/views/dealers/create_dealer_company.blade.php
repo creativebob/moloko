@@ -21,12 +21,12 @@
 @section('content')
 
   {{ Form::open(['route' => 'dealers.storeCompany', 'data-abide', 'novalidate', 'class' => 'form-check-city', 'files' => 'true']) }}
-    @include('companies.form', ['submitButtonText' => 'Добавить дилера', 'param' => ''])
+    @include('system.pages.companies.form', ['submitButtonText' => 'Добавить дилера', 'param' => ''])
   {{ Form::close() }}
 
 @endsection
 
-@section('scripts')
+@push('scripts')
   @include('includes.scripts.inputs-mask')
 
   <script type="application/javascript">
@@ -53,7 +53,7 @@
     };
   });
 </script>
-@endsection
+  @endpush
 
 
 

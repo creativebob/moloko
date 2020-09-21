@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Traits;
 
-use App\Http\Controllers\System\Traits\Timestampable;
 use App\User;
 use App\Lead;
 use App\Phone;
@@ -20,7 +19,7 @@ use Carbon\Carbon;
 trait LeadControllerTrait
 {
 
-    use Timestampable;
+
 
 	public function createLead($request){
 

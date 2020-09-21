@@ -19,7 +19,7 @@ class CompositionController extends Controller
     }
 
     /**
-     * Показать форму для создания нового ресурса.
+     * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
@@ -40,7 +40,7 @@ class CompositionController extends Controller
     }
 
     /**
-     * Отображение указанного ресурса.
+     * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -51,7 +51,7 @@ class CompositionController extends Controller
     }
 
     /**
-     * Показать форму для редактирования указанного ресурса.
+     * Show the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -62,7 +62,7 @@ class CompositionController extends Controller
     }
 
     /**
-     * Обновление указанного ресурса в хранилище.
+     * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -74,7 +74,7 @@ class CompositionController extends Controller
     }
 
     /**
-     * Удаление указанного ресурса из хранилища.
+     * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -99,7 +99,7 @@ class CompositionController extends Controller
     {
 
         $composition = Raw::with(['article.group.unit', 'category'])
-        ->findOrFail($request->id);
+        ->find($request->id);
 
         return view('goods_categories.compositions.composition_tr', compact('composition'));
     }
@@ -108,7 +108,7 @@ class CompositionController extends Controller
     // public function ajax_delete_relation(Request $request)
     // {
 
-    //     $goods_category = GoodsCategory::findOrFail($request->goods_category_id);
+    //     $goods_category = GoodsCategory::find($request->goods_category_id);
     //     $res = $goods_category->compositions()->detach($request->id);
 
     //     return response()->json(isset($res) ? true : 'Не удалось удалить состав!');

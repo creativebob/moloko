@@ -329,7 +329,7 @@ class ContainerController extends Controller
         Log::channel('operations')
             ->info('========================================== НАЧИНАЕМ ЗАПИСЬ УПАКОВКИ ==============================================');
 
-        $containers_category = ContainersCategory::findOrFail($request->category_id);
+        $containers_category = ContainersCategory::find($request->category_id);
         // dd($goods_category->load('groups'));
         $article = $this->storeArticle($request, $containers_category);
 
@@ -386,7 +386,7 @@ class ContainerController extends Controller
 
         // Главный запрос
         $container = Container::moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
         // dd($container);
 
         // Подключение политики
@@ -438,7 +438,7 @@ class ContainerController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $container = Container::moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
         // dd($container);
 
         // Подключение политики
@@ -529,7 +529,7 @@ class ContainerController extends Controller
             'compositions.goods',
         ])
             ->moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod('destroy'), $container);
@@ -554,7 +554,7 @@ class ContainerController extends Controller
 
     public function replicate(Request $request, $id)
     {
-        $container = Container::findOrFail($id);
+        $container = Container::find($id);
 
         $container->load('article');
         $article = $container->article;
@@ -608,7 +608,7 @@ class ContainerController extends Controller
             'article.group.unit',
             'category'
         ])
-            ->findOrFail($request->id);
+            ->find($request->id);
 
         return view('products.articles_categories.goods_categories.containers.container_tr', compact('container'));
     }

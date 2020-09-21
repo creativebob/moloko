@@ -52,12 +52,11 @@ class Kernel extends ConsoleKernel
             ->has('settings')
             ->get();
 
-        if ($companies->isNotEmpty()) {
-            foreach ($companies as $company) {
-                foreach ($company->settings as $setting) {
-                    switch ($setting->alias) {
+        foreach ($companies as $company) {
+            foreach ($company->settings as $setting) {
+                switch ($setting->alias) {
 
-                        // Показатели клиентской базы
+                    // Показатели клиентской базы
 //                        case 'clients_indicators':
 //                            // Ежедневные показатели клиентской базы
 //                            $schedule->command(ClientsIndicatorsDay::class, $companyId = $company->id)
@@ -68,16 +67,15 @@ class Kernel extends ConsoleKernel
 //                                ->monthlyOn(1, '04:00');
 //                            break;
 
-                        // Скидки
-                        case 'discounts':
-                            // Перерасчет скидок
-                            $schedule->command(DiscountsRecalculateCommand::class, [
-                                    $company->id
-                                ])
-                                ->everyMinute();
-                            break;
+                    // Скидки
+                    case 'discounts':
+                        // Перерасчет скидок
+                        $schedule->command(DiscountsRecalculateCommand::class, [
+                                $company->id
+                            ])
+                            ->everyMinute();
+                        break;
 
-                    }
                 }
             }
         }
@@ -93,13 +91,6 @@ class Kernel extends ConsoleKernel
             $schedule->command(ClientsIndicatorsCommand::class)
                 ->monthlyOn(1, '04:00');
         }
-//
-//        // Скидки
-//        if (config('app.discounts')) {
-//            // Перерасчет скидок
-//            $schedule->command(DiscountsCommand::class)
-//                ->everyMinute();
-//        }
 
         if (config('app.roll_house_parser')) {
             // Парсер лидов для РХ

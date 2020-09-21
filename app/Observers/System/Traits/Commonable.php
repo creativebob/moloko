@@ -9,7 +9,7 @@ trait Commonable
     {
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         $answer = operator_right($item->getTable(), false, getmethod(__FUNCTION__));
-        if($answer['automoderate'] == false){
+        if ($answer['automoderate'] == false) {
             $item->moderation = true;
         }
 
@@ -27,15 +27,19 @@ trait Commonable
 
     public function update($item)
     {
-        $user = request()->user();
-        $item->editor_id = $this->getUserId($user);
+        $user = auth()->user();
+        if ($user) {
+            $item->editor_id = $this->getUserId($user);
+        } else {
+            $item->editor_id = 1;
+        }
 
         return $item;
     }
 
     public function destroy($item)
     {
-        $user = request()->user();
+        $user = auth()->user();
         $item->editor_id = $this->getUserId($user);
         $item->save();
 

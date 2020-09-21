@@ -283,7 +283,6 @@ trait PoliticTrait
             // abort(403, 'Удаление системных записей запрещено законом');
         };
 
-
         if(($method == 'update')&&($model->system == 1)&&($user_status != 1)){
             // abort(403, 'Удаление системных записей запрещено законом');
             return true;

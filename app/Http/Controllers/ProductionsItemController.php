@@ -17,7 +17,7 @@ class ProductionsItemController extends Controller
     }
 
     /**
-     * Отображение списка ресурсов.
+     * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
@@ -27,7 +27,7 @@ class ProductionsItemController extends Controller
     }
 
     /**
-     * Показать форму для создания нового ресурса.
+     * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
@@ -56,7 +56,7 @@ class ProductionsItemController extends Controller
     }
 
     /**
-     * Отображение указанного ресурса.
+     * Display the specified resource.
      *
      * @param  \App\ProductionsItem  $productionsItem
      * @return \Illuminate\Http\Response
@@ -67,7 +67,7 @@ class ProductionsItemController extends Controller
     }
 
     /**
-     * Показать форму для редактирования указанного ресурса.
+     * Show the form for editing the specified resource.
      *
      * @param  \App\ProductionsItem  $productionsItem
      * @return \Illuminate\Http\Response
@@ -78,7 +78,7 @@ class ProductionsItemController extends Controller
     }
 
     /**
-     * Обновление указанного ресурса в хранилище.
+     * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\ProductionsItem  $productionsItem
@@ -86,7 +86,7 @@ class ProductionsItemController extends Controller
      */
     public function update(ProductionsItemUpdateRequest $request, $id)
     {
-        $production_item = ProductionsItem::findOrFail($id);
+        $production_item = ProductionsItem::find($id);
 
         $data = $request->input();
         $production_item->update($data);
@@ -100,7 +100,7 @@ class ProductionsItemController extends Controller
     }
 
     /**
-     * Удаление указанного ресурса из хранилища.
+     * Remove the specified resource from storage.
      *
      * @param  \App\ProductionsItem  $productionsItem
      * @return \Illuminate\Http\Response

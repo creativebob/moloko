@@ -156,7 +156,7 @@ class VkusnyashkaParser
                     }
 
                     // Ищем или создаем клиента
-                    $client = $this->checkClientUser($lead->user_id);
+                    $client = $this->getClientUser($lead->user_id);
 
                     if (is_null($client->source_id)) {
                         $client->update([

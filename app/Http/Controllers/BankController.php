@@ -254,7 +254,7 @@ class BankController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $bank = Bank::moderatorLimit($answer)->findOrFail($id);
+        $bank = Bank::moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize('view', $bank);
@@ -274,7 +274,7 @@ class BankController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $bank = Bank::moderatorLimit($answer)->findOrFail($id);
+        $bank = Bank::moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $bank);
@@ -285,7 +285,7 @@ class BankController extends Controller
         $company_id = $bank->company->id;
 
         $company = Company::with('location.city', 'schedules.worktimes', 'sector', 'processes_types')
-        ->findOrFail($company_id);
+        ->find($company_id);
         // $this->authorize(getmethod(__FUNCTION__), $company);
 
 
@@ -391,7 +391,7 @@ class BankController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $bank = Bank::moderatorLimit($answer)->findOrFail($id);
+        $bank = Bank::moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $bank);
@@ -402,7 +402,7 @@ class BankController extends Controller
         $answer_company = operator_right('companies', false, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $company = Company::with('location', 'schedules.worktimes')->findOrFail($company_id);
+        $company = Company::with('location', 'schedules.worktimes')->find($company_id);
 
         // Скрываем бога
         $user_id = hideGod($user);
@@ -485,7 +485,7 @@ class BankController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $bank = Bank::moderatorLimit($answer)->findOrFail($id);
+        $bank = Bank::moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $bank);

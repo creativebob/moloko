@@ -160,7 +160,7 @@
 
 @endsection
 
-@section('scripts')
+@push('scripts')
 {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
 @include('includes.scripts.tablesorter-script')
 
@@ -192,4 +192,4 @@
         });
     });
 </script>
-@endsection
+@endpush

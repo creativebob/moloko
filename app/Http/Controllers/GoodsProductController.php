@@ -156,7 +156,7 @@ class GoodsProductController extends Controller
     {
 
         $goods_product = GoodsProduct::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $goods_product);
@@ -171,7 +171,7 @@ class GoodsProductController extends Controller
     {
 
         $goods_product = GoodsProduct::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $goods_product);
@@ -206,7 +206,7 @@ class GoodsProductController extends Controller
 
         $goods_product = GoodsProduct::with('articles')
         ->moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $goods_product);
@@ -326,7 +326,7 @@ class GoodsProductController extends Controller
 
         $id = $request->id;
 
-        $goods_category = GoodsCategory::withCount('products')->with('products')->findOrFail($id);
+        $goods_category = GoodsCategory::withCount('products')->with('products')->find($id);
 
         if ($goods_category->goods_products_count > 0) {
 

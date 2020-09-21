@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Client;
 use App\Discount;
 use App\Estimate;
+use App\Http\Controllers\System\Traits\Locationable;
+use App\Http\Controllers\System\Traits\Phonable;
+use App\Http\Controllers\System\Traits\Timestampable;
 use App\Http\Controllers\Traits\Offable;
 use App\User;
 use App\Lead;
@@ -29,6 +33,9 @@ class LeadController extends Controller
     use UserControllerTrait;
     use LeadControllerTrait;
     use Offable;
+    use Phonable;
+    use Locationable;
+    use Timestampable;
 
     // Сущность над которой производит операции контроллер
     protected $entity_name = 'leads';
@@ -198,7 +205,11 @@ class LeadController extends Controller
 //
 //        $discountsIds = $discounts->pluck('id');
 
-        $lead->load('estimate');
+        $lead->load([
+            'estimate',
+            'main_phones',
+            'location'
+        ]);
         $estimate = $lead->estimate;
 
 //        $estimate->discounts()->attach($discountsIds);
@@ -283,7 +294,7 @@ class LeadController extends Controller
         // ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
         ->moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 //        dd($lead);
 
         // Подключение политики
@@ -376,7 +387,7 @@ class LeadController extends Controller
         ->filials($answer)
         ->systemItem($answer)
         ->moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $lead);
@@ -393,6 +404,56 @@ class LeadController extends Controller
         }
 
         return redirect('/admin/leads');
+    }
+
+    /**
+     * Временный метод обновления лида
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function axiosUpdate(Request $request, $id)
+    {
+        // TODO - 21.09.20 - Временный метод для axios обновления лида, уйдет с рефактором контроллера лидов
+        $lead = Lead::find($id);
+
+        $data = $request->input();
+        $location = $this->getLocation();
+        $data['location_id'] = $location->id;
+        $res = $lead->update($data);
+
+        if ($request->has('main_phone')) {
+            if (cleanPhone($request->main_phone) != $lead->main_phone) {
+               $this->savePhones($lead);
+            }
+        }
+
+        if ($lead->name && $lead->main_phone) {
+            $lead->update([
+                'draft' => false
+            ]);
+        }
+
+        if ($request->has('client_id')) {
+            $client = Client::find($request->client_id);
+
+            if (empty($client)) {
+                return response()->json(false);
+            }
+
+            if ($client->discount > 0) {
+                $lead->load('estimate.goods_items');
+
+                if ($lead->estimate->goods_items->isNotEmpty()) {
+
+                }
+
+            }
+
+        }
+
+        return response()->json($res);
     }
 
     public function leads_calls(Request $request)
@@ -609,7 +670,7 @@ class LeadController extends Controller
         // ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
         ->moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $lead);
@@ -654,7 +715,7 @@ class LeadController extends Controller
         $lead = Lead::with([
             'estimate.goods_items.goods.article',
         ])
-            ->findOrFail($id);
+            ->find($id);
 
         // dd($lead);
 
@@ -667,7 +728,7 @@ class LeadController extends Controller
     public function ajax_add_note(Request $request)
     {
 
-        $lead = Lead::findOrFail($request->id);
+        $lead = Lead::find($request->id);
 
         if ($lead) {
 
@@ -745,7 +806,7 @@ class LeadController extends Controller
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
 
-        $lead = Lead::findOrFail($request->id);
+        $lead = Lead::find($request->id);
 
         if ($user->gender == 1) {
             $phrase_sex = 'освободил';
@@ -766,7 +827,7 @@ class LeadController extends Controller
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
 
-        $user = User::with('staff.position.charges')->findOrFail($user->id);
+        $user = User::with('staff.position.charges')->find($user->id);
 
         foreach ($user->staff as $staffer) {
             // $staffer = $user->staff->first();
@@ -796,7 +857,7 @@ class LeadController extends Controller
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
-        $lead = Lead::findOrFail($request->id);
+        $lead = Lead::find($request->id);
 
         if ($lead->manager_id == 1) {
 
@@ -866,9 +927,9 @@ class LeadController extends Controller
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
-        $lead = Lead::findOrFail($request->lead_id);
+        $lead = Lead::find($request->lead_id);
 
-        $manager = User::findOrFail($request->appointed_id);
+        $manager = User::find($request->appointed_id);
         $lead->manager_id = $manager->id;
 
         // Если номер пуст и планируется назначение на сотрудника, а не бота - то генерируем номер!
@@ -998,12 +1059,12 @@ class LeadController extends Controller
         $lead_id = $request->lead_id;
         $new_lead_type_id = $request->lead_type_id;
 
-        $lead = Lead::findOrFail($lead_id);
+        $lead = Lead::find($lead_id);
         $lead_type_id = $lead->lead_type_id;
         $old_lead_type_name = $lead->lead_type->name;
 
         $manager_id = $lead->manager_id;
-        $manager = User::findOrFail($manager_id);
+        $manager = User::find($manager_id);
 
 
         if($new_lead_type_id !== $lead_type_id){
@@ -1025,7 +1086,7 @@ class LeadController extends Controller
             $lead->serial_number = $lead_number['serial'];
 
             $lead->save();
-            $lead = Lead::findOrFail($lead_id);
+            $lead = Lead::find($lead_id);
             $new_lead_type_name = $lead->lead_type->name;
 
             $note = add_note($lead, 'Сотрудник '. $user->first_name.' '.$user->second_name.' изменил тип обращения c "' . $old_lead_type_name . '" на "' . $new_lead_type_name . '", в связи с чем был изменен номер с '. $old_case_number . ' на ' . $lead_number['case']);

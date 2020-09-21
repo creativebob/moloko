@@ -30,7 +30,7 @@ class RawsCategoryController extends Controller
     use Photable;
 
     /**
-     * Отображение списка ресурсов
+     * Display a listing of the resource.
      *
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -92,7 +92,7 @@ class RawsCategoryController extends Controller
     }
 
     /**
-     * Показать форму для создания нового ресурса
+     * Show the form for creating a new resource.
      *
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -114,7 +114,7 @@ class RawsCategoryController extends Controller
     }
 
     /**
-     * Сохранение только что созданного ресурса в хранилище
+     * Store a newly created resource in storage.
      *
      * @param RawsCategoryStoreRequest $request
      * @return \Illuminate\Http\RedirectResponse
@@ -141,7 +141,7 @@ class RawsCategoryController extends Controller
     }
 
     /**
-     * Отображение указанного ресурса
+     * Display the specified resource.
      *
      * @param $id
      */
@@ -151,7 +151,7 @@ class RawsCategoryController extends Controller
     }
 
     /**
-     * Показать форму для редактирования указанного ресурса
+     * Show the form for editing the specified resource.
      *
      * @param Request $request
      * @param $id
@@ -175,7 +175,7 @@ class RawsCategoryController extends Controller
             },
         ])
         ->moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 //         dd($raws_category);
 
         // Подключение политики
@@ -204,7 +204,7 @@ class RawsCategoryController extends Controller
     }
 
     /**
-     * Обновление указанного ресурса в хранилище
+     * Update the specified resource in storage.
      *
      * @param RawsCategoryUpdateRequest $request
      * @param $id
@@ -218,13 +218,13 @@ class RawsCategoryController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $raws_category = RawsCategory::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $raws_category);
 
         $data = $request->input();
-        $data['photo_id'] = $this->getPhotoId($request, $raws_category);
+        $data['photo_id'] = $this->getPhotoId($raws_category);
         $result = $raws_category->update($data);
 
         if ($result) {
@@ -247,7 +247,7 @@ class RawsCategoryController extends Controller
     }
 
     /**
-     * Удаление указанного ресурса из хранилища
+     * Remove the specified resource from storage.
      *
      * @param Request $request
      * @param $id
@@ -266,7 +266,7 @@ class RawsCategoryController extends Controller
             'raws'
         ])
         ->moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $raws_category);

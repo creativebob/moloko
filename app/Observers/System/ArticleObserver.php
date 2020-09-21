@@ -54,12 +54,12 @@ class ArticleObserver
 
             // Ловим базовую единицу измерения
             if($request->has('unit_id')){
-                $unit = Unit::findOrFail($request->unit_id);
+                $unit = Unit::find($request->unit_id);
             }
 
             // Может прийти вес
             if($request->has('weight')){
-                $weight_unit = Unit::findOrFail($request->unit_weight_id);
+                $weight_unit = Unit::find($request->unit_weight_id);
 
                 // dd('Базовый: ' . $unit->ratio . 'Специфичный: ' . $weight_unit->ratio . 'Начальный вес: ' . $request->weight);
                 $weight = $request->weight * $weight_unit->ratio;
@@ -68,7 +68,7 @@ class ArticleObserver
 
             // Может прийти объем
             if($request->has('volume')){
-                $volume_unit = Unit::findOrFail($request->unit_volume_id);
+                $volume_unit = Unit::find($request->unit_volume_id);
                 $volume = $request->volume * $volume_unit->ratio;
                 $article->volume = $volume;
             };

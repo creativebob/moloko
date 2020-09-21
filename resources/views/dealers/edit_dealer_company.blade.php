@@ -21,7 +21,7 @@
 @section('content')
     {{ Form::model($dealer->client->clientable, ['url' => '/admin/dealers/update-company/'.$dealer->id, 'data-abide', 'novalidate', 'class' => 'form-check-city', 'files' => 'true']) }}
     {{ method_field('PATCH') }}
-        @include('companies.form', ['submitButtonText' => 'Редактировать', 'param'=>'', 'company'=>$dealer->client->clientable])
+        @include('system.pages.companies.form', ['submitButtonText' => 'Редактировать', 'param'=>'', 'company'=>$dealer->client->clientable])
     {{ Form::close() }}
 @endsection
 
@@ -31,11 +31,11 @@
     @include('includes.modals.modal-delete-ajax')
 @endsection
 
-@section('scripts')
+@push('scripts')
     @include('includes.scripts.inputs-mask')
     @include('includes.scripts.modal-delete-script')
     @include('includes.scripts.extra-phone')
     @include('includes.bank_accounts.bank-account-script', ['id' => $dealer->client->clientable->id])
-@endsection
+    @endpush
 
 

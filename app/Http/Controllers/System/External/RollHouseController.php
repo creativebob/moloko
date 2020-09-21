@@ -1135,10 +1135,10 @@ class RollHouseController extends Controller
 
         foreach($leads as $lead) {
 
-            $manager = Staffer::findOrFail(6);
+            $manager = Staffer::find(6);
 
             // Ищем или создаем клиента
-            $client = $this->checkClientUser($lead->user_id);
+            $client = $this->getClientUser($lead->user_id);
 
 
             if (is_null($client->source_id)) {

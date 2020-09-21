@@ -51,9 +51,7 @@ class OutcomesCategoryPolicy
     public function delete(User $user, Model $model)
     {
 
-        if ($model->system == 1) {
-            return false;
-        }
+
 
         if ($model->childs->count() > 0) {
             return false;

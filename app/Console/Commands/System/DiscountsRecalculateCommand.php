@@ -144,13 +144,13 @@ class DiscountsRecalculateCommand extends Command
             ]);
         }
 
-        if ($discounts->isNotEmpty()) {
+        if ($discounts->isNotEmpty() && count($pricesGoodsIds) > 0) {
             $discounts = Discount::find($discounts->pluck('id')->toArray());
             // Сообщение
             $message = "ИЗМЕНЕНИЯ НА СКИДКАХ\r\n\r\n";
             foreach ($discounts as $discount) {
                 $message .= "{$discount->name} ";
-                $message .= ($discount->mode == 1) ? "({$discount->percent}%)" : "({$discount->cyrrency} руб.)";
+                $message .= ($discount->mode == 1) ? "({$discount->percent}%)" : "({$discount->currency} руб.)";
                 $message .= ' ';
                 $message .= ($discount->is_actual == 1) ? ' - установлена' : ' - снята';
                 $message .= "\r\n";
@@ -159,7 +159,7 @@ class DiscountsRecalculateCommand extends Command
             $message .= "\r\n";
             $message .= "Затронуто позиций: " . count($pricesGoodsIds) .  " шт.";
 
-            // отправляем мессагу подписанным
+            // Отправляем мессагу подписанным
             Notifications::sendNotification(5, $message, $companyId);
 
         }

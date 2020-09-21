@@ -408,7 +408,7 @@ class GoodsController extends Controller
         Log::channel('operations')
         ->info('============================== НАЧИНАЕМ ЗАПИСЬ ТОВАРА ==============================');
 
-        $goods_category = GoodsCategory::findOrFail($request->category_id);
+        $goods_category = GoodsCategory::find($request->category_id);
         // dd($goods_category->load('groups'));
         $article = $this->storeArticle($request, $goods_category);
 
@@ -477,7 +477,7 @@ class GoodsController extends Controller
 
         // Главный запрос
         $cur_goods = Goods::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $cur_goods);
@@ -580,7 +580,7 @@ class GoodsController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $cur_goods = Goods::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
         // dd($cur_goods);
 
         // Подключение политики
@@ -659,7 +659,7 @@ class GoodsController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $cur_goods = Goods::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize('delete', $cur_goods);
@@ -696,7 +696,7 @@ class GoodsController extends Controller
 
     public function replicate(Request $request, $id)
     {
-        $cur_goods = Goods::findOrFail($id);
+        $cur_goods = Goods::find($id);
 
         $cur_goods->load('article');
         $article = $cur_goods->article;
@@ -796,7 +796,7 @@ class GoodsController extends Controller
             'article.unit',
             'category'
         ])
-            ->findOrFail($request->id);
+            ->find($request->id);
 
         return response()->json($cur_goods);
     }

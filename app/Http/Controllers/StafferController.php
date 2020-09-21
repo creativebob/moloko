@@ -27,7 +27,7 @@ class StafferController extends Controller
     }
 
     /**
-     * Отображение списка ресурсов
+     * Display a listing of the resource.
      *
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
@@ -94,7 +94,7 @@ class StafferController extends Controller
     }
 
     /**
-     * Показать форму для создания нового ресурса
+     * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -104,7 +104,7 @@ class StafferController extends Controller
     }
 
     /**
-     * Сохранение только что созданного ресурса в хранилище
+     * Store a newly created resource in storage.
      *
      * @param StafferRequest $request
      * @return \Illuminate\Http\RedirectResponse
@@ -132,7 +132,7 @@ class StafferController extends Controller
     }
 
     /**
-     * Отображение указанного ресурса
+     * Display the specified resource.
      *
      * @param $id
      */
@@ -142,7 +142,7 @@ class StafferController extends Controller
     }
 
     /**
-     * Показать форму для редактирования указанного ресурса
+     * Show the form for editing the specified resource.
      *
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -160,7 +160,7 @@ class StafferController extends Controller
             'employee'
         ])
         ->moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $staffer);
@@ -172,7 +172,7 @@ class StafferController extends Controller
     }
 
     /**
-     * Обновление указанного ресурса в хранилище
+     * Update the specified resource in storage.
      *
      * @param EmployeeRequest $request
      * @param $id
@@ -202,7 +202,7 @@ class StafferController extends Controller
             'employee'
         ])
             ->moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $staffer);
@@ -246,7 +246,7 @@ class StafferController extends Controller
                 ];
             }
 
-            $user = User::findOrFail($request->user_id);
+            $user = User::find($request->user_id);
 
             $user->roles()->attach($roles);
 
@@ -276,7 +276,7 @@ class StafferController extends Controller
 
             // Удаляем должность и права данного юзера
             // TODO - 05.12.18 - решали что при увольнении сносить все права (включая спецправа), т.к. должность одна пока что
-            $user = User::findOrFail($staffer->user_id);
+            $user = User::find($staffer->user_id);
             $res = $user->roles()->detach();
             $res = $user->notifications()->detach();
 
@@ -304,7 +304,7 @@ class StafferController extends Controller
     }
 
     /**
-     * Удаление указанного ресурса из хранилища
+     * Remove the specified resource from storage.
      *
      * @param $id
      */
@@ -330,7 +330,7 @@ class StafferController extends Controller
             'actual_employees'
         ])
         ->moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         if ($staffer) {
             // Подключение политики

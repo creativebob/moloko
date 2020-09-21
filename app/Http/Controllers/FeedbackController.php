@@ -117,7 +117,7 @@ class FeedbackController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $place = Place::moderatorLimit($answer)->findOrFail($id);
+        $place = Place::moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize('update', $role);
@@ -139,7 +139,7 @@ class FeedbackController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $feedback = Feedback::moderatorLimit($answer)->findOrFail($id);
+        $feedback = Feedback::moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $feedback);
@@ -162,7 +162,7 @@ class FeedbackController extends Controller
 
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $feedback = Feedback::moderatorLimit($answer)->findOrFail($id);
+        $feedback = Feedback::moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize('update', $feedback);
@@ -198,7 +198,7 @@ class FeedbackController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $feedback = Feedback::moderatorLimit($answer)->findOrFail($id);
+        $feedback = Feedback::moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $feedback);

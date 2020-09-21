@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@include('users.inhead')
+@include('system.pages.marketings.users.inhead')
 
 @section('title', 'Просмотр пользователя')
 
@@ -17,10 +17,10 @@
 
   {{ Form::model($user, ['route' => ['users.update', $user->id], 'data-abide', 'novalidate']) }}
   {{ method_field('PATCH') }}
-    @include('users.form', ['submitButtonText' => 'Редактировать пользователя', 'param' => 'readonly'])
+    @include('system.pages.marketings.users.form', ['submitButtonText' => 'Редактировать пользователя', 'param' => 'readonly'])
   {{ Form::close() }}
 
 @endsection
-@include('users.scripts')
+@include('system.pages.marketings.users.scripts')
 
 

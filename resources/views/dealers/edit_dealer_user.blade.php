@@ -22,7 +22,7 @@
 @section('content')
     {{ Form::model($dealer->client->clientable, ['url' => '/admin/dealers/update-user/'.$dealer->id, 'data-abide', 'novalidate', 'class' => 'form-check-city', 'files' => 'true']) }}
     {{ method_field('PATCH') }}
-        @include('users.form', ['submitButtonText' => 'Редактировать', 'param'=>'', 'user'=>$dealer->client->clientable])
+        @include('system.pages.marketings.users.form', ['submitButtonText' => 'Редактировать', 'param'=>'', 'user'=>$dealer->client->clientable])
     {{ Form::close() }}
 @endsection
 
@@ -34,13 +34,13 @@
     @include('includes.modals.modal-delete-ajax')
 @endsection
 
-@section('scripts')
-    @include('users.scripts')
+@push('scripts')
+    @include('system.pages.marketings.users.scripts')
     @include('includes.scripts.inputs-mask')
     @include('includes.scripts.pickmeup-script')
     @include('includes.scripts.delete-from-page-script')
     @include('includes.scripts.upload-file')
     @include('includes.scripts.extra-phone')
-@endsection
+    @endpush
 
 

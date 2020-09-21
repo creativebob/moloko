@@ -29,7 +29,7 @@ class ServicesCategoryController extends Controller
     use Photable;
 
     /**
-     * Отображение списка ресурсов.
+     * Display a listing of the resource.
      *
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -94,7 +94,7 @@ class ServicesCategoryController extends Controller
     }
 
     /**
-     * Показать форму для создания нового ресурса.
+     * Show the form for creating a new resource.
      *
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -144,7 +144,7 @@ class ServicesCategoryController extends Controller
     }
 
     /**
-     * Отображение указанного ресурса.
+     * Display the specified resource.
      *
      * @param $id
      */
@@ -154,7 +154,7 @@ class ServicesCategoryController extends Controller
     }
 
     /**
-     * Показать форму для редактирования указанного ресурса.
+     * Show the form for editing the specified resource.
      *
      * @param Request $request
      * @param $id
@@ -185,7 +185,7 @@ class ServicesCategoryController extends Controller
             'direction',
         ])
         ->moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 //         dd(isset($services_category->direction));
 
         // Подключение политики
@@ -214,7 +214,7 @@ class ServicesCategoryController extends Controller
     }
 
     /**
-     * Обновление указанного ресурса в хранилище.
+     * Update the specified resource in storage.
      *
      * @param ServicesCategoryUpdateRequest $request
      * @param $id
@@ -228,13 +228,13 @@ class ServicesCategoryController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $services_category = ServicesCategory::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $services_category);
 
         $data = $request->input();
-        $data['photo_id'] = $this->getPhotoId($request, $services_category);
+        $data['photo_id'] = $this->getPhotoId($services_category);
         $result = $services_category->update($data);
 
         if ($result) {
@@ -261,7 +261,7 @@ class ServicesCategoryController extends Controller
     }
 
     /**
-     * Удаление указанного ресурса из хранилища.
+     * Remove the specified resource from storage.
      *
      * @param Request $request
      * @param $id
@@ -280,7 +280,7 @@ class ServicesCategoryController extends Controller
             'services'
         ])
         ->moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $services_category);

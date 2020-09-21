@@ -32,7 +32,7 @@
 @include('includes.modals.modal-delete-ajax')
 @endsection
 
-@section('scripts')
+@push('scripts')
 
 <script>
 
@@ -76,7 +76,7 @@
         }
     };
 </script>
-@endsection
+@endpush
 
 
 

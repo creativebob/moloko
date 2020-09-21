@@ -20,13 +20,13 @@
 
   {{ Form::model($user, ['route' => ['users.update', $user->id], 'data-abide', 'novalidate']) }}
   {{ method_field('PATCH') }}
-    @include('users.form', ['submitButtonText' => 'Редактировать пользователя', 'param' => 'readonly'])
+    @include('system.pages.marketings.users.form', ['submitButtonText' => 'Редактировать пользователя', 'param' => 'readonly'])
   {{ Form::close() }}
 
 @endsection
 
-@section('scripts')
+@push('scripts')
   @include('includes.scripts.inputs-mask')
-@endsection
+  @endpush
 
 

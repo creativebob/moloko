@@ -64,8 +64,8 @@
 {{ Form::close() }}
 @endsection
 
-@section('scripts')
+@push('scripts')
 @include('includes.scripts.inputs-mask')
-@endsection
+@endpush
 
 

@@ -25,10 +25,10 @@
 
 @endsection
 
-@section('scripts')
+@push('scripts')
 @include('includes.scripts.inputs-mask')
 @include('rubricators.scripts')
 @include('includes.scripts.upload-file')
-@endsection
+@endpush
 
 

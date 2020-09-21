@@ -7,9 +7,9 @@
         :class="classes"
         :required="required"
         :disabled="disabled"
-        @input="changeCount($event.target.value)"
-        @focus="checkDecimal($event.target.value)"
-        @blur="returnDecimal($event.target.value)"
+        @input="input($event.target.value)"
+        @focus="focus($event.target.value)"
+        @blur="blur($event.target.value)"
         @keydown.enter.prevent="onEnter($event.target.value)"
 	>
 <!--
@@ -87,7 +87,7 @@
                 }
                 return zeros;
             },
-            checkDecimal(value) {
+            focus(value) {
                 let array = this.getDecimalArray(value),
                     zeros = this.getZeros();
 
@@ -103,7 +103,7 @@
                     this.count = '';
                 }
             },
-            returnDecimal(value) {
+            blur(value) {
                 if (this.count == '') {
                     this.count = 0;
                 }
@@ -125,9 +125,9 @@
             //         event.preventDefault();
             //     }
             // },
-            changeCount(value) {
+            input(value) {
 
-                // TODO - 04.08.20 - Здесть нужно валидировать получаемое значение, чтоб была только одна точка и ограниченное количество знаков после запятой, + еще какие огнраничения
+                // TODO - 04.08.20 - Здесь нужно валидировать получаемое значение, чтоб была только одна точка и ограниченное количество знаков после запятой, + еще какие огнраничения
 
 			    // let reg = '/^\s*[\d]+([,\.][\d]{0,2}+)?\s*$/';
 			    // let reg = '/^(\\d+)(\\.{1})(\\d{0,2})$/';
@@ -149,7 +149,7 @@
                 // console.log(value);
 
                 // this.count = value.toString().replace(reg , '');
-                this.$emit('change', parseFloat(value));
+                this.$emit('input', parseFloat(value));
             },
             onEnter(value) {
                 this.$emit('enter', parseFloat(value));

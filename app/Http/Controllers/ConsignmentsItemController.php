@@ -53,7 +53,7 @@ class ConsignmentsItemController extends Controller
 
     public function update(ConsignmentsItemUpdateRequest $request, $id)
     {
-        $consignment_item = ConsignmentsItem::findOrFail($id);
+        $consignment_item = ConsignmentsItem::find($id);
 
         $data = $request->input();
         $consignment_item->update($data);

@@ -2,345 +2,318 @@
 
 namespace App\Http\Controllers;
 
-// Модели
+use App\Http\Controllers\System\Traits\Companable;
+use App\Http\Controllers\System\Traits\Directorable;
+use App\Http\Controllers\System\Traits\Locationable;
+use App\Http\Controllers\System\Traits\Phonable;
 use App\Http\Controllers\Traits\Photable;
-use App\User;
-use App\Supplier;
 use App\Manufacturer;
+use App\Supplier;
 use App\Company;
-use App\Page;
-use App\Sector;
-use App\Folder;
-use App\Booklist;
-use App\List_item;
-use App\Schedule;
-use App\Worktime;
-use App\Location;
-use App\ScheduleEntity;
-use App\Country;
-use App\ProcessesType;
-use App\Phone;
-
-// Модели которые отвечают за работу с правами + политики
-use App\Policies\CompanyPolicy;
-use App\Policies\SupplierPolicy;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Auth;
-
-// Запросы и их валидация
+use App\Vendor;
 use Illuminate\Http\Request;
-use App\Http\Requests\System\CompanyRequest;
-use App\Http\Requests\System\SupplierRequest;
-
-// Общие классы
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Storage;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
-
-// Подрубаем трейт записи и обновления компании
-use App\Http\Controllers\Traits\CompanyControllerTrait;
 
 class SupplierController extends Controller
 {
 
-    // Подключаем трейт записи и обновления компании
-    use CompanyControllerTrait;
-	use Photable;
+    protected $entityAlias;
+    protected $entityDependence;
 
-    // Сущность над которой производит операции контроллер
-    protected $entity_name = 'suppliers';
-    protected $entity_dependence = false;
+    /**
+     * SupplierController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->entityAlias = 'suppliers';
+        $this->entityDependence = false;
+    }
 
+    use Locationable;
+    use Phonable;
+    use Photable;
+    use Companable;
+    use Directorable;
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function index(Request $request)
     {
-
-        $filter_url = autoFilter($request, $this->entity_name);
-        if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
+        $filter_url = autoFilter($request, $this->entityAlias);
+        if (($filter_url != null) && ($request->filter != 'active')) {
+            return Redirect($filter_url);
+        };
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Supplier::class);
 
-        // Получаем авторизованного пользователя
-        $user = $request->user();
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // -------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------------------------
-
-        $suppliers = Supplier::with('author', 'company.main_phones')
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->filter($request, 'city_id', 'location')
-        ->filter($request, 'sector_id', 'company')
-        ->booklistFilter($request)
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->paginate(30);
+        $suppliers = Supplier::with([
+            'company' => function ($q) {
+                $q->with([
+                    'main_phones',
+                    'location',
+                    'sector',
+                    'legal_form'
+                ]);
+            },
+            'author',
+        ])
+            ->moderatorLimit($answer)
+            ->companiesLimit($answer)
+            ->authors($answer)
+            ->systemItem($answer)
+            ->where('archive', false)
+            ->filter($request, 'city_id', 'location')
+            ->filter($request, 'sector_id', 'company')
+            ->booklistFilter($request)
+//            ->orderBy('moderation', 'desc')
+            ->oldest('sort')
+            ->paginate(30);
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter = setFilter($this->entity_name, $request, [
+        $filter = setFilter($this->entityAlias, $request, [
             'city',                 // Город
             'sector',               // Направление деятельности
             'booklist'              // Списки пользователя
         ]);
-
         // dd($filter);
 
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entityAlias);
 
-        return view('suppliers.index', compact('suppliers', 'pageInfo', 'filter', 'user'));
+        return view('system.pages.erp.suppliers.index', compact('suppliers', 'pageInfo', 'filter'));
     }
 
-    public function create(Request $request)
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function create()
     {
-
-        //Подключение политики
+        // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Supplier::class);
         $this->authorize(getmethod(__FUNCTION__), Company::class);
 
-        // Создаем новый экземляр компании
-        $supplier = new Supplier;
-
-        // Создаем новый экземляр поставщика
-        $company = new Company;
+        $supplier = Supplier::make();
+        $company = Company::make();
 
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entityAlias);
 
-        return view('suppliers.create', compact('company', 'supplier', 'pageInfo'));
+        return view('system.pages.erp.suppliers.create', compact('supplier', 'company', 'pageInfo'));
     }
 
-    public function store(CompanyRequest $request)
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function store(Request $request)
     {
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Supplier::class);
         $this->authorize(getmethod(__FUNCTION__), Company::class);
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        logs('companies')->info('============ НАЧАЛО СОЗДАНИЯ ПОСТАВЩИКА ===============');
 
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
+        $company = $this->storeCompany();
 
-        // Скрываем бога
-        $user_id = hideGod($user);
+        if ($request->set_user == 1) {
+            $this->getDirector($company);
+        }
 
-        $supplier = new Supplier;
-        $new_company = new Company;
+        $data = $request->input();
+        $data['supplier_id'] = $company->id;
+        $data['description'] = $request->supplier_description;
 
-        // Отдаем работу по созданию новой компании трейту
-        $company = $this->createCompany($request, $new_company);
+        $supplier = Supplier::create($data);
 
-        $supplier->company_id = $request->user()->company->id;
-        $supplier->supplier_id = $company->id;
+        $this->setStatuses($company);
 
-        // Запись информации по поставщику:
-        $supplier->description_supplier = $request->description_supplier;
-        $supplier->preorder = $request->preorder ?? 0;
-        $supplier->is_partner = $request->has('is_partner');
+        $supplier->manufacturers()->sync($request->manufacturers);
 
-        $supplier->save();
+        logs('companies')->info("Создан поставщик. Id: [{$supplier->id}]");
+        logs('companies')->info('============ КОНЕЦ СОЗДАНИЯ ПОСТАВЩИКА ===============
+        
+        ');
 
-        $supplier->company->currencies()->sync($request->currencies);
-
-        return redirect('/admin/suppliers');
+        return redirect()->route('suppliers.index');
     }
 
-
-    public function show($id)
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function edit($id)
     {
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $supplier = Supplier::moderatorLimit($answer)->findOrFail($id);
-
-        // Подключение политики
-        $this->authorize('view', $supplier);
-        return view('suppliers.show', compact('supplier'));
-    }
-
-
-    public function edit(Request $request, $id)
-    {
-
-
-        // Получаем данные для авторизованного пользователя
-        $user_auth = $request->user();
-
-        // Скрываем бога
-        $user_auth_id = hideGod($user_auth);
-        $auth_company_id = $user_auth->company_id;
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $supplier = Supplier::with([
+            'company' => function ($q) {
+                $q->with([
+                    'location.city',
+                    'schedules.worktimes',
+                    'sector',
+                    'processes_types',
+                    'manufacturers'
+                ]);
+            },
             'vendor'
         ])
-        ->moderatorLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer)
-        ->findOrFail($id);
+            ->moderatorLimit($answer)
+            ->authors($answer)
+            ->systemItem($answer)
+            ->find($id);
+//        dd($supplier);
+
+        if (empty($supplier)) {
+            abort(403, __('errors.not_found'));
+        }
+
+        $company = $supplier->company;
+//        dd($company);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $supplier);
-
-        // ПОЛУЧАЕМ КОМПАНИЮ ------------------------------------------------------------------------------------------------
-        $company_id = $supplier->company->id;
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_company = operator_right('company', false, getmethod(__FUNCTION__));
-
-        $company = Company::with('location.city', 'schedules.worktimes', 'sector', 'processes_types', 'manufacturers')
-        ->moderatorLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer)
-        ->findOrFail($company_id);
-
         $this->authorize(getmethod(__FUNCTION__), $company);
 
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entityAlias);
 
-
-        return view('suppliers.edit', compact('supplier', 'pageInfo'));
+        return view('system.pages.erp.suppliers.edit', compact('supplier', 'company', 'pageInfo'));
     }
 
-
-    public function update(SupplierRequest $request, $id)
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function update(Request $request, $id)
     {
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $supplier = Supplier::with([
+            'company' => function ($q) {
+                $q->with([
+                    'location.city',
+                    'schedules.worktimes'
+                ]);
+            }
+        ])
+            ->moderatorLimit($answer)
+            ->authors($answer)
+            ->systemItem($answer)
+            ->find($id);
+//        dd($supplier);
+
+        if (empty($supplier)) {
+            abort(403, __('errors.not_found'));
+        }
+
+        $company = $supplier->company;
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $supplier);
+        $this->authorize(getmethod(__FUNCTION__), $company);
+
+        logs('companies')->info('============ НАЧАЛО ОБНОВЛЕНИЯ ПОСТАВЩИКА ===============');
+
+        // TODO - 15.09.20 - Должна быть проерка на внешний контроль, так же на шаблоне не должны давать провалиться в компанию
+        $company = $this->updateCompany($company);
+
+        if ($request->set_user == 1) {
+            $this->getDirector($company);
+        }
+
+        $data = $request->input();
+        $data['description'] = $request->supplier_description;
+        $res = $supplier->update($data);
+
+        if (!$res) {
+            abort(403, __('errors.update'));
+        }
+
+        logs('companies')->info("Обновлен поставщик. Id: [{$supplier->id}]");
+        logs('companies')->info('============ КОНЕЦ ОБНОВЛЕНИЯ ПОСТАВЩИКА ===============
+        
+        ');
+
+        return redirect()->route('suppliers.index');
+    }
+
+    /**
+     * Архивирование указанного ресурса
+     *
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function archive($id)
+    {
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('delete'));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $supplier = Supplier::moderatorLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer)
-        ->findOrFail($id);
+            ->find($id);
+//        dd($supplier);
 
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $supplier);
-
-        if (isset($request->manufacturers)) {
-            $manufacturers = [];
-            foreach ($request->manufacturers as $manufacturer) {
-                $manufacturers[$manufacturer] = [
-                    'company_id' => $request->user()->company_id
-                ];
-            }
-            // dd($manufacturers);
-            $supplier->manufacturers()->sync($manufacturers);
-
-        } else {
-            $supplier->manufacturers()->detach();
+        if (empty($supplier)) {
+            abort(403, __('errors.not_found'));
         }
 
-        // dd($request);
-        // $supplier->preorder = $request->has('preorder');
-
-        // $supplier->save();
-
-        $company_id = $supplier->company->id;
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_company = operator_right('companies', false, getmethod(__FUNCTION__));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $company = Company::with('location', 'schedules.worktimes')->moderatorLimit($answer_company)->findOrFail($company_id);
-
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $company);
+        $this->authorize(getmethod('destroy'), $supplier);
 
-        // Отдаем работу по редактировнию компании трейту
-        $this->updateCompany($request, $supplier->company, $supplier);
-
-        // Обновление информации по поставщику:
-        $supplier->description_supplier = $request->description_supplier;
-        $supplier->preorder = $request->preorder ?? 0;
-        $supplier->is_partner = $request->has('is_partner');
-
+        $supplier->archive = true;
+        $supplier->editor_id = hideGod(auth()->user());
         $supplier->save();
 
-        $supplier->company->currencies()->sync($request->currencies);
-
-        return redirect('/admin/suppliers');
-    }
-
-
-    public function destroy(Request $request,$id)
-    {
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $supplier = Supplier::moderatorLimit($answer)->findOrFail($id);
-
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $supplier);
-
-        if ($supplier) {
-
-            $user = $request->user();
-
-            // Скрываем бога
-            $user_id = hideGod($user);
-            $supplier->editor_id = $user_id;
-            $supplier->save();
-
-            $supplier = Supplier::destroy($id);
-
-            // Удаляем компанию с обновлением
-            if($supplier) {
-                return redirect('/admin/suppliers');
-
-            } else {
-                abort(403, 'Ошибка при удалении поставщика');
-            }
-
-        } else {
-            abort(403, 'Поставщик не найдена');
+        if (!$supplier) {
+            abort(403, __('errors.archive'));
         }
-    }
 
-    // Сортировка
-    public function ajax_sort(Request $request)
-    {
-
-        $i = 1;
-
-        foreach ($request->suppliers as $item) {
-            Supplier::where('id', $item)->update(['sort' => $i]);
-            $i++;
-        }
+        return redirect()->route('suppliers.index');
     }
 
     public function checkcompany(Request $request)
     {
         $company = Company::where('inn', $request->inn)->first();
 
-        if(!isset($company)) {
+        if (!isset($company)) {
             return 0;
         } else {
-            return $company->name;};
-        }
-
+            return $company->name;
+        };
     }
+}

@@ -133,7 +133,7 @@ class ApplicationController extends Controller
         ->moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         $this->authorize(getmethod(__FUNCTION__), $application);
 
@@ -166,7 +166,7 @@ class ApplicationController extends Controller
         ->moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $application);
@@ -202,7 +202,7 @@ class ApplicationController extends Controller
         $application = Application::moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $application);
@@ -285,12 +285,12 @@ class ApplicationController extends Controller
     //     // $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
     //     // ГЛАВНЫЙ ЗАПРОС:
-    //     // $note = Note::moderatorLimit($answer)->findOrFail($id);
+    //     // $note = Note::moderatorLimit($answer)->find($id);
 
     //     // Подключение политики
     //     // $this->authorize(getmethod(__FUNCTION__), $note);
 
-    //     $application_composition = ApplicationComposition::findOrFail($id);
+    //     $application_composition = ApplicationComposition::find($id);
 
     //     // Удаляем ajax
     //     $application_composition->delete();

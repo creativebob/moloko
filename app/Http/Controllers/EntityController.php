@@ -182,7 +182,7 @@ class EntityController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Получаем сущность которую планируем просмотреть
-        $entity = Entity::moderatorLimit($answer)->findOrFail($id);
+        $entity = Entity::moderatorLimit($answer)->find($id);
 
         // Проверяем право на просмотр полученной сущности
         $this->authorize(getmethod(__FUNCTION__), $entity);
@@ -198,7 +198,7 @@ class EntityController extends Controller
         // $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // // Получаем сущность которую будем редактировать
-        // $entity = Entity::moderatorLimit($answer)->findOrFail($id);
+        // $entity = Entity::moderatorLimit($answer)->find($id);
 
         // // Проверяем право на редактирование полученной сущности
         // $this->authorize(getmethod(__FUNCTION__), $entity);
@@ -212,7 +212,7 @@ class EntityController extends Controller
 
 
         $entity = Entity::moderatorLimit(operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__)))
-        ->findOrFail($id);
+        ->find($id);
 
         // Проверяем право на редактирование полученной сущности
         $this->authorize(getmethod(__FUNCTION__), $entity);
@@ -230,7 +230,7 @@ class EntityController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Получаем сущность которую будем редактировать
-        $entity = Entity::moderatorLimit($answer)->findOrFail($id);
+        $entity = Entity::moderatorLimit($answer)->find($id);
 
         // Проверяем право на редактирование полученной сущности
         $this->authorize(getmethod(__FUNCTION__), $entity);
@@ -262,7 +262,7 @@ class EntityController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Получаем сущность которую планируем удалить
-        $entity = Entity::moderatorLimit($answer)->findOrFail($id);
+        $entity = Entity::moderatorLimit($answer)->find($id);
 
         // Проверяем право на удаление полученной сущности
         $this->authorize(getmethod(__FUNCTION__), $entity);

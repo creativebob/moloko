@@ -47,10 +47,14 @@
                 <div class="cell small-3">
                     <label>Дата:
                         <pickmeup-component
-                            :cur-date="curDate"
                             :required="true"
                             @change="changeDate"
                         ></pickmeup-component>
+<!--                        <pickmeup-component-->
+<!--                            :cur-date="curDate"-->
+<!--                            :required="true"-->
+<!--                            @change="changeDate"-->
+<!--                        ></pickmeup-component>-->
                         <span class="form-error">Выберите дату!</span>
                     </label>
                 </div>
@@ -105,7 +109,7 @@
 
 	export default {
         components: {
-            'pickmeup-component': require('../common/PickmeupChildComponent.vue'),
+            'pickmeup-component': require('../inputs/PickmeupComponent'),
         },
 
 		props: {

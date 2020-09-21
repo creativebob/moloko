@@ -48,8 +48,11 @@ class Supplier extends Model
 
     // protected $dates = ['deleted_at'];
     protected $fillable = [
-        'company_id',
         'supplier_id',
+
+        'description',
+        'preorder',
+        'is_partner',
 
         'display',
         'system',

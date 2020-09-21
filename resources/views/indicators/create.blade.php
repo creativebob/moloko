@@ -23,14 +23,14 @@
 
 @endsection
 
-@section('scripts')
+@push('scripts')
 @include('includes.scripts.inputs-mask')
 @include('indicators.scripts')
 {{-- Проверка поля на существование --}}
 @include('includes.scripts.check', ['entity' => 'indicators'])
 
 @include('includes.scripts.get_units')
-@endsection
+@endpush
 
 
 

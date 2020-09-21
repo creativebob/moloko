@@ -146,7 +146,7 @@ class RoleController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $role = Role::moderatorLimit($answer)->findOrFail($id);
+        $role = Role::moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize('view', $role);
@@ -162,7 +162,7 @@ class RoleController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $role = Role::moderatorLimit($answer)->findOrFail($id);
+        $role = Role::moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $role);
@@ -184,7 +184,7 @@ class RoleController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $role = Role::moderatorLimit($answer)->findOrFail($id);
+        $role = Role::moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize('update', $role);
@@ -204,7 +204,7 @@ class RoleController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $role = Role::moderatorLimit($answer)->findOrFail($id);
+        $role = Role::moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $role);
@@ -287,7 +287,7 @@ class RoleController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $role = Role::with('rights')->moderatorLimit($answer)->findOrFail($role_id);
+        $role = Role::with('rights')->moderatorLimit($answer)->find($role_id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $role);
@@ -328,7 +328,7 @@ class RoleController extends Controller
         $all_deny_right = Right::with('actionentity')->where('directive', 'deny')->get()->toarray();
 
         // Получаем права на редактируемую роль
-        $current_role = Role::with(['rights' => function($q){$q->where('category_right_id', 1);}])->findOrFail($role_id);
+        $current_role = Role::with(['rights' => function($q){$q->where('category_right_id', 1);}])->find($role_id);
 
         // Создаем ассоциированный массив
         // В формате: Ключ"user-create-allow" и right_id
@@ -476,7 +476,7 @@ class RoleController extends Controller
         $user = $request->user();
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $role = Role::moderatorLimit($answer)->findOrFail($request->role_id);
+        $role = Role::moderatorLimit($answer)->find($request->role_id);
 
         // Подключение политики
         $this->authorize('update', $role);
@@ -600,13 +600,13 @@ class RoleController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
 
         // Главный запрос
-        $role = Role::moderatorLimit($answer)->findOrFail($request->role_id);
+        $role = Role::moderatorLimit($answer)->find($request->role_id);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_departments = operator_right('departments', true, 'index');
 
         // Главный запрос
-        $department = Department::moderatorLimit($answer_departments)->findOrFail($request->department_id);
+        $department = Department::moderatorLimit($answer_departments)->find($request->department_id);
 
         $role_user = (object) [
             'role' => $role,

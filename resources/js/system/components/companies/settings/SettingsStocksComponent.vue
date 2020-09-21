@@ -34,7 +34,12 @@
 	export default {
 	    props: {
 	        category: Object,
-            item: Object
+            item: {
+	            type: Object,
+                default: () => ({
+                    settings: []
+                })
+            }
         },
 		data() {
 			return {

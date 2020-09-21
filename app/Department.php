@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\System\Traits\Quietlable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -26,10 +27,9 @@ use App\Scopes\Filters\BooklistFilter;
 class Department extends Model
 {
 
-    // Включаем кеш
-    use Cachable;
-
     use SoftDeletes;
+    use Cachable;
+    use Quietlable;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;

@@ -48,7 +48,7 @@ class DepartmentController extends Controller
     use Phonable;
 
     /**
-     * Отображение списка ресурсов
+     * Display a listing of the resource.
      *
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -142,7 +142,7 @@ class DepartmentController extends Controller
     }
 
     /**
-     * Показать форму для создания нового ресурса
+     * Show the form for creating a new resource.
      *
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -170,7 +170,7 @@ class DepartmentController extends Controller
     }
 
     /**
-     * Сохранение только что созданного ресурса в хранилище
+     * Store a newly created resource in storage.
      *
      * @param DepartmentRequest $request
      * @return \Illuminate\Http\RedirectResponse
@@ -213,7 +213,7 @@ class DepartmentController extends Controller
     }
 
     /**
-     * Отображение указанного ресурса
+     * Display the specified resource.
      *
      * @param $id
      */
@@ -223,7 +223,7 @@ class DepartmentController extends Controller
     }
 
     /**
-     * Показать форму для редактирования указанного ресурса
+     * Show the form for editing the specified resource.
      *
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -245,7 +245,7 @@ class DepartmentController extends Controller
             }
         ])
         ->moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $department);
@@ -267,7 +267,7 @@ class DepartmentController extends Controller
     }
 
     /**
-     * Обновление указанного ресурса в хранилище
+     * Update the specified resource in storage.
      *
      * @param DepartmentRequest $request
      * @param $id
@@ -280,7 +280,7 @@ class DepartmentController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $department = Department::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $department);
@@ -310,7 +310,7 @@ class DepartmentController extends Controller
     }
 
     /**
-     * Удаление указанного ресурса из хранилища
+     * Remove the specified resource from storage.
      *
      * @param Request $request
      * @param $id
@@ -330,7 +330,7 @@ class DepartmentController extends Controller
             'childs'
         ])
         ->moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $department);

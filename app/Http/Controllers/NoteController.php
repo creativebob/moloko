@@ -37,7 +37,7 @@ class NoteController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Note::class);
 
-        $item = $request->model::findOrFail($request->id);
+        $item = $request->model::find($request->id);
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -64,7 +64,7 @@ class NoteController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $note = Note::moderatorLimit($answer)->findOrFail($id);
+        $note = Note::moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $note);
@@ -79,7 +79,7 @@ class NoteController extends Controller
     public function update(NoteRequest $request, $id)
     {
 
-        $note = Note::moderatorLimit(operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__)))->findOrFail($id);
+        $note = Note::moderatorLimit(operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__)))->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $note);
@@ -96,7 +96,7 @@ class NoteController extends Controller
     public function destroy(Request $request, $id)
     {
 
-        $note = Note::moderatorLimit(operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__)))->findOrFail($id);
+        $note = Note::moderatorLimit(operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__)))->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $note);

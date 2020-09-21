@@ -140,7 +140,7 @@ class RoomsCategoryController extends Controller
         ])
         // ->withCount('one_metrics')
         ->moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
         // dd($rooms_category);
 
         // Подключение политики
@@ -177,13 +177,13 @@ class RoomsCategoryController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $rooms_category = RoomsCategory::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $rooms_category);
 
         $data = $request->input();
-        $data['photo_id'] = $this->getPhotoId($request, $rooms_category);
+        $data['photo_id'] = $this->getPhotoId($rooms_category);
         $result = $rooms_category->update($data);
 
         if ($result) {
@@ -213,7 +213,7 @@ class RoomsCategoryController extends Controller
             'rooms'
         ])
         ->moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $rooms_category);

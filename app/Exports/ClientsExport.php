@@ -99,7 +99,8 @@ class ClientsExport implements FromCollection, WithTitle, WithHeadings, ShouldAu
             ->authors($answer)
             ->systemItem($answer)
             ->filter()
-            ->orderBy('id')
+            ->where('orders_count', '>', 0)
+            ->orderBy('id', 'desc')
 //            ->get([
 //                'loyalty_id',
 //                'is_lost',
@@ -132,13 +133,16 @@ class ClientsExport implements FromCollection, WithTitle, WithHeadings, ShouldAu
 //            dd($client);
 
             $gender = null;
-            switch ($client->clientable->gender) {
-                case (1):
-                    $gender = 'мужской';
-                    break;
-                case (2):
-                    $gender = 'женский';
-                    break;
+
+            if ($client->clientable->getTable() == 'users') {
+                switch ($client->clientable->gender) {
+                    case (1):
+                        $gender = 'мужской';
+                        break;
+                    case (2):
+                        $gender = 'женский';
+                        break;
+                }
             }
 
             $client = [

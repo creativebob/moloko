@@ -28,7 +28,7 @@ class PricesGoodsController extends Controller
     use Discountable;
 
     /**
-     * Отображение списка ресурсов.
+     * Display a listing of the resource.
      *
      * @param Request $request
      * @param $catalogId
@@ -135,7 +135,7 @@ class PricesGoodsController extends Controller
         $catalogGoods = CatalogsGoods::with([
             'filials'
         ])
-        ->findOrFail($catalogId);
+        ->find($catalogId);
 
         $pageInfo->title = 'Прайс: ' . $catalogGoods->name;
         $pageInfo->name = 'Прайс: ' . $catalogGoods->name;
@@ -153,7 +153,7 @@ class PricesGoodsController extends Controller
     }
 
     /**
-     * Показать форму для создания нового ресурса.
+     * Show the form for creating a new resource.
      */
     public function create()
     {
@@ -169,7 +169,7 @@ class PricesGoodsController extends Controller
     }
 
     /**
-     * Отображение указанного ресурса.
+     * Display the specified resource.
      */
     public function show(PricesGoods $pricesGoods)
     {
@@ -177,7 +177,7 @@ class PricesGoodsController extends Controller
     }
 
     /**
-     * Показать форму для редактирования указанного ресурса.
+     * Show the form for editing the specified resource.
      *
      * @param Request $request
      * @param $catalogId
@@ -197,11 +197,11 @@ class PricesGoodsController extends Controller
             'discounts_actual'
         ])
         ->moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $priceGoods);
 
-        $catalogGoods = CatalogsGoods::findOrFail($catalogId);
+        $catalogGoods = CatalogsGoods::find($catalogId);
 
         return view('system.pages.catalogs.goods.prices_goods.edit', [
             'priceGoods' => $priceGoods,
@@ -212,7 +212,7 @@ class PricesGoodsController extends Controller
     }
 
     /**
-     * Обновление указанного ресурса в хранилище.
+     * Update the specified resource in storage.
      *
      * @param Request $request
      * @param $catalogId
@@ -221,7 +221,7 @@ class PricesGoodsController extends Controller
      */
     public function update(Request $request, $catalogId, $id)
     {
-        $priceGoods = PricesGoods::findOrFail($id);
+        $priceGoods = PricesGoods::find($id);
 
         $price = $request->price;
 
@@ -283,7 +283,7 @@ class PricesGoodsController extends Controller
                 'filial',
                 'currency'
             ])
-            ->findOrFail($id);
+            ->find($id);
 
             return response()->json($priceGoods);
         }
@@ -292,7 +292,7 @@ class PricesGoodsController extends Controller
     }
 
     /**
-     * Удаление указанного ресурса из хранилища.
+     * Remove the specified resource from storage.
      *
      * @param $id
      */
@@ -313,7 +313,7 @@ class PricesGoodsController extends Controller
     {
         $user = $request->user();
 
-        $price_goods = PricesGoods::findOrFail($id);
+        $price_goods = PricesGoods::find($id);
 
         $filial_id = $price_goods->filial_id;
 
@@ -397,7 +397,7 @@ class PricesGoodsController extends Controller
 
     public function ajax_get(Request $request, $catalogId, $id)
     {
-        $cur_price_goods = PricesGoods::findOrFail($id);
+        $cur_price_goods = PricesGoods::find($id);
         // dd($price);
         $price = $cur_price_goods->price;
         // dd($price);
@@ -496,14 +496,14 @@ class PricesGoodsController extends Controller
 
     public function ajax_edit(Request $request, $catalogId)
     {
-        $price = PricesGoods::findOrFail($request->id);
+        $price = PricesGoods::find($request->id);
         // dd($price);
         return view('products.articles.goods.prices.catalogs_item_edit', compact('price'));
     }
 
     public function ajax_update(Request $request, $catalogId)
     {
-        $cur_price_goods = PricesGoods::findOrFail($request->id);
+        $cur_price_goods = PricesGoods::find($request->id);
 
         if ($cur_price_goods->price != $request->price) {
 
@@ -529,7 +529,7 @@ class PricesGoodsController extends Controller
     {
         $user = $request->user();
 
-        $result = PricesGoods::findOrFail($request->id)
+        $result = PricesGoods::find($request->id)
             ->update([
                 'archive' => true,
                 'editor_id' => hideGod($user)
@@ -539,7 +539,7 @@ class PricesGoodsController extends Controller
 
 	public function ajax_status(Request $request)
 	{
-		$result = PricesGoods::findOrFail($request->id)->update([
+		$result = PricesGoods::find($request->id)->update([
 			'status' => $request->status
 		]);
 		return response()->json($result);
@@ -547,7 +547,7 @@ class PricesGoodsController extends Controller
 
     public function ajax_hit(Request $request)
     {
-        $result = PricesGoods::findOrFail($request->id)->update([
+        $result = PricesGoods::find($request->id)->update([
             'is_hit' => $request->is_hit
         ]);
         return response()->json($result);
@@ -555,7 +555,7 @@ class PricesGoodsController extends Controller
 
     public function ajax_new(Request $request)
     {
-        $result = PricesGoods::findOrFail($request->id)->update([
+        $result = PricesGoods::find($request->id)->update([
             'is_new' => $request->is_new
         ]);
         return response()->json($result);

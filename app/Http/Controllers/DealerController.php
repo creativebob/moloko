@@ -274,7 +274,7 @@ class DealerController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $dealer = Dealer::moderatorLimit($answer)->findOrFail($id);
+        $dealer = Dealer::moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize('view', $dealer);
@@ -292,7 +292,7 @@ class DealerController extends Controller
         $dealer = Dealer::moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $dealer);
@@ -312,7 +312,7 @@ class DealerController extends Controller
             // ->moderatorLimit($answer_company)
             // ->authors($answer_company)
             // ->systemItem($answer_company)
-            ->findOrFail($company_id);
+            ->find($company_id);
 
             $this->authorize(getmethod(__FUNCTION__), $company);
 
@@ -334,7 +334,7 @@ class DealerController extends Controller
             'main_phones',
             'extra_phones'
             )->moderatorLimit($answer_user)
-            ->findOrFail($user_id);
+            ->find($user_id);
 
             $this->authorize(getmethod(__FUNCTION__), $user);
 
@@ -353,7 +353,7 @@ class DealerController extends Controller
         $dealer = Dealer::moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod('update'), $dealer);
@@ -390,7 +390,7 @@ class DealerController extends Controller
         $dealer = Dealer::moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod('update'), $dealer);
@@ -423,7 +423,7 @@ class DealerController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $dealer = Dealer::moderatorLimit($answer)->findOrFail($id);
+        $dealer = Dealer::moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $dealer);

@@ -23,7 +23,7 @@
 
 @endsection
 
-@section('scripts')
+@push('scripts')
 @include('includes.scripts.inputs-mask')
 
 <script type="application/javascript">
@@ -35,4 +35,4 @@
     });
 </script>
 
-@endsection
+@endpush

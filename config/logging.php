@@ -39,20 +39,17 @@ return [
             'channels' => ['daily'],
             'ignore_exceptions' => false,
         ],
-
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
             'level' => 'debug',
         ],
-
         'daily' => [
             'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),
             'level' => 'debug',
             'days' => 14,
         ],
-
         'slack' => [
             'driver' => 'slack',
             'url' => env('LOG_SLACK_WEBHOOK_URL'),
@@ -60,7 +57,6 @@ return [
             'emoji' => ':boom:',
             'level' => 'critical',
         ],
-
         'papertrail' => [
             'driver' => 'monolog',
             'level' => 'debug',
@@ -70,7 +66,6 @@ return [
                 'port' => env('PAPERTRAIL_PORT'),
             ],
         ],
-
         'stderr' => [
             'driver' => 'monolog',
             'handler' => StreamHandler::class,
@@ -79,53 +74,54 @@ return [
                 'stream' => 'php://stderr',
             ],
         ],
-
         'syslog' => [
             'driver' => 'syslog',
             'level' => 'debug',
         ],
-
         'errorlog' => [
             'driver' => 'errorlog',
             'level' => 'debug',
         ],
-
         'test' => [
             'driver' => 'daily',
             'path' => storage_path('logs/test.log'),
             'level' => 'info',
         ],
-
+        'companies' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/companies.log'),
+            'level' => 'info',
+        ],
+        'users' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/users.log'),
+            'level' => 'info',
+        ],
         'operations' => [
             'driver' => 'daily',
             'path' => storage_path('logs/operations.log'),
             'level' => 'info',
         ],
-
 	    'documents' => [
 		    'driver' => 'daily',
 		    'path' => storage_path('logs/documents.log'),
 		    'level' => 'info',
 	    ],
-
         'hr' => [
             'driver' => 'daily',
             'path' => storage_path('logs/hr.log'),
             'level' => 'info',
         ],
-
         'leads_from_project' => [
             'driver' => 'daily',
             'path' => storage_path('logs/leads_from_project.log'),
             'level' => 'info',
         ],
-
         'clients' => [
             'driver' => 'daily',
             'path' => storage_path('logs/clients.log'),
             'level' => 'info',
         ],
-
     ],
 
 ];

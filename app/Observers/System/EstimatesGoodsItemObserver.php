@@ -14,14 +14,12 @@ class EstimatesGoodsItemObserver
     public function creating(EstimatesGoodsItem $estimatesGoodsItem)
     {
         $this->store($estimatesGoodsItem);
-
         $this->setAggregations($estimatesGoodsItem);
     }
 
     public function updating(EstimatesGoodsItem $estimatesGoodsItem)
     {
         $this->update($estimatesGoodsItem);
-
         $this->setAggregations($estimatesGoodsItem);
 
     }

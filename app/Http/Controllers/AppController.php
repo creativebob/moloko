@@ -78,7 +78,7 @@ class AppController extends Controller
         $entity = Entity::whereAlias($alias)->first(['model']);
         $model = 'App\\'.$entity->model;
 
-        $item = $model::findOrFail($id);
+        $item = $model::find($id);
 
         $item->article->update([
             'draft' => true
@@ -99,7 +99,7 @@ class AppController extends Controller
         $entity = Entity::whereAlias($alias)->first(['model']);
         $model = 'App\\'.$entity->model;
 
-        $item = $model::findOrFail($id);
+        $item = $model::find($id);
 
         $item->process->update([
             'draft' => true
@@ -142,7 +142,7 @@ class AppController extends Controller
             ->value('model');
         $model = 'App\\' . $entity_model;
 
-        // $item = $model::findOrFail($request->id);
+        // $item = $model::find($request->id);
         // $item->system = ($request->action == 'lock') ? 1 : null;
         // $item->save();
 

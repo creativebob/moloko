@@ -329,7 +329,7 @@ class AttachmentController extends Controller
         Log::channel('operations')
             ->info('========================================== НАЧИНАЕМ ЗАПИСЬ УПАКОВКИ ==============================================');
 
-        $attachments_category = AttachmentsCategory::findOrFail($request->category_id);
+        $attachments_category = AttachmentsCategory::find($request->category_id);
         // dd($goods_category->load('groups'));
         $article = $this->storeArticle($request, $attachments_category);
 
@@ -386,7 +386,7 @@ class AttachmentController extends Controller
 
         // Главный запрос
         $attachment = Attachment::moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
         // dd($attachment);
 
         // Подключение политики
@@ -438,7 +438,7 @@ class AttachmentController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $attachment = Attachment::moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
         // dd($attachment);
 
         // Подключение политики
@@ -530,7 +530,7 @@ class AttachmentController extends Controller
             'compositions.goods',
         ])
             ->moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod('destroy'), $attachment);
@@ -555,7 +555,7 @@ class AttachmentController extends Controller
 
     public function replicate(Request $request, $id)
     {
-        $attachment = Attachment::findOrFail($id);
+        $attachment = Attachment::find($id);
 
         $attachment->load('article');
         $article = $attachment->article;
@@ -609,7 +609,7 @@ class AttachmentController extends Controller
             'article.group.unit',
             'category'
         ])
-            ->findOrFail($request->id);
+            ->find($request->id);
 
         return view('products.articles_categories.goods_categories.attachments.attachment_tr', compact('attachment'));
     }

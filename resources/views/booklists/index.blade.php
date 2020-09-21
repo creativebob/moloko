@@ -79,7 +79,7 @@
 
 @endsection
 
-@section('scripts')
+@push('scripts')
 {{-- Скрипт перетаскивания для таблицы --}}
 @include('includes.scripts.tablesorter-script')
 @include('includes.scripts.sortable-table-script')
@@ -94,4 +94,4 @@
 {{-- Скрипт модалки удаления --}}
 @include('includes.scripts.modal-delete-script')
 
-@endsection
+@endpush

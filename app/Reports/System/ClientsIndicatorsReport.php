@@ -31,7 +31,7 @@ class ClientsIndicatorsReport
             case 'month':
                 // Месяц
                 // TODO - 29.04.20 - Добавить алиасы к units
-                $unit = Unit::findOrFail(17);
+                $unit = Unit::find(17);
 
                 $startDate = Carbon::create($date);
                 $endDate = Carbon::create($date)->addMonth();
@@ -48,7 +48,7 @@ class ClientsIndicatorsReport
             case 'year':
                 // Год
                 // TODO - 29.04.20 - Добавить алиасы к units
-                $unit = Unit::findOrFail(20);
+                $unit = Unit::find(20);
 
                 $startDate = Carbon::create($date);
                 $endDate = Carbon::create($date)->addYear();
@@ -106,7 +106,7 @@ class ClientsIndicatorsReport
         foreach ($groupedClients as $companyId => $clients) {
             $data['company_id'] = $companyId;
 
-            $company = Company::findOrFail($companyId);
+            $company = Company::find($companyId);
 
             $clientsIndicator = ClientsIndicator::firstOrNew([
                 'start_date' => $data['start_date'],

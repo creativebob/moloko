@@ -16,7 +16,7 @@
 
   {{ Form::model($company, ['route' => ['companies.update', $company->id], 'data-abide', 'novalidate']) }}
   {{ method_field('PATCH') }}
-    @include('companies.form', ['submitButtonText' => 'Редактировать дилера', 'param' => 'readonly'])
+    @include('system.pages.companies.form', ['submitButtonText' => 'Редактировать дилера', 'param' => 'readonly'])
   {{ Form::close() }}
 
 @endsection

@@ -25,8 +25,6 @@ class CreateUsersTable extends Migration
             $table->boolean('display')->default(1)->comment('Отображение на сайте');
 
             $table->timestamps();
-
-
         });
     }
 

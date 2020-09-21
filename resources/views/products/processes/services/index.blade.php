@@ -144,7 +144,7 @@
 
 @endsection
 
-@section('scripts')
+@push('scripts')
 
 @include('includes.scripts.units-scripts')
 
@@ -188,4 +188,4 @@
     });
 </script>
 
-@endsection
+@endpush

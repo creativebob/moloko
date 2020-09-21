@@ -31,7 +31,7 @@ class CatalogsGoodsItemController extends Controller
     use Photable;
 
     /**
-     * Отображение списка ресурсов.
+     * Display a listing of the resource.
      *
      * @param Request $request
      * @param $catalog_id
@@ -86,7 +86,7 @@ class CatalogsGoodsItemController extends Controller
             );
         }
 
-        $catalog_goods = CatalogsGoods::findOrFail($catalog_id);
+        $catalog_goods = CatalogsGoods::find($catalog_id);
 
         // Стандартный шаблон для отображения
         $view_name = 'catalogs_goods_items.index';
@@ -106,7 +106,7 @@ class CatalogsGoodsItemController extends Controller
     }
 
     /**
-     * Показать форму для создания нового ресурса.
+     * Show the form for creating a new resource.
      *
      * @param Request $request
      * @param $catalog_id
@@ -159,7 +159,7 @@ class CatalogsGoodsItemController extends Controller
     }
 
     /**
-     * Отображение указанного ресурса.
+     * Display the specified resource.
      *
      * @param $id
      */
@@ -169,7 +169,7 @@ class CatalogsGoodsItemController extends Controller
     }
 
     /**
-     * Показать форму для редактирования указанного ресурса.
+     * Show the form for editing the specified resource.
      *
      * @param Request $request
      * @param $catalog_id
@@ -183,7 +183,7 @@ class CatalogsGoodsItemController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $catalogs_goods_item = CatalogsGoodsItem::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $catalogs_goods_item);
@@ -191,7 +191,7 @@ class CatalogsGoodsItemController extends Controller
             'discounts'
         ]);
 
-        $catalog_goods = CatalogsGoods::findOrFail($catalog_id);
+        $catalog_goods = CatalogsGoods::find($catalog_id);
 
         return view('catalogs_goods_items.edit', [
             'catalogs_goods_item' => $catalogs_goods_item,
@@ -202,7 +202,7 @@ class CatalogsGoodsItemController extends Controller
     }
 
     /**
-     * Обновление указанного ресурса в хранилище.
+     * Update the specified resource in storage.
      *
      * @param CatalogsGoodsItemUpdateRequest $request
      * @param $catalog_id
@@ -217,13 +217,13 @@ class CatalogsGoodsItemController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $catalogsGoodsItem = CatalogsGoodsItem::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $catalogsGoodsItem);
 
         $data = $request->input();
-        $data['photo_id'] = $this->getPhotoId($request, $catalogsGoodsItem);
+        $data['photo_id'] = $this->getPhotoId($catalogsGoodsItem);
         $result = $catalogsGoodsItem->update($data);
 
         if ($result) {
@@ -273,7 +273,7 @@ class CatalogsGoodsItemController extends Controller
     }
 
     /**
-     * Удаление указанного ресурса из хранилища.
+     * Remove the specified resource from storage.
      *
      * @param Request $request
      * @param $catalog_id
@@ -288,7 +288,7 @@ class CatalogsGoodsItemController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $catalogsGoodsItem = CatalogsGoodsItem::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $catalogsGoodsItem);
@@ -330,7 +330,7 @@ class CatalogsGoodsItemController extends Controller
                     });
             }
         ])
-            ->findOrFail($request->id);
+            ->find($request->id);
 //         dd($catalogs_goods_item);
 
         return view('leads.catalogs.prices_goods', compact('catalogs_goods_item'));

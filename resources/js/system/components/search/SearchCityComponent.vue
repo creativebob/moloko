@@ -4,11 +4,13 @@
             <input
                 type="text"
                 v-model="text"
-                @input="reset"
+                @input="input"
                 maxlength="30"
                 autocomplete="off"
                 pattern="[А-Яа-яЁё0-9-_\s]{3,30}"
                 :required="required"
+                @focus="focus"
+                @blur="blur"
                 @keydown.enter.prevent="onEnter"
             >
 
@@ -150,6 +152,19 @@
                 this.error = false;
                 this.search = false;
                 this.results = [];
+
+                this.$emit('change', this.id);
+            },
+            updateCityId(cityId) {
+                this.id = cityId;
+
+                let city = this.cities.find(city => city.id == cityId);
+                this.text = city.name;
+
+                this.found = true;
+                this.error = false;
+                this.search = false;
+                this.results = [];
             },
             clear() {
                 if (this.error) {
@@ -161,7 +176,7 @@
                     this.results = [];
                 }
             },
-            reset() {
+            input() {
                 // console.log('Изменение в инпуте, обнуляем все кроме имени, и если символов больше 2х начинаем поиск');
                 this.id = null;
                 this.found = false;
@@ -172,6 +187,12 @@
                 if (this.text.length > 0) {
                     this.check();
                 }
+            },
+            focus() {
+                this.$emit('focus', this.text);
+            },
+            blur() {
+                this.$emit('blur', this.text);
             },
             onEnter() {
                 if (this.results.length == 1) {

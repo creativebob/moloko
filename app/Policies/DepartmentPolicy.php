@@ -38,9 +38,7 @@ class DepartmentPolicy
 
     public function delete(User $user, Department $model)
     {
-        if ($model->system == 1) {
-            return false;
-        }
+
 
         if ($model->staff->count() > 0) {
             return false;

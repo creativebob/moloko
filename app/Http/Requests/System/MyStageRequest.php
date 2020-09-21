@@ -44,7 +44,7 @@ class MyStageRequest extends FormRequest
             abort(403, $message);
         }
 
-        $stage = Stage::with('fields.rules')->findOrFail($request->stage_id);
+        $stage = Stage::with('fields.rules')->find($request->stage_id);
 
         $mass = [];
         $error = [];

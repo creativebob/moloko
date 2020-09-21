@@ -135,7 +135,7 @@ class RubricatorsItemController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $rubricators_item = RubricatorsItem::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $rubricators_item);
@@ -158,13 +158,13 @@ class RubricatorsItemController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $rubricators_item = RubricatorsItem::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $rubricators_item);
 
         $data = $request->input();
-        $data['photo_id'] = $this->getPhotoId($request, $rubricators_item);
+        $data['photo_id'] = $this->getPhotoId($rubricators_item);
         $result = $rubricators_item->update($data);
 
         if ($result) {
@@ -187,7 +187,7 @@ class RubricatorsItemController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $rubricators_item = RubricatorsItem::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $rubricators_item);

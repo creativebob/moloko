@@ -157,7 +157,7 @@ class StockController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $stock = Stock::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
         // dd($stock);
 
         // Подключение политики
@@ -176,7 +176,7 @@ class StockController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $stock = Stock::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
         // dd($stock);
 
         // Подключение политики
@@ -199,7 +199,7 @@ class StockController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $stock = Stock::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $stock);

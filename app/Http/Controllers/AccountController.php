@@ -137,7 +137,7 @@ class AccountController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $account = Account::moderatorLimit($answer)->findOrFail($id);
+        $account = Account::moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize('update', $account);
@@ -156,7 +156,7 @@ class AccountController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $account = Account::moderatorLimit($answer)->findOrFail($id);
+        $account = Account::moderatorLimit($answer)->find($id);
         // dd($account);
 
         // Подключение политики
@@ -179,7 +179,7 @@ class AccountController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $account = Account::moderatorLimit($answer)->findOrFail($id);
+        $account = Account::moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $account);
@@ -220,7 +220,7 @@ class AccountController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $account = Account::moderatorLimit($answer)->findOrFail($id);
+        $account = Account::moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $account);

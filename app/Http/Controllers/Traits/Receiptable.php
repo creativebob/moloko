@@ -39,7 +39,7 @@ trait Receiptable
             );
         
 	    // Акутальный филиал
-	    $stock_general = Stock::findOrFail($item->document->stock_id);
+	    $stock_general = Stock::find($item->document->stock_id);
 	    $filial_id = $stock_general->filial_id;
 
         // Склад

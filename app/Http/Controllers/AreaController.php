@@ -15,7 +15,7 @@ use App\Policies\AreaPolicy;
 // Общие классы
 use Illuminate\Support\Facades\Log;
 
-// Специфические классы 
+// Специфические классы
 
 // На удаление
 use Illuminate\Support\Facades\Auth;
@@ -64,7 +64,7 @@ class AreaController extends Controller
 
         // Удаляем с обновлением
         // Находим область и район города
-        $area = Area::withCount('cities')->moderatorLimit($answer)->findOrFail($id);
+        $area = Area::withCount('cities')->moderatorLimit($answer)->find($id);
         $region_id = $area->region_id;
 
         // Подключение политики
@@ -108,7 +108,7 @@ class AreaController extends Controller
 
         // Если не пустой город
         if (isset($request->cities)) {
-            
+
             $i = 1;
 
             foreach ($request->ciites as $item) {
@@ -134,7 +134,7 @@ class AreaController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -161,7 +161,7 @@ class AreaController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [

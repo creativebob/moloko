@@ -137,7 +137,7 @@ class GetAccessController extends Controller
                 if($user->company_id == null){abort(403, "Пользователь не имеет связи с компанией");};
 
                 // Получаем данные на пользователя
-                $user = User::with(['staff', 'staff.position.page', 'roles', 'roles.rights', 'roles.rights.actionentity.entity', 'booklists', 'booklists.list_items', 'company'])->findOrFail($user->id);
+                $user = User::with(['staff', 'staff.position.page', 'roles', 'roles.rights', 'roles.rights.actionentity.entity', 'booklists', 'booklists.list_items', 'company'])->find($user->id);
 
                 // Проверяем, устроен ли пользователь в компании
                 $user_department = $user->staff->first();

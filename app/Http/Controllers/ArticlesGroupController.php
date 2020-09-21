@@ -120,7 +120,7 @@ class ArticlesGroupController extends Controller
     {
 
         $articles_group = ArticlesGroup::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $articles_group);
@@ -137,7 +137,7 @@ class ArticlesGroupController extends Controller
     {
 
         $articles_group = ArticlesGroup::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $articles_group);
@@ -172,7 +172,7 @@ class ArticlesGroupController extends Controller
 
         $articles_group = ArticlesGroup::with('articles')
         ->moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $articles_group);
@@ -200,7 +200,7 @@ class ArticlesGroupController extends Controller
 
         $category = $model::withCount('groups')
         ->with(['groups'])
-        ->findOrFail($request->category_id);
+        ->find($request->category_id);
         // dd($category);
 
         $groups = $category->groups;
@@ -235,7 +235,7 @@ class ArticlesGroupController extends Controller
         $category = $model::with(['groups' => function ($q) {
             $q->with('unit');
         }])
-        ->findOrFail($category_id);
+        ->find($category_id);
 
         $articles_groups = $category->groups;
         return view('goods.create_modes.mode_select', compact('articles_groups'));

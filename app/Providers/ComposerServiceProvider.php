@@ -31,6 +31,7 @@ use App\Http\View\Composers\System\EmployeesActiveCountComposer;
 use App\Http\View\Composers\System\EmployeesDismissalCountComposer;
 use App\Http\View\Composers\System\EntitiesForDiscountsComposer;
 use App\Http\View\Composers\System\Filters\GoodsComposer;
+use App\Http\View\Composers\System\Filters\VacanciesComposer;
 use App\Http\View\Composers\System\FiltersComposer;
 use App\Http\View\Composers\System\GoodsCategoriesTreeComposer;
 use App\Http\View\Composers\System\LeadMethodsComposer;
@@ -197,12 +198,15 @@ class ComposerServiceProvider extends ServiceProvider
 
         view()->composer([
             'system.common.includes.city_search',
-            'test'
+            'system.pages.companies.includes.director',
+            'leads.personal',
         ], CitySearchComposer::class);
 
         view()->composer([
             'system.common.includes.city_search',
-            'includes.lists.cities'
+            'includes.lists.cities',
+            'system.pages.companies.includes.director',
+            'leads.personal'
         ], CitiesWithAreaRegionCountryComposer::class);
 
         view()->composer([
@@ -236,7 +240,8 @@ class ComposerServiceProvider extends ServiceProvider
             'includes.selects.manufacturers',
             'includes.selects.manufacturers_with_placeholder',
             'includes.lists.manufacturers',
-            'products.articles.common.edit.manufacturers'
+            'products.articles.common.edit.manufacturers',
+            'system.pages.erp.suppliers.form',
         ], ManufacturersComposer::class);
 
         view()->composer('includes.selects.suppliers', SupplierSelectComposer::class);
@@ -415,11 +420,12 @@ class ComposerServiceProvider extends ServiceProvider
 
         view()->composer('includes.lists.currencies', CurrenciesComposer::class);
 
-        view()->composer('companies.settings.list', CompaniesSettingsCategoriesComposer::class);
+        view()->composer('system.pages.companies.tabs.settings', CompaniesSettingsCategoriesComposer::class);
 
         // Сотрудники
         view()->composer('system.pages.hr.employees.includes.title_active', EmployeesDismissalCountComposer::class);
         view()->composer('system.pages.hr.employees.includes.title_dismissal', EmployeesActiveCountComposer::class);
+        view()->composer('system.pages.hr.employees.form', VacanciesComposer::class);
 
         // Выполненные работы
         view()->composer('system.pages.outcomes.includes.title', ClientsCountComposer::class);
@@ -434,8 +440,8 @@ class ComposerServiceProvider extends ServiceProvider
         // Фильтры
 
         // Клиенты
-        view()->composer('clients.includes.filters', SourcesComposer::class);
-        view()->composer('clients.includes.filters', ClientsCitiesComposer::class);
+        view()->composer('system.pages.clients.includes.filters', SourcesComposer::class);
+        view()->composer('system.pages.clients.includes.filters', ClientsCitiesComposer::class);
 
         // ТМЦ
         view()->composer('products.articles.common.index.includes.title', CmvArchivesCountComposer::class);

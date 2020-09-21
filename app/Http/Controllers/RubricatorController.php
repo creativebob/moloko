@@ -97,7 +97,7 @@ class RubricatorController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $rubricator = Rubricator::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $rubricator);
@@ -116,7 +116,7 @@ class RubricatorController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $rubricator = Rubricator::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $rubricator);
@@ -145,7 +145,7 @@ class RubricatorController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
         $rubricator = Rubricator::with(['items'])
         ->moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $rubricator);

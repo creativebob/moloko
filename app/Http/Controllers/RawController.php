@@ -353,7 +353,7 @@ class RawController extends Controller
         Log::channel('operations')
         ->info('========================================== НАЧИНАЕМ ЗАПИСЬ СЫРЬЯ ==============================================');
 
-        $raws_category = RawsCategory::findOrFail($request->category_id);
+        $raws_category = RawsCategory::find($request->category_id);
         // dd($goods_category->load('groups'));
         $article = $this->storeArticle($request, $raws_category);
 
@@ -390,10 +390,10 @@ class RawController extends Controller
                     return redirect()->route('raws.edit', $raw->id);
                 }
             } else {
-                abort(403, 'Ошибка записи сырья');
+                abort(403, __('errors.store'));
             }
         } else {
-            abort(403, 'Ошибка записи информации сырья');
+            abort(403, __('errors.store'));
         }
     }
 
@@ -410,7 +410,7 @@ class RawController extends Controller
 
         // Главный запрос
         $raw = Raw::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
         // dd($raw->coster);
 
         // Подключение политики
@@ -468,7 +468,7 @@ class RawController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
         $raw = Raw::with('article')
         ->moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
         // dd($raw);
 
         // Подключение политики
@@ -550,7 +550,7 @@ class RawController extends Controller
         //
     }
 
-    public function archive(Request $request, $id)
+    public function archive($id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -558,10 +558,10 @@ class RawController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $raw = Raw::with([
-            'compositions.goods',
-        ])
-        ->moderatorLimit($answer)
-        ->findOrFail($id);
+                'compositions.goods',
+            ])
+            ->moderatorLimit($answer)
+            ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod('destroy'), $raw);
@@ -569,24 +569,22 @@ class RawController extends Controller
         if ($raw) {
 
             $raw->archive = true;
-
-            // Скрываем бога
-            $raw->editor_id = hideGod($request->user());
+            $raw->editor_id = hideGod(auth()->user());
             $raw->save();
 
             if ($raw) {
                 return redirect()->route('raws.index');
             } else {
-                abort(403, 'Ошибка при архивации сырья');
+                abort(403, __('errors.archive'));
             }
         } else {
-            abort(403, 'Сырьё не найдено');
+            abort(403, __('errors.not_found'));
         }
     }
 
     public function replicate(Request $request, $id)
     {
-        $raw = Raw::findOrFail($id);
+        $raw = Raw::find($id);
 
         $raw->load('article');
         $article = $raw->article;
@@ -644,7 +642,7 @@ class RawController extends Controller
             'article.unit_weight',
             'category'
         ])
-        ->findOrFail($request->id);
+        ->find($request->id);
 
         return view('products.articles_categories.goods_categories.raws.raw_tr', compact('raw'));
     }

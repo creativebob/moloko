@@ -149,7 +149,7 @@ class ClaimController extends Controller
         // ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
         ->moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $claim);
@@ -181,7 +181,7 @@ class ClaimController extends Controller
         $user_id = hideGod($user);
 
         // ГЛАВНЫЙ ЗАПРОС: В начале пишем oбращение
-        $lead = Lead::with('location', 'main_phones')->findOrFail($request->lead_id);
+        $lead = Lead::with('location', 'main_phones')->find($request->lead_id);
 
         // $filial_id = $user->filial_id;
 
@@ -273,7 +273,7 @@ class ClaimController extends Controller
     public function ajax_finish(Request $request)
     {
 
-        $claim = Claim::findOrFail($request->id);
+        $claim = Claim::find($request->id);
         // Проверяем право на создание сущности
         $this->authorize('update', $claim);
 

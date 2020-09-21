@@ -132,7 +132,7 @@ class ContainersCategoryController extends Controller
             'manufacturers',
         ])
             ->moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
         // dd($containers_category);
 
         // Подключение политики
@@ -167,13 +167,13 @@ class ContainersCategoryController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $containers_category = ContainersCategory::moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $containers_category);
 
         $data = $request->input();
-        $data['photo_id'] = $this->getPhotoId($request, $containers_category);
+        $data['photo_id'] = $this->getPhotoId($containers_category);
         $result = $containers_category->update($data);
 
         if ($result) {
@@ -203,7 +203,7 @@ class ContainersCategoryController extends Controller
             'containers'
         ])
             ->moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $containers_category);

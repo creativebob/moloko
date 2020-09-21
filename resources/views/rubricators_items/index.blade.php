@@ -57,7 +57,7 @@
 @include('includes.modals.modal-delete-ajax')
 @endsection
 
-@section('scripts')
+@push('scripts')
 
 {{-- Скрипты --}}
 @include('rubricators_items.scripts')
@@ -71,4 +71,4 @@
 {{-- Скрипт системной записи --}}
 @include('includes.scripts.ajax-system')
 
-@endsection
+@endpush

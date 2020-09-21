@@ -46,9 +46,7 @@ class CatalogsServicePolicy
 
     public function delete(User $user, Model $model)
     {
-        if ($model->system == 1) {
-            return false;
-        }
+
 
         if ($model->items->count() > 0) {
             return false;

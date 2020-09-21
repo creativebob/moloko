@@ -23,7 +23,7 @@ class RuleController extends Controller
     }
 
     /**
-     * Показать форму для создания нового ресурса.
+     * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
@@ -45,7 +45,7 @@ class RuleController extends Controller
     }
 
     /**
-     * Отображение указанного ресурса.
+     * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -56,7 +56,7 @@ class RuleController extends Controller
     }
 
     /**
-     * Показать форму для редактирования указанного ресурса.
+     * Show the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -67,7 +67,7 @@ class RuleController extends Controller
     }
 
     /**
-     * Обновление указанного ресурса в хранилище.
+     * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -79,7 +79,7 @@ class RuleController extends Controller
     }
 
     /**
-     * Удаление указанного ресурса из хранилища.
+     * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -136,7 +136,7 @@ class RuleController extends Controller
         // $answer = operator_right($this->entity_name, $this->entity_dependence, 'destroy');
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $rule = Rule::findOrFail($request->id);
+        $rule = Rule::find($request->id);
 
         // Подключение политики
         // $this->authorize(getmethod(__FUNCTION__), $stage);

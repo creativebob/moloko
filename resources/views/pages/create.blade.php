@@ -20,13 +20,13 @@
 {{ Form::close() }}
 @endsection
 
-@section('scripts')
+@push('scripts')
 @include('includes.scripts.inputs-mask')
 @include('pages.scripts')
 @include('includes.scripts.upload-file')
 
 @include('includes.scripts.ckeditor')
-@endsection
+@endpush
 
 
 

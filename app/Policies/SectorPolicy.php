@@ -44,9 +44,7 @@ class SectorPolicy
 
     public function delete(User $user, Sector $model)
     {
-        if ($model->system == 1) {
-            return false;
-        }
+
 
         // if ($model->company_id == null) {
         //     return false;

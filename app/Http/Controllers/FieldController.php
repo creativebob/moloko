@@ -22,7 +22,7 @@ class FieldController extends Controller
     }
 
     /**
-     * Показать форму для создания нового ресурса.
+     * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
@@ -43,7 +43,7 @@ class FieldController extends Controller
     }
 
     /**
-     * Отображение указанного ресурса.
+     * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -54,7 +54,7 @@ class FieldController extends Controller
     }
 
     /**
-     * Показать форму для редактирования указанного ресурса.
+     * Show the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -65,7 +65,7 @@ class FieldController extends Controller
     }
 
     /**
-     * Обновление указанного ресурса в хранилище.
+     * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -77,7 +77,7 @@ class FieldController extends Controller
     }
 
     /**
-     * Удаление указанного ресурса из хранилища.
+     * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -89,8 +89,8 @@ class FieldController extends Controller
 
     public function  ajax_fields_list(Request $request)
     {
-        $entity = Entity::findOrFail($request->entity_id);
-         // $entity = Entity::findOrFail(7);
+        $entity = Entity::find($request->entity_id);
+         // $entity = Entity::find(7);
         $fields = Schema::getColumnListing($entity->alias);
         $fields_list = [];
         foreach ($fields as $field) {

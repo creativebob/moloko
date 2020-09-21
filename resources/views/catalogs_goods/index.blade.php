@@ -125,7 +125,7 @@
 	@include('includes.modals.modal-delete')
 @endsection
 
-@section('scripts')
+@push('scripts')
 
 {{-- Скрипт сортировки --}}
 @include('includes.scripts.sortable-table-script')
@@ -142,4 +142,4 @@
 {{-- Скрипт модалки удаления --}}
 @include('includes.scripts.modal-delete-script')
 
-@endsection
+@endpush

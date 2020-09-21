@@ -53,9 +53,7 @@ class PhotoPolicy
 
     public function delete(User $user, Photo $model)
     {
-        if ($model->system == 1) {
-            return false;
-        }
+
 
         return $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
     }

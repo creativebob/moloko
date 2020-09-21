@@ -97,7 +97,7 @@ class IndicatorController extends Controller
 
         if (isset($request->direction_id)) {
 
-            $direction = Direction::findOrFail($request->direction_id);
+            $direction = Direction::find($request->direction_id);
             $indicator->category_id = $direction->category_id;
             $indicator->category_type = $direction->category_type;
 
@@ -133,7 +133,7 @@ class IndicatorController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $indicator = Indicator::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $indicator);
@@ -153,7 +153,7 @@ class IndicatorController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $indicator = Indicator::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $indicator);
@@ -194,7 +194,7 @@ class IndicatorController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $indicator = Indicator::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $indicator);

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\System\Traits\Quietlable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
@@ -27,6 +28,7 @@ class Employee extends Model
 
     // Включаем кеш
     use Cachable;
+    use Quietlable;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;

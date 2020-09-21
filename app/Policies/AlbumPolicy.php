@@ -53,9 +53,7 @@ class AlbumPolicy
 
     public function delete(User $user, Album $model)
     {
-        if ($model->system == 1) {
-            return false;
-        }
+
 
         if ($model->photos->count() == 1) {
             return false;

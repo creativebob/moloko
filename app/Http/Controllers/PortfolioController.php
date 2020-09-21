@@ -27,7 +27,7 @@ class PortfolioController extends Controller
     use Photable;
 
     /**
-     * Отображение списка ресурсов.
+     * Display a listing of the resource.
      *
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -84,7 +84,7 @@ class PortfolioController extends Controller
     }
 
     /**
-     * Показать форму для создания нового ресурса.
+     * Show the form for creating a new resource.
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
@@ -116,7 +116,7 @@ class PortfolioController extends Controller
         $portfolio = Portfolio::create($data);
 
         // Cохраняем / обновляем фото
-        $photo_id = $this->getPhotoId($request, $portfolio);
+        $photo_id = $this->getPhotoId($portfolio);
         $portfolio->photo_id = $photo_id;
         $portfolio->save();
 
@@ -128,7 +128,7 @@ class PortfolioController extends Controller
     }
 
     /**
-     * Отображение указанного ресурса.
+     * Display the specified resource.
      *
      * @param $id
      */
@@ -138,7 +138,7 @@ class PortfolioController extends Controller
     }
 
     /**
-     * Показать форму для редактирования указанного ресурса.
+     * Show the form for editing the specified resource.
      *
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -154,7 +154,7 @@ class PortfolioController extends Controller
             'photo'
         ])
         ->moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
         // dd($portfolio);
 
         // Подключение политики
@@ -167,7 +167,7 @@ class PortfolioController extends Controller
     }
 
     /**
-     * Обновление указанного ресурса в хранилище.
+     * Update the specified resource in storage.
      *
      * @param PortfolioRequest $request
      * @param $id
@@ -180,7 +180,7 @@ class PortfolioController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $portfolio = Portfolio::moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $portfolio);
@@ -189,7 +189,7 @@ class PortfolioController extends Controller
         $result = $portfolio->update($data);
 
         // Cохраняем / обновляем фото
-        $photo_id = $this->getPhotoId($request, $portfolio);
+        $photo_id = $this->getPhotoId($portfolio);
         $portfolio->photo_id = $photo_id;
         $portfolio->save();
 
@@ -201,7 +201,7 @@ class PortfolioController extends Controller
     }
 
     /**
-     * Удаление указанного ресурса из хранилища.
+     * Remove the specified resource from storage.
      *
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
@@ -217,7 +217,7 @@ class PortfolioController extends Controller
             'items',
         ])
             ->moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         if ($portfolio) {
             // Подключение политики

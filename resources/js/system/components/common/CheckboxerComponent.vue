@@ -69,7 +69,9 @@
                         v-model="currentItems"
                     >
                     <label :for="'checkbox-' + name + '-' + item.id">
-                        <span class="wrap-label-checkboxer">{{ item.name }}</span>
+                        <span
+                            class="wrap-label-checkboxer"
+                        >{{ item.name }}</span>
                     </label>
                 </li>
             </ul>
@@ -89,6 +91,10 @@
                 default: null
             },
             title: {
+                type: String,
+                default: null
+            },
+            relation: {
                 type: String,
                 default: null
             },
@@ -119,6 +125,13 @@
             }
         },
         methods: {
+            // itemName(item) {
+            //     if (this.relation) {
+            //         return item.[this.relation].name;
+            //     } else {
+            //         return item.name;
+            //     }
+            // },
             setWidth() {
                 let width = $('.' + this.name + '.checkboxer-wrap').css("width");
                 $('.' + this.name + '.dropdown-pane.checkboxer-pane').css("width", width);

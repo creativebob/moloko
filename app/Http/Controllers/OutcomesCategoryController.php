@@ -29,7 +29,7 @@ class OutcomesCategoryController extends Controller
     use Photable;
 
     /**
-     * Отображение списка ресурсов
+     * Display a listing of the resource.
      *
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -90,7 +90,7 @@ class OutcomesCategoryController extends Controller
     }
 
     /**
-     * Показать форму для создания нового ресурса
+     * Show the form for creating a new resource.
      *
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -111,7 +111,7 @@ class OutcomesCategoryController extends Controller
     }
 
     /**
-     * Сохранение только что созданного ресурса в хранилище
+     * Store a newly created resource in storage.
      *
      * @param CategoryStoreRequest $request
      * @return \Illuminate\Http\RedirectResponse
@@ -137,7 +137,7 @@ class OutcomesCategoryController extends Controller
     }
 
     /**
-     * Отображение указанного ресурса
+     * Display the specified resource.
      *
      * @param $id
      */
@@ -147,7 +147,7 @@ class OutcomesCategoryController extends Controller
     }
 
     /**
-     * Показать форму для редактирования указанного ресурса
+     * Show the form for editing the specified resource.
      *
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -160,7 +160,7 @@ class OutcomesCategoryController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $outcomes_category = OutcomesCategory::moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 //         dd($outcomes_category);
 
         // Подключение политики
@@ -181,7 +181,7 @@ class OutcomesCategoryController extends Controller
     }
 
     /**
-     * Обновление указанного ресурса в хранилище
+     * Update the specified resource in storage.
      *
      * @param OutcomesCategoryUpdateRequest $request
      * @param $id
@@ -195,13 +195,13 @@ class OutcomesCategoryController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $outcomes_category = OutcomesCategory::moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $outcomes_category);
 
         $data = $request->input();
-        $data['photo_id'] = $this->getPhotoId($request, $outcomes_category);
+        $data['photo_id'] = $this->getPhotoId($outcomes_category);
         $result = $outcomes_category->update($data);
 
         if ($result) {
@@ -217,7 +217,7 @@ class OutcomesCategoryController extends Controller
     }
 
     /**
-     * Удаление указанного ресурса из хранилища
+     * Remove the specified resource from storage.
      *
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
@@ -234,7 +234,7 @@ class OutcomesCategoryController extends Controller
             'outcomes'
         ])
             ->moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         if ($outcomes_category) {
             // Подключение политики

@@ -42,9 +42,7 @@ class AlbumsCategoryPolicy
 
     public function delete(User $user, Model $model)
     {
-        if ($model->system == 1) {
-            return false;
-        }
+
 
         if ($model->albums->count() > 0) {
             return false;

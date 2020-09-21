@@ -35,16 +35,14 @@ class MenuPolicy
     }
 
     public function update(User $user, Menu $model)
-    { 
+    {
         $result = $this->getstatus($this->entity_name, $model, 'update', $this->entity_dependence);
         return $result;
     }
 
     public function delete(User $user, Menu $model)
     {
-        if ($model->system == 1) {
-            return false;
-        }
+
         if ($model->childs->count() > 0) {
             return false;
         }

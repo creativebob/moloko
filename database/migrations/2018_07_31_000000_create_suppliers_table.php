@@ -19,7 +19,7 @@ class CreateSuppliersTable extends Migration
             $table->bigInteger('supplier_id')->nullable()->unsigned()->comment('ID контрагента');
             $table->foreign('supplier_id')->references('id')->on('companies');
 
-            $table->text('description_supplier')->nullable()->comment('Описание поставщика');
+            $table->text('supplier')->nullable()->comment('Описание поставщика');
             $table->boolean('preorder')->default(0)->comment('Предзаказ');
 
             $table->boolean('is_partner')->default(0)->comment('Статус партнера');

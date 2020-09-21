@@ -37,9 +37,9 @@
                     <th class="td-phone">Телефон</th>
                     <th class="td-position">Название должности</th>
 
-                    @if ((Auth::user()->god == 1) || ($employees->isNotEmpty() && $employees->first()->company->filials->count() > 1))
-                    <th class="td-filial">Филиал</th>
-                    @endif
+{{--                    @if ((Auth::user()->god == 1) || ($employees->isNotEmpty() && $employees->first()->company->filials->count() > 1))--}}
+{{--                    <th class="td-filial">Филиал</th>--}}
+{{--                    @endif--}}
                     @if(Auth::user()->god == 1)<th class="td-getauth">Действие</th> @endif
                     <th class="td-employment-date">Дата приема</th>
                     <th class="td-status">Статус</th>
@@ -88,15 +88,15 @@
 
                         <td class="td-position">
                             {{ $employee->staffer->position->name }}
-                            @if (($employee->company->filials->count() > 1)&&($employee->staffer->department->parent_id != null))
-                                <br>
-                                <span class="tiny-text">{{ $employee->staffer->department->name }}</span>
-                            @endif
+{{--                            @if (($employee->company->filials->count() > 1)&&($employee->staffer->department->parent_id != null))--}}
+{{--                                <br>--}}
+{{--                                <span class="tiny-text">{{ $employee->staffer->department->name }}</span>--}}
+{{--                            @endif--}}
                         </td>
 
-                        @if (($employee->company->filials->count() > 1) || (Auth::user()->god == 1))
-                            <td class="td-filial">{{ $employee->staffer->filial->name }}</td>
-                        @endif
+{{--                        @if (($employee->company->filials->count() > 1) || (Auth::user()->god == 1))--}}
+{{--                            <td class="td-filial">{{ $employee->staffer->filial->name }}</td>--}}
+{{--                        @endif--}}
 
                         {{-- Если пользователь бог, то показываем для него переключатель на авторизацию под пользователем --}}
                         @if(Auth::user()->god == 1)
@@ -159,7 +159,7 @@
 @include('includes.modals.modal-delete')
 @endsection
 
-@section('scripts')
+@push('scripts')
 
 {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
 @include('includes.scripts.tablesorter-script')
@@ -178,4 +178,4 @@
 {{-- Скрипт модалки удаления --}}
 @include('includes.scripts.modal-delete-script')
 
-@endsection
+@endpush

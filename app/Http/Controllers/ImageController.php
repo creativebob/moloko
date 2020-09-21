@@ -23,7 +23,7 @@ class ImageController extends Controller
         $model = 'App\\'.$entity->model;
 
         $item = $model::with('photo')
-            ->findOrFail($item_id);
+            ->find($item_id);
 //        dd($item);
 
         if (isset($item->photo_id)) {
@@ -78,7 +78,7 @@ class ImageController extends Controller
             $directory = $item->company_id . '/media/' . $item->getTable() . '/' . $item->id . '/img';
 
             if (isset($item->photo_id)) {
-                $photo = Photo::findOrFail($item->photo_id);
+                $photo = Photo::find($item->photo_id);
 
                 if ($photo) {
                     foreach (['small', 'medium', 'large', 'original'] as $value) {

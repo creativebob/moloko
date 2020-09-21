@@ -20,8 +20,9 @@ trait Photable
      * @param  $item
      * @return int
      */
-    public function getPhotoId($request, $item)
+    public function getPhotoId($item)
     {
+        $request = request();
 
         if ($request->hasFile('photo'))  {
 
@@ -63,9 +64,8 @@ trait Photable
 	            $directory = $item->company_id . '/media/' . $item->getTable() . '/' . $item->id . '/img';
             }
 
-
             if (isset($item->photo_id)) {
-                $photo = Photo::findOrFail($item->photo_id);
+                $photo = Photo::find($item->photo_id);
 
                 if ($photo) {
                     foreach (['small', 'medium', 'large', 'original'] as $value) {
@@ -524,23 +524,20 @@ trait Photable
 
     }
 
-
     // Путь до фотки в альбоме
     function getPhotoInAlbumPath($photo, $size = 'medium')
     {
-
         return "/storage/" . $photo->company_id . "/media/albums/" . $photo->album_id . "/img/" . $size . "/" . $photo->name;
-
     }
 
     /**
- * Сохранение одной фотографии
- *
- * @param $request
- * @param $item
- * @param string $name
- * @return integer $photo_id
- */
+     * Сохранение одной фотографии
+     *
+     * @param $request
+     * @param $item
+     * @param string $name
+     * @return integer $photo_id
+     */
     public function savePhoto($request, $item, $name = 'photo')
     {
         if ($request->hasFile($name)) {
@@ -621,8 +618,10 @@ trait Photable
      * @param string $name
      * @return integer $vector_id
      */
-    public function saveVector($request, $item, $name = 'vector')
+    public function saveVector($item, $name = 'vector')
     {
+
+        $request = request();
 
         if ($request->hasFile($name)) {
 

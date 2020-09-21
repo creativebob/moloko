@@ -27,7 +27,7 @@ class ProductionObserver
     {
         $this->update($production);
 
-	    $stock = Stock::findOrFail($production->stock_id);
+	    $stock = Stock::find($production->stock_id);
 	    $production->filial_id = $stock->filial_id;
     }
 

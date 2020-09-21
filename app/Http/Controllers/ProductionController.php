@@ -34,7 +34,7 @@ class ProductionController extends Controller
 
 
     /**
-     * Отображение списка ресурсов.
+     * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
@@ -81,7 +81,7 @@ class ProductionController extends Controller
     }
 
     /**
-     * Показать форму для создания нового ресурса.
+     * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
@@ -122,7 +122,7 @@ class ProductionController extends Controller
     }
 
     /**
-     * Отображение указанного ресурса.
+     * Display the specified resource.
      *
      * @param  \App\Production  $production
      * @return \Illuminate\Http\Response
@@ -133,7 +133,7 @@ class ProductionController extends Controller
     }
 
     /**
-     * Показать форму для редактирования указанного ресурса.
+     * Show the form for editing the specified resource.
      *
      * @param integer $id
      * @return \Illuminate\Http\Response
@@ -158,7 +158,7 @@ class ProductionController extends Controller
             ->moderatorLimit($answer)
             ->authors($answer)
             ->systemItem($answer)
-            ->findOrFail($id);
+            ->find($id);
 //        dd($production);
 
         $this->authorize(getmethod(__FUNCTION__), $production);
@@ -170,7 +170,7 @@ class ProductionController extends Controller
     }
 
     /**
-     * Обновление указанного ресурса в хранилище.
+     * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Production  $production
@@ -185,7 +185,7 @@ class ProductionController extends Controller
         $production = Production::moderatorLimit($answer)
             ->authors($answer)
             ->systemItem($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $production);
@@ -200,7 +200,7 @@ class ProductionController extends Controller
     }
 
     /**
-     * Удаление указанного ресурса из хранилища.
+     * Remove the specified resource from storage.
      *
      * @param  \App\Production  $production
      * @return \Illuminate\Http\Response
@@ -216,7 +216,7 @@ class ProductionController extends Controller
 	    ->moderatorLimit($answer)
             ->authors($answer)
             ->systemItem($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $production);
@@ -328,7 +328,7 @@ class ProductionController extends Controller
         $production = Production::moderatorLimit($answer)
             ->authors($answer)
             ->systemItem($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         if ($production->is_produced == 0) {
             // Подключение политики
@@ -378,7 +378,7 @@ class ProductionController extends Controller
                     }
                 }
 
-                $stock_general = Stock::findOrFail($production->stock_id);
+                $stock_general = Stock::find($production->stock_id);
 
                 set_time_limit(60*10);
 
@@ -481,7 +481,7 @@ class ProductionController extends Controller
                             Log::channel('documents')
                                 ->info('=== СПИСАНИЕ ' . $composition['entity'] . ' ' . $composition['id'] . ' ===');
 
-                            $stock_composition = $composition['stock_model']::findOrFail($composition['stock_id']);
+                            $stock_composition = $composition['stock_model']::find($composition['stock_id']);
 
                             Log::channel('documents')
                                 ->info('Существует склад ' . $stock_composition->getTable() . ' c id: ' . $stock_composition->id);
@@ -573,7 +573,7 @@ class ProductionController extends Controller
         $production = Production::moderatorLimit($answer)
             ->authors($answer)
             ->systemItem($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod('update'), $production);
@@ -870,7 +870,7 @@ class ProductionController extends Controller
 
 
 
-                            $stock_general = Stock::findOrFail($production->stock_id);
+                            $stock_general = Stock::find($production->stock_id);
 
                             // Если нужна проверка остатка на слкдах
                             if ($request->has('leftover')) {
@@ -971,7 +971,7 @@ class ProductionController extends Controller
                                         Log::channel('documents')
                                             ->info('=== СПИСАНИЕ ' . $composition['entity'] . ' ' . $composition['id'] . ' ===');
 
-                                        $stock_composition = $composition['stock_model']::findOrFail($composition['stock_id']);
+                                        $stock_composition = $composition['stock_model']::find($composition['stock_id']);
 
                                         Log::channel('documents')
                                             ->info('Существует склад ' . $stock_composition->getTable() . ' c id: ' . $stock_composition->id);

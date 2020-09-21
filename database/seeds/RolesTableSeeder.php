@@ -14,6 +14,14 @@ class RolesTableSeeder extends Seeder
         DB::table('roles')->insert([
         	[
                 'name' => 'Полный доступ',
+                'alias' => 'all',
+                'company_id' => null,
+                'system' => false,
+                'author_id' => 1
+            ],
+            [
+                'name' => 'Базовая',
+                'alias' => 'base',
                 'company_id' => null,
                 'system' => false,
                 'author_id' => 1

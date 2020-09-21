@@ -15,7 +15,8 @@ class CreateRolesTable extends Migration
     {
         Schema::create('roles', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name')->index()->comment('Имя категории пользователей');
+            $table->string('name')->comment('Имя категории пользователей');
+            $table->string('alias')->nullable()->index()->comment('Алиас');
             $table->text('description')->nullable()->comment('Описание категории');
 
             $table->bigInteger('company_id')->nullable()->unsigned()->comment('ID компании');

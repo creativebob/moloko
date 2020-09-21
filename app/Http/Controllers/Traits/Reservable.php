@@ -31,7 +31,7 @@ trait Reservable
             ->info('=== РЕЗЕРВИРОВАНИЕ ' . $item->getTable() . ' ' . $item->id . ' ===');
 
         // Списываем позицию состава
-        $stock_general = Stock::findOrFail($item->stock_id);
+        $stock_general = Stock::find($item->stock_id);
 
         // Списываем позицию состава
         $product = $item->product;
@@ -138,7 +138,7 @@ trait Reservable
             Log::channel('documents')
                 ->info('=== ОТМЕНА РЕЗЕРВИРОВАНИЯ ' . $item->getTable() . ' ' . $item->id . ' ===');
 
-            $stock_general = Stock::findOrFail($item->stock_id);
+            $stock_general = Stock::find($item->stock_id);
 
             $product = $item->product;
 

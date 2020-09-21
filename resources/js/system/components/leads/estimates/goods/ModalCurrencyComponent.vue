@@ -71,7 +71,7 @@
                                         <digit-component
                                             name="discount_percent"
                                             :value="discountPercent"
-                                            @change="changeDiscountPercent"
+                                            @input="changeDiscountPercent"
                                             :disabled="isRegistered"
                                             :limit="100"
                                             ref="discountPercentComponent"
@@ -83,7 +83,7 @@
                                         <digit-component
                                             name="discount_currency"
                                             :value="discountCurrency"
-                                            @change="changeDiscountCurrency"
+                                            @input="changeDiscountCurrency"
                                             :disabled="isRegistered"
                                             :limit="item.price"
                                             ref="discountCurrencyComponent"
@@ -106,7 +106,7 @@
                             <digit-component
                                 name="count"
                                 :value="itemCount"
-                                @change="changeCount"
+                                @input="changeCount"
                                 :decimal-place="0"
                                 :disabled="isRegistered"
                                 ref="countComponent"

@@ -29,7 +29,7 @@ class WorkflowsCategoryController extends Controller
     use Photable;
 
     /**
-     * Отображение списка ресурсов.
+     * Display a listing of the resource.
      *
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -93,7 +93,7 @@ class WorkflowsCategoryController extends Controller
     }
 
     /**
-     * Показать форму для создания нового ресурса.
+     * Show the form for creating a new resource.
      *
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -142,7 +142,7 @@ class WorkflowsCategoryController extends Controller
     }
 
     /**
-     * Отображение указанного ресурса.
+     * Display the specified resource.
      *
      * @param $id
      */
@@ -152,7 +152,7 @@ class WorkflowsCategoryController extends Controller
     }
 
     /**
-     * Показать форму для редактирования указанного ресурса.
+     * Show the form for editing the specified resource.
      *
      * @param Request $request
      * @param $id
@@ -176,7 +176,7 @@ class WorkflowsCategoryController extends Controller
             },
         ])
         ->moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $workflows_category);
@@ -206,7 +206,7 @@ class WorkflowsCategoryController extends Controller
     }
 
     /**
-     * Обновление указанного ресурса в хранилище.
+     * Update the specified resource in storage.
      *
      * @param WorkflowsCategoryUpdateRequest $request
      * @param $id
@@ -220,13 +220,13 @@ class WorkflowsCategoryController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $workflows_category = WorkflowsCategory::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $workflows_category);
 
         $data = $request->input();
-        $data['photo_id'] = $this->getPhotoId($request, $workflows_category);
+        $data['photo_id'] = $this->getPhotoId($workflows_category);
         $result = $workflows_category->update($data);
 
         if ($result) {
@@ -249,7 +249,7 @@ class WorkflowsCategoryController extends Controller
     }
 
     /**
-     * Удаление указанного ресурса из хранилища.
+     * Remove the specified resource from storage.
      *
      * @param Request $request
      * @param $id
@@ -268,7 +268,7 @@ class WorkflowsCategoryController extends Controller
             'workflows'
         ])
         ->moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $workflows_category);

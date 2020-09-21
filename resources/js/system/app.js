@@ -59,6 +59,7 @@ Vue.component('presets-component', require('./components/products/articles/prese
 // Услуги
 Vue.component('processes-categories-with-groups-component', require('./components/ProcessesCategoriesWithGroupsComponent.vue'));
 
+Vue.component('lead-personal-component', require('./components/leads/LeadPersonalComponent'));
 Vue.component('catalog-goods-component', require('./components/leads/catalogs/goods/CatalogGoodsComponent.vue'));
 Vue.component('catalog-services-component', require('./components/leads/catalogs/services/CatalogServicesComponent.vue'));
 Vue.component('lead-badget-component', require('./components/LeadBadgetComponent.vue'));
@@ -71,6 +72,9 @@ Vue.component('discounts-component', require('./components/common/discounts/Disc
 Vue.component('photo-upload-component', require('./components/PhotoUploadComponent.vue'));
 Vue.component('metrics-categories-component', require('./components/metrics/categories/MetricsCategoriesComponent'));
 Vue.component('plugins-component', require('./components/plugins/PluginsComponent'));
+
+// Компании
+Vue.component('director-component', require('./components/companies/director/DirectorComponent'));
 
 // Поиск
 
@@ -95,7 +99,7 @@ Vue.component('settings-stocks-component', require('./components/companies/setti
 
 // Vue.component('price-goods-price-component', require('./components/prices_goods/PriceGoodsPriceComponent.vue'));
 
-Vue.component('pickmeup-component', require('./components/common/PickmeupComponent'));
+Vue.component('pickmeup-component', require('./components/inputs/PickmeupComponent'));
 
 // Виджеты
 Vue.component('clients-indicators-component', require('./components/widgets/ClientsIndicatorsComponent'));

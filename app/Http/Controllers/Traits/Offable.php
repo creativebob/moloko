@@ -49,7 +49,7 @@ trait Offable
                         ->info('=== СПИСАНИЕ ' . $composition->getTable() . ' ' . $composition->id . ' ===');
 
                     // Списываем позицию состава
-                    $stock_general = Stock::findOrFail($item->document->stock_id);
+                    $stock_general = Stock::find($item->document->stock_id);
 //                    dd($stock_production);
 
                     if ($composition->stocks->where('stock_id', $stock_general->id)->where('filial_id', $stock_general->filial_id)->where('manufacturer_id', $composition->article->manufacturer_id)->first()) {
@@ -166,7 +166,7 @@ trait Offable
             ->info('=== СПИСАНИЕ ' . $item->getTable() . ' ' . $item->id . ' ===');
 
         // Списываем позицию состава
-        $stock_general = Stock::findOrFail($item->document->stock_id);
+        $stock_general = Stock::find($item->document->stock_id);
 
         // Списываем позицию состава
         $product = $item->product;

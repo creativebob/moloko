@@ -49,6 +49,20 @@ Breadcrumbs::register('sections', function ($breadcrumbs, $pageInfo, $item) {
 });
 
 
+// ---------- Клиенты ----------------
+// index > Создать
+Breadcrumbs::register('create-client', function ($breadcrumbs, $pageInfo, $method) {
+    $breadcrumbs->parent('index', $pageInfo);
+    $breadcrumbs->push('Добавление', route("{$pageInfo->alias}.{$method}"));
+});
+
+// index > Редактировать
+Breadcrumbs::register('edit-client', function ($breadcrumbs, $pageInfo, $name, $method) {
+    $breadcrumbs->parent('index', $pageInfo);
+    $breadcrumbs->push($name, route("{$pageInfo->alias}.$method"));
+});
+
+
 // ---------------------------------- Алиасы и разделы --------------------------------------------
 
 

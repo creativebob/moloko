@@ -28,7 +28,7 @@ class DiscountController extends Controller
     use Discountable;
 
     /**
-     * Отображение списка ресурсов.
+     * Display a listing of the resource.
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
@@ -67,7 +67,7 @@ class DiscountController extends Controller
     }
 
     /**
-     * Показать форму для создания нового ресурса.
+     * Show the form for creating a new resource.
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
@@ -85,7 +85,7 @@ class DiscountController extends Controller
     }
 
     /**
-     * Сохранение только что созданного ресурса в хранилище.
+     * Store a newly created resource in storage.
      *
      * @param DiscountRequest $request
      * @return \Illuminate\Http\RedirectResponse
@@ -114,7 +114,7 @@ class DiscountController extends Controller
     }
 
     /**
-     * Отображение указанного ресурса.
+     * Display the specified resource.
      *
      * @param $id
      */
@@ -124,7 +124,7 @@ class DiscountController extends Controller
     }
 
     /**
-     * Показать форму для редактирования указанного ресурса.
+     * Show the form for editing the specified resource.
      *
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -136,7 +136,7 @@ class DiscountController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $discount = Discount::moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $discount);
@@ -148,7 +148,7 @@ class DiscountController extends Controller
     }
 
     /**
-     * Удаление указанного ресурса из хранилища.
+     * Remove the specified resource from storage.
      *
      * @param DiscountRequest $request
      * @param $id
@@ -162,7 +162,7 @@ class DiscountController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $discount = Discount::moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $discount);
@@ -184,7 +184,7 @@ class DiscountController extends Controller
     }
 
     /**
-     * Удаление указанного ресурса из хранилища.
+     * Remove the specified resource from storage.
      *
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
@@ -209,7 +209,7 @@ class DiscountController extends Controller
 
         $discount = Discount::with('entity')
         ->moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod('destroy'), $discount);

@@ -51,9 +51,7 @@ class WorkflowPolicy
     public function delete(User $user, Model $model)
     {
 
-        if ($model->system == 1) {
-            return false;
-        }
+
 
         if ($model->compositions->isNotEmpty()) {
             return false;

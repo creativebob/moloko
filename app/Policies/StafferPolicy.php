@@ -38,9 +38,7 @@ class StafferPolicy
 
     public function delete(User $user, Staffer $model)
     {
-        if ($model->system == 1) {
-            return false;
-        }
+
 
         if (isset($model->user)) {
             return false;

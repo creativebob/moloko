@@ -12,7 +12,7 @@ class FilialsForCatalogsServicesComposer
 	public function compose(View $view)
 	{
 
-        $catalog = CatalogsService::findOrFail($view->catalog_id);
+        $catalog = CatalogsService::find($view->catalog_id);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right('departments', true, 'index');

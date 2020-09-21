@@ -58,14 +58,12 @@ class ConsignmentPolicy
 
     public function system(User $user, Model $model)
     {
-        if ($model->system == 1) {
-            return false;
-        }
-	
+
+
 	    if ($model->is_posted == 1) {
 		    return false;
 	    }
-	
+
 	    if ($model->items->count() > 0) {
 		    return false;
 	    }

@@ -38,9 +38,7 @@ class NavigationPolicy
 
     public function delete(User $user, Navigation $model)
     {
-         if ($model->system == 1) {
-            return false;
-        }
+
 
         // if ($model->company_id == null) {
         //     return false;

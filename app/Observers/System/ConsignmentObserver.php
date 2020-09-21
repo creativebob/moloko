@@ -24,7 +24,7 @@ class ConsignmentObserver
     {
         $this->update($consignment);
 
-        $stock = Stock::findOrFail($consignment->stock_id);
+        $stock = Stock::find($consignment->stock_id);
 	    $consignment->filial_id = $stock->filial_id;
     }
 

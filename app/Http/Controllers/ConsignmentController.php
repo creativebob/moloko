@@ -124,7 +124,7 @@ class ConsignmentController extends Controller
         ->moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
-        ->findOrFail($id);
+        ->find($id);
 //        dd($consignment);
 
         $this->authorize(getmethod(__FUNCTION__), $consignment);
@@ -146,7 +146,7 @@ class ConsignmentController extends Controller
         $consignment = Consignment::moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $consignment);
@@ -172,7 +172,7 @@ class ConsignmentController extends Controller
 	    ->moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $consignment);
@@ -269,7 +269,7 @@ class ConsignmentController extends Controller
 		$consignment = Consignment::moderatorLimit($answer)
 			->authors($answer)
 			->systemItem($answer)
-			->findOrFail($id);
+			->find($id);
 
 		if ($consignment->is_posted == 0) {
             // Подключение политики
@@ -343,7 +343,7 @@ class ConsignmentController extends Controller
 		$consignment = Consignment::moderatorLimit($answer)
 			->authors($answer)
 			->systemItem($answer)
-			->findOrFail($id);
+			->find($id);
 
 		// Подключение политики
 		$this->authorize(getmethod('update'), $consignment);

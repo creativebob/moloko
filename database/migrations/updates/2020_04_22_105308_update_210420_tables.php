@@ -96,6 +96,10 @@ class Update210420Tables extends Migration
             $table->decimal('estimate_discount', 10, 2)->default(0)->comment('Скидкка по смете')->after('estimate_discount_id');
             $table->decimal('total_estimate_discount', 10, 2)->default(0)->comment('Сумма с скидкой по смете')->after('estimate_discount');
 
+            $table->decimal('client_discount_percent', 10, 2)->default(0)->comment('Скидка клиента (%)')->after('total_estimate_discount');
+            $table->decimal('client_discount_currency', 10, 2)->default(0)->comment('Скидка клиента (валюта)')->after('client_discount_percent');
+            $table->decimal('total_client_discount', 10, 2)->default(0)->comment('Сумма со скидкой клиента')->after('total_client_discount');
+
             $table->text('comment')->nullable()->comment('Комментарий')->after('profit');
             $table->tinyInteger('sale_mode')->default(1)->comment('Режим продажи: 1 - валюта, 2 - поинты')->after('goods_id');
             $table->integer('total_points')->default(0)->comment('Итого поинтами')->after('total');
@@ -120,6 +124,10 @@ class Update210420Tables extends Migration
 //            $table->foreign('estimate_discount_id')->references('id')->on('discounts');
             $table->decimal('estimate_discount', 10, 2)->default(0)->comment('Скидкка по смете')->after('estimate_discount_id');
             $table->decimal('total_estimate_discount', 10, 2)->default(0)->comment('Сумма с скидкой по смете')->after('estimate_discount');
+
+            $table->decimal('client_discount_percent', 10, 2)->default(0)->comment('Скидка клиента (%)')->after('total_estimate_discount');
+            $table->decimal('client_discount_currency', 10, 2)->default(0)->comment('Скидка клиента (валюта)')->after('client_discount_percent');
+            $table->decimal('total_client_discount', 10, 2)->default(0)->comment('Сумма со скидкой клиента')->after('total_client_discount');
 
             $table->text('comment')->nullable()->comment('Комментарий')->after('profit');
             $table->tinyInteger('sale_mode')->default(1)->comment('Режим продажи: 1 - валюта, 2 - поинты')->after('service_id');
@@ -318,6 +326,9 @@ class Update210420Tables extends Migration
                 'estimate_discount_id',
                 'estimate_discount',
                 'total_estimate_discount',
+                'client_discount_percent',
+                'client_discount_currency',
+                'total_client_discount',
                 'comment',
                 'sale_mode',
                 'total_points',
@@ -337,6 +348,9 @@ class Update210420Tables extends Migration
                 'estimate_discount_id',
                 'estimate_discount',
                 'total_estimate_discount',
+                'client_discount_percent',
+                'client_discount_currency',
+                'total_client_discount',
                 'comment',
                 'sale_mode',
                 'total_points',

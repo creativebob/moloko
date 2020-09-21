@@ -611,7 +611,7 @@ class ParserController extends Controller
 
         foreach ($leads as $lead) {
 
-            $old_lead = OldLead::with('city')->findOrFail($lead->old_lead_id);
+            $old_lead = OldLead::with('city')->find($lead->old_lead_id);
 
             // dd($lead->location);
             if (isset($lead->location->address)) {
@@ -1003,7 +1003,7 @@ class ParserController extends Controller
     }
 
     /**
-     * Показать форму для создания нового ресурса.
+     * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
@@ -1387,7 +1387,7 @@ class ParserController extends Controller
     }
 
     /**
-     * Отображение указанного ресурса.
+     * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -1398,7 +1398,7 @@ class ParserController extends Controller
     }
 
     /**
-     * Показать форму для редактирования указанного ресурса.
+     * Show the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -1409,7 +1409,7 @@ class ParserController extends Controller
     }
 
     /**
-     * Обновление указанного ресурса в хранилище.
+     * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -1421,7 +1421,7 @@ class ParserController extends Controller
     }
 
     /**
-     * Удаление указанного ресурса из хранилища.
+     * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response

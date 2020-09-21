@@ -124,7 +124,7 @@
   </div>
 @endsection
 
-@section('scripts')
+@push('scripts')
 <script type="application/javascript">
   // Оставляем ширину у вырванного из потока элемента
   var fixHelper = function(e, ui) {
@@ -286,7 +286,7 @@
   });
 
 </script>
-@endsection
+@endpush
 
 
 

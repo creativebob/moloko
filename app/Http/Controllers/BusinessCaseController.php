@@ -25,7 +25,7 @@ class BusinessCaseController extends Controller
         $this->middleware('auth');
 
         $this->portfolio_id = request()->portfolio_id;
-        $this->portfolio = Portfolio::findOrFail(request()->portfolio_id);
+        $this->portfolio = Portfolio::find(request()->portfolio_id);
         $this->business_case = $business_case;
         $this->class = BusinessCase::class;
         $this->model = 'App\BusinessCase';
@@ -36,7 +36,7 @@ class BusinessCaseController extends Controller
     use Photable;
 
     /**
-     * Отображение списка ресурсов.
+     * Display a listing of the resource.
      *
      * @param $portfolio_id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -71,7 +71,7 @@ class BusinessCaseController extends Controller
     }
 
     /**
-     * Показать форму для создания нового ресурса.
+     * Show the form for creating a new resource.
      *
      * @param $portfolio_id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -107,7 +107,7 @@ class BusinessCaseController extends Controller
         $business_case = BusinessCase::create($data);
 
         // Cохраняем / обновляем фото
-        $photo_id = $this->getPhotoId($request, $business_case);
+        $photo_id = $this->getPhotoId($business_case);
         $business_case->photo_id = $photo_id;
         $business_case->save();
 
@@ -121,7 +121,7 @@ class BusinessCaseController extends Controller
     }
 
     /**
-     * Отображение указанного ресурса.
+     * Display the specified resource.
      *
      * @param $id
      */
@@ -131,7 +131,7 @@ class BusinessCaseController extends Controller
     }
 
     /**
-     * Показать форму для редактирования указанного ресурса.
+     * Show the form for editing the specified resource.
      *
      * @param $portfolio_id
      * @param $id
@@ -145,7 +145,7 @@ class BusinessCaseController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $business_case = BusinessCase::moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
         // dd($business_case);
 
         // Подключение политики
@@ -159,7 +159,7 @@ class BusinessCaseController extends Controller
     }
 
     /**
-     * Обновление указанного ресурса в хранилище.
+     * Update the specified resource in storage.
      *
      * @param BusinessCaseRequest $request
      * @param $portfolio_id
@@ -174,7 +174,7 @@ class BusinessCaseController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $business_case = BusinessCase::moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $business_case);
@@ -183,7 +183,7 @@ class BusinessCaseController extends Controller
         $business_case->update($data);
 
         // Cохраняем / обновляем фото
-        $photo_id = $this->getPhotoId($request, $business_case);
+        $photo_id = $this->getPhotoId($business_case);
         $business_case->photo_id = $photo_id;
         $business_case->save();
 
@@ -197,7 +197,7 @@ class BusinessCaseController extends Controller
     }
 
     /**
-     * Удаление указанного ресурса из хранилища.
+     * Remove the specified resource from storage.
      *
      * @param $portfolio_id
      * @param $id
@@ -212,7 +212,7 @@ class BusinessCaseController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $business_case = BusinessCase::moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $business_case);

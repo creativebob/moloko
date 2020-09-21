@@ -134,7 +134,7 @@ class ToolsCategoryController extends Controller
             'manufacturers',
         ])
         ->moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
         // dd($tools_category);
 
         // Подключение политики
@@ -170,14 +170,14 @@ class ToolsCategoryController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $tools_category = ToolsCategory::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $tools_category);
 
         // Заполнение и проверка основных полей в трейте
         $data = $request->input();
-        $data['photo_id'] = $this->getPhotoId($request, $tools_category);
+        $data['photo_id'] = $this->getPhotoId($tools_category);
         $result = $tools_category->update($data);
 
         if ($result) {
@@ -207,7 +207,7 @@ class ToolsCategoryController extends Controller
         'tools'
         ])
         ->moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $tools_category);

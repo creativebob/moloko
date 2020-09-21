@@ -54,15 +54,16 @@
                             </div>
 
                             <div class="small-3 medium-6 large-3 cell">
-                                <pickmeup-component
-                                    name="begin_date"
-                                    title="Дата начала"
-                                    value="{{ isset($discount->begined_at) ? $discount->begined_at->format('Y-m-d') : null }}"
-                                    :required="true"
-                                    @if($discount->id)
-                                        :disabled="true"
-                                    @endif
-                                ></pickmeup-component>
+                                <label>Дата начала
+                                    <pickmeup-component
+                                        name="begin_date"
+                                        value="{{ isset($discount->begined_at) ? $discount->begined_at->format('Y-m-d') : null }}"
+                                        :required="true"
+                                        @if($discount->id)
+                                            :disabled="true"
+                                        @endif
+                                    ></pickmeup-component>
+                                </label>
                             </div>
                             <div class="small-3 medium-6 large-3 cell">
 {{--                                    <input-time-component--}}
@@ -76,14 +77,15 @@
                             </div>
 
                             <div class="small-3 medium-6 large-3 cell">
-                                <pickmeup-component
-                                    name="end_date"
-                                    title="Дата окончания"
-                                    value="{{ isset($discount->ended_at) ? $discount->ended_at->format('Y-m-d') : null }}"
-                                    @if($discount->id)
-                                        :disabled="true"
-                                    @endif
-                                ></pickmeup-component>
+                                <label>Дата окончания
+                                    <pickmeup-component
+                                        name="end_date"
+                                        value="{{ isset($discount->ended_at) ? $discount->ended_at->format('Y-m-d') : null }}"
+                                        @if($discount->id)
+                                            :disabled="true"
+                                        @endif
+                                    ></pickmeup-component>
+                                </label>
                             </div>
                             <div class="small-3 medium-6 large-3 cell">
                                 <label>Время окончания:

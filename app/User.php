@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Models\System\Traits\Phonable;
+use App\Models\System\Traits\Quietlable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -29,6 +31,8 @@ class User extends Authenticatable
 
     use Notifiable;
     use SoftDeletes;
+    use Quietlable;
+    use Phonable;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
@@ -50,37 +54,27 @@ class User extends Authenticatable
     ];
 
     protected $fillable = [
-        'login',
-        'login_date',
-
-        'email',
-        'password',
-        'nickname',
-
-        'external',
-
         'first_name',
         'second_name',
         'patronymic',
-        'name',
-        'gender',
-        'birthday_date',
-
-        'phone',
-        'extra_phone',
-        'telegram_id',
-        'city_id',
-        'address',
 
         'location_id',
 
-        'orgform_status',
-        // 'company_name',
-        'user_inn',
-        // 'kpp',
-        // 'account_settlement',
-        // 'account_correspondent',
-        // 'bank',
+        'email',
+        'telegram',
+        'liter',
+
+        'login',
+        'login_date',
+        'password',
+
+        'site_id',
+        'access_block',
+
+        'user_type',
+        'filial_id',
+        'gender',
+        'birthday_date',
 
         'passport_number',
         'passport_released',
@@ -90,23 +84,28 @@ class User extends Authenticatable
         'specialty',
         'about',
         'degree',
+        'about',
 
-        'user_type',
-        'lead_id',
-        'employee_id',
-        'access_block',
-        'company_id',
-        'filial_id',
-        'moderation',
-        'photo_id',
+        'nickname',
+        'external',
 
         'display',
         'system',
-        'moderation'
+        'moderation',
+
+//        'orgform_status',
+        // 'company_name',
+//        'user_inn',
+        // 'kpp',
+        // 'account_settlement',
+        // 'account_correspondent',
+        // 'bank',
+//        'lead_id',
+//        'employee_id',
     ];
 
     protected $hidden = [
-        'password',
+//        'password',
         'remember_token',
     ];
 
@@ -154,19 +153,23 @@ class User extends Authenticatable
     // КОНЕЦ БЛОКА ОПИСАНИЯ ФИЛЬТРОВ
     public function setBirthdayDateAttribute($value)
     {
-        if (isset($value)) {
+        if ($value) {
             $this->attributes['birthday_date'] = Carbon::createFromFormat('d.m.Y', $value);
         }
     }
 
     public function setPassportDateAttribute($value) {
-        if($value == Null){
-            return $value;
-        } else
-        {
-            $date_parts = explode('.', $value);
-            $this->attributes['passport_date'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
+        if ($value) {
+            $this->attributes['passport_date'] = Carbon::createFromFormat('d.m.Y', $value);
         }
+
+//        if($value == Null){
+//            return $value;
+//        } else
+//        {
+//            $date_parts = explode('.', $value);
+//            $this->attributes['passport_date'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
+//        }
     }
 
 //    public function setNameAttribute() {
@@ -185,15 +188,15 @@ class User extends Authenticatable
 //        }
 //    }
 
-    public function getPassportDateAttribute($value) {
-        if($value == Null){
-            return $value;
-        } else {
-            $date_parts = explode('-', $value);
-            $value = $date_parts[2].'.'.$date_parts[1].'.'.$date_parts[0];
-            return $value;
-        }
-    }
+//    public function getPassportDateAttribute($value) {
+//        if($value == Null){
+//            return $value;
+//        } else {
+//            $date_parts = explode('-', $value);
+//            $value = $date_parts[2].'.'.$date_parts[1].'.'.$date_parts[0];
+//            return $value;
+//        }
+//    }
 
     // Склеиваем имя и фамилию для юзера и выводим при обращении через name
 //    public function getNameAttribute($value) {
@@ -465,8 +468,15 @@ class User extends Authenticatable
     // Клиент
     public function client()
     {
-        return $this->morphOne('App\Client', 'clientable');
+        return $this->morphOne(Client::class, 'clientable')
+            ->where([
+                'archive' => false
+            ]);
     }
+//    public function client()
+//    {
+//        return $this->morphOne('App\Client', 'clientable');
+//    }
 
     // Бюджет
     public function badget()

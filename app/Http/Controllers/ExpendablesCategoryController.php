@@ -128,7 +128,7 @@ class ExpendablesCategoryController extends Controller
             'manufacturers',
         ])
             ->moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $expendables_category);
@@ -162,13 +162,13 @@ class ExpendablesCategoryController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $expendables_category = ExpendablesCategory::moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $expendables_category);
 
         $data = $request->input();
-        $data['photo_id'] = $this->getPhotoId($request, $expendables_category);
+        $data['photo_id'] = $this->getPhotoId($expendables_category);
         $result = $expendables_category->update($data);
 
         if ($result) {
@@ -195,7 +195,7 @@ class ExpendablesCategoryController extends Controller
         $expendables_category = ExpendablesCategory::with([
             'childs'
         ])
-            ->moderatorLimit($answer)->findOrFail($id);
+            ->moderatorLimit($answer)->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $expendables_category);

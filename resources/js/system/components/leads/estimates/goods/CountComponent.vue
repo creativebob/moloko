@@ -6,7 +6,7 @@
             >
                 <digit-component
                     :value="curCount"
-                    @change="setCount"
+                    @input="setCount"
                     @blur="changeCount = false"
                     @enter="updateCount"
                     :decimal-place="0"

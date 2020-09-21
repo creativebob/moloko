@@ -44,9 +44,7 @@ class ExpendablesCategoryPolicy
 
     public function delete(User $user, ExpendablesCategory $model)
     {
-        if ($model->system == 1) {
-            return false;
-        }
+
 
         // if ($model->company_id == null) {
         //     return false;

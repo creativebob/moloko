@@ -26,11 +26,11 @@
 {{ Form::close() }}
 @endsection
 
-@section('scripts')
+@push('scripts')
 @include('includes.scripts.inputs-mask')
 @include('catalogs_goods.scripts')
 @include('includes.scripts.upload-file')
-@endsection
+@endpush
 
 
 

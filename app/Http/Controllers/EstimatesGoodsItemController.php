@@ -28,7 +28,7 @@ class EstimatesGoodsItemController extends Controller
     use Reservable;
 
     /**
-     * Отображение списка ресурсов.
+     * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
@@ -38,7 +38,7 @@ class EstimatesGoodsItemController extends Controller
     }
 
     /**
-     * Показать форму для создания нового ресурса.
+     * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
@@ -77,7 +77,7 @@ class EstimatesGoodsItemController extends Controller
         $priceGoods = PricesGoods::with([
             'product.article'
         ])
-        ->findOrFail($request->price_id);
+        ->find($request->price_id);
 
         $discountCurrency = $priceGoods->price - $priceGoods->total;
         $discountPercent = 0;
@@ -197,7 +197,7 @@ class EstimatesGoodsItemController extends Controller
     }
 
     /**
-     * Отображение указанного ресурса.
+     * Display the specified resource.
      *
      * @param  \App\EstimatesGoodsItem  $estimatesItem
      * @return \Illuminate\Http\Response
@@ -208,7 +208,7 @@ class EstimatesGoodsItemController extends Controller
     }
 
     /**
-     * Показать форму для редактирования указанного ресурса.
+     * Show the form for editing the specified resource.
      *
      * @param  \App\EstimatesGoodsItem  $estimatesItem
      * @return \Illuminate\Http\Response
@@ -219,7 +219,7 @@ class EstimatesGoodsItemController extends Controller
     }
 
     /**
-     * Обновление указанного ресурса в хранилище.
+     * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
      * @param  \App\EstimatesGoodsItem $estimatesItem
@@ -230,7 +230,7 @@ class EstimatesGoodsItemController extends Controller
         $estimatesGoodsItem = EstimatesGoodsItem::with([
             'product.article',
         ])
-        ->findOrFail($id);
+        ->find($id);
 //        dd($estimatesGoodsItem);
 
         $merge = 0;
@@ -290,7 +290,7 @@ class EstimatesGoodsItemController extends Controller
     }
 
     /**
-     * Удаление указанного ресурса из хранилища.
+     * Remove the specified resource from storage.
      *
      * @param $id
      * @return \Illuminate\Http\JsonResponse
@@ -304,7 +304,7 @@ class EstimatesGoodsItemController extends Controller
             'document',
             'reserve'
         ])
-        ->findOrFail($id);
+        ->find($id);
 
 	    if (isset($estimatesGoodsItem->reserve)) {
             Log::channel('documents')
@@ -399,7 +399,7 @@ class EstimatesGoodsItemController extends Controller
             'document',
             'reserve'
         ])
-        ->findOrfail($id);
+        ->find($id);
 
         Log::channel('documents')
             ->info('========================================== НАЧАЛО РЕЗЕРВИРОВАНИЯ ПУНКТА СМЕТЫ, ID: ' . $estimates_goods_item->id . ' ==============================================');
@@ -431,7 +431,7 @@ class EstimatesGoodsItemController extends Controller
             'document',
             'reserve'
         ])
-            ->findOrfail($id);
+            ->find($id);
 
         Log::channel('documents')
             ->info('========================================== НАЧАЛО СНЯТИЯ РЕЗЕРВИРОВАНИЯ ПУНКТА СМЕТЫ, ID: ' . $estimates_goods_item->id . ' ==============================================');

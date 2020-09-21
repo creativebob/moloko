@@ -68,12 +68,16 @@ class Lead extends Model
 
     protected $fillable = [
         'name',
+        'company_name',
+        'email',
+
+        'location_id',
+        'client_id',
 	    'shipment_at',
 
         'order_amount_base',
         'need_delivery',
 
-        'client_id',
 
         'draft',
 

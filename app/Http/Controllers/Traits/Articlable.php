@@ -65,7 +65,7 @@ trait Articlable
             break;
 
             case 'mode-select':
-                $articles_group = ArticlesGroup::findOrFail($request->group_id);
+                $articles_group = ArticlesGroup::find($request->group_id);
             break;
         }
 
@@ -80,33 +80,33 @@ trait Articlable
             // Смотрим статичную категорию id 2 (Масса), если пришла она по переводим к выбранному коэффициенту
             if($data['units_category_id'] == 2) {
 
-                $unit = Unit::findOrFail($data['unit_id']);
+                $unit = Unit::find($data['unit_id']);
                 $weight = $unit->ratio;
                 $data['weight'] = $weight;
 
             } elseif ($data['units_category_id'] == 5) {
 
-                $unit = Unit::findOrFail($data['unit_id']);
+                $unit = Unit::find($data['unit_id']);
                 $volume = $unit->ratio;
                 $data['volume'] = $volume;
 
             } else {
 
                 // Если нет, то умножаем пришедший вес на количество чего либо
-                // $extra_unit = Unit::findOrFail($data['extra_unit_id']);
+                // $extra_unit = Unit::find($data['extra_unit_id']);
 
 
                 // Если не пришло кол-во веса, значит у пользователя его не запросили, так как планируеться измерять
                 // в единицах веса. Установим единицу!
 
                 if(isset($data['weight'])){
-                    $weight_unit = Unit::findOrFail($data['unit_weight_id']);
+                    $weight_unit = Unit::find($data['unit_weight_id']);
                     $weight = $data['weight'] * $weight_unit->ratio;
                     $data['weight'] = $weight;
                 };
 
                 if(isset($data['volume'])){
-                    $volume_unit = Unit::findOrFail($data['unit_volume_id']);
+                    $volume_unit = Unit::find($data['unit_volume_id']);
                     $volume = $data['volume'] * $volume_unit->ratio;
                     $data['volume'] = $volume;
                 };
@@ -185,7 +185,7 @@ trait Articlable
 
                     // Устаревший код
                     // if (isset($article->unit_id)) {
-                    //     $unit = Unit::findOrFail($article->unit_id);
+                    //     $unit = Unit::find($article->unit_id);
                     //     $weight = $data['weight'] * $unit->ratio;
                     //     $data['weight'] = $weight;
                     // }
@@ -194,7 +194,7 @@ trait Articlable
                 $data['draft'] = $request->draft;
                 // dd($data);
 
-                $photo_id = $this->getPhotoId($request, $article);
+                $photo_id = $this->getPhotoId($article);
                 $data['photo_id'] = $photo_id;
 
                 // Если ошибок и совпадений нет, то обновляем артикул
@@ -486,7 +486,7 @@ trait Articlable
                 ->first(['model']);
             $model = 'App\\'.$entity->model;
 
-            $new_category = $model::findOrFail($category_id);
+            $new_category = $model::find($category_id);
             $new_category->groups()->attach($request->articles_group_id);
 
             $item->update([

@@ -23,9 +23,9 @@
 
 @endsection
 
-@section('scripts')
+@push('scripts')
   @include('includes.scripts.cities-list')
   @include('includes.scripts.inputs-mask')
-@endsection
+  @endpush
 
 

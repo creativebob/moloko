@@ -55,9 +55,7 @@ class IndicatorPolicy
     public function delete(User $user, Indicator $model)
     {
 
-        if ($model->system == 1) {
-            return false;
-        }
+
 
         return $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
     }

@@ -21,7 +21,7 @@ class PluginController extends Controller
         $this->entity_dependence = false;
     }
     /**
-     * Отображение списка ресурсов.
+     * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
@@ -31,7 +31,7 @@ class PluginController extends Controller
     }
 
     /**
-     * Показать форму для создания нового ресурса.
+     * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
@@ -72,7 +72,7 @@ class PluginController extends Controller
     }
 
     /**
-     * Отображение указанного ресурса.
+     * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -83,7 +83,7 @@ class PluginController extends Controller
     }
 
     /**
-     * Показать форму для редактирования указанного ресурса.
+     * Show the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -94,7 +94,7 @@ class PluginController extends Controller
     }
 
     /**
-     * Обновление указанного ресурса в хранилище.
+     * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -102,7 +102,7 @@ class PluginController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $plugin = Plugin::findOrFail($id);
+        $plugin = Plugin::find($id);
 
         $result = $plugin->update([
             'code' => $request->code,
@@ -126,7 +126,7 @@ class PluginController extends Controller
     }
 
     /**
-     * Удаление указанного ресурса из хранилища.
+     * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -143,7 +143,7 @@ class PluginController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $plugin = Plugin::moderatorLimit($answer)
-            ->findOrFail($id);
+            ->find($id);
 
         // Подключение политики
 //        $this->authorize(getmethod(__FUNCTION__), $plugin);

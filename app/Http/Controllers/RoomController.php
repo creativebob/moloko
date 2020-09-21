@@ -281,7 +281,7 @@ class RoomController extends Controller
         Log::channel('operations')
         ->info('========================================== НАЧИНАЕМ ЗАПИСЬ ПОМЕЩЕНИЯ ==============================================');
 
-        $rooms_category = RoomsCategory::findOrFail($request->category_id);
+        $rooms_category = RoomsCategory::find($request->category_id);
         // dd($goods_category->load('groups'));
         $article = $this->storeArticle($request, $rooms_category);
 
@@ -338,7 +338,7 @@ class RoomController extends Controller
 
         // Главный запрос
         $room = Room::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
         // dd($room);
 
         // Подключение политики
@@ -383,7 +383,7 @@ class RoomController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
         $room = Room::with('article')
         ->moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
         // dd($room);
 
         // Подключение политики
@@ -457,7 +457,7 @@ class RoomController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $room = Room::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod('destroy'), $room);

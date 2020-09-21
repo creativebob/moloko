@@ -3,9 +3,8 @@
 namespace App\Policies;
 
 use App\User;
-use App\Raw as Model;
+use App\Raw as Item;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Support\Facades\Auth;
 use App\Policies\Traits\PoliticTrait;
 
 class RawPolicy
@@ -17,79 +16,74 @@ class RawPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\User  $user
-     * @param  \App\User  $model
      * @return mixed
      */
 
-    protected $entity_name = 'raws';
-    protected $entity_dependence = false;
+    protected $entityName = 'raws';
+    protected $entityDependence = false;
 
     public function index(User $user)
     {
-        $result = $this->getstatus($this->entity_name, null, 'index', $this->entity_dependence);
+        $result = $this->getstatus($this->entityName, null, 'index', $this->entityDependence);
         return $result;
     }
 
-    public function view(User $user, Model $model)
+    public function view(User $user, Item $item)
     {
-        $result = $this->getstatus($this->entity_name, $model, 'view', $this->entity_dependence);
+        $result = $this->getstatus($this->entityName, $item, 'view', $this->entityDependence);
         return $result;
     }
 
     public function create(User $user)
     {
-        $result = $this->getstatus($this->entity_name, null, 'create', $this->entity_dependence);
+        $result = $this->getstatus($this->entityName, null, 'create', $this->entityDependence);
         return $result;
     }
 
-    public function update(User $user, Model $model)
+    public function update(User $user, Item $item)
     {
-        $result = $this->getstatus($this->entity_name, $model, 'update', $this->entity_dependence);
+        $result = $this->getstatus($this->entityName, $item, 'update', $this->entityDependence);
         return $result;
     }
 
-    public function delete(User $user, Model $model)
+    public function delete(User $user, Item $item)
     {
 
-        if ($model->system == 1) {
+        if ($item->compositions->isNotEmpty()) {
             return false;
         }
 
-        if ($model->compositions->isNotEmpty()) {
-            return false;
-        }
-
-        $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
+        $result = $this->getstatus($this->entityName, $item, 'delete', $this->entityDependence);
         return $result;
     }
 
-    public function moderator(User $user, Model $model)
+    public function moderator(User $user, Item $item)
     {
-        $result = $this->getstatus($this->entity_name, $model, 'moderator', $this->entity_dependence);
+        $result = $this->getstatus($this->entityName, $item, 'moderator', $this->entityDependence);
         return $result;
     }
 
-    public function automoderate(User $user, Model $model)
+    public function automoderate(User $user, Item $item)
     {
-        $result = $this->getstatus($this->entity_name, $model, 'automoderate', $this->entity_dependence);
+        $result = $this->getstatus($this->entityName, $item, 'automoderate', $this->entityDependence);
         return $result;
     }
 
     public function display(User $user)
     {
-        $result = $this->getstatus($this->entity_name, null, 'display', $this->entity_dependence);
+        $result = $this->getstatus($this->entityName, null, 'display', $this->entityDependence);
         return $result;
     }
 
-    public function system(User $user, Model $model)
+    public function system(User $user, Item $item)
     {
-        $result = $this->getstatus($this->entity_name, $model, 'system', $this->entity_dependence);
+        $result = $this->getstatus($this->entityName, $item, 'system', $this->entityDependence);
         return $result;
     }
 
-    public function god(User $user)
+    public function god()
     {
-        $result = isset(Auth::user()->god);
+        $result = isset(auth()->user()->god);
         return $result;
     }
 }

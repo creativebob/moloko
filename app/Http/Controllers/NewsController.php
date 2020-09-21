@@ -118,7 +118,7 @@ class NewsController extends Controller
 
         if ($cur_news) {
 
-            $photo_id = $this->getPhotoId($request, $cur_news);
+            $photo_id = $this->getPhotoId($cur_news);
             $cur_news->photo_id = $photo_id;
             $cur_news->save();
 
@@ -144,7 +144,7 @@ class NewsController extends Controller
             // 'cities',
         ])
         ->moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $cur_news);
@@ -163,13 +163,13 @@ class NewsController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $cur_news = News::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $cur_news);
 
         $data = $request->input();
-        $data['photo_id'] = $this->getPhotoId($request, $cur_news);
+        $data['photo_id'] = $this->getPhotoId($cur_news);
         $cur_news->update($data);
 
         if ($cur_news) {
@@ -195,7 +195,7 @@ class NewsController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $cur_news = News::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
         // dd($cur_news);
 
         // Подключение политики

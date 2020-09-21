@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\System\Traits\Phonable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
@@ -23,16 +24,16 @@ use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 // Фильтры
 use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
+
 // use App\Scopes\Filters\DateIntervalFilter;
 
 class Company extends Model
 {
-
-    // Включаем кеш
-    use Cachable;
-
     use Notifiable;
     use SoftDeletes;
+    use Cachable;
+
+    use Phonable;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
@@ -60,15 +61,30 @@ class Company extends Model
 
     protected $fillable = [
         'name',
+        'prename',
+        'slogan',
+        'name_short',
+        'designation',
+        'email',
         'alias',
-        'phone',
-        'extra_phone',
+
+        'inn',
+        'kpp',
+        'ogrn',
+        'okpo',
+        'okved',
         'bic',
+
+        'seo_description',
+        'about',
+        'foundation_date',
+
+        'external_control',
+
         'location_id',
         'sector_id',
         'legal_form_id',
-        'foundation_date',
-	    'photo_id',
+        'photo_id',
 
         'display',
         'system',
@@ -80,7 +96,7 @@ class Company extends Model
     {
 
         //Фильтруем по списку городов
-        if($request->author_id){
+        if ($request->author_id) {
             $query = $query->whereIn('author_id', $request->author_id);
         };
 
@@ -99,11 +115,14 @@ class Company extends Model
 
     public function director()
     {
-        return $this->hasOne('App\Staffer')->whereHas('department', function($q){
-            $q->whereNull('parent_id');
-        })->whereHas('position', function($q){
-            $q->where('direction', true);
-        })->withDefault('Не найден');
+        return $this->hasOne('App\Staffer')
+            ->whereHas('department', function ($q) {
+                $q->whereNull('parent_id');
+            })
+            ->whereHas('position', function ($q) {
+                $q->where('direction', true);
+            })
+            ->withDefault('Не найден');
     }
 
     // Получение списка банковских счетов
@@ -145,9 +164,10 @@ class Company extends Model
     }
 
     // Получаем график компании в адаптированном под шаблон виде
-    public function getMainScheduleAttribute($value) {
+    public function getMainScheduleAttribute($value)
+    {
         $main_schedule = $this->morphToMany('App\Schedule', 'schedule_entities')->with('worktimes')->wherePivot('mode', 'main')->first();
-        if($main_schedule != null){
+        if ($main_schedule != null) {
             return $main_schedule;
         } else {
             return $value;
@@ -155,14 +175,15 @@ class Company extends Model
     }
 
     // Получаем график компании в адаптированном под шаблон виде
-    public function getWorktimeAttribute($value) {
-            $worktime = $this->morphToMany('App\Schedule', 'schedule_entities')->wherePivot('mode', 'main')->first();
-            if($worktime != null){
-                $worktime = $worktime->worktimes;
-                return worktime_to_format($worktime->keyBy('weekday'));
-            } else {
-                return $value;
-            }
+    public function getWorktimeAttribute($value)
+    {
+        $worktime = $this->morphToMany('App\Schedule', 'schedule_entities')->wherePivot('mode', 'main')->first();
+        if ($worktime != null) {
+            $worktime = $worktime->worktimes;
+            return worktime_to_format($worktime->keyBy('weekday'));
+        } else {
+            return $value;
+        }
     }
 
     public function positions()
@@ -195,6 +216,12 @@ class Company extends Model
     }
 
     // Получаем поставщиков
+    public function supplier()
+    {
+        return $this->hasOne(Supplier::class, 'supplier_id')
+            ->where('archive', false);
+    }
+
     public function suppliers()
     {
         return $this->belongsToMany('App\Company', 'suppliers', 'company_id', 'supplier_id');
@@ -207,6 +234,14 @@ class Company extends Model
     }
 
     // Получаем клиентов-компании
+    public function client()
+    {
+        return $this->morphOne(Client::class, 'clientable')
+            ->where([
+                'archive' => false
+            ]);
+    }
+
     public function clients()
     {
         return $this->hasMany('App\Client', 'company_id');
@@ -235,9 +270,27 @@ class Company extends Model
 
     }
 
+    // Производитель
+    public function manufacturer()
+    {
+        return $this->hasOne(Manufacturer::class, 'manufacturer_id')
+            ->where('archive', false);
+    }
+
     public function manufacturers()
     {
-        return $this->hasMany('App\Manufacturer', 'company_id');
+        return $this->hasMany(Manufacturer::class, 'company_id')
+            ->where('archive', false);
+    }
+
+    public function manufactured()
+    {
+        return $this->belongsToMany('App\Company', 'manufacturers', 'manufacturer_id', 'company_id');
+    }
+
+    public function we_manufacturer()
+    {
+        return $this->belongsTo(Manufacturer::class, 'id', 'manufacturer_id');
     }
 
     public function vendors()
@@ -245,16 +298,7 @@ class Company extends Model
         return $this->hasMany(Vendor::class, 'company_id');
     }
 
-    // Производитель
-    public function manufactured($company_id = null)
-    {
-        return $this->belongsToMany('App\Company', 'manufacturers', 'manufacturer_id', 'company_id')->where('manufacturer_id', $company_id);
-    }
 
-	public function we_manufacturer()
-	{
-		return $this->belongsTo(Manufacturer::class, 'id', 'manufacturer_id');
-	}
 
     // Получаем клиентов
     // public function clients()
@@ -311,57 +355,36 @@ class Company extends Model
         return $this->belongsToMany(ProcessesType::class, 'company_processes_type', 'company_id', 'processes_type_id');
     }
 
-    // Телефоны
-
-    // Основной
-    public function main_phones()
-    {
-        return $this->morphToMany('App\Phone', 'phone_entity')->wherePivot('main', '=', 1)->whereNull('archive')->withPivot('archive');
-    }
-
-    public function getMainPhoneAttribute()
-    {
-        if(!empty($this->main_phones->first()))
-        {
-            $value = $this->main_phones->first();
-        } else {
-            $value = null;
-        }
-        return $value;
-    }
-
-    // Дополнительные
-    public function extra_phones()
-    {
-        return $this->morphToMany('App\Phone', 'phone_entity')->whereNull('archive')->whereNull('main')->withPivot('archive');
-    }
-
-    // Все
-    public function phones()
-    {
-        return $this->morphToMany('App\Phone', 'phone_entity');
-    }
-
     // Отзывы
     public function feedback()
     {
         return $this->morphMany('App\Feedback', 'feedback');
     }
 
+
     public function getManufacturerSelfAttribute($value)
     {
-        $ms = $this->hasOne('App\Manufacturer', 'manufacturer_id')->where('archive', 0)->first();
-        if($ms == null) {$value = false;} else {$value = true;};
+        $ms = $this->hasOne('App\Manufacturer', 'manufacturer_id')
+            ->where('archive', 0)
+            ->first();
+        if ($ms == null) {
+            $value = false;
+        } else {
+            $value = true;
+        };
         return $value;
     }
 
     public function getSupplierSelfAttribute($value)
     {
         $ms = $this->hasOne('App\Supplier', 'supplier_id')->where('archive', 0)->first();
-        if($ms == null) {$value = false;} else {$value = true;};
+        if ($ms == null) {
+            $value = false;
+        } else {
+            $value = true;
+        };
         return $value;
     }
-
 
 
     public function setFoundationDateAttribute($value)
@@ -373,11 +396,11 @@ class Company extends Model
         }
     }
 
-	// Фото
-	public function photo()
-	{
-		return $this->belongsTo(Photo::class);
-	}
+    // Фото
+    public function photo()
+    {
+        return $this->belongsTo(Photo::class);
+    }
 
     public function white()
     {

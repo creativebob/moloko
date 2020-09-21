@@ -3,9 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Client;
+use App\Company;
 use App\ContractsClient;
 use App\Http\Controllers\System\Traits\Clientable;
+use App\Http\Controllers\System\Traits\Companable;
+use App\Http\Controllers\System\Traits\Locationable;
+use App\Http\Controllers\System\Traits\Phonable;
 use App\Http\Controllers\Traits\Offable;
+use App\Http\Controllers\Traits\Photable;
 use App\Http\Controllers\Traits\Reservable;
 use App\Http\Controllers\Traits\UserControllerTrait;
 use App\Http\Requests\System\LeadRequest;
@@ -32,9 +37,15 @@ class EstimateController extends Controller
 
     use UserControllerTrait;
     use LeadControllerTrait;
-    use Offable;
-    use Reservable;
+    use Locationable;
+    use Phonable;
+    use Photable;
     use Clientable;
+    use Companable;
+    use Reservable;
+    use Offable;
+
+
 
     public function index(Request $request)
     {
@@ -122,6 +133,126 @@ class EstimateController extends Controller
     }
 
     /**
+     * Регистрация сметы
+     *
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function registering(LeadRequest $request, $id)
+    {
+        // ГЛАВНЫЙ ЗАПРОС:
+        $estimate = Estimate::with([
+            'lead',
+            'goods_items.goods'
+        ])
+            ->find($id);
+
+        if ($estimate->is_registered == 0) {
+
+            // Отдаем работу по редактировнию лида трейту
+            $this->updateLead($request, $estimate->lead);
+
+            foreach ($estimate->goods_items as $goodsItem) {
+                if ($goodsItem->goods->archive == 1) {
+                    return back()
+                        ->withErrors(['msg' => 'Смета содержит архивные позиции, оформление невозможно!']);
+                }
+            }
+
+            if (isset($request->company_name)) {
+                $company = $this->checkCompanyByPhone(cleanPhone($request->main_phone));
+
+
+                if ($company) {
+
+                } else {
+                    $data = $request->input();
+                    $location = $this->getLocation();
+                    $data['location_id'] = $location->id;
+
+                    $data['name'] = $request->company_name;
+//        dd($data);
+
+                    $company = Company::create($data);
+                    $this->savePhones($company);
+
+                    dd($company);
+                }
+            }
+
+
+
+            logs('documents')->info("========================================== НАЧАЛО РЕГИСТРАЦИИ СМЕТЫ, ID: {$estimate->id} =============================================== ");
+
+            // Обновляем смету
+//            $amount = 0;
+//            $discount = 0;
+//            $total = 0;
+//
+//            if ($estimate->goods_items->isNotEmpty()) {
+//
+//                $amount = $estimate->goods_items->sum('amount');
+//                $discount = (($amount * $estimate->discount_percent) / 100);
+//                $total = ($amount - $discount);
+//            }
+
+            // Пишем склады при оформлении
+            $settings = getSettings();
+            if ($settings) {
+
+                $estimate->load([
+                    'goods_items'
+                ]);
+
+                if ($estimate->goods_items->isNotEmpty()) {
+
+                }
+            }
+
+            if (isset($request->company_name)) {
+                $client = $this->getClientCompany($company->id);
+            } else {
+                // Ищем или создаем клиента
+                $client = $this->getClientUser($estimate->lead->user_id);
+            }
+
+
+
+            if (is_null($client->source_id)) {
+                $client->update([
+                    'source_id' => $estimate->lead->source_id
+                ]);
+            }
+
+            $estimate->lead->update([
+                'client_id' =>  $client->id
+            ]);
+
+            $contracts_client = ContractsClient::create([
+                'client_id' => $client->id,
+                'amount' => $estimate->total,
+            ]);
+
+            $estimate->update([
+                'client_id' => $client->id,
+                'is_registered' => true,
+                'registered_date' => today(),
+            ]);
+
+            logs('documents')->info("========================================== КОНЕЦ РЕГИСТРАЦИИ СМЕТЫ, ID: {$estimate->id} =============================================== ");
+
+            return redirect()
+                ->route('leads.edit', $estimate->lead_id)
+                ->with(['success' => 'Успешно оформлено']);
+
+        } else {
+            return back()
+                ->withErrors(['msg' => 'Смета уже оформлена'])
+                ->withInput();
+        }
+    }
+
+    /**
      * Производство сметы
      *
      * @param Request $request
@@ -142,7 +273,7 @@ class EstimateController extends Controller
                 ]);
             },
         ])
-            ->findOrFail($id);
+            ->find($id);
 
         if ($estimate->is_saled == 0) {
             // Подключение политики
@@ -159,7 +290,7 @@ class EstimateController extends Controller
             if ($estimate->goods_items->isNotEmpty()) {
                 //            dd('Ща буит');
 
-                $stock_general = Stock::findOrFail($request->stock_id);
+                $stock_general = Stock::find($request->stock_id);
 
                 $leftover = 1;
                 // Если нужна проверка остатка на складах
@@ -310,96 +441,7 @@ class EstimateController extends Controller
 //        return redirect()->route('leads.index');
     }
 
-    /**
-     * Регистрация сметы
-     *
-     * @param $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function registering(LeadRequest $request, $id)
-    {
-        // ГЛАВНЫЙ ЗАПРОС:
-        $estimate = Estimate::with([
-            'lead',
-            'goods_items.goods'
-        ])
-        ->findOrFail($id);
 
-        if ($estimate->is_registered == 0) {
-
-            // Отдаем работу по редактировнию лида трейту
-            $this->updateLead($request, $estimate->lead);
-
-            foreach ($estimate->goods_items as $goodsItem) {
-                if ($goodsItem->goods->archive == 1) {
-                    return back()
-                        ->withErrors(['msg' => 'Смета содержит архивные позиции, оформление невозможно!']);
-                }
-            }
-
-            logs('documents')->info("========================================== НАЧАЛО РЕГИСТРАЦИИ СМЕТЫ, ID: {$estimate->id} =============================================== ");
-
-            // Обновляем смету
-//            $amount = 0;
-//            $discount = 0;
-//            $total = 0;
-//
-//            if ($estimate->goods_items->isNotEmpty()) {
-//
-//                $amount = $estimate->goods_items->sum('amount');
-//                $discount = (($amount * $estimate->discount_percent) / 100);
-//                $total = ($amount - $discount);
-//            }
-
-            // Пишем склады при оформлении
-            $settings = getSettings();
-            if ($settings) {
-
-                $estimate->load([
-                    'goods_items'
-                ]);
-
-                if ($estimate->goods_items->isNotEmpty()) {
-
-                }
-            }
-
-            // Ищем или создаем клиента
-            $client = $this->checkClientUser($estimate->lead->user_id);
-
-            if (is_null($client->source_id)) {
-                $client->update([
-                    'source_id' => $estimate->lead->source_id
-                ]);
-            }
-
-            $estimate->lead->update([
-                'client_id' =>  $client->id
-            ]);
-
-            $contracts_client = ContractsClient::create([
-                'client_id' => $client->id,
-                'amount' => $estimate->total,
-            ]);
-
-            $estimate->update([
-                'client_id' => $client->id,
-                'is_registered' => true,
-                'registered_date' => today(),
-            ]);
-
-            logs('documents')->info("========================================== КОНЕЦ РЕГИСТРАЦИИ СМЕТЫ, ID: {$estimate->id} =============================================== ");
-
-            return redirect()
-                ->route('leads.edit', $estimate->lead_id)
-                ->with(['success' => 'Успешно оформлено']);
-
-        } else {
-            return back()
-                ->withErrors(['msg' => 'Смета уже оформлена'])
-                ->withInput();
-        }
-    }
 
     /**
      * Продажа сметы
@@ -415,7 +457,7 @@ class EstimateController extends Controller
             'lead',
             'client'
         ])
-        ->findOrFail($id);
+        ->find($id);
 
         if ($estimate->is_saled == 0) {
 
@@ -456,7 +498,7 @@ class EstimateController extends Controller
                 ]);
             },
         ])
-            ->findOrFail($id);
+            ->find($id);
 //        dd($estimate);
 
         if ($estimate->is_saled == 0) {
@@ -522,7 +564,7 @@ class EstimateController extends Controller
                 ]);
             },
         ])
-            ->findOrFail($id);
+            ->find($id);
 //        dd($estimate);
 
         if ($estimate->is_saled == 0) {
@@ -579,7 +621,7 @@ class EstimateController extends Controller
     public function ajax_create(Request $request)
     {
 
-        $lead = Lead::findOrFail($request->lead_id);
+        $lead = Lead::find($request->lead_id);
 
         // TODO - 24.10.19 - Скидка должна браться из ценовой политики
 
@@ -602,7 +644,7 @@ class EstimateController extends Controller
     public function ajax_update(Request $request)
     {
 
-        $result = Estimate::findOrFail($request->estimate_id)
+        $result = Estimate::find($request->estimate_id)
             ->update([
                 'stock_id' => $request->stock_id
             ]);

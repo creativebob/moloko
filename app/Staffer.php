@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\System\Traits\Quietlable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
@@ -26,6 +27,7 @@ class Staffer extends Model
 
     // Включаем кеш
     use Cachable;
+    use Quietlable;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
@@ -42,7 +44,9 @@ class Staffer extends Model
 
     protected $table = 'staff';
 
-    protected $dates = ['deleted_at'];
+    protected $dates = [
+        'deleted_at'
+    ];
 
     protected $fillable = [
         'user_id',

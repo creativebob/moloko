@@ -30,7 +30,7 @@ class CatalogsGoodsController extends Controller
     }
 
     /**
-     * Отображение списка ресурсов.
+     * Display a listing of the resource.
      *
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -64,7 +64,7 @@ class CatalogsGoodsController extends Controller
     }
 
     /**
-     * Показать форму для создания нового ресурса.
+     * Show the form for creating a new resource.
      *
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -111,7 +111,7 @@ class CatalogsGoodsController extends Controller
     }
 
     /**
-     * Отображение указанного ресурса.
+     * Display the specified resource.
      *
      * @param $id
      */
@@ -121,7 +121,7 @@ class CatalogsGoodsController extends Controller
     }
 
     /**
-     * Показать форму для редактирования указанного ресурса.
+     * Show the form for editing the specified resource.
      *
      * @param Request $request
      * @param $id
@@ -134,7 +134,7 @@ class CatalogsGoodsController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $catalogs_goods = CatalogsGoods::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $catalogs_goods);
@@ -149,7 +149,7 @@ class CatalogsGoodsController extends Controller
     }
 
     /**
-     * Обновление указанного ресурса в хранилище.
+     * Update the specified resource in storage.
      *
      * @param CatalogsGoodsRequest $request
      * @param $id
@@ -162,7 +162,7 @@ class CatalogsGoodsController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $catalogs_goods = CatalogsGoods::moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $catalogs_goods);
@@ -185,7 +185,7 @@ class CatalogsGoodsController extends Controller
     }
 
     /**
-     * Удаление указанного ресурса из хранилища.
+     * Remove the specified resource from storage.
      *
      * @param Request $request
      * @param $id
@@ -202,7 +202,7 @@ class CatalogsGoodsController extends Controller
             'items'
         ])
         ->moderatorLimit($answer)
-        ->findOrFail($id);
+        ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $catalogs_goods);
@@ -292,7 +292,7 @@ class CatalogsGoodsController extends Controller
             ->whereHas('sites', function ($q) {
                 $q->whereId(1);
             })
-            ->findOrFail($id);
+            ->find($id);
 //         dd($сatalog_goods);
 
         return view('leads.catalogs.catalog_goods', compact('сatalog_goods'));
