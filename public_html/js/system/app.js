@@ -91580,10 +91580,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             address: this.lead.location.address,
             number: null,
 
-            clientId: null,
-
-            searchResults: []
-
+            client: this.lead.client
         };
     },
 
@@ -91605,7 +91602,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             if (value.length == 17) {
                 var number = value.replace(/\D+/g, "");
                 axios.post('/admin/clients/search/' + number).then(function (response) {
-                    _this.searchResults = response.data;
+                    if (response.data.length) {
+                        _this.client = response.data[0];
+
+                        _this.updateLead(_this.client);
+                        _this.update();
+                    }
                 }).catch(function (error) {
                     console.log(error);
                 });
@@ -91633,14 +91635,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             this.address = client.clientable.location.address;
             this.$refs.address.update(this.address);
-
-            this.clientId = client.id;
-            this.searchResults = [];
-            this.change = true;
         },
         update: function update() {
             this.change = false;
 
+            var clientId = this.client.id ? this.client.id : null;
             axios.patch('/admin/leads/axios_update/' + this.lead.id, {
                 name: this.name,
                 company_name: this.companyName,
@@ -91648,9 +91647,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 city_id: this.cityId,
                 address: this.address,
                 main_phone: this.number,
-                client_id: this.clientId
+                client_id: clientId
             }).then(function (response) {
-                console.log(response);
+                // console.log(response);
             }).catch(function (error) {
                 console.log(error);
             });
@@ -92227,7 +92226,7 @@ var render = function() {
           _c(
             "label",
             [
-              _vm._v("Телефон\n                    "),
+              _vm._v("Телефон\n                        "),
               _c("phone-component", {
                 attrs: { phone: _vm.phone, required: true },
                 on: { input: _vm.changePhone },
@@ -92252,7 +92251,7 @@ var render = function() {
           _c(
             "label",
             [
-              _vm._v("Контактное лицо\n                    "),
+              _vm._v("Контактное лицо\n                        "),
               _c("string-component", {
                 ref: "name",
                 attrs: { value: _vm.lead.name, required: true },
@@ -92274,51 +92273,10 @@ var render = function() {
           )
         ]),
         _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "small-12 cell", attrs: { id: "port-autofind" } },
-          [
-            _vm.searchResults.length
-              ? _c("div", { staticClass: "wrap-autofind" }, [
-                  _c("legend", [_vm._v("Найдены клиенты:")]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "grid-x" }, [
-                    _c(
-                      "div",
-                      { staticClass: "small-12 medium-12 large-12 cell" },
-                      [
-                        _c(
-                          "table",
-                          {},
-                          _vm._l(_vm.searchResults, function(client) {
-                            return _c("tr", [
-                              _c(
-                                "td",
-                                {
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.updateLead(client)
-                                    }
-                                  }
-                                },
-                                [
-                                  _vm._v(
-                                    _vm._s(client.clientable.name) +
-                                      "\n                                    "
-                                  )
-                                ]
-                              )
-                            ])
-                          }),
-                          0
-                        )
-                      ]
-                    )
-                  ])
-                ])
-              : _vm._e()
-          ]
-        ),
+        _c("div", {
+          staticClass: "small-12 cell",
+          attrs: { id: "port-autofind" }
+        }),
         _vm._v(" "),
         _c(
           "div",
@@ -92337,7 +92295,7 @@ var render = function() {
           _c(
             "label",
             [
-              _vm._v("Адрес\n                    "),
+              _vm._v("Адрес\n                        "),
               _c("string-component", {
                 ref: "address",
                 attrs: { name: "address", value: _vm.lead.location.address },
@@ -92370,7 +92328,7 @@ var render = function() {
             _c(
               "label",
               [
-                _vm._v("Компания\n                    "),
+                _vm._v("Компания\n                        "),
                 _c("string-component", {
                   ref: "companyName",
                   attrs: { name: "company_name", value: _vm.lead.company_name },
@@ -92396,7 +92354,7 @@ var render = function() {
             _c(
               "label",
               [
-                _vm._v("E-mail\n                    "),
+                _vm._v("E-mail\n                        "),
                 _c("string-component", {
                   ref: "email",
                   attrs: { name: "email", value: _vm.lead.email },

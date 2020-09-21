@@ -57,6 +57,7 @@ class User extends Authenticatable
         'first_name',
         'second_name',
         'patronymic',
+        'name',
 
         'location_id',
 

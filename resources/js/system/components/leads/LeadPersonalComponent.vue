@@ -27,28 +27,28 @@
                     </label>
                 </div>
                 <div id="port-autofind" class="small-12 cell">
-                    <div
-                        v-if="searchResults.length"
-                        class="wrap-autofind"
-                    >
+<!--                    <div-->
+<!--                        v-if="searchResults.length"-->
+<!--                        class="wrap-autofind"-->
+<!--                    >-->
 
-                        <legend>Найдены клиенты:</legend>
-                        <div class="grid-x">
-                            <div class="small-12 medium-12 large-12 cell">
-                                <table class="">
-                                    <tr
-                                        v-for="client in searchResults"
-                                    >
-                                        <td
-                                            @click="updateLead(client)"
-                                        >{{ client.clientable.name }}
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
+<!--                        <legend>Найдены клиенты:</legend>-->
+<!--                        <div class="grid-x">-->
+<!--                            <div class="small-12 medium-12 large-12 cell">-->
+<!--                                <table class="">-->
+<!--                                    <tr-->
+<!--                                        v-for="client in searchResults"-->
+<!--                                    >-->
+<!--                                        <td-->
+<!--                                            @click="updateLead(client)"-->
+<!--                                        >{{ client.clientable.name }}-->
+<!--                                        </td>-->
+<!--                                    </tr>-->
+<!--                                </table>-->
+<!--                            </div>-->
+<!--                        </div>-->
 
-                    </div>
+<!--                    </div>-->
                 </div>
 
                 <div class="large-shrink cell">
@@ -139,10 +139,7 @@
                 address: this.lead.location.address,
                 number: null,
 
-                clientId: null,
-
-                searchResults: []
-
+                client: this.lead.client,
             }
         },
 
@@ -163,7 +160,13 @@
                     axios
                         .post('/admin/clients/search/' + number)
                         .then(response => {
-                            this.searchResults = response.data;
+                            if (response.data.length) {
+                                this.client = response.data[0];
+
+                                this.updateLead(this.client);
+                                this.update();
+                            }
+
                         })
                         .catch(error => {
                             console.log(error)
@@ -192,14 +195,11 @@
 
                 this.address = client.clientable.location.address;
                 this.$refs.address.update(this.address);
-
-                this.clientId = client.id;
-                this.searchResults = [];
-                this.change = true;
             },
             update() {
                 this.change = false;
 
+                let clientId = this.client.id ? this.client.id : null;
                 axios
                     .patch('/admin/leads/axios_update/' + this.lead.id, {
                         name: this.name,
@@ -208,10 +208,10 @@
                         city_id: this.cityId,
                         address: this.address,
                         main_phone: this.number,
-                        client_id: this.clientId,
+                        client_id: clientId,
                     })
                     .then(response => {
-                        console.log(response);
+                        // console.log(response);
                     })
                     .catch(error => {
                         console.log(error)

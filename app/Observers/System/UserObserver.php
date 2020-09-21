@@ -57,7 +57,23 @@ class UserObserver
 
     public function saving(User $user)
     {
-        $user->name = $user->first_name . ' ' . $user->second_name;
+
+        if ($user->first_name || $user->second_name) {
+            $user->name = $user->first_name . ' ' . $user->second_name;
+        }
+
+        // TODO - 21.09.20 - ПОсле переработки getNameUser внедрить ее сюда.
+        // ПРоверка на name при записи юзера со страницы лида
+        if ($user->name) {
+            $nameArray = explode(' ', $user->name);
+            if ($nameArray[0]) {
+                $user->first_name = $nameArray[0];
+            }
+            if ($nameArray[1]) {
+                $user->second_name = $nameArray[1];
+            }
+        }
+
 
         if (empty($user->login)) {
             $usersCount = User::where('company_id', auth()->user()->company_id)

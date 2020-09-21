@@ -72,7 +72,10 @@ class Lead extends Model
         'email',
 
         'location_id',
+
+        'user_id',
         'client_id',
+
 	    'shipment_at',
 
         'order_amount_base',

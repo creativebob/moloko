@@ -80,6 +80,8 @@ trait Userable
 
     public function checkUserByPhone($entityAlias = null, $siteId = null)
     {
+
+
         $user = User::where('company_id', auth()->user()->company_id)
             ->whereHas('main_phones', function ($q) {
                 $q->where('phone', cleanPhone(request()->main_phone));
@@ -87,7 +89,7 @@ trait Userable
             ->when($entityAlias == 'users', function ($q) use ($siteId) {
                 $q->where('site_id', $siteId);
             })
-            ->when($entityAlias == 'clients', function ($q) {
+            ->when(($entityAlias == 'clients' || $entityAlias == 'leads'), function ($q) {
                 $q->where(function ($q) {
                     $q->where('site_id', '!=', 1)
                         ->orWhereNull('site_id');
