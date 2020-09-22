@@ -32,7 +32,7 @@ class LeadController extends Controller
 {
 
     use Userable;
-    use UserControllerTrait;
+//    use UserControllerTrait;
     use LeadControllerTrait;
     use Offable;
     use Phonable;
