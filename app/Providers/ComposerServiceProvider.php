@@ -19,7 +19,9 @@ use App\Http\View\Composers\System\CitiesWithAreaRegionCountryComposer;
 use App\Http\View\Composers\System\CitySearchComposer;
 use App\Http\View\Composers\System\ClientsCitiesComposer;
 use App\Http\View\Composers\System\ClientsCountComposer;
+use App\Http\View\Composers\System\UsersWithClientComposer;
 use App\Http\View\Composers\System\CmvArchivesCountComposer;
+use App\Http\View\Composers\System\CompaniesWithClientComposer;
 use App\Http\View\Composers\System\ContainersCategoriesComposer;
 use App\Http\View\Composers\System\ContainersComposer;
 use App\Http\View\Composers\System\CurrenciesComposer;
@@ -36,6 +38,7 @@ use App\Http\View\Composers\System\FiltersComposer;
 use App\Http\View\Composers\System\GoodsCategoriesTreeComposer;
 use App\Http\View\Composers\System\LeadMethodsComposer;
 use App\Http\View\Composers\System\LeadTypesComposer;
+use App\Http\View\Composers\System\LegalFormsComposer;
 use App\Http\View\Composers\System\ManagersComposer;
 use App\Http\View\Composers\System\NotificationsComposer;
 use App\Http\View\Composers\System\PaymentsTypesComposer;
@@ -278,6 +281,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer([
             'includes.lists.sites',
             'includes.selects.sites',
+            'system.pages.marketings.users.tabs.general',
         ], SitesComposer::class);
         view()->composer('includes.lists.site_menus', SiteMenusComposer::class);
 
@@ -421,6 +425,11 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.lists.currencies', CurrenciesComposer::class);
 
         view()->composer('system.pages.companies.tabs.settings', CompaniesSettingsCategoriesComposer::class);
+
+        // Лиды
+        view()->composer('leads.personal', UsersWithClientComposer::class);
+        view()->composer('leads.personal', CompaniesWithClientComposer::class);
+        view()->composer('leads.personal', LegalFormsComposer::class);
 
         // Сотрудники
         view()->composer('system.pages.hr.employees.includes.title_active', EmployeesDismissalCountComposer::class);

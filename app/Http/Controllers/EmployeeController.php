@@ -20,6 +20,7 @@ class EmployeeController extends Controller
 
     protected $entityAlias;
     protected $entityDependence;
+
     /**
      * EmployeeController constructor.
      */
@@ -49,7 +50,9 @@ class EmployeeController extends Controller
 
         // Включение контроля активного фильтра
         $filter_url = autoFilter($request, $this->entityAlias);
-        if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
+        if (($filter_url != null) && ($request->filter != 'active')) {
+            return Redirect($filter_url);
+        };
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
@@ -61,7 +64,7 @@ class EmployeeController extends Controller
         // -------------------------------------------------------------------------------------------
         $employees = Employee::with([
             'company.filials',
-            'staffer' => function($q) {
+            'staffer' => function ($q) {
                 $q->with([
                     'position',
                     'filial',
@@ -70,40 +73,38 @@ class EmployeeController extends Controller
             },
             'user.main_phones'
         ])
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
+            ->moderatorLimit($answer)
+            ->companiesLimit($answer)
 
-        // Так как сущность не филиала зависимая, но по факту
-        // все таки зависимая через staff, то делаем нестандартную фильтрацию (прямо в запросе)
-        ->when($answer['dependence'] == true, function ($query) use ($user) {
-            return $query->whereHas('staffer', function($q) use ($user){
-                $q->where('filial_id', $user->staff->first()->filial_id);
-            });
-        })
+            // Так как сущность не филиала зависимая, но по факту
+            // все таки зависимая через staff, то делаем нестандартную фильтрацию (прямо в запросе)
+            ->when($answer['dependence'] == true, function ($query) use ($user) {
+                return $query->whereHas('staffer', function ($q) use ($user) {
+                    $q->where('filial_id', $user->staff->first()->filial_id);
+                });
+            })
 
-        // Получаем только устроенных
-        ->whereNull('dismissal_date')
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->booklistFilter($request)
-        ->filter($request, 'position_id', 'staffer')
-        ->filter($request, 'department_id', 'staffer')
-        ->dateIntervalFilter($request, 'employment_date')
-
-        ->whereHas('user', function($q) use ($request){
-            $q->booleanArrayFilter($request, 'access_block');
-        })
-
-        ->whereHas('user', function($q) use ($request){
-            $q->whereHas('location', function($q) use ($request){
-                $q->filter($request, 'city_id');
-            });
-        })
+            // Получаем только устроенных
+            ->whereNull('dismissal_date')
+            ->authors($answer)
+            ->systemItem($answer) // Фильтр по системным записям
+            ->booklistFilter($request)
+            ->filter($request, 'position_id', 'staffer')
+            ->filter($request, 'department_id', 'staffer')
+            ->dateIntervalFilter($request, 'employment_date')
+            ->whereHas('user', function ($q) use ($request) {
+                $q->booleanArrayFilter($request, 'access_block');
+            })
+            ->whereHas('user', function ($q) use ($request) {
+                $q->whereHas('location', function ($q) use ($request) {
+                    $q->filter($request, 'city_id');
+                });
+            })
 
 //        ->orderBy('moderation', 'desc')
-        ->oldest('dismissal_date')
-        ->oldest('sort')
-        ->paginate(30);
+            ->oldest('dismissal_date')
+            ->oldest('sort')
+            ->paginate(30);
 //        dd($employees);
 
         // -----------------------------------------------------------------------------------------------------------
@@ -150,13 +151,13 @@ class EmployeeController extends Controller
             'user'
         ])
             ->where('user_id', $employee->user_id)
-        ->moderatorLimit($answer)
-        ->get();
+            ->moderatorLimit($answer)
+            ->get();
 
         // Инфо о странице
         $pageInfo = pageInfo($this->entityAlias);
 
-        return view('system.pages.hr.employees.create', compact('user', 'employee', 'pageInfo', 'list_user_employees'));
+        return view('system.pages.hr.employees.create', compact('employee', 'user', 'pageInfo', 'list_user_employees'));
     }
 
     /**
@@ -220,33 +221,35 @@ class EmployeeController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entityAlias,  $this->entityDependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $employee = Employee::with([
             'user.photo',
             'staffer'
         ])
-        ->companiesLimit($answer)
-        ->filials($answer)
-        ->authors($answer)
-        ->systemItem($answer)
-        ->moderatorLimit($answer)
-        ->find($id);
+            ->companiesLimit($answer)
+            ->filials($answer)
+            ->authors($answer)
+            ->systemItem($answer)
+            ->moderatorLimit($answer)
+            ->find($id);
+
+        $user = $employee->user;
 
         $list_user_employees = Employee::with('user')
-        ->moderatorLimit($answer)
-        ->where('user_id', $employee->user_id)
-        ->get();
+            ->moderatorLimit($answer)
+            ->where('user_id', $employee->user_id)
+            ->get();
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $employee);
-        $this->authorize(getmethod(__FUNCTION__), $employee->user);
+        $this->authorize(getmethod(__FUNCTION__), $user);
 
         // Инфо о странице
         $pageInfo = pageInfo($this->entityAlias);
 
-        return view('system.pages.hr.employees.edit', compact('employee', 'pageInfo', 'list_user_employees'));
+        return view('system.pages.hr.employees.edit', compact('employee', 'user', 'pageInfo', 'list_user_employees'));
     }
 
     /**
@@ -261,15 +264,15 @@ class EmployeeController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entityAlias,  $this->entityDependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $employee = Employee::moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer)
-        ->with('user', 'staffer')
-        ->find($id);
+            ->companiesLimit($answer)
+            ->authors($answer)
+            ->systemItem($answer)
+            ->with('user', 'staffer')
+            ->find($id);
 
         $user = $employee->user;
         $staffer = $employee->staffer;
@@ -289,9 +292,9 @@ class EmployeeController extends Controller
         $user->photo_id = $photo_id;
         $user->save();
 
-        if($request->staff_id != null){
+        if ($request->staff_id != null) {
 
-            if($employee->staffer->id == $request->staff_id){
+            if ($employee->staffer->id == $request->staff_id) {
 
             } else {
 
@@ -313,7 +316,7 @@ class EmployeeController extends Controller
 
 
             // Если сотрудник удачно отредактирован - занимем ставку
-            if($employee){
+            if ($employee) {
 
                 // Проверяем: свободна ли ставка  =====================================================
                 logs('hr')->info('Проверяем: свободна ли ставка?');
@@ -321,7 +324,7 @@ class EmployeeController extends Controller
                 $staff = Staffer::with('position.roles')->find($request->staff_id);
                 // dd($staff);
 
-                if($staff->user_id != null){
+                if ($staff->user_id != null) {
                     abort(403, "Ставка не свободна!");
                 } else {
                     logs('hr')->info('Ставка свободна!');
@@ -361,7 +364,6 @@ class EmployeeController extends Controller
             };
 
 
-
         }
 
         // Если записалось
@@ -397,7 +399,9 @@ class EmployeeController extends Controller
 
         // Включение контроля активного фильтра
         $filter_url = autoFilter($request, $this->entityAlias);
-        if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
+        if (($filter_url != null) && ($request->filter != 'active')) {
+            return Redirect($filter_url);
+        };
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('index'));
@@ -423,14 +427,14 @@ class EmployeeController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------
         $employees = Employee::with([
-                'company.filials', 'staffer' => function($q) {
-                    $q->with([
-                        'position',
-                        'filial',
-                        'department'
-                    ]);
-                }, 'user.main_phones'
-            ])
+            'company.filials', 'staffer' => function ($q) {
+                $q->with([
+                    'position',
+                    'filial',
+                    'department'
+                ]);
+            }, 'user.main_phones'
+        ])
             ->moderatorLimit($answer)
             ->companiesLimit($answer)
             // ->whereIn('user_id', $staff_id_mass)
@@ -445,18 +449,15 @@ class EmployeeController extends Controller
 
             // Получаем только уволенных
             ->whereNotNull('dismissal_date')
-
             ->authors($answer)
             ->systemItem($answer) // Фильтр по системным записям
             ->booklistFilter($request)
             ->filter($request, 'position_id', 'staffer')
             ->filter($request, 'department_id', 'staffer')
             ->dateIntervalFilter($request, 'date_employment')
-
-            ->whereHas('user', function($q) use ($request){
+            ->whereHas('user', function ($q) use ($request) {
                 $q->booleanArrayFilter($request, 'access_block');
             })
-
             ->orderBy('moderation', 'desc')
             ->orderBy('dismissal_date', 'asc')
             ->orderBy('sort', 'asc')
@@ -491,7 +492,7 @@ class EmployeeController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entityAlias,  $this->entityDependence, 'update');
+        $answer = operator_right($this->entityAlias, $this->entityDependence, 'update');
 
         // ГЛАВНЫЙ ЗАПРОС:
         $employee = Employee::with('user', 'staffer')->moderatorLimit($answer)->find($request->employee_id);
@@ -506,7 +507,7 @@ class EmployeeController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entityAlias,  $this->entityDependence, 'update');
+        $answer = operator_right($this->entityAlias, $this->entityDependence, 'update');
 
         // ГЛАВНЫЙ ЗАПРОС:
         $employee = Employee::with('user', 'staffer')->moderatorLimit($answer)->find($request->employee_id);
@@ -521,10 +522,10 @@ class EmployeeController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_user = operator_right('users',  true, 'index');
+        $answer_user = operator_right('users', true, 'index');
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_staff = operator_right('staff',  true, 'index');
+        $answer_staff = operator_right('staff', true, 'index');
 
         // ГЛАВНЫЙ ЗАПРОС:
         $user = User::moderatorLimit($answer_user)->find($request->user_id);
@@ -539,7 +540,7 @@ class EmployeeController extends Controller
 
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_user = operator_right('users',  true, 'index');
+        $answer_user = operator_right('users', true, 'index');
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         // $answer_staff = operator_right('staff',  true, 'index');
@@ -565,8 +566,6 @@ class EmployeeController extends Controller
         $this->authorize(getmethod('update'), $user);
 
 
-
-
         logs('hr')->info('Открываем доступ для пользователя');
         $user->access_block = 0;
 
@@ -587,7 +586,7 @@ class EmployeeController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entityAlias,  $this->entityDependence, 'update');
+        $answer = operator_right($this->entityAlias, $this->entityDependence, 'update');
 
         $staff = $employee->staffer;
         $user = $employee->user;

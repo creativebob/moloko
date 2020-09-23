@@ -35,6 +35,7 @@ use App\ExpendablesCategory;
 use App\Favourite;
 use App\GoodsCategory;
 use App\GoodsStock;
+use App\Lead;
 use App\Manufacturer;
 use App\Menu;
 use App\Metric;
@@ -71,6 +72,7 @@ use App\Observers\System\ExpendablesCategoryObserver;
 use App\Observers\System\FavouriteObserver;
 use App\Observers\System\GoodsCategoryObserver;
 use App\Observers\System\GoodsStockObserver;
+use App\Observers\System\LeadObserver;
 use App\Observers\System\ManufacturerObserver;
 use App\Observers\System\MenuObserver;
 use App\Observers\System\MetricObserver;
@@ -188,6 +190,8 @@ class ObserverServiceProvider extends ServiceProvider
 
         // Пользователь
         User::observe(UserObserver::class);
+
+        Lead::observe(LeadObserver::class);
 
         // HR
         Department::observe(DepartmentObserver::class);

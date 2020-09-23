@@ -663,16 +663,19 @@ Route::resource('/sectors', 'SectorController')->middleware('auth');
 
 // --------------------------------------- Компании -----------------------------------------------
 
-// Основные методы
-Route::resource('/companies', 'CompanyController')->middleware('auth');
+Route::post('/companies/search-by-name', 'CompanyController@searchByName');
 // Проверка существования компании в базе по ИНН
-Route::post('/companies/check_company', 'CompanyController@checkcompany')->middleware('auth')->name('companies.checkcompany');
+Route::post('/companies/check_company', 'CompanyController@checkcompany')
+    ->name('companies.checkcompany');
+
+// Основные методы
+Route::resource('/companies', 'CompanyController');
 
 
 // --------------------------- Дополнительные реквизиты компании -------------------------------------
-
 // Основные методы
 Route::resource('/extra_requisites', 'ExtraRequisiteController')->middleware('auth');
+
 
 // ------------------------------------------------ Планирование -------------------------------------
 
@@ -693,39 +696,43 @@ Route::get('plans/{alias}', 'PlanController@show')->name('plans.show');
 // Печать
 Route::get('/leads/{id}/print', 'LeadController@print');
 
-// Основные методы
+
 // Route::get('/lead/calls', 'LeadController@index')->middleware('auth');
 Route::post('/leads', 'LeadController@resetFilter')
-    ->name('leads.resetFilter')
-    ->middleware('auth');
+    ->name('leads.resetFilter');
 
 Route::any('/leads/axios_update/{id}', 'LeadController@axiosUpdate');
 
-Route::resource('/leads', 'LeadController')->middleware('auth');
+// Основные методы
+Route::resource('/leads', 'LeadController')
+    ->except([
+        'store',
+        'show'
+    ]);
 
-Route::get('/leads_export', 'LeadController@export')->middleware('auth');
+Route::get('/leads_export', 'LeadController@export');
 // Route::resource('/leads_calls', 'LeadController@leads_calls')->middleware('auth');
 
 
 // Поиск
-Route::get('/leads/search/{text}', 'LeadController@search')->middleware('auth');
+Route::get('/leads/search/{text}', 'LeadController@search');
 
 // Назначение лида
-Route::any('/lead_appointed_check', 'LeadController@ajax_appointed_check')->middleware('auth');
-Route::any('/lead_appointed', 'LeadController@ajax_lead_appointed')->middleware('auth');
-Route::any('/lead_distribute', 'LeadController@ajax_distribute')->middleware('auth');
-Route::any('/lead_take', 'LeadController@ajax_lead_take')->middleware('auth');
+Route::any('/lead_appointed_check', 'LeadController@ajax_appointed_check');
+Route::any('/lead_appointed', 'LeadController@ajax_lead_appointed');
+Route::any('/lead_distribute', 'LeadController@ajax_distribute');
+Route::any('/lead_take', 'LeadController@ajax_lead_take');
 
-Route::post('/open_change_lead_type', 'LeadController@ajax_open_change_lead_type')->middleware('auth');
-Route::post('/change_lead_type', 'LeadController@ajax_change_lead_type')->middleware('auth');
+Route::post('/open_change_lead_type', 'LeadController@ajax_open_change_lead_type');
+Route::post('/change_lead_type', 'LeadController@ajax_change_lead_type');
 
 // Освобождаем лида
-Route::any('/lead_free', 'LeadController@ajax_lead_free')->middleware('auth');
+Route::any('/lead_free', 'LeadController@ajax_lead_free');
 
 // Добавление комментария
-Route::post('/leads_add_note', 'LeadController@ajax_add_note')->middleware('auth');
+Route::post('/leads_add_note', 'LeadController@ajax_add_note');
 // Поиск лида по номеру телефона
-Route::post('/leads/autofind/{phone}', 'LeadController@ajax_autofind_phone')->middleware('auth');
+Route::post('/leads/autofind/{phone}', 'LeadController@ajax_autofind_phone');
 
 
 // --------------------------------------- Расчеты (Сметы) -----------------------------------------------
@@ -987,6 +994,9 @@ Route::post('/clients/archive/{id}', 'ClientController@archive');
 
 // Поиск
 Route::any('/clients/search/{text}', 'ClientController@search');
+
+Route::post('/clients/search-user/{text}', 'ClientController@searchClientUser');
+Route::any('/clients/search-company/{text}', 'ClientController@searchClientCompany');
 
 Route::get('/clients/excel-export', 'ClientController@excelExport')
     ->name('clients.excelExport');

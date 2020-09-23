@@ -171,6 +171,7 @@ class Update210420Tables extends Migration
             $table->boolean('is_link_parse')->default(0)->comment('Связан парсером со сметой')->after('is_create_parse');
             $table->decimal('order_amount_base', 12, 4)->default(0)->comment('Сумма первоначального заказа')->after('is_link_parse');
             $table->boolean('need_delivery')->default(0)->comment('Нужна доставка')->after('order_amount_base');
+            $table->bigInteger('organization_id')->unsigned()->nullable()->comment('Id организации')->after('user_id');
         });
 
         Schema::table('users', function (Blueprint $table) {
@@ -397,6 +398,7 @@ class Update210420Tables extends Migration
                 'is_link_parse',
                 'order_amount_base',
                 'need_delivery',
+                'organization_id',
             ]);
         });
 

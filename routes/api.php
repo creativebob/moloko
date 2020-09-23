@@ -31,6 +31,9 @@ Route::group(['prefix' => '/v1',
     Route::get('/categories/{category_entity}', 'AppController@categories_index');
 
 
+    Route::post('/companies/search-by-name', 'CompanyController@searchByName');
+
+
 
     Route::group(['prefix' => '/search'], function () {
         Route::get('/clients/{search}', 'ClientController@search');

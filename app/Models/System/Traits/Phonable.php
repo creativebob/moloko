@@ -15,10 +15,13 @@ trait Phonable
 
     public function main_phones()
     {
-        return $this->morphToMany('App\Phone', 'phone_entity')
-            ->wherePivot('main', '=', 1)
+        return $this->morphToMany(Phone::class, 'phone_entity')
+            ->wherePivot('main', 1)
             ->whereNull('archive')
-            ->withPivot('archive');
+            ->withPivot([
+                'main',
+                'archive'
+            ]);
     }
 
 

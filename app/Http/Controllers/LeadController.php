@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Client;
-use App\Discount;
 use App\Estimate;
 use App\Http\Controllers\System\Traits\Locationable;
 use App\Http\Controllers\System\Traits\Phonable;
@@ -20,29 +19,40 @@ use App\ServicesCategory;
 use App\RawsCategory;
 use Illuminate\Http\Request;
 use App\Http\Requests\System\LeadRequest;
-use App\Http\Requests\System\MyStageRequest;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cookie;
-use App\Http\Controllers\Traits\UserControllerTrait;
-use App\Http\Controllers\Traits\LeadControllerTrait;
 use App\Exports\LeadsExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class LeadController extends Controller
 {
 
+    protected $entityAlias;
+    protected $entityDependence;
+
+    /**
+     * LeadController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->entityAlias = 'leads';
+        $this->entityDependence = true;
+    }
+
     use Userable;
-//    use UserControllerTrait;
-    use LeadControllerTrait;
     use Offable;
     use Phonable;
     use Locationable;
     use Timestampable;
 
-    // Сущность над которой производит операции контроллер
-    protected $entityAlias = 'leads';
-    protected $entityDependence = true;
-
+    /**
+     * Display a listing of the resource.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function index(Request $request)
     {
 
@@ -120,7 +130,11 @@ class LeadController extends Controller
             ->companiesLimit($answer)
             ->filials($answer)
             // ->authors($answer)
-            ->whereNull('draft')
+            ->where(function ($q) {
+                $q->where('draft', false)
+                    ->orWhereNull('draft');
+            })
+
             ->systemItem($answer)
             ->filter()
 //        ->filter($request, 'city_id', 'location')
@@ -157,26 +171,26 @@ class LeadController extends Controller
         // Инфо о странице
         $pageInfo = pageInfo($this->entityAlias);
 
-        return view('leads.index', compact('leads', 'pageInfo', 'user', 'filter'));
+        return view('leads.index', compact('leads', 'pageInfo', 'filter'));
     }
 
-
-    public function create(Request $request, $lead_type = 1)
+    /**
+     * Создаем чернового лида со сметой
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function create()
     {
-
         // Подключение политики
         $this->authorize(__FUNCTION__, Lead::class);
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
+        $location = $this->getLocation();
+        $data['location_id'] = $location->id;
 
-        // Отдаем работу по созданию нового лида трейту
-        $lead = $this->createLead($request);
+        $lead = Lead::create($data);
 
         // Создаем смету для лида
-
-        // TODO - 24.10.19 - Скидка должна браться из ценовой политики
-
         $estimate = Estimate::make([
             'filial_id' => $lead->filial_id,
             'discount_percent' => 0,
@@ -187,50 +201,7 @@ class LeadController extends Controller
 
         $result = $lead->estimate()->save($estimate);
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right('discounts', true, getmethod('index'));
-
-//        $discounts = Discount::moderatorLimit($answer)
-//            ->companiesLimit($answer)
-//            ->filials($answer)
-//            ->systemItem($answer)
-//            ->whereHas('entity', function ($q) {
-//                $q->where('alias', 'estimates');
-//            })
-//            ->where('archive', false)
-//            ->where('begined_at', '<=', now())
-//            ->where(function ($q) {
-//                $q->where('ended_at', '>=', now())
-//                    ->orWhereNull('ended_at');
-//            })
-//        ->get();
-////        dd($discounts);
-//
-//        $discountsIds = $discounts->pluck('id');
-
-        $lead->load([
-            'estimate',
-            'main_phones',
-            'location',
-            'client'
-        ]);
-        $estimate = $lead->estimate;
-
-//        $estimate->discounts()->attach($discountsIds);
-
-        return Redirect('/admin/leads/' . $lead->id . '/edit');
-    }
-
-
-    public function store(LeadRequest $request)
-    {
-        // Не используется.
-    }
-
-
-    public function show(Request $request, $id)
-    {
-        dd('Это show - Тупиковая ветка');
+        return redirect()->route('leads.edit', $lead->id);
     }
 
 
@@ -245,6 +216,8 @@ class LeadController extends Controller
         $lead = Lead::with([
             'location.city',
             'user',
+            'organization',
+            'client',
             'main_phones',
             'extra_phones',
             'medium',
@@ -301,11 +274,15 @@ class LeadController extends Controller
             ->find($id);
 //        dd($lead);
 
+        if (empty($lead)) {
+            abort(403, __('errors.not_found'));
+        }
+
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $lead);
 
         $historyLeads = collect();
-        if ($lead->draft != 1) {
+        if ($lead->draft) {
             // История лида
             $historyLeads = Lead::with([
                 'location.city',
@@ -378,25 +355,49 @@ class LeadController extends Controller
         return view('leads.edit', compact('lead', 'pageInfo', 'choices', 'previous_url', 'settings'));
     }
 
-    public function update(LeadRequest $request, MyStageRequest $my_request, $id)
+    public function update(LeadRequest $request, $id)
     {
-
+        dd($request);
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $lead = Lead::with('location', 'company')
+        $lead = Lead::with([
+            'location',
+            'company'
+        ])
             ->companiesLimit($answer)
             ->filials($answer)
             ->systemItem($answer)
             ->moderatorLimit($answer)
             ->find($id);
 
+        if (empty($lead)) {
+            abort(403, __('errors.not_found'));
+        }
+
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $lead);
 
-        // Отдаем работу по редактировнию лида трейту
-        $this->updateLead($request, $lead);
+        $data = $request->input();
+
+        $location = $this->getLocation();
+        $data['location_id'] = $location->id;
+
+        $lead->update($data);
+
+        $this->savePhones($lead);
+
+        if ($lead->organization_id) {
+            $lead->load('user');
+            $user = $lead->user;
+
+//            $user->organizations()->attach([$lead->organization_id => [
+//                'company_id' => $lead->company_id
+//            ]]);
+        }
+
+
 
 //        $lead->estimate->update([
 //           'stock_id' => $request->stock_id
@@ -406,7 +407,7 @@ class LeadController extends Controller
             return redirect($request->previous_url);
         }
 
-        return redirect('/admin/leads');
+        return redirect()->route('leads.index');
     }
 
     /**

@@ -79,6 +79,26 @@ trait Directorable
     }
 
     /**
+     * Поиск пользователя (сотрудника) по номеру телефона директора
+     *
+     * @param $item
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
+     */
+    public function getUserByPhone($item)
+    {
+        $user = User::where([
+            'company_id' => $item->company_id,
+            'site_id' => 1
+        ])
+            ->whereHas('main_phones', function ($q) {
+                $q->where('phone', cleanPhone(request()->user_main_phone));
+            })
+            ->first();
+
+        return $user;
+    }
+
+    /**
      * Создаем пользователя (Директора) для компании
      *
      * @param $filial
@@ -86,51 +106,58 @@ trait Directorable
      */
     public function storeUserDirector($filial)
     {
-        $request = request();
 
-        $usersCount = User::withTrashed()
-            ->where([
-                'company_id' => $filial->company_id,
-                'site_id' => 1
-            ])
-            ->count();
+        $user = $this->getUserByPhone($filial);
 
-        $location = Location::firstOrCreate([
-            'country_id' => 1,
-            'city_id' => $request->user_city_id,
-            'address' => $request->user_address,
-        ], [
-            'author_id' => 1
-        ]);
+        if (!$user) {
+            $request = request();
 
-        $user = User::make([
-            'second_name' => $request->user_second_name,
-            'first_name' => $request->user_first_name,
-            'name' => $request->user_first_name . ' ' . $request->user_second_name,
-            'patronymic' => $request->user_patronymic,
-            'login' => $request->user_login ?? ($usersCount + 1),
-            'access_code' => rand(1000, 9999),
-            'filial_id' => $filial->id,
-            'site_id' => 1,
-            'location_id' => $location->id,
-            'user_type' => 1
-        ]);
+            $usersCount = User::withTrashed()
+                ->where([
+                    'company_id' => $filial->company_id,
+                    'site_id' => 1
+                ])
+                ->count();
 
-        $user->author_id = 1;
-        $user->password = bcrypt($request->user_password);
-        $user->company_id = $filial->company_id;
-        $user->saveQuietly();
-
-        logs('companies')->info("Создан пользователь (Директор) для компании [{$filial->company_id}] с id: [{$user->id}]");
-
-        if (isset($request->user_main_phone)) {
-            $phone = Phone::firstOrCreate([
-                'phone' => cleanPhone($request->user_main_phone)
+            $location = Location::firstOrCreate([
+                'country_id' => 1,
+                'city_id' => $request->user_city_id,
+                'address' => $request->user_address,
             ], [
-                'crop' => substr(cleanPhone($request->user_main_phone), -4),
+                'author_id' => 1
             ]);
 
-            $user->phones()->attach($phone->id, ['main' => 1]);
+            $user = User::make([
+                'second_name' => $request->user_second_name,
+                'first_name' => $request->user_first_name,
+                'name' => $request->user_first_name . ' ' . $request->user_second_name,
+                'patronymic' => $request->user_patronymic,
+                'login' => $request->user_login ?? ($usersCount + 1),
+                'access_code' => rand(1000, 9999),
+                'filial_id' => $filial->id,
+                'site_id' => 1,
+                'location_id' => $location->id,
+                'user_type' => 1
+            ]);
+
+            $user->author_id = 1;
+            if ($request->has('user_password')) {
+                $user->password = bcrypt($request->user_password);
+            }
+            $user->company_id = $filial->company_id;
+            $user->saveQuietly();
+
+            logs('companies')->info("Создан пользователь (Директор) для компании [{$filial->company_id}] с id: [{$user->id}]");
+
+            if (isset($request->user_main_phone)) {
+                $phone = Phone::firstOrCreate([
+                    'phone' => cleanPhone($request->user_main_phone)
+                ], [
+                    'crop' => substr(cleanPhone($request->user_main_phone), -4),
+                ]);
+
+                $user->phones()->attach($phone->id, ['main' => 1]);
+            }
         }
 
         return $user;
@@ -144,6 +171,13 @@ trait Directorable
      */
     public function updateUserDirector($user)
     {
+        $checkUser = $this->getUserByPhone($user);
+
+        if ($checkUser) {
+            return back()
+                ->withErrors(['msg' => 'Пользователь уже существует']);
+        }
+
         $request = request();
 
         $location = Location::firstOrCreate([
@@ -157,13 +191,22 @@ trait Directorable
         $user->first_name = $request->user_first_name;
         $user->second_name = $request->user_second_name;
         $user->patronymic = $request->user_patronymic;
-        $user->name = $request->user_first_name. ' ' . $request->user_second_name;
+        $user->name = $request->user_first_name . ' ' . $request->user_second_name;
         $user->location_id = $location->id;
+
+        $user->login = $request->user_login;
+        if ($request->has('user_password')) {
+            $user->password = bcrypt($request->user_password);
+        }
         $user->updateQuietly();
 
         logs('companies')->info("Обновлен пользователь (Директор) для компании [{$user->company_id}] с id: [{$user->id}]");
 
         if (isset($request->user_main_phone)) {
+            $user->main_phones()->update([
+                'main' => null
+            ]);
+
             $phone = Phone::firstOrCreate([
                 'phone' => cleanPhone($request->user_main_phone)
             ], [

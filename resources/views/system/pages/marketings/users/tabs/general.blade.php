@@ -95,86 +95,31 @@
     <div class="cell small-12 medium-5 medium-offset-1 large-5 large-offset-2">
         <fieldset class="fieldset-access">
             <legend>Настройка доступа</legend>
-
-            @isset($employee)
-
-                <input name="user_type" type="hidden" value='1'>
-
-            @else
-                <div class="grid-x grid-padding-x">
-                    <div class="small-12 cell">
-                        <label>Статус пользователя
-                            {{ Form::select('user_type', [ '0' => 'Чужой', '1' => 'Свой']) }}
-                        </label>
-                    </div>
-
-                    <div class="small-12 cell tabs-margin-bottom">
+            <div class="grid-x grid-padding-x">
+                @empty($employee)
+                    <div class="cell small-12 tabs-margin-bottom">
                         <label>
                             @include('includes.selects.filials_for_user', ['value' => $user->filial_id, 'disabled' => $user->exists ? 'true' : null])
                         </label>
                     </div>
-                </div>
+                @endempty
+
+                @isset($client)
+                    @isset($sites)
+                        @include('system.pages.clients.includes.access.sites')
+                        @include('system.pages.marketings.users.includes.access.access')
+                    @endisset
+                @else
+                    @include('system.pages.marketings.users.includes.access.access')
+                @endisset
+
+                @isset($employee)
+                    @include('system.pages.hr.employees.includes.access.roles')
+                @endisset
+            </div>
+            @isset($site)
+                {!! Form::hidden('site_id', $site->id) !!}
             @endisset
-
-            <div class="grid-x grid-padding-x">
-                <div class="small-12 cell">
-                    <label>Логин
-                        {{ Form::text('login', $user->login, ['class'=>'login-field', 'maxlength'=>'30', 'autocomplete'=>'off', 'pattern'=>'[A-Za-z0-9._-]{6,30}']) }}
-                        <span class="form-error">Обязательно нужно логиниться!</span>
-                    </label>
-                    <label>Пароль
-                        {{ Form::password('password', ['class' => 'password password-field', 'maxlength' => '20', 'id' => 'password', 'pattern'=>'[A-Za-z0-9]{6,20}', 'autocomplete'=>'off']) }}
-                        <span
-                            class="form-error">Введите пароль и повторите его, ну а что поделать, меняем ведь данные!</span>
-                    </label>
-                    <label>Пароль повторно
-                        {{ Form::password('password', ['class' => 'password password-field', 'maxlength' => '20', 'id' => 'password-repeat', 'data-equalto' => 'password', 'pattern'=>'[A-Za-z0-9]{6,20}', 'autocomplete'=>'off']) }}
-                        <span class="form-error">Пароли не совпадают!</span>
-                    </label>
-                </div>
-            </div>
-            <div class="grid-x grid-padding-x">
-
-                @if (isset($user->login))
-                    @can('index', App\Role::class)
-                        <div class="small-12 cell tabs-margin-top">
-                            <table class="content-table">
-                                <caption>Уровень доступа</caption>
-                                <thead>
-                                <tr>
-                                    <th>Роль</th>
-                                    <th>Филиал</th>
-                                    <th>Должность</th>
-                                    <th>Инфа</th>
-                                    <th class="td-delete"></th>
-                                </tr>
-                                </thead>
-                                <tbody class="roleuser-table">
-                                @if (!empty($user->role_user))
-                                    @foreach ($user->role_user as $role_user)
-                                        @include('system.pages.marketings.users.roles', $role_user)
-                                    @endforeach
-                                @endif
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="small-8 small-offset-2 medium-8 medium-offset-2 tabs-margin-top text-center cell">
-                            <a class="button" data-open="role-add">Настройка доступа</a>
-                        </div>
-                    @endcan
-                @endif
-
-                <div class="small-12 text-center cell checkbox">
-                    {!! Form::hidden('access_block', 0) !!}
-                    {{ Form::checkbox('access_block', 1, $user->access_block == 1, ['id'=>'access-block-checkbox']) }}
-                    <label for="access-block-checkbox"><span>Блокировать доступ</span></label>
-                </div>
-
-                @if($user->exists && isset($site))
-                    {!! Form::hidden('site_id', $site->id) !!}
-                @endif
-
-            </div>
         </fieldset>
     </div>
 

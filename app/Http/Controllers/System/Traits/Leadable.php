@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Traits;
+namespace App\Http\Controllers\System\Traits;
 
 use App\User;
 use App\Lead;
@@ -16,12 +16,10 @@ use Telegram;
 // Специфические классы
 use Carbon\Carbon;
 
-trait LeadControllerTrait
+trait Leadable
 {
 
-
-
-	public function createLead($request){
+	public function storeLead($request){
 
         // Подготовка: -------------------------------------------------------------------------------------
 
@@ -47,6 +45,7 @@ trait LeadControllerTrait
         $lead->company_name = NULL;
 
 
+        $lead->draft = 1;
         $lead->author_id = $user_auth->id;
         $lead->manager_id = $user_auth->id;
         $lead->stage_id = 2;

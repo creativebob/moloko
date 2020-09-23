@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\System\Traits\Locationable;
 use App\Models\System\Traits\Phonable;
 use App\Models\System\Traits\Quietlable;
 use Illuminate\Notifications\Notifiable;
@@ -32,6 +33,7 @@ class User extends Authenticatable
     use Notifiable;
     use SoftDeletes;
     use Quietlable;
+    use Locationable;
     use Phonable;
 
     // Включаем Scopes
@@ -47,6 +49,11 @@ class User extends Authenticatable
     use Filter;
     use BooklistFilter;
     // use DateIntervalFilter;
+
+    protected $with = [
+        'location.city',
+        'main_phones'
+    ];
 
     protected $dates = [
         'deleted_at',
@@ -213,8 +220,8 @@ class User extends Authenticatable
 
 	public function getStafferFilialIdAttribute() {
 		$access = session('access');
-		$filial_id = $access['user_info']['filial_id'];
-		return $filial_id;
+		$filialId = $access['user_info']['filial_id'];
+		return $filialId;
 	}
 
     // public function getPhoneAttribute($value) {
@@ -320,12 +327,6 @@ class User extends Authenticatable
 //                'path' => '/img/system/plug/' . $this->sex == 1 ? 'avatar_small_man.png' : 'avatar_small_woman.png'
 //            ])
             ;
-    }
-
-    // Получаем локацию пользователя
-    public function location()
-    {
-        return $this->belongsTo(Location::class);
     }
 
     // Получаем задачи
@@ -471,7 +472,8 @@ class User extends Authenticatable
     {
         return $this->morphOne(Client::class, 'clientable')
             ->where([
-                'archive' => false
+                'archive' => false,
+                'company_id' => auth()->user()->company_id
             ]);
     }
 //    public function client()
@@ -493,6 +495,12 @@ class User extends Authenticatable
     public function favoritesGoods()
     {
         return $this->belongsToMany('App\Models\Project\Goods', 'favorite_goods', 'user_id', 'goods_id');
+    }
+
+
+    public function organizations()
+    {
+        return $this->belongsToMany(Company::class, 'representatives', 'user_id', 'organization_id');
     }
 
 

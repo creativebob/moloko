@@ -272,7 +272,6 @@ class ClientController extends Controller
         $this->checkChanges($client);
 
 
-
         logs('companies')->info("Обновлена компания клиент. Id: [{$client->id}]");
         logs('companies')->info('============ КОНЕЦ ОБНОВЛЕНИЯ КОМПАНИИ КЛИЕНТА ===============
         
@@ -559,9 +558,14 @@ class ClientController extends Controller
     public function search($search)
     {
 
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('index'));
+
+
         $results = Client::with([
-            'clientable.location.city'
+            'clientable'
         ])
+            ->companiesLimit($answer)
             ->whereHasMorph('clientable',
                 [
                     User::class,
@@ -578,6 +582,36 @@ class ClientController extends Controller
             ->get();
 
         return response()->json($results);
+    }
+
+    /**
+     * Поиск клиента пользователя (физика) по номеру телефона
+     *
+     * @param $search
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function searchClientUser($search)
+    {
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('index'));
+
+
+        $client = Client::with([
+            'clientable.location.city'
+        ])
+            ->companiesLimit($answer)
+            ->whereHasMorph('clientable',
+                [
+                    User::class,
+                ],
+                function ($q) use ($search) {
+                    $q->whereHas('main_phones', function ($q) use ($search) {
+                        $q->where('phone', $search);
+                    });
+                })
+            ->first();
+
+        return response()->json($client);
     }
 
     /**

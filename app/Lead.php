@@ -68,21 +68,23 @@ class Lead extends Model
 
     protected $fillable = [
         'name',
+        'user_id',
+
         'company_name',
-        'email',
+        'organization_id',
 
         'location_id',
+        'email',
 
-        'user_id',
         'client_id',
 
 	    'shipment_at',
 
+        'stage_id',
+        'badget',
+
         'order_amount_base',
         'need_delivery',
-
-
-        'draft',
 
         'display',
         'system',
@@ -189,16 +191,19 @@ class Lead extends Model
         return $this->belongsTo('App\User', 'manager_id');
     }
 
-    // Получаем пользователя
     public function user()
     {
-        return $this->belongsTo('App\User', 'user_id');
+        return $this->belongsTo(User::class);
     }
 
-    // Получаем клиента
+    public function organization()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
     public function client()
     {
-        return $this->belongsTo('App\Client', 'client_id');
+        return $this->belongsTo(Client::class);
     }
 
     // Получаем рекламации

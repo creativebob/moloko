@@ -78,10 +78,15 @@ trait Userable
         return $user;
     }
 
+    /**
+     * Поиск пользователя по номекру телефона в зависимости от сайта
+     *
+     * @param null $entityAlias
+     * @param null $siteId
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|mixed|object|null
+     */
     public function checkUserByPhone($entityAlias = null, $siteId = null)
     {
-
-
         $user = User::where('company_id', auth()->user()->company_id)
             ->whereHas('main_phones', function ($q) {
                 $q->where('phone', cleanPhone(request()->main_phone));

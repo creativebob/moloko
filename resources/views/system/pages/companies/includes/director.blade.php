@@ -4,6 +4,9 @@
     @endisset
     :cities='@json($cities)'
     :city='@json($city)'
+    @if($company->id != auth()->user()->company_id)
+        :access-block="true"
+        @endif
 ></director-component>
 {{--<div class="cell small-12 large-6">--}}
 

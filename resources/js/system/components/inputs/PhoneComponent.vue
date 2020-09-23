@@ -24,8 +24,8 @@
         @focus="focus"
         @blur="blur"
         @keydown.enter.prevent="onEnter"
-        @dblclick="curReadonly = false"
     >
+<!--    @dblclick="curReadonly = false"-->
 <!--    class="phone-field"-->
 <!--    mask="8 (000) 00-00-000"-->
 <!--    v-mask="'# (###) ###-##-##'"-->
@@ -47,12 +47,7 @@
                 type: String,
                 default: 'main_phone'
             },
-            phone: {
-                type: Object,
-                default: () => ({
-                    phone: null
-                })
-            },
+            phone: Object,
             placeholder: {
                 type: String,
                 default: ''
@@ -84,11 +79,8 @@
         },
         data() {
             return {
-                number: this.phone.phone,
+                number: this.phone ? this.phone.phone : null,
             }
-        },
-        mounted() {
-
         },
         methods: {
             update(value) {
@@ -101,7 +93,6 @@
                 this.$emit('blur', this.number);
             },
             input() {
-                // TODO - 14.09.20 - Здесь нужно валидировать получаемое значение
                 this.$emit('input', this.number);
             },
             change() {

@@ -81,6 +81,7 @@
                                 </label>
                             </div>
                             {!! Form::hidden('site_id', 1) !!}
+                            {!! Form::hidden('user_type', 1) !!}
                         </div>
                     </div>
                 @endif

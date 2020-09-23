@@ -54,9 +54,6 @@ class CreatePricesGoodsTable extends Migration
             $table->decimal('estimate_discount', 10, 2)->default(0)->comment('Скидкка по смете');
             $table->decimal('total_estimate_discount', 10, 2)->default(0)->comment('Сумма с скидкой по смете');
 
-            $table->bigInteger('ancestor_id')->nullable()->unsigned()->comment('Предок');
-            $table->foreign('ancestor_id')->references('id')->on('prices_goods');
-
             $table->decimal('total', 10, 2)->default(0)->comment('Итоговая сумма');
 
             $table->integer('points')->default(0)->comment('Внутренняя валюта');

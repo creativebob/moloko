@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\System\Traits\Locationable;
 use App\Models\System\Traits\Phonable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -33,6 +34,7 @@ class Company extends Model
     use SoftDeletes;
     use Cachable;
 
+    use Locationable;
     use Phonable;
 
     // Включаем Scopes
@@ -49,6 +51,11 @@ class Company extends Model
     use Filter;
     use BooklistFilter;
     // use DateIntervalFilter;
+
+    protected $with = [
+        'location.city',
+        'main_phones'
+    ];
 
     protected $model_name = [
         'company'
@@ -204,10 +211,7 @@ class Company extends Model
     }
 
     // Получаем локацию компании
-    public function location()
-    {
-        return $this->belongsTo('App\Location');
-    }
+
 
     // Получаем правовую форму
     public function legal_form()
@@ -238,7 +242,8 @@ class Company extends Model
     {
         return $this->morphOne(Client::class, 'clientable')
             ->where([
-                'archive' => false
+                'archive' => false,
+                'company_id' => auth()->user()->company_id
             ]);
     }
 
@@ -457,6 +462,11 @@ class Company extends Model
     public function site()
     {
         return $this->hasOne(Site::class);
+    }
+
+    public function representatives()
+    {
+        return $this->belongsToMany(User::class, 'representatives', 'organization_id');
     }
 
 }

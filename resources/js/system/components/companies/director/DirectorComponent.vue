@@ -119,6 +119,24 @@
                             <span class="form-error">Пароли не совпадают!</span>
                         </label>
                     </div>
+                    <div
+                        v-if="accessBlock"
+                        class="cell small-12 text-center checkbox"
+                    >
+                        <input
+                            type="hidden"
+                            name="access_block"
+                            value="0"
+                        >
+                        <input
+                            type="checkbox"
+                            name="access_block"
+                            id="checkbox-access_block"
+                            value="1"
+                            :checked="director.access_block == 1"
+                        >
+                        <label for="checkbox-access_block"><span>Блокировать доступ</span></label>
+                    </div>
                 </div>
 
             </fieldset>
@@ -155,10 +173,15 @@
                         }
                     },
                     login: null,
+                    access_block: null,
                 })
             },
             cities: Array,
-            city: Object
+            city: Object,
+            accessBlock: {
+                type: Boolean,
+                default: false
+            }
         },
         data() {
             return {
