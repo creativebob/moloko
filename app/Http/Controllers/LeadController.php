@@ -130,11 +130,7 @@ class LeadController extends Controller
             ->companiesLimit($answer)
             ->filials($answer)
             // ->authors($answer)
-            ->where(function ($q) {
-                $q->where('draft', false)
-                    ->orWhereNull('draft');
-            })
-
+            ->where('draft', false)
             ->systemItem($answer)
             ->filter()
 //        ->filter($request, 'city_id', 'location')
@@ -357,7 +353,6 @@ class LeadController extends Controller
 
     public function update(LeadRequest $request, $id)
     {
-        dd($request);
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
