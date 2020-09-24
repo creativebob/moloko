@@ -30,7 +30,7 @@
                         <string-component
                             name="user_second_name"
                             :value="director.second_name"
-                            :required="true"
+                            :required="setDirector"
                         ></string-component>
                     </label>
                 </div>
@@ -39,7 +39,7 @@
                         <string-component
                             name="user_first_name"
                             :value="director.first_name"
-                            :required="true"
+                            :required="setDirector"
                         ></string-component>
                     </label>
                 </div>
@@ -56,7 +56,7 @@
                         <phone-component
                             name="user_main_phone"
                             :phone="phone"
-                            :required="true"
+                            :required="setDirector"
                         ></phone-component>
                     </label>
                 </div>

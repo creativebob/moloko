@@ -15,7 +15,7 @@ class SalesDepartmentBurdenComposer
 
         $leads = Lead::whereNotIn('stage_id', [13, 14, 1, 12])
             ->manager(request()->user())
-            ->whereNull('draft')
+            ->where('draft', false)
             ->pluck('manager_id');
 
         $managers = $leads->unique()->toArray();
@@ -24,7 +24,7 @@ class SalesDepartmentBurdenComposer
         $users = User::withCount([
             'leads' => function($q) {
                 $q->whereNotIn('stage_id', [13, 14, 1, 12])
-                    ->whereNull('draft');
+                    ->where('draft', false);
             },
             'challenges_work',
             'challenges_today',
