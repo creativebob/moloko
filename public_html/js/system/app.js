@@ -105593,7 +105593,7 @@ var render = function() {
                     type: "text",
                     name: "user_login",
                     maxlength: "30",
-                    autocomplete: "off",
+                    autocomplete: "new-login",
                     pattern: "[A-Za-z0-9._-]{6,30}"
                   },
                   domProps: { value: _vm.director.login }
@@ -105656,7 +105656,7 @@ var staticRenderFns = [
           name: "user_password",
           maxlength: "20",
           id: "password",
-          autocomplete: "off",
+          autocomplete: "new-password",
           pattern: "[A-Za-z0-9]{6,20}"
         }
       }),
@@ -105681,7 +105681,7 @@ var staticRenderFns = [
           name: "user_password",
           maxlength: "20",
           id: "password-repeat",
-          autocomplete: "off",
+          autocomplete: "new-password",
           pattern: "[A-Za-z0-9]{6,20}",
           "data-equalto": "password"
         }

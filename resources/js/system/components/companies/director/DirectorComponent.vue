@@ -87,7 +87,7 @@
                                 name="user_login"
                                 class="login-field"
                                 maxlength="30"
-                                autocomplete="off"
+                                autocomplete="new-login"
                                 pattern="[A-Za-z0-9._-]{6,30}"
                                 :value="director.login"
                             >
@@ -100,7 +100,7 @@
                                 class="password password-field"
                                 maxlength="20"
                                 id="password"
-                                autocomplete="off"
+                                autocomplete="new-password"
                                 pattern="[A-Za-z0-9]{6,20}"
                             >
                             <span class="form-error">Введите пароль и повторите его, ну а что поделать, меняем ведь данные!</span>
@@ -112,7 +112,7 @@
                                 class="password password-field"
                                 maxlength="20"
                                 id="password-repeat"
-                                autocomplete="off"
+                                autocomplete="new-password"
                                 pattern="[A-Za-z0-9]{6,20}"
                                 data-equalto="password"
                             >
