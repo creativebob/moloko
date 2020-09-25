@@ -90,7 +90,7 @@ class BusinessCaseController extends Controller
     }
 
     /**
-     * Сохранение созданного ресурса в хранилище.
+     * Store a newly created resource in storage.
      *
      * @param BusinessCaseRequest $request
      * @param $portfolio_id

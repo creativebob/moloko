@@ -13,7 +13,7 @@ use App\Vendor;
 trait Companable
 {
     /**
-     * Сохранение только что созданного русурса
+     * Store a newly created resource in storage.
      *
      * @return Company|\Illuminate\Database\Eloquent\Model|\Illuminate\Database\Query\Builder
      */

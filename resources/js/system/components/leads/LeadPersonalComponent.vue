@@ -170,6 +170,9 @@
                 client: this.lead.client,
             }
         },
+        mounted() {
+            this.$store.commit('SET_CLIENT', this.client);
+        },
         computed: {
             userId() {
                 if (this.user) {
@@ -207,12 +210,6 @@
                     this.name = user.name;
                     this.$refs.name.update(this.name);
 
-                    if (user.client) {
-                        this.client = user.client;
-                    } else {
-                        this.client = null;
-                    }
-
                     if (user.organizations.length) {
                         let organization = user.organizations[0];
 
@@ -236,6 +233,12 @@
                         this.$refs.email.update(this.email);
 
                     } else {
+                        if (user.client) {
+                            this.client = user.client;
+                        } else {
+                            this.client = null;
+                        }
+
                         this.organization = null;
                         this.companyName = null;
                         this.$refs.organization.update(null);
@@ -255,6 +258,8 @@
                     this.user = null;
                     this.client = null;
                 }
+
+                this.$store.commit('SET_CLIENT', this.client);
             },
             updateOrganization(organization) {
                 if (organization) {
@@ -311,6 +316,8 @@
                         }
                     }
                 }
+
+                this.$store.commit('SET_CLIENT', this.client);
             },
 
             // update() {

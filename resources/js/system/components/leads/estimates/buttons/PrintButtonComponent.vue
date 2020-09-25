@@ -12,8 +12,8 @@
 
         data() {
             return {
-                estimate: this.$store.state.estimate.estimate,
-                leadId: this.$store.state.estimate.estimate.lead_id
+                estimate: this.$store.state.lead.estimate,
+                leadId: this.$store.state.lead.estimate.lead_id
             }
         },
         computed: {

@@ -1,9 +1,9 @@
-const moduleEstimate = {
+const moduleLead = {
     state: {
         estimate: null,
         goodsItems: [],
         servicesItems: [],
-        // discounts: [],
+        client: null,
     },
     mutations: {
         // Смета
@@ -72,6 +72,9 @@ const moduleEstimate = {
         },
 
         // Скидки
+        SET_CLIENT(state, client = null) {
+            state.client = client;
+        },
         // SET_DISCOUNTS(state, discounts) {
         //     state.discounts = discounts;
         // },
@@ -85,10 +88,12 @@ const moduleEstimate = {
         // Товары
         ADD_GOODS_ITEM_TO_ESTIMATE({ state }, priceId) {
             if (state.estimate.is_registered === 0) {
+
                 axios
                     .post('/admin/estimates_goods_items', {
                         estimate_id: state.estimate.id,
                         price_id: priceId,
+                        client_discount_percent: state.client ? state.client.discount : 0,
                     })
                     .then(response => {
                         if (response.data.success) {
@@ -226,13 +231,13 @@ const moduleEstimate = {
 
             if (state.goodsItems.length) {
                 state.goodsItems.forEach(item => {
-                    return goodsDiscount += (parseFloat(item.discount_currency) * parseInt(item.count))
+                    return goodsDiscount += parseFloat(item.discount_currency)
                 });
             }
 
             if (state.servicesItems.length) {
                 state.servicesItems.forEach(item => {
-                    return servicesDiscount += (parseFloat(item.discount_currency) * parseInt(item.count))
+                    return servicesDiscount += parseFloat(item.discount_currency)
                 });
             }
 
@@ -324,6 +329,10 @@ const moduleEstimate = {
             return total.toFixed(2);
         },
 
+        // Клиент
+        clientDiscountPercent: state => {
+            return state.client ? state.client.discount : 0;
+        },
 
         // Платежи
         paymentsAmount: state => {
@@ -338,4 +347,4 @@ const moduleEstimate = {
     }
 };
 
-export default moduleEstimate;
+export default moduleLead;

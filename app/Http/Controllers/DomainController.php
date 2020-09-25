@@ -102,7 +102,7 @@ class DomainController extends Controller
     }
 
     /**
-     * Сохранение созданного ресурса в хранилище.
+     * Store a newly created resource in storage.
      *
      * @param DomainRequest $request
      * @return \Illuminate\Http\RedirectResponse

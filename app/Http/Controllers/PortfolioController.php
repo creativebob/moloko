@@ -101,7 +101,7 @@ class PortfolioController extends Controller
     }
 
     /**
-     * Сохранение созданного ресурса в хранилище.
+     * Store a newly created resource in storage.
      *
      * @param PortfolioRequest $request
      * @return \Illuminate\Http\RedirectResponse

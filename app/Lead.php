@@ -86,6 +86,8 @@ class Lead extends Model
         'order_amount_base',
         'need_delivery',
 
+        'draft',
+
         'display',
         'system',
         'moderation'

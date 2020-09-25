@@ -57,6 +57,9 @@ class EstimatesServicesItem extends Model
         'estimate_discount',
         'total_estimate_discount',
 
+        'client_discount_percent',
+        'client_discount_currency',
+
         'display',
         'system',
         'moderation'

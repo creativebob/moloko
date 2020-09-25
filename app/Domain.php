@@ -56,6 +56,16 @@ class Domain extends Model
         'moderation'
     ];
 
+    public function getUtfDomainAttribute()
+    {
+        if ($this->domain) {
+            return idn_to_utf8($this->domain, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
+        } else {
+            return null;
+        }
+
+    }
+
     // Сайт
     public function site()
     {

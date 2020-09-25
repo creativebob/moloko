@@ -31,15 +31,13 @@ class Estimate extends Model
         'client_id',
 	    'filial_id',
 
-        'company_id',
-
         'number',
         'date',
 
         'cost',
 
         'description',
-        'author_id',
+
         'draft',
 
         'is_registered',
@@ -62,9 +60,17 @@ class Estimate extends Model
         'surplus',
         'points',
 
-        'discount_items_currency',
-
         'amount',
+
+        'price_discount',
+        'catalogs_item_discount',
+        'estimate_discount',
+        'client_discount',
+        'manual_discount',
+
+        'discount_currency',
+        'discount_percent',
+
         'total',
         'total_points',
         'total_bonuses',
@@ -72,12 +78,15 @@ class Estimate extends Model
         'margin_percent',
         'margin_currency',
 
-        'discount_currency',
-        'discount_percent',
+
 
         'display',
         'system',
-        'moderation'
+        'moderation',
+
+        // TODO - 24.09.20 - Поля открыты для парсера базы РХ
+        'company_id',
+        'author_id',
     ];
 
     public function setDateAttribute($value)

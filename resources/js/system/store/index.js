@@ -1,4 +1,4 @@
-import moduleEstimate from './modules/estimate'
+import moduleLead from './modules/lead'
 import modulePromotion from './modules/promotion'
 import moduleGoods from './modules/goods'
 
@@ -6,7 +6,7 @@ import moduleGoods from './modules/goods'
 
 let store = {
     modules: {
-        estimate: moduleEstimate,
+        lead: moduleLead,
         promotion: modulePromotion,
         goods: moduleGoods,
     },

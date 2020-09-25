@@ -115,7 +115,7 @@ class WorkflowsCategoryController extends Controller
     }
 
     /**
-     * Сохранение созданного ресурса в хранилище.
+     * Store a newly created resource in storage.
      *
      * @param WorkflowsCategoryStoreRequest $request
      * @return \Illuminate\Http\RedirectResponse

@@ -12,19 +12,19 @@
             :item="item"
             :is-archive="isArchive"
         ></comment-component>
-<!--        <td v-if="settings.length && stocks.length">-->
-<!--            <select-->
-<!--                name="stock_id"-->
-<!--                v-model="stockId"-->
-<!--            >-->
-<!--                <option v-for="stock in stocks"-->
-<!--                    :value="stock.id"-->
-<!--                >{{ stock.name }}</option>-->
-<!--            </select>-->
-<!--        </td>-->
-<!--        <td v-else>-->
-<!--            {{ item.stock.name }}-->
-<!--        </td>-->
+        <!--        <td v-if="settings.length && stocks.length">-->
+        <!--            <select-->
+        <!--                name="stock_id"-->
+        <!--                v-model="stockId"-->
+        <!--            >-->
+        <!--                <option v-for="stock in stocks"-->
+        <!--                    :value="stock.id"-->
+        <!--                >{{ stock.name }}</option>-->
+        <!--            </select>-->
+        <!--        </td>-->
+        <!--        <td v-else>-->
+        <!--            {{ item.stock.name }}-->
+        <!--        </td>-->
 
         <template
             v-if="item.sale_mode == 1"
@@ -127,19 +127,30 @@
         props: {
             item: Object,
             index: Number,
-            settings: Array,
-            stocks: Array,
+            settings: {
+                type: Array,
+                default: () => {
+                    return [];
+                }
+            },
+            stocks: {
+                type: Array,
+                default: () => {
+                    return [];
+                }
+            },
         },
         data() {
             return {
-                countInput: Number(this.item.count),
-                cost: Number(this.item.cost),
-                changeCost: false,
+                countInput: parseFloat(this.item.count),
                 stockId: null,
+
+                // cost: Number(this.item.cost),
+                // changeCost: false,
             }
         },
         mounted() {
-            if(this.settings.length && this.stocks.length && this.item.stock_id === null) {
+            if (this.settings.length && this.stocks.length && this.item.stock_id === null) {
                 this.stockId = this.stocks[0].id;
             } else {
                 this.stockId = this.item.stock_id;
@@ -150,7 +161,7 @@
                 return this.item.product.archive == 1;
             },
             isRegistered() {
-                return this.$store.state.estimate.estimate.is_registered == 1;
+                return this.$store.state.lead.estimate.is_registered == 1;
             },
             isReservedClass() {
                 if (this.item.reserve !== null) {
@@ -175,9 +186,6 @@
                     }
                 }
                 return 0;
-            },
-            total() {
-                return (this.item.price - this.discountCurrency) * this.itemCount;
             },
             itemCount() {
                 return Math.floor(this.item.count);
@@ -209,12 +217,12 @@
         methods: {
             updateModalCount(count) {
                 if (this.item.sale_mode == 1) {
-                    this.$refs.modalCurrencyComponent.changeCount(count);
+                    this.$refs.modalCurrencyComponent.update(count);
                 }
             },
             updateCount(count) {
                 if (this.item.sale_mode == 1) {
-                    this.$refs.countComponent.changeValue(count);
+                    this.$refs.countComponent.update(count);
                 }
             },
             openModalRemoveItem() {

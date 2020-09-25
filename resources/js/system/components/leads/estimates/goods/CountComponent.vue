@@ -10,7 +10,7 @@
                     @blur="changeCount = false"
                     @enter="updateCount"
                     :decimal-place="0"
-                    ref="inputComponent"
+                    ref="countComponent"
                     v-focus
                 ></digit-component>
             </template>
@@ -50,7 +50,7 @@
                 return this.item.product.serial === 0 && ! this.isRegistered;
             },
             isRegistered() {
-                return this.$store.state.estimate.estimate.is_registered == 1;
+                return this.$store.state.lead.estimate.is_registered == 1;
             }
         },
         methods: {
@@ -62,6 +62,7 @@
                     const {data} = await axios
                         .patch('/admin/estimates_goods_items/' + this.item.id, {
                             count: parseInt(this.curCount),
+                            client_discount_percent: this.$store.getters.clientDiscountPercent
                         });
                     this.$store.commit('UPDATE_GOODS_ITEM', data);
                     this.curCount = parseInt(data.count);
@@ -86,10 +87,9 @@
             //             console.log(error)
             //         });
             // },
-            changeValue(value) {
+            update(value) {
                 this.item.count = value;
                 this.curCount = value;
-                this.$refs.inputComponent.update(value);
             },
         },
         directives: {

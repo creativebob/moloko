@@ -128,7 +128,7 @@ class PortfoliosItemController extends Controller
     }
 
     /**
-     * Сохранение созданного ресурса в хранилище.
+     * Store a newly created resource in storage.
      *
      * @param PortfoliosItemStoreRequest $request
      * @param $portfolio_id

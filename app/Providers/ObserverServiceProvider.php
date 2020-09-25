@@ -95,6 +95,7 @@ use App\Observers\System\ProductionsItemObserver;
 use App\Observers\System\PromotionObserver;
 use App\Observers\System\RawsStockObserver;
 use App\Observers\System\ReceiptObserver;
+use App\Observers\System\RepresentativeObserver;
 use App\Observers\System\ReserveObserver;
 use App\Observers\System\ReservesHistoryObserver;
 use App\Observers\System\RoomsCategoryObserver;
@@ -124,6 +125,7 @@ use App\ProductionsItem;
 use App\Promotion;
 use App\RawsStock;
 use App\Receipt;
+use App\Representative;
 use App\Reserve;
 use App\ReservesHistory;
 use App\RoomsCategory;
@@ -190,6 +192,9 @@ class ObserverServiceProvider extends ServiceProvider
 
         // Пользователь
         User::observe(UserObserver::class);
+
+        // Представитель
+        Representative::observe(RepresentativeObserver::class);
 
         Lead::observe(LeadObserver::class);
 

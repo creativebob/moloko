@@ -185,6 +185,9 @@ class EmployeeController extends Controller
 
         $user = $this->storeUser();
 
+        // Cохраняем или обновляем роли
+        $result_setroles = setRoles($request, $user);
+
         $staff = Staffer::with([
             'position',
             'department'
@@ -286,6 +289,9 @@ class EmployeeController extends Controller
 
         // Отдаем работу по редактированию нового юзера трейту
         $user = $this->updateUser($request, $user);
+
+        // Cохраняем или обновляем роли
+        $result_setroles = setRoles($request, $user);
 
 
         $photo_id = $this->getPhotoId($user);

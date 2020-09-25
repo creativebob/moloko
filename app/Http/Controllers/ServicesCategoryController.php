@@ -117,7 +117,7 @@ class ServicesCategoryController extends Controller
     }
 
     /**
-     * Сохранение созданного ресурса в хранилище.
+     * Store a newly created resource in storage.
      *
      * @param ServicesCategoryStoreRequest $request
      * @return \Illuminate\Http\RedirectResponse

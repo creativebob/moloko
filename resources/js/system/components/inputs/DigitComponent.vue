@@ -74,7 +74,7 @@
 		methods: {
             update(count) {
                 this.count = count;
-                this.returnDecimal(count);
+                this.blur(count);
             },
             getDecimalArray(value) {
                 let str = value.toString();

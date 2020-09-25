@@ -114,13 +114,13 @@
 
                 count: null,
                 cost: null,
-                discountPercent: Number(this.$store.state.estimate.estimate.discount_percent),
+                discountPercent: Number(this.$store.state.lead.estimate.discount_percent),
 
                 item: null,
                 itemName: null,
                 itemIndex: null,
 
-                isRegistered: this.$store.state.estimate.estimate.is_registered === 1,
+                isRegistered: this.$store.state.lead.estimate.is_registered === 1,
             }
         },
         mounted() {
@@ -128,7 +128,7 @@
         },
         computed: {
             estimate() {
-                return this.$store.state.estimate.estimate;
+                return this.$store.state.lead.estimate;
             },
             itemsAmount() {
                 let amount = 0;
@@ -171,7 +171,7 @@
             },
             isReserved() {
                 let result = [];
-                result = this.$store.state.estimate.goodsItems.filter(item => {
+                result = this.$store.state.lead.goodsItems.filter(item => {
                     if (item.reserve !== null) {
                         if (item.reserve.count > 0) {
                             return item;

@@ -1,11 +1,11 @@
 <template>
-   <div
+    <div
         class="reveal"
         :id="'modal-estimates_goods_item-' + item.id"
         data-reveal
         data-close-on-click="false"
         v-reveal
-   >
+    >
         <div class="grid-x">
             <div class="small-12 cell modal-title">
                 <h5>Настройка позиции</h5>
@@ -95,14 +95,13 @@
                     </div>
 
 
-
                     <div class="small-12 medium-6 cell">
                         <label>Количество
-<!--                                <input-->
-<!--                                    type="number"-->
-<!--                                    name="count"-->
-<!--                                    v-model="count"-->
-<!--                                >-->
+                            <!--                                <input-->
+                            <!--                                    type="number"-->
+                            <!--                                    name="count"-->
+                            <!--                                    v-model="count"-->
+                            <!--                                >-->
                             <digit-component
                                 name="count"
                                 :value="itemCount"
@@ -120,11 +119,11 @@
 
                 </div>
 
-<!--                    <div class="grid-x grid-margin-x">-->
-<!--                        <div class="small-12 cell">-->
-<!--                            Склад:-->
-<!--                        </div>-->
-<!--                    </div>-->
+                <!--                    <div class="grid-x grid-margin-x">-->
+                <!--                        <div class="small-12 cell">-->
+                <!--                            Склад:-->
+                <!--                        </div>-->
+                <!--                    </div>-->
 
             </div>
         </div>
@@ -136,7 +135,8 @@
                 <button
                     @click="updateItem"
                     class="button modal-button"
-                >Сохранить</button>
+                >Сохранить
+                </button>
             </div>
         </div>
         <div data-close class="icon-close-modal sprite close-modal add-item"></div>
@@ -158,7 +158,6 @@
                 markupCurrency: 0,
                 discountPercent: this.item.discount_percent,
                 discountCurrency: this.item.discount_currency,
-
             }
         },
         mounted() {
@@ -169,7 +168,7 @@
         },
         computed: {
             estimate() {
-                return this.$store.state.estimate.estimate;
+                return this.$store.state.lead.estimate;
             },
             total() {
                 return (this.item.price - this.discountCurrency) * this.itemCount;
@@ -182,13 +181,12 @@
                 }
             },
             itemCount() {
-                return Math.floor(this.item.count);
+                return parseFloat(this.item.count);
             }
         },
         methods: {
             changeCount(value) {
                 this.item.count = value;
-                this.$refs.countComponent.update(value);
             },
             checkChangeCount() {
                 if (this.item.product.serial === 0) {
@@ -197,21 +195,25 @@
                     }
                 }
             },
-            updateItem() {
-                axios
-                    .patch('/admin/estimates_goods_items/' + this.item.id, {
-                        count: this.itemCount,
-                        discount_currency: this.discountCurrency,
-                        discount_percent: this.discountPercent,
-                    })
-                    .then(response => {
-                        $('#modal-estimates_goods_item-' + this.item.id).foundation('close');
-                        this.$store.commit('UPDATE_GOODS_ITEM', response.data);
-                        this.$emit('update-count', parseInt(response.data.count));
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    });
+            async updateItem() {
+                try {
+                    var insert = {};
+                    insert.count = this.itemCount;
+                    insert.client_discount_percent = this.$store.getters.clientDiscountPercent;
+
+                    if (this.item.discount_percent != this.discountPercent || this.item.discount_currency != this.discountCurrency) {
+                        insert.manual_discount_currency = this.discountCurrency;
+                        insert.manual_discount_percent = this.discountPercent;
+                    }
+
+                    const {data} = await axios
+                        .patch('/admin/estimates_goods_items/' + this.item.id, insert);
+                    $('#modal-estimates_goods_item-' + this.item.id).foundation('close');
+                    this.$store.commit('UPDATE_GOODS_ITEM', data);
+                    this.$emit('update-count', parseFloat(data.count));
+                } catch (error) {
+                    console.log(error)
+                }
             },
             changeDiscountPercent(value) {
                 let percent = this.item.price / 100;
@@ -230,7 +232,11 @@
                 this.$refs.discountPercentComponent.update(this.discountPercent);
                 this.discountCurrency = 0;
                 this.$refs.discountCurrencyComponent.update(this.discountCurrency);
-            }
+            },
+            update(value) {
+                this.item.count = value;
+                this.$refs.countComponent.update(value);
+            },
         },
         directives: {
             'reveal': {

@@ -91,7 +91,7 @@
 
         computed: {
             pluginsList() {
-                return this.$store.state.estimate.goodsItems;
+                return this.$store.state.lead.goodsItems;
             },
 
             // actualMetrics() {

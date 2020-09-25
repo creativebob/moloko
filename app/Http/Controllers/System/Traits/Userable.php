@@ -7,7 +7,7 @@ use App\User;
 trait Userable
 {
     /**
-     * Сохранение только что созданного русурса
+     * Store a newly created resource in storage.
      *
      * @param null $entityAlias
      * @return User|\Illuminate\Database\Eloquent\Model
@@ -33,9 +33,6 @@ trait Userable
         $user->saveQuietly();
 
         $this->savePhones($user);
-
-        // Cохраняем или обновляем роли
-        $result_setroles = setRoles($request, $user);
 
         logs('users')->info("Создан пользователь. Id: [{$user->id}]");
 
@@ -69,9 +66,6 @@ trait Userable
 //            $this->setPassword($user);
 
         $this->savePhones($user);
-
-        // Cохраняем или обновляем роли
-        $result_setroles = setRoles($request, $user);
 
         logs('users')->info("Обновлен пользователь. Id: [{$user->id}]");
 

@@ -81,12 +81,12 @@
 		computed: {
 		    // Товары
 			goodsList() {
-				return this.$store.state.estimate.goodsItems;
+				return this.$store.state.lead.goodsItems;
 			},
 
             // Услуги
             servicesList() {
-                return this.$store.state.estimate.servicesItems;
+                return this.$store.state.lead.servicesItems;
             },
 
             // Смета

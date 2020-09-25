@@ -13,12 +13,12 @@
     export default {
         data() {
             return {
-                estimate: this.$store.state.estimate.estimate
+                estimate: this.$store.state.lead.estimate
             }
         },
         computed: {
             isShow() {
-                return this.estimate.is_registered === 0 && (this.$store.state.estimate.goodsItems.length > 0 || this.$store.state.estimate.servicesItems.length > 0);
+                return this.estimate.is_registered === 0 && (this.$store.state.lead.goodsItems.length > 0 || this.$store.state.lead.servicesItems.length > 0);
             },
             isDisabled() {
                 return this.estimate.is_registered === 1;

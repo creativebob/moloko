@@ -125,7 +125,7 @@ class VendorController extends Controller
     }
 
     /**
-     * Сохранение созданного ресурса в хранилище.
+     * Store a newly created resource in storage.
      *
      * @param CompanyRequest $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector

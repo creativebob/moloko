@@ -9,6 +9,7 @@ use App\Http\Controllers\System\Traits\Phonable;
 use App\Http\Controllers\System\Traits\Timestampable;
 use App\Http\Controllers\System\Traits\Userable;
 use App\Http\Controllers\Traits\Offable;
+use App\Representative;
 use App\User;
 use App\Lead;
 use App\LeadType;
@@ -144,7 +145,7 @@ class LeadController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(30);
 
-        // dd($leads);
+//         dd($leads);
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
@@ -211,8 +212,8 @@ class LeadController extends Controller
 
         $lead = Lead::with([
             'location.city',
-            'user',
-            'organization',
+            'user.client',
+            'organization.client',
             'client',
             'main_phones',
             'extra_phones',
@@ -277,8 +278,57 @@ class LeadController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $lead);
 
+        if ($lead->draft == false && $lead->estimate->is_registered) {
+            // Если есть клиент у лида, сравниваем скидку
+            if ($lead->client) {
+                $this->updateClientDiscount($lead);
+            } else {
+                // Если нет клиента, то ищем его
+                // Проверяем организацию
+                if ($lead->organization) {
+                    $organization = $lead->organization;
+                    $organization->load('client');
+                    if ($organization->client) {
+                        $lead->update([
+                            'client_id' => $organization->client->id
+                        ]);
+                        $lead->load('client');
+                        $this->updateClientDiscount($lead);
+                    }
+                } else if ($lead->company_name) {
+                    // Если есть имя компании, ищем первую компанию, которую представляет пользователь
+                    $user = $lead->user;
+                    $user->load('organizations');
+
+                    if ($user->organizations->isNotEmpty()) {
+                        $organization = $user->organizations->first();
+                        $organization->load('client');
+                        if ($organization->client) {
+                            $lead->update([
+                                'client_id' => $organization->client->id
+                            ]);
+                            $lead->load('client');
+                            $this->updateClientDiscount($lead);
+                        }
+                    }
+                } else if ($lead->user) {
+                    // Смотрим, есть ли клиент у юзера
+                    $user = $lead->user;
+                    $user->load('client');
+                    if ($user->client) {
+                        $lead->update([
+                            'client_id' => $user->client->id
+                        ]);
+                        $lead->load('client');
+                        $this->updateClientDiscount($lead);
+                    }
+
+                }
+            }
+        }
+
         $historyLeads = collect();
-        if ($lead->draft) {
+        if ($lead->draft == false) {
             // История лида
             $historyLeads = Lead::with([
                 'location.city',
@@ -301,7 +351,6 @@ class LeadController extends Controller
                 ->orderBy('sort', 'asc')
                 ->get();
         }
-
 
         $lead->history = $historyLeads;
 //        dd($lead);
@@ -334,21 +383,26 @@ class LeadController extends Controller
         ];
 
 
+        $settings = auth()->user()->company->settings;
+
         // Инфо о странице
         $pageInfo = pageInfo($this->entityAlias);
 
-        $filial_id = $request->user()->filial_id;
+        return view('leads.edit', compact('lead', 'pageInfo', 'choices', 'settings'));
+    }
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_cs = operator_right('catalogs_services', false, getmethod('index'));
+    public function updateClientDiscount($lead)
+    {
+        $clientDiscount = $lead->client->discount;
 
-        // dd($catalog_service);
-
-        $previous_url = url()->previous();
-
-        $settings = auth()->user()->company->settings;
-
-        return view('leads.edit', compact('lead', 'pageInfo', 'choices', 'previous_url', 'settings'));
+        $estimate = $lead->estimate;
+        foreach ($estimate->goods_items as $goodsItem) {
+            if ($goodsItem->client_discount_percent != $clientDiscount) {
+                $goodsItem->update([
+                    'client_discount_percent' => $clientDiscount
+                ]);
+            }
+        }
     }
 
     public function update(LeadRequest $request, $id)
@@ -379,19 +433,31 @@ class LeadController extends Controller
         $location = $this->getLocation();
         $data['location_id'] = $location->id;
 
+        if (empty($request->user_id)) {
+            $user = $this->storeUser();
+            $data['user_id'] = $user->id;
+        }
+
         $lead->update($data);
 
         $this->savePhones($lead);
 
+        // Проверка на создание представителя
         if ($lead->organization_id) {
-            $lead->load('user');
-            $user = $lead->user;
+            $representative = Representative::where([
+                'user_id' => $lead->user_id,
+                'organization_id' => $lead->organization_id,
+                'company_id' => $lead->company_id,
+            ])
+                ->first();
 
-//            $user->organizations()->attach([$lead->organization_id => [
-//                'company_id' => $lead->company_id
-//            ]]);
+            if (empty($representative)) {
+                Representative::create([
+                    'user_id' => $lead->user_id,
+                    'organization_id' => $lead->organization_id,
+                ]);
+            }
         }
-
 
 
 //        $lead->estimate->update([

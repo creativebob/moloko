@@ -19,9 +19,6 @@ class CreateEstimatesServicesItemsTable extends Migration
             $table->bigInteger('estimate_id')->nullable()->unsigned()->comment('Id сметы');
             $table->foreign('estimate_id')->references('id')->on('estimates');
 
-//            $table->morphs('product');
-//            $table->morphs('price_product');
-
             $table->bigInteger('price_id')->unsigned()->nullable()->comment('Id прайса');
             $table->foreign('price_id')->references('id')->on('prices_services');
 
@@ -33,49 +30,61 @@ class CreateEstimatesServicesItemsTable extends Migration
 
             $table->tinyInteger('sale_mode')->default(1)->comment('Режим продажи: 1 - валюта, 2 - поинты');
 
-            $table->integer('cost')->default(0)->comment('Себестоимость');
             $table->integer('cost_mode')->nullable()->unsigned()->comment('Режим себестоимости');
+            $table->integer('cost_unit')->default(0)->comment('Себестоимость за единицу');
+            $table->integer('cost')->default(0)->comment('Себестоимость');
 
             $table->decimal('price', 10,2)->default(0)->comment('Цена');
+            $table->integer('points')->default(0)->comment('Внутренняя валюта');
             $table->decimal('count', 10,2)->default(0)->comment('Количество');
             $table->decimal('amount', 10,2)->default(0)->comment('Сумма');
 
-            $table->integer('points')->default(0)->comment('Внутренняя валюта');
-
             $table->bigInteger('price_discount_id')->nullable()->unsigned()->comment('Id скидки прайса');
             $table->foreign('price_discount_id')->references('id')->on('discounts');
+            $table->decimal('price_discount_unit', 10, 2)->default(0)->comment('Скидка по прайсу за единицу');
             $table->decimal('price_discount', 10, 2)->default(0)->comment('Скидка по прайсу');
             $table->decimal('total_price_discount', 10, 2)->default(0)->comment('Сумма с скидкой по прайсу');
 
             $table->bigInteger('catalogs_item_discount_id')->nullable()->unsigned()->comment('Id скидки раздела каталога');
             $table->foreign('catalogs_item_discount_id')->references('id')->on('discounts');
+            $table->decimal('catalogs_item_discount_unit', 10, 2)->default(0)->comment('Скидкка по разделу каталога за единицу');
             $table->decimal('catalogs_item_discount', 10, 2)->default(0)->comment('Скидкка по разделу каталога');
             $table->decimal('total_catalogs_item_discount', 10, 2)->default(0)->comment('Сумма с скидкой по разделу каталога');
 
             $table->bigInteger('estimate_discount_id')->nullable()->unsigned()->comment('Id скидки сметы');
             $table->foreign('estimate_discount_id')->references('id')->on('discounts');
+            $table->decimal('estimate_discount_unit', 10, 2)->default(0)->comment('Скидкка по смете за единицу');
             $table->decimal('estimate_discount', 10, 2)->default(0)->comment('Скидкка по смете');
             $table->decimal('total_estimate_discount', 10, 2)->default(0)->comment('Сумма с скидкой по смете');
 
             $table->decimal('client_discount_percent', 10, 2)->default(0)->comment('Скидка клиента (%)');
+            $table->decimal('client_discount_unit_currency', 10, 2)->default(0)->comment('Скидка клиента за единицу (валюта)');
             $table->decimal('client_discount_currency', 10, 2)->default(0)->comment('Скидка клиента (валюта)');
             $table->decimal('total_client_discount', 10, 2)->default(0)->comment('Сумма со скидкой клиента');
 
-            $table->decimal('margin_percent', 10,2)->default(0)->comment('Процент маржи');
-            $table->decimal('margin_currency', 10, 2)->default(0)->comment('Сумма маржи');
+            $table->decimal('computed_discount_percent', 10, 2)->default(0)->comment('высчитанная скидка (%)');
+            $table->decimal('computed_discount_currency', 10, 2)->default(0)->comment('высчитанная скидка (валюта)');
+            $table->decimal('total_computed_discount', 10, 2)->default(0)->comment('Сумма с высчитанной скидкой');
+
+            $table->decimal('manual_discount_percent', 10, 2)->default(0)->comment('Ручная скидка (%)');
+            $table->decimal('manual_discount_currency', 10, 2)->default(0)->comment('Ручная скидка (валюта)');
+            $table->decimal('total_manual_discount', 10, 2)->default(0)->comment('Сумма с ручной скидкой');
 
             $table->decimal('discount_percent', 10,2)->default(0)->comment('Процент скидки');
             $table->decimal('discount_currency', 10,2)->default(0)->comment('Сумма скидки');
 
-            $table->decimal('extra_margin_percent', 10,2)->default(0)->comment('Общий процент маржи');
-            $table->decimal('extra_margin_currency', 10,2)->default(0)->comment('Общая сумма маржи');
-
-            $table->decimal('extra_discount_percent', 10,2)->default(0)->comment('Общий процент скидки');
-            $table->decimal('extra_discount_currency', 10,2)->default(0)->comment('Общая сумма скидки');
+//            $table->decimal('extra_margin_percent', 10,2)->default(0)->comment('Общий процент маржи');
+//            $table->decimal('extra_margin_currency', 10,2)->default(0)->comment('Общая сумма маржи');
+//
+//            $table->decimal('extra_discount_percent', 10,2)->default(0)->comment('Общий процент скидки');
+//            $table->decimal('extra_discount_currency', 10,2)->default(0)->comment('Общая сумма скидки');
 
             $table->decimal('total', 10,2)->default(0)->comment('Итоговая сумма');
             $table->integer('total_points')->default(0)->comment('Итого поинтами');
             $table->integer('total_bonuses')->default(0)->comment('Итого бонусами');
+
+            $table->decimal('margin_percent', 10,2)->default(0)->comment('Процент маржи');
+            $table->decimal('margin_currency', 10,2)->default(0)->comment('Сумма маржи');
 
             $table->decimal('profit', 10,2)->default(0)->comment('Прибыль');
 

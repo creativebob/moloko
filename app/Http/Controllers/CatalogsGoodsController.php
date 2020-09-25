@@ -82,7 +82,7 @@ class CatalogsGoodsController extends Controller
     }
 
     /**
-     * Сохранение созданного ресурса в хранилище.
+     * Store a newly created resource in storage.
      *
      * @param CatalogsGoodsRequest $request
      * @return \Illuminate\Http\RedirectResponse

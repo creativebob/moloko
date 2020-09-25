@@ -15,7 +15,7 @@
     export default {
         data() {
             return {
-                estimate: this.$store.state.estimate.estimate
+                estimate: this.$store.state.lead.estimate
             }
         },
         computed: {

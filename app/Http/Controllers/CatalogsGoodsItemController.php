@@ -129,7 +129,7 @@ class CatalogsGoodsItemController extends Controller
     }
 
     /**
-     * Сохранение созданного ресурса в хранилище.
+     * Store a newly created resource in storage.
      *
      * @param CatalogsGoodsItemStoreRequest $request
      * @param $catalog_id

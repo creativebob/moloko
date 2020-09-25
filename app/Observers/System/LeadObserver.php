@@ -22,6 +22,8 @@ class LeadObserver
         $lead->stage_id = 2;
         $lead->lead_type_id = 1;
         $lead->lead_method_id = 1;
+
+        $lead->draft = true;
     }
 
     public function created(Lead $lead)
@@ -37,7 +39,9 @@ class LeadObserver
     {
         $this->update($lead);
 
-        $lead->draft = false;
+        if ($lead->name) {
+            $lead->draft = false;
+        }
     }
 
     public function deleting(Lead $lead)
