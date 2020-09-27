@@ -1,6 +1,5 @@
 <template>
-    <td>
-        {{ item.product.article.name }}<span v-if="isArchive"> (Архивный)</span>
+    <span>
         <span
             class="icon-comment"
             :class="[{ 'hide-comment' : ! showComment }]"
@@ -37,14 +36,13 @@
                 @click="changeEditComment"
             >{{ item.comment }}</p>
         </div>
-    </td>
+    </span>
 </template>
 
 <script>
     export default {
         props: {
             item: Object,
-            isArchive: Boolean
         },
         data() {
             return {

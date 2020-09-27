@@ -1,6 +1,6 @@
 <template>
 	<input
-		:type="type"
+		type="number"
 		:name="name"
         v-model="count"
         :id="id"
@@ -55,12 +55,6 @@
                 type: [Number, String],
                 default: 99999999
             },
-
-            // TODO - 04.09.20 - Костыль для вкусняшки, в инпутах указан тип digit, Хотя такого не существует
-            type: {
-                type: String,
-                default: 'number'
-            },
         },
 		data() {
 			return {
@@ -71,6 +65,11 @@
 				// count_item: this.value,
 			}
 		},
+        // watch: {
+        //     count(val) {
+        //         this.count = parseFloat(val).toFixed(this.decimalPlace);
+        //     },
+        // },
 		methods: {
             update(count) {
                 this.count = count;

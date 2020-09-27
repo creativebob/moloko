@@ -10160,6 +10160,15 @@ span.wrap-label-checkboxer {
   margin-left: 0px;
 }
 
+.input-with-buttons .button-count {
+  cursor: pointer;
+}
+
+.input-with-buttons input {
+  display: inline-block;
+  width: 60px;
+}
+
 .show-elem {
   display: inline-block !important;
 }

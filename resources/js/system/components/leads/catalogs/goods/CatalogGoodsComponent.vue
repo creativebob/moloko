@@ -53,7 +53,7 @@
                                 v-for="price in listPrices"
                         >
                             <a
-                                    @click="addPriceToEstimate(price.id)"
+                                    @click="addPriceToEstimate(price)"
                             >
 
                                 <div class="media-object stack-for-small">
@@ -168,8 +168,8 @@
 
                 $('#modal-catalogs-goods').foundation('close');
             },
-            addPriceToEstimate(id) {
-                this.$store.dispatch('ADD_GOODS_ITEM_TO_ESTIMATE', id);
+            addPriceToEstimate(price) {
+                this.$store.commit('ADD_GOODS_ITEM_TO_ESTIMATE', price);
             }
         },
         directives: {

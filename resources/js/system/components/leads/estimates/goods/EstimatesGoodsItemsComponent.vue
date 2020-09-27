@@ -114,7 +114,7 @@
 
                 count: null,
                 cost: null,
-                discountPercent: Number(this.$store.state.lead.estimate.discount_percent),
+                // discountPercent: Number(this.$store.state.lead.estimate.discount_percent),
 
                 item: null,
                 itemName: null,
@@ -185,13 +185,13 @@
             openModal(item, index) {
                 this.itemIndex = index;
                 this.item = item;
-                this.itemName = item.product.article.name;
+                this.itemName = item.goods.article.name;
             },
             updateItem: function(item) {
                 this.$store.commit('UPDATE_GOODS_ITEM', item);
             },
             deleteItem() {
-                this.$store.dispatch('REMOVE_GOODS_ITEM_FROM_ESTIMATE', this.item.id);
+                this.$store.commit('REMOVE_GOODS_ITEM', this.item.id);
                 $('#delete-estimates_goods_item').foundation('close');
             },
             reserveEstimateItems() {

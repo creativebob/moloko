@@ -134,7 +134,7 @@ class EstimatesGoodsItemObserver
 
         $item->manual_discount_currency = 0;
         $item->manual_discount_percent = 0;
-        $item->total_manual_discount_percent;
+        $item->total_manual_discount_percent = 0;
 
         return $item;
     }

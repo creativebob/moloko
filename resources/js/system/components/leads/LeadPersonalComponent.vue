@@ -171,6 +171,7 @@
             }
         },
         mounted() {
+            this.$store.commit('SET_LEAD', this.lead);
             this.$store.commit('SET_CLIENT', this.client);
         },
         computed: {
@@ -195,6 +196,9 @@
                     let number = value.replace(/\D+/g, "");
                     let found = this.users.find(user => user.main_phones[0].phone == number);
                     this.updateUser(found);
+                } else {
+                    this.user = null;
+                    this.updateOrganization(this.organization);
                 }
             },
             changeCityId(value) {

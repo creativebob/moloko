@@ -715,7 +715,10 @@ span.wrap-label-checkboxer {
 }
 
 // Чекбоксер категорий
-@import "./partials/checkboxers/checkboxer_categories";
+@import "components/checkboxers/checkboxer_categories";
+
+// Чекбоксер категорий
+@import "components/inputs/count_with_buttons";
 
 // ------------------------------------------ Оформление суперменю--------------------------------------------
 

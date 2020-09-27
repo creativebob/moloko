@@ -3,15 +3,16 @@
         class="item commentable"
         :class="[{'cmv-archive' : isArchive}]"
         :id="'estimates_goods_items-' + item.id"
-        :data-name="item.product.article.name"
-        :data-price_id="item.price_id"
-        :data-count="item.count"
-        :data-price="item.price"
     >
-        <comment-component
-            :item="item"
-            :is-archive="isArchive"
-        ></comment-component>
+
+        <td class="td-name">
+            {{ item.goods.article.name }}<span v-if="isArchive"> (Архивный)</span>
+            <comment-component
+                :item="item"
+            ></comment-component>
+        </td>
+
+
         <!--        <td v-if="settings.length && stocks.length">-->
         <!--            <select-->
         <!--                name="stock_id"-->
@@ -45,11 +46,17 @@
             ></points-component>
         </template>
 
-        <count-component
-            :item="item"
-            @update="updateModalCount"
-            ref="countComponent"
-        ></count-component>
+        <td class="td-count">
+            <span
+                v-if="isRegistered || this.item.goods.serial === 1"
+            >{{ item.count | onlyInteger | level }}</span>
+            <count-component
+                v-else
+                :count="item.count"
+                @update="changeCount"
+                ref="countComponent"
+            ></count-component>
+        </td>
 
         <td class="td-discount">
             <template
@@ -71,14 +78,16 @@
                 class="button green-button"
             >{{ item.total_points | level }} поинтов</a>
         </td>
+
         <td class="td-delete">
             <div
                 v-if="!isRegistered"
-                @click="openModalRemoveItem"
+                @click="openModalRemove"
                 class="icon-delete sprite"
                 data-open="delete-estimates_goods_item"
             ></div>
         </td>
+
         <td
             v-if="settings.length && isRegistered"
             class="td-action"
@@ -109,7 +118,7 @@
             :item="item"
             :is-registered="isRegistered"
             ref="modalCurrencyComponent"
-            @update-count="updateCount"
+            @update="update"
         ></modal-component>
     </tr>
 </template>
@@ -120,7 +129,7 @@
             'comment-component': require('./CommentComponent'),
             'currency-component': require('./price/CurrencyComponent'),
             'points-component': require('./price/PointsComponent'),
-            'count-component': require('./CountComponent'),
+            'count-component': require('../../../inputs/CountWithButtonsComponent'),
             'modal-component': require('./ModalCurrencyComponent'),
             'digit-component': require('../../../inputs/DigitComponent')
         },
@@ -142,14 +151,23 @@
         },
         data() {
             return {
-                countInput: parseFloat(this.item.count),
+                count: parseFloat(this.item.count),
                 stockId: null,
 
                 // cost: Number(this.item.cost),
                 // changeCost: false,
             }
         },
+        // watch: {
+        //     count: ((val, oldVal) => {
+        //         if (val != oldVal) {
+        //             alert(val);
+        //         }
+        //     })
+        // },
         mounted() {
+            this.item.index = this.index;
+
             if (this.settings.length && this.stocks.length && this.item.stock_id === null) {
                 this.stockId = this.stocks[0].id;
             } else {
@@ -158,7 +176,7 @@
         },
         computed: {
             isArchive() {
-                return this.item.product.archive == 1;
+                return this.item.goods.archive == 1;
             },
             isRegistered() {
                 return this.$store.state.lead.estimate.is_registered == 1;
@@ -215,17 +233,17 @@
             // },
         },
         methods: {
-            updateModalCount(count) {
-                if (this.item.sale_mode == 1) {
-                    this.$refs.modalCurrencyComponent.update(count);
-                }
+            changeCount(count) {
+                // Оновление количества из строки
+                this.item.count = count;
+                this.$store.commit('UPDATE_GOODS_ITEM', this.item)
             },
-            updateCount(count) {
-                if (this.item.sale_mode == 1) {
-                    this.$refs.countComponent.update(count);
-                }
+            update(item) {
+                // Обновление из модалки
+                this.$store.commit('UPDATE_GOODS_ITEM', item)
             },
-            openModalRemoveItem() {
+            openModalRemove() {
+                // Открытие модалки удаления
                 this.$emit('open-modal-remove', this.item);
             },
             updateItem(item) {

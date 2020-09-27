@@ -53,8 +53,18 @@
 		},
         props: {
             estimate: Object,
-            settings: Array,
-            stocks: Array,
+            settings: {
+                type: Array,
+                default: () => {
+                    return [];
+                }
+            },
+            stocks: {
+                type: Array,
+                default: () => {
+                    return [];
+                }
+            },
         },
         created: function () {
             this.$store.commit('SET_ESTIMATE', this.estimate);
