@@ -97,8 +97,7 @@ class ManufacturerController extends Controller
      */
     public function create()
     {
-
-        //Подключение политики
+        // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Manufacturer::class);
         $this->authorize(getmethod(__FUNCTION__), Company::class);
 

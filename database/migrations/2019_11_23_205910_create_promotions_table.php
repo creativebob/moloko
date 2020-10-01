@@ -50,6 +50,7 @@ class CreatePromotionsTable extends Migration
             $table->text('square')->nullable()->comment('square');
 
             $table->string('prom')->nullable()->comment('Триггер для отображения');
+            $table->decimal('total_min', 10,2)->default(0)->comment('Минимальная сумма');
 
             $table->bigInteger('filial_id')->unsigned()->nullable()->comment('Id филиала');
             $table->foreign('filial_id')->references('id')->on('departments');
@@ -60,6 +61,7 @@ class CreatePromotionsTable extends Migration
             $table->boolean('is_slider')->default(false)->comment('Отображение слайдера');
             $table->boolean('is_recommend')->default(false)->comment('Отображение рекомендации');
             $table->boolean('is_upsale')->default(false)->comment('Отображение на корзине');
+
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

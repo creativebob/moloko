@@ -19,35 +19,8 @@ class GoodsComposer
 	public function __construct()
 	{
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right('goods', false, 'index');
 
-        $this->goods = Goods::with([
-            'article' => function ($q) {
-                $q->where([
-                    'draft' => false,
-                ])
-                ->select([
-                    'id',
-                    'name',
-                    'draft'
-                ]);
-            },
-        ])
-        ->whereHas('article', function ($q) {
-            $q->where([
-                'draft' => false,
-            ]);
-        })
-        ->moderatorLimit($answer)
-        ->systemItem($answer)
-        ->companiesLimit($answer)
-        ->get([
-            'id',
-            'article_id',
-            'archive'
-        ]);
-//         dd($goods);
+
 
     }
 
@@ -59,6 +32,42 @@ class GoodsComposer
      */
     public function compose(View $view)
     {
+
+        $archive = isset($view->archive);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right('goods', false, 'index');
+
+        $this->goods = Goods::with([
+            'article' => function ($q) {
+                $q->where([
+                    'draft' => false,
+                ])
+                    ->select([
+                        'id',
+                        'name',
+                        'draft'
+                    ]);
+            },
+        ])
+            ->whereHas('article', function ($q) {
+                $q->where([
+                    'draft' => false,
+                ]);
+            })
+            ->when(!$archive, function ($q) {
+                $q->where('archive', false);
+            })
+            ->moderatorLimit($answer)
+            ->systemItem($answer)
+            ->companiesLimit($answer)
+            ->get([
+                'id',
+                'article_id',
+                'archive'
+            ]);
+//         dd($goods);
+
         return $view->with('goods', $this->goods);
     }
 }

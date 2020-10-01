@@ -200,6 +200,7 @@ class Update210420Tables extends Migration
             $table->text('vertical')->nullable()->comment('vertical')->after('horizontal');
             $table->text('square')->nullable()->comment('square')->after('vertical');
             $table->string('prom')->nullable()->comment('Триггер для отображения')->after('square');
+            $table->decimal('total_min', 10,2)->default(0)->comment('Минимальная сумма')->after('prom');
         });
 
         Schema::table('leads', function (Blueprint $table) {
@@ -469,6 +470,7 @@ class Update210420Tables extends Migration
                 'vertical',
                 'square',
                 'prom',
+                'total_min',
             ]);
         });
 

@@ -312,7 +312,7 @@ class ComposerServiceProvider extends ServiceProvider
             'menus.form'
         ], FilialsComposer::class);
 
-         view()->composer('system.pages.promotions.form', SitesWIthFilialsAndCatalogsComposer::class);
+         view()->composer('system.pages.marketings.promotions.form', SitesWIthFilialsAndCatalogsComposer::class);
 
         view()->composer([
             'includes.selects.categories',
@@ -448,6 +448,10 @@ class ComposerServiceProvider extends ServiceProvider
 
         // Фильтры
 
+        view()->composer([
+            'system.common.listers.goods',
+        ], GoodsComposer::class);
+
         // Клиенты
         view()->composer('system.pages.clients.includes.filters', SourcesComposer::class);
         view()->composer('system.pages.clients.includes.filters', ClientsCitiesComposer::class);
@@ -468,7 +472,6 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('leads.includes.filters', ManagersComposer::class);
         view()->composer('leads.includes.filters', LeadMethodsComposer::class);
         view()->composer('leads.includes.filters', LeadTypesComposer::class);
-        view()->composer('leads.includes.filters', GoodsComposer::class);
         view()->composer('leads.includes.filters', SourcesComposer::class);
 
     }

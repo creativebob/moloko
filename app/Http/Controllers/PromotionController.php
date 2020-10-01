@@ -10,15 +10,17 @@ use Illuminate\Http\Request;
 class PromotionController extends Controller
 {
 
-    // Настройки контроллера
-    public function __construct(Promotion $promotion)
+    protected $entityAlias;
+    protected $entityDependence;
+
+    /**
+     * PromotionController constructor.
+     */
+    public function __construct()
     {
         $this->middleware('auth');
-        $this->promotion = $promotion;
-        $this->class = Promotion::class;
-        $this->model = 'App\Promotion';
-        $this->entity_alias = with(new $this->class)->getTable();
-        $this->entity_dependence = false;
+        $this->entityAlias = 'promotions';
+        $this->entityDependence = false;
     }
 
     use Photable;
@@ -26,15 +28,17 @@ class PromotionController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function index(Request $request)
     {
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), Promotion::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // -------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
@@ -63,7 +67,7 @@ class PromotionController extends Controller
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter = setFilter($this->entity_alias, $request, [
+        $filter = setFilter($this->entityAlias, $request, [
             // 'author',               // Автор записи
             // 'date_interval',     // Дата обращения
             'booklist'              // Списки пользователя
@@ -71,9 +75,12 @@ class PromotionController extends Controller
 
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
-        return view('system.pages.promotions.index',[
+        // Инфо о странице
+        $pageInfo = pageInfo($this->entityAlias);
+
+        return view('system.pages.marketings.promotions.index', [
             'promotions' => $promotions,
-            'pageInfo' => pageInfo($this->entity_alias),
+            'pageInfo' => $pageInfo,
             'filter' => $filter,
             'nested' => 'pages_count'
         ]);
@@ -82,30 +89,33 @@ class PromotionController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function create()
     {
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), Promotion::class);
 
-        return view('system.pages.promotions.create', [
-            'promotion' => Promotion::make(),
-            'pageInfo' => pageInfo($this->entity_alias),
-        ]);
+        $promotion = Promotion::make();
+
+        // Инфо о странице
+        $pageInfo = pageInfo($this->entityAlias);
+
+        return view('system.pages.marketings.promotions.create', compact('promotion', 'pageInfo'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param PromotionRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function store(PromotionRequest $request)
     {
-
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), Promotion::class);
 
         $data = $request->input();
         $promotion = Promotion::create($data);
@@ -126,42 +136,28 @@ class PromotionController extends Controller
         }
         $promotion->save();
 
-        if ($promotion) {
-
-            $access = session('access.all_rights.index-departments-allow');
-            if ($access) {
-                $promotion->filials()->sync($request->filials);
-            }
-
-            $promotion->prices_goods()->sync($request->prices_goods);
-
-            return redirect()->route('promotions.index');
-        } else {
-            abort(403, 'Ошибка записи сайта');
+        $access = session('access.all_rights.index-departments-allow');
+        if ($access) {
+            $promotion->filials()->sync($request->filials);
         }
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Promotion  $promotion
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+        $promotion->goods()->sync($request->goods);
+        $promotion->prices_goods()->sync($request->prices_goods);
+
+        return redirect()->route('promotions.index');
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Promotion  $promotion
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function edit($id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         $promotion = Promotion::with([
             'tiny:id,name,path',
@@ -181,34 +177,38 @@ class PromotionController extends Controller
 //                    'filials'
 //                ]);
 //            }
-            'prices_goods.goods.article'
+            'prices_goods.goods.article',
+            'goods.article'
         ])
-        ->moderatorLimit($answer)
+            ->moderatorLimit($answer)
             ->find($id);
 //         dd($promotion);
+
+        if (empty($promotion)) {
+            abort(403, __('errors.not_found'));
+        }
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $promotion);
 
-        return view('system.pages.promotions.edit', [
-            'promotion' => $promotion,
-            'pageInfo' => pageInfo($this->entity_alias),
-        ]);
+        // Инфо о странице
+        $pageInfo = pageInfo($this->entityAlias);
+
+        return view('system.pages.marketings.promotions.edit', compact('promotion', 'pageInfo'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Promotion  $promotion
-     * @return \Illuminate\Http\Response
+     * @param PromotionRequest $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function update(PromotionRequest $request, $id)
     {
-
-//        dd($request);
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         $promotion = Promotion::with([
             'photo',
@@ -218,8 +218,13 @@ class PromotionController extends Controller
             'large',
             'large_x',
         ])
-        ->moderatorLimit($answer)
-        ->find($id);
+            ->moderatorLimit($answer)
+            ->find($id);
+//        dd($promotion);
+
+        if (empty($promotion)) {
+            abort(403, __('errors.not_found'));
+        }
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $promotion);
@@ -248,45 +253,51 @@ class PromotionController extends Controller
                 break;
         }
 
-        $result = $promotion->update($data);
+        $res = $promotion->update($data);
+
+        if (!$res) {
+            abort(403, __('errors.update'));
+        }
 
         $filials = session('access.all_rights.index-departments-allow');
         if ($filials) {
             $promotion->filials()->sync($request->filials);
         }
 
+        $promotion->goods()->sync($request->goods);
         $promotion->prices_goods()->sync($request->prices_goods);
 
-        if ($result) {
-            return redirect()->route('promotions.index');
-        } else {
-            abort(403, 'Ошибка обновления');
-        }
+        return redirect()->route('promotions.index');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Promotion  $promotion
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function destroy($id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         $promotion = Promotion::moderatorLimit($answer)
             ->find($id);
 
+        if (empty($promotion)) {
+            abort(403, __('errors.not_found'));
+        }
+
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $promotion);
 
-        $promotion->delete();
+        $res = $promotion->delete();
 
-        if ($promotion) {
-            return redirect()->route('promotions.index');
-        } else {
-            abort(403, 'Ошибка при удалении');
+        if (!$res) {
+            abort(403, __('errors.destroy'));
         }
+
+        return redirect()->route('promotions.index');
     }
 }

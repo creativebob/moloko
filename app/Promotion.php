@@ -53,6 +53,7 @@ class Promotion extends Model
         'square',
 
         'prom',
+        'total_min',
 
         'display',
         'system',
@@ -87,14 +88,21 @@ class Promotion extends Model
         return $this->belongsTo(Site::class);
     }
 
-    public function prices_goods()
-    {
-        return $this->belongsToMany(PricesGoods::class, 'promotion_price_goods', 'promotion_id', 'price_goods_id');
-    }
+
 
     public function filials()
     {
         return $this->belongsToMany(Department::class, 'filial_promotion', 'promotion_id', 'filial_id');
+    }
+
+    public function goods()
+    {
+        return $this->belongsToMany(Goods::class, 'promotion_goods', 'promotion_id', 'goods_id');
+    }
+
+    public function prices_goods()
+    {
+        return $this->belongsToMany(PricesGoods::class, 'promotion_price_goods', 'promotion_id', 'price_goods_id');
     }
 
     // Фото

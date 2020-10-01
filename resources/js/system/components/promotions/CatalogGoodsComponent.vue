@@ -133,14 +133,14 @@
             </fieldset>
         </div>
 
-        <tempalate v-if="pricesIds.length">
+        <template v-if="pricesIds.length">
             <input
                 v-for="priceId in pricesIds"
                 type="hidden"
                 name="prices_goods[]"
                 :value="priceId"
             >
-        </tempalate>
+        </template>
     </div>
 </template>
 

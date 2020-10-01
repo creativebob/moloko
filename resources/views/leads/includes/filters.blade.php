@@ -49,10 +49,7 @@
             </div>
 
             <div class="cell small-12">
-                <goods-lister-component
-                    :goods='@json($goods)'
-                    :items='@json(request()->goods)'
-                ></goods-lister-component>
+                @include('system.common.listers.goods', ['items' => request()->goods, 'archive' => true])
             </div>
 
         </div>

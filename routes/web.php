@@ -1342,7 +1342,10 @@ Route::prefix('catalogs_services/{catalog_id}')->group(function () {
 
 // --------------------------- Продвижение -------------------------------------
 // Основные методы
-Route::resource('/promotions', 'PromotionController');
+Route::resource('/promotions', 'PromotionController')
+->except([
+    'show'
+]);
 
 
 // --------------------------- Рассылки -------------------------------------
