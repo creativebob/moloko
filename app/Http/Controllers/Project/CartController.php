@@ -96,17 +96,17 @@ class CartController extends Controller
                 'is_upsale' => true,
                 'display' => true
             ])
-            ->whereHas('filials', function($q) use ($filial_id) {
+            ->whereHas('filials', function ($q) use ($filial_id) {
                 $q->where('id', $filial_id);
             })
             ->where('begin_date', '<=', today())
             ->where('end_date', '>=', today())
             ->whereNull('prom')
             ->when($prom, function ($q) use ($site, $prom) {
-                $q->orWhere(function($q) use ($site, $prom) {
-                    $q->whereHas('filials', function($q) use ($site) {
-                            $q->where('id', $site->filial->id);
-                        })
+                $q->orWhere(function ($q) use ($site, $prom) {
+                    $q->whereHas('filials', function ($q) use ($site) {
+                        $q->where('id', $site->filial->id);
+                    })
                         ->where([
                             'site_id' => $site->id,
                             'is_upsale' => true,
@@ -114,7 +114,6 @@ class CartController extends Controller
                         ])
                         ->where('begin_date', '<=', today())
                         ->where('end_date', '>=', today())
-
                         ->when(is_array($prom), function ($q) use ($prom) {
                             $q->whereIn('prom', $prom);
                         })
@@ -142,7 +141,7 @@ class CartController extends Controller
 
         $page = $site->pages_public->firstWhere('alias', 'cart');
 
-        return view($site->alias.'.pages.cart.index', compact('site',  'page', 'prices_goods', 'promotions', 'discount'));
+        return view($site->alias . '.pages.cart.index', compact('site', 'page', 'prices_goods', 'promotions', 'discount'));
     }
 
     /**
@@ -158,34 +157,14 @@ class CartController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
+
         // Если пользователь дал согласие на обработку персональных данных
         if ($request->personal_data) {
-
-            // Содержится ли в куках данные корзины
-            if(Cookie::get('cart') !== null){
-                $cart = json_decode(Cookie::get('cart'), true);
-
-//                if (count($cart['prices']) > 0) {
-//                    // Проверка на различие цены
-//                    $prices = $cart['prices'];
-//                    $prices_ids = array_keys($cart['prices']);
-//                    $prices_goods = PricesGoods::with('goods.article.photo', 'currency')
-//                    ->find($prices_ids);
-//
-//                    $result = [];
-//                    foreach ($prices_goods as $price_goods) {
-//                        if ($price_goods->price != $prices[$price_goods->id]['price']) {
-//                            $result[] = $price_goods;
-//                        }
-//                    }
-//                    dd(count($result) > 0);
-//                }
-            }
 
             // Собираем для request недостающие данные или преобразовываем
 
@@ -200,20 +179,20 @@ class CartController extends Controller
 
             $company_name = $request->has('company_name') ? $request->company_name : null;
 
-            if($lead_type == "Школа"){
+            if ($lead_type == "Школа") {
                 $description = $lead_type . ' №' . $school_number . ', класс ' . $class_number;
             }
 
-            if($lead_type == "Детский сад"){
+            if ($lead_type == "Детский сад") {
                 $description = $lead_type . ' №' . $kindergarten_number . ', группа ' . $kindergarten_group;
             }
 
-            if($lead_type == "Компания"){
+            if ($lead_type == "Компания") {
                 $description = $lead_type . ' ' . $company_name;
             }
 
             // Отдаем недостающий description
-            if(isset($description)){
+            if (isset($description)) {
                 $request->description = $description;
             }
 
@@ -230,14 +209,13 @@ class CartController extends Controller
             $filial_id = $this->site->filial->id;
 
 
-
             $first_name = isset($request->first_name) ? $request->first_name : 'Клиент не указал имя';
 
             $nickname = $request->name;
             $second_name = $request->second_name;
 
-            if(($first_name == null)&&($second_name == null)){
-                if($nickname == null){
+            if (($first_name == null) && ($second_name == null)) {
+                if ($nickname == null) {
                     $lead_name = null;
                 } else {
                     $lead_name = $first_name;
@@ -254,7 +232,7 @@ class CartController extends Controller
             // ------------------------------------------------------------------------------
 
             // Если пришло имя компании, то укажем, что это компания
-            if($company_name){
+            if ($company_name) {
                 $private_status = 1;
             } else {
                 $private_status = 0;
@@ -263,13 +241,8 @@ class CartController extends Controller
             $phone = cleanPhone($request->main_phone);
 
             // Содержится ли в куках данные корзины
-            if(Cookie::get('cart') !== null){
-
-                $count = 0; $badget = 0;
-
+            if (Cookie::get('cart') !== null) {
                 $cart = json_decode(Cookie::get('cart'), true);
-                $badget = $cart['sum'];
-                $count = $cart['count'];
             }
 
 
@@ -277,10 +250,10 @@ class CartController extends Controller
 
             // Если пользователь АВТОРИЗОВАН
             $user = Auth::User();
-            if($user){
+            if ($user) {
 
                 // Формируем имя записи в лида
-                if(empty($lead_name)){
+                if (empty($lead_name)) {
                     $lead_name = $user->first_name . ' ' . $user->second_name;
                 }
 
@@ -289,7 +262,9 @@ class CartController extends Controller
                 // Если пользователь НЕ авторизован
             } else {
 
-                if(!isset($request->main_phone)){abort(403, 'Не указан номер телефона!');}
+                if (!isset($request->main_phone)) {
+                    abort(403, 'Не указан номер телефона!');
+                }
 
                 // Получаем юзера если такой пользователь есть в базе по указанному номеру
                 $user = checkPhoneUserForSite($request->main_phone, $site);
@@ -362,7 +337,7 @@ class CartController extends Controller
 
             $lead->description = $description;
             $lead->stage_id = $request->stage_id ?? 2; // Этап: "обращение"" по умолчанию
-            $lead->badget = $badget ?? 0;
+            $lead->badget = 0;
             $lead->lead_method_id = 2; // Способ обращения: "звонок"" по умолчанию
             $lead->draft = null;
             $lead->site_id = $site->id;
@@ -388,40 +363,22 @@ class CartController extends Controller
             $phones = add_phones($request, $lead);
             // $lead = update_location($request, $lead);
 
+            // Создаем заказ для лида
+            $estimate = Estimate::create([
+                'lead_id' => $lead->id,
+                'filial_id' => $lead->filial_id,
+                'company_id' => $lead->company->id,
+                'date' => today(),
+                'number' => $lead->id,
+                'author_id' => 1,
+                'is_main' => true
+            ]);
+
             // Если есть наполненная корзина, создаем смету на лиде
-            if(isset($cart)){
-//                $estimate = $this->createEstimateFromCart($cart, $lead);
-
-                // Находим или создаем заказ для лида
-                $estimate = Estimate::create([
-                    'lead_id' => $lead->id,
-                    'filial_id' => $lead->filial_id,
-                    'company_id' => $lead->company->id,
-                    'date' => today(),
-                    'number' => $lead->id,
-                    'author_id' => $lead->author_id,
-                    'is_main' => true
-                ]);
-
-//                $discounts = Discount::where('company_id', $company->id)
-//                    ->whereHas('entity', function ($q) {
-//                        $q->where('alias', 'estimates');
-//                    })
-//                    ->where('archive', false)
-//                    ->where('begined_at', '<=', now())
-//                    ->where(function ($q) {
-//                        $q->where('ended_at', '>=', now())
-//                            ->orWhereNull('ended_at');
-//                    })
-//                    ->get();
-////              dd($discounts);
-//
-//                $discountsIds = $discounts->pluck('id');
+            if (isset($cart)) {
 
                 $lead->load('estimate');
                 $estimate = $lead->estimate;
-
-//                $estimate->discounts()->attach($discountsIds);
 
                 logs('leads_from_project')->info("Создана смета с id: [{$estimate->id}]");
 
@@ -429,61 +386,57 @@ class CartController extends Controller
                 $prices_goods = PricesGoods::with('goods.article')
                     ->find($prices_goods_ids);
 
-                $stock_id = null;
+                $stockId = null;
                 // Если включены настройки для складов, то проверяем сколько складов в системе, и если один, то берем его id
-                $settings = $this->site->company->settings;
-                if ($settings->isNotEmpty()) {
-                    $stocks = Stock::where('filial_id', $lead->filial_id)
-                        ->get([
-                            'id',
-                            'filial_id'
-                        ]);
-
-                    if ($stocks) {
-                        if ($stocks->count() == 1) {
-                            $stock_id = $stocks->first()->id;
-                        }
-                    }
-                }
+//                $settings = $this->site->company->settings;
+//                if ($settings->isNotEmpty()) {
+//                    $stocks = Stock::where('filial_id', $lead->filial_id)
+//                        ->get([
+//                            'id',
+//                            'filial_id'
+//                        ]);
+//
+//                    if ($stocks) {
+//                        if ($stocks->count() == 1) {
+//                            $stock_id = $stocks->first()->id;
+//                        }
+//                    }
+//                }
 
                 $estimatesGoodsItemsInsert = [];
-                foreach ($prices_goods as $price_goods) {
+                foreach ($prices_goods as $priceGoods) {
 
-                    $discountCurrency = $price_goods->price - $price_goods->total;
-                    $discountPercent = 0;
-                    if ($discountCurrency > 0) {
-//            $percent = $priceGoods->total / 100;
-//            $discountPercent = $discountCurrency / $percent;
-                        $discountPercent = $discountCurrency * 100 / $price_goods->price;
-                    }
-                    $count = $cart['prices'][$price_goods->id]['count'];
+                    $count = $cart['prices'][$priceGoods->id]['count'];
                     $data = [
-                        'currency_id' => 1,
-                        'goods_id' => $price_goods->goods->id,
-                        'price_id' => $price_goods->id,
+                        'estimate_id' => $estimate->id,
+                        'price_id' => $priceGoods->id,
+
+                        'goods_id' => $priceGoods->product->id,
+                        'currency_id' => $priceGoods->currency_id,
+                        'sale_mode' => 1,
+
+                        'stock_id' => $stockId,
+
+                        'cost_unit' => $priceGoods->product->article->cost_default,
+                        'price' => $priceGoods->price,
+                        'points' => $priceGoods->points,
+                        'count' => 1,
+
+                        'price_discount_id' => $priceGoods->price_discount_id,
+                        'price_discount_unit' => $priceGoods->price_discount,
+
+                        'catalogs_item_discount_id' => $priceGoods->catalogs_item_discount_id,
+                        'catalogs_item_discount_unit' => $priceGoods->catalogs_item_discount,
+
+                        'estimate_discount_id' => $priceGoods->estimate_discount_id,
+                        'estimate_discount_unit' => $priceGoods->estimate_discount,
+
+                        'client_discount_percent' => $request->client_discount_percent,
+
+                        'manual_discount_currency' => 0,
+
                         'author_id' => 1,
                         'company_id' => $estimate->company_id,
-                        'price' => $price_goods->price,
-                        'count' => $count,
-                        'cost' => $price_goods->goods->article->cost_default,
-                        'amount' => $count * $price_goods->price,
-
-                        'discount_percent' => $discountPercent,
-                        'discount_currency' => $discountCurrency,
-
-                        'price_discount_id' => $price_goods->price_discount_id,
-                        'price_discount' => $price_goods->price_discount,
-                        'total_price_discount' => $price_goods->total_price_discount,
-
-                        'catalogs_item_discount_id' => $price_goods->catalogs_item_discount_id,
-                        'catalogs_item_discount' => $price_goods->catalogs_item_discount,
-                        'total_catalogs_item_discount' => $price_goods->total_catalogs_item_discount,
-
-                        'estimate_discount_id' => $price_goods->estimate_discount_id,
-                        'estimate_discount' => $price_goods->estimate_discount,
-                        'total_estimate_discount' => $price_goods->total_estimate_discount,
-
-                        'total' => $count * $price_goods->total_estimate_discount,
                     ];
 
                     $data['margin_currency'] = $data['total'] - ($data['cost'] * $count);
@@ -500,81 +453,102 @@ class CartController extends Controller
                 $estimate->goods_items()->saveMany($estimatesGoodsItemsInsert);
                 logs('leads_from_project')->info("Записаны товары сметы");
 
-                $estimate->load([
-                    'goods_items',
-                    'discounts'
-                ]);
-
-                $cost = 0;
-                $amount = 0;
-                $total = 0;
-                $points = 0;
-                $discountItemsCurrency = 0;
-                $totalPoints = 0;
-                $totalBonuses = 0;
-
-                if ($estimate->goods_items->isNotEmpty()) {
-                    $cost += $estimate->goods_items->sum('cost');
-                    $amount += $estimate->goods_items->sum('amount');
-                    $total += $estimate->goods_items->sum('total');
-                    $points += $estimate->goods_items->sum('points');
-                    $discountItemsCurrency += $estimate->goods_items->sum('discount_currency');
-                    $totalPoints += $estimate->goods_items->sum('total_points');
-                    $totalBonuses += $estimate->goods_items->sum('total_bonuses');
-                }
-
-                $estimate->total_points = $totalPoints;
-                $estimate->total_bonuses = $totalBonuses;
-                $estimate->discount_items_currency = $discountItemsCurrency;
-
-                $discountCurrency = 0;
-                $discountPercent = 0;
-
-                if ($total > 0) {
-                    $discountCurrency = $amount - $total;
-                    $percent = $amount / 100;
-                    $discountPercent = $discountCurrency / $percent;
-                }
-
-                $estimate->amount = $amount;
-                $estimate->total = $total;
-                $estimate->discount_currency = $discountCurrency;
-                $estimate->discount_percent = $discountPercent;
-
-                $estimate->cost = $cost;
-
-                $estimate->margin_currency = $estimate->total - $estimate->cost;
-                if ($estimate->margin_currency > 0) {
-                    $estimate->margin_percent = ($estimate->margin_currency / $estimate->amount * 100);
-                } else {
-                    $estimate->margin_percent = 0;
-                }
-
-                $estimate->save();
-
-                // TODO - 23.10.19 - Сделать адекватное сохранение в корзине
-                $lead->badget = $total;
-                $lead->order_amount_base = $total;
-                $lead->save();
-
             }
+
+            $estimate->load([
+                'goods_items',
+                'services_items',
+            ]);
+
+            $cost = 0;
+            $amount = 0;
+            $points = 0;
+
+            $priceDiscount = 0;
+            $catalogsItemDiscount = 0;
+            $estimateDiscount = 0;
+            $clientDiscount = 0;
+            $manualDiscount = 0;
+
+            $total = 0;
+            $totalPoints = 0;
+            $totalBonuses = 0;
+
+            $count = 0;
+
+            if ($estimate->goods_items->isNotEmpty()) {
+                $cost += $estimate->goods_items->sum('cost');
+                $amount += $estimate->goods_items->sum('amount');
+                $points += $estimate->goods_items->sum('points');
+
+                $priceDiscount += $estimate->goods_items->sum('price_discount');
+                $catalogsItemDiscount += $estimate->goods_items->sum('catalogs_item_discount');
+                $estimateDiscount += $estimate->goods_items->sum('estimate_discount');
+                $clientDiscount += $estimate->goods_items->sum('client_discount_currency');
+                $manualDiscount += $estimate->goods_items->sum('manual_discount_currency');
+
+                $total += $estimate->goods_items->sum('total');
+                $totalPoints += $estimate->goods_items->sum('total_points');
+                $totalBonuses += $estimate->goods_items->sum('total_bonuses');
+
+                $count += $estimate->goods_items->sum('count');
+            }
+
+//        if ($estimate->services_items->isNotEmpty()) {
+//            $cost += $estimate->services_items->sum('cost');
+//            $amount += $estimate->services_items->sum('amount');
+//            $total += $estimate->services_items->sum('total');
+//        }
+
+
+            // Скидки
+            $discountCurrency = 0;
+            $discountPercent = 0;
+            if ($total > 0) {
+                $discountCurrency = $amount - $total;
+                $discountPercent = $discountCurrency * 100 / $amount;
+            }
+
+            // Маржа
+            $marginCurrency = $total - $cost;
+            if ($total > 0) {
+                $marginPercent = ($marginCurrency / $total * 100);
+            } else {
+                $marginPercent = $marginCurrency * 100;
+            }
+
+            $estimate->cost = $cost;
+            $estimate->amount = $amount;
+            $estimate->points = $points;
+
+            $estimate->price_discount = $priceDiscount;
+            $estimate->catalogs_item_discount = $catalogsItemDiscount;
+            $estimate->estimate_discount = $estimateDiscount;
+            $estimate->client_discount = $clientDiscount;
+            $estimate->manual_discount = $manualDiscount;
+
+            $estimate->discount_currency = $discountCurrency;
+            $estimate->discount_percent = $discountPercent;
+
+            $estimate->total = $total;
+            $estimate->total_points = $totalPoints;
+            $estimate->total_bonuses = $totalBonuses;
+
+            $estimate->margin_currency = $marginCurrency;
+            $estimate->margin_percent = $marginPercent;
+
+            $estimate->save();
+
+            // TODO - 23.10.19 - Сделать адекватное сохранение в корзине
+            $lead->badget = $total;
+            $lead->order_amount_base = $total;
+            $lead->save();
 
             // Оповещение
             // Получаем сайт
             $site = $this->site;
             $company = $site->company;
             $phone = cleanPhone($request->main_phone);
-
-            $count = 0;
-            $badget = 0;
-
-            // Содержится ли в куках данные корзины
-            if(Cookie::get('cart') !== null){
-
-                $cart = json_decode(Cookie::get('cart'), true);
-                $badget = $cart['sum'];
-                $count = $cart['count'];
-            }
 
             // Формируем сообщение
             $message = "Заказ с сайта: №" . $lead->id . "\r\n";
@@ -609,7 +583,7 @@ class CartController extends Controller
             $message .= "Кол-во товаров: " . num_format($count, 0) . "\r\n";
             $message .= "Сумма заказа: " . num_format($estimate->amount, 0) . ' руб.' . "\r\n";
 
-            if ($estimate->discount_currency > 0){
+            if ($estimate->discount_currency > 0) {
                 $message .= "Сумма со скидкой: " . num_format($estimate->total, 0) . ' руб.' . "\r\n";
                 $message .= "Скидка: " . num_format($estimate->discount_currency, 0) . ' руб.' . "\r\n";
             }
@@ -663,24 +637,24 @@ class CartController extends Controller
                     'telegram'
                 ]);
 
-            if (isset($destinations)) {
-
-                // Отправляем на каждый telegram
-                foreach ($destinations as $destination) {
-
-                    if (isset($destination->telegram)) {
-
-                        try {
-                            $response = Telegram::sendMessage([
-                                'chat_id' => $destination->telegram,
-                                'text' => $message
-                            ]);
-                        } catch (TelegramResponseException $exception) {
-                            // Юзера нет в боте, не отправляем ему мессагу
-                        }
-                    }
-                }
-            }
+//            if (isset($destinations)) {
+//
+//                // Отправляем на каждый telegram
+//                foreach ($destinations as $destination) {
+//
+//                    if (isset($destination->telegram)) {
+//
+//                        try {
+//                            $response = Telegram::sendMessage([
+//                                'chat_id' => $destination->telegram,
+//                                'text' => $message
+//                            ]);
+//                        } catch (TelegramResponseException $exception) {
+//                            // Юзера нет в боте, не отправляем ему мессагу
+//                        }
+//                    }
+//                }
+//            }
 
             // Чистим корзину у пользователя
             Cookie::queue(Cookie::forget('cart'));
@@ -711,7 +685,7 @@ class CartController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -722,7 +696,7 @@ class CartController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -733,8 +707,8 @@ class CartController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -745,7 +719,7 @@ class CartController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -763,20 +737,13 @@ class CartController extends Controller
         if ($request->has('goodsItems')) {
             if (count($request->goodsItems) > 0) {
                 $result = Cookie::queue(Cookie::forget('cart'));
-                foreach($request->goodsItems as $goodsItem) {
-    //                $goodsItem = json_decode($goodsItem, true);
+                foreach ($request->goodsItems as $goodsItem) {
 
                     $cart['prices'][$goodsItem['id']] = [
                         'count' => $goodsItem['quantity'],
                         'price' => $goodsItem['price'],
                     ];
-
-                    $sum += $goodsItem['totalPrice'];
-                    $count += $goodsItem['quantity'];
                 }
-
-                $cart['sum'] = $sum;
-                $cart['count'] = $count;
 
                 $result = Cookie::queue(Cookie::forever('cart', json_encode($cart)));
                 return response()->json([
@@ -791,28 +758,6 @@ class CartController extends Controller
             $result = Cookie::queue(Cookie::forget('cart'));
             return response()->json($result);
         }
-//        dd($cart);
-
-
-//        if (array_key_exists($id, $cart['prices'])) {
-//            $new_count = $cart['prices'][$id]['count'] + $count;
-//            $cart['prices'][$id] = [
-//                'count' => $new_count
-//            ];
-//        } else {
-//            $cart['prices'][$id] = [
-//                'count' => $count
-//            ];
-//            $cart['count'] = $count;
-//            $cart['sum'] = $price_goods->price * $count;
-//        }
-//        $cart['count'] += $count;
-//        $cart['sum'] += ($price_goods->price * $count);
-////            dd($cart);
-//    } else {
-//        $cart['prices'][$id] = [
-//        'count' => $count
-//        }
     }
 
     public function check_prices(Request $request)

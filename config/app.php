@@ -195,6 +195,7 @@ return [
         App\Providers\MorphServiceProvider::class,
 
         App\Providers\ComposerProjectServiceProvider::class,
+        App\Providers\ObserverProjectServiceProvider::class,
 
     ],
 

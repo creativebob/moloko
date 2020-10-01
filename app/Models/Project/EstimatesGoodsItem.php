@@ -20,35 +20,32 @@ class EstimatesGoodsItem extends Model
     protected $fillable = [
         'estimate_id',
         'price_id',
-        'currency_id',
         'goods_id',
+        'currency_id',
         'stock_id',
-        'comment',
-    
-        'count',
-        'price',
-        'cost',
-        'points',
         'sale_mode',
-    
-        'margin_percent',
-        'margin_currency',
-        'discount_percent',
-        'discount_currency',
-    
-        'amount',
-        'total',
-        'total_points',
-        'total_bonuses',
-    
+
+        'comment',
+
+        'cost_unit',
+        'price',
+        'points',
+        'count',
+
         'price_discount_id',
-        'price_discount',
-        'total_price_discount',
-    
+        'price_discount_unit',
+
         'catalogs_item_discount_id',
-        'catalogs_item_discount',
-        'total_catalogs_item_discount',
-    
+        'catalogs_item_discount_unit',
+
+        'estimate_discount_id',
+        'estimate_discount_unit',
+
+        'client_discount_percent',
+
+        'manual_discount_percent',
+        'manual_discount_currency',
+
         'is_reserved',
 
         'company_id',

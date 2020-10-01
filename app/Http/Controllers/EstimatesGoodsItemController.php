@@ -309,7 +309,6 @@ class EstimatesGoodsItemController extends Controller
         $estimate->load([
             'goods_items',
             'services_items',
-//            'discounts'
         ]);
 
         $cost = 0;
