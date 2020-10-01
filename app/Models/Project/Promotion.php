@@ -22,6 +22,11 @@ class Promotion extends Model
         'end_date'
     ];
 
+    public function goods()
+    {
+        return $this->belongsToMany(Goods::class, 'promotion_goods', 'promotion_id', 'goods_id');
+    }
+
     public function prices_goods()
     {
         return $this->belongsToMany(PricesGoods::class, 'promotion_price_goods', 'promotion_id', 'price_goods_id');

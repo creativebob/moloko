@@ -88,7 +88,8 @@ class CartController extends Controller
                     'catalogs_item.parent'
                 ])
                     ->where('filial_id', $filial_id);
-            }
+            },
+            'goods',
         ])
             ->where([
                 'site_id' => $site->id,
@@ -103,12 +104,14 @@ class CartController extends Controller
             ->whereNull('prom')
             ->when($prom, function ($q) use ($site, $prom) {
                 $q->orWhere(function($q) use ($site, $prom) {
-                    $q->display()
-                        ->company($site->company_id)
-                        ->whereHas('filials', function($q) use ($site) {
+                    $q->whereHas('filials', function($q) use ($site) {
                             $q->where('id', $site->filial->id);
                         })
-                        ->where('is_slider', true)
+                        ->where([
+                            'site_id' => $site->id,
+                            'is_upsale' => true,
+                            'display' => true
+                        ])
                         ->where('begin_date', '<=', today())
                         ->where('end_date', '>=', today())
 
