@@ -431,21 +431,13 @@ class CartController extends Controller
                         'estimate_discount_id' => $priceGoods->estimate_discount_id,
                         'estimate_discount_unit' => $priceGoods->estimate_discount,
 
-                        'client_discount_percent' => $request->client_discount_percent,
+                        'client_discount_percent' => $request->client_discount_percent ?? 0,
 
                         'manual_discount_currency' => 0,
 
                         'author_id' => 1,
                         'company_id' => $estimate->company_id,
                     ];
-
-                    $data['margin_currency'] = $data['total'] - ($data['cost'] * $count);
-                    if ($data['total'] > 0) {
-                        $data['margin_percent'] = ($data['margin_currency'] / $data['total'] * 100);
-                    } else {
-                        $data['margin_percent'] = 0;
-                    }
-
 
                     $estimatesGoodsItemsInsert[] = EstimatesGoodsItem::make($data);
                 }

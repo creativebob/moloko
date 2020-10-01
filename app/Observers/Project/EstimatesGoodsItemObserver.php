@@ -2,7 +2,7 @@
 
 namespace App\Observers\Project;
 
-use App\EstimatesGoodsItem;
+use App\Models\Project\EstimatesGoodsItem;
 
 use App\Observers\System\Traits\Commonable;
 
