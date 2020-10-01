@@ -753,23 +753,23 @@ class CartController extends Controller
 
     public function update_cookies(Request $request)
     {
-//        dd($request->cartGoods);
+//        dd($request->goodsItems);
         $cart = [];
         $sum = 0;
         $count = 0;
-        if ($request->has('cartGoods')) {
-            if (count($request->cartGoods) > 0) {
+        if ($request->has('goodsItems')) {
+            if (count($request->goodsItems) > 0) {
                 $result = Cookie::queue(Cookie::forget('cart'));
-                foreach($request->cartGoods as $cartGood) {
-    //                $cartGood = json_decode($cartGood, true);
+                foreach($request->goodsItems as $goodsItem) {
+    //                $goodsItem = json_decode($goodsItem, true);
 
-                    $cart['prices'][$cartGood['id']] = [
-                        'count' => $cartGood['quantity'],
-                        'price' => $cartGood['price'],
+                    $cart['prices'][$goodsItem['id']] = [
+                        'count' => $goodsItem['quantity'],
+                        'price' => $goodsItem['price'],
                     ];
 
-                    $sum += $cartGood['totalPrice'];
-                    $count += $cartGood['quantity'];
+                    $sum += $goodsItem['totalPrice'];
+                    $count += $goodsItem['quantity'];
                 }
 
                 $cart['sum'] = $sum;
