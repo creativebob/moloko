@@ -513,7 +513,7 @@ class LeadController extends Controller
             $dataLead['organization_id'] = $company->id;
         }
 
-        return $dataLead;
+//        return $dataLead;
 
         $res = $lead->update($dataLead);
         $this->savePhones($lead, $newLead['main_phone']);
