@@ -44,7 +44,7 @@
                                     <label>Наценка, %
                                         <digit-component
                                             name="margin_percent"
-                                            :value="item.margin_percent"
+                                            :value="item.margin_percent_unit"
                                             :disabled="true"
                                         ></digit-component>
                                     </label>
@@ -53,7 +53,7 @@
                                     <label>Наценка, руб
                                         <digit-component
                                             name="margin_currency"
-                                            :value="item.margin_currency"
+                                            :value="item.margin_currency_unit"
                                             :disabled="true"
                                         ></digit-component>
                                     </label>
@@ -95,11 +95,11 @@
                     </div>
 
 
-                    <div class="small-12 medium-6 cell">
+                    <div class="cell small-12 medium-3">
                         <label>Количество
                             <span
                                 v-if="isRegistered || item.goods.serial === 1"
-                            ></span>
+                            >{{ item.count | decimalPlaces | decimalLevel }}</span>
                             <count-component
                                 v-else
                                 :count="item.count"
@@ -109,8 +109,25 @@
                         </label>
                     </div>
 
-                    <div class="small-12 medium-6 cell">
-                        Итоговая стоимость по позиции: {{ total | decimalPlaces | decimalLevel }} руб.
+                    <div class="cell small-12 medium-9">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>Общая скидка</td>
+                                    <td>{{ totalDiscount | decimalPlaces | decimalLevel }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Общая маржа</td>
+                                    <td>{{ totalMargin | decimalPlaces | decimalLevel }}</td>
+                                </tr>
+                            <tr>
+                                <td colspan="2">
+                                    Итоговая стоимость по позиции: {{ total | decimalPlaces | decimalLevel }} руб.
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
                     </div>
 
                 </div>
@@ -156,7 +173,7 @@
         data() {
             return {
                 discountPercent: this.item.discount_percent,
-                discountCurrency: this.item.discount_currency,
+                discountCurrency: this.item.discount_currency / this.item.count,
                 count: this.item.count,
             }
         },
@@ -164,6 +181,12 @@
             Foundation.reInit($('#modal-estimates_goods_item-' + this.item.id));
         },
         computed: {
+            totalDiscount() {
+                return this.discountCurrency * this.count;
+            },
+            totalMargin() {
+                return (this.item.price - this.discountCurrency - this.item.cost_unit) * this.count;
+            },
             total() {
                 return (this.item.price - this.discountCurrency) * this.count;
             },
@@ -176,7 +199,7 @@
             //     this.discountPercent = val;
             // },
             // discountCurrency(val) {
-            //     this.discountCurrency = val;
+            //     this.discountCurrency = val / this.count;
             // },
         },
         methods: {

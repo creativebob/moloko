@@ -250,7 +250,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.suppliers', SupplierSelectComposer::class);
         view()->composer([
             'includes.selects.stocks',
-            'leads.estimate'
+            'leads.tabs.estimate'
         ], StocksComposer::class);
         view()->composer('leads.form', PaymentsTypesComposer::class);
 

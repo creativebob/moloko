@@ -5,16 +5,18 @@
             :class="[{ 'hide-comment' : ! showComment }]"
             :data-toggle="'comment-dropdown-' + item.id"
         ></span>
+<!--        data-tooltip-->
+<!--            tabindex="1"-->
+<!--            :title="comment"-->
         <div
             class="dropdown-pane"
             :id="'comment-dropdown-' + item.id"
             data-dropdown
             data-auto-focus="true"
-
+            v-dropdown
 
         >
 <!--            data-close-on-click="true"-->
-<!--            v-dropdown-->
             <template v-if="editComment">
                 <textarea
                     name="comment"
@@ -51,7 +53,7 @@
             }
         },
         mounted() {
-            // Foundation.reInit($('#comment-dropdown-' + this.item.id));
+            Foundation.reInit($('#comment-dropdown-' + this.item.id));
 
             if (this.item.comment == null) {
                 this.editComment = true
@@ -88,11 +90,11 @@
             },
         },
         directives: {
-            // 'dropdown': {
-            //     bind: function (el) {
-            //         new Foundation.Dropdown($(el))
-            //     },
-            // },
+            'dropdown': {
+                bind: function (el) {
+                    new Foundation.Dropdown($(el))
+                },
+            },
             focus: {
                 inserted: function (el) {
                     el.focus()

@@ -19,24 +19,7 @@
         <div v-if="estimateDiscountCurrency > 0">{{ estimateDiscount.name}}<span v-if="estimateDiscount.mode == 1"> {{ estimateDiscount.percent | decimalPlaces | decimalLevel }}%</span>: {{ estimateDiscountCurrency | decimalPlaces | decimalLevel }}</div>
         <div v-if="estimateTotal > 0">Итого к оплате: {{ estimateTotal | decimalPlaces | decimalLevel }}</div>
 
-        <div class="grid-x">
-            <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">
-                <register-button-component></register-button-component>
-            </div>
-
-<!--            <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">-->
-<!--                <production-button-component></estimate-production-button-component>-->
-<!--            </div>-->
-
-            <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">
-                <sale-button-component></sale-button-component>
-            </div>
-
-            <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">
-                <print-button-component></print-button-component>
-            </div>
-
-        </div>
+        <buttons-component></buttons-component>
 
 	</div>
 
@@ -47,9 +30,7 @@
 		components: {
 			'estimates-goods-items-component': require('./goods/EstimatesGoodsItemsComponent'),
             'estimates-services-items-component': require('./services/EstimatesServicesItemsComponent'),
-            'register-button-component': require('./buttons/RegisterButtonComponent'),
-            'sale-button-component': require('./buttons/SaleButtonComponent'),
-            'print-button-component': require('./buttons/PrintButtonComponent'),
+            'buttons-component': require('./buttons/ButtonsComponent'),
 		},
         props: {
             estimate: Object,

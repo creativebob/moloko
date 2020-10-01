@@ -6,7 +6,15 @@ use App\Location;
 
 trait Locationable
 {
-
+    /**
+     * Получение локации
+     *
+     * @param int $countryId
+     * @param int $cityId
+     * @param null $address
+     * @param null $zipCode
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model
+     */
     public function getLocation($countryId = 1, $cityId = 1, $address = null, $zipCode = null)
     {
         $request = request();

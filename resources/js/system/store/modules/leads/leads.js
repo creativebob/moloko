@@ -10,11 +10,31 @@ const moduleLead = {
         mutations: {
             // Лид
             SET_LEAD(state, lead) {
+                if (lead.main_phones.length) {
+                    lead.main_phone = lead.main_phones[0].phone;
+                } else {
+                    lead.main_phone = null;
+                }
+
+                state.lead = lead;
+            },
+            UPDATE_LEAD(state, lead) {
                 state.lead = lead;
             },
 
-            // Клиента
+            // Клиент
             SET_CLIENT(state, client) {
+                if (client) {
+                    switch (client.clientable_type) {
+                        case ('App\\Company'):
+                            state.lead.organization_id = client.id;
+                            break;
+                        case ('App\\User'):
+                            state.lead.user_id = client.id;
+                            break;
+                    }
+                    state.lead.client_id = client.id;
+                }
                 state.client = client ? client : null;
 
                 this.commit('UPDATE_GOODS_ITEMS');
@@ -121,7 +141,8 @@ const moduleLead = {
                 }
             },
             UPDATE_GOODS_ITEM(state, item) {
-                let index = item.index;
+                let id = item.id;
+                let index = state.goodsItems.findIndex(item => item.id === id);
                 this.commit('SET_AGGREGATIONS', item);
                 item = state.goodsItems[index];
                 Vue.set(state.goodsItems, index, item);
@@ -179,10 +200,16 @@ const moduleLead = {
                         }
 
                         // Маржа
+
+                        let totalPrice = item.price - item.price_discount_unit - item.catalogs_item_discount_unit - item.estimate_discount_unit - item.client_discount_unit_currency;
+                        item.margin_currency_unit = totalPrice - item.cost_unit;
                         item.margin_currency = item.total - item.cost;
+
                         if (item.total > 0) {
+                            item.margin_percent_unit = (item.margin_currency_unit / totalPrice * 100);
                             item.margin_percent = (item.margin_currency / item.total * 100);
                         } else {
+                            item.margin_percent_unit = (item.margin_currency_unit * 100);
                             item.margin_percent = (item.margin_currency * 100);
                         }
                         break;
@@ -241,23 +268,23 @@ const moduleLead = {
 
                 item.manual_discount_currency = 0;
                 item.manual_discount_percent = 0;
-                item.total_manual_discount_percent = 0;
+                item.total_manual_discount = 0;
 
                 let id = item.id;
                 let index = state.goodsItems.findIndex(item => item.id == id);
                 Vue.set(state.goodsItems, index, item);
 
-                console.log(state.goodsItems);
+                // console.log(state.goodsItems);
 
             },
 
             REMOVE_GOODS_ITEM(state, id) {
-                let index = state.goodsItems.findIndex(obj => obj.id === id);
+                let index = state.goodsItems.findIndex(item => item.id === id);
                 state.goodsItems.splice(index, 1);
             },
             UPDATE_GOODS_ITEMS(state) {
                 state.goodsItems.forEach(item => {
-                    let index = item.index;
+                    let index = state.goodsItems.findIndex(obj => obj.id === item.id);
                     this.commit('SET_AGGREGATIONS', item);
                     item = state.goodsItems[index];
                     Vue.set(state.goodsItems, index, item);
@@ -269,7 +296,8 @@ const moduleLead = {
                 state.servicesItems = servicesItems;
             },
             UPDATE_SERVICES_ITEM(state, item) {
-                let index = state.servicesItems.findIndex(obj => obj.id === item.id);
+                let id = item.id;
+                let index = state.servicesItems.findIndex(item => item.id === id);
                 Vue.set(state.servicesItems, index, item);
 
                 this.commit('UPDATE_ESTIMATE');

@@ -5,7 +5,8 @@
                 type="text"
                 name="company_name"
                 v-model="name"
-                @input="input"
+                :disabled="disabled"
+                @input="input($event.target.value)"
                 maxlength="50"
                 autocomplete="off"
                 pattern="[А-Яа-яЁё0-9-_\s]{3,50}"
@@ -54,6 +55,10 @@
             organization: Object,
             legalForms: Array,
             companies: Array,
+            disabled: {
+                type: Boolean,
+                default: false
+            },
         },
         data() {
             return {
@@ -91,21 +96,8 @@
                 });
                 this.search = (this.results.length > 0)
                 this.remove = (this.results.length == 0 || this.search)
-                // axios
-                //     .post('/api/v1/companies/search-by-name', {
-                //         name: this.name
-                //     })
-                //     .then(response => {
-                //         this.results = response.data;
-                //         this.search = (this.results.length > 0)
-                //         this.error = (this.results.length == 0)
-                //     })
-                //     .catch(error => {
-                //         console.log(error)
-                //     });
             },
             add(index) {
-                // console.log('Клик по пришедшим данным, добавляем в инпут');
                 this.curOrganization = this.results[index];
                 this.id = this.results[index].id;
                 this.name = this.results[index].name;
@@ -135,9 +127,11 @@
                     this.found = false;
                     this.remove = false;
                     this.results = [];
+
+                    this.$emit('input', this.name);
                 }
             },
-            input() {
+            input(value) {
                 // console.log('Изменение в инпуте, обнуляем все кроме имени, и если символов больше 2х начинаем поиск');
                 this.curOrganization = null;
                 this.id = null;
@@ -145,6 +139,8 @@
                 this.remove = false;
                 this.search = false;
                 this.results = [];
+
+                this.$emit('input', value);
 
                 this.change();
 
@@ -174,7 +170,7 @@
                 } else {
                     this.curOrganization = null;
                     this.id = null;
-                    this.name = null;
+                    // this.name = null;
                 }
 
                 this.found = !!organization;

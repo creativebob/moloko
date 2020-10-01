@@ -37,7 +37,7 @@
         },
         data() {
             return {
-                number: this.count,
+                number: parseInt(this.count),
             }
         },
         watch: {

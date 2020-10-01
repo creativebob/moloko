@@ -166,8 +166,6 @@
         //     })
         // },
         mounted() {
-            this.item.index = this.index;
-
             if (this.settings.length && this.stocks.length && this.item.stock_id === null) {
                 this.stockId = this.stocks[0].id;
             } else {

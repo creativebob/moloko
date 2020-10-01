@@ -122,6 +122,9 @@ class Update210420Tables extends Migration
             $table->decimal('manual_discount_currency', 10, 2)->default(0)->comment('Ручная скидка (валюта)')->after('manual_discount_percent');
             $table->decimal('total_manual_discount', 10, 2)->default(0)->comment('Сумма с ручной скидкой')->after('manual_discount_currency');
 
+            $table->decimal('margin_currency_unit', 10,2)->default(0)->comment('Процент маржи за единицу')->after('total_bonuses');
+            $table->decimal('margin_percent_unit', 10,2)->default(0)->comment('Сумма маржи за единицу')->after('total_bonuses');
+
             $table->text('comment')->nullable()->comment('Комментарий')->after('profit');
             $table->tinyInteger('sale_mode')->default(1)->comment('Режим продажи: 1 - валюта, 2 - поинты')->after('goods_id');
             $table->integer('total_points')->default(0)->comment('Итого поинтами')->after('total');
@@ -164,6 +167,9 @@ class Update210420Tables extends Migration
             $table->decimal('manual_discount_percent', 10, 2)->default(0)->comment('Ручная скидка (%)')->after('total_computed_discount');
             $table->decimal('manual_discount_currency', 10, 2)->default(0)->comment('Ручная скидка (валюта)')->after('manual_discount_percent');
             $table->decimal('total_manual_discount', 10, 2)->default(0)->comment('Сумма с ручной скидкой')->after('manual_discount_currency');
+
+            $table->decimal('margin_currency_unit', 10,2)->default(0)->comment('Процент маржи за единицу')->after('total_bonuses');
+            $table->decimal('margin_percent_unit', 10,2)->default(0)->comment('Сумма маржи за единицу')->after('total_bonuses');
 
             $table->text('comment')->nullable()->comment('Комментарий')->after('profit');
             $table->tinyInteger('sale_mode')->default(1)->comment('Режим продажи: 1 - валюта, 2 - поинты')->after('service_id');
@@ -391,6 +397,9 @@ class Update210420Tables extends Migration
                 'manual_discount_currency',
                 'total_manual_discount',
 
+                'margin_currency_unit',
+                'margin_percent_unit',
+
                 'comment',
                 'sale_mode',
                 'total_points',
@@ -431,6 +440,9 @@ class Update210420Tables extends Migration
                 'manual_discount_percent',
                 'manual_discount_currency',
                 'total_manual_discount',
+
+                'margin_currency_unit',
+                'margin_percent_unit',
 
                 'comment',
                 'sale_mode',

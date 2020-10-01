@@ -13,19 +13,21 @@
     <!-- Левый блок -->
     <div class="small-12 medium-5 large-7 cell">
 
-        @php
-            $disabled = $lead->estimate->is_registered == 1 ? true : false;
-        @endphp
-        {{--       Персональная информация--}}
-        @include('leads.personal', ['item' => $lead ?? auth()->user()])
+    @php
+        $disabled = $lead->estimate->is_registered == 1 ? true : false;
+    @endphp
+    {{--       Персональная информация--}}
+    @include('leads.personal', ['item' => $lead ?? auth()->user()])
 
 
-        <!-- ЗАКАЗ -->
+    <!-- ЗАКАЗ -->
         <div class="grid-x grid-padding-x">
             <div class="small-12 medium-12 large-12 cell margin-left-15 wrap-tabs-lead">
                 <ul class="tabs-list" data-tabs id="tabs-extra-leads">
-                    <li class="tabs-title is-active" id="tab-order"><a href="#content-panel-order" aria-selected="true">Состав
-                            заказа</a></li>
+
+                    <li class="tabs-title is-active">
+                        <a href="#tab-estimate" aria-selected="true">Состав заказа</a>
+                    </li>
 
                     @can ('index', App\Client::class)
                         <li class="tabs-title" id="tab-client"><a href="#content-panel-client" aria-selected="true">Карточка
@@ -41,16 +43,10 @@
                 {{-- Контент доп таба --}}
                 <div data-tabs-content="tabs-extra-leads">
 
-                    {{-- ЗАКАЗ --}}
-                    <div class="tabs-panel is-active" id="content-panel-order">
-
-                        <div class="grid-x grid-margin-x">
-                            <div class="small-12 medium-12 large-12 cell">
-                                @include('leads.estimate')
-                            </div>
-                        </div>
+                    {{-- Смета --}}
+                    <div class="tabs-panel is-active" id="tab-estimate">
+                        @include('leads.tabs.estimate')
                     </div>
-                    {{-- КОНЕЦ ЗАКАЗ --}}
 
 
                     {{-- КЛИЕНТ --}}
@@ -488,17 +484,15 @@
         </div>
 
     </div>
-{{-- КОНЕЦ ПРАВОГО БЛОКА --}}
+    {{-- КОНЕЦ ПРАВОГО БЛОКА --}}
 
-
-<!-- Кнопка сохранить -->
-    <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">
-        @can('update', $lead)
-            {{ Form::submit($submitButtonText, ['class'=>'button']) }}
-        @else
-            {{ Form::submit($submitButtonText, ['class'=>'button', $disabled_leadbot]) }}
-        @endcan
-    </div>
+    {{--    <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">--}}
+    {{--        @can('update', $lead)--}}
+    {{--            {{ Form::submit($submitButtonText, ['class'=>'button']) }}--}}
+    {{--        @else--}}
+    {{--            {{ Form::submit($submitButtonText, ['class'=>'button', $disabled_leadbot]) }}--}}
+    {{--        @endcan--}}
+    {{--    </div>--}}
 </div>
 
 {{-- Подключаем ПОИСК обращений и заказов по номеру телефона --}}

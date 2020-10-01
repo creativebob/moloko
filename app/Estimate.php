@@ -110,7 +110,8 @@ class Estimate extends Model
     // Товары
     public function goods_items()
     {
-        return $this->hasMany(EstimatesGoodsItem::class);
+        return $this->hasMany(EstimatesGoodsItem::class)
+            ->oldest('sort');
     }
 
     // Услуги

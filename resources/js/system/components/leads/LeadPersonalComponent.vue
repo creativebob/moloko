@@ -8,6 +8,7 @@
                         <phone-component
                             :phone="phone"
                             :required="true"
+                            :disabled="isDisabled"
                             @input="changePhone"
                             ref="phone"
                         ></phone-component>
@@ -19,52 +20,21 @@
                         <string-component
                             :value="name"
                             :required="true"
+                            :disabled="isDisabled"
                             v-model="name"
-                            @change="change = true"
+                            @change="changeName"
                             ref="name"
                         ></string-component>
-                        <input
-                            type="hidden"
-                            name="user_id"
-                            :value="userId"
-                        >
-                        <input
-                            type="hidden"
-                            name="client_id"
-                            :value="clientId"
-                        >
-                        <!--                        <input type="hidden" name="lead_id" value="{{$lead->id }}" id="lead_id" data-lead-id="{{$lead->id }}" class="wrap-lead-name">-->
                     </label>
                 </div>
                 <div id="port-autofind" class="small-12 cell">
-                    <!--                    <div-->
-                    <!--                        v-if="searchResults.length"-->
-                    <!--                        class="wrap-autofind"-->
-                    <!--                    >-->
-
-                    <!--                        <legend>Найдены клиенты:</legend>-->
-                    <!--                        <div class="grid-x">-->
-                    <!--                            <div class="small-12 medium-12 large-12 cell">-->
-                    <!--                                <table class="">-->
-                    <!--                                    <tr-->
-                    <!--                                        v-for="client in searchResults"-->
-                    <!--                                    >-->
-                    <!--                                        <td-->
-                    <!--                                            @click="updateLead(client)"-->
-                    <!--                                        >{{ client.clientable.name }}-->
-                    <!--                                        </td>-->
-                    <!--                                    </tr>-->
-                    <!--                                </table>-->
-                    <!--                            </div>-->
-                    <!--                        </div>-->
-
-                    <!--                    </div>-->
                 </div>
 
                 <div class="large-shrink cell">
                     <search-city-component
                         :start-cities="cities"
                         :city="city"
+                        :disabled="isDisabled"
                         @change="changeCityId"
                         ref="cityId"
                     ></search-city-component>
@@ -74,8 +44,9 @@
                         <string-component
                             name="address"
                             :value="address"
+                            :disabled="isDisabled"
                             v-model="address"
-                            @change="change = true"
+                            @change="changeAddress"
                             ref="address"
                         ></string-component>
                     </label>
@@ -89,47 +60,29 @@
                     :organization="organization"
                     :legal-forms="legalForms"
                     :companies="companies"
+                    :disabled="isDisabled"
                     @change="updateOrganization"
+                    @input="changeCompanyName"
                     ref="organization"
                 ></organization-component>
-
-                <!--                <div class="small-12 cell wrap-lead-company">-->
-                <!--                    <label>Компания-->
-                <!--                        <string-component-->
-                <!--                            name="company_name"-->
-                <!--                            :value="lead.company_name"-->
-                <!--                            v-model="companyName"-->
-                <!--                            @change="change = true"-->
-                <!--                            ref="companyName"-->
-                <!--                        ></string-component>-->
-                <!--                    </label>-->
-                <!--                </div>-->
 
                 <div class="small-12 cell wrap-lead-email">
                     <label>E-mail
                         <string-component
                             name="email"
                             :value="email"
+                            :disabled="isDisabled"
                             v-model="email"
-                            @change="change = true"
+                            @change="changeEmail"
                             ref="email"
                         ></string-component>
-                        <!--                        @include('includes.inputs.email', ['value'=>$lead->email, 'name'=>'email'])-->
+
                     </label>
                 </div>
 
             </div>
         </div>
 
-<!--        <div-->
-<!--            v-if="change"-->
-<!--            class="cell small-12"-->
-<!--        >-->
-<!--            <a-->
-<!--                @click="update"-->
-<!--                class="button"-->
-<!--            >Сохранить</a>-->
-<!--        </div>-->
     </div>
 </template>
 
@@ -158,6 +111,7 @@
                     id: null,
                     phone: null
                 },
+                mainPhone: this.lead.main_phones.length ? this.lead.main_phones[0].phone : null,
                 name: this.lead.name,
 
                 organization: this.lead.organization,
@@ -170,25 +124,17 @@
                 client: this.lead.client,
             }
         },
-        mounted() {
+        created: function () {
             this.$store.commit('SET_LEAD', this.lead);
             this.$store.commit('SET_CLIENT', this.client);
+            this.$store.commit('SET_ESTIMATE', this.lead.estimate);
+
         },
         computed: {
-            userId() {
-                if (this.user) {
-                    return this.user.id;
-                } else {
-                    return null;
-                }
-            },
-            clientId() {
-                if (this.client) {
-                    return this.client.id;
-                } else {
-                    return null;
-                }
-            },
+            isDisabled() {
+                return this.$store.state.lead.estimate.is_registered == 1;
+            }
+
         },
         methods: {
             changePhone(value) {
@@ -200,17 +146,46 @@
                     this.user = null;
                     this.updateOrganization(this.organization);
                 }
+                this.change = true;
+                this.mainPhone = value;
+                this.lead.main_phone = value;
+                this.$store.commit('UPDATE_LEAD', this.lead);
+            },
+            changeName(value) {
+                this.change = true;
+                this.name = value;
+                this.lead.name = value;
+                this.$store.commit('UPDATE_LEAD', this.lead);
+            },
+            changeCompanyName(value) {
+                this.change = true;
+                this.companyName = value;
+                this.lead.company_name = value;
+                this.$store.commit('UPDATE_LEAD', this.lead);
             },
             changeCityId(value) {
-                // this.change = true;
+                this.change = true;
                 this.cityId = value;
+                this.lead.location.city_id = value;
+                this.$store.commit('UPDATE_LEAD', this.lead);
+            },
+            changeAddress(value) {
+                this.change = true;
+                this.address = value;
+                this.lead.location.address = value;
+                this.$store.commit('UPDATE_LEAD', this.lead);
+            },
+            changeEmail(value) {
+                this.change = true;
+                this.email = value;
+                this.lead.email = value;
+                this.$store.commit('UPDATE_LEAD', this.lead);
             },
             updateUser(user) {
                 if (user) {
                     this.user = user;
 
                     this.phone = user.main_phones[0];
-
                     this.name = user.name;
                     this.$refs.name.update(this.name);
 
@@ -263,6 +238,17 @@
                     this.client = null;
                 }
 
+                this.lead.name = this.name;
+                this.lead.company_name = this.companyName;
+                this.lead.location.city_id = this.cityId;
+                this.lead.location.address = this.address;
+                this.lead.email = this.email;
+
+                this.lead.user_id = this.user ? this.user.id : null;
+                this.lead.organization_id = this.organization ? this.organization.id : null;
+                this.lead.client_id = this.client ? this.client.id : null;
+
+                this.$store.commit('UPDATE_LEAD', this.lead);
                 this.$store.commit('SET_CLIENT', this.client);
             },
             updateOrganization(organization) {
@@ -302,7 +288,7 @@
 
                 } else {
                     this.organization = null;
-                    this.companyName = null;
+                    // this.companyName = null;
                     this.client = null;
 
                     if (this.user) {
@@ -321,6 +307,17 @@
                     }
                 }
 
+                this.lead.name = this.name;
+                this.lead.company_name = this.companyName;
+                this.lead.location.city_id = this.cityId;
+                this.lead.location.address = this.address;
+                this.lead.email = this.email;
+
+                this.lead.user_id = this.user ? this.user.id : null;
+                this.lead.organization_id = this.organization ? this.organization.id : null;
+                this.lead.client_id = this.client ? this.client.id : null;
+
+                this.$store.commit('UPDATE_LEAD', this.lead);
                 this.$store.commit('SET_CLIENT', this.client);
             },
 

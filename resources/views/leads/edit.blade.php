@@ -1,9 +1,5 @@
 @extends('layouts.app')
 
-@section('inhead')
-    @include('includes.scripts.class.digitfield')
-@endsection
-
 @section('title', 'Редактировать лид')
 
 @section('breadcrumbs', Breadcrumbs::render('edit', $pageInfo, isset($lead->case_number) ? $lead->case_number : 'нет номера'))
@@ -19,9 +15,14 @@
     </div> --}}
 @endsection
 
-
 @section('content')
-    {{ Form::model($lead, ['url' => '/admin/leads/'.$lead->id, 'data-abide', 'novalidate', 'id' => 'form-lead', 'files'=>'true']) }}
+
+    {{ Form::model($lead, [
+        'route' => ['leads.update', $lead->id],
+        'data-abide', 'novalidate',
+        'id' => 'form-lead',
+        'files' => 'true'
+    ]) }}
     {{ method_field('PATCH') }}
     {!! Form::hidden('previous_url', url()->previous()) !!}
 
@@ -42,8 +43,6 @@
     {{-- Модалка удаления с ajax --}}
     @include('includes.modals.modal-delete-ajax')
     @include('includes.modals.modal-add-claim', ['lead' => $lead])
-    {{--@include('leads.estimate.modal_estimate_item_delete')--}}
-    {{--@include('leads.catalogs.modal_catalogs_goods')--}}
 @endsection
 
 @push('scripts')
@@ -67,11 +66,11 @@
         var lead_type_id = '{{ $lead->lead_type_id }}';
         var manager_id = '{{ $lead->manager_id }}';
 
-        $(document).on('dblclick', '#phone', function () {
-
-            // Снятие блокировки с поля номер телефона
-            $('#phone').attr('readonly', false);
-        });
+        // $(document).on('dblclick', '#phone', function () {
+        //
+        //     // Снятие блокировки с поля номер телефона
+        //     $('#phone').attr('readonly', false);
+        // });
 
         $(document).on('click', '#lead-free', function (event) {
             event.preventDefault();

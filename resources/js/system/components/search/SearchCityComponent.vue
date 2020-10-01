@@ -9,6 +9,7 @@
                 autocomplete="off"
                 pattern="[А-Яа-яЁё0-9-_\s]{3,30}"
                 :required="required"
+                :disabled="disabled"
                 @focus="focus"
                 @blur="blur"
                 @keydown.enter.prevent="onEnter"
@@ -85,6 +86,10 @@
                 }
             },
             required: {
+                type: Boolean,
+                default: false
+            },
+            disabled: {
                 type: Boolean,
                 default: false
             },
