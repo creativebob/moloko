@@ -9,24 +9,9 @@ use App\Observers\System\Traits\Commonable;
 class EstimatesGoodsItemObserver
 {
 
-    use Commonable;
-
     public function creating(EstimatesGoodsItem $estimatesGoodsItem)
     {
-        $this->store($estimatesGoodsItem);
         $this->setAggregations($estimatesGoodsItem);
-    }
-
-    public function updating(EstimatesGoodsItem $estimatesGoodsItem)
-    {
-        $this->update($estimatesGoodsItem);
-        $this->setAggregations($estimatesGoodsItem);
-
-    }
-
-    public function deleting(EstimatesGoodsItem $estimatesGoodsItem)
-    {
-        $this->destroy($estimatesGoodsItem);
     }
 
     public function setAggregations($item)
