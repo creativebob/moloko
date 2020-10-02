@@ -19,7 +19,12 @@
     </div>
 
     <div class="cell small-12 medium-9">
+    </div>
+
+    <div class="cell small-12 medium-3">
         @include('system.common.listers.goods', ['items' => $promotion->goods->pluck('id')])
+    </div>
+    <div class="cell small-12 medium-9">
     </div>
 
     {!! Form::hidden('is_recommend', 0) !!}
