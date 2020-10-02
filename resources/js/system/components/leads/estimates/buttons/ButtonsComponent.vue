@@ -5,9 +5,13 @@
             class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top"
         >
             <a
+                v-if="change"
                 class="button"
                 @click="save"
             >Сохранить</a>
+            <span
+                v-else
+            >Сохранено</span>
         </div>
 
         <div
@@ -52,11 +56,11 @@
         components: {
             'sale-button-component': require('./SaleButtonComponent'),
         },
-        data() {
-            return {
-                loading: false,
-            }
-        },
+        // data() {
+        //     return {
+        //         loading: false,
+        //     }
+        // },
         computed: {
             lead() {
                 return this.$store.state.lead.lead;
@@ -73,12 +77,19 @@
             },
 
             isRegistered() {
-                return this.estimate.is_registered === 1;
+                return this.$store.state.lead.estimate.is_registered === 1;
             },
 
             showRegisterButton() {
                 return this.$store.state.lead.goodsItems.length > 0 || this.$store.state.lead.servicesItems.length > 0;
-            }
+            },
+
+            change() {
+                return this.$store.state.lead.change;
+            },
+            loading() {
+                return this.$store.state.lead.loading;
+            },
         },
         methods: {
             save() {
@@ -111,20 +122,7 @@
                 }
             },
             update(data) {
-                this.loading = true;
-                axios
-                    .patch('/admin/leads/' + this.lead.id, data)
-                    .then(response => {
-                        console.log(response.data);
-                        this.$store.commit('SET_LEAD', response.data.lead);
-                        this.$store.commit('SET_ESTIMATE', response.data.estimate);
-                        this.$store.commit('SET_GOODS_ITEMS', response.data.goods_items);
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
-                    .finally(() => (this.loading = false));
-
+                this.$store.dispatch('UPDATE', data);
             },
             // update() {
             //     // Обновляем лида

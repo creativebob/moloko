@@ -116,7 +116,6 @@
 
         <modal-component
             :item="item"
-            :is-registered="isRegistered"
             ref="modalCurrencyComponent"
             @update="update"
         ></modal-component>

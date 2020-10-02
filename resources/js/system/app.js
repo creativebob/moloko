@@ -37,8 +37,10 @@ Vue.component('consignment-component', require('./components/consignments/Consig
 Vue.component('production-component', require('./components/productions/ProductionComponent.vue'));
 
 // Смета на лиде
-Vue.component('estimate-component', require('./components/leads/estimates/EstimateComponent.vue'));
-Vue.component('payments-component', require('./components/leads/PaymentsComponent.vue'));
+Vue.component('lead-init-component', require('./components/leads/LeadInitComponent'));
+Vue.component('estimate-component', require('./components/leads/estimates/EstimateComponent'));
+Vue.component('tab-payments-component', require('./components/leads/payments/TabPaymentsComponent'));
+Vue.component('payments-component', require('./components/leads/payments/PaymentsComponent'));
 
 Vue.component('checkboxer-component', require('./components/common/CheckboxerComponent'));
 Vue.component('lister-component', require('./components/common/ListerComponent'));

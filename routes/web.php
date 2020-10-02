@@ -701,7 +701,7 @@ Route::get('/leads/{id}/print', 'LeadController@print');
 Route::post('/leads', 'LeadController@resetFilter')
     ->name('leads.resetFilter');
 
-Route::any('/leads/axios_update/{id}', 'LeadController@axiosUpdate');
+Route::patch('/leads/axios_update/{id}', 'LeadController@axiosUpdate');
 
 // Основные методы
 Route::resource('/leads', 'LeadController')

@@ -112,14 +112,14 @@
                     <div class="cell small-12 medium-9">
                         <table>
                             <tbody>
-                                <tr>
-                                    <td>Общая скидка</td>
-                                    <td>{{ totalDiscount | decimalPlaces | decimalLevel }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Общая маржа</td>
-                                    <td>{{ totalMargin | decimalPlaces | decimalLevel }}</td>
-                                </tr>
+                            <tr>
+                                <td>Общая скидка</td>
+                                <td>{{ totalDiscount | decimalPlaces | decimalLevel }}</td>
+                            </tr>
+                            <tr>
+                                <td>Общая маржа</td>
+                                <td>{{ totalMargin | decimalPlaces | decimalLevel }}</td>
+                            </tr>
                             <tr>
                                 <td colspan="2">
                                     Итоговая стоимость по позиции: {{ total | decimalPlaces | decimalLevel }} руб.
@@ -168,7 +168,6 @@
         },
         props: {
             item: Object,
-            isRegistered: Boolean,
         },
         data() {
             return {
@@ -181,6 +180,9 @@
             Foundation.reInit($('#modal-estimates_goods_item-' + this.item.id));
         },
         computed: {
+            isRegistered() {
+                return this.$store.state.lead.estimate.is_registered == 1;
+            },
             totalDiscount() {
                 return this.discountCurrency * this.count;
             },
@@ -230,14 +232,16 @@
                 this.$emit('update', this.item);
             },
             reset() {
-                this.discountPercent = this.item.discount_percent;
-                this.$refs.discountPercentComponent.update(this.discountPercent);
+                if (!this.isRegistered) {
+                    this.discountPercent = this.item.discount_percent;
+                    this.$refs.discountPercentComponent.update(this.discountPercent);
 
-                this.discountCurrency = this.item.discount_currency;
-                this.$refs.discountCurrencyComponent.update(this.discountCurrency);
+                    this.discountCurrency = this.item.discount_currency;
+                    this.$refs.discountCurrencyComponent.update(this.discountCurrency);
 
-                this.count = this.item.count;
-                this.$refs.countComponent.update(this.count);
+                    this.count = this.item.count;
+                    this.$refs.countComponent.update(this.count);
+                }
             },
         },
         directives: {

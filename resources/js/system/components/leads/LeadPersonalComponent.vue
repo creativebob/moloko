@@ -22,7 +22,7 @@
                             :required="true"
                             :disabled="isDisabled"
                             v-model="name"
-                            @change="changeName"
+                            @change="change"
                             ref="name"
                         ></string-component>
                     </label>
@@ -35,7 +35,7 @@
                         :start-cities="cities"
                         :city="city"
                         :disabled="isDisabled"
-                        @change="changeCityId"
+                        @change="change"
                         ref="cityId"
                     ></search-city-component>
                 </div>
@@ -46,7 +46,7 @@
                             :value="address"
                             :disabled="isDisabled"
                             v-model="address"
-                            @change="changeAddress"
+                            @change="change"
                             ref="address"
                         ></string-component>
                     </label>
@@ -62,7 +62,7 @@
                     :companies="companies"
                     :disabled="isDisabled"
                     @change="updateOrganization"
-                    @input="changeCompanyName"
+                    @input="change"
                     ref="organization"
                 ></organization-component>
 
@@ -73,7 +73,7 @@
                             :value="email"
                             :disabled="isDisabled"
                             v-model="email"
-                            @change="changeEmail"
+                            @change="change"
                             ref="email"
                         ></string-component>
 
@@ -104,8 +104,6 @@
         },
         data() {
             return {
-                change: false,
-
                 user: this.lead.user,
                 phone: this.lead.main_phones.length ? this.lead.main_phones[0] : {
                     id: null,
@@ -125,18 +123,36 @@
             }
         },
         created: function () {
-            this.$store.commit('SET_LEAD', this.lead);
-            this.$store.commit('SET_CLIENT', this.client);
-            this.$store.commit('SET_ESTIMATE', this.lead.estimate);
+            this.lead.main_phone = this.lead.main_phones.length ? this.lead.main_phones[0].phone : null;
 
+            // this.$store.commit('SET_LEAD', this.lead);
+            // this.$store.commit('SET_CLIENT', this.client);
+            // this.$store.commit('SET_ESTIMATE', this.lead.estimate);
         },
         computed: {
             isDisabled() {
                 return this.$store.state.lead.estimate.is_registered == 1;
             }
-
         },
         methods: {
+            change() {
+                const data = {
+                    main_phone: this.mainPhone,
+                    name: this.name,
+                    company_name: this.companyName,
+                    location: {
+                        city_id: this.cityId,
+                        address: this.address,
+                    },
+                    email: this.email,
+
+                    user_id: this.user ? this.user.id : null,
+                    organization_id: this.organization ? this.organization.id : null,
+                    client_id: this.client ? this.client.id : null,
+                };
+
+                this.$store.commit('UPDATE_LEAD', data)
+            },
             changePhone(value) {
                 if (value.length == 17) {
                     let number = value.replace(/\D+/g, "");
@@ -146,40 +162,9 @@
                     this.user = null;
                     this.updateOrganization(this.organization);
                 }
-                this.change = true;
                 this.mainPhone = value;
-                this.lead.main_phone = value;
-                this.$store.commit('UPDATE_LEAD', this.lead);
-            },
-            changeName(value) {
-                this.change = true;
-                this.name = value;
-                this.lead.name = value;
-                this.$store.commit('UPDATE_LEAD', this.lead);
-            },
-            changeCompanyName(value) {
-                this.change = true;
-                this.companyName = value;
-                this.lead.company_name = value;
-                this.$store.commit('UPDATE_LEAD', this.lead);
-            },
-            changeCityId(value) {
-                this.change = true;
-                this.cityId = value;
-                this.lead.location.city_id = value;
-                this.$store.commit('UPDATE_LEAD', this.lead);
-            },
-            changeAddress(value) {
-                this.change = true;
-                this.address = value;
-                this.lead.location.address = value;
-                this.$store.commit('UPDATE_LEAD', this.lead);
-            },
-            changeEmail(value) {
-                this.change = true;
-                this.email = value;
-                this.lead.email = value;
-                this.$store.commit('UPDATE_LEAD', this.lead);
+
+                this.change();
             },
             updateUser(user) {
                 if (user) {
@@ -238,29 +223,15 @@
                     this.client = null;
                 }
 
-                this.lead.name = this.name;
-                this.lead.company_name = this.companyName;
-                this.lead.location.city_id = this.cityId;
-                this.lead.location.address = this.address;
-                this.lead.email = this.email;
-
-                this.lead.user_id = this.user ? this.user.id : null;
-                this.lead.organization_id = this.organization ? this.organization.id : null;
-                this.lead.client_id = this.client ? this.client.id : null;
-
-                this.$store.commit('UPDATE_LEAD', this.lead);
+                this.change();
                 this.$store.commit('SET_CLIENT', this.client);
             },
             updateOrganization(organization) {
-                if (organization) {
+                if (organization.id) {
                     this.organization = organization;
                     this.companyName = organization.name;
 
-                    if (organization.client) {
-                        this.client = organization.client;
-                    } else {
-                        this.client = null;
-                    }
+                    this.client = organization.client ? organization.client : null;
 
                     this.email = organization.email;
                     this.$refs.email.update(this.email);
@@ -274,7 +245,7 @@
                     if (!this.phone.phone && !this.name) {
 
                         if (organization.representatives.length) {
-                            let user = organization.representatives[0];
+                            const user = organization.representatives[0];
 
                             this.user = user;
 
@@ -288,7 +259,6 @@
 
                 } else {
                     this.organization = null;
-                    // this.companyName = null;
                     this.client = null;
 
                     if (this.user) {
@@ -301,48 +271,17 @@
                         this.email = this.user.email;
                         this.$refs.email.update(this.email);
 
-                        if (this.user.client) {
-                            this.client = this.user.client;
-                        }
+                        // if (this.user.client) {
+                        //     this.client = this.user.client;
+                        // }
                     }
+
+                    this.companyName = organization.name;
                 }
 
-                this.lead.name = this.name;
-                this.lead.company_name = this.companyName;
-                this.lead.location.city_id = this.cityId;
-                this.lead.location.address = this.address;
-                this.lead.email = this.email;
-
-                this.lead.user_id = this.user ? this.user.id : null;
-                this.lead.organization_id = this.organization ? this.organization.id : null;
-                this.lead.client_id = this.client ? this.client.id : null;
-
-                this.$store.commit('UPDATE_LEAD', this.lead);
+                this.change();
                 this.$store.commit('SET_CLIENT', this.client);
             },
-
-            // update() {
-            //     this.change = false;
-            //
-            //     let clientId = this.client.id ? this.client.id : null;
-            //     axios
-            //         .patch('/admin/leads/axios_update/' + this.lead.id, {
-            //             name: this.name,
-            //             organization_id: this.organizationId,
-            //             company_name: this.companyName,
-            //             email: this.email,
-            //             city_id: this.cityId,
-            //             address: this.address,
-            //             main_phone: this.number,
-            //             client_id: clientId,
-            //         })
-            //         .then(response => {
-            //             // console.log(response);
-            //         })
-            //         .catch(error => {
-            //             console.log(error)
-            //         });
-            // },
         }
     }
 </script>
