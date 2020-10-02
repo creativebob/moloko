@@ -89,18 +89,25 @@ Route::resource('/promotions', 'PromotionController')
     ])
     ->names('project.promotions');
 
-Route::get('/goods-composition/{id}/', 'AppController@goods_composition')->name('project.goods_composition');
+Route::get('/goods-composition/{id}/', 'AppController@goods_composition')
+    ->name('project.goods_composition');
 
-Route::post('/site_user_login', 'AppController@site_user_login')->name('project.site_user_login');
-Route::get('/confirmation', 'AppController@confirmation')->name('project.confirmation');
-Route::post('/success', 'AppController@success')->name('project.success');
+Route::post('/site_user_login', 'AppController@site_user_login')
+    ->name('project.site_user_login');
+Route::get('/confirmation', 'AppController@confirmation')
+    ->name('project.confirmation');
+Route::post('/success', 'AppController@success')
+    ->name('project.success');
 
 
 // Генерация access_code и отправка его на телефон пользователя
-Route::post('/get_access_code', 'AppController@get_access_code')->name('project.get_access_code');
-Route::post('/get_sms_code', 'AppController@get_sms_code')->name('project.get_sms_code');
+Route::post('/get_access_code', 'AppController@get_access_code')
+    ->name('project.get_access_code');
+Route::post('/get_sms_code', 'AppController@get_sms_code')
+    ->name('project.get_sms_code');
 // Route::post('/login_by_access_code', 'AppController@login_by_access_code')->name('project.login_by_access_code');
-Route::get('/telegram', 'AppController@telegram')->name('project.telegram');
+Route::get('/telegram', 'AppController@telegram')
+    ->name('project.telegram');
 
 Route::post('/shipment_update', 'AppController@shipment_update')
     ->name('project.shipment_update');
@@ -108,8 +115,10 @@ Route::post('/shipment_update', 'AppController@shipment_update')
 Route::post('logout_siteuser', 'AppController@logout_siteuser')
     ->name('project.logout_siteuser');
 
-Route::get('/cabinet', 'AppController@cabinet')->name('project.cabinet')->middleware('auth_usersite');
-Route::post('/update_profile', 'AppController@update_profile')->name('project.update_profile');
+Route::get('/cabinet', 'AppController@cabinet')
+    ->name('project.cabinet')->middleware('auth_usersite');
+Route::post('/update_profile', 'AppController@update_profile')
+    ->name('project.update_profile');
 
 
 // ---------------------- Лайки ------------------------------
@@ -130,7 +139,8 @@ Route::resource('/favorites_goods', 'FavoritesGoodsController')
     ->names('project.favorites_goods');
 
 
-Route::get('/{page_alias}', 'AppController@dynamic_pages')->name('project.dynamic_pages');
+Route::get('/{page_alias}', 'AppController@dynamic_pages')
+    ->name('project.dynamic_pages');
 
 
 // Оборудование
