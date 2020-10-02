@@ -15,10 +15,6 @@
             @include('includes.inputs.name', ['name' => 'link', 'value' => $promotion->link])
         </label>
 
-        <label>Триггер
-            @include('includes.inputs.name', ['name' => 'prom', 'value' => $promotion->prom])
-        </label>
-
         <div class="grid-x grid-padding-x">
             <div class="small-6 cell">
                 <label>Начало публикации

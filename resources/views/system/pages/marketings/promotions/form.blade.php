@@ -10,6 +10,9 @@
             <li class="tabs-title">
                 <a data-tabs-target="tab-prices_goods" href="#tab-prices_goods">Товары</a>
             </li>
+            <li class="tabs-title">
+                <a data-tabs-target="tab-triggers" href="#tab-triggers">Триггеры</a>
+            </li>
         </ul>
     </div>
 </div>
@@ -28,6 +31,10 @@
 
             <div class="tabs-panel" id="tab-prices_goods">
                 @include('system.pages.marketings.promotions.tabs.prices_goods')
+            </div>
+
+            <div class="tabs-panel" id="tab-triggers">
+                @include('system.pages.marketings.promotions.tabs.triggers')
             </div>
         </div>
     </div>
