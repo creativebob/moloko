@@ -65,7 +65,7 @@ class ParserController extends Controller
 
     public function setMorphsAliases()
     {
-        $items = \DB::table('phone_entites')
+        $items = \DB::table('phone_entities')
             ->get();
         foreach ($items as $item) {
             switch ($item->phone_entity_type) {
