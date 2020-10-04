@@ -63,6 +63,45 @@ class ParserController extends Controller
         dd(__METHOD__);
     }
 
+    public function setMorphsAliases()
+    {
+        $items = \DB::table('phone_entites')
+            ->get();
+        foreach ($items as $item) {
+            switch ($item->phone_entity_type) {
+                case ('App\User'):
+                    $item->phone_entity_type = 'User';
+                    break;
+                case ('App\Company'):
+                    $item->phone_entity_type = 'Company';
+                    break;
+                case ('App\Department'):
+                    $item->phone_entity_type = 'Department';
+                    break;
+                case ('App\Lead'):
+                    $item->phone_entity_type = 'Lead';
+                    break;
+            }
+            $item->save();
+
+            $clients = Client::get();
+            foreach ($clients as $client) {
+                switch ($client->phone_entity_type) {
+                    case ('App\User'):
+                        $client->phone_entity_type = 'User';
+                        break;
+                    case ('App\Company'):
+                        $client->phone_entity_type = 'Company';
+                        break;
+                }
+                $client->save();
+            }
+
+            return "Проставлены morphs алиасы телефонам и клиентам";
+        }
+
+    }
+
     /**
      * Для добавления мне прав на ВК (т.к. у Маши отклдчены права на роли)
      *

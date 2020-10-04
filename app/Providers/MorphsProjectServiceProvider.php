@@ -6,7 +6,7 @@ use App\Goods;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
-class MorphServiceProvider extends ServiceProvider
+class MorphsProjectServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
@@ -26,7 +26,8 @@ class MorphServiceProvider extends ServiceProvider
     public function boot()
     {
         Relation::morphMap([
-            'goods' => Goods::class,
+            'Lead' => \App\Models\Project\Lead::class,
+            'User' => \App\Models\Project\User::class,
         ]);
     }
 }

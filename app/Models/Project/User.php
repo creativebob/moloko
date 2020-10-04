@@ -46,8 +46,6 @@ class User extends Authenticatable
     use BooklistFilter;
     // use DateIntervalFilter;
 
-    protected $morphClass = 'User';
-
     protected $dates = [
         'deleted_at',
         'birthday_date'

@@ -42,6 +42,7 @@ Route::get('/parsers/130420', 'ParserController@parser_130420');
 Route::get('/parsers/archive_goods', 'ParserController@parserArchiveGoods');
 Route::get('/parsers/prices_goods_total', 'ParserController@parserPricesGoodsTotal');
 Route::get('/parsers/add_role', 'ParserController@addRole');
+Route::get('/parsers/set-morphs-aliases', 'ParserController@setMorphsAliases');
 
 Route::get('/parsers/test', 'ParserController@test');
 
