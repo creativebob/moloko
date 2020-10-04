@@ -320,7 +320,6 @@ class CartController extends Controller
                         ]);
 
                         $user->phones()->attach($new_phone->id, ['main' => 1]);
-                        return $user;
 
                     } else {
                         abort(403, 'Ошибка при создании пользователя по номеру телефона!');
