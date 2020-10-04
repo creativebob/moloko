@@ -78,22 +78,20 @@ class ParserController extends Controller
             ->where('phone_entity_type', 'App\Lead')
             ->update(['phone_entity_type' => 'Lead']);
 
-            $clients = Client::get();
-            foreach ($clients as $client) {
-                switch ($client->phone_entity_type) {
-                    case ('App\User'):
-                        $client->phone_entity_type = 'User';
-                        break;
-                    case ('App\Company'):
-                        $client->phone_entity_type = 'Company';
-                        break;
-                }
-                $client->save();
+        $clients = Client::get();
+        foreach ($clients as $client) {
+            switch ($client->phone_entity_type) {
+                case ('App\User'):
+                    $client->phone_entity_type = 'User';
+                    break;
+                case ('App\Company'):
+                    $client->phone_entity_type = 'Company';
+                    break;
             }
-
-            return "Проставлены morphs алиасы телефонам и клиентам";
+            $client->save();
         }
 
+        return "Проставлены morphs алиасы телефонам и клиентам";
     }
 
     /**
@@ -124,10 +122,10 @@ class ParserController extends Controller
     public function parserPricesGoodsTotal()
     {
         $pricesGoods = PricesGoods::get();
-        foreach($pricesGoods as $priceGoods) {
+        foreach ($pricesGoods as $priceGoods) {
             $total = $priceGoods->price - $priceGoods->discount_currency;
             $priceGoods->update([
-               'total' => $total
+                'total' => $total
             ]);
         }
         return "Прайсам товаров проставлен total";
@@ -173,7 +171,7 @@ class ParserController extends Controller
         $users = User::whereNull('name')
             ->get();
 
-        foreach($users as $user) {
+        foreach ($users as $user) {
             $cur_user = $user;
             $cur_user->name = $cur_user->first_name . ' ' . $cur_user->second_name;
 //            dd($user);
@@ -212,7 +210,7 @@ class ParserController extends Controller
             ->get();
 
         $insert = [];
-        foreach($metrics as $metric) {
+        foreach ($metrics as $metric) {
             $insert[] = [
                 'goods_id' => $metric->entity_id,
                 'metric_id' => $metric->metric_id,
@@ -531,12 +529,12 @@ class ParserController extends Controller
         // Всем
 //        $entities = Entity::get();
 
-        foreach($entities as $entity) {
+        foreach ($entities as $entity) {
             // Генерируем права
             $actions = Action::get();
             $mass = [];
 
-            foreach($actions as $action){
+            foreach ($actions as $action) {
                 $mass[] = ['action_id' => $action->id, 'entity_id' => $entity->id, 'alias_action_entity' => $action->method . '-' . $entity->alias];
             };
             DB::table('action_entity')->insert($mass);
@@ -544,7 +542,7 @@ class ParserController extends Controller
             $actionentities = ActionEntity::where('entity_id', $entity->id)->get();
             $mass = [];
 
-            foreach($actionentities as $actionentity){
+            foreach ($actionentities as $actionentity) {
 
                 $mass[] = ['name' => "Разрешение на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'allow', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-allow'];
 
@@ -560,7 +558,7 @@ class ParserController extends Controller
 
             $mass = [];
             // Генерируем права на полный доступ
-            foreach($rights as $right){
+            foreach ($rights as $right) {
                 $mass[] = ['right_id' => $right->id, 'role_id' => 1, 'system' => 1];
             };
 
@@ -568,7 +566,7 @@ class ParserController extends Controller
 
             $mass = null;
             $mass = [];
-            foreach($rights as $right){
+            foreach ($rights as $right) {
                 $mass[] = ['right_id' => $right->id, 'role_id' => 2, 'system' => 1];
             };
 
@@ -609,7 +607,7 @@ class ParserController extends Controller
         }
 
 
-        dd('Гатова, всего: '.$count);
+        dd('Гатова, всего: ' . $count);
 
     }
 
@@ -628,7 +626,7 @@ class ParserController extends Controller
             // dd($location_old);
 
             $location = Location::firstOrCreate(['address' => $location_old->address, 'city_id' => $location_old->city_id, 'country_id' => $location_old->country_id, 'author_id' => $location_old->author_id]);
-                // dd($location);
+            // dd($location);
 
             if ($location->id != $user->location_id) {
                 $user->location()->forceDelete();
@@ -679,7 +677,7 @@ class ParserController extends Controller
 
             // Формируем запрос в Яндекс Карты
             $request_params = [
-                'geocode' => $location->city->name . ', ' .$location->address,
+                'geocode' => $location->city->name . ', ' . $location->address,
                 'format' => 'json',
             ];
             // Преобразуем его в GET строку
@@ -725,16 +723,16 @@ class ParserController extends Controller
     {
 
 
-    $leads = Lead::with('challenges_active')->get();
+        $leads = Lead::with('challenges_active')->get();
 
         foreach ($leads as $lead) {
 
-            if($lead->challenges_active->count() > 0){
+            if ($lead->challenges_active->count() > 0) {
                 $leads = Lead::where('id', $lead->id)
-                ->update(['challenges_active_count' => $lead->challenges_active->count()]);
+                    ->update(['challenges_active_count' => $lead->challenges_active->count()]);
             } else {
                 $leads = Lead::where('id', $lead->id)
-                ->update(['challenges_active_count' => 0]);
+                    ->update(['challenges_active_count' => 0]);
             };
         }
 
@@ -749,9 +747,9 @@ class ParserController extends Controller
         foreach ($choices as $choice) {
 
 
-            if(isset($choice->lead_id)){
+            if (isset($choice->lead_id)) {
                 $leads = Lead::where('id', $choice->lead_id)
-                ->update(['choice_id' => $choice->choices_id, 'choice_type' => $choice->choices_type]);
+                    ->update(['choice_id' => $choice->choices_id, 'choice_type' => $choice->choices_type]);
             }
 
         }
@@ -792,7 +790,7 @@ class ParserController extends Controller
 
             $mass['get_lead'] = $old_lead->id;
 
-                // Пишем локацию
+            // Пишем локацию
             $location = new Location;
             $location->country_id = 1;
             $location->address = $old_lead->address_company;
@@ -811,10 +809,10 @@ class ParserController extends Controller
 
                 $mass['location'] = $location;
             } else {
-                dd('Ошибка записи адреса для лида: '.$old_lead->name_contact);
+                dd('Ошибка записи адреса для лида: ' . $old_lead->name_contact);
             }
 
-                // Определяем тип лида
+            // Определяем тип лида
             $lead_type_id = null;
             if ($old_lead->status_site == 1) {
                 $lead_type_id = 2;
@@ -822,7 +820,7 @@ class ParserController extends Controller
                 $lead_type_id = 1;
             }
 
-                // Начинаем писать лида
+            // Начинаем писать лида
             $lead = new Lead;
             $lead->company_id = 1;
             $lead->filial_id = 1;
@@ -835,7 +833,7 @@ class ParserController extends Controller
             $lead->email = $old_lead->email_contact;
             $lead->location_id = $location_id;
 
-                // Определяем тип лида
+            // Определяем тип лида
             $lead_type_id = null;
             if ($old_lead->status_site == 1) {
                 $lead->lead_type_id = 2;
@@ -859,11 +857,11 @@ class ParserController extends Controller
 
                 $mass['lead'] = $lead;
             } else {
-                dd('Ошибка записи лида: '.$old_lead->name_contact);
+                dd('Ошибка записи лида: ' . $old_lead->name_contact);
             }
 
-                // dd($old_lead);
-                // Пишем комменты
+            // dd($old_lead);
+            // Пишем комменты
             $lead_comments = [];
 
             if ($old_lead->comment != '') {
@@ -891,7 +889,7 @@ class ParserController extends Controller
                             'body' => $comment->body_note,
                             'company_id' => 1,
                             'author_id' => $old_lead->manager->new_user_id,
-                            'created_at' => $comment->date_note.' '.$comment->time_note.':00',
+                            'created_at' => $comment->date_note . ' ' . $comment->time_note . ':00',
                         ];
                     }
 
@@ -901,20 +899,20 @@ class ParserController extends Controller
             if ($old_lead->fact_pay != 0) {
                 $fact_pay = num_format($old_lead->fact_pay, 0);
                 $lead_comments[] = [
-                    'body' => 'Фактически оплачено: '. $fact_pay,
+                    'body' => 'Фактически оплачено: ' . $fact_pay,
                     'company_id' => 1,
                     'author_id' => $old_lead->manager->new_user_id,
                     'created_at' => Carbon::now(),
                 ];
             }
 
-                // dd($lead_comments);
+            // dd($lead_comments);
 
             $lead->notes()->createMany($lead_comments);
 
             $mass['comments'] = $lead_comments;
 
-                // Пишем задачи
+            // Пишем задачи
             if (count($old_lead->challenges) > 0) {
                 $lead_challenges = [];
 
@@ -935,19 +933,19 @@ class ParserController extends Controller
 
                     if (isset($challenge->finisher->new_user_id)) {
                         $finisher_id = $challenge->finisher->new_user_id;
-                            # code...
+                        # code...
                     } else {
                         $finisher_id = null;
                     }
 
 
-                    if($challenge->deadline_challenge == '0000-00-00 00:00:00'){
+                    if ($challenge->deadline_challenge == '0000-00-00 00:00:00') {
                         $deadline_challenge = null;
                     } else {
                         $deadline_challenge = $challenge->deadline_challenge;
                     };
 
-                    if($challenge->date_completed == '0000-00-00 00:00:00'){
+                    if ($challenge->date_completed == '0000-00-00 00:00:00') {
                         $date_completed = null;
                     } else {
                         $date_completed = $challenge->date_completed;
@@ -967,13 +965,13 @@ class ParserController extends Controller
                     ];
                 }
 
-                    // dd($lead_challenges);
+                // dd($lead_challenges);
                 $lead->challenges()->createMany($lead_challenges);
 
                 $mass['lead_challenges'] = $lead_challenges;
             }
 
-                // Пишем рекламации
+            // Пишем рекламации
             if (count($old_lead->claims) > 0) {
                 $lead_claims = [];
 
@@ -982,7 +980,7 @@ class ParserController extends Controller
                     $lead_claims[] = [
                         'company_id' => 1,
                         'body' => $claim->body_claim,
-                            // 'lead_id' => $lead_id,
+                        // 'lead_id' => $lead_id,
                         'old_claim_id' => $claim->id,
                         'author_id' => $claim->author->new_user_id,
                         'created_at' => $claim->date_claim,
@@ -990,7 +988,7 @@ class ParserController extends Controller
                     ];
 
                 }
-                    // dd($lead_claims);
+                // dd($lead_claims);
                 $lead->claims()->createMany($lead_claims);
 
                 $mass['lead_claims'] = $lead_claims;
@@ -1020,15 +1018,15 @@ class ParserController extends Controller
 
                 $mass['parse_lead'] = $old_lead->parse_status;
             } else {
-                dd('Ошибка проставления отметки старому лиду: '.$old_lead->id);
+                dd('Ошибка проставления отметки старому лиду: ' . $old_lead->id);
 
             }
 
 
-            echo 'Текущий лид: '.$mass['get_lead'].', записан в новую базу: '.$mass['save_lead'].', отметка: '.$mass['parse_lead']."\r\n";
+            echo 'Текущий лид: ' . $mass['get_lead'] . ', записан в новую базу: ' . $mass['save_lead'] . ', отметка: ' . $mass['parse_lead'] . "\r\n";
 
         }
-            // echo '500 записей, id: '.$lead->id.', ';
+        // echo '500 записей, id: '.$lead->id.', ';
         // });
 
         return redirect('/admin/leads');
@@ -1057,8 +1055,8 @@ class ParserController extends Controller
 
             $dubl_lead = Lead::where('old_lead_id', $lead->old_lead_id)->where('id', '!=', $lead->id)->first();
 
-            if($dubl_lead) {
-                    // dd($dubl_lead);
+            if ($dubl_lead) {
+                // dd($dubl_lead);
 
                 $dubl_lead->location()->forceDelete();
                 $dubl_lead->notes()->forceDelete();
@@ -1080,7 +1078,7 @@ class ParserController extends Controller
             }
 
             if ($count == 200) {
-                    // break;
+                // break;
                 return redirect('/admin/cities');
             }
 
@@ -1089,14 +1087,14 @@ class ParserController extends Controller
 
         return redirect('/admin/users');
         // $mass['count'] = $count;
-            // dd($mass);
+        // dd($mass);
 
 
     }
 
     public function adder(Request $request)
     {
-       // Получаем данные для авторизованного пользователя
+        // Получаем данные для авторизованного пользователя
         $user = $request->user();
 
         // Смотрим компанию пользователя
@@ -1153,7 +1151,7 @@ class ParserController extends Controller
 
                     $mass['location'] = $location;
                 } else {
-                    dd('Ошибка записи адреса для лида: '.$old_lead->name_contact);
+                    dd('Ошибка записи адреса для лида: ' . $old_lead->name_contact);
                 }
 
                 // Определяем тип лида
@@ -1201,7 +1199,7 @@ class ParserController extends Controller
 
                     $mass['lead'] = $lead;
                 } else {
-                    dd('Ошибка записи лида: '.$old_lead->name_contact);
+                    dd('Ошибка записи лида: ' . $old_lead->name_contact);
                 }
 
                 // dd($old_lead);
@@ -1233,7 +1231,7 @@ class ParserController extends Controller
                                 'body' => $comment->body_note,
                                 'company_id' => 1,
                                 'author_id' => $old_lead->manager->new_user_id,
-                                'created_at' => $comment->date_note.' '.$comment->time_note.':00',
+                                'created_at' => $comment->date_note . ' ' . $comment->time_note . ':00',
                             ];
                         }
 
@@ -1243,7 +1241,7 @@ class ParserController extends Controller
                 if ($old_lead->fact_pay != 0) {
                     $fact_pay = num_format($old_lead->fact_pay, 0);
                     $lead_comments[] = [
-                        'body' => 'Фактически оплачено: '. $fact_pay,
+                        'body' => 'Фактически оплачено: ' . $fact_pay,
                         'company_id' => 1,
                         'author_id' => $old_lead->manager->new_user_id,
                         'created_at' => Carbon::now(),
@@ -1283,13 +1281,13 @@ class ParserController extends Controller
                         }
 
 
-                        if($challenge->deadline_challenge == '0000-00-00 00:00:00'){
+                        if ($challenge->deadline_challenge == '0000-00-00 00:00:00') {
                             $deadline_challenge = null;
                         } else {
                             $deadline_challenge = $challenge->deadline_challenge;
                         };
 
-                        if($challenge->date_completed == '0000-00-00 00:00:00'){
+                        if ($challenge->date_completed == '0000-00-00 00:00:00') {
                             $date_completed = null;
                         } else {
                             $date_completed = $challenge->date_completed;
@@ -1362,20 +1360,18 @@ class ParserController extends Controller
 
                     $mass['parse_lead'] = $old_lead->parse_status;
                 } else {
-                    dd('Ошибка проставления отметки старому лиду: '.$old_lead->id);
+                    dd('Ошибка проставления отметки старому лиду: ' . $old_lead->id);
 
                 }
 
 
-                echo 'Текущий лид: '.$mass['get_lead'].', записан в новую базу: '.$mass['save_lead'].', отметка: '.$mass['parse_lead']."\r\n";
+                echo 'Текущий лид: ' . $mass['get_lead'] . ', записан в новую базу: ' . $mass['save_lead'] . ', отметка: ' . $mass['parse_lead'] . "\r\n";
             }
         }
-            // echo '500 записей, id: '.$lead->id.', ';
+        // echo '500 записей, id: '.$lead->id.', ';
         // });
 
         return redirect('/admin/users');
-
-
 
 
     }
@@ -1383,7 +1379,7 @@ class ParserController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
 
@@ -1422,7 +1418,7 @@ class ParserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -1433,7 +1429,7 @@ class ParserController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -1444,8 +1440,8 @@ class ParserController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -1456,7 +1452,7 @@ class ParserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -1501,7 +1497,7 @@ class ParserController extends Controller
                 // Пишем или ищем новый и создаем связь
                 $phone = Phone::firstOrCreate(
                     ['phone' => $company->phone,
-                ], [
+                    ], [
                     'crop' => substr($company->phone, -4),
                 ]);
                 $company->phones()->attach($phone->id, ['main' => 1]);
@@ -1568,7 +1564,6 @@ class ParserController extends Controller
         dd('Норм');
 
 
-
     }
 
     public function sort_catalog_parser()
@@ -1578,10 +1573,10 @@ class ParserController extends Controller
         $items_filial_1 = $items->where('filial_id', 1);
         $items_filial_2 = $items->where('filial_id', 2);
 
-        foreach($items_filial_1 as $item){
+        foreach ($items_filial_1 as $item) {
             $new_item = $items_filial_2->where('goods_id', $item->goods_id)->first();
-            if($new_item){
-                 $new_item->sort = $item->sort;
+            if ($new_item) {
+                $new_item->sort = $item->sort;
                 $new_item->save();
             }
         }
