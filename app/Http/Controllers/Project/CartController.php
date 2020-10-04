@@ -281,11 +281,9 @@ class CartController extends Controller
                     // Подготовка: -------------------------------------------------------------------------------------
 
 
-                    $user_number = User::withoutTrashed()
-                        ->all()
-                        ->last()
-                        ->id;
-                    $user_number = $user_number + 1;
+                    $usersCount = User::withoutTrashed()
+                        ->count();
+                    $user_number = $usersCount + 1;
 
                     $user = new User;
                     $user->login = 'user_' . $user_number;
@@ -662,13 +660,14 @@ class CartController extends Controller
                 'author_id' => 1,
             ]);
 
-            $destinations = User::whereHas('staff', function ($query) {
+            $destinations = \App\User::whereHas('staff', function ($query) {
                 $query->whereHas('position', function ($query) {
                     $query->whereHas('notifications', function ($query) {
                         $query->where('notification_id', 1);
                     });
                 });
             })
+                ->where('company_id', $site->company_id)
                 ->whereNotNull('telegram')
                 ->get([
                     'telegram'
