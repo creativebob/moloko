@@ -58,6 +58,8 @@ class Lead extends Model
     use ValueFilter;
     use BooleanArrayFilter;
 
+    protected $morphClass = 'Lead';
+
     // public $timestamps = false;
 
     protected $dates = [
