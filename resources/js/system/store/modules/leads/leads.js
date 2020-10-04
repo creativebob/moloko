@@ -6,6 +6,8 @@ const moduleLead = {
             goodsItems: [],
             servicesItems: [],
 
+            change: false,
+            loading: false,
         },
         mutations: {
             // Лид
@@ -19,7 +21,18 @@ const moduleLead = {
                 state.lead = lead;
             },
             UPDATE_LEAD(state, lead) {
-                state.lead = lead;
+                state.lead.main_phone = lead.main_phone;
+                state.lead.name = lead.name;
+                state.lead.company_name = lead.company_name;
+                state.lead.location.city_id = lead.location.city_id;
+                state.lead.location.address = lead.location.address;
+                state.lead.email = lead.email;
+
+                state.lead.user_id = lead.user_id;
+                state.lead.organization_id = lead.organization_id;
+                state.lead.client_id = lead.client_id;
+
+                this.commit('SET_CHANGE');
             },
 
             // Клиент
@@ -27,10 +40,10 @@ const moduleLead = {
                 if (client) {
                     switch (client.clientable_type) {
                         case ('App\\Company'):
-                            state.lead.organization_id = client.id;
+                            state.lead.organization_id = client.clientable_id;
                             break;
                         case ('App\\User'):
-                            state.lead.user_id = client.id;
+                            state.lead.user_id = client.clientable_id;
                             break;
                     }
                     state.lead.client_id = client.id;
@@ -79,7 +92,6 @@ const moduleLead = {
             },
 
             ADD_GOODS_ITEM_TO_ESTIMATE(state, price) {
-
                 if (state.estimate.is_registered === 0) {
 
                     // TODO - 25.09.20 - Нужна будет проверка на серийность
@@ -149,6 +161,8 @@ const moduleLead = {
             },
 
             SET_AGGREGATIONS(state, item) {
+                this.commit('SET_CHANGE');
+
                 var count = item.count;
 
                 switch (item.sale_mode) {
@@ -281,6 +295,7 @@ const moduleLead = {
             REMOVE_GOODS_ITEM(state, id) {
                 let index = state.goodsItems.findIndex(item => item.id === id);
                 state.goodsItems.splice(index, 1);
+                this.commit('SET_CHANGE');
             },
             UPDATE_GOODS_ITEMS(state) {
                 state.goodsItems.forEach(item => {
@@ -308,12 +323,37 @@ const moduleLead = {
                 this.commit('UPDATE_ESTIMATE');
             },
 
+            // Изменения
+            SET_CHANGE(state) {
+                state.change = true;
+            },
+
             // Платежи
             ADD_PAYMENT(state, payment) {
                 state.estimate.payments.push(payment);
             }
         },
         actions: {
+            // Обновление лида и сметы
+            UPDATE({ state }, data) {
+                state.loading = true;
+                axios
+                    .patch('/admin/leads/axios_update/' + state.lead.id, data)
+                    .then(response => {
+                        console.log(response.data);
+
+                        this.commit('SET_LEAD', response.data.lead);
+                        this.commit('SET_ESTIMATE', response.data.estimate);
+                        this.commit('SET_GOODS_ITEMS', response.data.goods_items);
+
+                        state.change = false;
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+                    .finally(() => (state.loading = false));
+            },
+
             // Товары
 
             // ADD_GOODS_ITEM_TO_ESTIMATE({ state }, priceId) {

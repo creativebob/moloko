@@ -1,17 +1,31 @@
 <template>
     <div class="grid-x grid-padding-x">
         <div
-            v-if="!isSaled"
+            v-if="isShow"
             class="cell small-12"
         >
             <div class="grid-x grid-padding-x">
 
                 <div class="cell small-3">
-                    <label>Сумма:
-                        <input
-                            type="number"
-                            v-model="amount"
+                    <label>Дата:
+                        <pickmeup-component
+                            :required="true"
+                            @change="changeDate"
+                        ></pickmeup-component>
+                        <span class="form-error">Выберите дату!</span>
+                    </label>
+                </div>
+
+                <div class="cell small-3">
+                    <label>Тип платежа:
+                        <select
+                            v-model="paymentsTypeId"
                         >
+                            <option
+                                v-for="paymentsType in paymentsTypes"
+                                :value="paymentsType.id"
+                            >{{ paymentsType.name }}</option>
+                        </select>
                     </label>
                 </div>
 
@@ -32,38 +46,27 @@
                 </div>
 
                 <div class="cell small-3">
-                    <label>Тип платежа:
-                        <select
-                            v-model="paymentsTypeId"
-                        >
-                            <option
-                                v-for="paymentsType in paymentsTypes"
-                                :value="paymentsType.id"
-                            >{{ paymentsType.name }}</option>
-                        </select>
-                    </label>
-                </div>
+                    <label>Сумма
+                        <div class="input-group">
+                            <digit-component
+                                v-model="amount"
+                                ref="countComponent"
+                            ></digit-component>
+                            <div class="input-group-button">
+                                <a
+                                    @click="addPayment"
+                                    class="button"
+                                >+</a>
+                            </div>
+                        </div>
 
-                <div class="cell small-3">
-                    <label>Дата:
-                        <pickmeup-component
-                            :required="true"
-                            @change="changeDate"
-                        ></pickmeup-component>
-<!--                        <pickmeup-component-->
-<!--                            :cur-date="curDate"-->
-<!--                            :required="true"-->
-<!--                            @change="changeDate"-->
-<!--                        ></pickmeup-component>-->
-                        <span class="form-error">Выберите дату!</span>
-                    </label>
-                </div>
 
-                <div class="cell small-3">
-                    <button
-                        class="button"
-                        @click.prevent="addPayment"
-                    >Добавить</button>
+                    </label>
+
+<!--                    <button-->
+<!--                        class="button"-->
+<!--                        @click.prevent="addPayment"-->
+<!--                    >Добавить</button>-->
                 </div>
 
             </div>
@@ -109,7 +112,8 @@
 
 	export default {
         components: {
-            'pickmeup-component': require('../inputs/PickmeupComponent'),
+            'pickmeup-component': require('../../inputs/PickmeupComponent'),
+            'digit-component': require('../../inputs/DigitComponent'),
         },
 
 		props: {
@@ -126,23 +130,21 @@
                     ]
                 }
             },
-            curDate: String
 		},
 
         data() {
             return {
-                saled: this.document.is_saled,
                 amount: 0,
                 paymentsTypeId: this.paymentsTypes[0].id,
                 currencyId: this.currencies[0].id,
-                date: moment(String(this.curDate)).format('DD.MM.YYYY'),
+                date: moment(String( new Date() )).format('DD.MM.YYYY'),
                 payments: this.document.payments
             }
         },
 
         computed: {
-		    isSaled() {
-		        return this.saled == 1 || this.$store.getters.paymentsAmount >= this.$store.getters.estimateTotal;
+		    isShow() {
+		        return this.$store.state.lead.estimate.is_registered == 1 && this.$store.state.lead.estimate.is_saled == 0 && this.$store.getters.paymentsAmount < this.$store.getters.estimateTotal;
             },
             paymentsAmount() {
                 return this.$store.getters.paymentsAmount;
@@ -153,32 +155,33 @@
                 this.date = date;
             },
             addPayment() {
+                if (this.amount > 0) {
+                    let data = {
+                        amount: this.amount,
+                        payments_type_id: this.paymentsTypeId,
+                        currency_id: this.currencyId,
+                        date: this.date,
 
-                let data = {
-                    amount: this.amount,
-                    payments_type_id: this.paymentsTypeId,
-                    currency_id: this.currencyId,
-                    date: this.date,
+                        contract_id: this.document.lead.client.contract.id,
+                        contract_type: 'App\\ContractsClient',
 
-                    contract_id: this.document.lead.client.contract.id,
-                    contract_type: 'App\\ContractsClient',
-
-                    document_id: this.document.id,
-                    document_type: 'App\\Estimate'
-                };
-                // console.log(data);
-
-                axios
-                    .post('/admin/payments', data)
-                    .then(response => {
-                        let payment = response.data;
-                        this.payments.push(payment);
-                        this.$store.commit('ADD_PAYMENT', payment);
-                        this.amount = 0;
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    });
+                        document_id: this.document.id,
+                        document_type: 'App\\Estimate'
+                    };
+                    // console.log(data);
+                    axios
+                        .post('/admin/payments', data)
+                        .then(response => {
+                            let payment = response.data;
+                            this.payments.push(payment);
+                            this.$store.commit('ADD_PAYMENT', payment);
+                            this.amount = 0;
+                            this.$refs.countComponent.update(this.amount);
+                        })
+                        .catch(error => {
+                            console.log(error)
+                        });
+                }
             }
         },
 
