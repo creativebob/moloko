@@ -64,4 +64,10 @@ class Estimate extends Model
     {
         return $this->hasMany('App\EstimatesGoodsItem');
     }
+
+    // Услуги
+    public function services_items()
+    {
+        return $this->hasMany('App\EstimatesServicesItem');
+    }
 }
