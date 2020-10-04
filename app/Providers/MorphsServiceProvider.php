@@ -6,7 +6,7 @@ use App\Goods;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
-class MorphsServiceProvider extends ServiceProvider
+class MorphServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
