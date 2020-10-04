@@ -65,24 +65,18 @@ class ParserController extends Controller
 
     public function setMorphsAliases()
     {
-        $items = \DB::table('phone_entities')
-            ->get();
-        foreach ($items as $item) {
-            switch ($item->phone_entity_type) {
-                case ('App\User'):
-                    $item->phone_entity_type = 'User';
-                    break;
-                case ('App\Company'):
-                    $item->phone_entity_type = 'Company';
-                    break;
-                case ('App\Department'):
-                    $item->phone_entity_type = 'Department';
-                    break;
-                case ('App\Lead'):
-                    $item->phone_entity_type = 'Lead';
-                    break;
-            }
-            $item->save();
+        \DB::table('phone_entities')
+            ->where('phone_entity_type', 'App\User')
+            ->update(['phone_entity_type' => 'User']);
+        \DB::table('phone_entities')
+            ->where('phone_entity_type', 'App\Company')
+            ->update(['phone_entity_type' => 'Company']);
+        \DB::table('phone_entities')
+            ->where('phone_entity_type', 'App\Department')
+            ->update(['phone_entity_type' => 'Department']);
+        \DB::table('phone_entities')
+            ->where('phone_entity_type', 'App\Lead')
+            ->update(['phone_entity_type' => 'Lead']);
 
             $clients = Client::get();
             foreach ($clients as $client) {
