@@ -193,7 +193,7 @@ return [
         App\Providers\WidgetServiceProvider::class,
         App\Providers\ObserverServiceProvider::class,
 
-        App\Providers\MorphServiceProvider::class,
+        App\Providers\MorphsServiceProvider::class,
         App\Providers\MorphsProjectServiceProvider::class,
 
         App\Providers\ComposerProjectServiceProvider::class,
