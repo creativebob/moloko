@@ -8,7 +8,7 @@ use App\Http\Controllers\Project\Traits\Commonable;
 use App\Http\Controllers\Traits\EstimateControllerTrait;
 use App\Http\Controllers\Traits\LeadControllerTrait;
 use App\Http\Controllers\Traits\UserControllerTrait;
-use App\Lead;
+use App\Models\Project\Lead;
 use App\Models\Project\Estimate;
 use App\Models\Project\EstimatesGoodsItem;
 use App\Models\Project\Promotion;
