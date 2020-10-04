@@ -38,40 +38,6 @@ class CartController extends Controller
      */
     public function index()
     {
-//        if (Cookie::has('cart')) {
-//            $cart = json_decode(Cookie::get('cart'), true);
-//
-//            // dd($cart);
-//
-//            if (isset($cart['prices'])) {
-//                $prices_ids = array_keys($cart['prices']);
-////            dd($prices_ids);
-//
-//                $prices_goods = PricesGoods::with('goods_public.article.photo', 'currency')
-//                    ->find($prices_ids);
-//
-//                // dd($prices_goods->first()->goods->article);
-//
-//                foreach($cart['prices'] as $id => $price) {
-//                    $price_goods = $prices_goods->firstWhere('id', $id);
-//                    $price_goods->count = $price['count'];
-//                }
-//            } else {
-//                $prices_goods = [];
-//                $prices_goods = collect($prices_goods);
-//            }
-////            dd($prices_goods);
-//        } else {
-//            $prices_goods = [];
-//            $prices_goods = collect($prices_goods);
-//        }
-//
-//        $prices_goods = $prices_goods->toArray();
-//        $prices_goods = collect($prices_goods);
-
-
-        // dd($prices_goods);
-
         $site = $this->site;
 
         // Грузим продвижения с отображением на корзине
@@ -402,8 +368,14 @@ class CartController extends Controller
             logs('leads_from_project')->info("============== Создан лид с сайта с id :[{$lead->id}], сайт:[{$site->id}]  ===============================");
             // ------------------------------------------- Конец создаем лида ---------------------------------------------
 
-            // Телефон
-            $phones = add_phones($request, $lead);
+            // Если номера нет, пишем или ищем новый и создаем связь
+            $new_phone = Phone::firstOrCreate(
+                ['phone' => $cleanPhone
+                ], [
+                'crop' => substr($cleanPhone, -4),
+            ]);
+
+            $lead->phones()->attach($new_phone->id, ['main' => 1]);
             // $lead = update_location($request, $lead);
 
             // Создаем заказ для лида
