@@ -86,9 +86,14 @@ class PricesGoodsController extends Controller
             'currency'
         ])
             ->where([
-                'display' => true
+                'display' => true,
+                'archive' => false
             ])
             ->find($id);
+    
+        if (empty($company)) {
+            abort(404, __('errors.not_found'));
+        }
 
         // dd($price_goods->goods->article->containers);
 
