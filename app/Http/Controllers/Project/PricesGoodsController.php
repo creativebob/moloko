@@ -91,7 +91,7 @@ class PricesGoodsController extends Controller
             ])
             ->find($id);
     
-        if (empty($company)) {
+        if (empty($price_goods)) {
             abort(404, __('errors.not_found'));
         }
 
