@@ -67,6 +67,13 @@ class Handler extends ExceptionHandler
         // }
 
         // Конец пробы -------------------------------------------------
+        
+        // Исключение 404, гугл кешировал ктраницы. и на ВК нельзя на них попасть, нужно отдавать 404
+        if ($this->isHttpException($exception)) {
+            if (view()->exists('errors.' . $exception->getStatusCode())) {
+                return response()->view('errors.' . $exception->getStatusCode(), [], $exception->getStatusCode());
+            }
+        }
 
         return parent::render($request, $exception);
     }

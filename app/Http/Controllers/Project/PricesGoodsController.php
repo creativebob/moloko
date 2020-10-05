@@ -92,7 +92,7 @@ class PricesGoodsController extends Controller
             ->find($id);
     
         if (empty($price_goods)) {
-            abort(404, __('errors.not_found'));
+            abort(404);
         }
 
         // dd($price_goods->goods->article->containers);
