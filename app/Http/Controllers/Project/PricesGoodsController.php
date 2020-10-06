@@ -92,7 +92,7 @@ class PricesGoodsController extends Controller
             ->find($id);
 
         if (empty($price_goods)) {
-            abort(404);
+            abort(404, $site->alias);
         }
 
         // dd($price_goods->goods->article->containers);
