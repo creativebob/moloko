@@ -112991,7 +112991,7 @@ var moduleLead = {
                 if (index > -1) {
                     var item = state.goodsItems[index];
 
-                    item.count += 1;
+                    item.count = parseFloat(item.count) + 1;
 
                     this.commit('SET_AGGREGATIONS', item);
                     item = state.goodsItems[index];
