@@ -90,7 +90,7 @@ class PricesGoodsController extends Controller
                 'archive' => false
             ])
             ->find($id);
-    
+
         if (empty($price_goods)) {
             abort(404);
         }
@@ -155,9 +155,10 @@ class PricesGoodsController extends Controller
             ])
             // TODO - 17.06.20 - Нужна проверка на display у всех родителей раздела (если они есть), видимо рекусия
             ->whereHas('catalogs_item', function ($q) {
-                $q->whereHas('parent', function ($q) {
-                    $q->where('display', true);
-                })
+                $q
+//                    ->whereHas('parent', function ($q) {
+//                    $q->where('display', true);
+//                })
                     ->where('display', true);
             })
             ->whereHas('catalog', function ($q) {
