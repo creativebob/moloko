@@ -23,27 +23,19 @@
     export default {
         props: {
             item: Object,
-            isRegistered: Boolean,
         },
         computed: {
+            isRegistered() {
+                return this.$store.state.lead.estimate.is_registered == 1;
+            },
             havePoints() {
                 return this.item.points > 0;
             }
         },
         methods: {
             setCurrencyMode() {
-                if(! this.isRegistered) {
-                    axios
-                        .patch('/admin/estimates_goods_items/' + this.item.id, {
-                            sale_mode: 1,
-                        })
-                        .then(response => {
-                            this.$emit('update', response.data);
-                        })
-                        .catch(error => {
-                            console.log(error)
-                        });
-                }
+                this.item.sale_mode = 1;
+                this.$emit('update', this.item);
 
             }
         },

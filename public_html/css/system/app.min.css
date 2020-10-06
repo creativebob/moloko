@@ -10168,6 +10168,15 @@ span.wrap-label-checkboxer {
   margin-left: 0px;
 }
 
+.input-with-buttons .button-count {
+  cursor: pointer;
+}
+
+.input-with-buttons input {
+  display: inline-block;
+  width: 60px;
+}
+
 .show-elem {
   display: inline-block !important;
 }
@@ -11025,6 +11034,23 @@ tr:hover .button-to-reserve {
 
 .commentable:hover .icon-comment {
   opacity: 1;
+}
+
+.commentable .wrap-comment {
+  position: relative;
+  display: inline-block;
+}
+
+.commentable .wrap-comment .dropdown-comment {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  visibility: visible;
+  display: block;
+}
+
+.commentable .wrap-comment .dropdown-comment textarea {
+  resize: vertical;
 }
 
 .button-to-reserve:hover {

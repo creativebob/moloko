@@ -14,6 +14,7 @@ class EstimateObserver
     public function creating(Estimate $estimate)
     {
         $this->store($estimate);
+        $estimate->currency_id = 1;
 //        $estimate->date = now()->format('d.m.Y');
     }
 

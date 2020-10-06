@@ -31,7 +31,8 @@ class CatalogGoodsWithPricesComposer
                                     'name',
                                     'photo_id',
                                     'manufacturer_id',
-                                    'draft'
+                                    'draft',
+                                    'cost_default'
                                 ]);
                             }
                         ])
@@ -39,8 +40,12 @@ class CatalogGoodsWithPricesComposer
                         ->select([
                             'id',
                             'article_id',
+                            'serial'
                         ]);
-                    }
+                    },
+                    'currency',
+                    'discounts_actual',
+                    'catalogs_item.discounts_actual'
                 ])
                 ->whereHas('goods', function ($q) use ($settings) {
                     $q

@@ -16,19 +16,17 @@ class UserObserver
         $user->password = bcrypt($user->password);
         $user->access_code = rand(1000, 9999);
 
-        $request = request();
-
         // Если не пришли имя, фамилия и отчество, парсим их из $request->name
-        if(($request->first_name == null) && ($request->second_name == null) && ($request->patronymic == null) && (isset($request->name))){
-
-            $mass_names = getNameUser($request->name);
-
-            $user->first_name = $mass_names['first_name'];
-            $user->second_name = $mass_names['second_name'];
-            $user->patronymic = $mass_names['patronymic'];
-            $user->gender = $mass_names['gender'];
-            $user->nickname = $request->name;
-        }
+//        if (($user->first_name == null) && ($user->second_name == null) && ($user->patronymic == null) && (isset($user->name))) {
+//
+//            $mass_names = getNameUser($user->name);
+//
+//            $user->first_name = $mass_names['first_name'];
+//            $user->second_name = $mass_names['second_name'];
+//            $user->patronymic = $mass_names['patronymic'];
+//            $user->gender = $mass_names['gender'];
+//            $user->nickname = $user->name;
+//        }
 
         if (empty($user->filial_id)) {
             $authUser = auth()->user();
@@ -43,7 +41,7 @@ class UserObserver
 
     public function updating(User $user)
     {
-         $this->update($user);
+        $this->update($user);
 
         if ($user->isDirty('password')) {
             $user->password = bcrypt($user->password);
@@ -52,7 +50,7 @@ class UserObserver
 
     public function deleting(User $user)
     {
-         $this->destroy($user);
+        $this->destroy($user);
     }
 
     public function saving(User $user)
@@ -63,21 +61,19 @@ class UserObserver
         }
 
         // TODO - 21.09.20 - ПОсле переработки getNameUser внедрить ее сюда.
-        // ПРоверка на name при записи юзера со страницы лида
+        // Проверка на name при записи юзера со страницы лида
         if ($user->name) {
             $nameArray = explode(' ', $user->name);
-            if ($nameArray[0]) {
+            if (isset($nameArray[0])) {
                 $user->first_name = $nameArray[0];
             }
-            if ($nameArray[1]) {
+            if (isset($nameArray[1])) {
                 $user->second_name = $nameArray[1];
             }
         }
 
-
         if (empty($user->login)) {
-            $usersCount = User::where('company_id', auth()->user()->company_id)
-                ->withTrashed()
+            $usersCount = User::withTrashed()
                 ->count();
 
             if ($usersCount == 0) {

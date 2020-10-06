@@ -250,9 +250,10 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.suppliers', SupplierSelectComposer::class);
         view()->composer([
             'includes.selects.stocks',
-            'leads.estimate'
+            'leads.tabs.estimate'
         ], StocksComposer::class);
-        view()->composer('leads.form', PaymentsTypesComposer::class);
+        
+        view()->composer('leads.tabs.payments', PaymentsTypesComposer::class);
 
         // Conflict: то, что осталось в нижней части
         // view()->composer(['includes.selects.manufacturers', 'includes.lists.manufacturers'], ManufacturersComposer::class);
@@ -361,8 +362,8 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('products.articles.goods.prices.catalogs_items', CatalogsGoodsItemsSelectComposer::class);
         view()->composer('products.articles.goods.prices.filials', FilialsForCatalogsGoodsComposer::class);
 
-        view()->composer('leads.catalogs.catalogs_goods', CatalogGoodsWithPricesComposer::class);
-        view()->composer('leads.catalogs.catalogs_services', CatalogServicesWithPricesComposer::class);
+        view()->composer('leads.tabs.catalogs_goods', CatalogGoodsWithPricesComposer::class);
+        view()->composer('leads.tabs.catalogs_services', CatalogServicesWithPricesComposer::class);
 
         view()->composer('includes.selects.articles_groups', ArticlesGroupsComposer::class);
         view()->composer('includes.selects.processes_groups', ProcessesGroupsComposer::class);

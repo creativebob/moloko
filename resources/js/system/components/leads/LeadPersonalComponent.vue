@@ -8,6 +8,7 @@
                         <phone-component
                             :phone="phone"
                             :required="true"
+                            :disabled="isDisabled"
                             @input="changePhone"
                             ref="phone"
                         ></phone-component>
@@ -19,53 +20,22 @@
                         <string-component
                             :value="name"
                             :required="true"
+                            :disabled="isDisabled"
                             v-model="name"
-                            @change="change = true"
+                            @change="change"
                             ref="name"
                         ></string-component>
-                        <input
-                            type="hidden"
-                            name="user_id"
-                            :value="userId"
-                        >
-                        <input
-                            type="hidden"
-                            name="client_id"
-                            :value="clientId"
-                        >
-                        <!--                        <input type="hidden" name="lead_id" value="{{$lead->id }}" id="lead_id" data-lead-id="{{$lead->id }}" class="wrap-lead-name">-->
                     </label>
                 </div>
                 <div id="port-autofind" class="small-12 cell">
-                    <!--                    <div-->
-                    <!--                        v-if="searchResults.length"-->
-                    <!--                        class="wrap-autofind"-->
-                    <!--                    >-->
-
-                    <!--                        <legend>Найдены клиенты:</legend>-->
-                    <!--                        <div class="grid-x">-->
-                    <!--                            <div class="small-12 medium-12 large-12 cell">-->
-                    <!--                                <table class="">-->
-                    <!--                                    <tr-->
-                    <!--                                        v-for="client in searchResults"-->
-                    <!--                                    >-->
-                    <!--                                        <td-->
-                    <!--                                            @click="updateLead(client)"-->
-                    <!--                                        >{{ client.clientable.name }}-->
-                    <!--                                        </td>-->
-                    <!--                                    </tr>-->
-                    <!--                                </table>-->
-                    <!--                            </div>-->
-                    <!--                        </div>-->
-
-                    <!--                    </div>-->
                 </div>
 
                 <div class="large-shrink cell">
                     <search-city-component
                         :start-cities="cities"
                         :city="city"
-                        @change="changeCityId"
+                        :disabled="isDisabled"
+                        @change="change"
                         ref="cityId"
                     ></search-city-component>
                 </div>
@@ -74,8 +44,9 @@
                         <string-component
                             name="address"
                             :value="address"
+                            :disabled="isDisabled"
                             v-model="address"
-                            @change="change = true"
+                            @change="change"
                             ref="address"
                         ></string-component>
                     </label>
@@ -89,47 +60,29 @@
                     :organization="organization"
                     :legal-forms="legalForms"
                     :companies="companies"
+                    :disabled="isDisabled"
                     @change="updateOrganization"
+                    @input="change"
                     ref="organization"
                 ></organization-component>
-
-                <!--                <div class="small-12 cell wrap-lead-company">-->
-                <!--                    <label>Компания-->
-                <!--                        <string-component-->
-                <!--                            name="company_name"-->
-                <!--                            :value="lead.company_name"-->
-                <!--                            v-model="companyName"-->
-                <!--                            @change="change = true"-->
-                <!--                            ref="companyName"-->
-                <!--                        ></string-component>-->
-                <!--                    </label>-->
-                <!--                </div>-->
 
                 <div class="small-12 cell wrap-lead-email">
                     <label>E-mail
                         <string-component
                             name="email"
                             :value="email"
+                            :disabled="isDisabled"
                             v-model="email"
-                            @change="change = true"
+                            @change="change"
                             ref="email"
                         ></string-component>
-                        <!--                        @include('includes.inputs.email', ['value'=>$lead->email, 'name'=>'email'])-->
+
                     </label>
                 </div>
 
             </div>
         </div>
 
-<!--        <div-->
-<!--            v-if="change"-->
-<!--            class="cell small-12"-->
-<!--        >-->
-<!--            <a-->
-<!--                @click="update"-->
-<!--                class="button"-->
-<!--            >Сохранить</a>-->
-<!--        </div>-->
     </div>
 </template>
 
@@ -151,13 +104,12 @@
         },
         data() {
             return {
-                change: false,
-
                 user: this.lead.user,
                 phone: this.lead.main_phones.length ? this.lead.main_phones[0] : {
                     id: null,
                     phone: null
                 },
+                mainPhone: this.lead.main_phones.length ? this.lead.main_phones[0].phone : null,
                 name: this.lead.name,
 
                 organization: this.lead.organization,
@@ -170,43 +122,61 @@
                 client: this.lead.client,
             }
         },
-        mounted() {
-            this.$store.commit('SET_CLIENT', this.client);
+        created: function () {
+            this.lead.main_phone = this.lead.main_phones.length ? this.lead.main_phones[0].phone : null;
+
+            this.$store.commit('SET_LEAD', this.lead);
+            this.$store.commit('SET_CLIENT', this.lead.client);
+            this.$store.commit('SET_ESTIMATE', this.lead.estimate);
+            this.$store.commit('SET_GOODS_ITEMS', this.lead.estimate.goods_items);
+            this.$store.commit('SET_SERVICES_ITEMS', this.lead.estimate.services_items);
+
+            // this.$store.commit('SET_LEAD', this.lead);
+            // this.$store.commit('SET_CLIENT', this.client);
+            // this.$store.commit('SET_ESTIMATE', this.lead.estimate);
         },
         computed: {
-            userId() {
-                if (this.user) {
-                    return this.user.id;
-                } else {
-                    return null;
-                }
-            },
-            clientId() {
-                if (this.client) {
-                    return this.client.id;
-                } else {
-                    return null;
-                }
-            },
+            isDisabled() {
+                return this.$store.state.lead.estimate.is_registered == 1;
+            }
         },
         methods: {
+            change() {
+                const data = {
+                    main_phone: this.mainPhone,
+                    name: this.name,
+                    company_name: this.companyName,
+                    location: {
+                        city_id: this.cityId,
+                        address: this.address,
+                    },
+                    email: this.email,
+
+                    user_id: this.user ? this.user.id : null,
+                    organization_id: this.organization ? this.organization.id : null,
+                    client_id: this.client ? this.client.id : null,
+                };
+
+                this.$store.commit('UPDATE_LEAD', data)
+            },
             changePhone(value) {
                 if (value.length == 17) {
                     let number = value.replace(/\D+/g, "");
                     let found = this.users.find(user => user.main_phones[0].phone == number);
                     this.updateUser(found);
+                } else {
+                    this.user = null;
+                    this.updateOrganization(this.organization);
                 }
-            },
-            changeCityId(value) {
-                // this.change = true;
-                this.cityId = value;
+                this.mainPhone = value;
+
+                this.change();
             },
             updateUser(user) {
                 if (user) {
                     this.user = user;
 
                     this.phone = user.main_phones[0];
-
                     this.name = user.name;
                     this.$refs.name.update(this.name);
 
@@ -259,18 +229,15 @@
                     this.client = null;
                 }
 
+                this.change();
                 this.$store.commit('SET_CLIENT', this.client);
             },
             updateOrganization(organization) {
-                if (organization) {
+                if (organization.id) {
                     this.organization = organization;
                     this.companyName = organization.name;
 
-                    if (organization.client) {
-                        this.client = organization.client;
-                    } else {
-                        this.client = null;
-                    }
+                    this.client = organization.client ? organization.client : null;
 
                     this.email = organization.email;
                     this.$refs.email.update(this.email);
@@ -284,7 +251,7 @@
                     if (!this.phone.phone && !this.name) {
 
                         if (organization.representatives.length) {
-                            let user = organization.representatives[0];
+                            const user = organization.representatives[0];
 
                             this.user = user;
 
@@ -298,7 +265,6 @@
 
                 } else {
                     this.organization = null;
-                    this.companyName = null;
                     this.client = null;
 
                     if (this.user) {
@@ -311,37 +277,17 @@
                         this.email = this.user.email;
                         this.$refs.email.update(this.email);
 
-                        if (this.user.client) {
-                            this.client = this.user.client;
-                        }
+                        // if (this.user.client) {
+                        //     this.client = this.user.client;
+                        // }
                     }
+
+                    this.companyName = organization.name;
                 }
 
+                this.change();
                 this.$store.commit('SET_CLIENT', this.client);
             },
-
-            // update() {
-            //     this.change = false;
-            //
-            //     let clientId = this.client.id ? this.client.id : null;
-            //     axios
-            //         .patch('/admin/leads/axios_update/' + this.lead.id, {
-            //             name: this.name,
-            //             organization_id: this.organizationId,
-            //             company_name: this.companyName,
-            //             email: this.email,
-            //             city_id: this.cityId,
-            //             address: this.address,
-            //             main_phone: this.number,
-            //             client_id: clientId,
-            //         })
-            //         .then(response => {
-            //             // console.log(response);
-            //         })
-            //         .catch(error => {
-            //             console.log(error)
-            //         });
-            // },
         }
     }
 </script>

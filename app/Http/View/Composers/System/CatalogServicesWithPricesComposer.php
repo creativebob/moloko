@@ -39,7 +39,10 @@ class CatalogServicesWithPricesComposer
                                 'id',
                                 'process_id',
                             ]);
-                    }
+                    },
+                    'currency',
+                    'discounts_actual',
+                    'catalogs_item.discounts_actual'
                 ])
                     ->whereHas('service', function ($q) {
                         $q->where('archive', false)

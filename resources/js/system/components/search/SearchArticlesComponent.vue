@@ -1,26 +1,26 @@
 <template>
 
-        <div id="search">
-                <input
-                        class="search-field"
-                        type="search"
-                        id="field-search"
-                        name="search"
-                        placeholder="Поиск"
-                        v-model="text"
-                        @input="dedounceSearch"
-                />
-            <div id="search-result-wrap" v-if=search>
+    <div id="search">
+        <input
+            class="search-field"
+            type="search"
+            id="field-search"
+            name="search"
+            placeholder="Поиск"
+            v-model="text"
+            @input="dedounceSearch"
+        />
+        <div id="search-result-wrap" v-if=search>
 
-                <ul class="search-result-list">
+            <ul class="search-result-list">
 
-                    <li v-for="(item, index) in results">
-                        <a :href="'/admin/' + this.entity + '/' + item.id + '/edit'">{{ item.article.name }}</a>
-                    </li>
+                <li v-for="(item, index) in results">
+                    <a :href="'/admin/' + this.entity + '/' + item.id + '/edit'">{{ item.article.name }}</a>
+                </li>
 
-                </ul>
-            </div>
+            </ul>
         </div>
+    </div>
 
 </template>
 
@@ -52,32 +52,27 @@
                 }
                 return result;
             },
-            dedounceSearch: function() {
+            dedounceSearch: function () {
                 let delay = 300;
                 return _.debounce(this.check, delay);
             }
         },
         methods: {
-            check () {
-                    // console.log('Ищем введеные данные в наших городах (подгруженных), затем от результата меняем состояние на поиск или ошибку');
-                    if (this.text.length >= 2) {
-                        axios.get('/admin/' + this.alias + '/search/' + this.text)
-                            .then(response => {
-                                this.results = response.data
-                                this.search = (this.results.length > 0)
-                                this.error = (this.results.length == 0)
-                            })
-                            .catch(error => {
-                                    console.log(error)
-                            });
-
-
-
-                    } else {
-                        this.reset();
-                    }
-
-
+            check() {
+                // console.log('Ищем введеные данные в наших городах (подгруженных), затем от результата меняем состояние на поиск или ошибку');
+                if (this.text.length >= 2) {
+                    axios.get('/admin/' + this.alias + '/search/' + this.text)
+                        .then(response => {
+                            this.results = response.data
+                            this.search = (this.results.length > 0)
+                            this.error = (this.results.length == 0)
+                        })
+                        .catch(error => {
+                            console.log(error)
+                        });
+                } else {
+                    this.reset();
+                }
             },
 
             clear() {

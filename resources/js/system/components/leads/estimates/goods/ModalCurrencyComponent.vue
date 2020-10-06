@@ -21,7 +21,7 @@
                         <label>Закупочная цена единицы, руб
                             <digit-component
                                 name="cost"
-                                :value="item.cost"
+                                :value="item.cost_unit"
                                 :disabled="true"
                             ></digit-component>
                         </label>
@@ -44,7 +44,7 @@
                                     <label>Наценка, %
                                         <digit-component
                                             name="margin_percent"
-                                            :value="markupPercent"
+                                            :value="item.margin_percent_unit"
                                             :disabled="true"
                                         ></digit-component>
                                     </label>
@@ -53,7 +53,7 @@
                                     <label>Наценка, руб
                                         <digit-component
                                             name="margin_currency"
-                                            :value="markupCurrency"
+                                            :value="item.margin_currency_unit"
                                             :disabled="true"
                                         ></digit-component>
                                     </label>
@@ -95,26 +95,39 @@
                     </div>
 
 
-                    <div class="small-12 medium-6 cell">
+                    <div class="cell small-12 medium-3">
                         <label>Количество
-                            <!--                                <input-->
-                            <!--                                    type="number"-->
-                            <!--                                    name="count"-->
-                            <!--                                    v-model="count"-->
-                            <!--                                >-->
-                            <digit-component
-                                name="count"
-                                :value="itemCount"
-                                @input="changeCount"
-                                :decimal-place="0"
-                                :disabled="isRegistered"
+                            <span
+                                v-if="isRegistered || item.goods.serial === 1"
+                            >{{ item.count | decimalPlaces | decimalLevel }}</span>
+                            <count-component
+                                v-else
+                                :count="item.count"
+                                @update="changeCount"
                                 ref="countComponent"
-                            ></digit-component>
+                            ></count-component>
                         </label>
                     </div>
 
-                    <div class="small-12 medium-6 cell">
-                        Итоговая стоимость по позиции: {{ total | decimalPlaces | decimalLevel }} руб.
+                    <div class="cell small-12 medium-9">
+                        <table>
+                            <tbody>
+                            <tr>
+                                <td>Общая скидка</td>
+                                <td>{{ totalDiscount | decimalPlaces | decimalLevel }}</td>
+                            </tr>
+                            <tr>
+                                <td>Общая маржа</td>
+                                <td>{{ totalMargin | decimalPlaces | decimalLevel }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    Итоговая стоимость по позиции: {{ total | decimalPlaces | decimalLevel }} руб.
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
                     </div>
 
                 </div>
@@ -133,88 +146,65 @@
         >
             <div class="small-6 medium-4 cell">
                 <button
-                    @click="updateItem"
+                    @click="update"
                     class="button modal-button"
                 >Сохранить
                 </button>
             </div>
         </div>
-        <div data-close class="icon-close-modal sprite close-modal add-item"></div>
+        <div
+            @click="reset"
+            data-close
+            class="icon-close-modal sprite close-modal add-item"
+        ></div>
     </div>
 </template>
 
 <script>
     export default {
         components: {
-            'digit-component': require('../../../inputs/DigitComponent')
+            'digit-component': require('../../../inputs/DigitComponent'),
+            'count-component': require('../../../inputs/CountWithButtonsComponent'),
         },
         props: {
             item: Object,
-            isRegistered: Boolean,
         },
         data() {
             return {
-                markupPercent: 0,
-                markupCurrency: 0,
                 discountPercent: this.item.discount_percent,
-                discountCurrency: this.item.discount_currency,
+                discountCurrency: this.item.discount_currency / this.item.count,
+                count: this.item.count,
             }
         },
         mounted() {
             Foundation.reInit($('#modal-estimates_goods_item-' + this.item.id));
-
-            this.markupCurrency = Number(this.item.price - this.item.cost);
-            this.markupPercent = this.markupCurrency / (this.item.cost / 100);
         },
         computed: {
-            estimate() {
-                return this.$store.state.lead.estimate;
+            isRegistered() {
+                return this.$store.state.lead.estimate.is_registered == 1;
+            },
+            totalDiscount() {
+                return this.discountCurrency * this.count;
+            },
+            totalMargin() {
+                return (this.item.price - this.discountCurrency - this.item.cost_unit) * this.count;
             },
             total() {
-                return (this.item.price - this.discountCurrency) * this.itemCount;
+                return (this.item.price - this.discountCurrency) * this.count;
             },
-            showComment() {
-                if (this.item.comment != null) {
-                    return this.item.comment.length > 0;
-                } else {
-                    return false;
-                }
+        },
+        watch: {
+            count(val) {
+                this.count = val;
             },
-            itemCount() {
-                return parseFloat(this.item.count);
-            }
+            // discountPercent(val) {
+            //     this.discountPercent = val;
+            // },
+            // discountCurrency(val) {
+            //     this.discountCurrency = val / this.count;
+            // },
         },
         methods: {
-            changeCount(value) {
-                this.item.count = value;
-            },
-            checkChangeCount() {
-                if (this.item.product.serial === 0) {
-                    if (!this.isRegistered) {
-                        this.canChangeCount = !this.canChangeCount
-                    }
-                }
-            },
-            async updateItem() {
-                try {
-                    var insert = {};
-                    insert.count = this.itemCount;
-                    insert.client_discount_percent = this.$store.getters.clientDiscountPercent;
-
-                    if (this.item.discount_percent != this.discountPercent || this.item.discount_currency != this.discountCurrency) {
-                        insert.manual_discount_currency = this.discountCurrency;
-                        insert.manual_discount_percent = this.discountPercent;
-                    }
-
-                    const {data} = await axios
-                        .patch('/admin/estimates_goods_items/' + this.item.id, insert);
-                    $('#modal-estimates_goods_item-' + this.item.id).foundation('close');
-                    this.$store.commit('UPDATE_GOODS_ITEM', data);
-                    this.$emit('update-count', parseFloat(data.count));
-                } catch (error) {
-                    console.log(error)
-                }
-            },
             changeDiscountPercent(value) {
                 let percent = this.item.price / 100;
                 this.discountPercent = value;
@@ -227,15 +217,31 @@
                 this.discountPercent = value / percent;
                 this.$refs.discountPercentComponent.update(this.discountPercent);
             },
-            reset() {
-                this.discountPercent = 0;
-                this.$refs.discountPercentComponent.update(this.discountPercent);
-                this.discountCurrency = 0;
-                this.$refs.discountCurrencyComponent.update(this.discountCurrency);
+            changeCount(value) {
+                this.count = value;
             },
-            update(value) {
-                this.item.count = value;
-                this.$refs.countComponent.update(value);
+            update() {
+                this.item.count = this.count;
+
+                if (this.item.discount_percent != this.discountPercent || this.item.discount_currency != this.discountCurrency) {
+                    this.item.manual_discount_currency = this.discountCurrency;
+                    this.item.manual_discount_percent = this.discountPercent;
+                }
+
+                $('#modal-estimates_goods_item-' + this.item.id).foundation('close');
+                this.$emit('update', this.item);
+            },
+            reset() {
+                if (!this.isRegistered) {
+                    this.discountPercent = this.item.discount_percent;
+                    this.$refs.discountPercentComponent.update(this.discountPercent);
+
+                    this.discountCurrency = this.item.discount_currency;
+                    this.$refs.discountCurrencyComponent.update(this.discountCurrency);
+
+                    this.count = this.item.count;
+                    this.$refs.countComponent.update(this.count);
+                }
             },
         },
         directives: {
@@ -265,6 +271,5 @@
                 return Math.floor(value);
             },
         },
-
     }
 </script>

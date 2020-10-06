@@ -53,6 +53,7 @@
                                     <digit-component
                                         name="price"
                                         :value="{{ $priceGoods->price }}"
+                                        :required="true"
                                     ></digit-component>
                                     {{--                                    {!! Form::number('percent', null, ['disabled' => $disabled]) !!}--}}
                                 </label>
@@ -60,7 +61,12 @@
 
                             <div class="cell small-12 medium-4">
                                 <label>Внут. валюта
-                                    {!! Form::number('points', $priceGoods->points, ['required']) !!}
+                                    <digit-component
+                                        name="points"
+                                        :value="{{ $priceGoods->points }}"
+                                        :decimal-place="0"
+                                    ></digit-component>
+{{--                                    {!! Form::number('points', $priceGoods->points, ['required']) !!}--}}
                                 </label>
                             </div>
 

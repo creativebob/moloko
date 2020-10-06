@@ -1,13 +1,10 @@
 <template>
-
-        <input
-                v-if="isShow"
-                type="submit"
-                value="Продать"
-                class="button"
-                @click="saleEstimate"
-                :disabled="!isDisabled"
-        >
+    <a
+        class="button"
+        :disabled="isDisabled"
+        v-if="isShow"
+        @click="saleEstimate"
+    >Продать</a>
 
 </template>
 
@@ -27,11 +24,8 @@
             }
         },
         methods: {
-
             saleEstimate() {
-                if (this.isShow) {
-                        $('form').attr('action', '/admin/estimates/' + this.estimate.id + '/saling');
-                }
+                this.$store.dispatch('SALE_ESTIMATE');
             },
         }
     }
