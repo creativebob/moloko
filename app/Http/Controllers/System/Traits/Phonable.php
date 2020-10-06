@@ -13,12 +13,13 @@ trait Phonable
      * Запись основного и дополнительных номеров телефонов
      *
      * @param $item
+     * @param $number
      */
-    public function savePhones($item)
+    public function savePhones($item, $number = null)
     {
         $request = request();
         // Телефон
-        if (isset($request->main_phone)) {
+        if (isset($request->main_phone) || $number) {
 
             // Если пришли дополнительные номера
             if (isset($request->extra_phones)) {
@@ -69,11 +70,19 @@ trait Phonable
                 }
             }
 
-            // Если у записи нет телефона
+            $cleanNumber = null;
+            if (isset($request->main_phone)) {
+                $cleanNumber = cleanPhone($request->main_phone);
+            }
+            if ($number) {
+                $cleanNumber = cleanPhone($number);
+            }
+
+            // Если у записи есть телефон
             if (isset($item->main_phone->phone)) {
 
                 // Если пришедший номер не равен существующему
-                if ($item->main_phone->phone != cleanPhone($request->main_phone)) {
+                if ($item->main_phone->phone != $cleanNumber) {
                     // dd($request->main_phone);
 
                     // Отправляем старый номер в архив
@@ -82,9 +91,9 @@ trait Phonable
 
                     // Пишем или ищем новый и создаем связь
                     $phone = Phone::firstOrCreate([
-                        'phone' => cleanPhone($request->main_phone)
+                        'phone' => $cleanNumber
                     ], [
-                        'crop' => substr(cleanPhone($request->main_phone), -4),
+                        'crop' => substr($cleanNumber, -4),
                     ]);
                     // dd($phone);
                     $item->phones()->attach($phone->id, ['main' => 1]);
@@ -92,9 +101,9 @@ trait Phonable
             } else {
                 // Если номера нет, пишем или ищем новый и создаем связь
                 $phone = Phone::firstOrCreate([
-                    'phone' => cleanPhone($request->main_phone)
+                    'phone' => $cleanNumber
                 ], [
-                    'crop' => substr(cleanPhone($request->main_phone), -4),
+                    'crop' => substr($cleanNumber, -4),
                 ]);
                 $item->phones()->attach($phone->id, ['main' => 1]);
             }

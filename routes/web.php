@@ -702,7 +702,7 @@ Route::get('/leads/{id}/print', 'LeadController@print');
 Route::post('/leads', 'LeadController@resetFilter')
     ->name('leads.resetFilter');
 
-Route::any('/leads/axios_update/{id}', 'LeadController@axiosUpdate');
+Route::patch('/leads/axios_update/{id}', 'LeadController@axiosUpdate');
 
 // Основные методы
 Route::resource('/leads', 'LeadController')
@@ -740,10 +740,8 @@ Route::post('/leads/autofind/{phone}', 'LeadController@ajax_autofind_phone');
 
 // Регистрация
 Route::patch('/estimates/{id}/registering', 'EstimateController@registering');
-
 // Производство
 Route::patch('/estimates/{id}/produce', 'EstimateController@produce');
-
 // Продажа
 Route::patch('/estimates/{id}/saling', 'EstimateController@saling');
 

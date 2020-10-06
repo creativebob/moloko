@@ -3,12 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Client;
+use App\Company;
+use App\ContractsClient;
 use App\Estimate;
+use App\EstimatesGoodsItem;
+use App\Http\Controllers\System\Traits\Leadable;
 use App\Http\Controllers\System\Traits\Locationable;
 use App\Http\Controllers\System\Traits\Phonable;
 use App\Http\Controllers\System\Traits\Timestampable;
 use App\Http\Controllers\System\Traits\Userable;
 use App\Http\Controllers\Traits\Offable;
+use App\Http\Controllers\Traits\Photable;
 use App\Representative;
 use App\User;
 use App\Lead;
@@ -41,8 +46,10 @@ class LeadController extends Controller
         $this->entityDependence = true;
     }
 
+    use Leadable;
     use Userable;
     use Offable;
+    use Photable;
     use Phonable;
     use Locationable;
     use Timestampable;
@@ -190,10 +197,10 @@ class LeadController extends Controller
         // Создаем смету для лида
         $estimate = Estimate::make([
             'filial_id' => $lead->filial_id,
-            'discount_percent' => 0,
             'is_main' => true,
             'number' => $lead->id,
-            'date' => today()->format('d.m.Y')
+            'date' => today()->format('d.m.Y'),
+            'currency_id' => 1,
         ]);
 
         $result = $lead->estimate()->save($estimate);
@@ -226,7 +233,7 @@ class LeadController extends Controller
                 $q->with([
                     'goods_items' => function ($q) {
                         $q->with([
-                            'product.article',
+                            'goods.article',
                             'reserve',
                             'stock:id,name',
                             'price_goods',
@@ -405,15 +412,41 @@ class LeadController extends Controller
         }
     }
 
-    public function update(LeadRequest $request, $id)
+    public function update(Request $request, $id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
-        // ГЛАВНЫЙ ЗАПРОС:
         $lead = Lead::with([
-            'location',
-            'company'
+            'location.city',
+            'user.client',
+            'organization.client',
+            'client',
+            'main_phones',
+            'estimate' => function ($q) {
+                $q->with([
+                    'goods_items' => function ($q) {
+                        $q->with([
+                            'product.article',
+                            'reserve',
+                            'stock:id,name',
+                            'price_goods',
+                            'currency'
+                        ]);
+                    },
+                    'services_items' => function ($q) {
+                        $q->with([
+                            'product.process',
+                        ]);
+                    },
+                    'payments' => function ($q) {
+                        $q->with([
+                            'type',
+                            'currency'
+                        ]);
+                    },
+                ]);
+            },
         ])
             ->companiesLimit($answer)
             ->filials($answer)
@@ -421,26 +454,287 @@ class LeadController extends Controller
             ->moderatorLimit($answer)
             ->find($id);
 
-        if (empty($lead)) {
-            abort(403, __('errors.not_found'));
-        }
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $lead);
 
-        $data = $request->input();
+        $newLead = $request->lead;
 
-        $location = $this->getLocation();
-        $data['location_id'] = $location->id;
+        $dataLead = [
+            'name' => $newLead['name'],
+            'company_name' => $newLead['company_name'],
+            'email' => $newLead['email'],
+            'user_id' => $newLead['user_id'],
+            'organization_id' => $newLead['organization_id'],
+            'client_id' => $newLead['client_id'],
+        ];
 
-        if (empty($request->user_id)) {
-            $user = $this->storeUser();
-            $data['user_id'] = $user->id;
+        $location = $this->getLocation(1, $newLead['location']['city_id'], $newLead['location']['address']);
+        $dataLead['location_id'] = $location->id;
+
+        // Проверка пользователя
+        if (empty($dataLead['user_id'])) {
+            $user = User::whereHas('main_phones', function ($q) use ($newLead) {
+                $q->where('phone', cleanPhone($newLead['main_phone']));
+            })
+                ->where('company_id', $lead->company_id)
+                ->where('site_id', '!=', 1)
+                ->first();
+
+            
+            if ($user) {
+                $dataLead['user_id'] = $user->id;
+            } else {
+                $dataUser = [
+                    'name' => $newLead['name'],
+                    'email' => $newLead['email'],
+                    'location_id' => $dataLead['location_id']
+                ];
+
+                $user = User::create($dataUser);
+
+                $this->savePhones($user, $newLead['main_phone']);
+                logs('users')->info("Создан пользователь. Id: [{$user->id}]");
+
+                $dataLead['user_id'] = $user->id;
+            }
         }
 
-        $lead->update($data);
+        // Проверка организации
+        if (empty($dataLead['organization_id']) && isset($dataLead['company_name'])) {
+            $dataCompany = [
+                'name' => $newLead['company_name'],
+                'email' => $newLead['email'],
+                'location_id' => $dataLead['location_id']
+            ];
 
-        $this->savePhones($lead);
+            $company = Company::create($dataCompany);
+
+            $this->savePhones($company, $newLead['main_phone']);
+            logs('companies')->info("Создана компания. Id: [{$company->id}]");
+
+            $dataLead['organization_id'] = $company->id;
+        }
+
+//        return $dataLead;
+
+        $res = $lead->update($dataLead);
+        $this->savePhones($lead, $newLead['main_phone']);
+        
+        // Обновляем пункты сметы
+        $goodsItems = $lead->estimate->goods_items;
+        $newGoodsItems = $request->goods_items;
+
+        $newGoodsItemsIds = [];
+        $sort = 1;
+
+        foreach ($newGoodsItems as $newGoodsItem) {
+
+            $data = [
+                'estimate_id' => $newGoodsItem['estimate_id'],
+                'price_id' => $newGoodsItem['price_id'],
+
+                'goods_id' => $newGoodsItem['goods_id'],
+                'currency_id' => $newGoodsItem['currency_id'],
+                'sale_mode' => $newGoodsItem['sale_mode'],
+
+                'comment' => $newGoodsItem['comment'],
+
+                'cost_unit' => $newGoodsItem['cost_unit'],
+                'price' => $newGoodsItem['price'],
+                'points' => $newGoodsItem['points'],
+                'count' => $newGoodsItem['count'],
+
+                'cost' => $newGoodsItem['cost'],
+                'amount' => $newGoodsItem['amount'],
+
+                'price_discount_id' => $newGoodsItem['price_discount_id'],
+                'price_discount_unit' => $newGoodsItem['price_discount_unit'],
+                'price_discount' => $newGoodsItem['price_discount'],
+                'total_price_discount' => $newGoodsItem['total_price_discount'],
+
+                'catalogs_item_discount_id' => $newGoodsItem['catalogs_item_discount_id'],
+                'catalogs_item_discount_unit' => $newGoodsItem['catalogs_item_discount_unit'],
+                'catalogs_item_discount' => $newGoodsItem['catalogs_item_discount'],
+                'total_catalogs_item_discount' => $newGoodsItem['total_catalogs_item_discount'],
+
+                'estimate_discount_id' => $newGoodsItem['estimate_discount_id'],
+                'estimate_discount_unit' => $newGoodsItem['estimate_discount_unit'],
+                'estimate_discount' => $newGoodsItem['estimate_discount'],
+                'total_estimate_discount' => $newGoodsItem['total_estimate_discount'],
+
+                'client_discount_percent' => $newGoodsItem['client_discount_percent'],
+                'client_discount_unit_currency' => $newGoodsItem['client_discount_unit_currency'],
+                'client_discount_currency' => $newGoodsItem['client_discount_currency'],
+                'total_client_discount' => $newGoodsItem['total_client_discount'],
+
+                'total' => $newGoodsItem['total'],
+                'total_points' => $newGoodsItem['total_points'],
+                'total_bonuses' => $newGoodsItem['total_bonuses'],
+
+                'computed_discount_percent' => $newGoodsItem['computed_discount_percent'],
+                'computed_discount_currency' => $newGoodsItem['computed_discount_currency'],
+                'total_computed_discount' => $newGoodsItem['total_computed_discount'],
+
+                'manual_discount_percent' => $newGoodsItem['manual_discount_percent'],
+                'manual_discount_currency' => $newGoodsItem['manual_discount_currency'],
+                'total_manual_discount' => $newGoodsItem['total_manual_discount'],
+
+                'discount_currency' => $newGoodsItem['discount_currency'],
+                'discount_percent' => $newGoodsItem['discount_percent'],
+
+                'margin_currency_unit' => $newGoodsItem['margin_currency_unit'],
+                'margin_percent_unit' => $newGoodsItem['margin_percent_unit'],
+                'margin_currency' => $newGoodsItem['margin_currency'],
+                'margin_percent' => $newGoodsItem['margin_percent'],
+
+                'sort' => $sort,
+            ];
+
+            if (isset($newGoodsItem['company_id'])) {
+                $goodsItem = $goodsItems->firstWhere('id', $newGoodsItem['id']);
+                $goodsItem->update($data);
+            } else {
+                $goodsItem = EstimatesGoodsItem::create($data);
+            }
+
+            $newGoodsItemsIds[] = $goodsItem['id'];
+            $sort++;
+        }
+
+        $oldGoodsItemsIds = $lead->estimate->goods_items->pluck('id')->toArray();
+
+        $deleteIds = array_diff($oldGoodsItemsIds, $newGoodsItemsIds);
+        $res = EstimatesGoodsItem::destroy($deleteIds);
+
+        // Аггрегация сметы
+        $estimate = $lead->estimate;
+
+        $estimate->load([
+            'goods_items',
+            'services_items',
+        ]);
+
+        $cost = 0;
+        $amount = 0;
+        $points = 0;
+
+        $priceDiscount = 0;
+        $catalogsItemDiscount = 0;
+        $estimateDiscount = 0;
+        $clientDiscount = 0;
+        $manualDiscount = 0;
+
+        $total = 0;
+        $totalPoints = 0;
+        $totalBonuses = 0;
+
+        if ($estimate->goods_items->isNotEmpty()) {
+            $cost += $estimate->goods_items->sum('cost');
+            $amount += $estimate->goods_items->sum('amount');
+            $points += $estimate->goods_items->sum('points');
+
+            $priceDiscount += $estimate->goods_items->sum('price_discount');
+            $catalogsItemDiscount += $estimate->goods_items->sum('catalogs_item_discount');
+            $estimateDiscount += $estimate->goods_items->sum('estimate_discount');
+            $clientDiscount += $estimate->goods_items->sum('client_discount_currency');
+            $manualDiscount += $estimate->goods_items->sum('manual_discount_currency');
+
+            $total += $estimate->goods_items->sum('total');
+            $totalPoints += $estimate->goods_items->sum('total_points');
+            $totalBonuses += $estimate->goods_items->sum('total_bonuses');
+        }
+
+//        if ($estimate->services_items->isNotEmpty()) {
+//            $cost += $estimate->services_items->sum('cost');
+//            $amount += $estimate->services_items->sum('amount');
+//            $total += $estimate->services_items->sum('total');
+//        }
+        
+        // Скидки
+        $discountCurrency = 0;
+        $discountPercent = 0;
+        if ($total > 0) {
+            $discountCurrency = $amount - $total;
+            $discountPercent = $discountCurrency * 100 / $amount;
+        }
+
+        // Маржа
+        $marginCurrency = $total - $cost;
+        if ($total > 0) {
+            $marginPercent = ($marginCurrency / $total * 100);
+        } else {
+            $marginPercent = $marginCurrency * 100;
+        }
+
+        $data = [
+            'cost' => $cost,
+            'amount' => $amount,
+            'points' => $points,
+
+            'price_discount' => $priceDiscount,
+            'catalogs_item_discount' => $catalogsItemDiscount,
+            'estimate_discount' => $estimateDiscount,
+            'client_discount' => $clientDiscount,
+            'manual_discount' => $manualDiscount,
+
+            'discount_currency' => $discountCurrency,
+            'discount_percent' => $discountPercent,
+
+            'total' => $total,
+            'total_points' => $totalPoints,
+            'total_bonuses' => $totalBonuses,
+
+            'margin_currency' => $marginCurrency,
+            'margin_percent' => $marginPercent,
+        ];
+
+        $estimate->update($data);
+
+        // Регистрация сметы
+        if ($request->has('is_registered')) {
+
+            if (empty($lead->client_id)) {
+                if (isset($lead->organization_id)) {
+                    $client = Client::firstOrCreate([
+                        'clientable_id' => $lead->organization_id,
+                        'clientable_type' => 'App\Company',
+                    ]);
+
+                } else {
+                    $client = Client::firstOrCreate([
+                        'clientable_id' => $lead->user_id,
+                        'clientable_type' => 'App\User',
+                    ]);
+
+                }
+
+                $clientId = $client->id;
+                $lead->update([
+                    'client_id' => $clientId
+                ]);
+            } else {
+                $clientId = $lead->client_id;
+            }
+
+            $lead->estimate->update([
+                'client_id' => $clientId,
+            ]);
+
+            $contracts_client = ContractsClient::create([
+                'client_id' => $clientId,
+                'amount' => $estimate->total,
+            ]);
+
+            $estimate->update([
+                'client_id' => $clientId,
+                'is_registered' => true,
+                'registered_date' => today(),
+            ]);
+        } else {
+            $lead->estimate->update([
+                'client_id' => $lead->client_id
+            ]);
+        }
 
         // Проверка на создание представителя
         if ($lead->organization_id) {
@@ -460,79 +754,481 @@ class LeadController extends Controller
         }
 
 
-//        $lead->estimate->update([
-//           'stock_id' => $request->stock_id
-//        ]);
+        $lead->load([
+            'location.city',
+            'user.client',
+            'organization.client',
+            'client',
+            'main_phones',
+            'extra_phones',
+            'medium',
+            'campaign',
+            'source',
+            'site',
+            'claims',
+            'estimate' => function ($q) {
+                $q->with([
+                    'goods_items' => function ($q) {
+                        $q->with([
+                            'goods.article',
+                            'reserve',
+                            'stock:id,name',
+                            'price_goods',
+                            'currency'
+                        ]);
+                    },
+                    'services_items' => function ($q) {
+                        $q->with([
+                            'product.process',
+                        ]);
+                    },
+                    'payments' => function ($q) {
+                        $q->with([
+                            'type',
+                            'currency'
+                        ]);
+                    },
+                    'lead.client.contract',
+                    'discounts'
+                ]);
+            },
+            'client.contract',
+            'lead_method',
+            'choice' => function ($query) {
+                $query->orderBy('created_at', 'asc');
+            },
+            'notes' => function ($query) {
+                $query->orderBy('created_at', 'desc');
+            },
+            'challenges' => function ($query) {
+                $query->with('challenge_type')
+                    ->whereNull('status')
+                    ->orderBy('deadline_date', 'asc');
+            }
+        ]);
 
-        if ($request->has('previous_url')) {
-            return redirect($request->previous_url);
-        }
+        $estimate = $lead->estimate;
+        $goodsItems = $estimate->goods_items;
 
-        return redirect()->route('leads.index');
+        return response()->json([
+            'lead' => $lead,
+            'estimate' => $estimate,
+            'goods_items' => $goodsItems,
+        ]);
     }
-
+    
     /**
      * Временный метод обновления лида
      *
      * @param Request $request
      * @param $id
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function axiosUpdate(Request $request, $id)
     {
         // TODO - 21.09.20 - Временный метод для axios обновления лида, уйдет с рефактором контроллера лидов
-        $lead = Lead::find($id);
-
-        $data = $request->input();
-        $location = $this->getLocation();
-        $data['location_id'] = $location->id;
-        $res = $lead->update($data);
-
-        if ($request->has('main_phone')) {
-            if (cleanPhone($request->main_phone) != $lead->main_phone) {
-                $this->savePhones($lead);
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
+    
+        $lead = Lead::with([
+            'location.city',
+            'user.client',
+            'organization.client',
+            'client',
+            'main_phones',
+            'estimate' => function ($q) {
+                $q->with([
+                    'goods_items' => function ($q) {
+                        $q->with([
+                            'product.article',
+                            'reserve',
+                            'stock:id,name',
+                            'price_goods',
+                            'currency'
+                        ]);
+                    },
+                    'services_items' => function ($q) {
+                        $q->with([
+                            'product.process',
+                        ]);
+                    },
+                    'payments' => function ($q) {
+                        $q->with([
+                            'type',
+                            'currency'
+                        ]);
+                    },
+                ]);
+            },
+        ])
+            ->companiesLimit($answer)
+            ->filials($answer)
+            ->systemItem($answer)
+            ->moderatorLimit($answer)
+            ->find($id);
+    
+        // Подключение политики
+        $this->authorize(getmethod('update'), $lead);
+    
+        $newLead = $request->lead;
+    
+        $dataLead = [
+            'name' => $newLead['name'],
+            'company_name' => $newLead['company_name'],
+            'email' => $newLead['email'],
+            'user_id' => $newLead['user_id'],
+            'organization_id' => $newLead['organization_id'],
+            'client_id' => $newLead['client_id'],
+        ];
+    
+        $location = $this->getLocation(1, $newLead['location']['city_id'], $newLead['location']['address']);
+        $dataLead['location_id'] = $location->id;
+    
+        // Проверка пользователя
+        if (empty($dataLead['user_id'])) {
+            $user = User::whereHas('main_phones', function ($q) use ($newLead) {
+                $q->where('phone', cleanPhone($newLead['main_phone']));
+            })
+                ->where('company_id', $lead->company_id)
+                ->where('site_id', '!=', 1)
+                ->first();
+        
+        
+            if ($user) {
+                $dataLead['user_id'] = $user->id;
+            } else {
+                $dataUser = [
+                    'name' => $newLead['name'],
+                    'email' => $newLead['email'],
+                    'location_id' => $dataLead['location_id']
+                ];
+            
+                $user = User::create($dataUser);
+            
+                $this->savePhones($user, $newLead['main_phone']);
+                logs('users')->info("Создан пользователь. Id: [{$user->id}]");
+            
+                $dataLead['user_id'] = $user->id;
             }
         }
+    
+        // Проверка организации
+        if (empty($dataLead['organization_id']) && isset($dataLead['company_name'])) {
+            $dataCompany = [
+                'name' => $newLead['company_name'],
+                'email' => $newLead['email'],
+                'location_id' => $dataLead['location_id']
+            ];
+        
+            $company = Company::create($dataCompany);
+        
+            $this->savePhones($company, $newLead['main_phone']);
+            logs('companies')->info("Создана компания. Id: [{$company->id}]");
+        
+            $dataLead['organization_id'] = $company->id;
+        }
 
-        if (($lead->name || $lead->company_name) && $lead->main_phone) {
+//        return $dataLead;
+    
+        $res = $lead->update($dataLead);
+        $this->savePhones($lead, $newLead['main_phone']);
+    
+        // Обновляем пункты сметы
+        $goodsItems = $lead->estimate->goods_items;
+        $newGoodsItems = $request->goods_items;
+    
+        $newGoodsItemsIds = [];
+        $sort = 1;
+    
+        foreach ($newGoodsItems as $newGoodsItem) {
+        
+            $data = [
+                'estimate_id' => $newGoodsItem['estimate_id'],
+                'price_id' => $newGoodsItem['price_id'],
+            
+                'goods_id' => $newGoodsItem['goods_id'],
+                'currency_id' => $newGoodsItem['currency_id'],
+                'sale_mode' => $newGoodsItem['sale_mode'],
+            
+                'comment' => $newGoodsItem['comment'],
+            
+                'cost_unit' => $newGoodsItem['cost_unit'],
+                'price' => $newGoodsItem['price'],
+                'points' => $newGoodsItem['points'],
+                'count' => $newGoodsItem['count'],
+            
+                'cost' => $newGoodsItem['cost'],
+                'amount' => $newGoodsItem['amount'],
+            
+                'price_discount_id' => $newGoodsItem['price_discount_id'],
+                'price_discount_unit' => $newGoodsItem['price_discount_unit'],
+                'price_discount' => $newGoodsItem['price_discount'],
+                'total_price_discount' => $newGoodsItem['total_price_discount'],
+            
+                'catalogs_item_discount_id' => $newGoodsItem['catalogs_item_discount_id'],
+                'catalogs_item_discount_unit' => $newGoodsItem['catalogs_item_discount_unit'],
+                'catalogs_item_discount' => $newGoodsItem['catalogs_item_discount'],
+                'total_catalogs_item_discount' => $newGoodsItem['total_catalogs_item_discount'],
+            
+                'estimate_discount_id' => $newGoodsItem['estimate_discount_id'],
+                'estimate_discount_unit' => $newGoodsItem['estimate_discount_unit'],
+                'estimate_discount' => $newGoodsItem['estimate_discount'],
+                'total_estimate_discount' => $newGoodsItem['total_estimate_discount'],
+            
+                'client_discount_percent' => $newGoodsItem['client_discount_percent'],
+                'client_discount_unit_currency' => $newGoodsItem['client_discount_unit_currency'],
+                'client_discount_currency' => $newGoodsItem['client_discount_currency'],
+                'total_client_discount' => $newGoodsItem['total_client_discount'],
+            
+                'total' => $newGoodsItem['total'],
+                'total_points' => $newGoodsItem['total_points'],
+                'total_bonuses' => $newGoodsItem['total_bonuses'],
+            
+                'computed_discount_percent' => $newGoodsItem['computed_discount_percent'],
+                'computed_discount_currency' => $newGoodsItem['computed_discount_currency'],
+                'total_computed_discount' => $newGoodsItem['total_computed_discount'],
+            
+                'manual_discount_percent' => $newGoodsItem['manual_discount_percent'],
+                'manual_discount_currency' => $newGoodsItem['manual_discount_currency'],
+                'total_manual_discount' => $newGoodsItem['total_manual_discount'],
+            
+                'discount_currency' => $newGoodsItem['discount_currency'],
+                'discount_percent' => $newGoodsItem['discount_percent'],
+            
+                'margin_currency_unit' => $newGoodsItem['margin_currency_unit'],
+                'margin_percent_unit' => $newGoodsItem['margin_percent_unit'],
+                'margin_currency' => $newGoodsItem['margin_currency'],
+                'margin_percent' => $newGoodsItem['margin_percent'],
+            
+                'sort' => $sort,
+            ];
+        
+            if (isset($newGoodsItem['company_id'])) {
+                $goodsItem = $goodsItems->firstWhere('id', $newGoodsItem['id']);
+                $goodsItem->update($data);
+            } else {
+                $goodsItem = EstimatesGoodsItem::create($data);
+            }
+        
+            $newGoodsItemsIds[] = $goodsItem['id'];
+            $sort++;
+        }
+    
+        $oldGoodsItemsIds = $lead->estimate->goods_items->pluck('id')->toArray();
+    
+        $deleteIds = array_diff($oldGoodsItemsIds, $newGoodsItemsIds);
+        $res = EstimatesGoodsItem::destroy($deleteIds);
+    
+        // Аггрегация сметы
+        $estimate = $lead->estimate;
+    
+        $estimate->load([
+            'goods_items',
+            'services_items',
+        ]);
+    
+        $cost = 0;
+        $amount = 0;
+        $points = 0;
+    
+        $priceDiscount = 0;
+        $catalogsItemDiscount = 0;
+        $estimateDiscount = 0;
+        $clientDiscount = 0;
+        $manualDiscount = 0;
+    
+        $total = 0;
+        $totalPoints = 0;
+        $totalBonuses = 0;
+    
+        if ($estimate->goods_items->isNotEmpty()) {
+            $cost += $estimate->goods_items->sum('cost');
+            $amount += $estimate->goods_items->sum('amount');
+            $points += $estimate->goods_items->sum('points');
+        
+            $priceDiscount += $estimate->goods_items->sum('price_discount');
+            $catalogsItemDiscount += $estimate->goods_items->sum('catalogs_item_discount');
+            $estimateDiscount += $estimate->goods_items->sum('estimate_discount');
+            $clientDiscount += $estimate->goods_items->sum('client_discount_currency');
+            $manualDiscount += $estimate->goods_items->sum('manual_discount_currency');
+        
+            $total += $estimate->goods_items->sum('total');
+            $totalPoints += $estimate->goods_items->sum('total_points');
+            $totalBonuses += $estimate->goods_items->sum('total_bonuses');
+        }
 
-            if (!$lead->user_id) {
-                $user = $this->checkUserByPhone($this->entityAlias);
-                if ($user) {
-                    logs('users')->info("По номеру телефона найден пользователь с id: [{$user->id}]");
-                    $userId = $user->id;
+//        if ($estimate->services_items->isNotEmpty()) {
+//            $cost += $estimate->services_items->sum('cost');
+//            $amount += $estimate->services_items->sum('amount');
+//            $total += $estimate->services_items->sum('total');
+//        }
+    
+        // Скидки
+        $discountCurrency = 0;
+        $discountPercent = 0;
+        if ($total > 0) {
+            $discountCurrency = $amount - $total;
+            $discountPercent = $discountCurrency * 100 / $amount;
+        }
+    
+        // Маржа
+        $marginCurrency = $total - $cost;
+        if ($total > 0) {
+            $marginPercent = ($marginCurrency / $total * 100);
+        } else {
+            $marginPercent = $marginCurrency * 100;
+        }
+    
+        $data = [
+            'cost' => $cost,
+            'amount' => $amount,
+            'points' => $points,
+        
+            'price_discount' => $priceDiscount,
+            'catalogs_item_discount' => $catalogsItemDiscount,
+            'estimate_discount' => $estimateDiscount,
+            'client_discount' => $clientDiscount,
+            'manual_discount' => $manualDiscount,
+        
+            'discount_currency' => $discountCurrency,
+            'discount_percent' => $discountPercent,
+        
+            'total' => $total,
+            'total_points' => $totalPoints,
+            'total_bonuses' => $totalBonuses,
+        
+            'margin_currency' => $marginCurrency,
+            'margin_percent' => $marginPercent,
+        ];
+    
+        $estimate->update($data);
+    
+        // Регистрация сметы
+        if ($request->has('is_registered')) {
+        
+            if (empty($lead->client_id)) {
+                if (isset($lead->organization_id)) {
+                    $client = Client::firstOrCreate([
+                        'clientable_id' => $lead->organization_id,
+                        'clientable_type' => 'App\Company',
+                    ]);
+                
                 } else {
-                    $user = $this->storeUser();
-                    logs('users')->info("Создан пользователь с id: [{$user->id}]");
-                    $userId = $user->id;
+                    $client = Client::firstOrCreate([
+                        'clientable_id' => $lead->user_id,
+                        'clientable_type' => 'App\User',
+                    ]);
+                
                 }
-
+            
+                $clientId = $client->id;
                 $lead->update([
-                    'user_id' => $userId,
-                    'draft' => null
+                    'client_id' => $clientId
+                ]);
+            } else {
+                $clientId = $lead->client_id;
+            }
+        
+            $lead->estimate->update([
+                'client_id' => $clientId,
+            ]);
+        
+            $contracts_client = ContractsClient::create([
+                'client_id' => $clientId,
+                'amount' => $estimate->total,
+            ]);
+        
+            $estimate->update([
+                'client_id' => $clientId,
+                'is_registered' => true,
+                'registered_date' => today(),
+            ]);
+        } else {
+            $lead->estimate->update([
+                'client_id' => $lead->client_id
+            ]);
+        }
+    
+        // Проверка на создание представителя
+        if ($lead->organization_id) {
+            $representative = Representative::where([
+                'user_id' => $lead->user_id,
+                'organization_id' => $lead->organization_id,
+                'company_id' => $lead->company_id,
+            ])
+                ->first();
+        
+            if (empty($representative)) {
+                Representative::create([
+                    'user_id' => $lead->user_id,
+                    'organization_id' => $lead->organization_id,
                 ]);
             }
         }
-
-        if ($request->has('client_id')) {
-            $client = Client::find($request->client_id);
-
-            if (empty($client)) {
-                return response()->json(false);
+    
+    
+        $lead->load([
+            'location.city',
+            'user.client',
+            'organization.client',
+            'client',
+            'main_phones',
+            'extra_phones',
+            'medium',
+            'campaign',
+            'source',
+            'site',
+            'claims',
+            'estimate' => function ($q) {
+                $q->with([
+                    'goods_items' => function ($q) {
+                        $q->with([
+                            'goods.article',
+                            'reserve',
+                            'stock:id,name',
+                            'price_goods',
+                            'currency'
+                        ]);
+                    },
+                    'services_items' => function ($q) {
+                        $q->with([
+                            'product.process',
+                        ]);
+                    },
+                    'payments' => function ($q) {
+                        $q->with([
+                            'type',
+                            'currency'
+                        ]);
+                    },
+                    'lead.client.contract',
+                    'discounts'
+                ]);
+            },
+            'client.contract',
+            'lead_method',
+            'choice' => function ($query) {
+                $query->orderBy('created_at', 'asc');
+            },
+            'notes' => function ($query) {
+                $query->orderBy('created_at', 'desc');
+            },
+            'challenges' => function ($query) {
+                $query->with('challenge_type')
+                    ->whereNull('status')
+                    ->orderBy('deadline_date', 'asc');
             }
-
-            if ($client->discount > 0) {
-                $lead->load('estimate.goods_items');
-
-                if ($lead->estimate->goods_items->isNotEmpty()) {
-
-                }
-
-            }
-
-        }
-
-        return response()->json($lead);
+        ]);
+    
+        $estimate = $lead->estimate;
+        $goodsItems = $estimate->goods_items;
+    
+        return response()->json([
+            'lead' => $lead,
+            'estimate' => $estimate,
+            'goods_items' => $goodsItems,
+        ]);
     }
 
     public function leads_calls(Request $request)

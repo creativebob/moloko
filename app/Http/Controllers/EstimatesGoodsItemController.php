@@ -129,7 +129,6 @@ class EstimatesGoodsItemController extends Controller
 
                 'client_discount_percent' => $request->client_discount_percent,
 
-
                 'manual_discount_currency' => 0,
             ]);
 

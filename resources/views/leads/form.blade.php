@@ -1,3 +1,7 @@
+{{--<lead-init-component--}}
+{{--    :lead="{{ $lead }}"--}}
+{{--></lead-init-component>--}}
+
 <div class="top-bar head-content">
     <div class="top-bar-left">
         <h2 class="header-content">ЛИД №:<input id="show-case-number" name="show_case_number" readonly
@@ -13,19 +17,18 @@
     <!-- Левый блок -->
     <div class="small-12 medium-5 large-7 cell">
 
-        @php
-            $disabled = $lead->estimate->is_registered == 1 ? true : false;
-        @endphp
-        {{--       Персональная информация--}}
-        @include('leads.personal', ['item' => $lead ?? auth()->user()])
+    {{--       Персональная информация--}}
+    @include('leads.personal', ['item' => $lead ?? auth()->user()])
 
 
-        <!-- ЗАКАЗ -->
+    <!-- ЗАКАЗ -->
         <div class="grid-x grid-padding-x">
             <div class="small-12 medium-12 large-12 cell margin-left-15 wrap-tabs-lead">
                 <ul class="tabs-list" data-tabs id="tabs-extra-leads">
-                    <li class="tabs-title is-active" id="tab-order"><a href="#content-panel-order" aria-selected="true">Состав
-                            заказа</a></li>
+
+                    <li class="tabs-title is-active">
+                        <a href="#tab-estimate" aria-selected="true">Состав заказа</a>
+                    </li>
 
                     @can ('index', App\Client::class)
                         <li class="tabs-title" id="tab-client"><a href="#content-panel-client" aria-selected="true">Карточка
@@ -41,16 +44,10 @@
                 {{-- Контент доп таба --}}
                 <div data-tabs-content="tabs-extra-leads">
 
-                    {{-- ЗАКАЗ --}}
-                    <div class="tabs-panel is-active" id="content-panel-order">
-
-                        <div class="grid-x grid-margin-x">
-                            <div class="small-12 medium-12 large-12 cell">
-                                @include('leads.estimate')
-                            </div>
-                        </div>
+                    {{-- Смета --}}
+                    <div class="tabs-panel is-active" id="tab-estimate">
+                        @include('leads.tabs.estimate')
                     </div>
-                    {{-- КОНЕЦ ЗАКАЗ --}}
 
 
                     {{-- КЛИЕНТ --}}
@@ -186,21 +183,17 @@
                         <a href="#content-panel-notes" aria-selected="true">События</a>
                     </li>
 
-                    @if(! $lead->estimate->is_registered)
-                        @can('create', App\Estimate::class)
-                            <li class="tabs-title">
-                                <a data-tabs-target="tab-catalog_goods" href="#tab-catalog_goods">Товары</a>
-                            </li>
-                        @endcan
-                    @endif
+                    @can('create', App\Estimate::class)
+                        <li class="tabs-title">
+                            <a data-tabs-target="tab-catalog_goods" href="#tab-catalog_goods">Товары</a>
+                        </li>
+                    @endcan
 
-                    @if(! $lead->estimate->is_registered)
-                        @can('create', App\Estimate::class)
-                            <li class="tabs-title">
-                                <a data-tabs-target="tab-catalog_services" href="#tab-catalog_services">Услуги</a>
-                            </li>
-                        @endcan
-                    @endif
+                    @can('create', App\Estimate::class)
+                        <li class="tabs-title">
+                            <a data-tabs-target="tab-catalog_services" href="#tab-catalog_services">Услуги</a>
+                        </li>
+                    @endcan
 
                     {{-- <li class="tabs-title"><a href="#content-panel-documents" aria-selected="true">Документы</a></li> --}}
 
@@ -209,11 +202,7 @@
                         <a data-tabs-target="content-panel-claims" href="#content-panel-claims">Рекламации</a>
                     </li>
                     @endcan --}}
-                    @if($lead->estimate->is_registered)
-                        <li class="tabs-title">
-                            <a href="#tab-payments" aria-selected="true">Оплата</a>
-                        </li>
-                    @endif
+                    <tab-payments-component></tab-payments-component>
 
                     {{-- <li class="tabs-title"><a href="#content-panel-measurements" aria-selected="true">Замеры</a></li> --}}
                     <li class="tabs-title" id="tab-attribution">
@@ -267,24 +256,14 @@
                     </div>
 
                     {{-- КАТАЛОГ ТОВАРОВ --}}
-                    @if(! $lead->estimate->is_registered)
-                        @can('index', App\CatalogsGoods::class)
-                            <div class="tabs-panel" id="tab-catalog_goods">
-                                @include('leads.catalogs.catalogs_goods')
-                            </div>
-                        @endcan
-                    @endif
-                    {{-- КОНЕЦ КАТАЛОГ ТОВАРОВ --}}
+                    <div class="tabs-panel" id="tab-catalog_goods">
+                        @include('leads.tabs.catalogs_goods')
+                    </div>
 
                     {{-- КАТАЛОГ УСЛУГ --}}
-                    @if(! $lead->estimate->is_registered)
-                        @can('index', App\CatalogsService::class)
-                            <div class="tabs-panel" id="tab-catalog_services">
-                                @include('leads.catalogs.catalogs_services')
-                            </div>
-                        @endcan
-                    @endif
-                    {{-- КОНЕЦ КАТАЛОГ УСЛУГ --}}
+                    <div class="tabs-panel" id="tab-catalog_services">
+                        @include('leads.tabs.catalogs_services')
+                    </div>
 
 
                     {{-- ДОКУМЕНТЫ
@@ -294,8 +273,6 @@
                             </div>
                         </div>
                     </div> --}}
-
-
 
                     {{-- РЕКЛАМАЦИИ --}}
                     <div class="tabs-panel" id="content-panel-claims">
@@ -351,21 +328,10 @@
                         </div>
                     </div> --}}
 
-                    {{-- ФАКТ ОПЛАТЫ --}}
-                    @if($lead->estimate->is_registered)
-                        <div class="tabs-panel" id="tab-payments">
-                            <payments-component
-                                :document='@json($lead->estimate)'
-                                :payments-types='@json($payments_types)'
-                                cur-date="{{ now() }}"
-
-                                @if(auth()->user()->company->currencies->isNotEmpty())
-                                :currencies='@json(auth()->user()->company->currencies)'
-                                @endif
-
-                            ></payments-component>
-                        </div>
-                    @endif
+                    {{-- ОПЛАТА --}}
+                    <div class="tabs-panel" id="tab-payments">
+                        @include('leads.tabs.payments')
+                    </div>
 
                     {{-- АТТРИБУЦИЯ --}}
                     <div class="tabs-panel" id="content-panel-attribution">
@@ -488,17 +454,15 @@
         </div>
 
     </div>
-{{-- КОНЕЦ ПРАВОГО БЛОКА --}}
+    {{-- КОНЕЦ ПРАВОГО БЛОКА --}}
 
-
-<!-- Кнопка сохранить -->
-    <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">
-        @can('update', $lead)
-            {{ Form::submit($submitButtonText, ['class'=>'button']) }}
-        @else
-            {{ Form::submit($submitButtonText, ['class'=>'button', $disabled_leadbot]) }}
-        @endcan
-    </div>
+    {{--    <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">--}}
+    {{--        @can('update', $lead)--}}
+    {{--            {{ Form::submit($submitButtonText, ['class'=>'button']) }}--}}
+    {{--        @else--}}
+    {{--            {{ Form::submit($submitButtonText, ['class'=>'button', $disabled_leadbot]) }}--}}
+    {{--        @endcan--}}
+    {{--    </div>--}}
 </div>
 
 {{-- Подключаем ПОИСК обращений и заказов по номеру телефона --}}

@@ -37,9 +37,9 @@
             <div class="grid-x grid-padding-x">
 
                 <div class="small-12 cell view-settings-panel">
-                    <div class="one-icon-16 icon-view-list icon-button active" id="toggler-view-list"></div>
-                    <div class="one-icon-16 icon-view-block icon-button" id="toggler-view-block"></div>
-                    <div class="one-icon-16 icon-view-card icon-button" id="toggler-view-card"></div>
+<!--                    <div class="one-icon-16 icon-view-list icon-button active" id="toggler-view-list"></div>-->
+<!--                    <div class="one-icon-16 icon-view-block icon-button" id="toggler-view-block"></div>-->
+<!--                    <div class="one-icon-16 icon-view-card icon-button" id="toggler-view-card"></div>-->
                     <div class="one-icon-16 icon-view-setting icon-button" id="open-setting-view" data-open="modal-catalogs-goods"></div>
                 </div>
 
@@ -53,7 +53,7 @@
                                 v-for="price in listPrices"
                         >
                             <a
-                                    @click="addPriceToEstimate(price.id)"
+                                    @click="addPriceToEstimate(price)"
                             >
 
                                 <div class="media-object stack-for-small">
@@ -168,8 +168,8 @@
 
                 $('#modal-catalogs-goods').foundation('close');
             },
-            addPriceToEstimate(id) {
-                this.$store.dispatch('ADD_GOODS_ITEM_TO_ESTIMATE', id);
+            addPriceToEstimate(price) {
+                this.$store.commit('ADD_GOODS_ITEM_TO_ESTIMATE', price);
             }
         },
         directives: {

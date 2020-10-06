@@ -1,4 +1,4 @@
-import moduleLead from './modules/lead'
+import moduleLead from './modules/leads/leads'
 import modulePromotion from './modules/promotion'
 import moduleGoods from './modules/goods'
 

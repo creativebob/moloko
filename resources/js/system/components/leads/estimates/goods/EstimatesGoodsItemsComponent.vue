@@ -5,7 +5,7 @@
             <thead>
             <tr>
                 <th>Наименование</th>
-<!--                <th v-if="settings.length">Склад</th>-->
+                <!--                <th v-if="settings.length">Склад</th>-->
                 <th>Цена</th>
                 <th>Кол-во</th>
                 <!--                                        <th>Себестоимость</th>
@@ -14,53 +14,39 @@
                 <th class="td-discount">Скидка</th>
                 <th class="th-amount">Сумма</th>
                 <th class="th-delete"></th>
-                <th
-                    v-if="settings.length && isRegistered"
-                    class="th-action"
-                >
 
-                    <span
-                        v-if="isReserved"
-                        @click="unreserveEstimateItems"
-                        class="button-to-reserve"
-                        title="Снять все с резерва!"
-                    ></span>
-                    <span
-                        v-else
-                        @click="reserveEstimateItems"
-                        class="button-to-reserve"
-                        title="Зарезервировать все!"
-                    ></span>
+                <reserves-component
+                    :settings="settings"
+                ></reserves-component>
 
-                </th>
             </tr>
             </thead>
 
             <tbody>
-                <estimates-goods-item-component
-                    v-for="(item, index) in items"
-                    :item="item"
-                    :index="index"
-                    :key="item.id"
-                    :settings="settings"
-                    :stocks="stocks"
-                    @open-modal-remove="openModal(item, index)"
-                    @update="updateItem"
-                ></estimates-goods-item-component>
+            <estimates-goods-item-component
+                v-for="(item, index) in items"
+                :item="item"
+                :index="index"
+                :key="item.id"
+                :settings="settings"
+                :stocks="stocks"
+                @open-modal-remove="openModal(item, index)"
+                @update="updateItem"
+            ></estimates-goods-item-component>
             </tbody>
 
-<!--            <tfoot>-->
-<!--                <tr>-->
-<!--                    <td colspan="4" class="text-right">Итого:</td>-->
-<!--                    <td>{{ itemsAmount | roundToTwo | level }}</td>-->
-<!--                    <td colspan="1"></td>-->
-<!--                </tr>-->
-<!--                <tr>-->
-<!--                    <td colspan="4" class="text-right">Итого со скидкой ({{ discountPercent }}%):</td>-->
-<!--                    <td>{{ itemsTotal | roundToTwo | level }}</td>-->
-<!--                    <td colspan="1"></td>-->
-<!--                </tr>-->
-<!--            </tfoot>-->
+            <!--            <tfoot>-->
+            <!--                <tr>-->
+            <!--                    <td colspan="4" class="text-right">Итого:</td>-->
+            <!--                    <td>{{ itemsAmount | roundToTwo | level }}</td>-->
+            <!--                    <td colspan="1"></td>-->
+            <!--                </tr>-->
+            <!--                <tr>-->
+            <!--                    <td colspan="4" class="text-right">Итого со скидкой ({{ discountPercent }}%):</td>-->
+            <!--                    <td>{{ itemsTotal | roundToTwo | level }}</td>-->
+            <!--                    <td colspan="1"></td>-->
+            <!--                </tr>-->
+            <!--            </tfoot>-->
 
         </table>
 
@@ -87,7 +73,8 @@
                         data-close
                         class="button modal-button"
                         type="submit"
-                    >Удалить</button>
+                    >Удалить
+                    </button>
                 </div>
                 <div class="small-6 medium-4 cell">
                     <button data-close class="button modal-button" type="submit">Отменить</button>
@@ -101,7 +88,8 @@
 <script>
     export default {
         components: {
-            'estimates-goods-item-component': require('./EstimatesGoodsItemComponent.vue')
+            'estimates-goods-item-component': require('./EstimatesGoodsItemComponent'),
+            'reserves-component': require('./reserves/EstimateReservesComponent'),
         },
         props: {
             items: Array,
@@ -114,13 +102,11 @@
 
                 count: null,
                 cost: null,
-                discountPercent: Number(this.$store.state.lead.estimate.discount_percent),
+                // discountPercent: Number(this.$store.state.lead.estimate.discount_percent),
 
                 item: null,
                 itemName: null,
                 itemIndex: null,
-
-                isRegistered: this.$store.state.lead.estimate.is_registered === 1,
             }
         },
         mounted() {
@@ -130,114 +116,53 @@
             estimate() {
                 return this.$store.state.lead.estimate;
             },
+            isRegistered() {
+                return this.$store.state.lead.estimate.is_registered === 1;
+            },
             itemsAmount() {
                 let amount = 0;
-                if (this.items.length) {
-                    this.items.forEach(item => {
-                        return amount += parseFloat(item.amount)
-                    });
-                }
+                this.items.forEach(item => {
+                    return amount += parseFloat(item.amount)
+                });
                 return amount;
             },
             itemsDiscount() {
                 let discount = 0;
-                if (this.items.length) {
-                    this.items.forEach(item => {
-                        return discount += parseFloat(item.discount_currency)
-                    });
-                }
+                this.items.forEach(item => {
+                    return discount += parseFloat(item.discount_currency)
+                });
                 return discount;
             },
             itemsTotal() {
                 let total = 0;
-                if (this.items.length) {
-                    this.items.forEach(item => {
-                        return total += parseFloat(item.total)
-                    });
-                }
+                this.items.forEach(item => {
+                    return total += parseFloat(item.total)
+                });
                 return total;
             },
             itemsTotalPoints() {
                 let points = 0;
-                if (this.items.length) {
-                    this.items.forEach(item => {
-                        return points += parseFloat(item.points)
-                    });
-                }
+                this.items.forEach(item => {
+                    return points += parseFloat(item.points)
+                });
                 return points;
             },
-            showButtonReserved() {
-                return this.estimate.is_reserved === 0;
-            },
-            isReserved() {
-                let result = [];
-                result = this.$store.state.lead.goodsItems.filter(item => {
-                    if (item.reserve !== null) {
-                        if (item.reserve.count > 0) {
-                            return item;
-                        }
-                    }
-                });
-                return result.length > 0;
-            }
+
         },
         methods: {
             openModal(item, index) {
                 this.itemIndex = index;
                 this.item = item;
-                this.itemName = item.product.article.name;
+                this.itemName = item.goods.article.name;
             },
-            updateItem: function(item) {
+            updateItem: function (item) {
                 this.$store.commit('UPDATE_GOODS_ITEM', item);
             },
             deleteItem() {
-                this.$store.dispatch('REMOVE_GOODS_ITEM_FROM_ESTIMATE', this.item.id);
+                this.$store.commit('REMOVE_GOODS_ITEM', this.item.id);
                 $('#delete-estimates_goods_item').foundation('close');
             },
-            reserveEstimateItems() {
-                axios
-                    .post('/admin/estimates/' + this.estimate.id + '/reserving')
-                    .then(response => {
-                        console.log(response.data);
-                        if (response.data.msg.length > 0) {
-                            let msg = '';
-                            response.data.msg.forEach(item => {
-                                if (item !== null) {
-                                    msg = msg + '- ' + item + '\r\n';
-                                }
-                            });
-                            if (msg !== '') {
-                                alert(msg);
-                            }
-                        }
-                        this.$store.commit('UPDATE_GOODS_ITEMS', response.data.items);
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    });
-            },
-            unreserveEstimateItems() {
-                axios
-                    .post('/admin/estimates/' + this.estimate.id + '/unreserving')
-                    .then(response => {
-                        console.log(response.data);
-                        if (response.data.msg.length > 0) {
-                            let msg = '';
-                            response.data.msg.forEach(item => {
-                                if (item !== null) {
-                                    msg = msg + '- ' + item + '\r\n';
-                                }
-                            });
-                            if (msg !== '') {
-                                alert(msg);
-                            }
-                        }
-                        this.$store.commit('UPDATE_GOODS_ITEMS', response.data.items);
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    });
-            },
+
         },
         filters: {
             roundToTwo: function (value) {

@@ -5,12 +5,11 @@
                 type="text"
                 name="company_name"
                 v-model="name"
-                @input="input"
+                :disabled="disabled"
+                @input="input($event.target.value)"
                 maxlength="50"
                 autocomplete="off"
                 pattern="[А-Яа-яЁё0-9-_\s]{3,50}"
-                @focus="focus"
-                @blur="blur"
                 @keydown.enter.prevent="onEnter"
             >
 
@@ -22,14 +21,6 @@
             </div>
             <!--            <span class="form-error">Уж постарайтесь, введите город!</span>-->
         </label>
-
-        <input
-            type="hidden"
-            name="organization_id"
-            v-model="id"
-            maxlength="3"
-            pattern="[0-9]{3}"
-        >
 
         <table class="content-table-search table-over">
             <tbody>
@@ -54,12 +45,19 @@
             organization: Object,
             legalForms: Array,
             companies: Array,
+            disabled: {
+                type: Boolean,
+                default: false
+            },
         },
         data() {
             return {
-                curOrganization: this.organization ? this.organization : null,
-                id: this.organization ? this.organization.id : null,
+                curOrganization: this.organization ? this.organization : {
+                    id: null,
+                    name: null,
+                },
                 name: this.organization ? this.organization.name : null,
+
                 results: [],
                 search: false,
                 found: !!this.organization,
@@ -81,82 +79,70 @@
         },
         methods: {
             check() {
-                var $vm = this;
-                this.results = this.companies.filter(company => {
-                    // $vm.legalForms.forEach(legalForm => {
-                    //     $vm.name = $vm.name.toLowerCase().replace(legalForm.name.toLowerCase(), "")
-                    // });
-                    // console.log($vm.name);
-                    return company.name.toLowerCase().includes($vm.name.toLowerCase());
+                let nameLowerCase = this.name.toLowerCase();
+
+                // Ищем значение правовой формы в названии, введеном пользователем
+                this.legalForms.forEach(legalForm => {
+                    const legalFormNameLowerCase = legalForm.name.toLowerCase();
+                    if (nameLowerCase.includes(legalFormNameLowerCase)) {
+                        nameLowerCase = nameLowerCase.replace(legalFormNameLowerCase + ' ', '');
+                    }
                 });
-                this.search = (this.results.length > 0)
-                this.remove = (this.results.length == 0 || this.search)
-                // axios
-                //     .post('/api/v1/companies/search-by-name', {
-                //         name: this.name
-                //     })
-                //     .then(response => {
-                //         this.results = response.data;
-                //         this.search = (this.results.length > 0)
-                //         this.error = (this.results.length == 0)
-                //     })
-                //     .catch(error => {
-                //         console.log(error)
-                //     });
+
+                this.results = this.companies.filter(company => {
+                    const companyNameLowerCase = company.name.toLowerCase();
+                    return companyNameLowerCase.includes(nameLowerCase);
+                });
+
+                this.search = (this.results.length > 0);
+                this.remove = (this.results.length == 0 || this.search);
             },
             add(index) {
-                // console.log('Клик по пришедшим данным, добавляем в инпут');
                 this.curOrganization = this.results[index];
-                this.id = this.results[index].id;
                 this.name = this.results[index].name;
+
+                this.results = [];
+                this.search = false;
                 this.found = true;
                 this.remove = false;
-                this.search = false;
-                this.results = [];
 
                 this.change();
-            },
-            updateCityId(cityId) {
-                this.id = cityId;
-
-                let city = this.cities.find(city => city.id == cityId);
-                this.name = city.name;
-
-                this.found = true;
-                this.remove = false;
-                this.search = false;
-                this.results = [];
             },
             clear() {
                 if (this.remove) {
                     // console.log('Клик по иконке ошибки на инпуте, обнуляем');
-                    this.name = '';
-                    this.id = null;
+                    this.curOrganization = {
+                        id: null,
+                        name: null,
+                    };
+                    this.name = null;
+
+                    this.results = [];
                     this.found = false;
                     this.remove = false;
-                    this.results = [];
+
+                    this.$emit('input', this.name);
                 }
             },
-            input() {
+            input(value) {
                 // console.log('Изменение в инпуте, обнуляем все кроме имени, и если символов больше 2х начинаем поиск');
-                this.curOrganization = null;
-                this.id = null;
+                this.curOrganization = {
+                    id: null,
+                    name: value,
+                };
+
+                this.results = [];
+                this.search = false;
                 this.found = false;
                 this.remove = false;
-                this.search = false;
-                this.results = [];
+
+                this.$emit('input', value);
 
                 this.change();
 
                 if (this.name.length > 1) {
                     this.check();
                 }
-            },
-            focus() {
-                this.$emit('focus', this.name);
-            },
-            blur() {
-                this.$emit('blur', this.name);
             },
             onEnter() {
                 if (this.results.length == 1) {
@@ -169,11 +155,12 @@
             update(organization) {
                 if (organization) {
                     this.curOrganization = organization;
-                    this.id = organization.id;
                     this.name = organization.name;
                 } else {
-                    this.curOrganization = null;
-                    this.id = null;
+                    this.curOrganization = {
+                        id: null,
+                        name: null,
+                    };
                     this.name = null;
                 }
 

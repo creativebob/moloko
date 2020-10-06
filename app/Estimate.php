@@ -30,6 +30,7 @@ class Estimate extends Model
         'lead_id',
         'client_id',
 	    'filial_id',
+        'currency_id',
 
         'number',
         'date',
@@ -110,7 +111,8 @@ class Estimate extends Model
     // Товары
     public function goods_items()
     {
-        return $this->hasMany(EstimatesGoodsItem::class);
+        return $this->hasMany(EstimatesGoodsItem::class)
+            ->oldest('sort');
     }
 
     // Услуги
