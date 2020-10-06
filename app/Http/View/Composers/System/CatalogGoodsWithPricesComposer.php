@@ -43,7 +43,9 @@ class CatalogGoodsWithPricesComposer
                             'serial'
                         ]);
                     },
-                    'currency'
+                    'currency',
+                    'discounts_actual',
+                    'catalogs_item.discounts_actual'
                 ])
                 ->whereHas('goods', function ($q) use ($settings) {
                     $q
