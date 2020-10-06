@@ -11036,6 +11036,23 @@ tr:hover .button-to-reserve {
   opacity: 1;
 }
 
+.commentable .wrap-comment {
+  position: relative;
+  display: inline-block;
+}
+
+.commentable .wrap-comment .dropdown-comment {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  visibility: visible;
+  display: block;
+}
+
+.commentable .wrap-comment .dropdown-comment textarea {
+  resize: vertical;
+}
+
 .button-to-reserve:hover {
   opacity: 1 !important;
 }

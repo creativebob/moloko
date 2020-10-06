@@ -230,13 +230,36 @@ const moduleLead = {
 
                     case (2):
                         item.amount = 0;
-                        item.discount_currency = 0;
-                        item.discount_percent = 0;
-                        item.margin_currency = 0;
-                        item.margin_percent = 0;
+
+                        item.price_discount = 0;
+                        item.total_price_discount = 0;
+
+                        item.catalogs_item_discount = 0;
+                        item.total_catalogs_item_discount = 0;
+
+                        item.estimate_discount = 0;
+                        item.total_estimate_discount = 0;
+
+                        item.manual_discount_currency = 0;
+                        item.manual_discount_percent = 0;
+                        item.total_manual_discount = 0;
+
+                        item.client_discount_currency = 0;
+                        item.total_client_discount = 0;
+
+                        item.computed_discount_percent = 0;
+                        item.computed_discount_currency = 0;
+                        item.total_computed_discount = 0;
+
                         item.total = 0;
                         item.total_bonuses = 0;
                         item.total_points = item.points * count;
+
+                        item.discount_currency = 0;
+                        item.discount_percent = 0;
+
+                        item.margin_currency = 0;
+                        item.margin_percent = 0;
                         break;
                 }
 
@@ -347,6 +370,21 @@ const moduleLead = {
                         this.commit('SET_GOODS_ITEMS', response.data.goods_items);
 
                         state.change = false;
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+                    .finally(() => (state.loading = false));
+            },
+
+            // Продажа сметы
+            SALE_ESTIMATE({ state }) {
+                state.loading = true;
+                axios
+                    .patch('/admin/estimates/' + state.estimate.id + '/saling/')
+                    .then(response => {
+                        console.log(response.data);
+                        this.commit('SET_ESTIMATE', response.data);
                     })
                     .catch(error => {
                         console.log(error)
@@ -560,43 +598,20 @@ const moduleLead = {
             //     return discountCurrency;
             // },
             estimateTotal: state => {
-                let goodsTotal = 0,
-                    servicesTotal = 0;
+                let total = 0;
 
                 if (state.goodsItems.length) {
                     state.goodsItems.forEach(item => {
-                        return goodsTotal += parseFloat(item.total)
+                        return total += parseFloat(item.total)
                     });
                 }
 
                 if (state.servicesItems.length) {
                     state.servicesItems.forEach(item => {
-                        return servicesTotal += parseFloat(item.total)
+                        return total += parseFloat(item.total)
                     });
                 }
-
-                let total = goodsTotal + servicesTotal;
-
-                // let discount = null,
-                //     discountCurrency = 0;
-                // if (state.discounts && state.discounts.length) {
-                //     discount = state.estimate.discounts[0];
-                // }
-                // if (discount) {
-                //     switch (discount.mode) {
-                //         case (1):
-                //             let percent = total / 100;
-                //             discountCurrency = discount.percent * percent;
-                //             break;
-                //
-                //         case (2):
-                //             discountCurrency = discount.currency;
-                //             break;
-                //     }
-                // }
-                //
-                // let totalWithDiscount = total - parseFloat(discountCurrency);
-                return total.toFixed(2);
+                return parseFloat(total);
             },
 
             // Товары
@@ -615,7 +630,7 @@ const moduleLead = {
                 let amount = 0;
                 if (state.estimate.payments.length) {
                     state.estimate.payments.forEach(function (item) {
-                        return amount += Number(item.amount)
+                        return amount += parseFloat(item.amount)
                     });
                 }
                 return amount;

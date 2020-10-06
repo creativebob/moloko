@@ -454,7 +454,6 @@ class EstimateController extends Controller
     {
         // ГЛАВНЫЙ ЗАПРОС:
         $estimate = Estimate::with([
-            'lead',
             'client'
         ])
         ->find($id);
@@ -469,17 +468,9 @@ class EstimateController extends Controller
                 'saled_date' => today(),
             ]);
 
-            return redirect()
-                ->route('leads.edit', $estimate->lead_id)
-                ->with(['success' => 'Успешно продано']);
-
-        } else {
-            return back()
-                ->withErrors(['msg' => 'Смета продана'])
-                ->withInput();
         }
 
-//        return redirect()->route('leads.index');
+        return response()->json($estimate);
     }
 
     public function reserving(Request $request, $id)

@@ -102,6 +102,28 @@ tr:hover .button-to-reserve{
             opacity: 1;
         }
     }
+
+    .wrap-comment {
+        position: relative;
+        display: inline-block;
+
+        .dropdown-comment {
+            position: absolute;
+            top: 30px;
+            left: 0;
+            visibility: visible;
+            display: block;
+
+            //width: 100px;
+            //background-color: white;
+            //border: 1px solid black;
+
+            textarea {
+                resize: vertical;
+            }
+
+        }
+    }
 }
 
 // tr th .button-to-reserve{
@@ -162,7 +184,7 @@ tr:hover .button-to-reserve{
 }
 
 input.case_number_field[readonly]{
-    background-color: $body-bg-color;  
+    background-color: $body-bg-color;
 }
 
 .case_number_field:hover{

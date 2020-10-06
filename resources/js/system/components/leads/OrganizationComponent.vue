@@ -79,14 +79,21 @@
         },
         methods: {
             check() {
-                const $vm = this;
-                this.results = this.companies.filter(company => {
-                    // $vm.legalForms.forEach(legalForm => {
-                    //     $vm.name = $vm.name.toLowerCase().replace(legalForm.name.toLowerCase(), "")
-                    // });
-                    // console.log($vm.name);
-                    return company.name.toLowerCase().includes($vm.name.toLowerCase());
+                let nameLowerCase = this.name.toLowerCase();
+
+                // Ищем значение правовой формы в названии, введеном пользователем
+                this.legalForms.forEach(legalForm => {
+                    const legalFormNameLowerCase = legalForm.name.toLowerCase();
+                    if (nameLowerCase.includes(legalFormNameLowerCase)) {
+                        nameLowerCase = nameLowerCase.replace(legalFormNameLowerCase + ' ', '');
+                    }
                 });
+
+                this.results = this.companies.filter(company => {
+                    const companyNameLowerCase = company.name.toLowerCase();
+                    return companyNameLowerCase.includes(nameLowerCase);
+                });
+
                 this.search = (this.results.length > 0);
                 this.remove = (this.results.length == 0 || this.search);
             },

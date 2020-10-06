@@ -1,6 +1,6 @@
-<lead-init-component
-    :lead="{{ $lead }}"
-></lead-init-component>
+{{--<lead-init-component--}}
+{{--    :lead="{{ $lead }}"--}}
+{{--></lead-init-component>--}}
 
 <div class="top-bar head-content">
     <div class="top-bar-left">
@@ -468,9 +468,3 @@
 {{-- Подключаем ПОИСК обращений и заказов по номеру телефона --}}
 @include('leads.autofind-lead-script')
 @include('includes.scripts.product-to-estimate-script')
-<script>
-    import LeadInitComponent from "../../js/system/components/leads/LeadInitComponent";
-    export default {
-        components: {LeadInitComponent}
-    }
-</script>

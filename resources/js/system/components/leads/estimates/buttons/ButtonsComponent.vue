@@ -1,17 +1,13 @@
 <template>
     <div class="grid-x">
         <div
-            v-if="! isRegistered"
+            v-if="! isRegistered && change"
             class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top"
         >
             <a
-                v-if="change"
                 class="button"
                 @click="save"
             >Сохранить</a>
-            <span
-                v-else
-            >Сохранено</span>
         </div>
 
         <div
@@ -28,8 +24,15 @@
         <!--                <production-button-component></estimate-production-button-component>-->
         <!--            </div>-->
 
-        <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">
-            <sale-button-component></sale-button-component>
+        <div
+            v-if="showSaleButton"
+            class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top"
+        >
+            <button
+                class="button"
+                :disabled="disabledSaleButton"
+                @click.prevent="saleEstimate"
+            >Продать</button>
         </div>
 
         <div
@@ -84,6 +87,13 @@
                 return this.$store.state.lead.goodsItems.length > 0 || this.$store.state.lead.servicesItems.length > 0;
             },
 
+            showSaleButton() {
+                return this.estimate.is_registered === 1 && this.estimate.is_saled === 0;
+            },
+            disabledSaleButton() {
+                return this.$store.getters.paymentsAmount >= this.$store.getters.estimateTotal;
+            },
+
             change() {
                 return this.$store.state.lead.change;
             },
@@ -121,9 +131,13 @@
                     this.update(data);
                 }
             },
+            saleEstimate() {
+                this.$store.dispatch('SALE_ESTIMATE');
+            },
             update(data) {
                 this.$store.dispatch('UPDATE', data);
             },
+
             // update() {
             //     // Обновляем лида
             //     axios

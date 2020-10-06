@@ -739,10 +739,8 @@ Route::post('/leads/autofind/{phone}', 'LeadController@ajax_autofind_phone');
 
 // Регистрация
 Route::patch('/estimates/{id}/registering', 'EstimateController@registering');
-
 // Производство
 Route::patch('/estimates/{id}/produce', 'EstimateController@produce');
-
 // Продажа
 Route::patch('/estimates/{id}/saling', 'EstimateController@saling');
 

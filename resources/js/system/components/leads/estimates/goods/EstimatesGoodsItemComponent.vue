@@ -7,11 +7,24 @@
 
         <td class="td-name">
             {{ item.goods.article.name }}<span v-if="isArchive"> (Архивный)</span>
+            <template
+                v-if="isRegistered"
+            >
+                <span
+                    v-if="item.comment"
+                    class="icon-comment"
+                    data-tooltip
+                    tabindex="1"
+                    :title="item.comment"
+                ></span>
+            </template>
+
             <comment-component
-                :item="item"
+                v-else
+                :item="item.comment"
+                @update="changeComment"
             ></comment-component>
         </td>
-
 
         <!--        <td v-if="settings.length && stocks.length">-->
         <!--            <select-->
@@ -33,7 +46,7 @@
             <currency-component
                 :item="item"
                 :is-registered="isRegistered"
-                @update="updateItem"
+                @update="updatePrice"
             ></currency-component>
         </template>
         <template
@@ -42,7 +55,7 @@
             <points-component
                 :item="item"
                 :is-registered="isRegistered"
-                @update="updateItem"
+                @update="updatePrice"
             ></points-component>
         </template>
 
@@ -92,26 +105,9 @@
             v-if="settings.length && isRegistered"
             class="td-action"
         >
-            <div
-                :class="isReservedClass"
-            >
-                <span
-                    v-if="!isReserved"
-                    @click="reserveEstimateItem"
-                    class="button-to-reserve"
-                    title="Позицию в резерв!"
-                ></span>
-                <span
-                    v-else
-                    @click="unreserveEstimateItem"
-                    class="button-to-reserve unreserve"
-                    title="Снять с резерва!"
-                ></span>
-                <span
-                    v-if="reservedCount > 0"
-                    class="reserved-count"
-                >{{ reservedCount | roundToTwo | level }}</span>
-            </div>
+            <reserves-component
+                :item="item"
+            ></reserves-component>
         </td>
 
         <modal-component
@@ -130,7 +126,8 @@
             'points-component': require('./price/PointsComponent'),
             'count-component': require('../../../inputs/CountWithButtonsComponent'),
             'modal-component': require('./ModalCurrencyComponent'),
-            'digit-component': require('../../../inputs/DigitComponent')
+            'digit-component': require('../../../inputs/DigitComponent'),
+            'reserves-component': require('./reserves/ItemReservesComponent'),
         },
         props: {
             item: Object,
@@ -178,30 +175,7 @@
             isRegistered() {
                 return this.$store.state.lead.estimate.is_registered == 1;
             },
-            isReservedClass() {
-                if (this.item.reserve !== null) {
-                    if (this.item.reserve.count > 0) {
-                        return 'wrap-reserved-info active';
-                    }
-                }
-                return 'wrap-reserved-info';
-            },
-            isReserved() {
-                if (this.item.reserve !== null) {
-                    if (this.item.reserve.count > 0) {
-                        return true;
-                    }
-                }
-                return false;
-            },
-            reservedCount() {
-                if (this.item.reserve !== null) {
-                    if (this.item.reserve.count > 0) {
-                        return this.item.reserve.count;
-                    }
-                }
-                return 0;
-            },
+
             itemCount() {
                 return Math.floor(this.item.count);
             }
@@ -230,6 +204,11 @@
             // },
         },
         methods: {
+            changeComment(comment) {
+                // Оновление ккомментария
+                this.item.comment = comment;
+                this.$store.commit('UPDATE_GOODS_ITEM', this.item)
+            },
             changeCount(count) {
                 // Оновление количества из строки
                 this.item.count = count;
@@ -243,7 +222,8 @@
                 // Открытие модалки удаления
                 this.$emit('open-modal-remove', this.item);
             },
-            updateItem(item) {
+            updatePrice(item) {
+                // Обновление редима оплаты (валюта / поинты)
                 if (item.sale_mode == 2) {
                     this.$refs.modalCurrencyComponent.reset();
                 }
@@ -252,34 +232,9 @@
                     this.$store.dispatch('REMOVE_GOODS_ITEM_FROM_ESTIMATE', item.remove_from_page);
                     // this.$refs.countComponent.setCount(item.count);
                 }
-                this.$emit('update', item);
+                this.$store.commit('UPDATE_GOODS_ITEM', item)
             },
-            reserveEstimateItem() {
-                axios
-                    .post('/admin/estimates_goods_items/' + this.item.id + '/reserving')
-                    .then(response => {
-                        if (response.data.msg !== null) {
-                            alert(response.data.msg);
-                        }
-                        this.$emit('update', response.data.item);
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    });
-            },
-            unreserveEstimateItem() {
-                axios
-                    .post('/admin/estimates_goods_items/' + this.item.id + '/unreserving')
-                    .then(response => {
-                        if (response.data.msg !== null) {
-                            alert(response.data.msg);
-                        }
-                        this.$emit('update', response.data.item);
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    });
-            },
+
 
         },
         directives: {

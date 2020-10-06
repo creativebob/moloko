@@ -199,7 +199,8 @@ class LeadController extends Controller
             'filial_id' => $lead->filial_id,
             'is_main' => true,
             'number' => $lead->id,
-            'date' => today()->format('d.m.Y')
+            'date' => today()->format('d.m.Y'),
+            'currency_id' => 1,
         ]);
 
         $result = $lead->estimate()->save($estimate);

@@ -30,6 +30,7 @@ class Estimate extends Model
         'lead_id',
         'client_id',
 	    'filial_id',
+        'currency_id',
 
         'number',
         'date',
