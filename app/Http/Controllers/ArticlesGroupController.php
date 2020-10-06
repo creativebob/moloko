@@ -19,7 +19,7 @@ class ArticlesGroupController extends Controller
         $this->articles_group = $articles_group;
         $this->class = ArticlesGroup::class;
         $this->model = 'App\ArticlesGroup';
-        $this->entity_alias = with(new $this->class)->getTable();
+        $this->entity_alias = 'articles_groups';
         $this->entity_dependence = false;
     }
 
@@ -50,7 +50,7 @@ class ArticlesGroupController extends Controller
         // ->filter($request, 'author_id')
         // ->filter($request, 'company_id')
         ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
+        ->orderBy('name', 'asc')
         ->paginate(30);
 
 
@@ -60,6 +60,26 @@ class ArticlesGroupController extends Controller
             // 'filter' => $filter,
             'nested' => 'articles_count'
         ]);
+    }
+
+
+    /**
+     * Поиск
+     *
+     * @param $search
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function search($search)
+    {
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('index'));
+
+        $results = ArticlesGroup::companiesLimit($answer)
+            ->where('name', 'LIKE', '%' . $search . '%')
+            ->get();
+
+        return response()->json($results);
     }
 
     public function create()
@@ -119,7 +139,7 @@ class ArticlesGroupController extends Controller
     public function edit(Request $request, $id)
     {
 
-        $articles_group = ArticlesGroup::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
+        $articles_group = ArticlesGroup::with('articles.in_raws', 'articles.in_goods', 'articles.in_containers')->moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
         ->find($id);
 
         // Подключение политики

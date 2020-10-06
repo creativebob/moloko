@@ -15,8 +15,8 @@
 @endsection
 
 @section('title-content')
-{{-- Таблица --}}
-@include('includes.title-content', ['pageInfo' => $pageInfo, 'class' => App\ArticlesGroup::class, 'type' => 'table'])
+    {{-- Таблица --}}
+    @include('products.articles_groups.includes.title')
 @endsection
 
 @section('content')

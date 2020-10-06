@@ -86,6 +86,7 @@ Vue.component('search-clients-component', require('./components/search/SearchCli
 Vue.component('search-articles-component', require('./components/search/SearchArticlesComponent'));
 Vue.component('search-processes-component', require('./components/search/SearchProcessesComponent'));
 Vue.component('search-prices-goods-component', require('./components/search/SearchPricesGoodsComponent'));
+Vue.component('search-articles-groups-component', require('./components/search/SearchArticlesGroupsComponent'));
 
 Vue.component('search-client-component', require('./components/search/SearchClientComponent'));
 

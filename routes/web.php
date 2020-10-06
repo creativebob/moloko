@@ -995,6 +995,7 @@ Route::post('/clients/archive/{id}', 'ClientController@archive');
 
 // Поиск
 Route::any('/clients/search/{text}', 'ClientController@search');
+Route::any('/articles_groups/search/{text}', 'ArticlesGroupController@search');
 
 Route::post('/clients/search-user/{text}', 'ClientController@searchClientUser');
 Route::any('/clients/search-company/{text}', 'ClientController@searchClientCompany');

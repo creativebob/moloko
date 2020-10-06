@@ -23,6 +23,33 @@
                     @include('includes.selects.units', ['default' => isset($articles_group->unit_id) ? $articles_group->unit_id : 26, 'units_category_id' => isset($articles_group->unit_id) ? $articles_group->unit->category_id : 6])
                 </div>
 
+                <div class="small-12 cell">
+                    <fieldset>
+                        <legend>Список артикулов в группе:</legend>
+                        <ul>
+                            @foreach($articles_group->articles as $article)
+                            
+                                @if(!empty($article->in_goods))
+                                    @foreach($article->in_goods as $item)
+                                        <li>Товар: <a href="/admin/goods/{{ $item->id }}/edit">{{ $item->article->name }}</a></li>
+                                    @endforeach
+                                @endif
+                                @if(!empty($article->in_raws))
+                                    @foreach($article->in_raws as $item)
+                                        <li>Сырье: <a href="/admin/raws/{{ $item->id }}/edit">{{ $item->article->name }}</a></li>
+                                    @endforeach
+                                @endif
+                                @if(!empty($article->in_containers))
+                                    @foreach($article->in_containers as $item)
+                                        <li>Упаковка: <a href="/admin/containers/{{ $item->id }}/edit">{{ $item->article->name }}</a></li>
+                                    @endforeach
+                                @endif
+                            
+                            @endforeach
+                        </ul>
+                    </fieldset>
+                </div>
+
             </div>
 
         </div>

@@ -487,7 +487,7 @@ Menu::insert([
         'icon' => null,
         'alias' => 'admin/articles_groups',
         'tag' => 'articles_groups',
-        'parent_id' => $menus->where('tag', 'goods')->first()->id,
+        'parent_id' => $menus->where('tag', 'guides')->first()->id,
         'page_id' => $pages->where('alias', 'articles_groups')->first()->id,
         'navigation_id' => 1,
         'company_id' => null,

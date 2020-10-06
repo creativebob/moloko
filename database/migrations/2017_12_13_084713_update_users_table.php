@@ -36,7 +36,7 @@ class UpdateUsersTable extends Migration
             $table->integer('orgform_status')->nullable()->comment('Представляет компанию 1 или частное лицо 0')->after('photo_id');
             $table->string('inn', 12)->nullable()->comment('ИНН')->after('orgform_status');
 
-            $table->string('passport_number')->nullable()->unique()->comment('Номер паспорта')->after('user_inn');
+            $table->string('passport_number')->nullable()->unique()->comment('Номер паспорта')->after('inn');
             $table->date('passport_date')->nullable()->comment('Дата выдачи паспорта')->after('passport_number');
             $table->string('passport_released', 200)->nullable()->comment('Кем выдан паспорт')->after('passport_date');
             $table->string('passport_address', 250)->nullable()->comment('Адрес прописки')->after('passport_released');

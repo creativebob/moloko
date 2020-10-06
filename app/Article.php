@@ -177,6 +177,19 @@ class Article extends Model
         return $this->hasMany(Goods::class, 'article_id');
     }
 
+    // Сырье на базе этого артикула
+    public function in_raws()
+    {
+        return $this->hasMany(Raw::class, 'article_id');
+    }
+
+    // Упаковка на базе этого артикула
+    public function in_containers()
+    {
+        return $this->hasMany(Container::class, 'article_id');
+    }
+
+
     // Состав (набор)
     // public function set_compositions()
     // {
