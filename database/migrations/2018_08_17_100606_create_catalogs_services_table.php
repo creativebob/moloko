@@ -20,6 +20,8 @@ class CreateCatalogsServicesTable extends Migration
             $table->string('alias')->index()->nullable()->comment('Алиас');
             $table->string('slug')->index()->nullable()->comment('Слаг');
 
+            $table->boolean('is_access_page')->default(1)->comment('Страница товара');
+
             $table->text('description')->nullable()->comment('Описание каталога');
             $table->text('seo_description')->nullable()->comment('Описание для сайта для каталога');
 

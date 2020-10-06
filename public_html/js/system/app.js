@@ -97648,6 +97648,21 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "small-12 cell view-settings-panel" }, [
       _c("div", {
+        staticClass: "one-icon-16 icon-view-list icon-button active",
+        attrs: { id: "toggler-view-list" }
+      }),
+      _vm._v(" "),
+      _c("div", {
+        staticClass: "one-icon-16 icon-view-block icon-button",
+        attrs: { id: "toggler-view-block" }
+      }),
+      _vm._v(" "),
+      _c("div", {
+        staticClass: "one-icon-16 icon-view-card icon-button",
+        attrs: { id: "toggler-view-card" }
+      }),
+      _vm._v(" "),
+      _c("div", {
         staticClass: "one-icon-16 icon-view-setting icon-button",
         attrs: { id: "open-setting-view", "data-open": "modal-catalogs-goods" }
       })

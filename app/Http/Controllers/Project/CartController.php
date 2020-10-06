@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Project;
 
 use App\Campaign;
+use App\Client;
 use App\Discount;
 use App\Http\Controllers\Project\Traits\Commonable;
 use App\Http\Controllers\Traits\EstimateControllerTrait;
@@ -196,7 +197,6 @@ class CartController extends Controller
                 $cart = json_decode(Cookie::get('cart'), true);
             }
 
-
             // Работаем с ПОЛЬЗОВАТЕЛЕМ для лида ================================================================
 
             // Если пользователь АВТОРИЗОВАН
@@ -225,7 +225,7 @@ class CartController extends Controller
 
                     Log::info('Нашли телефон в общей базе');
 
-                    $result = $phone->user_owner->where('site_id', $site->id)->where('company_id', $site->company->id);
+                    $result = $phone->user_owner->where('site_id', $site->id)->where('company_id', $site->company_id);
 
                     if($result->first() !== null){
                         Log::info('Нашли телефон в связке с текущим сайтом');
@@ -313,6 +313,15 @@ class CartController extends Controller
                 };
             }
             // Конец работы с ПОЛЬЗОВАТЕЛЕМ для лида
+
+            // TODO - 06.10.2020 - Сначала ищем клиента компанию через представителя, если не нашли, то берем первую компанию у представителя, если нет компаний, т оищем как клиента физика
+
+            $client = Client::where([
+                'clientable_id' => $user->id,
+                'clientable_type' => 'App\User',
+                'company_id' => $site->company_id,
+            ])
+                ->first();
 
             // Создание ЛИДА ======================================================================
             $lead = new Lead;
@@ -682,6 +691,8 @@ class CartController extends Controller
             ");
 
             return redirect()->route('project.confirmation');
+        } else {
+            abort(403, 'Ну вы и Хакер!');
         }
     }
 
