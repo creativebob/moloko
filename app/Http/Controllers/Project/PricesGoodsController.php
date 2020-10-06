@@ -48,42 +48,20 @@ class PricesGoodsController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      *
-     * @param  string  $url
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function show($id)
     {
-
         $site = $this->site;
-
-        $page = $site->pages_public->where('alias', 'prices-goods')->first();
+        $page = $site->pages_public->firstWhere('alias', 'prices-goods');
 
         $price_goods = PricesGoods::with([
             'goods.article.raws',
-            'currency'
+            'currency',
+            'catalog'
         ])
             ->where([
                 'display' => true,
@@ -91,51 +69,21 @@ class PricesGoodsController extends Controller
             ])
             ->find($id);
 
-        if (empty($price_goods)) {
+        if (empty($price_goods) || $price_goods->catalog->is_access_page == 0) {
             abort(404, $site->alias);
         }
 
-        // dd($price_goods->goods->article->containers);
-
         $page->title = $price_goods->goods->article->name;
 
-        return view($site->alias.'.pages.prices_goods.index', compact('site',  'page', 'price_goods'));
+        return view("{$site->alias}.pages.prices_goods.index", compact('site',  'page', 'price_goods'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Поиск прайсов по имени, внешнему артикулу
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param $search
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
     public function search($search)
     {
 
@@ -181,7 +129,6 @@ class PricesGoodsController extends Controller
                     ]);
             })
             ->get();
-
 //        dd($items);
 
         return response()->json($items);

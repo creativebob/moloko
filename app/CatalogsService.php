@@ -49,6 +49,8 @@ class CatalogsService extends Model
         'alias',
         'slug',
 
+        'is_access_page',
+
         'description',
         'seo_description',
 

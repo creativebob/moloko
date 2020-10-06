@@ -46,6 +46,9 @@ class CatalogsGoods extends Model
         'alias',
         'slug',
 
+        'is_access_page',
+        'is_check_stock',
+
         'description',
         'seo_description',
 

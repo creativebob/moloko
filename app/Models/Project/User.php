@@ -464,9 +464,13 @@ class User extends Authenticatable
     }
 
     // Клиент
-    public function client()
+    public function client($site)
     {
-        return $this->morphOne('App\Client', 'clientable');
+        return $this->morphOne('App\Client', 'clientable')
+            ->where([
+                'archive' => false,
+                'company_id' => $site->company_id
+            ]);
     }
 
     // Бюджет

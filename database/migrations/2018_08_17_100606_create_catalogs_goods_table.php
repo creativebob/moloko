@@ -20,6 +20,9 @@ class CreateCatalogsGoodsTable extends Migration
             $table->string('alias')->index()->nullable()->comment('Алиас');
             $table->string('slug')->index()->nullable()->comment('Слаг');
 
+            $table->boolean('is_access_page')->default(1)->comment('Страница товара');
+            $table->boolean('is_check_stock')->default(0)->comment('Наличие на складе');
+
             $table->text('description')->nullable()->comment('Описание каталога');
             $table->text('seo_description')->nullable()->comment('Описание для сайта для каталога');
 
