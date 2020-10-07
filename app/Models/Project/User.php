@@ -463,16 +463,6 @@ class User extends Authenticatable
         return $this->hasMany('App\Lead');
     }
 
-    // Клиент
-    public function client($site)
-    {
-        return $this->morphOne('App\Client', 'clientable')
-            ->where([
-                'archive' => false,
-                'company_id' => $site->company_id
-            ]);
-    }
-
     // Бюджет
     public function badget()
     {
@@ -489,7 +479,18 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Models\Project\Goods', 'favorite_goods', 'user_id', 'goods_id');
     }
 
+    // Клиент
+    public function getClientAttribute($site)
+    {
+        return $this->morphOne('App\Client', 'clientable')
+            ->where([
+                'archive' => false,
+                'company_id' => $site->company_id
+            ]);
+    }
 
-
-
+    public function organizations()
+    {
+        return $this->belongsToMany(Company::class, 'representatives', 'user_id', 'organization_id');
+    }
 }
