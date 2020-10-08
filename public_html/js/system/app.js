@@ -87354,7 +87354,7 @@ var render = function() {
                 ])
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "cell small-12 medium-3" }, [
+              _c("div", { staticClass: "cell small-12" }, [
                 _c(
                   "label",
                   [
@@ -87379,13 +87379,13 @@ var render = function() {
                 )
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "cell small-12 medium-9" }, [
-                _c("table", [
+              _c("div", { staticClass: "cell small-12" }, [
+                _c("table", { staticClass: "modal-item-estimate-total" }, [
                   _c("tbody", [
                     _c("tr", [
                       _c("td", [_vm._v("Общая скидка")]),
                       _vm._v(" "),
-                      _c("td", [
+                      _c("td", { staticClass: "width-limit-3" }, [
                         _vm._v(
                           _vm._s(
                             _vm._f("decimalLevel")(
@@ -87399,7 +87399,7 @@ var render = function() {
                     _c("tr", [
                       _c("td", [_vm._v("Общая маржа")]),
                       _vm._v(" "),
-                      _c("td", [
+                      _c("td", { staticClass: "width-limit-3" }, [
                         _vm._v(
                           _vm._s(
                             _vm._f("decimalLevel")(
@@ -87411,16 +87411,19 @@ var render = function() {
                     ]),
                     _vm._v(" "),
                     _c("tr", [
-                      _c("td", { attrs: { colspan: "2" } }, [
-                        _vm._v(
-                          "\n                                Итоговая стоимость по позиции: " +
+                      _c("td", [_vm._v("ИТОГО по позиции:")]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "width-limit-3" }, [
+                        _c("span", { staticClass: "invert-show" }, [
+                          _vm._v(
                             _vm._s(
                               _vm._f("decimalLevel")(
                                 _vm._f("decimalPlaces")(_vm.total)
                               )
-                            ) +
-                            " руб.\n                            "
-                        )
+                            )
+                          )
+                        ]),
+                        _vm._v(" руб.")
                       ])
                     ])
                   ])

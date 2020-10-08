@@ -37,7 +37,7 @@
 
                     <div class="small-6 medium-3 cell">
                         <label>Номер
-                            @include('includes.inputs.digit', ['name' => 'number',  'required' => true, 'value' => $production->id])
+                            @include('includes.inputs.digit', ['name' => 'number',  'required' => true, 'value' => $production->number])
                         </label>
                     </div>
 

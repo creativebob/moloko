@@ -10739,6 +10739,10 @@ span.wrap-label-checkboxer {
   height: 60px;
 }
 
+.td-receipt_date, .th-receipt_date {
+  width: 65px;
+}
+
 table.list-employees {
   margin-bottom: 1rem;
 }
@@ -11151,6 +11155,31 @@ table.lead-estimate tr.item:hover td {
 span.item-currency {
   color: #999;
   font-size: 0.8rem;
+}
+
+.modal-item-estimate-total {
+  margin-top: 1rem;
+}
+
+.modal-item-estimate-total tr td {
+  background-color: white;
+  border-bottom: 1px dotted #ddd;
+  padding: 4px 5px;
+  font-size: 0.9rem;
+}
+
+.modal-item-estimate-total .width-limit-3 {
+  width: 130px;
+}
+
+.modal-item-estimate-total tbody tr:last-child td {
+  padding-top: 7px;
+  font-weight: 500;
+}
+
+.modal-item-estimate-total .invert-show {
+  font-family: "PFDinDisplayPro-Med";
+  font-size: 1.5rem;
 }
 
 .green-button {

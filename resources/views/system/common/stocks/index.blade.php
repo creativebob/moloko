@@ -78,8 +78,9 @@
                     </td>
 
 
-                    <td class="td-name">
-                        <a href="/admin/raws_stocks/{{ $stock->id }}/edit">{{ $stock->cmv->article->name }}</a><br>
+                    <td class="td-name" title="ID ТМЦ: {{ $stock->cmv->id }}">
+                        {{-- <a href="/admin/raws_stocks/{{ $stock->id }}/edit">{{ $stock->cmv->article->name }}</a><br> --}}
+                        {{ $stock->cmv->article->name }}<br>
                         <span class="tiny-text">{{ $stock->cmv->category->name }}</span>
                     </td>
                     <td>

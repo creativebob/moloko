@@ -233,3 +233,29 @@ span.item-currency{
     color: #999;
     font-size: 0.8rem;
 }
+
+
+// Модалка настройки позиции
+.modal-item-estimate-total{
+    margin-top: 1rem;
+    tr td{
+        background-color: white;
+        border-bottom: 1px dotted #ddd;
+        padding: 4px 5px;
+        font-size: 0.9rem;
+    }
+
+     .width-limit-3{
+        width: 130px
+     }
+
+    tbody tr:last-child td{
+        padding-top: 7px;
+        font-weight: 500;
+     }
+
+    .invert-show{
+        font-family: $PFDDPM;
+        font-size: 1.5rem;
+    }
+}
