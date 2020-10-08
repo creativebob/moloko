@@ -79,7 +79,7 @@
 
 
                     <td class="td-name">
-                        {{ $stock->cmv->article->name }}<br>
+                        <a href="/admin/raws_stocks/{{ $stock->id }}/edit">{{ $stock->cmv->article->name }}</a><br>
                         <span class="tiny-text">{{ $stock->cmv->category->name }}</span>
                     </td>
                     <td>

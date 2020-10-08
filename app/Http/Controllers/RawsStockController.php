@@ -49,7 +49,7 @@ class RawsStockController extends Controller
             // ->orderBy('moderation', 'desc')
 //            ->orderBy('sort', 'asc')
             ->paginate(30);
-//         dd($stocks);
+        // dd($stocks);
 
         // Инфо о странице
         $pageInfo = pageInfo($this->entity_alias);
@@ -85,20 +85,30 @@ class RawsStockController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        //
+
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
-        //
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $stock = RawsStock::moderatorLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer)
+        ->find($id);
+//        dd($raws_stock);
+
+        $this->authorize(getmethod(__FUNCTION__), $stock);
+
+        // Инфо о странице
+        $pageInfo = pageInfo($this->entity_alias);
+        // dd($pageInfo);
+
+        return view('system.common.stocks.edit', compact('stock', 'pageInfo', 'filter'));
     }
 
     /**

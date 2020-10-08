@@ -10,7 +10,7 @@ class ManufacturersListComposer
 	{
         $company = $view->site->company->load(['manufacturers' => function ($q) {
             $q->with([
-                'attachments.article'
+                'attachments.article', 'company.sites.domains'
             ])
                 ->where('display', true);
         }]);

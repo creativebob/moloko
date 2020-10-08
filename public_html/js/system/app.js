@@ -86151,7 +86151,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
@@ -86201,10 +86200,12 @@ var render = function() {
       _vm._v(
         "\n    " +
           _vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.item.price))) +
-          " " +
-          _vm._s(_vm.item.currency.abbreviation) +
-          "\n\n    "
+          " "
       ),
+      _c("span", { staticClass: "item-currency" }, [
+        _vm._v(_vm._s(_vm.item.currency.abbreviation))
+      ]),
+      _vm._v(" "),
       _vm.havePoints
         ? [
             _vm.isRegistered
