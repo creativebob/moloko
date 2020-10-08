@@ -13,12 +13,25 @@ class Goods extends Model
     use Cachable;
     use SoftDeletes;
 
+    protected $appends = [
+        'rest'
+    ];
+
     protected $with = [
         'article',
         'metrics'
     ];
 
     protected $morphClass = 'goods';
+
+    public function getRestAttribute()
+    {
+        if(!empty($this->hasMany('App\GoodsStock', 'cmv_id')->where('filial_id', 1)->first())){
+            return $this->hasMany('App\GoodsStock', 'cmv_id')->where('filial_id', 1)->first()->free;
+        } else {
+            return null;
+        }
+    }
 
     // Артикул
     public function article()

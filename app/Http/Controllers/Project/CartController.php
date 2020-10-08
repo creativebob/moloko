@@ -314,7 +314,21 @@ class CartController extends Controller
             }
             // Конец работы с ПОЛЬЗОВАТЕЛЕМ для лида
 
-            // TODO - 06.10.2020 - Сначала ищем клиента компанию через представителя, если не нашли, то берем первую компанию у представителя, если нет компаний, т оищем как клиента физика
+            // TODO - 06.10.2020 - Сначала ищем клиента компанию через представителя, если не нашли, то берем первую компанию у представителя, если нет компаний, то ищем как клиента физика
+
+            $user->load([
+                'organizations'
+            ]);
+
+//            $client = null;
+//
+//            if ($user->organizations->isNotEmpty()) {
+//                $organizations = $user->organizations;
+//
+//                $organization = $organizations->first();
+//            } else {
+//                dd($user->client($site));
+//            }
 
             $client = Client::where([
                 'clientable_id' => $user->id,
