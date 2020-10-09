@@ -362,6 +362,10 @@ input[type='search'] {
   color: #cacaca;
 }
 
+::-moz-placeholder {
+  color: #cacaca;
+}
+
 ::-ms-input-placeholder {
   color: #cacaca;
 }
@@ -593,6 +597,10 @@ select[multiple] {
 }
 
 .is-invalid-input:not(:focus)::-webkit-input-placeholder {
+  color: #cc4b37;
+}
+
+.is-invalid-input:not(:focus)::-moz-placeholder {
   color: #cc4b37;
 }
 
@@ -10731,6 +10739,10 @@ span.wrap-label-checkboxer {
   height: 60px;
 }
 
+.td-receipt_date, .th-receipt_date {
+  width: 65px;
+}
+
 table.list-employees {
   margin-bottom: 1rem;
 }
@@ -11109,6 +11121,65 @@ input.case_number_field[readonly] {
 
 .case_number_field:hover[readonly] {
   cursor: text;
+}
+
+.input-with-buttons input[type="number"] {
+  margin-top: 3px;
+  margin-bottom: 3px;
+  height: 26px;
+  padding: 0 10px;
+}
+
+.input-with-buttons .left, .input-with-buttons .right {
+  outline: none;
+  width: 30px;
+  height: 29px;
+  border: 1px solid transparent;
+  text-align: center;
+  -webkit-transition: background-color 0.1s ease;
+  transition: background-color 0.1s ease;
+}
+
+.input-with-buttons .left:hover, .input-with-buttons .right:hover {
+  background-color: rgba(190, 190, 190, 0.3);
+}
+
+table.lead-estimate {
+  margin-bottom: 1rem;
+}
+
+table.lead-estimate tr.item:hover td {
+  background-color: #f5f5f5 !important;
+}
+
+span.item-currency {
+  color: #999;
+  font-size: 0.8rem;
+}
+
+.modal-item-estimate-total {
+  margin-top: 1rem;
+}
+
+.modal-item-estimate-total tr td {
+  background-color: white;
+  border-bottom: 1px dotted #ddd;
+  padding: 4px 5px;
+  font-size: 0.9rem;
+}
+
+.modal-item-estimate-total .width-limit-3 {
+  width: 130px;
+}
+
+.modal-item-estimate-total tbody tr:last-child td {
+  padding-top: 7px;
+  font-weight: 500;
+}
+
+.modal-item-estimate-total .invert-show {
+  font-family: "PFDinDisplayPro-Med";
+  font-size: 1.5rem;
 }
 
 .green-button {
@@ -12903,7 +12974,7 @@ a#task-toggle {
 
 .table-invoice {
   border-collapse: separate;
-  border-spacing: 0px 4px !important;
+  border-spacing: 0px 2px !important;
 }
 
 .table-invoice thead {
@@ -12921,7 +12992,8 @@ a#task-toggle {
 .table-invoice tr td {
   background-color: #fff;
   border-top: 1px solid #fff;
-  padding: 3px 0.625rem 0.1rem;
+  padding: 8px 0.625rem 6px;
+  font-size: 0.9rem;
 }
 
 .table-invoice td.td-delete, .table-invoice th.td-delete {

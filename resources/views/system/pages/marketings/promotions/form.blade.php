@@ -5,7 +5,7 @@
                 <a href="#tab-general" aria-selected="true">Общая информация</a>
             </li>
             <li class="tabs-title">
-                <a data-tabs-target="tab-photos" href="#tab-photos">Креативы</a>
+                <a data-tabs-target="tab-photos" href="#tab-photos">Слайдер</a>
             </li>
             <li class="tabs-title">
                 <a data-tabs-target="tab-prices_goods" href="#tab-prices_goods">Товары</a>

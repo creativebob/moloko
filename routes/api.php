@@ -39,6 +39,7 @@ Route::group(['prefix' => '/v1',
 
     Route::group(['prefix' => '/search'], function () {
         Route::get('/clients/{search}', 'ClientController@search');
+        Route::get('/articles_groups/{search}', 'ArticlesGroupController@search');
 
     });
 

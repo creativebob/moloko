@@ -1,7 +1,6 @@
 <template>
     <td>
-        {{ item.price | roundToTwo | level }} {{ item.currency.abbreviation}}
-
+        {{ item.price | roundToTwo | level }} <span class="item-currency">{{ item.currency.abbreviation}}</span>
         <template
             v-if="havePoints"
         >

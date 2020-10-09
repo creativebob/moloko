@@ -1331,6 +1331,10 @@ span.wrap-label-checkboxer {
     height: 60px;
 }
 
+.td-receipt_date, .th-receipt_date{
+    width: 65px;
+}
+
 
 // СТРАНИЦА СОТРУДНИКИ
 
@@ -3842,7 +3846,7 @@ a#task-toggle{
 
 .table-invoice {
     border-collapse: separate;
-    border-spacing: 0px 4px !important;
+    border-spacing: 0px 2px !important;
 
     thead {
 
@@ -3859,7 +3863,8 @@ a#task-toggle{
     tr td{
         background-color: #fff;
         border-top: 1px solid #fff;
-        padding: 3px 0.625rem 0.1rem;
+        padding: 8px 0.625rem 6px;
+        font-size: 0.9rem;
     }
 
     td.td-delete, th.td-delete{

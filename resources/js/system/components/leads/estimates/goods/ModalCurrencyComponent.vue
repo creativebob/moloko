@@ -95,7 +95,7 @@
                     </div>
 
 
-                    <div class="cell small-12 medium-3">
+                    <div class="cell small-12">
                         <label>Количество
                             <span
                                 v-if="isRegistered || item.goods.serial === 1"
@@ -109,22 +109,22 @@
                         </label>
                     </div>
 
-                    <div class="cell small-12 medium-9">
-                        <table>
+                    <div class="cell small-12">
+                        <table class="modal-item-estimate-total">
                             <tbody>
-                            <tr>
-                                <td>Общая скидка</td>
-                                <td>{{ totalDiscount | decimalPlaces | decimalLevel }}</td>
-                            </tr>
-                            <tr>
-                                <td>Общая маржа</td>
-                                <td>{{ totalMargin | decimalPlaces | decimalLevel }}</td>
-                            </tr>
-                            <tr>
-                                <td colspan="2">
-                                    Итоговая стоимость по позиции: {{ total | decimalPlaces | decimalLevel }} руб.
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td>Общая скидка</td>
+                                    <td class="width-limit-3">{{ totalDiscount | decimalPlaces | decimalLevel }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Общая маржа</td>
+                                    <td class="width-limit-3">{{ totalMargin | decimalPlaces | decimalLevel }}</td>
+                                </tr>
+                                <tr>
+                                    <td>ИТОГО по позиции:</td>
+                                    <td class="width-limit-3"><span class="invert-show">{{ total | decimalPlaces | decimalLevel }}</span> руб.</td>
+                                   
+                                </tr>
                             </tbody>
                         </table>
 

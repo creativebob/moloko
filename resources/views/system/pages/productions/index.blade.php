@@ -30,8 +30,8 @@
                 <tr id="thead-content">
                     <th class="td-drop"></th>
                     <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
-                    <th class="td-number">№</th>
                     <th class="td-receipt_date">Дата</th>
+                    <th class="td-number">№</th>
                     {{-- <th class="td-number">Номер</th> --}}
                     {{-- <th class="td-supplier-name">Поставщик</th> --}}
                     <th class="td-stock">Склад</th>
@@ -66,13 +66,13 @@
 
                     </td>
 
-                    <td class="td-number">{{ $production->number }}</td>
+                    
 
                     <td class="td-receipt_date">
                         <a href="/admin/{{ $production->getTable() }}/{{ $production->id }}/edit">
                         <span>{{ isset($production->receipt_date) ? $production->receipt_date->format('d.m.Y') : null }}</span></a>
                     </td>
-
+                    <td class="td-number">{{ $production->number }}</td>
 
                     <td class="td-stock">
                         {{ optional($production->stock)->name }}

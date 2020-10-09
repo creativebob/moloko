@@ -18,6 +18,16 @@
 												{{ $manufacturer->company->location->address }}<br>
 												Тел: 
 												<span>{{ decorPhone($manufacturer->company->main_phone->phone) }}</span>
+
+												@if($manufacturer->company->site)
+													@if($manufacturer->company->site->domains->first())
+														<nofollow>
+															<noindex>	
+																<span>Сайт: <a target="_blank" href="//{{ $manufacturer->company->site ? $manufacturer->company->site->domains->last()->domain : '' }}">{{ $manufacturer->company->site ? $manufacturer->company->site->domains->first()->domain : '' }}</a></span>
+															</noindex>
+														</nofollow>
+													@endif
+												@endif
 											</p>
 										@endif
 									</div>
