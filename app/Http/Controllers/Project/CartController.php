@@ -323,9 +323,9 @@ class CartController extends Controller
 
             if ($user->organizations->isNotEmpty()) {
                 foreach ($user->organizations as $organization) {
-                    if ($organization->client($site)) {
+                    if ($organization->isClient($site)) {
                         $organization = $organization;
-                        $client = $organization->client($site);
+                        $client = $organization->isClient($site);
                         break;
                     }
                 }
@@ -335,7 +335,7 @@ class CartController extends Controller
                 }
 
             } else {
-                $client = $user->client($site);
+                $client = $user->isClient($site);
             }
 
             // Создание ЛИДА ======================================================================
