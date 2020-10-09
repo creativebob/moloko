@@ -3,20 +3,19 @@
 namespace App\Http\Controllers\Project;
 
 use App\Campaign;
-use App\Client;
 use App\Discount;
 use App\Http\Controllers\Project\Traits\Commonable;
 use App\Http\Controllers\Traits\EstimateControllerTrait;
 use App\Http\Controllers\Traits\LeadControllerTrait;
 use App\Http\Controllers\Traits\UserControllerTrait;
-use App\Models\Project\Lead;
+use App\Lead;
 use App\Models\Project\Estimate;
 use App\Models\Project\EstimatesGoodsItem;
 use App\Models\Project\Promotion;
 use App\Phone;
 use App\PricesGoods;
 use App\Source;
-use App\Models\Project\User;
+use App\User;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -215,39 +214,26 @@ class CartController extends Controller
                     abort(403, 'Не указан номер телефона!');
                 }
 
-                // Получаем юзера если такой пользователь есть в базе по указанному номеру
-                Log::info('Проверяем телефон пользователя - есть ли такой номер в базе именно для этого сайта?');
-
-                // Ищем телефон в базе телефонов
-                $phone = Phone::where('phone', $cleanPhone)->first();
-
-                if (!empty($phone)) {
-
-                    Log::info('Нашли телефон в общей базе');
-
-                    $user = User::where('company_id', $site->company_id)
-                        ->where(function ($q) use ($site) {
-                            $q->where('site_id', $site->id)
+                $user = User::where('company_id', $site->company_id)
+                    ->where(function ($q) use ($site) {
+                        $q->where('site_id', $site->id)
                             ->orWhereNull('site_id');
-                        })
-                        ->whereHas('main_phones', function ($q) use ($cleanPhone) {
-                            $q->where('phone', $cleanPhone);
-                        })
-                        ->first();
+                    })
+                    ->whereHas('main_phones', function ($q) use ($cleanPhone) {
+                        $q->where('phone', $cleanPhone);
+                    })
+                    ->first();
+//                    dd($user);
 
 //                    $result = $phone->user_owner->where('site_id', $site->id)->where('company_id', $site->company_id);
 
-                    if ($user) {
-                        Log::info('Нашли телефон в связке с текущим сайтом');
-                        Log::info($user->name ?? 'Имя не указано');
-
-                    } else {
-                        Log::info('А вот в связке с текущим сайтом - не нашли');
-                    }
+                if ($user) {
+                    Log::info('Нашли телефон в связке с текущим сайтом');
+                    Log::info($user->name ?? 'Имя не указано');
 
                 } else {
-                    $user = null;
-                };
+                    Log::info('А вот в связке с текущим сайтом - не нашли');
+                }
 
                 // Если нет, то создадим нового
                 if (empty($user)) {
@@ -283,7 +269,7 @@ class CartController extends Controller
 
                     $user->author_id = 1;
 
-                    $user->save();
+                    $user->saveQuietly();
 
                     if ($user) {
 
@@ -294,7 +280,10 @@ class CartController extends Controller
                             'crop' => substr($cleanPhone, -4),
                         ]);
 
-                        $user->phones()->attach($new_phone->id, ['main' => 1]);
+                        $user->phones()->attach($new_phone->id, [
+                            'phone_entity_type' => 'App\USer',
+                            'main' => 1
+                        ]);
 
                     } else {
                         abort(403, 'Ошибка при создании пользователя по номеру телефона!');
@@ -314,7 +303,7 @@ class CartController extends Controller
                     $user->author_id = 1;
                     $user->company_id = $company->id;
                     $user->filial_id = $filialId;
-                    $user->save();
+                    $user->saveQuietly();
 
                     $phone = $user->main_phone->phone;
 
@@ -327,6 +316,7 @@ class CartController extends Controller
             $user->load([
                 'organizations'
             ]);
+//            dd($user);
 
             $client = null;
             $organization = null;
@@ -400,7 +390,8 @@ class CartController extends Controller
                 $lead->campaign_id = Campaign::where('external', $request->cookie('utm_campaign'))->value('id');
             }
 
-            $lead->save();
+            $lead->saveQuietly();
+
 
             logs('leads_from_project')->info("============== Создан лид с сайта с id :[{$lead->id}], сайт:[{$site->id}]  ===============================");
             // ------------------------------------------- Конец создаем лида ---------------------------------------------
@@ -412,7 +403,12 @@ class CartController extends Controller
                 'crop' => substr($cleanPhone, -4),
             ]);
 
-            $lead->phones()->attach($new_phone->id, ['main' => 1]);
+            $lead->phones()->attach($new_phone->id, [
+                'phone_entity_type' => 'App\Lead',
+                'main' => 1,
+            ]);
+
+            dd(__METHOD__);
             // $lead = update_location($request, $lead);
 
             // Создаем заказ для лида

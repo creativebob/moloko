@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\System\Traits\Clientable;
 use App\Models\System\Traits\Locationable;
 use App\Models\System\Traits\Phonable;
 use Carbon\Carbon;
@@ -36,6 +37,7 @@ class Company extends Model
 
     use Locationable;
     use Phonable;
+    use Clientable;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
@@ -235,16 +237,6 @@ class Company extends Model
     public function dealers()
     {
         return $this->hasManyTrough('App\Dealer', 'App\Client', 'company_id');
-    }
-
-    // Получаем клиентов-компании
-    public function client()
-    {
-        return $this->morphOne(Client::class, 'clientable')
-            ->where([
-                'archive' => false,
-                'company_id' => auth()->user()->company_id
-            ]);
     }
 
     public function clients()

@@ -367,7 +367,7 @@ class AppController extends Controller
         $user->second_name = $request->second_name;
         $user->email = $request->email;
         $user->birthday_date = $request->birthday_date;
-        $user->save();
+        $user->saveQuietly();
 
         $user->notifications()->sync($request->notifications);
 
