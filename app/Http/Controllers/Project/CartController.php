@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Project;
 
 use App\Campaign;
+use App\Client;
 use App\Discount;
 use App\Http\Controllers\Project\Traits\Commonable;
 use App\Http\Controllers\Traits\EstimateControllerTrait;
@@ -322,20 +323,28 @@ class CartController extends Controller
             $organization = null;
 
             if ($user->organizations->isNotEmpty()) {
-                foreach ($user->organizations as $organization) {
-                    if ($organization->isClient($site)) {
-                        $organization = $organization;
-                        $client = $organization->isClient($site);
-                        break;
-                    }
-                }
+                $organizationsIds = $user->organizations->pluck('id');
 
-                if (empty($client)) {
+                $client = Client::where([
+                    'company_id' => $site->company_id,
+                    'clientable_type' => 'App\Company'
+                ])
+                    ->whereIn('clientable_id', $organizationsIds)
+                    ->first();
+
+                if ($client) {
+                    $organization = $client->clientable;
+                } else {
                     $organization = $user->organizations->first();
                 }
 
             } else {
-                $client = $user->isClient($site);
+                $client = $client = Client::where([
+                    'company_id' => $site->company_id,
+                    'clientable_type' => 'App\User',
+                    'clientable_id' => $user->id
+                ])
+                    ->first();
             }
 
             // Создание ЛИДА ======================================================================
