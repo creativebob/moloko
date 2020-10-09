@@ -212,7 +212,8 @@
             changeCount(count) {
                 // Оновление количества из строки
                 this.item.count = count;
-                this.$store.commit('UPDATE_GOODS_ITEM', this.item)
+                this.$store.commit('UPDATE_GOODS_ITEM', this.item);
+                this.$refs.modalCurrencyComponent.reset();
             },
             update(item) {
                 // Обновление из модалки

@@ -208,8 +208,14 @@ class LeadController extends Controller
         return redirect()->route('leads.edit', $lead->id);
     }
 
-
-    public function edit(Request $request, $id)
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function edit($id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -333,34 +339,6 @@ class LeadController extends Controller
             }
         }
 
-        $historyLeads = collect();
-        if ($lead->draft == false) {
-            // История лида
-            $historyLeads = Lead::with([
-                'location.city',
-                'choice',
-                'manager',
-                'stage',
-                'user',
-                'challenges.challenge_type',
-                'phones',
-            ])
-                ->companiesLimit($answer)
-                // ->authors($answer_lead) // Не фильтруем по авторам
-                ->systemItem($answer) // Фильтр по системным записям
-                // ->whereNull('archive')
-                ->whereNull('draft')
-                ->whereHas('phones', function ($query) use ($lead) {
-                    $query->where('phone', $lead->main_phone->phone);
-                })
-                ->where('id', '!=', $lead->id)
-                ->orderBy('sort', 'asc')
-                ->get();
-        }
-
-        $lead->history = $historyLeads;
-//        dd($lead);
-
         $goods_categories_list = GoodsCategory::whereNull('parent_id')->get()->mapWithKeys(function ($item) {
             return ['goods-' . $item->id => $item->name];
         })->toArray();
@@ -388,7 +366,7 @@ class LeadController extends Controller
             'Сырье' => $raws_categories_list,
         ];
 
-
+        // Настройки компании
         $settings = auth()->user()->company->settings;
 
         // Инфо о странице
@@ -479,7 +457,6 @@ class LeadController extends Controller
                 ->where('site_id', '!=', 1)
                 ->first();
 
-
             if ($user) {
                 $dataLead['user_id'] = $user->id;
             } else {
@@ -495,26 +472,26 @@ class LeadController extends Controller
                 logs('users')->info("Создан пользователь. Id: [{$user->id}]");
 
                 $dataLead['user_id'] = $user->id;
+                $dataLead['private_status'] = 0;
             }
         }
 
         // Проверка организации
         if (empty($dataLead['organization_id']) && isset($dataLead['company_name'])) {
-            $dataCompany = [
-                'name' => $newLead['company_name'],
+
+            $company = Company::firstOrCreate([
+                'name' => $newLead['company_name']
+            ], [
                 'email' => $newLead['email'],
                 'location_id' => $dataLead['location_id']
-            ];
-
-            $company = Company::create($dataCompany);
+            ]);
 
             $this->savePhones($company, $newLead['main_phone']);
             logs('companies')->info("Создана компания. Id: [{$company->id}]");
 
             $dataLead['organization_id'] = $company->id;
+            $dataLead['private_status'] = 1;
         }
-
-//        return $dataLead;
 
         $res = $lead->update($dataLead);
         $this->savePhones($lead, $newLead['main_phone']);

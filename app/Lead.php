@@ -80,6 +80,8 @@ class Lead extends Model
 
         'client_id',
 
+        'private_status',
+
         'shipment_at',
 
         'stage_id',

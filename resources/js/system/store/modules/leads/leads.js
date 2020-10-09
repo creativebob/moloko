@@ -172,16 +172,19 @@ const moduleLead = {
 
                         // Основные расчеты
                         item.cost = item.cost_unit * count;
-                        item.amount = item.price * count;
+                        item.amount = parseFloat(item.price) * count;
 
                         // Скидки
+                        // Иначе рассчитываем
+                        let id = item.id;
+                        let index = state.goodsItems.findIndex(obj => obj.id == id);
 
                         // Если есть ручная скидка
                         if (item.manual_discount_currency > 0) {
 
                             if (item.manual_discount_currency == item.computed_discount_currency) {
                                 // Введенное значение совпало, скидываем ручную скидку
-                                item = this.commit('SET_COMPUTED_DISCOUNT', item);
+                                this.commit('SET_COMPUTED_DISCOUNT', item);
                             } else {
                                 item.price_discount = 0;
                                 item.total_price_discount = item.amount;
@@ -205,17 +208,12 @@ const moduleLead = {
                             }
                         } else {
                             // Иначе рассчитываем
-                            let id = item.id;
-                            let index = state.goodsItems.findIndex(item => item.id == id);
-
                             this.commit('SET_COMPUTED_DISCOUNT', item);
-
-                            item = state.goodsItems[index];
                         }
+                        item = state.goodsItems[index];
 
                         // Маржа
-
-                        let totalPrice = item.price - item.price_discount_unit - item.catalogs_item_discount_unit - item.estimate_discount_unit - item.client_discount_unit_currency;
+                        let totalPrice = parseFloat(item.price) - item.price_discount_unit - item.catalogs_item_discount_unit - item.estimate_discount_unit - item.client_discount_unit_currency;
                         item.margin_currency_unit = totalPrice - item.cost_unit;
                         item.margin_currency = item.total - item.cost;
 
@@ -268,7 +266,7 @@ const moduleLead = {
                 Vue.set(state.goodsItems, index, item);
             },
             SET_COMPUTED_DISCOUNT(state, item) {
-                var count = item.count;
+                const count = item.count;
 
                 item.price_discount = item.price_discount_unit * count;
                 item.total_price_discount = item.amount - item.price_discount;
@@ -310,9 +308,6 @@ const moduleLead = {
                 let id = item.id;
                 let index = state.goodsItems.findIndex(item => item.id == id);
                 Vue.set(state.goodsItems, index, item);
-
-                // console.log(state.goodsItems);
-
             },
 
             REMOVE_GOODS_ITEM(state, id) {
