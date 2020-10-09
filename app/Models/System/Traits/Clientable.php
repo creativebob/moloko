@@ -11,11 +11,12 @@ trait Clientable
     // TODO - 09.10.2020 - Временный параметр, пока не получилось развести модели изи за записи в связующую телефонов
     public function client($site = null)
     {
-        return $this->morphOne(Client::class, 'clientable')
+        return $this->morphMany(Client::class, 'clientable')
             ->where([
                 'archive' => false,
                 'company_id' => isset($site) ? $site->company_id : optional(auth()->user())->company_id
-            ]);
+            ])
+            ->first();
     }
 
 }
