@@ -405,7 +405,7 @@ class Company extends Model
     // Фото
     public function photo()
     {
-        return $this->belongsTo(Photo::class);
+        return $this->belongsTo('App\Photo');
     }
 
     public function white()
@@ -452,7 +452,7 @@ class Company extends Model
     // Настройки
     public function settings()
     {
-        return $this->belongsToMany(CompaniesSetting::class, 'company_setting', 'company_id', 'setting_id');
+        return $this->belongsToMany('App\CompaniesSetting', 'company_setting', 'company_id', 'setting_id');
     }
 
     public function domain()

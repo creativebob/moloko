@@ -68,9 +68,14 @@ class ClientController extends Controller
         // -------------------------------------------------------------------------------------------------------------
         $clients = Client::with([
             'author',
-            'clientable.main_phones',
+            'clientable' => function ($q) {
+                $q->with([
+                    'photo',
+                    'main_phones'
+                ]);
+            },
             'loyalty',
-            'leads'
+            'leads',
         ])
             ->companiesLimit($answer)
             // ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null

@@ -17,6 +17,9 @@ class CompaniesWithClientComposer
      */
     public function __construct()
     {
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right('clients', false, 'index');
+
         $this->companies = Company::with([
             'client',
             'representatives.client'
