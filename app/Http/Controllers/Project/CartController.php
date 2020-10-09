@@ -221,24 +221,33 @@ class CartController extends Controller
                 // Ищем телефон в базе телефонов
                 $phone = Phone::where('phone', $cleanPhone)->first();
 
-                if(!empty($phone)){
+                if (!empty($phone)) {
 
                     Log::info('Нашли телефон в общей базе');
 
-                    $result = $phone->user_owner->where('site_id', $site->id)->where('company_id', $site->company_id);
+                    $user = User::where('company_id', $site->company_id)
+                        ->where(function ($q) use ($site) {
+                            $q->where('site_id', $site->id)
+                            ->orWhereNull('site_id');
+                        })
+                        ->whereHas('main_phones', function ($q) use ($cleanPhone) {
+                            $q->where('phone', $cleanPhone);
+                        })
+                        ->first();
 
-                    if($result->first() !== null){
+//                    $result = $phone->user_owner->where('site_id', $site->id)->where('company_id', $site->company_id);
+
+                    if ($user) {
                         Log::info('Нашли телефон в связке с текущим сайтом');
-
-                        $user = $result->first();
                         Log::info($user->name ?? 'Имя не указано');
 
                     } else {
-                        $user = null;
                         Log::info('А вот в связке с текущим сайтом - не нашли');
                     }
 
-                } else {$user = null;};
+                } else {
+                    $user = null;
+                };
 
                 // Если нет, то создадим нового
                 if (empty($user)) {
@@ -314,34 +323,39 @@ class CartController extends Controller
             }
             // Конец работы с ПОЛЬЗОВАТЕЛЕМ для лида
 
-            // TODO - 06.10.2020 - Сначала ищем клиента компанию через представителя, если не нашли, то берем первую компанию у представителя, если нет компаний, то ищем как клиента физика
-
+            // Ищем клиента
             $user->load([
                 'organizations'
             ]);
 
-//            $client = null;
-//
-//            if ($user->organizations->isNotEmpty()) {
-//                $organizations = $user->organizations;
-//
-//                $organization = $organizations->first();
-//            } else {
-//                dd($user->client($site));
-//            }
+            $client = null;
+            $organization = null;
 
-            $client = Client::where([
-                'clientable_id' => $user->id,
-                'clientable_type' => 'App\User',
-                'company_id' => $site->company_id,
-            ])
-                ->first();
+            if ($user->organizations->isNotEmpty()) {
+                foreach ($user->organizations as $organization) {
+                    if ($organization->client($site)) {
+                        $organization = $organization;
+                        $client = $organization->client($site);
+                        break;
+                    }
+                }
+
+                if (empty($client)) {
+                    $organization = $user->organizations->first();
+                }
+
+            } else {
+                $client = $user->client($site);
+            }
 
             // Создание ЛИДА ======================================================================
             $lead = new Lead;
             $lead->company_id = $company->id;
             $lead->filial_id = $filialId;
             $lead->user_id = $user->id;
+
+            $lead->user_id = optional($client)->id;
+
             $lead->email = $request->email ?? '';
             $lead->name = $lead_name;
             $lead->company_name = $company_name;
@@ -405,6 +419,7 @@ class CartController extends Controller
             $estimate = Estimate::create([
                 'lead_id' => $lead->id,
                 'filial_id' => $lead->filial_id,
+                'client_id' => $lead->client_id,
                 'company_id' => $lead->company_id,
                 'date' => today(),
                 'number' => $lead->id,
@@ -469,7 +484,7 @@ class CartController extends Controller
                         'estimate_discount_id' => $priceGoods->estimate_discount_id,
                         'estimate_discount_unit' => $priceGoods->estimate_discount,
 
-                        'client_discount_percent' => $request->client_discount_percent ?? 0,
+                        'client_discount_percent' => $client ? $client->discount : 0,
 
                         'manual_discount_currency' => 0,
 

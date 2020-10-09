@@ -238,13 +238,14 @@ class Company extends Model
     }
 
     // Получаем клиентов-компании
-    public function getClientAttribute($site)
+    public function client($site)
     {
-        return $this->morphOne(Client::class, 'clientable')
+        return $this->morphOne('APP\Client', 'clientable')
             ->where([
                 'archive' => false,
                 'company_id' => $site->company_id
-            ]);
+            ])
+            ->first();;
     }
 
     public function clients()

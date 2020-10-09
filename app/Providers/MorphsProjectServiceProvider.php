@@ -28,6 +28,7 @@ class MorphsProjectServiceProvider extends ServiceProvider
         Relation::morphMap([
             'App\Lead' => \App\Models\Project\Lead::class,
             'App\User' => \App\Models\Project\User::class,
+            'App\Company' => \App\Models\Project\Company::class,
         ]);
     }
 }
