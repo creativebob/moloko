@@ -344,7 +344,7 @@ class CartController extends Controller
             $lead->filial_id = $filialId;
             $lead->user_id = $user->id;
 
-            $lead->user_id = optional($client)->id;
+            $lead->client_id = optional($client)->id;
 
             $lead->email = $request->email ?? '';
             $lead->name = $lead_name;
