@@ -408,7 +408,6 @@ class CartController extends Controller
                 'main' => 1,
             ]);
 
-            dd(__METHOD__);
             // $lead = update_location($request, $lead);
 
             // Создаем заказ для лида
