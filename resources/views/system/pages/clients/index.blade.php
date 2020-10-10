@@ -10,6 +10,11 @@
 @section('breadcrumbs', Breadcrumbs::render('index', $pageInfo))
 
 @section('exсel')
+{{--    {!! Form::open(['route' => 'clients.excelImport', 'files' => true]) !!}--}}
+{{--    <input name="clients" type="file">--}}
+{{--    <input type="submit" class="button tiny" value="Загрузить">--}}
+{{--    {!! Form::close() !!}--}}
+
     <a href="{{ route('clients.excelExport', request()->input()) }}" class="button tiny">Выгрузить</a>
 @endsection
 

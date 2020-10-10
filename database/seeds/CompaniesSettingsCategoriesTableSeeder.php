@@ -26,6 +26,12 @@ class CompaniesSettingsCategoriesTableSeeder extends Seeder
                 'level' => 1,
                 'alias' => 'cron',
             ],
+            [
+                'name' => 'Настройки для лида',
+                'slug' => \Str::slug('Настройки для лида'),
+                'level' => 1,
+                'alias' => 'leads',
+            ],
 
         ]);
     }

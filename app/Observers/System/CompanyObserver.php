@@ -33,29 +33,6 @@ class CompanyObserver
         // TODO - 15.09.20 - Думаю стоит в компанию всегда автором писать id робота
         $company->author_id = 1;
 
-        $companiesCount = Company::count();
-
-        // Вычисляем номер для использования в алиасе
-        if ($companiesCount == 0) {
-            $number = 1;
-        } else {
-            $number = $companiesCount + 1;
-        }
-
-        $legalFormsList = LegalForm::get()
-            ->pluck('name', 'id');
-
-        foreach ($legalFormsList as $key => $value) {
-
-            if (preg_match("/(^|\s)" . $value . "\s/i", $company->name, $matches)) {
-                $company->name = str_replace($matches[0], "", $company->name);
-                $company->legal_form_id = $key;
-                $company->alias = \Str::slug($company->name) . '-' . $number;
-            } else {
-                $company->legal_form_id = $request->legal_form_id ?? 1;
-                $company->alias = \Str::slug($company->name) . '-' . $number;
-            }
-        }
     }
 
     /**
@@ -83,6 +60,16 @@ class CompanyObserver
     }
 
     /**
+     * Handle the company "saving" event.
+     *
+     * @param Company $company
+     */
+    public function saving(Company $company)
+    {
+        $this->clearName($company);
+    }
+
+    /**
      * Handle the company "saved" event.
      *
      * @param Company $company
@@ -94,6 +81,52 @@ class CompanyObserver
             $rubleId = Currency::where('abbreviation', 'руб.')
                 ->value('id');
             $company->currencies()->attach($rubleId);
+        }
+
+
+        $organization = \DB::table('organizations')->where([
+            'company_id' => auth()->user()->company_id,
+            'organization_id' => $company->id
+        ])
+        ->first();
+
+        if (empty($organization)) {
+            // Пишем связь с компанией
+            $company->organizations()->attach($company->id, [
+                'company_id' => auth()->user()->company_id,
+            ]);
+        }
+    }
+
+    /**
+     * Очистка имени
+     *
+     * @param Company $company
+     */
+    public function clearName(Company $company)
+    {
+        $companiesCount = Company::count();
+
+        // Вычисляем номер для использования в алиасе
+        if ($companiesCount == 0) {
+            $number = 1;
+        } else {
+            $number = $companiesCount + 1;
+        }
+
+        $legalFormsList = LegalForm::get()
+            ->pluck('name', 'id');
+
+        foreach ($legalFormsList as $key => $value) {
+
+            if (preg_match("/(^|\s)" . $value . "\s/i", $company->name, $matches)) {
+                $company->name = str_replace($matches[0], "", $company->name);
+                $company->legal_form_id = $key;
+                $company->alias = \Str::slug($company->name) . '-' . $number;
+            } else {
+                $company->legal_form_id = $request->legal_form_id ?? 1;
+                $company->alias = \Str::slug($company->name) . '-' . $number;
+            }
         }
     }
 }

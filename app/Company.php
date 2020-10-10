@@ -456,6 +456,11 @@ class Company extends Model
         return $this->hasOne(Site::class);
     }
 
+    public function organizations()
+    {
+        return $this->belongsToMany(Company::class, 'organizations', 'company_id', 'organization_id');
+    }
+
     public function representatives()
     {
         return $this->belongsToMany(User::class, 'representatives', 'organization_id');

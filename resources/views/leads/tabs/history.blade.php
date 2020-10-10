@@ -1,4 +1,4 @@
-@if($leadHistory->isNotEmpty())
+@isset($leadHistory)
 <div class="wrap-autofind">
     <legend>Найдены обращения: {{ $leadHistory->count() }}</legend>
 
@@ -53,4 +53,4 @@
 
 
 </div>
-@endif
+@endisset

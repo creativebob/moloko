@@ -34,13 +34,18 @@ class CompaniesSettingsTableSeeder extends Seeder
             ],
             [
                 'name' => 'Показатели клиентской базы',
-                'alias' => 'clients_indicators',
+                'alias' => 'clients-indicators',
                 'category_id' => $settingsCategories->firstWhere('alias', 'cron')->id
             ],
             [
                 'name' => 'Перерасчет скидок',
-                'alias' => 'discounts',
+                'alias' => 'discounts-recalculate',
                 'category_id' => $settingsCategories->firstWhere('alias', 'cron')->id
+            ],
+            [
+                'name' => 'Приоритет компании',
+                'alias' => 'search-company-priority',
+                'category_id' => $settingsCategories->firstWhere('alias', 'leads')->id
             ],
         ]);
     }

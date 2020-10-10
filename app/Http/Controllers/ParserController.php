@@ -63,6 +63,30 @@ class ParserController extends Controller
         dd(__METHOD__);
     }
 
+    /**
+     * Установка организаций для компании
+     *
+     * @return string
+     */
+    public function setOrganizations()
+    {
+        $company = auth()->user()->company;
+
+        $organizations = Company::where('id', '!=', $company->id)
+            ->get();
+
+        $data = [];
+        foreach ($organizations as $organization) {
+            $data[$organization->id] = [
+                'company_id' => $company->id,
+            ];
+        }
+
+        $company->organizations()->attach($data);
+
+        return "Проставлены связи компании с организациями";
+    }
+
     public function setMorphsAliases()
     {
         \DB::table('phone_entities')

@@ -58,7 +58,10 @@ class CreatePromotionsTable extends Migration
             $table->bigInteger('site_id')->unsigned()->nullable()->comment('Id сайта');
             $table->foreign('site_id')->references('id')->on('sites');
 
-            $table->boolean('is_slider')->default(false)->comment('Отображение слайдера');
+            $table->boolean('is_slider')->default(0)->comment('Отображение слайдера');
+            $table->boolean('is_autochange')->default(0)->comment('Авто-смена слайдов');
+            $table->integer('delay')->nullable()->comment('Время задержки');
+
             $table->boolean('is_recommend')->default(false)->comment('Отображение рекомендации');
             $table->boolean('is_upsale')->default(false)->comment('Отображение на корзине');
 

@@ -203,7 +203,7 @@ const moduleLead = {
 
                                 item.total_computed_discount = item.computed_discount_currency * count;
 
-                                item.discount_currency = item.manual_discount_currency;
+                                item.discount_currency = item.total_manual_discount;
                                 item.discount_percent = item.manual_discount_percent;
                             }
                         } else {

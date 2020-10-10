@@ -107451,23 +107451,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
@@ -107651,23 +107634,7 @@ var render = function() {
           ])
         ])
       ]
-    ),
-    _vm._v(" "),
-    _c("div", { staticClass: "small-12 cell checkbox" }, [
-      _c("input", { attrs: { type: "hidden", name: "is_slider", value: "0" } }),
-      _vm._v(" "),
-      _c("input", {
-        attrs: {
-          type: "checkbox",
-          name: "is_slider",
-          value: "1",
-          id: "checkbox-is_slider"
-        },
-        domProps: { checked: _vm.promotion.is_slider == 1 }
-      }),
-      _vm._v(" "),
-      _vm._m(2)
-    ])
+    )
   ])
 }
 var staticRenderFns = [
@@ -107685,14 +107652,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("label", { attrs: { for: "radiobutton-video" } }, [
       _c("span", [_vm._v("Видео")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("label", { attrs: { for: "checkbox-is_slider" } }, [
-      _c("span", [_vm._v("Отображать слайдер")])
     ])
   }
 ]
@@ -113368,7 +113327,7 @@ var moduleLead = {
 
                             item.total_computed_discount = item.computed_discount_currency * count;
 
-                            item.discount_currency = item.manual_discount_currency;
+                            item.discount_currency = item.total_manual_discount;
                             item.discount_percent = item.manual_discount_percent;
                         }
                     } else {
