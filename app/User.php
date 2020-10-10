@@ -493,7 +493,8 @@ class User extends Authenticatable
 
     public function organizations()
     {
-        return $this->belongsToMany(Company::class, 'representatives', 'user_id', 'organization_id');
+        return $this->belongsToMany(Company::class, 'representatives', 'user_id', 'organization_id')
+            ->withPivot('company_id');
     }
 
 

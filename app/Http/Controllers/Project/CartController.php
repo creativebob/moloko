@@ -252,6 +252,7 @@ class CartController extends Controller
             $companyName = $request->company_name;
             $cleanCompanyName = null;
             $company = null;
+            $organization = null;
 
             // Обработка имени компании
             if ($companyName) {
@@ -275,7 +276,7 @@ class CartController extends Controller
             // Ищем клиента
             $user->load([
                 'organizations' => function ($q) use ($site) {
-                    $q->where('company_id', $site->company_id);
+                    $q->wherePivot('company_id', $site->company_id);
                 }
             ]);
 
