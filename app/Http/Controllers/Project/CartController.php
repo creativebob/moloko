@@ -295,8 +295,7 @@ class CartController extends Controller
 
                 logs('leads_from_project')->info("Найдена компания, id: [{$organization->id}]. Проверена на клиента.");
             } else {
-
-                if ($companyName) {
+                if ($cleanCompanyName) {
                     if ($user->organizations->isNotEmpty()) {
                         $organizationsIds = $user->organizations->pluck('id');
 
