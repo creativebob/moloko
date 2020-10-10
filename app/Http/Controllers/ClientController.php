@@ -9,6 +9,7 @@ use App\Http\Controllers\System\Traits\Locationable;
 use App\Http\Controllers\System\Traits\Phonable;
 use App\Http\Controllers\System\Traits\Userable;
 use App\Http\Controllers\Traits\Photable;
+use App\Imports\ClientsImport;
 use App\Manufacturer;
 use App\Supplier;
 use Maatwebsite\Excel\Facades\Excel;
@@ -68,9 +69,14 @@ class ClientController extends Controller
         // -------------------------------------------------------------------------------------------------------------
         $clients = Client::with([
             'author',
-            'clientable.main_phones',
+            'clientable' => function ($q) {
+                $q->with([
+                    'photo',
+                    'main_phones'
+                ]);
+            },
             'loyalty',
-            'leads'
+            'leads',
         ])
             ->companiesLimit($answer)
             // ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -484,16 +490,6 @@ class ClientController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param $id
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
-    /**
      * Проверка изменений по состоянию клиента
      *
      * @param $client
@@ -615,6 +611,20 @@ class ClientController extends Controller
     }
 
     /**
+     * Импорт клиент ской базы из excel
+     *
+     * @return \Maatwebsite\Excel\BinaryFileResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    public function excelImport()
+    {
+        Excel::import(new ClientsImport(), request()->file('clients.xlsx'));
+
+        return redirect()->route('clients.index');
+    }
+
+    /**
      * Выгрузка клиенской базы в excel (с учетом фильтра)
      *
      * @return \Maatwebsite\Excel\BinaryFileResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
@@ -625,6 +635,8 @@ class ClientController extends Controller
     {
         return Excel::download(new ClientsExport(), 'Клиенты.xlsx');
     }
+
+
 
     // Непонятные методы
     public function checkcompany(Request $request)

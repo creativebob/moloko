@@ -43,11 +43,11 @@
         //     vueMask
         // },
         props: {
+            phone: Object,
             name: {
                 type: String,
                 default: 'main_phone'
             },
-            phone: Object,
             placeholder: {
                 type: String,
                 default: ''

@@ -17,11 +17,18 @@ class CompaniesWithClientComposer
      */
     public function __construct()
     {
-        $this->companies = Company::with([
-            'client',
-            'representatives.client'
-        ])
-        ->get();
+        $company = auth()->user()->company;
+
+        $company->load([
+            'organizations' => function ($q) {
+                $q->with([
+                    'client',
+                    'representatives.client'
+                ]);
+            }
+        ]);
+
+        $this->companies = $company->organizations;
     }
 
     /**

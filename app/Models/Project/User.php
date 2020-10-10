@@ -480,13 +480,14 @@ class User extends Authenticatable
     }
 
     // Клиент
-    public function getClientAttribute($site)
+    public function client($site)
     {
         return $this->morphOne('App\Client', 'clientable')
             ->where([
                 'archive' => false,
                 'company_id' => $site->company_id
-            ]);
+            ])
+            ->first();
     }
 
     public function organizations()

@@ -238,13 +238,14 @@ class Company extends Model
     }
 
     // Получаем клиентов-компании
-    public function getClientAttribute($site)
+    public function client($site)
     {
-        return $this->morphOne(Client::class, 'clientable')
+        return $this->morphOne('APP\Client', 'clientable')
             ->where([
                 'archive' => false,
                 'company_id' => $site->company_id
-            ]);
+            ])
+            ->first();;
     }
 
     public function clients()
@@ -404,7 +405,7 @@ class Company extends Model
     // Фото
     public function photo()
     {
-        return $this->belongsTo(Photo::class);
+        return $this->belongsTo('App\Photo');
     }
 
     public function white()
@@ -451,7 +452,7 @@ class Company extends Model
     // Настройки
     public function settings()
     {
-        return $this->belongsToMany(CompaniesSetting::class, 'company_setting', 'company_id', 'setting_id');
+        return $this->belongsToMany('App\CompaniesSetting', 'company_setting', 'company_id', 'setting_id');
     }
 
     public function domain()

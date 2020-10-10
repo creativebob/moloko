@@ -94,23 +94,6 @@
             </div>
         </div>
 
-        <div class="small-12 cell checkbox">
-            <input
-                type="hidden"
-                name="is_slider"
-                value="0"
-            >
-            <input
-                type="checkbox"
-                name="is_slider"
-                value="1"
-                id="checkbox-is_slider"
-                :checked="promotion.is_slider == 1"
-            >
-            <label for="checkbox-is_slider"><span>Отображать слайдер</span></label>
-        </div>
-
-
     </div>
 </template>
 

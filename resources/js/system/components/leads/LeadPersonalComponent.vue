@@ -12,7 +12,7 @@
                             @input="changePhone"
                             ref="phone"
                         ></phone-component>
-                        <span class="form-error">Укажите номер</span>
+<!--                        <span class="form-error">Укажите номер</span>-->
                     </label>
                 </div>
                 <div class="large-auto cell">
@@ -112,7 +112,10 @@
                 mainPhone: this.lead.main_phones.length ? this.lead.main_phones[0].phone : null,
                 name: this.lead.name,
 
-                organization: this.lead.organization,
+                organization: this.lead.organization ? this.lead.organization : {
+                    id: null,
+                    name: null
+                },
                 companyName: this.lead.company_name,
 
                 cityId: this.lead.location ? this.lead.location.city_id : null,
@@ -209,7 +212,10 @@
                             this.client = null;
                         }
 
-                        this.organization = null;
+                        this.organization = {
+                            id: null,
+                            name: null
+                        };
                         this.companyName = null;
                         this.$refs.organization.update(null);
 
@@ -264,7 +270,10 @@
                     }
 
                 } else {
-                    this.organization = null;
+                    this.organization = {
+                        id: null,
+                        name: null
+                    };
                     this.client = null;
 
                     if (this.user) {

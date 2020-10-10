@@ -57,7 +57,7 @@ class Kernel extends ConsoleKernel
                 switch ($setting->alias) {
 
                     // Показатели клиентской базы
-//                        case 'clients_indicators':
+//                        case 'clients-indicators':
 //                            // Ежедневные показатели клиентской базы
 //                            $schedule->command(ClientsIndicatorsDay::class, $companyId = $company->id)
 //                                ->dailyAt('03:00');
@@ -68,7 +68,7 @@ class Kernel extends ConsoleKernel
 //                            break;
 
                     // Скидки
-                    case 'discounts':
+                    case 'discounts-recalculate':
                         // Перерасчет скидок
                         $schedule->command(DiscountsRecalculateCommand::class, [
                                 $company->id

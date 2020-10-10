@@ -21,6 +21,11 @@ class UpdateOctober2020Tables extends Migration
         Schema::table('catalogs_services', function (Blueprint $table) {
             $table->boolean('is_access_page')->default(1)->comment('Страница товара')->after('slug');
         });
+
+        Schema::table('promotions', function (Blueprint $table) {
+            $table->boolean('is_autochange')->default(0)->comment('Авто-смена слайдов')->after('is_slider');
+            $table->integer('delay')->nullable()->comment('Время задержки')->after('is_autochange');
+        });
     }
 
     /**
@@ -40,6 +45,13 @@ class UpdateOctober2020Tables extends Migration
         Schema::table('catalogs_services', function (Blueprint $table) {
             $table->dropColumn([
                 'is_access_page',
+            ]);
+        });
+
+        Schema::table('promotions', function (Blueprint $table) {
+            $table->dropColumn([
+                'is_autochange',
+                'delay',
             ]);
         });
     }

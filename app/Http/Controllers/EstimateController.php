@@ -441,8 +441,6 @@ class EstimateController extends Controller
 //        return redirect()->route('leads.index');
     }
 
-
-
     /**
      * Продажа сметы
      *

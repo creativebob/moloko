@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\System\Traits\Quietlable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -37,7 +38,8 @@ class Lead extends Model
     use Cachable;
 
     use Notifiable;
-     use SoftDeletes;
+    use SoftDeletes;
+    use Quietlable;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
@@ -61,9 +63,9 @@ class Lead extends Model
     // public $timestamps = false;
 
     protected $dates = [
-    	'deleted_at',
-	    'created_at',
-	    'shipment_at'
+        'deleted_at',
+        'created_at',
+        'shipment_at'
     ];
 
     protected $fillable = [
@@ -78,7 +80,9 @@ class Lead extends Model
 
         'client_id',
 
-	    'shipment_at',
+        'private_status',
+
+        'shipment_at',
 
         'stage_id',
         'badget',
@@ -238,9 +242,9 @@ class Lead extends Model
         return $this->morphMany('App\Challenge', 'subject')->whereNull('status');
     }
 
-    public function getFirstChallengeAttribute() {
-        if(!empty($this->challenges->where('status', null)->sortByDesc('deadline_date')->first()))
-        {
+    public function getFirstChallengeAttribute()
+    {
+        if (!empty($this->challenges->where('status', null)->sortByDesc('deadline_date')->first())) {
             $value = $this->challenges->where('status', null)->sortByDesc('deadline_date')->first();
         } else {
             $value = null;
@@ -249,9 +253,9 @@ class Lead extends Model
         return $value;
     }
 
-    public function getExpiredChallengeAttribute() {
-        if(!empty($this->challenges->where('status', null)->sortByDesc('deadline_date')->first()))
-        {
+    public function getExpiredChallengeAttribute()
+    {
+        if (!empty($this->challenges->where('status', null)->sortByDesc('deadline_date')->first())) {
             $value = $this->challenges->where('status', null)->sortByDesc('deadline_date')->first();
         } else {
             $value = null;
@@ -278,8 +282,7 @@ class Lead extends Model
 
     public function getMainPhoneAttribute()
     {
-        if(!empty($this->main_phones->first()))
-        {
+        if (!empty($this->main_phones->first())) {
             $value = $this->main_phones->first();
         } else {
             $value = null;
@@ -360,7 +363,7 @@ class Lead extends Model
             $query->whereDate('shipment_at', '<=', Carbon::createFromFormat('d.m.Y', request()->shipment_date_max));
         }
 
-        if (! is_null(request('status'))) {
+        if (!is_null(request('status'))) {
             if (request('status') == 'fiz') {
                 $query->whereNull('company_name');
             }
@@ -380,7 +383,7 @@ class Lead extends Model
             });
         }
 
-        if (! is_null(request('challenges'))) {
+        if (!is_null(request('challenges'))) {
             if (request('challenges') == true) {
                 $query->where('challenges_active_count', '>', 0);
             } else {
@@ -420,12 +423,13 @@ class Lead extends Model
 
 
     // this is a recommended way to declare event handlers
-    public static function boot() {
+    public static function boot()
+    {
         parent::boot();
-        self::deleting(function($lead) { // before delete() method call this
-            $lead->estimate->goods_items()->each(function($item) {
+        self::deleting(function ($lead) { // before delete() method call this
+            $lead->estimate->goods_items()->each(function ($item) {
                 $item->delete();
-             });
+            });
             $lead->estimate()->delete();
             // do the rest of the cleanup...
         });

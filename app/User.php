@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\System\Traits\Clientable;
 use App\Models\System\Traits\Locationable;
 use App\Models\System\Traits\Phonable;
 use App\Models\System\Traits\Quietlable;
@@ -35,6 +36,7 @@ class User extends Authenticatable
     use Quietlable;
     use Locationable;
     use Phonable;
+    use Clientable;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
@@ -467,15 +469,6 @@ class User extends Authenticatable
         return $this->hasMany('App\Lead');
     }
 
-    // Клиент
-    public function client()
-    {
-        return $this->morphOne(Client::class, 'clientable')
-            ->where([
-                'archive' => false,
-                'company_id' => auth()->user()->company_id
-            ]);
-    }
 //    public function client()
 //    {
 //        return $this->morphOne('App\Client', 'clientable');
@@ -500,7 +493,8 @@ class User extends Authenticatable
 
     public function organizations()
     {
-        return $this->belongsToMany(Company::class, 'representatives', 'user_id', 'organization_id');
+        return $this->belongsToMany(Company::class, 'representatives', 'user_id', 'organization_id')
+            ->withPivot('company_id');
     }
 
 

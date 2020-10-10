@@ -82129,11 +82129,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     //     vueMask
     // },
     props: {
+        phone: Object,
         name: {
             type: String,
             default: 'main_phone'
         },
-        phone: Object,
         placeholder: {
             type: String,
             default: ''
@@ -85797,6 +85797,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             // Оновление количества из строки
             this.item.count = count;
             this.$store.commit('UPDATE_GOODS_ITEM', this.item);
+            this.$refs.modalCurrencyComponent.reset();
         },
         update: function update(item) {
             // Обновление из модалки
@@ -86593,8 +86594,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     // },
     methods: {
         update: function update(count) {
-            this.count = count;
-            this.blur(count);
+            this.count = parseFloat(count).toFixed(this.decimalPlace);
+            this.blur(this.count);
         },
         getDecimalArray: function getDecimalArray(value) {
             var str = value.toString();
@@ -87097,7 +87098,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             discountPercent: this.item.discount_percent,
             discountCurrency: this.item.discount_currency / this.item.count,
-            count: this.item.count
+            curCount: this.item.count
         };
     },
     mounted: function mounted() {
@@ -87108,19 +87109,28 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         isRegistered: function isRegistered() {
             return this.$store.state.lead.estimate.is_registered == 1;
         },
+
+        count: {
+            get: function get() {
+                return this.curCount;
+            },
+            set: function set(value) {
+                this.curCount = value;
+            }
+        },
         totalDiscount: function totalDiscount() {
-            return this.discountCurrency * this.count;
+            return this.discountCurrency * this.curCount;
         },
         totalMargin: function totalMargin() {
-            return (this.item.price - this.discountCurrency - this.item.cost_unit) * this.count;
+            return (this.item.price - this.discountCurrency - this.item.cost_unit) * this.curCount;
         },
         total: function total() {
-            return (this.item.price - this.discountCurrency) * this.count;
+            return (this.item.price - this.discountCurrency) * this.curCount;
         }
     },
     watch: {
         count: function count(val) {
-            this.count = val;
+            this.curCount = val;
         }
     },
     methods: {
@@ -87137,17 +87147,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.$refs.discountPercentComponent.update(this.discountPercent);
         },
         changeCount: function changeCount(value) {
-            this.count = value;
+            this.curCount = value;
         },
         update: function update() {
-            this.item.count = this.count;
-
-            if (this.item.discount_percent != this.discountPercent || this.item.discount_currency != this.discountCurrency) {
+            if (this.item.discount_percent != this.discountPercent || this.item.discount_currency / this.item.count != this.discountCurrency) {
                 this.item.manual_discount_currency = this.discountCurrency;
                 this.item.manual_discount_percent = this.discountPercent;
             }
 
+            this.item.count = this.curCount;
+
             $('#modal-estimates_goods_item-' + this.item.id).foundation('close');
+
             this.$emit('update', this.item);
         },
         reset: function reset() {
@@ -87155,11 +87166,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.discountPercent = this.item.discount_percent;
                 this.$refs.discountPercentComponent.update(this.discountPercent);
 
-                this.discountCurrency = this.item.discount_currency;
+                this.discountCurrency = this.item.discount_currency / this.item.count;
                 this.$refs.discountCurrencyComponent.update(this.discountCurrency);
 
-                this.count = this.item.count;
-                this.$refs.countComponent.update(this.count);
+                this.curCount = this.item.count;
+                this.$refs.countComponent.update(this.curCount);
             }
         }
     },
@@ -95852,7 +95863,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             mainPhone: this.lead.main_phones.length ? this.lead.main_phones[0].phone : null,
             name: this.lead.name,
 
-            organization: this.lead.organization,
+            organization: this.lead.organization ? this.lead.organization : {
+                id: null,
+                name: null
+            },
             companyName: this.lead.company_name,
 
             cityId: this.lead.location ? this.lead.location.city_id : null,
@@ -95951,7 +95965,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                         this.client = null;
                     }
 
-                    this.organization = null;
+                    this.organization = {
+                        id: null,
+                        name: null
+                    };
                     this.companyName = null;
                     this.$refs.organization.update(null);
 
@@ -96003,7 +96020,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     }
                 }
             } else {
-                this.organization = null;
+                this.organization = {
+                    id: null,
+                    name: null
+                };
                 this.client = null;
 
                 if (this.user) {
@@ -96295,15 +96315,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     data: function data() {
         return {
-            curOrganization: this.organization ? this.organization : {
+            curOrganization: this.organization.id ? this.organization : {
                 id: null,
                 name: null
             },
-            name: this.organization ? this.organization.name : null,
+            name: this.organization.id ? this.organization.name : null,
 
             results: [],
             search: false,
-            found: !!this.organization,
+            found: !!this.organization.id,
             remove: false
         };
     },
@@ -96930,7 +96950,7 @@ var render = function() {
           _c(
             "label",
             [
-              _vm._v("Телефон\n                    "),
+              _vm._v("Телефон\n                        "),
               _c("phone-component", {
                 ref: "phone",
                 attrs: {
@@ -96939,11 +96959,7 @@ var render = function() {
                   disabled: _vm.isDisabled
                 },
                 on: { input: _vm.changePhone }
-              }),
-              _vm._v(" "),
-              _c("span", { staticClass: "form-error" }, [
-                _vm._v("Укажите номер")
-              ])
+              })
             ],
             1
           )
@@ -96953,7 +96969,7 @@ var render = function() {
           _c(
             "label",
             [
-              _vm._v("Контактное лицо\n                    "),
+              _vm._v("Контактное лицо\n                        "),
               _c("string-component", {
                 ref: "name",
                 attrs: {
@@ -97001,7 +97017,7 @@ var render = function() {
           _c(
             "label",
             [
-              _vm._v("Адрес\n                    "),
+              _vm._v("Адрес\n                        "),
               _c("string-component", {
                 ref: "address",
                 attrs: {
@@ -97048,7 +97064,7 @@ var render = function() {
               _c(
                 "label",
                 [
-                  _vm._v("E-mail\n                    "),
+                  _vm._v("E-mail\n                        "),
                   _c("string-component", {
                     ref: "email",
                     attrs: {
@@ -108211,23 +108227,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
@@ -108411,23 +108410,7 @@ var render = function() {
           ])
         ])
       ]
-    ),
-    _vm._v(" "),
-    _c("div", { staticClass: "small-12 cell checkbox" }, [
-      _c("input", { attrs: { type: "hidden", name: "is_slider", value: "0" } }),
-      _vm._v(" "),
-      _c("input", {
-        attrs: {
-          type: "checkbox",
-          name: "is_slider",
-          value: "1",
-          id: "checkbox-is_slider"
-        },
-        domProps: { checked: _vm.promotion.is_slider == 1 }
-      }),
-      _vm._v(" "),
-      _vm._m(2)
-    ])
+    )
   ])
 }
 var staticRenderFns = [
@@ -108445,14 +108428,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("label", { attrs: { for: "radiobutton-video" } }, [
       _c("span", [_vm._v("Видео")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("label", { attrs: { for: "checkbox-is_slider" } }, [
-      _c("span", [_vm._v("Отображать слайдер")])
     ])
   }
 ]
@@ -114095,16 +114070,21 @@ var moduleLead = {
 
                     // Основные расчеты
                     item.cost = item.cost_unit * count;
-                    item.amount = item.price * count;
+                    item.amount = parseFloat(item.price) * count;
 
                     // Скидки
+                    // Иначе рассчитываем
+                    var _id = item.id;
+                    var _index2 = state.goodsItems.findIndex(function (obj) {
+                        return obj.id == _id;
+                    });
 
                     // Если есть ручная скидка
                     if (item.manual_discount_currency > 0) {
 
                         if (item.manual_discount_currency == item.computed_discount_currency) {
                             // Введенное значение совпало, скидываем ручную скидку
-                            item = this.commit('SET_COMPUTED_DISCOUNT', item);
+                            this.commit('SET_COMPUTED_DISCOUNT', item);
                         } else {
                             item.price_discount = 0;
                             item.total_price_discount = item.amount;
@@ -114123,24 +114103,17 @@ var moduleLead = {
 
                             item.total_computed_discount = item.computed_discount_currency * count;
 
-                            item.discount_currency = item.manual_discount_currency;
+                            item.discount_currency = item.total_manual_discount;
                             item.discount_percent = item.manual_discount_percent;
                         }
                     } else {
                         // Иначе рассчитываем
-                        var _id = item.id;
-                        var _index2 = state.goodsItems.findIndex(function (item) {
-                            return item.id == _id;
-                        });
-
                         this.commit('SET_COMPUTED_DISCOUNT', item);
-
-                        item = state.goodsItems[_index2];
                     }
+                    item = state.goodsItems[_index2];
 
                     // Маржа
-
-                    var totalPrice = item.price - item.price_discount_unit - item.catalogs_item_discount_unit - item.estimate_discount_unit - item.client_discount_unit_currency;
+                    var totalPrice = parseFloat(item.price) - item.price_discount_unit - item.catalogs_item_discount_unit - item.estimate_discount_unit - item.client_discount_unit_currency;
                     item.margin_currency_unit = totalPrice - item.cost_unit;
                     item.margin_currency = item.total - item.cost;
 
@@ -114239,8 +114212,6 @@ var moduleLead = {
                 return item.id == id;
             });
             Vue.set(state.goodsItems, index, item);
-
-            // console.log(state.goodsItems);
         },
         REMOVE_GOODS_ITEM: function REMOVE_GOODS_ITEM(state, id) {
             var index = state.goodsItems.findIndex(function (item) {

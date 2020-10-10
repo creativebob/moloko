@@ -4,6 +4,26 @@
         <promotion-component
             :promotion='@json($promotion)'
         ></promotion-component>
+
+        <div class="grid-x">
+            <div class="cell small-12 checkbox">
+                {!! Form::hidden('is_slider', 0) !!}
+                {!! Form::checkbox('is_slider', 1, $promotion->is_slider, ['id' => 'checkbox-is_slider']) !!}
+                <label for="checkbox-is_slider"><span>Отображать слайдер</span></label>
+            </div>
+
+            <div class="cell small-12 checkbox">
+                {!! Form::hidden('is_autochange', 0) !!}
+                {!! Form::checkbox('is_autochange', 1, $promotion->is_autochange, ['id' => 'checkbox-is_autochange']) !!}
+                <label for="checkbox-is_autochange"><span>Авто-смена слайдов</span></label>
+            </div>
+
+            <div class="cell small-12 medium-6">
+                <label>Время задержки
+                    {!! Form::number('delay', $promotion->delay) !!}
+                </label>
+            </div>
+        </div>
     </div>
 
     <div class="small-12 medium-7 cell">

@@ -52,15 +52,15 @@
         },
         data() {
             return {
-                curOrganization: this.organization ? this.organization : {
+                curOrganization: this.organization.id ? this.organization : {
                     id: null,
                     name: null,
                 },
-                name: this.organization ? this.organization.name : null,
+                name: this.organization.id ? this.organization.name : null,
 
                 results: [],
                 search: false,
-                found: !!this.organization,
+                found: !!this.organization.id,
                 remove: false,
             };
         },

@@ -72,8 +72,8 @@
         // },
 		methods: {
             update(count) {
-                this.count = count;
-                this.blur(count);
+                this.count = parseFloat(count).toFixed(this.decimalPlace);
+                this.blur(this.count);
             },
             getDecimalArray(value) {
                 let str = value.toString();

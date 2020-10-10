@@ -37,6 +37,9 @@ class Promotion extends Model
         'photo_id',
 
         'is_slider',
+        'is_autochange',
+        'delay',
+
         'is_recommend',
         'is_upsale',
 

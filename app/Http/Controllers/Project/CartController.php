@@ -4,19 +4,21 @@ namespace App\Http\Controllers\Project;
 
 use App\Campaign;
 use App\Client;
+use App\Company;
 use App\Discount;
 use App\Http\Controllers\Project\Traits\Commonable;
 use App\Http\Controllers\Traits\EstimateControllerTrait;
 use App\Http\Controllers\Traits\LeadControllerTrait;
 use App\Http\Controllers\Traits\UserControllerTrait;
-use App\Models\Project\Lead;
+use App\Lead;
+use App\LegalForm;
 use App\Models\Project\Estimate;
 use App\Models\Project\EstimatesGoodsItem;
 use App\Models\Project\Promotion;
 use App\Phone;
 use App\PricesGoods;
 use App\Source;
-use App\Models\Project\User;
+use App\User;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -121,240 +123,257 @@ class CartController extends Controller
     {
         // Если пользователь дал согласие на обработку персональных данных
         if ($request->personal_data) {
-            // Собираем для request недостающие данные или преобразовываем
+
+            if (empty($request->main_phone)) {
+                abort(403, 'Не указан номер телефона!');
+            }
+
+            logs('leads_from_project')->info("============== НАЧАЛО СОЗДАНИЯ ЛИДА С САЙТА  ===============================");
+
+            // TODO - 03.12.19 - Вынести в отдельные методы для сайта
+            // Получаем сайт
+            $site = $this->site;
+            $filial = $this->site->filial;
+
+            $description = $request->description;
 
             // Вкусняшка
             $lead_type = $request->has('lead_type') ? $request->lead_type : null;
-
-            $school_number = $request->has('school_number') ? $request->school_number : null;
-            $class_number = $request->has('class_number') ? $request->class_number : null;
-
-            $kindergarten_number = $request->has('kindergarten_number') ? $request->kindergarten_number : null;
-            $kindergarten_group = $request->has('kindergarten_group') ? $request->kindergarten_group : null;
-
-            $company_name = $request->has('company_name') ? $request->company_name : null;
-
             switch ($lead_type) {
                 case "Школа":
+                    $school_number = $request->has('school_number') ? $request->school_number : null;
+                    $class_number = $request->has('class_number') ? $request->class_number : null;
+
                     $description = $lead_type . ' №' . $school_number . ', класс ' . $class_number;
                     break;
 
                 case "Детский сад":
+                    $kindergarten_number = $request->has('kindergarten_number') ? $request->kindergarten_number : null;
+                    $kindergarten_group = $request->has('kindergarten_group') ? $request->kindergarten_group : null;
+
                     $description = $lead_type . ' №' . $kindergarten_number . ', группа ' . $kindergarten_group;
                     break;
 
                 case "Компания":
+                    $company_name = $request->has('company_name') ? $request->company_name : null;
+
                     $description = $lead_type . ' ' . $company_name;
                     break;
             }
 
-            // Отдаем недостающий description
-            if (isset($description)) {
-                $request->description = $description;
+            $firstName = isset($request->first_name) ? $request->first_name : 'Клиент не указал имя';
+            $secondName = $request->second_name;
+
+            $name = null;
+            if (isset($secondName)) {
+                $name = $firstName . ' ' . $secondName;
             }
 
-            // TODO - 03.12.19 - Вынести в отдельные методы для сайта
-            // ------------------------------------------- Создаем лида ---------------------------------------------
-//            $lead = $this->createLeadFromSite($request);
 
-            // Готовим необходимые данные ======================================================================
-            // Получаем сайт
-            $site = $this->site;
-            $company = $site->company;
-            $filialId = $this->site->filial->id;
-
-            $first_name = isset($request->first_name) ? $request->first_name : 'Клиент не указал имя';
-
-            $nickname = $request->name;
-            $second_name = $request->second_name;
-
-            if (($first_name == null) && ($second_name == null)) {
-                if ($nickname == null) {
-                    $lead_name = null;
-                } else {
-                    $lead_name = $first_name;
-                }
-            } else {
-                $lead_name = $first_name . ' ' . $second_name;
-            }
-
-            $company_name = $request->company_name;
-            $description = $request->description;
-
-            // ------------------------------------------------------------------------------
-
-            // Если пришло имя компании, то укажем, что это компания
-            if ($company_name) {
-                $private_status = 1;
-            } else {
-                $private_status = 0;
-            }
-
-            $cleanPhone = cleanPhone($request->main_phone);
-
-            // Содержится ли в куках данные корзины
-            if (Cookie::get('cart') !== null) {
-                $cart = json_decode(Cookie::get('cart'), true);
-            }
-
-            // Работаем с ПОЛЬЗОВАТЕЛЕМ для лида ================================================================
+            $user = auth()->user();
 
             // Если пользователь АВТОРИЗОВАН
-            $user = auth()->user();
             if ($user) {
-
-                // Формируем имя записи в лида
-                if (empty($lead_name)) {
-                    $lead_name = $user->first_name . ' ' . $user->second_name;
-                }
-                $phone = $user->main_phone->phone;
-
-                // Если пользователь НЕ авторизован
+                $cleanPhone = $user->main_phone->phone;
+                logs('leads_from_project')->info("Пользователь авторизован, id: [{$user->id}]");
             } else {
-                if (!isset($request->main_phone)) {
-                    abort(403, 'Не указан номер телефона!');
-                }
+                // Если пользователь НЕ авторизован
+                // Ищем по номеру телефона
+                $cleanPhone = cleanPhone($request->main_phone);
 
-                // Получаем юзера если такой пользователь есть в базе по указанному номеру
-                Log::info('Проверяем телефон пользователя - есть ли такой номер в базе именно для этого сайта?');
+                $user = User::where('company_id', $site->company_id)
+                    ->where(function ($q) use ($site) {
+                        $q->where('site_id', $site->id)
+                            ->orWhereNull('site_id');
+                    })
+                    ->whereHas('main_phones', function ($q) use ($cleanPhone) {
+                        $q->where('phone', $cleanPhone);
+                    })
+                    ->first();
+//                    dd($user);
 
-                // Ищем телефон в базе телефонов
-                $phone = Phone::where('phone', $cleanPhone)->first();
-
-                if(!empty($phone)){
-
-                    Log::info('Нашли телефон в общей базе');
-
-                    $result = $phone->user_owner->where('site_id', $site->id)->where('company_id', $site->company_id);
-
-                    if($result->first() !== null){
-                        Log::info('Нашли телефон в связке с текущим сайтом');
-
-                        $user = $result->first();
-                        Log::info($user->name ?? 'Имя не указано');
-
-                    } else {
-                        $user = null;
-                        Log::info('А вот в связке с текущим сайтом - не нашли');
-                    }
-
-                } else {$user = null;};
-
-                // Если нет, то создадим нового
-                if (empty($user)) {
-
-                    // Если нет: создаем нового пользователя по номеру телефона
-                    // Подготовка: -------------------------------------------------------------------------------------
-
-
+                if ($user) {
+                    logs('leads_from_project')->info("Пользователь найден по номеру телефона, id: [{$user->id}]");
+                } else {
                     $usersCount = User::withoutTrashed()
                         ->count();
-                    $user_number = $usersCount + 1;
+                    $userNumber = $usersCount + 1;
 
                     $user = new User;
-                    $user->login = 'user_' . $user_number;
+                    $user->login = 'user_' . $userNumber;
                     $user->password = bcrypt(str_random(12));
                     $user->access_code = rand(1000, 9999);
-
-                    if ($request != null) {
-
-                        $user->first_name = $request->first_name;
-                        $user->second_name = $request->second_name;
-                        $user->patronymic = $request->patronymic;
-                    }
 
                     $user->access_block = 0;
                     $user->user_type = 0;
 
-                    // Компания и филиал ----------------------------------------------------------
-                    $user->company_id = $site->id;
-                    $user->filial_id = $site->filial->id;
-
+                    $user->first_name = $firstName;
+                    $user->second_name = $secondName;
                     $user->name = $user->first_name . ' ' . $user->second_name;
 
-                    $user->author_id = 1;
+                    $user->nickname = $user->name;
 
-                    $user->save();
+                    $user->location_id = create_location($request, 1, $filial->location->city_id);
+
+                    $user->site_id = $site->id;
+                    $user->company_id = $site->company_id;
+                    $user->filial_id = $filial->id;
+                    $user->author_id = 1;
+                    $user->saveQuietly();
 
                     if ($user) {
 
                         // Если номера нет, пишем или ищем новый и создаем связь
-                        $new_phone = Phone::firstOrCreate(
-                            ['phone' => $cleanPhone
-                            ], [
+                        $newPhone = Phone::firstOrCreate([
+                            'phone' => $cleanPhone
+                        ], [
                             'crop' => substr($cleanPhone, -4),
                         ]);
 
-                        $user->phones()->attach($new_phone->id, ['main' => 1]);
+                        $user->phones()->attach($newPhone->id, [
+                            'phone_entity_type' => 'App\User',
+                            'main' => 1
+                        ]);
+
+                        logs('leads_from_project')->info("Создан пользователь, id: [{$user->id}]");
 
                     } else {
                         abort(403, 'Ошибка при создании пользователя по номеру телефона!');
                     }
-
                     // sendSms('79041248598', 'Данные для входа: ' . $user->access_code);
-
-                    $user->location_id = create_location($request, 1, $site->filial->location->city_id);
-
-                    $user->first_name = $first_name;
-                    $user->second_name = $second_name;
-                    $user->nickname = $nickname;
-
-                    $user->site_id = $site->id;
-
-                    // Компания и филиал
-                    $user->author_id = 1;
-                    $user->company_id = $company->id;
-                    $user->filial_id = $filialId;
-                    $user->save();
-
-                    $phone = $user->main_phone->phone;
-
-                    // Конец апдейта юзеара
-                };
+                }
             }
-            // Конец работы с ПОЛЬЗОВАТЕЛЕМ для лида
 
-            // TODO - 06.10.2020 - Сначала ищем клиента компанию через представителя, если не нашли, то берем первую компанию у представителя, если нет компаний, то ищем как клиента физика
+            // Формируем имя записи в лида
+            if (empty($name)) {
+                $name = $user->first_name . ' ' . $user->second_name;
+            }
 
+            $companyName = $request->company_name;
+            $cleanCompanyName = null;
+            $company = null;
+            $organization = null;
+
+            // Обработка имени компании
+            if ($companyName) {
+                $cleanCompanyName = str_replace('"', "", $companyName);
+                $cleanCompanyName = str_replace('\'', "", $cleanCompanyName);
+
+                $legalFormsList = LegalForm::get()
+                    ->pluck('name', 'id');
+
+                $cleanCompanyNameLowerCase = mb_strtolower($cleanCompanyName, 'UTF-8');
+                foreach ($legalFormsList as $key => $value) {
+                    $valueLowerCase = mb_strtolower($value, 'UTF-8');
+                    if (preg_match("/(^|\s)" . $valueLowerCase . "\s/i", $cleanCompanyNameLowerCase, $matches)) {
+                        $cleanCompanyNameLowerCase = str_replace($matches[0], "", $cleanCompanyNameLowerCase);
+                    }
+                }
+
+                $cleanCompanyName = ucfirst($cleanCompanyNameLowerCase);
+                $company = Company::where('name', $cleanCompanyName)
+                    ->first();
+            }
+
+            // Ищем клиента
             $user->load([
-                'organizations'
+                'organizations' => function ($q) use ($site) {
+                    $q->wherePivot('company_id', $site->company_id);
+                }
             ]);
 
-//            $client = null;
-//
-//            if ($user->organizations->isNotEmpty()) {
-//                $organizations = $user->organizations;
-//
-//                $organization = $organizations->first();
-//            } else {
-//                dd($user->client($site));
-//            }
+            $client = null;
+            if ($company) {
+                $organization = $company;
 
-            $client = Client::where([
-                'clientable_id' => $user->id,
-                'clientable_type' => 'App\User',
-                'company_id' => $site->company_id,
-            ])
-                ->first();
+                $client = Client::where([
+                    'company_id' => $site->company_id,
+                    'clientable_type' => 'App\Company'
+                ])
+                    ->whereIn('clientable_id', $organization->id)
+                    ->first();
+
+                logs('leads_from_project')->info("Найдена компания, id: [{$organization->id}]. Проверена на клиента.");
+            } else {
+                if ($cleanCompanyName) {
+                    if ($user->organizations->isNotEmpty()) {
+                        $organizationsIds = $user->organizations->pluck('id');
+
+                        $client = Client::where([
+                            'company_id' => $site->company_id,
+                            'clientable_type' => 'App\Company'
+                        ])
+                            ->whereIn('clientable_id', $organizationsIds)
+                            ->first();
+
+                        if ($client) {
+                            $organization = $client->clientable;
+                        } else {
+                            $organization = $user->organizations->first();
+                        }
+
+                        $comment = "Пользователь указал имя компании - {$companyName}";
+
+                        logs('leads_from_project')->info("Не найдена компания. Добавлена первая организация пользователя, id: [{$organization->id}]. Проверена на клиента.");
+                    }
+                } else {
+                    $curCompany = $site->company;
+                    $setting = $curCompany->settings->firstWhere('alias', 'search-company-priority');
+                    if ($setting) {
+                        if ($user->organizations->isNotEmpty()) {
+                            $organizationsIds = $user->organizations->pluck('id');
+
+                            $client = Client::where([
+                                'company_id' => $site->company_id,
+                                'clientable_type' => 'App\Company'
+                            ])
+                                ->whereIn('clientable_id', $organizationsIds)
+                                ->first();
+
+                            if ($client) {
+                                $organization = $client->clientable;
+                            } else {
+                                $organization = $user->organizations->first();
+                            }
+
+                            logs('leads_from_project')->info("Не найдена компания. Добавлена первая организация пользователя, id: [{$organization->id}]. Проверена на клиента.");
+                        }
+
+                        logs('leads_from_project')->info("Найдена настройка на приоритет компании, осуществлен поиск первой организации пользователя.");
+                    } else {
+                        $client = $client = Client::where([
+                            'company_id' => $site->company_id,
+                            'clientable_type' => 'App\User',
+                            'clientable_id' => $user->id
+                        ])
+                            ->first();
+                        logs('leads_from_project')->info("Нет настройки на приоритет компании, осуществлен поиск клиента пользователя.");
+                    }
+                }
+            }
 
             // Создание ЛИДА ======================================================================
             $lead = new Lead;
-            $lead->company_id = $company->id;
-            $lead->filial_id = $filialId;
             $lead->user_id = $user->id;
+            $lead->organization_id = optional($organization)->id;
+            $lead->client_id = optional($client)->id;
+
             $lead->email = $request->email ?? '';
-            $lead->name = $lead_name;
-            $lead->company_name = $company_name;
-            $lead->private_status = $private_status;
-            $lead->location_id = create_location($request, 1, $site->filial->location->city_id);
+            $lead->name = $name;
+            $lead->company_name = $cleanCompanyName;
+            $lead->private_status = $cleanCompanyName ? 1 : 0;
+            $lead->location_id = create_location($request, 1, $filial->location->city_id);
             $lead->need_delivery = $request->get('need_delivery', 0);
             $lead->description = $description;
             $lead->stage_id = $request->stage_id ?? 2;
             $lead->badget = 0;
             $lead->lead_method_id = 2;
             $lead->draft = false;
+
             $lead->site_id = $site->id;
 
+            $lead->filial_id = $filial->id;
+            $lead->company_id = $site->company_id;
             $lead->author_id = 1;
 
             // if($request->choice_tag){
@@ -386,25 +405,29 @@ class CartController extends Controller
                 $lead->campaign_id = Campaign::where('external', $request->cookie('utm_campaign'))->value('id');
             }
 
-            $lead->save();
+            $lead->saveQuietly();
 
-            logs('leads_from_project')->info("============== Создан лид с сайта с id :[{$lead->id}], сайт:[{$site->id}]  ===============================");
+
+            logs('leads_from_project')->info("Создан лид с сайта с id :[{$lead->id}], сайт: [{$site->id}]");
             // ------------------------------------------- Конец создаем лида ---------------------------------------------
 
             // Если номера нет, пишем или ищем новый и создаем связь
-            $new_phone = Phone::firstOrCreate(
-                ['phone' => $cleanPhone
-                ], [
+            $new_phone = Phone::firstOrCreate([
+                'phone' => $cleanPhone
+            ], [
                 'crop' => substr($cleanPhone, -4),
             ]);
 
-            $lead->phones()->attach($new_phone->id, ['main' => 1]);
-            // $lead = update_location($request, $lead);
+            $lead->phones()->attach($new_phone->id, [
+                'phone_entity_type' => 'App\Lead',
+                'main' => 1,
+            ]);
 
             // Создаем заказ для лида
             $estimate = Estimate::create([
                 'lead_id' => $lead->id,
                 'filial_id' => $lead->filial_id,
+                'client_id' => $lead->client_id,
                 'company_id' => $lead->company_id,
                 'date' => today(),
                 'number' => $lead->id,
@@ -413,15 +436,21 @@ class CartController extends Controller
             ]);
             logs('leads_from_project')->info("Создана смета с id: [{$estimate->id}]");
 
+
+            // Содержится ли в куках данные корзины
+            if (Cookie::get('cart') !== null) {
+                $cart = json_decode(Cookie::get('cart'), true);
+            }
+
             // Если есть наполненная корзина, создаем смету на лиде
             if (isset($cart)) {
 
                 $lead->load('estimate');
                 $estimate = $lead->estimate;
 
-                $prices_goods_ids = array_keys($cart['prices']);
-                $prices_goods = PricesGoods::with('goods.article')
-                    ->find($prices_goods_ids);
+                $pricesGoodsIds = array_keys($cart['prices']);
+                $pricesGoods = PricesGoods::with('goods.article')
+                    ->find($pricesGoodsIds);
 
                 $stockId = null;
                 // Если включены настройки для складов, то проверяем сколько складов в системе, и если один, то берем его id
@@ -442,20 +471,20 @@ class CartController extends Controller
 
                 // Вписываем пункты сметы
                 $estimatesGoodsItemsInsert = [];
-                foreach ($prices_goods as $priceGoods) {
+                foreach ($pricesGoods as $priceGoods) {
 
                     $count = $cart['prices'][$priceGoods->id]['count'];
                     $data = [
                         'estimate_id' => $estimate->id,
                         'price_id' => $priceGoods->id,
 
-                        'goods_id' => $priceGoods->product->id,
+                        'goods_id' => $priceGoods->goods_id,
                         'currency_id' => $priceGoods->currency_id,
                         'sale_mode' => 1,
 
                         'stock_id' => $stockId,
 
-                        'cost_unit' => $priceGoods->product->article->cost_default,
+                        'cost_unit' => $priceGoods->goods->article->cost_default,
                         'price' => $priceGoods->price,
                         'points' => $priceGoods->points,
                         'count' => $count,
@@ -469,7 +498,7 @@ class CartController extends Controller
                         'estimate_discount_id' => $priceGoods->estimate_discount_id,
                         'estimate_discount_unit' => $priceGoods->estimate_discount,
 
-                        'client_discount_percent' => $request->client_discount_percent ?? 0,
+                        'client_discount_percent' => $client ? $client->discount : 0,
 
                         'manual_discount_currency' => 0,
 
@@ -573,9 +602,10 @@ class CartController extends Controller
             // TODO - 23.10.19 - Сделать адекватное сохранение в корзине
             $lead->badget = $total;
             $lead->order_amount_base = $total;
-            $lead->save();
+            $lead->saveQuietly();
 
             // Оповещение
+
             // Получаем сайт
             $phone = cleanPhone($request->main_phone);
 
@@ -648,8 +678,12 @@ class CartController extends Controller
                 $message .= $utm_term . "\r\n";
             }
 
+            if (isset($comment)) {
+                $message .= "\r\n{$comment}\r\n";
+            }
+
             $lead->notes()->create([
-                'company_id' => $company->id,
+                'company_id' => $site->company_id,
                 'body' => $message,
                 'author_id' => 1,
             ]);

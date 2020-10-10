@@ -123,7 +123,7 @@
                                 <tr>
                                     <td>ИТОГО по позиции:</td>
                                     <td class="width-limit-3"><span class="invert-show">{{ total | decimalPlaces | decimalLevel }}</span> руб.</td>
-                                   
+
                                 </tr>
                             </tbody>
                         </table>
@@ -173,7 +173,7 @@
             return {
                 discountPercent: this.item.discount_percent,
                 discountCurrency: this.item.discount_currency / this.item.count,
-                count: this.item.count,
+                curCount: this.item.count,
             }
         },
         mounted() {
@@ -183,25 +183,38 @@
             isRegistered() {
                 return this.$store.state.lead.estimate.is_registered == 1;
             },
+            count: {
+                get() {
+                    return this.curCount;
+                },
+                set (value) {
+                    this.curCount = value;
+                }
+            },
             totalDiscount() {
-                return this.discountCurrency * this.count;
+                return this.discountCurrency * this.curCount;
             },
             totalMargin() {
-                return (this.item.price - this.discountCurrency - this.item.cost_unit) * this.count;
+                return (this.item.price - this.discountCurrency - this.item.cost_unit) * this.curCount;
             },
             total() {
-                return (this.item.price - this.discountCurrency) * this.count;
+                return (this.item.price - this.discountCurrency) * this.curCount;
             },
         },
         watch: {
             count(val) {
-                this.count = val;
+                this.curCount = val;
             },
+
+            // item(obj) {
+            //     alert(1)
+            //     this.reset();
+            // }
             // discountPercent(val) {
             //     this.discountPercent = val;
             // },
             // discountCurrency(val) {
-            //     this.discountCurrency = val / this.count;
+            //     this.discountCurrency = val / this.curCount;
             // },
         },
         methods: {
@@ -218,17 +231,18 @@
                 this.$refs.discountPercentComponent.update(this.discountPercent);
             },
             changeCount(value) {
-                this.count = value;
+                this.curCount = value;
             },
             update() {
-                this.item.count = this.count;
-
-                if (this.item.discount_percent != this.discountPercent || this.item.discount_currency != this.discountCurrency) {
+                if (this.item.discount_percent != this.discountPercent || (this.item.discount_currency / this.item.count) != this.discountCurrency) {
                     this.item.manual_discount_currency = this.discountCurrency;
                     this.item.manual_discount_percent = this.discountPercent;
                 }
 
+                this.item.count = this.curCount;
+
                 $('#modal-estimates_goods_item-' + this.item.id).foundation('close');
+
                 this.$emit('update', this.item);
             },
             reset() {
@@ -236,11 +250,11 @@
                     this.discountPercent = this.item.discount_percent;
                     this.$refs.discountPercentComponent.update(this.discountPercent);
 
-                    this.discountCurrency = this.item.discount_currency;
+                    this.discountCurrency = this.item.discount_currency / this.item.count;
                     this.$refs.discountCurrencyComponent.update(this.discountCurrency);
 
-                    this.count = this.item.count;
-                    this.$refs.countComponent.update(this.count);
+                    this.curCount = this.item.count;
+                    this.$refs.countComponent.update(this.curCount);
                 }
             },
         },

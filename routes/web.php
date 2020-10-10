@@ -43,6 +43,7 @@ Route::get('/parsers/archive_goods', 'ParserController@parserArchiveGoods');
 Route::get('/parsers/prices_goods_total', 'ParserController@parserPricesGoodsTotal');
 Route::get('/parsers/add_role', 'ParserController@addRole');
 Route::get('/parsers/set-morphs-aliases', 'ParserController@setMorphsAliases');
+Route::get('/parsers/set-organizations', 'ParserController@setOrganizations');
 
 Route::get('/parsers/test', 'ParserController@test');
 
@@ -1005,6 +1006,9 @@ Route::any('/articles_groups/search/{text}', 'ArticlesGroupController@search');
 Route::post('/clients/search-user/{text}', 'ClientController@searchClientUser');
 Route::any('/clients/search-company/{text}', 'ClientController@searchClientCompany');
 
+// Excel
+Route::get('/clients/excel-import', 'ClientController@excelImport')
+    ->name('clients.excelImport');
 Route::get('/clients/excel-export', 'ClientController@excelExport')
     ->name('clients.excelExport');
 

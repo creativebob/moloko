@@ -25,9 +25,10 @@ class MorphsProjectServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Relation::morphMap([
-            'App\Lead' => \App\Models\Project\Lead::class,
-            'App\User' => \App\Models\Project\User::class,
-        ]);
+//        Relation::morphMap([
+//            'App\Lead' => \App\Models\Project\Lead::class,
+//            'App\User' => \App\Models\Project\User::class,
+//            'App\Company' => \App\Models\Project\Company::class,
+//        ]);
     }
 }
