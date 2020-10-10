@@ -84298,15 +84298,16 @@ var render = function() {
     _vm._v(" "),
     _c("tfoot", [
       _c("tr", [
-        _c("td", { attrs: { colspan: "5" } }, [_vm._v("Итого:")]),
+        _c("td", { attrs: { colspan: "7" } }, [_vm._v("Итого:")]),
         _vm._v(" "),
-        _c("td", [_vm._v("Позиций: " + _vm._s(_vm.totalItemsCount))]),
+        _c("td"),
         _vm._v(" "),
         _c("td", [
-          _vm._v(
-            "Сумма: " +
+          _c("span", { staticClass: "font-accent" }, [
+            _vm._v(
               _vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.totalItemsCost)))
-          )
+            )
+          ])
         ]),
         _vm._v(" "),
         !_vm.isPosted ? _c("td") : _vm._e()
@@ -84377,6 +84378,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
 //
 //
 //
@@ -85038,11 +85040,12 @@ var render = function() {
     _vm._v(" "),
     _c("tfoot", [
       _c("tr", [
-        _c("td", { attrs: { colspan: "4" } }, [_vm._v("Итого:")]),
+        _c("td", { attrs: { colspan: "3" } }, [_vm._v("Итого:")]),
         _vm._v(" "),
-        _c("td", [_vm._v("Позиций: " + _vm._s(_vm.totalItemsCount))]),
+        _c("td"),
         _vm._v(" "),
-        !_vm.isProduced ? _c("td") : _vm._e()
+        !_vm.isProduced ? _c("td") : _vm._e(),
+        _c("td")
       ])
     ])
   ])

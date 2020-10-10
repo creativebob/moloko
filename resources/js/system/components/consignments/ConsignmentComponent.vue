@@ -139,9 +139,9 @@
 
 		<tfoot>
 			<tr>
-				<td	colspan="5">Итого:</td>
-				<td>Позиций: {{ totalItemsCount }}</td>
-				<td>Сумма: {{ totalItemsCost | roundToTwo | level }}</td>
+				<td	colspan="7">Итого:</td>
+				<td></td>
+				<td><span class="font-accent">{{ totalItemsCost | roundToTwo | level }}</span></td>
 				<td
 					v-if="!isPosted"
 				></td>

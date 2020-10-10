@@ -475,6 +475,9 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('leads.includes.filters', LeadTypesComposer::class);
         view()->composer('leads.includes.filters', SourcesComposer::class);
 
+        // Клиентские заказы
+        view()->composer('estimates.includes.filters', CitiesComposer::class);
+        view()->composer('estimates.includes.filters', SourcesComposer::class);
     }
 
     public function register()

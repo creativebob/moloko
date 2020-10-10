@@ -35,9 +35,8 @@
                     {{-- <th class="td-number">Номер</th> --}}
                     {{-- <th class="td-supplier-name">Поставщик</th> --}}
                     <th class="td-stock">Склад</th>
-                    <th class="td-amount">Сумма</th>
+                    <th class="td-amount">Расход</th>
                     <th class="td-description">Коментарий</th>
-                    <th class="td-payment">Оплачено</th>
                     <th class="td-status">Статус</th>
                     <th class="td-created_at">Создана</th>
                     <th class="td-author">Автор</th>
@@ -90,12 +89,7 @@
                         </span>
                       </td> --}}
 
-                        {{-- <td class="td-phone">
-                            {{ isset($production->supplier->company->main_phone->phone) ? decorPhone($production->supplier->company->main_phone->phone) : 'Номер не указан' }}
-                            @if($production->supplier->email ?? '' )<br><span class="tiny-text">{{ $production->supplier->company->email ?? '' }}</span>@endif
-                        </td> --}}
-
-                        <td class="td-amount">{{ num_format($production->amount, 0) }}</td>
+                      <td class="td-amount">{{ num_format($production->amount, 0) }}</td>
 
                     <td class="td-description">
 
@@ -110,10 +104,6 @@
                           @endcan
 
                     </td>
-
-                        <td class="td-payment">{{ num_format($production->payment, 0) }}
-                          <br><span class="tiny-text">{{ num_format($production->amount - $production->payment, 0) }}</span>
-                      </td>
                       <td class="td-status">@if($production->is_produced)Произведен @endif</td>
                       <td class="td-created_at">
                         <span>{{ $production->created_at->format('d.m.Y') }}</span><br>
