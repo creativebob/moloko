@@ -118,7 +118,8 @@ class Update210420Tables extends Migration
             $table->decimal('computed_discount_currency', 10, 2)->default(0)->comment('высчитанная скидка (валюта)')->after('computed_discount_percent');
             $table->decimal('total_computed_discount', 10, 2)->default(0)->comment('Сумма с высчитанной скидкой ')->after('computed_discount_currency');
 
-            $table->decimal('manual_discount_percent', 10, 2)->default(0)->comment('Ручная скидка (%)')->after('total_computed_discount');
+            $table->boolean('is_manual')->default(0)->comment('Ручной режим скидки')->after('total_computed_discount');
+            $table->decimal('manual_discount_percent', 10, 2)->default(0)->comment('Ручная скидка (%)')->after('is_manual');
             $table->decimal('manual_discount_currency', 10, 2)->default(0)->comment('Ручная скидка (валюта)')->after('manual_discount_percent');
             $table->decimal('total_manual_discount', 10, 2)->default(0)->comment('Сумма с ручной скидкой')->after('manual_discount_currency');
 
@@ -164,7 +165,8 @@ class Update210420Tables extends Migration
             $table->decimal('computed_discount_currency', 10, 2)->default(0)->comment('высчитанная скидка (валюта)')->after('computed_discount_percent');
             $table->decimal('total_computed_discount', 10, 2)->default(0)->comment('Сумма с высчитанной скидкой ')->after('computed_discount_currency');
 
-            $table->decimal('manual_discount_percent', 10, 2)->default(0)->comment('Ручная скидка (%)')->after('total_computed_discount');
+            $table->boolean('is_manual')->default(0)->comment('Ручной режим скидки')->after('total_computed_discount');
+            $table->decimal('manual_discount_percent', 10, 2)->default(0)->comment('Ручная скидка (%)')->after('is_manual');
             $table->decimal('manual_discount_currency', 10, 2)->default(0)->comment('Ручная скидка (валюта)')->after('manual_discount_percent');
             $table->decimal('total_manual_discount', 10, 2)->default(0)->comment('Сумма с ручной скидкой')->after('manual_discount_currency');
 
@@ -394,6 +396,7 @@ class Update210420Tables extends Migration
                 'computed_discount_currency',
                 'total_computed_discount',
 
+                'is_manual',
                 'manual_discount_percent',
                 'manual_discount_currency',
                 'total_manual_discount',
@@ -438,6 +441,7 @@ class Update210420Tables extends Migration
                 'computed_discount_currency',
                 'total_computed_discount',
 
+                'is_manual',
                 'manual_discount_percent',
                 'manual_discount_currency',
                 'total_manual_discount',

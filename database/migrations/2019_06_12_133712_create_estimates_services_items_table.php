@@ -66,6 +66,7 @@ class CreateEstimatesServicesItemsTable extends Migration
             $table->decimal('computed_discount_currency', 10, 2)->default(0)->comment('высчитанная скидка (валюта)');
             $table->decimal('total_computed_discount', 10, 2)->default(0)->comment('Сумма с высчитанной скидкой');
 
+            $table->boolean('is_manual')->default(0)->comment('Ручной режим скидки');
             $table->decimal('manual_discount_percent', 10, 2)->default(0)->comment('Ручная скидка (%)');
             $table->decimal('manual_discount_currency', 10, 2)->default(0)->comment('Ручная скидка (валюта)');
             $table->decimal('total_manual_discount', 10, 2)->default(0)->comment('Сумма с ручной скидкой');
