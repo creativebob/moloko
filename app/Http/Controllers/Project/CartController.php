@@ -256,19 +256,21 @@ class CartController extends Controller
 
             // Обработка имени компании
             if ($companyName) {
-                $cleanCompanyName = trim($companyName, '"');
-                $cleanCompanyName = trim($cleanCompanyName, '\'');
+                $cleanCompanyName = str_replace('"', "", $companyName);
+                $cleanCompanyName = str_replace('\'', "", $cleanCompanyName);
 
                 $legalFormsList = LegalForm::get()
                     ->pluck('name', 'id');
 
+                $cleanCompanyNameLowerCase = mb_strtolower($cleanCompanyName, 'UTF-8');
                 foreach ($legalFormsList as $key => $value) {
-
-                    if (preg_match("/(^|\s)" . $value . "\s/i", $cleanCompanyName, $matches)) {
-                        $cleanCompanyName = str_replace($matches[0], "", $cleanCompanyName);
+                    $valueLowerCase = mb_strtolower($value, 'UTF-8');
+                    if (preg_match("/(^|\s)" . $valueLowerCase . "\s/i", $cleanCompanyNameLowerCase, $matches)) {
+                        $cleanCompanyNameLowerCase = str_replace($matches[0], "", $cleanCompanyNameLowerCase);
                     }
                 }
 
+                $cleanCompanyName = ucfirst($cleanCompanyNameLowerCase);
                 $company = Company::where('name', $cleanCompanyName)
                     ->first();
             }
