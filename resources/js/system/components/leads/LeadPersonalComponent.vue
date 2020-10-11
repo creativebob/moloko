@@ -1,89 +1,89 @@
 <template>
-    <div class="grid-x">
+    <form id="form-lead-personal" data-abide novalidate>
+        <div class="grid-x">
+            <div class="cell small-12 large-shrink margin-left-15">
+                <div class="grid-x grid-padding-x lead-contacts-block">
+                    <div class="large-shrink cell">
+                        <label>Телефон
+                            <phone-component
+                                :phone="phone"
+                                :required="true"
+                                :disabled="isDisabled"
+                                @input="changePhone"
+                                ref="phone"
+                            ></phone-component>
+                            <!--                        <span class="form-error">Укажите номер</span>-->
+                        </label>
+                    </div>
+                    <div class="large-auto cell">
+                        <label>Контактное лицо
+                            <string-component
+                                :value="name"
+                                :required="true"
+                                :disabled="isDisabled"
+                                v-model="name"
+                                @change="change"
+                                ref="name"
+                            ></string-component>
+                        </label>
+                    </div>
+                    <div id="port-autofind" class="small-12 cell">
+                    </div>
 
-        <div class="cell small-12 large-shrink margin-left-15">
-            <div class="grid-x grid-padding-x lead-contacts-block">
-                <div class="large-shrink cell">
-                    <label>Телефон
-                        <phone-component
-                            :phone="phone"
-                            :required="true"
+                    <div class="large-shrink cell">
+                        <search-city-component
+                            :start-cities="cities"
+                            :city="city"
                             :disabled="isDisabled"
-                            @input="changePhone"
-                            ref="phone"
-                        ></phone-component>
-<!--                        <span class="form-error">Укажите номер</span>-->
-                    </label>
-                </div>
-                <div class="large-auto cell">
-                    <label>Контактное лицо
-                        <string-component
-                            :value="name"
-                            :required="true"
-                            :disabled="isDisabled"
-                            v-model="name"
                             @change="change"
-                            ref="name"
-                        ></string-component>
-                    </label>
+                            ref="cityId"
+                        ></search-city-component>
+                    </div>
+                    <div class="large-auto cell wrap-lead-address">
+                        <label>Адрес
+                            <string-component
+                                name="address"
+                                :value="address"
+                                :disabled="isDisabled"
+                                v-model="address"
+                                @change="change"
+                                ref="address"
+                            ></string-component>
+                        </label>
+                    </div>
                 </div>
-                <div id="port-autofind" class="small-12 cell">
-                </div>
+            </div>
+            <div class="small-12 large-auto cell wrap-lead-add-contacts">
+                <div class="grid-x grid-padding-x">
 
-                <div class="large-shrink cell">
-                    <search-city-component
-                        :start-cities="cities"
-                        :city="city"
+                    <organization-component
+                        :organization="organization"
+                        :legal-forms="legalForms"
+                        :companies="companies"
                         :disabled="isDisabled"
-                        @change="change"
-                        ref="cityId"
-                    ></search-city-component>
-                </div>
-                <div class="large-auto cell wrap-lead-address">
-                    <label>Адрес
-                        <string-component
-                            name="address"
-                            :value="address"
-                            :disabled="isDisabled"
-                            v-model="address"
-                            @change="change"
-                            ref="address"
-                        ></string-component>
-                    </label>
+                        @change="updateOrganization"
+                        @input="change"
+                        ref="organization"
+                    ></organization-component>
+
+                    <div class="small-12 cell wrap-lead-email">
+                        <label>E-mail
+                            <string-component
+                                name="email"
+                                :value="email"
+                                :disabled="isDisabled"
+                                v-model="email"
+                                @change="change"
+                                ref="email"
+                            ></string-component>
+
+                        </label>
+                    </div>
+
                 </div>
             </div>
         </div>
-        <div class="small-12 large-auto cell wrap-lead-add-contacts">
-            <div class="grid-x grid-padding-x">
-
-                <organization-component
-                    :organization="organization"
-                    :legal-forms="legalForms"
-                    :companies="companies"
-                    :disabled="isDisabled"
-                    @change="updateOrganization"
-                    @input="change"
-                    ref="organization"
-                ></organization-component>
-
-                <div class="small-12 cell wrap-lead-email">
-                    <label>E-mail
-                        <string-component
-                            name="email"
-                            :value="email"
-                            :disabled="isDisabled"
-                            v-model="email"
-                            @change="change"
-                            ref="email"
-                        ></string-component>
-
-                    </label>
-                </div>
-
-            </div>
-        </div>
-
-    </div>
+    </form>
 </template>
 
 <script>
@@ -161,6 +161,7 @@
                 };
 
                 this.$store.commit('UPDATE_LEAD', data)
+
             },
             changePhone(value) {
                 if (value.length == 17) {
@@ -254,7 +255,7 @@
                     this.address = organization.location.address;
                     this.$refs.address.update(this.address);
 
-                    if (!this.phone.phone && !this.name) {
+                    if (!this.mainPhone && !this.name) {
 
                         if (organization.representatives.length) {
                             const user = organization.representatives[0];

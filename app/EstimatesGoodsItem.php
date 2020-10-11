@@ -70,6 +70,7 @@ class EstimatesGoodsItem extends Model
         'computed_discount_currency',
         'total_computed_discount',
 
+        'is_manual',
         'manual_discount_percent',
         'manual_discount_currency',
         'total_manual_discount',

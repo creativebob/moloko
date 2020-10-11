@@ -551,6 +551,7 @@ class LeadController extends Controller
                 'computed_discount_currency' => $newGoodsItem['computed_discount_currency'],
                 'total_computed_discount' => $newGoodsItem['total_computed_discount'],
 
+                'is_manual' => $newGoodsItem['is_manual'],
                 'manual_discount_percent' => $newGoodsItem['manual_discount_percent'],
                 'manual_discount_currency' => $newGoodsItem['manual_discount_currency'],
                 'total_manual_discount' => $newGoodsItem['total_manual_discount'],

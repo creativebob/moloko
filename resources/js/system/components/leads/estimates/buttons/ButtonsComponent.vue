@@ -103,7 +103,7 @@
         },
         methods: {
             save() {
-                let res = window.submitAjax('form-lead');
+                let res = window.submitAjax('form-lead-personal');
                 if (res) {
 
                     let data = {
@@ -117,7 +117,7 @@
                 }
             },
             registerEstimate() {
-                let res = window.submitAjax('form-lead');
+                let res = window.submitAjax('form-lead-personal');
                 if (res) {
 
                     let data = {

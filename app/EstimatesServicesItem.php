@@ -17,52 +17,74 @@ class EstimatesServicesItem extends Model
 
     use Commonable;
 
-    protected $dates = ['deleted_at'];
+    protected $dates = [
+        'deleted_at'
+    ];
+
     protected $fillable = [
         'estimate_id',
-
         'price_id',
+
+        'goods_id',
         'currency_id',
-
-        'service_id',
-
-        'company_id',
-        'author_id',
-
-        'count',
-        'price',
+        'sale_mode',
 
         'comment',
 
-        'sale_mode',
+        'cost_unit',
+        'price',
+        'points',
+        'count',
 
         'cost',
-        'margin_percent',
-        'margin_currency',
-
         'amount',
-        'total',
-        'total_points',
-        'total_bonuses',
 
         'price_discount_id',
+        'price_discount_unit',
         'price_discount',
         'total_price_discount',
 
         'catalogs_item_discount_id',
+        'catalogs_item_discount_unit',
         'catalogs_item_discount',
         'total_catalogs_item_discount',
 
         'estimate_discount_id',
+        'estimate_discount_unit',
         'estimate_discount',
         'total_estimate_discount',
 
         'client_discount_percent',
+        'client_discount_unit_currency',
         'client_discount_currency',
+        'total_client_discount',
+
+        'total',
+        'total_points',
+        'total_bonuses',
+
+        'computed_discount_percent',
+        'computed_discount_currency',
+        'total_computed_discount',
+
+        'is_manual',
+        'manual_discount_percent',
+        'manual_discount_currency',
+        'total_manual_discount',
+
+        'discount_currency',
+        'discount_percent',
+
+        'margin_currency_unit',
+        'margin_percent_unit',
+        'margin_currency',
+        'margin_percent',
+
+        'sort',
 
         'display',
         'system',
-        'moderation'
+        'moderation',
     ];
 
     // Смета

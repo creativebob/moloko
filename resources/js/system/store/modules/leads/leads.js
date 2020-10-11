@@ -140,6 +140,8 @@ const moduleLead = {
                             manual_discount_currency: 0,
                             manual_discount_percent: 0,
 
+                            is_manual: 0,
+
                             company_id: null,
                         };
 
@@ -153,8 +155,7 @@ const moduleLead = {
                 }
             },
             UPDATE_GOODS_ITEM(state, item) {
-                let id = item.id;
-                let index = state.goodsItems.findIndex(item => item.id === id);
+                let index = state.goodsItems.findIndex(obj => obj.id === item.id);
                 this.commit('SET_AGGREGATIONS', item);
                 item = state.goodsItems[index];
                 Vue.set(state.goodsItems, index, item);
@@ -176,11 +177,9 @@ const moduleLead = {
 
                         // Скидки
                         // Иначе рассчитываем
-                        let id = item.id;
-                        let index = state.goodsItems.findIndex(obj => obj.id == id);
-
+                        let index = state.goodsItems.findIndex(obj => obj.id == item.id);
                         // Если есть ручная скидка
-                        if (item.manual_discount_currency > 0) {
+                        if (item.is_manual == 1) {
 
                             if (item.manual_discount_currency == item.computed_discount_currency) {
                                 // Введенное значение совпало, скидываем ручную скидку
@@ -198,13 +197,16 @@ const moduleLead = {
                                 item.client_discount_currency = 0;
                                 item.total_client_discount = item.amount;
 
-                                item.total_manual_discount = item.manual_discount_currency * count;
-                                item.total = item.amount - item.total_manual_discount;
+                                item.total_manual_discount = item.amount - (item.manual_discount_currency * count);
+                                item.total = item.total_manual_discount;
 
-                                item.total_computed_discount = item.computed_discount_currency * count;
+                                item.total_computed_discount = 0;
 
-                                item.discount_currency = item.total_manual_discount;
+                                item.discount_currency = item.manual_discount_currency * count;
                                 item.discount_percent = item.manual_discount_percent;
+
+                                let index = state.goodsItems.findIndex(obj => obj.id == item.id);
+                                Vue.set(state.goodsItems, index, item);
                             }
                         } else {
                             // Иначе рассчитываем
@@ -305,8 +307,9 @@ const moduleLead = {
                 item.manual_discount_percent = 0;
                 item.total_manual_discount = 0;
 
-                let id = item.id;
-                let index = state.goodsItems.findIndex(item => item.id == id);
+                item.is_manual = 0;
+
+                let index = state.goodsItems.findIndex(obj => obj.id == item.id);
                 Vue.set(state.goodsItems, index, item);
             },
 
@@ -358,7 +361,7 @@ const moduleLead = {
                 axios
                     .patch('/admin/leads/axios_update/' + state.lead.id, data)
                     .then(response => {
-                        console.log(response.data);
+                        // console.log(response.data);
 
                         this.commit('SET_LEAD', response.data.lead);
                         this.commit('SET_ESTIMATE', response.data.estimate);
@@ -378,7 +381,7 @@ const moduleLead = {
                 axios
                     .patch('/admin/estimates/' + state.estimate.id + '/saling/')
                     .then(response => {
-                        console.log(response.data);
+                        // console.log(response.data);
                         this.commit('SET_ESTIMATE', response.data);
                     })
                     .catch(error => {

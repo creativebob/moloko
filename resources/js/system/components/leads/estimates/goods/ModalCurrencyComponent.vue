@@ -234,16 +234,19 @@
                 this.curCount = value;
             },
             update() {
-                if (this.item.discount_percent != this.discountPercent || (this.item.discount_currency / this.item.count) != this.discountCurrency) {
+                if (this.item.computed_discount_percent != this.discountPercent || this.item.computed_discount_currency != this.discountCurrency) {
                     this.item.manual_discount_currency = this.discountCurrency;
                     this.item.manual_discount_percent = this.discountPercent;
+                    this.item.is_manual = 1;
+                } else {
+                    this.item.manual_discount_currency = 0;
+                    this.item.manual_discount_percent = 0;
+                    this.item.is_manual = 0;
                 }
 
                 this.item.count = this.curCount;
-
-                $('#modal-estimates_goods_item-' + this.item.id).foundation('close');
-
                 this.$emit('update', this.item);
+                $('#modal-estimates_goods_item-' + this.item.id).foundation('close');
             },
             reset() {
                 if (!this.isRegistered) {
