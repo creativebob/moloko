@@ -52,11 +52,8 @@
         },
         data() {
             return {
-                curOrganization: this.organization.id ? this.organization : {
-                    id: null,
-                    name: null,
-                },
-                name: this.organization.id ? this.organization.name : null,
+                curOrganization: this.organization,
+                name: this.organization.name,
 
                 results: [],
                 search: false,

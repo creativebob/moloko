@@ -114,7 +114,7 @@
 
                 organization: this.lead.organization ? this.lead.organization : {
                     id: null,
-                    name: null
+                    name: this.lead.company_name
                 },
                 companyName: this.lead.company_name,
 

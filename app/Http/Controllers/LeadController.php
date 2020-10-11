@@ -1669,6 +1669,7 @@ class LeadController extends Controller
                 'name' => $lead->name ?? 'Имя не указано',
                 'case_number' => $lead->case_number,
                 'manager' => $lead->manager->first_name . ' ' . $lead->manager->second_name,
+                'company_name' => $lead->company_name,
             ];
             return response()->json($result);
         }

@@ -91390,7 +91390,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             organization: this.lead.organization ? this.lead.organization : {
                 id: null,
-                name: null
+                name: this.lead.company_name
             },
             companyName: this.lead.company_name,
 
@@ -91840,11 +91840,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     data: function data() {
         return {
-            curOrganization: this.organization.id ? this.organization : {
-                id: null,
-                name: null
-            },
-            name: this.organization.id ? this.organization.name : null,
+            curOrganization: this.organization,
+            name: this.organization.name,
 
             results: [],
             search: false,

@@ -33,6 +33,16 @@ class CompanyObserver
         // TODO - 15.09.20 - Думаю стоит в компанию всегда автором писать id робота
         $company->author_id = 1;
 
+        $legalForm = $this->cleanName($company);
+        $company->legal_form_id = $legalForm->id ?? $request->legal_form_id ?? 1;
+
+        $companiesCount = Company::count();
+        if ($companiesCount == 0) {
+            $number = 1;
+        } else {
+            $number = $companiesCount + 1;
+        }
+        $company->alias = \Str::slug($company->name) . '-' . $number;
     }
 
     /**
@@ -47,6 +57,9 @@ class CompanyObserver
         } else {
             $company->editor_id = 1;
         }
+
+        $legalForm = $this->cleanName($company);
+        $company->legal_form_id = $legalForm->id ?? request()->legal_form_id ?? 1;
     }
 
     /**
@@ -57,16 +70,6 @@ class CompanyObserver
     public function deleting(Company $company)
     {
         $this->destroy($company);
-    }
-
-    /**
-     * Handle the company "saving" event.
-     *
-     * @param Company $company
-     */
-    public function saving(Company $company)
-    {
-        $this->clearName($company);
     }
 
     /**
@@ -102,31 +105,49 @@ class CompanyObserver
      * Очистка имени
      *
      * @param Company $company
+     * @return |null
      */
-    public function clearName(Company $company)
+    public function cleanName(Company $company)
     {
-        $companiesCount = Company::count();
 
-        // Вычисляем номер для использования в алиасе
-        if ($companiesCount == 0) {
-            $number = 1;
-        } else {
-            $number = $companiesCount + 1;
-        }
+        $cleanCompanyName = str_replace('"', "", $company->name);
+        $cleanCompanyName = str_replace('\'', "", $cleanCompanyName);
 
-        $legalFormsList = LegalForm::get()
-            ->pluck('name', 'id');
+        $legalForms = LegalForm::get();
 
-        foreach ($legalFormsList as $key => $value) {
-
-            if (preg_match("/(^|\s)" . $value . "\s/i", $company->name, $matches)) {
-                $company->name = str_replace($matches[0], "", $company->name);
-                $company->legal_form_id = $key;
-                $company->alias = \Str::slug($company->name) . '-' . $number;
-            } else {
-                $company->legal_form_id = $request->legal_form_id ?? 1;
-                $company->alias = \Str::slug($company->name) . '-' . $number;
+        $cleanCompanyNameLowerCase = mb_strtolower($cleanCompanyName, 'UTF-8');
+        $item = null;
+        foreach ($legalForms as $legalForm) {
+            $valueLowerCase = mb_strtolower($legalForm->name, 'UTF-8');
+            if (preg_match("/(^|\s)" . $valueLowerCase . "\s/i", $cleanCompanyNameLowerCase, $matches)) {
+                $cleanCompanyNameLowerCase = str_replace($matches[0], "", $cleanCompanyNameLowerCase);
+                $item = $legalForm;
             }
         }
+
+        // Почему то не отрабатывает
+//        $cleanCompanyName = ucfirst($cleanCompanyNameLowerCase);
+
+        // TODO - 11.10.20 - Топроное решение, чтоб сделать первую букву имени компании заглавное, т.к. сравнение на правовую форму происходит в нижнем регистре
+        $firstLetter = mb_substr($cleanCompanyNameLowerCase, 0, 1);
+        $firstLetter = mb_strtoupper($firstLetter);
+        $text = mb_substr($cleanCompanyNameLowerCase, 1);
+        $cleanCompanyName = "{$firstLetter}{$text}";
+
+        $company->name = $cleanCompanyName;
+
+        return $item;
+
+//        foreach ($legalFormsList as $key => $value) {
+//
+//            if (preg_match("/(^|\s)" . $value . "\s/i", $company->name, $matches)) {
+//                $company->name = str_replace($matches[0], "", $company->name);
+//                $company->legal_form_id = $key;
+//                $company->alias = \Str::slug($company->name) . '-' . $number;
+//            } else {
+//                $company->legal_form_id = $request->legal_form_id ?? 1;
+//                $company->alias = \Str::slug($company->name) . '-' . $number;
+//            }
+//        }
     }
 }
