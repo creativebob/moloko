@@ -142,9 +142,81 @@ class Estimate extends Model
     public function scopeFilter($query)
     {
 
-        if (request('client_id')) {
-            $query->where('client_id', request('client_id'));
+
+        // if (request('cities')) {
+        //     $query->where(
+        //         'client', 
+        //         function ($q) {
+        //             $query->whereHasMorph(
+        //                 'clientable',
+        //                 [
+        //                     Company::class,
+        //                     User::class
+        //                 ],
+        //                 function ($q) {
+        //                 $q->whereHas('location', function ($q) {
+        //                     $q->whereHas('city', function ($q) {
+        //                         $q->whereIn('id', request('cities'));
+        //                     });
+        //                 });
+        //             });
+        //         }
+        //     );
+        // }
+
+
+        if (! is_null(request('dismissed'))) {
+            $query->where('is_dismissed', request('dismissed'));
         }
+
+        if (! is_null(request('saled'))) {
+            $query->where('is_saled', request('saled'));
+        }
+
+        if (request('total_min')) {
+            $query->where('total', '>=', request()->total_min);
+        }
+
+        if (request('total_max')) {
+            $query->where('total', '<=', request()->total_max);
+        }
+
+        if (request('total_points_min')) {
+            $query->where('total_points', '>=', request()->total_points_min);
+        }
+
+        if (request('total_points_max')) {
+            $query->where('total_points', '<=', request()->total_points_max);
+        }
+
+        if (request('margin_currency_min')) {
+            $query->where('margin_currency', '>=', request()->margin_currency_min);
+        }
+
+        if (request('margin_currency_max')) {
+            $query->where('margin_currency', '<=', request()->margin_currency_max);
+        }
+
+        if (request('discount_currency_min')) {
+            $query->where('discount_currency', '>=', request()->discount_currency_min);
+        }
+
+        if (request('discount_currency_max')) {
+            $query->where('discount_currency', '<=', request()->discount_currency_max);
+        }
+
+
+        // TODO - 01.07.20 - Фильтруем по дате регистрации, нужно фильтровать по дате продажи
+        if (request('registered_date_min')) {
+            $query->whereDate('registered_date', '>=', Carbon::createFromFormat('d.m.Y', request()->registered_date_min));
+        }
+
+        if (request('registered_date_max')) {
+            $query->whereDate('registered_date', '<=', Carbon::createFromFormat('d.m.Y', request()->registered_date_max));
+        }
+
+
+
 
         return $query;
     }

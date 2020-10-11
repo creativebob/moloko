@@ -188,6 +188,11 @@ $dropdown-width: 14rem;
     margin-top: 0.8rem;
 }
 
+sup{
+    font-size: 0.65rem;
+    color: #bbb;
+}
+
 
 // Базовые корректировки
 label[for='access-block-checkbox']{
@@ -1331,10 +1336,13 @@ span.wrap-label-checkboxer {
     height: 60px;
 }
 
-.td-receipt_date, .th-receipt_date{
+.td-receipt_date, .th-receipt_date, .td-date, .th-date{
     width: 65px;
 }
 
+.bold{
+    font-weight: 600;
+}
 
 // СТРАНИЦА СОТРУДНИКИ
 
@@ -4306,4 +4314,9 @@ tr:hover .button-to-reserve{
 
 .with-discount {
     color: red;
+}
+
+.font-accent{
+    font-family: $PFDDPM;
+    font-size: 1.2rem;
 }

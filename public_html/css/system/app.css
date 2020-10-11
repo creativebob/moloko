@@ -362,6 +362,10 @@ input[type='search'] {
   color: #cacaca;
 }
 
+::-moz-placeholder {
+  color: #cacaca;
+}
+
 ::-ms-input-placeholder {
   color: #cacaca;
 }
@@ -593,6 +597,10 @@ select[multiple] {
 }
 
 .is-invalid-input:not(:focus)::-webkit-input-placeholder {
+  color: #cc4b37;
+}
+
+.is-invalid-input:not(:focus)::-moz-placeholder {
   color: #cc4b37;
 }
 
@@ -9601,6 +9609,11 @@ tbody.brand-logo-table-tbody {
   margin-top: 0.8rem;
 }
 
+sup {
+  font-size: 0.65rem;
+  color: #bbb;
+}
+
 label[for='access-block-checkbox'] {
   margin-top: 7px !important;
 }
@@ -10731,8 +10744,12 @@ span.wrap-label-checkboxer {
   height: 60px;
 }
 
-.td-receipt_date, .th-receipt_date {
+.td-receipt_date, .th-receipt_date, .td-date, .th-date {
   width: 65px;
+}
+
+.bold {
+  font-weight: 600;
 }
 
 table.list-employees {
@@ -13319,4 +13336,9 @@ tr:hover .button-to-reserve {
 
 .with-discount {
   color: red;
+}
+
+.font-accent {
+  font-family: "PFDinDisplayPro-Med";
+  font-size: 1.2rem;
 }

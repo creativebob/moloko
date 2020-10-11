@@ -5,6 +5,7 @@ namespace App\Notifications\System;
 use App\User;
 use Telegram;
 use Telegram\Bot\Exceptions\TelegramResponseException;
+use Illuminate\Support\Facades\Mail;
 
 class Notifications
 {
@@ -48,4 +49,20 @@ class Notifications
             }
         }
     }
+
+    // Тестируем отправку почты
+    public static function sendMail()
+    {
+        $to_name = 'Антону Павловичу';
+        $to_email = 'creativebob@yandex.ru';
+        $data = array('name'=>"Антон Павлович", "body" => "Мы хотим продать вам интересные штучки!");
+
+        Mail::send('emails/offers/main', $data, function($message) use ($to_name, $to_email) {
+            $message->to($to_email, $to_name)->subject('Коммерческое предложение');
+            $message->from('smpcreativebob@gmail.com','Алексей');
+        });
+    }
+
+
+
 }

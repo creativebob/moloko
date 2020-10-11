@@ -31,15 +31,7 @@ class CreateCompaniesTable extends Migration
             $table->string('ogrn', 15)->nullable()->comment('Основной государственный регистрационный номер');
             $table->string('okpo', 10)->nullable()->comment('Общероссийский классификатор предприятий и организаций');
             $table->string('okved', 8)->nullable() ->comment('Общероссийский классификатор видов экономической деятельности');
-
-            $table->integer('bic')->length(9)->nullable()->unsigned()->comment('Банковский идентификационный код');
-
-            // Видимо устарело - на удаление!
-            // $table->bigInteger('director_user_id')->nullable()->unsigned()->comment('Директор компании');
-            // $table->foreign('director_user_id')->references('id')->on('users');
-
-            // $table->bigInteger('admin_user_id')->nullable()->unsigned()->comment('Администратор компании');
-            // $table->foreign('admin_user_id')->references('id')->on('users');
+            $table->string('bic', 9)->nullable()->comment('Банковский идентификационный код');
 
             $table->boolean('external_control')->default(0)->comment('Внешнее управление');
 

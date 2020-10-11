@@ -9,23 +9,13 @@
                         @yield('content-count')
                     </span>
                 </h2>
-
-                @can('create', App\Client::class)
-                    @if(!empty(Auth::user()->staff[0]))
-                        <div class="button-group">
-                            <a href="{{ route('clients.createClientCompany') }}" class="button tiny">+ Компания</a>
-                            <a href="{{ route('clients.createClientUser') }}" class="button tiny">+ Физическое лицо</a>
-                        </div>
-                    @endif
-                @endcan
-
             </div>
 
             <div class="top-bar-right">
                 <a class="icon-filter sprite
                 @if(count(request()->input())) filtration-active @endif
                     "></a>
-                <search-clients-component></search-clients-component>
+                {{-- <search-estimates-component></search-estimates-component> --}}
             </div>
         </div>
 
@@ -33,14 +23,14 @@
             <div class="small-12 cell filters fieldset-filters" id="filters">
                 <div class="grid-padding-x">
                     <div class="small-12 cell text-right">
-                        <a href="{{ route('clients.index') }}" class="small-link">Сбросить</a>
+                        <a href="{{ route('estimates.index') }}" class="small-link">Сбросить</a>
                     </div>
                 </div>
                 <div class="grid-padding-x">
                     <div class="small-12 cell">
-                        {{ Form::open(['route' => 'clients.index', 'data-abide', 'novalidate', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
+                        {{ Form::open(['route' => 'estimates.index', 'data-abide', 'novalidate', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
 
-                        @include('system.pages.clients.includes.filters')
+                        @include('estimates.includes.filters')
 
                         <div class="small-12 cell text-center">
                             {{ Form::submit('Фильтрация', ['class'=>'button']) }}

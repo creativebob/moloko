@@ -14,8 +14,8 @@
 @endsection
 
 @section('title-content')
-{{-- Таблица --}}
-@include('includes.title-content', ['pageInfo' => $pageInfo, 'class' => null, 'type' => 'table'])
+    {{-- Таблица --}}
+    @include('estimates.includes.title')
 @endsection
 
 @section('content')
@@ -30,15 +30,18 @@
                 <tr id="thead-content">
                     <th class="td-drop"></th>
                     <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
+                    <th class="td-date">Дата заказа</th> 
+                    <th class="td-number">Номер заказа</th>                   
                     <th class="td-name">Клиент</th>
                     <th class="td-phone">Телефон</th>
-                    <th class="td-number">Номер заказа</th>
-                    <th class="td-date">Дата заказа</th>
-                    <th class="td-total">Сумма</th>
+                    <th class="td-amount">Сумма</th>
+                    <th class="td-discount-currency">Скидка</th>
+                    <th class="td-total">Сумма к оплате</th>
                     <th class="td-payment">Оплачено</th>
-                    <th class="td-margin_currency">Маржа</th>
-                    <th class="td-margin_percent">% маржи</th>
-                    <th class="td-status">Статус</th>
+                    <th class="td-debt">Долг</th>
+                    @if(extra_right('margin-show'))<th class="td-margin_currency">Маржа</th>@endif
+                    <th class="td-saled">Продажа</th>
+                    <th class="td-dissmissed">Списание</th>
                     <th class="td-delete"></th>
                 </tr>
             </thead>
@@ -58,10 +61,14 @@
                     @endif
                     >
                     <label class="label-check" for="check-{{ $estimate->id }}"></label>
-
                 </td>
+                <td class="td-date">
+                    <span>{{ $estimate->registered_date->format('d.m.Y') }}</span><br>
+                    <span class="tiny-text">{{ $estimate->registered_date->format('H:i') }}</span>
+                </td>                 
+                <td class="td-number"><a href="/admin/leads/{{ $estimate->lead_id }}/edit">{{ $estimate->number }}</a>
+                </td>               
                 <td class="td-name">
-
                   <a href="/admin/estimates?client_id={{ $estimate->client_id }}" class="filter_link" title="Фильтровать">
                     {{ $estimate->client->clientable->name ?? 'Имя не указано' }}
                 </a>
@@ -73,26 +80,32 @@
                 @endisset
                 <td class="td-phone">
                     {{ isset($estimate->client->clientable->main_phone->phone) ? decorPhone($estimate->client->clientable->main_phone->phone) : 'Номер не указан' }}
-                    @if($estimate->client->clientable->email)<br><span class="tiny-text">{{ $estimate->client->clientable->email ?? '' }}</span>@endif
+                    {{-- @if($estimate->client->clientable->email)<br><span class="tiny-text">{{ $estimate->client->clientable->email ?? '' }}</span>@endif --}}
                 </td>
-                <td class="td-number"><a href="/admin/leads/{{ $estimate->lead_id }}/edit">{{ $estimate->id }}</a>
-                    <br><span class="tiny-text">{{ $estimate->lead->choice->name ?? '' }}</span>
+                <td class="td-amount">{{ num_format($estimate->amount, 0) }}</td>
+                <td class="td-discount-currency">
+                  @if($estimate->discount_currency != 0)
+                    {{ num_format($estimate->discount_currency, 0) }} <sup> {{ num_format($estimate->discount_percent, 0) }}%</sup>
+                  @endif
+                </td>
+                <td class="td-total">
+                  <span class="bold">{{ num_format($estimate->total, 0) }}</span>
+                  @if($estimate->total_points != 0)
+                    <span class="tiny-text"> | $estimate->total_points</span>
+                  @endif
+
                 </td>
 
+                <td class="td-payment">{{ num_format($estimate->payments->sum('amount'), 0) }}</td>
+                <td class="td-debt">{{ num_format($estimate->total - $estimate->payments->sum('amount'), 0) }}</td>
 
-                <td class="td-date">
-                    <span>{{ $estimate->created_at->format('d.m.Y') }}</span><br>
-                    <span class="tiny-text">{{ $estimate->created_at->format('H:i') }}</span>
-                </td>
-                <td class="td-total">{{ num_format($estimate->total, 0) }}</td>
-                <td class="td-payment">{{ num_format($estimate->payments->sum('amount'), 0) }}
-                  <br><span class="tiny-text">{{ num_format($estimate->total - $estimate->payments->sum('amount'), 0) }}</span>
-              </td>
+                @if(extra_right('margin-show'))
+                  <td class="td-margin_currency">{{ num_format($estimate->margin_currency, 0) }} <sup>{{ num_format($estimate->margin_percent, 0) }}%</sup></td>
+                @endif
 
-                  <td class="td-margin_currency">{{ num_format($estimate->margin_currency, 0) }}</td>
-                  <td class="td-margin_percent">{{ num_format($estimate->margin_percent, 0) }}</td>
+              <td class="td-saled">{{ ($estimate->is_saled == 1) ? 'Чек закрыт' : '' }}</td>
+              <td class="td-dissmissed">{{ ($estimate->is_dissmissed == 1) ? 'Списан' : '' }}</td>
 
-              <td class="td-stage">{{ ($estimate->is_dissmissed == 1) ? 'Списана' : 'Оформлена' }}</td>
               <td class="td-delete">
                   {{-- @if ($estimate->system !== 1)
                   @can('delete', $estimate)

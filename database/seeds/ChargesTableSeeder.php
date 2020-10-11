@@ -75,6 +75,12 @@ class ChargesTableSeeder extends Seeder
                 'alias' => 'auth-under-user',
                 'author_id' => 1,
             ],
+            [
+                'name' => 'Просмотр маржинальности заказов',
+                'description' => null,
+                'alias' => 'margin-show',
+                'author_id' => 1,
+            ],
 
 
 

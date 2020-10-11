@@ -75,11 +75,12 @@
 
 		<tfoot>
 			<tr>
-				<td	colspan="4">Итого:</td>
-				<td>Позиций: {{ totalItemsCount }}</td>
+				<td	colspan="3">Итого:</td>
+				<td></td>
 				<td
 					v-if="!isProduced"
-				></td>
+				></td><td></td>
+
 			</tr>
 		</tfoot>
 	</table>

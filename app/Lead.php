@@ -347,31 +347,11 @@ class Lead extends Model
     // Фильтры
     public function scopeFilter($query)
     {
-        if (request('cities')) {
-            $query->whereHas('location', function ($q) {
-                $q->whereIn('city_id', request('cities'));
-            });
-        }
-
-        if (request('stages')) {
-            $query->whereIn('stage_id', request('stages'));
-        }
-
-        if (request('managers')) {
-            $query->whereIn('manager_id', request('managers'));
-        }
-
-        if (request('lead_methods')) {
-            $query->whereIn('lead_method_id', request('lead_methods'));
-        }
-
-        if (request('lead_types')) {
-            $query->whereIn('lead_type_id', request('lead_types'));
-        }
 
         if (request('period_date_min')) {
             $query->whereDate('created_at', '>=', Carbon::createFromFormat('d.m.Y', request()->period_date_min));
         }
+
         if (request('period_date_max')) {
             $query->whereDate('created_at', '<=', Carbon::createFromFormat('d.m.Y', request()->period_date_max));
         }
@@ -411,9 +391,33 @@ class Lead extends Model
             }
         }
 
+        if (request('cities')) {
+            $query->whereHas('location', function($q) {
+                $q->whereIn('city_id', request('cities'));
+            });
+        }
+
+        if (request('managers')) {
+            $query->whereIn('manager_id', request('managers'));
+        }
+
+        if (request('lead_methods')) {
+            $query->whereIn('lead_method_id', request('lead_methods'));
+        }
+
+        if (request('lead_types')) {
+            $query->whereIn('lead_type_id', request('lead_types'));
+        }
+
         if (request('sources')) {
             $query->whereIn('source_id', request('sources'));
         }
+
+        if (request('stages')) {
+            $query->whereIn('stage_id', request('stages'));
+        }
+
+        return $query;
 
     }
 

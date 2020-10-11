@@ -45,7 +45,7 @@
                     :items='@json($managers)'
                     :checkeds='@json(request()->managers)'
                 ></checkboxer-component>
-                {{--                            @include('includes.inputs.checkboxer', ['name'=>'manager', 'value' => $filter])--}}
+{{--                            @include('includes.inputs.checkboxer', ['name'=>'manager', 'value' => $filter])--}}
             </div>
 
             <div class="cell small-12">

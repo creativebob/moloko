@@ -17,8 +17,7 @@ class StagesComposer
      */
     public function __construct()
     {
-        $this->stages = Stage::orderBy('name')
-            ->get();
+        $this->stages = Stage::get();
     }
 
     /**
