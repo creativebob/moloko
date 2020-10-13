@@ -26,6 +26,10 @@ class Estimate extends Model
         'registered_date',
     ];
 
+    protected $casts = [
+        'date' => 'datetime:d.m.Y', 
+    ];
+
     protected $fillable = [
         'lead_id',
         'client_id',
@@ -142,7 +146,6 @@ class Estimate extends Model
     public function scopeFilter($query)
     {
 
-
         // if (request('cities')) {
         //     $query->where(
         //         'client', 
@@ -164,6 +167,38 @@ class Estimate extends Model
         //     );
         // }
 
+        // if (request('cities')) {
+        //     $query->whereHas('location', function($q) {
+        //         $q->whereIn('city_id', request('cities'));
+        //     });
+        // }
+
+        if (request('cities')) {
+            $query->whereHas('lead', function($q){
+                $q->whereHas('location', function($q) {
+                    $q->whereIn('city_id', request('cities'));
+                });
+            });
+        }
+
+        if (!is_null(request('status'))) {
+            if (request('status') == 'fiz') {
+                $query->whereHas('lead', function($q){
+                    $q->whereNull('company_name');
+                });
+            }
+            if (request('status') == 'ur') {
+                $query->whereHas('lead', function($q){
+                    $q->whereNotNull('company_name');
+                });
+            }
+        }
+
+        if (request('sources')) {
+            $query->whereHas('lead', function($q){
+                $q->whereIn('source_id', request('sources'));
+            });
+        }
 
         if (! is_null(request('dismissed'))) {
             $query->where('is_dismissed', request('dismissed'));

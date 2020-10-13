@@ -1,4 +1,4 @@
-<div class="cell small-12 medium-6 large-6">
+<div class="cell small-12 medium-8 large-6">
 	<legend>Фильтры:</legend>
 
 	<div class="grid-x grid-margin-x">
@@ -11,7 +11,7 @@
                 :checkeds='@json(request()->cities)'
             ></checkboxer-component>
         </div>
-        
+
         <div class="cell small-12 medium-6 checkbox checkboxer">
             <checkboxer-component
                 name="sources"
@@ -21,14 +21,19 @@
             ></checkboxer-component>
         </div>
 
-        <div class="cell small-12 medium-6">
+        <div class="cell small-12 medium-4">
             <label>Статус по списанию
                 {!! Form::select('dismissed', [false => 'Действующие', true => 'Списанные'], request()->dismissed, ['placeholder' => 'Все']) !!}
             </label>
         </div>
-        <div class="cell small-12 medium-6">
+        <div class="cell small-12 medium-4">
             <label>Статус по продаже
                 {!! Form::select('saled', [false => 'Не проданные', true => 'Проданные'], request()->saled, ['placeholder' => 'Все']) !!}
+            </label>
+        </div>
+        <div class="cell small-12 medium-4">
+            <label>Юридический статус
+                {!! Form::select('status', ['fiz' => 'Физическое лицо', 'ur' => 'Юридическое лицо'], request()->status, ['placeholder' => 'Все']) !!}
             </label>
         </div>
 
@@ -56,11 +61,11 @@
 
         <div class="cell small-12 medium-6">
             @include('includes.inputs.min_max_date', ['name' => 'registered_date', 'title' => 'Дата оформления заказа'])
-        </div>
+        </div>        
 
     </div>
 </div>
-<div class="small-12 medium-6 large-6 cell checkbox checkboxer">
+<div class="small-12 medium-4 large-6 cell checkbox checkboxer">
 	<legend>Мои списки:</legend>
 	<div id="booklists">
 {{--		@include('includes.inputs.booklister', ['name'=>'booklist', 'value'=>$filter])--}}

@@ -20,6 +20,7 @@ use App\Http\Controllers\Traits\LeadControllerTrait;
 use App\Lead;
 use App\Stock;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class EstimateController extends Controller
 {
@@ -63,7 +64,8 @@ class EstimateController extends Controller
             'client.clientable.location',
             'goods_items',
             'author',
-            'payments'
+            'payments',
+            'lead'
         ])
             ->moderatorLimit($answer)
             ->companiesLimit($answer)
@@ -96,6 +98,54 @@ class EstimateController extends Controller
         $pageInfo = pageInfo($this->entity_alias);
 
         return view('estimates.index', compact('estimates', 'pageInfo'));
+    }
+
+
+    public function search(Request $request, $search)
+    {
+
+        $results = Estimate::with('lead')
+        ->where('number', $search)
+            ->orWhereHas('lead', function ($q) use ($search) {
+                $q->where('name', 'LIKE', '%' . $search . '%')
+                ->orWhere('company_name', 'LIKE', '%' . $search . '%')
+                ->orWhereHas('phones', function ($q) use ($search) {
+                    $q->where('phone', $search)
+                    ->orWhere('crop', $search);
+                });
+            })->where('is_registered', true)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+            // Модифицируем данные 
+            $modified = $results->map(function($value, $key) {
+                $value['total'] = num_format($value['total'], 0);
+                // $value['created_at'] = Carbon::parse($value['created_at']);
+                return $value;
+            });
+
+            return response()->json($results);
+
+    }
+
+    // Экспериментальный метод
+    // Проверить на больших объемах данных - быстрее ли этот запрос чем запрос без LIKE
+    public function search_crop_phone(Request $request, $search)
+    {
+
+        // TODO Попробовать сделать поиск через обращенеи phone(crop)->leads->estimate
+
+        $results = Estimate::with('lead')
+        ->where('number', $search)
+        ->orWhereHas('lead', function ($q) use ($search) {
+            $q->whereHas('phones', function ($q) use ($search) {
+                $q->where('crop', $search);
+            });
+        })->where('is_registered', true)
+        ->orderBy('created_at', 'desc')
+        ->get();
+        return response()->json($results);
+
     }
 
 

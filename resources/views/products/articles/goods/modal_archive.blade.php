@@ -5,9 +5,22 @@
     </div>
   </div>
   <div class="grid-x align-center modal-content ">
+    <ul>
+      @if($item->stocks->sum('count') > 0)
+          <li class="small-10 cell">
+              <h6>На складе присутствуют остатки товара: {{ $item->stocks->sum('count') }} </h6>
+              <ol>
+                  @foreach($item->stocks as $stock)
+                    <li>
+                        <a href="{{ route('goods_stocks.edit', $stock->id) }}" target="_blank">{{ $stock->stock->name }}: {{ num_format($stock->count, 2) }} {{ $item->article->unit->abbreviation }}</a>
+                    </li>
+                  @endforeach
+              </ol>
+          </li>
+      @endif
 
       @if($item->in_kits->isNotEmpty())
-          <div class="small-10 cell">
+          <li class="small-10 cell">
               <h6>Товар находится в наборах:</h6>
               <ol>
                   @foreach($item->in_kits as $kit)
@@ -16,11 +29,11 @@
                       </li>
                   @endforeach
               </ol>
-          </div>
+          </li>
       @endif
 
       @if($item->related->isNotEmpty())
-          <div class="small-10 cell">
+          <li class="small-10 cell">
               <h6>Товар является сопутствующим для товаров:</h6>
               <ol>
                   @foreach($item->related as $related)
@@ -29,15 +42,16 @@
                       </li>
                   @endforeach
               </ol>
-          </div>
+          </li>
       @endif
 
       @if($item->prices->isNotEmpty())
-          <div class="small-10 cell">
+          <li class="small-10 cell">
             <h6>Товар находится в прайсах:</h6>
               <ol>
                   @foreach($item->prices as $price)
                       <li>{{ $price->catalog->name }} - {{ $price->catalogs_item->name }}</li>
+
                       @if($price->promotions->isNotEmpty())
                           <ol>
                           @foreach($price->promotions as $promotion)
@@ -47,35 +61,29 @@
                           @endif
                   @endforeach
               </ol>
-          </div>
+          </li>
       @endif
-
+    </ul>
   </div>
     @can('delete', $item)
-        <div class="grid-x align-center grid-padding-x">
-            <div class="cell small-10">
+      <div class="grid-x align-center grid-padding-x">
+        @if($item->stocks->sum('count') == 0)
+            <div class="cell small-12">
                 При архивации все связи будут удалены!
             </div>
-        </div>
-      <div class="grid-x align-center grid-padding-x">
-        <div class="small-6 medium-4 cell">
-{{--          {!! Form::open(['route' => ['goods.archive', $item->id]]) !!}--}}
-{{--            {!! Form::submit('В архив', ['class' => 'button modal-button']) !!}--}}
-{{--            <button class="button modal-button" type="submit">В архив</button>--}}
-{{--        {!! Form::close() !!}--}}
-            <a href="{{ route('goods.archive', $item->id) }}" class="button modal-button">В архив</a>
-        </div>
-<div class="small-6 medium-4 cell">
-<button data-close class="button modal-button" id="save-button" type="submit">Отменить</button>
-</div>
-</div>
+            <div class="small-4 cell">
+                <a href="{{ route('goods.archive', $item->id) }}" class="button modal-button">В архив</a>
+            </div>
+            <div class="small-4 cell">
+              <button data-close class="button modal-button" id="save-button" type="submit">Отменить</button>
+            </div>
+          @else
+              <div class="cell small-12">
+                <p>Архивация невозможна!</p><br>
+              </div>
+          @endif
+      </div>
 
-{{--        @else--}}
-{{--        <div class="grid-x align-center grid-padding-x">--}}
-{{--            <div class="cell small-10">--}}
-{{--                Товар находится в составе набора, архивация невозможна!--}}
-{{--            </div>--}}
-{{--        </div>--}}
 @endcan
 <div data-close class="icon-close-modal sprite close-modal remove-modal"></div>
 </div>

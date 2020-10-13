@@ -51,8 +51,6 @@ class GoodsPolicy
     public function delete(User $user, Model $model)
     {
 
-
-
         if ($model->in_kits->isNotEmpty()) {
             return false;
         }

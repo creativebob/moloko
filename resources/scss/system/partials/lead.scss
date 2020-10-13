@@ -259,3 +259,162 @@ span.item-currency{
         font-size: 1.5rem;
     }
 }
+
+
+
+// УПРАВЛЕНИЕ ДОБАВЛЕНИЕМ ТОВАРА
+
+// Добавление товара
+
+.view-settings-panel{
+    padding: 8px 0px;
+    margin-bottom: 10px;
+    text-align: right;
+}
+
+.catalog-bar{
+    width: 200px !important;
+}
+
+
+.products-list{
+
+    li {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+
+        a {
+            position: relative;
+            font-size: 0.9rem;
+            display: block;
+            float: left;
+            padding: 10px;
+            margin: 1px;
+            width: 100%;
+            height: 30px;
+            background-color: #fff;
+            color: #000;
+            border-radius: 4px;
+            box-shadow: 1px 1px 0px 1px #eee;
+            line-height: 1.2;
+            text-decoration: none;
+
+        }
+
+        a:hover{
+            background-color: #f7f7f7;
+        }
+    }
+}
+
+.view-list.products-list{
+
+    li {
+        a {
+            .items-product-description{
+                display: none;
+            }
+
+            .items-product-img{
+                display: none;
+            }
+
+            .wrap-product-price{
+                width: 60px;
+            }
+
+        }
+
+        a:hover{
+            background-color: #f7f7f7;
+            font-weight: 600;
+        }
+    }
+}
+
+
+.view-block.products-list{
+
+    li {
+        a {
+            padding: 10px;
+            margin: 1px;
+            width: 140px;
+            height: 80px;
+            background-color: #5B6B87;
+            color: #fff;
+
+            .items-product-description{
+                display: none;
+            }
+            .items-product-img{
+                display: none;
+            }
+        }
+
+        a:hover{
+            background-color: #4B5B77;
+        }
+    }
+}
+
+.view-card.products-list{
+
+    li {
+        a {
+            position: relative;
+            font-size: 0.9rem;
+            display: block;
+            float: left;
+            padding: 10px;
+            margin: 1px;
+            width: 100%;
+            height: 200px;
+            background-color: #fff;
+            color: #000;
+            border-radius: 4px;
+            box-shadow: 1px 1px 0px 1px #eee;
+            line-height: 1.2;
+            text-decoration: none;
+
+            .items-product-description{
+                display: block;
+            }
+
+            .items-product-img{
+                display: block;
+            }
+
+            h4{
+                margin-bottom: 1rem;
+            }
+
+            .media-object-section{
+                padding-right: 1rem;
+            }
+
+            span.items-product-manufacturer{
+                color: #999;
+            }
+        }
+
+        a:hover{
+            background-color: #f7f7f7;
+        }
+    }
+}
+
+
+.catalog-bar {
+    .item-catalog:hover > a{
+        background-color: #ddd;
+    }
+
+    .get-products{
+        color: #000;
+        font-size: 0.9rem;
+    }
+}
+
+

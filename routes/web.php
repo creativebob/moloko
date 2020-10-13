@@ -1001,6 +1001,9 @@ Route::post('/clients/archive/{id}', 'ClientController@archive');
 
 // Поиск
 Route::any('/clients/search/{text}', 'ClientController@search');
+Route::any('/estimates/search/{text}', 'EstimateController@search');
+
+Route::any('/estimates/search_crop_phone/{text}', 'EstimateController@search_crop_phone');
 Route::any('/articles_groups/search/{text}', 'ArticlesGroupController@search');
 
 Route::post('/clients/search-user/{text}', 'ClientController@searchClientUser');
@@ -1293,6 +1296,7 @@ Route::prefix('catalogs_goods/{catalog_id}')->group(function () {
     Route::resource('/catalogs_goods_items', 'CatalogsGoodsItemController');
 
     Route::delete('/prices_goods/{id}', 'PricesGoodsController@archive');
+    Route::any('/prices_goods/search/{text}', 'PricesGoodsController@search');
 
     Route::post('/get_catalogs_goods_items', 'CatalogsGoodsItemController@ajax_get');
 

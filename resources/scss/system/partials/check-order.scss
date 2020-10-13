@@ -12,6 +12,10 @@
     height: 200mm;
     padding: 1rem;
 
+    .company-info{
+    	min-height: 100px;
+    }
+
     .contact-info{
 
     	padding-top: 1rem;
@@ -33,6 +37,7 @@
 		line-height: 1.4;
 		font-size: 0.8rem;
 		margin-bottom: 1rem;
+
 
 		.order-date,
 		.order-time

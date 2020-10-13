@@ -80,4 +80,10 @@ class Phone extends Model
 		return $this->morphedByMany('App\User', 'phone_entity');
 	}
 
+	// Лид с этим номером
+	public function leads_owner()
+	{
+		return $this->morphedByMany('App\Lead', 'phone_entity');
+	}
+
 }

@@ -19,18 +19,11 @@
 
             </div>
             <div class="top-bar-right">
-                <a class="icon-filter sprite
-                @if(count(request()->input())) filtration-active @endif
-                    "></a>
-{{--                <input class="search-field" type="search" id="search_field" name="search_field" placeholder="Поиск" />--}}
+                <a class="icon-filter sprite @if(count(request()->input())) filtration-active @endif"></a>
+                <search-prices-goods-component catalog_id="{{ request('catalog_id') }}"></search-prices-goods-component>
                 {{-- <button type="button" class="icon-search sprite button"></button> --}}
-
             </div>
-
-
         </div>
-
-
 
         <div id="port-result-search">
         </div>

@@ -11,14 +11,23 @@
                         @input="dedounceSearch"
                 />
             <div id="search-result-wrap" v-if=search>
-
-                <ul class="search-result-list">
-
-                    <li v-for="(item, index) in results">
-                        <a :href="'/admin/leads/' + item.id + '/edit'">{{ item.name }}</a>
-                    </li>
-
-                </ul>
+                <table class="search-result-list">
+                    <tr v-for="(item, index) in results">
+                        <td class="search-result-name">
+                            <a :href="'/admin/leads/' + item.id + '/edit'">Обращение <span>{{ item.number_case }}</span> от {{ item.created_at }}</a>
+                        </td>
+                        <td class="search-result-info">
+                            <span>{{ item.name }}</span><br>
+                            <span class="text-small">{{ item.company_name }}</span><br>
+                        </td>
+                        <td  class="search-result-summa">
+                            <span>{{ item.badget }} руб.</span>
+                        </td>
+                        <td class="search-result-id">
+                            {{ item.id }}
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
 

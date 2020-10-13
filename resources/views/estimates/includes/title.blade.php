@@ -15,7 +15,7 @@
                 <a class="icon-filter sprite
                 @if(count(request()->input())) filtration-active @endif
                     "></a>
-                {{-- <search-estimates-component></search-estimates-component> --}}
+                <search-estimates-component></search-estimates-component>
             </div>
         </div>
 

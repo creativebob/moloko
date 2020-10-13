@@ -282,7 +282,7 @@ trait Articlable
 
 //        $search = $request->search;
         $items = $this->class::with([
-            'article'
+            'article.manufacturer.company'
         ])
             ->moderatorLimit($answer)
             ->companiesLimit($answer)

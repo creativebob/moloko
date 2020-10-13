@@ -52,6 +52,7 @@ class PricesGoods extends Model
         'filial_id',
 
         'price',
+        'name_alt',
 
         'discount_mode',
         'discount_percent',
@@ -84,6 +85,8 @@ class PricesGoods extends Model
 
         'is_discount',
         'is_need_recalculate',
+
+        'external', 
 
         'display',
         'system',

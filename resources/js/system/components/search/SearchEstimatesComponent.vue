@@ -1,7 +1,7 @@
 <template>
 
         <div id="search">
-            <input
+                <input
                     class="search-field"
                     type="search"
                     id="field-search"
@@ -9,27 +9,25 @@
                     placeholder="Поиск"
                     v-model="text"
                     @input="dedounceSearch"
-            />
+                />
             <div id="search-result-wrap" v-if=search>
-
                 <table class="search-result-list">
                     <tr v-for="(item, index) in results">
                         <td class="search-result-name">
-                            <a :href="'/admin/catalogs_goods/' + item.catalogs_goods_id + '/prices_goods/' + item.id + '/edit'"><span>{{ item.goods.article.name }}</span></a><br>
-                            <span class="text-small">{{ item.goods.article.manufacturer.company.name }}</span>
+                            <a :href="'/admin/leads/' + item.number + '/edit'">Заказ <span class="bold">{{ item.number }}</span> от {{ item.date }}</a>
                         </td>
                         <td  class="search-result-summa">
                             <span>{{ item.total }} руб.</span>
                         </td>
                         <td class="search-result-info">
-                            <span v-if="item.goods.article.draft" class="draft">Черновик</span>
+                            <span>{{ item.lead.name }}</span><br>
+                            <span class="text-small">{{ item.lead.company_name }}</span>
                         </td>
                         <td class="search-result-id">
                             {{ item.id }}
                         </td>
                     </tr>
                 </table>
-
             </div>
         </div>
 
@@ -39,10 +37,6 @@
     import _ from 'lodash'
 
     export default {
-
-        props: {
-          catalog_id: Number,
-        },
         data() {
             return {
                 text: '',
@@ -65,16 +59,31 @@
                 return result;
             },
             dedounceSearch: function() {
-                let delay = 300;
+                let delay = 150;
                 return _.debounce(this.check, delay);
             }
         },
         methods: {
             check () {
-                // console.log('Поиск...');
-                if (this.text.length >= 1) {
-                    axios
-                        .get('/admin/catalogs_goods/' + catalog_id + '/prices_goods/search/' + this.text)
+
+                    // Если пользователь ввел более одного знака - начинам поиск
+                    if (this.text.length >= 1) {
+
+                        // Общий запрос поиска
+                        var search_query = '/admin/estimates/search/';
+
+                        // ПЕРЕОПРЕДЕЛЕНЕ запроса в определенных случаях (Для ускорения)
+
+                        // СЛУЧАЙ 1: Пользователь ввел только 4 символа и все они числа
+                        // Будем искать по crop телефону и в номерах сметы с 4 знаками.
+
+                        // if((this.text.match(/^\d+$/))&&(this.text.length == 4)){
+                        //     search_query = '/admin/estimates/search_crop_phone/';
+                        // }
+
+                        // Делаем запрос:
+                        axios
+                        .get(search_query + this.text)
                         .then(response => {
                             this.results = response.data
                             this.search = (this.results.length > 0)
@@ -84,9 +93,10 @@
                                 console.log(error)
                         });
 
-                } else {
-                    this.reset();
-                }
+                    } else {
+                        this.reset();
+                    }
+
             },
 
             clear() {

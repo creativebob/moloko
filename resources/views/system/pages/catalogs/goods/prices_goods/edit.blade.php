@@ -19,7 +19,7 @@
     <div class="small-12 cell">
         <ul class="tabs-list" data-tabs id="tabs">
             <li class="tabs-title is-active">
-                <a href="#tab-options" aria-selected="true">Общая информация</a>
+                <a href="#tab-main" aria-selected="true">Общая информация</a>
             </li>
 
             @can('index', App\Discount::class)
@@ -27,6 +27,10 @@
                 <a href="#tab-discounts" data-tabs-target="tab-discounts">Скидки</a>
             </li>
             @endcan
+
+            <li class="tabs-title">
+                <a href="#tab-options" aria-selected="true">Опции</a>
+            </li>
         </ul>
     </div>
 </div>
@@ -39,7 +43,7 @@
             @method('PATCH')
 
             {{-- Общая информация --}}
-            <div class="tabs-panel is-active" id="tab-options">
+            <div class="tabs-panel is-active" id="tab-main">
                 <div class="grid-x grid-padding-x">
 
                     <div class="small-12 medium-6 cell">
@@ -69,6 +73,8 @@
 {{--                                    {!! Form::number('points', $priceGoods->points, ['required']) !!}--}}
                                 </label>
                             </div>
+
+
 
 {{--                            <div class="cell small-12 medium-4">--}}
 {{--                                <label>Тип скидки--}}
@@ -119,6 +125,22 @@
                     @include('system.common.discounts.discounts', ['item' => $priceGoods, 'entity' => 'prices_goods'])
                 </div>
             @endcan
+
+            <div class="tabs-panel" id="tab-options">
+                <div class="grid-x grid-padding-x">
+                    <div class="cell small-12 medium-3">
+                        <label>Альтернативное название:
+                            {!! Form::text('name_alt', $priceGoods->name_alt) !!}
+                        </label>
+                    </div>
+
+                    <div class="cell small-12 medium-2">
+                        <label>Внешний ID:
+                            {!! Form::text('external', $priceGoods->external) !!}
+                        </label>
+                    </div>
+                </div>
+            </div>            
 
             {!! Form::close() !!}
         </div>
