@@ -35,6 +35,9 @@ class Container extends Model
         'unit_portion_goods_id',
         'portion_goods_count',
 
+        'archive',
+        'serial',
+
         'display',
         'system',
         'moderation'

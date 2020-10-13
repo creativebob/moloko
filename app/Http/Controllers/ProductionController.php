@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Traits\Offable;
 use App\Http\Controllers\Traits\Receiptable;
-use App\Receipt;
 use App\Stock;
 use Illuminate\Support\Facades\Log;
-use App\Cost;
 use App\Entity;
 use App\Http\Requests\System\ProductionUpdateRequest;
 use App\Off;
@@ -18,20 +16,21 @@ use Illuminate\Http\Request;
 class ProductionController extends Controller
 {
 
-    // Настройки сконтроллера
-    public function __construct(Production $production)
+    protected $entityAlias;
+    protected $entityDependence;
+
+    /**
+     * ProductionController constructor.
+     */
+    public function __construct()
     {
         $this->middleware('auth');
-        $this->production = $production;
-        $this->class = Production::class;
-        $this->model = 'App\Production';
-        $this->entity_alias = with(new $this->class)->getTable();
-        $this->entity_dependence = true;
+        $this->entityAlias = 'productions';
+        $this->entityDependence = true;
     }
 
     use Offable;
     use Receiptable;
-
 
     /**
      * Display a listing of the resource.
@@ -41,10 +40,10 @@ class ProductionController extends Controller
     public function index(Request $request)
     {
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), Production::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         $productions = Production::with([
         	'author',
@@ -67,7 +66,7 @@ class ProductionController extends Controller
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter = setFilter($this->entity_alias, $request, [
+        $filter = setFilter($this->entityAlias, $request, [
             'supplier',             // Поставщики
             'booklist'              // Списки пользователя
         ]);
@@ -75,7 +74,7 @@ class ProductionController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entityAlias);
 
         return view('system.pages.productions.index', compact('productions', 'pageInfo', 'filter'));
     }
@@ -88,7 +87,7 @@ class ProductionController extends Controller
     public function create()
     {
         // Подключение политики
-        $this->authorize(getmethod('store'), $this->class);
+        $this->authorize(getmethod('store'), Production::class);
 
         if (is_null(\Auth::user()->company->we_manufacturer)) {
             // Описание ошибки
@@ -141,7 +140,7 @@ class ProductionController extends Controller
     public function edit($id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         $production = Production::with([
             'items' => function ($q) {
@@ -164,7 +163,7 @@ class ProductionController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $production);
 
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entityAlias);
 
         return view('system.pages.productions.edit', compact('production', 'pageInfo'));
     }
@@ -179,7 +178,7 @@ class ProductionController extends Controller
     public function update(ProductionUpdateRequest $request, $id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $production = Production::moderatorLimit($answer)
@@ -209,7 +208,7 @@ class ProductionController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $production = Production::with('items')
@@ -234,8 +233,8 @@ class ProductionController extends Controller
     {
         $entity = Entity::find($request->entity_id);
 
-        $entity_alias = $entity->alias;
-        $alias = $entity_alias.'_categories';
+        $entityAlias = $entity->alias;
+        $alias = $entityAlias.'_categories';
 
         $entity_categories = Entity::whereAlias($alias)->first(['model']);
         $model = 'App\\'.$entity_categories->model;
@@ -246,7 +245,7 @@ class ProductionController extends Controller
         $categories = $model::moderatorLimit($answer)
             ->companiesLimit($answer)
             ->with([
-                $entity_alias => function ($q) {
+                $entityAlias => function ($q) {
                     $q->with([
                         'article' => function($q) {
                             $q->with([
@@ -279,8 +278,8 @@ class ProductionController extends Controller
         foreach($categories as $category) {
             $category->entity_id = $entity->id;
 
-            if (isset($category->$entity_alias)) {
-                foreach ($category->$entity_alias as $item) {
+            if (isset($category->$entityAlias)) {
+                foreach ($category->$entityAlias as $item) {
                     $item->category_id = $category->id;
                     $item->entity_id = $entity->id;
                     $items[] = $item;
@@ -288,9 +287,9 @@ class ProductionController extends Controller
             }
 
             if (isset($category->childCategories)) {
-                if (isset($category->$entity_alias)) {
+                if (isset($category->$entityAlias)) {
                     foreach ($category->childCategories as $childCategory) {
-                        foreach ($childCategory->$entity_alias as $item) {
+                        foreach ($childCategory->$entityAlias as $item) {
                             $item->category_id = $category->id;
                             $item->entity_id = $entity->id;
                             $items[] = $item;
@@ -322,7 +321,7 @@ class ProductionController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('update'));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('update'));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $production = Production::moderatorLimit($answer)
@@ -380,7 +379,7 @@ class ProductionController extends Controller
 
                 $stock_general = Stock::find($production->stock_id);
 
-                set_time_limit(60*10);
+                set_time_limit(0);
 
                 // Если нужна проверка остатка на складах
                 if ($request->has('leftover')) {
@@ -567,7 +566,7 @@ class ProductionController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('update'));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('update'));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $production = Production::moderatorLimit($answer)
@@ -811,10 +810,10 @@ class ProductionController extends Controller
     {
 
         // Подключение политики
-        $this->authorize(getmethod('index'), $this->class);
+        $this->authorize(getmethod('index'), Production::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('index'));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('index'));
 
         if ($num == 1) {
             $ids = [1, 2, 3, 4, 5, 6, 7];
@@ -822,7 +821,7 @@ class ProductionController extends Controller
             $ids = [8, 9, 10, 11, 12, 13, 14];
         };
 
-        set_time_limit(60*5);
+        set_time_limit(0);
 //        ini_set('memory_limit', '100М');
 
         // ГЛАВНЫЙ ЗАПРОС:

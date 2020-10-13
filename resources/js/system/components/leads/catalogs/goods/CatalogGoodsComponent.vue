@@ -37,16 +37,29 @@
             <div class="grid-x grid-padding-x">
 
                 <div class="small-12 cell view-settings-panel">
-                    <div class="one-icon-16 icon-view-list icon-button active" id="toggler-view-list"></div>
-                    <div class="one-icon-16 icon-view-block icon-button" id="toggler-view-block"></div>
-                    <div class="one-icon-16 icon-view-card icon-button" id="toggler-view-card"></div>
-                    <div class="one-icon-16 icon-view-setting icon-button" id="open-setting-view" data-open="modal-catalogs-goods"></div>
+                    <div
+                        class="one-icon-16 icon-view-list icon-button"
+                        :class="[{active: view == 'view-list'}]"
+                        @click="view = 'view-list'"
+                    ></div>
+                    <div
+                        class="one-icon-16 icon-view-block icon-button"
+                        :class="[{active: view == 'view-block'}]"
+                        @click="view = 'view-block'"
+                    ></div>
+                    <div
+                        class="one-icon-16 icon-view-card icon-button"
+                        :class="[{active: view == 'view-card'}]"
+                        @click="view = 'view-card'"
+                    ></div>
+                    <div class="one-icon-16 icon-view-setting icon-button" data-open="modal-catalogs-goods"></div>
                 </div>
 
                 <div id="block-prices_goods">
 
                     <ul
-                            class="small-12 cell products-list view-list"
+                            class="small-12 cell products-list"
+                            :class="view"
                             v-show="listPrices.length > 0"
                     >
                         <li
@@ -139,6 +152,8 @@
         },
         data() {
             return {
+                view: 'view-list',
+
                 catalogId: this.catalogsGoodsData.catalogsGoods[0].id,
                 catalogs: this.catalogsGoodsData.catalogsGoods,
                 catalogsItems: this.catalogsGoodsData.catalogsGoodsItems,

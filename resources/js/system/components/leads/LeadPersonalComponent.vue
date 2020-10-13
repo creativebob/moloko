@@ -59,7 +59,7 @@
                     <organization-component
                         :organization="organization"
                         :legal-forms="legalForms"
-                        :companies="companies"
+                        :companies="storeCompanies"
                         :disabled="isDisabled"
                         @change="updateOrganization"
                         @input="change"
@@ -128,8 +128,12 @@
         created: function () {
             this.lead.main_phone = this.lead.main_phones.length ? this.lead.main_phones[0].phone : null;
 
+            this.$store.commit('SET_USERS', this.users);
+            this.$store.commit('SET_COMPANIES', this.companies);
+
             this.$store.commit('SET_LEAD', this.lead);
             this.$store.commit('SET_CLIENT', this.lead.client);
+
             this.$store.commit('SET_ESTIMATE', this.lead.estimate);
             this.$store.commit('SET_GOODS_ITEMS', this.lead.estimate.goods_items);
             this.$store.commit('SET_SERVICES_ITEMS', this.lead.estimate.services_items);
@@ -141,6 +145,12 @@
         computed: {
             isDisabled() {
                 return this.$store.state.lead.estimate.is_registered == 1;
+            },
+            storeUsers() {
+                return this.$store.state.lead.users;
+            },
+            storeCompanies() {
+                return this.$store.state.lead.companies;
             }
         },
         methods: {
@@ -166,7 +176,7 @@
             changePhone(value) {
                 if (value.length == 17) {
                     let number = value.replace(/\D+/g, "");
-                    let found = this.users.find(user => user.main_phones[0].phone == number);
+                    let found = this.storeUsers.find(user => user.main_phones[0].phone == number);
                     this.updateUser(found);
                 } else {
                     this.user = null;

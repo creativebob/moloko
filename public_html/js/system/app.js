@@ -77681,7 +77681,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     //     vueMask
     // },
     props: {
-        phone: Object,
+        phone: {
+            type: Object,
+            default: function _default() {
+                return {
+                    id: null,
+                    phone: null
+                };
+            }
+        },
         name: {
             type: String,
             default: 'main_phone'
@@ -77717,7 +77725,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     data: function data() {
         return {
-            number: this.phone ? this.phone.phone : null
+            number: this.phone.phone
         };
     },
 
@@ -82637,6 +82645,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
@@ -82648,6 +82659,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     data: function data() {
         return {
+            isManual: this.item.is_manual = 1,
             discountPercent: this.item.discount_percent,
             discountCurrency: this.item.discount_currency / this.item.count,
             curCount: this.item.count
@@ -82670,6 +82682,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.curCount = value;
             }
         },
+        manual: function manual() {
+            return this.isManual;
+        },
         totalDiscount: function totalDiscount() {
             return this.discountCurrency * this.curCount;
         },
@@ -82690,19 +82705,30 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var percent = this.item.price / 100;
             this.discountPercent = value;
             this.discountCurrency = value * percent;
+            this.isManual = true;
             this.$refs.discountCurrencyComponent.update(this.discountCurrency);
         },
         changeDiscountCurrency: function changeDiscountCurrency(value) {
             var percent = this.item.price / 100;
             this.discountCurrency = value;
             this.discountPercent = value / percent;
+            this.isManual = true;
             this.$refs.discountPercentComponent.update(this.discountPercent);
         },
         changeCount: function changeCount(value) {
             this.curCount = value;
         },
+        returnComputed: function returnComputed() {
+            this.isManual = false;
+
+            this.discountPercent = this.item.computed_discount_percent;
+            this.$refs.discountPercentComponent.update(this.discountPercent);
+
+            this.discountCurrency = this.item.computed_discount_currency;
+            this.$refs.discountCurrencyComponent.update(this.discountCurrency);
+        },
         update: function update() {
-            if (this.item.computed_discount_percent != this.discountPercent || this.item.computed_discount_currency != this.discountCurrency) {
+            if (this.isManual) {
                 this.item.manual_discount_currency = this.discountCurrency;
                 this.item.manual_discount_percent = this.discountPercent;
                 this.item.is_manual = 1;
@@ -82873,7 +82899,15 @@ var render = function() {
               _vm._v(" "),
               _c("div", { staticClass: "small-12 medium-12 cell" }, [
                 _c("fieldset", [
-                  _c("legend", [_vm._v("Скидка:")]),
+                  _c("legend", [
+                    _vm._v("Скидка "),
+                    _vm.manual
+                      ? _c("span", { on: { click: _vm.returnComputed } }, [
+                          _vm._v("(удалить ручную)")
+                        ])
+                      : _vm._e(),
+                    _vm._v(":")
+                  ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "grid-x grid-margin-x" }, [
                     _c("div", { staticClass: "small-12 medium-6 cell" }, [
@@ -84528,7 +84562,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return this.estimate.is_registered === 1 && this.estimate.is_saled === 0;
         },
         disabledSaleButton: function disabledSaleButton() {
-            return this.$store.getters.paymentsAmount >= this.$store.getters.estimateTotal;
+            return this.$store.getters.paymentsAmount < this.$store.getters.estimateTotal;
         },
         change: function change() {
             return this.$store.state.lead.change;
@@ -85242,6 +85276,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         paymentsAmount: function paymentsAmount() {
             return this.$store.getters.paymentsAmount;
+        },
+        lead: function lead() {
+            return this.$store.state.lead.lead;
         }
     },
     methods: {
@@ -85258,7 +85295,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     currency_id: this.currencyId,
                     date: this.date,
 
-                    contract_id: this.document.lead.client.contract.id,
+                    contract_id: this.lead.client.contract.id,
                     contract_type: 'App\\ContractsClient',
 
                     document_id: this.document.id,
@@ -91411,8 +91448,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     created: function created() {
         this.lead.main_phone = this.lead.main_phones.length ? this.lead.main_phones[0].phone : null;
 
+        this.$store.commit('SET_USERS', this.users);
+        this.$store.commit('SET_COMPANIES', this.companies);
+
         this.$store.commit('SET_LEAD', this.lead);
         this.$store.commit('SET_CLIENT', this.lead.client);
+
         this.$store.commit('SET_ESTIMATE', this.lead.estimate);
         this.$store.commit('SET_GOODS_ITEMS', this.lead.estimate.goods_items);
         this.$store.commit('SET_SERVICES_ITEMS', this.lead.estimate.services_items);
@@ -91424,6 +91465,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     computed: {
         isDisabled: function isDisabled() {
             return this.$store.state.lead.estimate.is_registered == 1;
+        },
+        storeUsers: function storeUsers() {
+            return this.$store.state.lead.users;
+        },
+        storeCompanies: function storeCompanies() {
+            return this.$store.state.lead.companies;
         }
     },
     methods: {
@@ -91448,7 +91495,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         changePhone: function changePhone(value) {
             if (value.length == 17) {
                 var number = value.replace(/\D+/g, "");
-                var found = this.users.find(function (user) {
+                var found = this.storeUsers.find(function (user) {
                     return user.main_phones[0].phone == number;
                 });
                 this.updateUser(found);
@@ -92598,7 +92645,7 @@ var render = function() {
                   attrs: {
                     organization: _vm.organization,
                     "legal-forms": _vm.legalForms,
-                    companies: _vm.companies,
+                    companies: _vm.storeCompanies,
                     disabled: _vm.isDisabled
                   },
                   on: { change: _vm.updateOrganization, input: _vm.change }
@@ -92831,6 +92878,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
@@ -92842,6 +92902,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     data: function data() {
         return {
+            view: 'view-list',
+
             catalogId: this.catalogsGoodsData.catalogsGoods[0].id,
             catalogs: this.catalogsGoodsData.catalogsGoods,
             catalogsItems: this.catalogsGoodsData.catalogsGoodsItems,
@@ -93022,7 +93084,42 @@ var render = function() {
     _vm._v(" "),
     _c("div", { staticClass: "auto cell" }, [
       _c("div", { staticClass: "grid-x grid-padding-x" }, [
-        _vm._m(1),
+        _c("div", { staticClass: "small-12 cell view-settings-panel" }, [
+          _c("div", {
+            staticClass: "one-icon-16 icon-view-list icon-button",
+            class: [{ active: _vm.view == "view-list" }],
+            on: {
+              click: function($event) {
+                _vm.view = "view-list"
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("div", {
+            staticClass: "one-icon-16 icon-view-block icon-button",
+            class: [{ active: _vm.view == "view-block" }],
+            on: {
+              click: function($event) {
+                _vm.view = "view-block"
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("div", {
+            staticClass: "one-icon-16 icon-view-card icon-button",
+            class: [{ active: _vm.view == "view-card" }],
+            on: {
+              click: function($event) {
+                _vm.view = "view-card"
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("div", {
+            staticClass: "one-icon-16 icon-view-setting icon-button",
+            attrs: { "data-open": "modal-catalogs-goods" }
+          })
+        ]),
         _vm._v(" "),
         _c("div", { attrs: { id: "block-prices_goods" } }, [
           _c(
@@ -93036,7 +93133,8 @@ var render = function() {
                   expression: "listPrices.length > 0"
                 }
               ],
-              staticClass: "small-12 cell products-list view-list"
+              staticClass: "small-12 cell products-list",
+              class: _vm.view
             },
             _vm._l(_vm.listPrices, function(price) {
               return _c("li", [
@@ -93051,7 +93149,7 @@ var render = function() {
                   },
                   [
                     _c("div", { staticClass: "media-object stack-for-small" }, [
-                      _vm._m(2, true),
+                      _vm._m(1, true),
                       _vm._v(" "),
                       _c("div", { staticClass: "media-object-section cell" }, [
                         _c("div", { staticClass: "grid-x grid-margin-x" }, [
@@ -93116,7 +93214,7 @@ var render = function() {
         attrs: { id: "modal-catalogs-goods", "data-reveal": "" }
       },
       [
-        _vm._m(3),
+        _vm._m(2),
         _vm._v(" "),
         _c("div", { staticClass: "grid-x align-center modal-content" }, [
           _c("div", { staticClass: "small-10 cell text-center inputs" }, [
@@ -93209,32 +93307,6 @@ var staticRenderFns = [
           _vm._v("Обязательно нужно логиниться!")
         ])
       ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "small-12 cell view-settings-panel" }, [
-      _c("div", {
-        staticClass: "one-icon-16 icon-view-list icon-button active",
-        attrs: { id: "toggler-view-list" }
-      }),
-      _vm._v(" "),
-      _c("div", {
-        staticClass: "one-icon-16 icon-view-block icon-button",
-        attrs: { id: "toggler-view-block" }
-      }),
-      _vm._v(" "),
-      _c("div", {
-        staticClass: "one-icon-16 icon-view-card icon-button",
-        attrs: { id: "toggler-view-card" }
-      }),
-      _vm._v(" "),
-      _c("div", {
-        staticClass: "one-icon-16 icon-view-setting icon-button",
-        attrs: { id: "open-setting-view", "data-open": "modal-catalogs-goods" }
-      })
     ])
   },
   function() {
@@ -104792,12 +104864,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     second_name: null,
                     first_name: null,
                     patronymic: null,
-                    main_phones: [function () {
-                        return {
-                            phone: {
-                                phone: null
-                            }
-                        };
+                    main_phones: [{
+                        phone: null
                     }],
                     location: {
                         address: null,
@@ -113136,6 +113204,9 @@ var store = {
 "use strict";
 var moduleLead = {
     state: {
+        users: [],
+        companies: [],
+
         lead: null,
         client: null,
         estimate: null,
@@ -113146,6 +113217,14 @@ var moduleLead = {
         loading: false
     },
     mutations: {
+        SET_USERS: function SET_USERS(state, users) {
+            state.users = users;
+        },
+        SET_COMPANIES: function SET_COMPANIES(state, companies) {
+            state.companies = companies;
+        },
+
+
         // Лид
         SET_LEAD: function SET_LEAD(state, lead) {
             if (lead.main_phones.length) {
@@ -113326,35 +113405,30 @@ var moduleLead = {
                     // Если есть ручная скидка
                     if (item.is_manual == 1) {
 
-                        if (item.manual_discount_currency == item.computed_discount_currency) {
-                            // Введенное значение совпало, скидываем ручную скидку
-                            this.commit('SET_COMPUTED_DISCOUNT', item);
-                        } else {
-                            item.price_discount = 0;
-                            item.total_price_discount = item.amount;
+                        item.price_discount = 0;
+                        item.total_price_discount = item.amount;
 
-                            item.catalogs_item_discount = 0;
-                            item.total_catalogs_item_discount = item.amount;
+                        item.catalogs_item_discount = 0;
+                        item.total_catalogs_item_discount = item.amount;
 
-                            item.estimate_discount = 0;
-                            item.total_estimate_discount = item.amount;
+                        item.estimate_discount = 0;
+                        item.total_estimate_discount = item.amount;
 
-                            item.client_discount_currency = 0;
-                            item.total_client_discount = item.amount;
+                        item.client_discount_currency = 0;
+                        item.total_client_discount = item.amount;
 
-                            item.total_manual_discount = item.amount - item.manual_discount_currency * count;
-                            item.total = item.total_manual_discount;
+                        item.total_manual_discount = item.amount - item.manual_discount_currency * count;
+                        item.total = item.total_manual_discount;
 
-                            item.total_computed_discount = 0;
+                        item.total_computed_discount = 0;
 
-                            item.discount_currency = item.manual_discount_currency * count;
-                            item.discount_percent = item.manual_discount_percent;
+                        item.discount_currency = item.manual_discount_currency * count;
+                        item.discount_percent = item.manual_discount_percent;
 
-                            var _index3 = state.goodsItems.findIndex(function (obj) {
-                                return obj.id == item.id;
-                            });
-                            Vue.set(state.goodsItems, _index3, item);
-                        }
+                        var _index3 = state.goodsItems.findIndex(function (obj) {
+                            return obj.id == item.id;
+                        });
+                        Vue.set(state.goodsItems, _index3, item);
                     } else {
                         // Иначе рассчитываем
                         this.commit('SET_COMPUTED_DISCOUNT', item);
@@ -113526,8 +113600,34 @@ var moduleLead = {
             axios.patch('/admin/leads/axios_update/' + state.lead.id, data).then(function (response) {
                 // console.log(response.data);
 
-                _this2.commit('SET_LEAD', response.data.lead);
+                var lead = response.data.lead;
+                _this2.commit('SET_LEAD', lead);
+                if (lead.user) {
+                    var user = lead.user;
+                    var index = state.users.findIndex(function (obj) {
+                        return obj.id == user.id;
+                    });
+                    if (index > -1) {
+                        Vue.set(state.users, index, user);
+                    } else {
+                        state.users.push(user);
+                    }
+                }
+
+                if (lead.organization) {
+                    var organization = lead.organization;
+                    var _index4 = state.companies.findIndex(function (obj) {
+                        return obj.id == organization.id;
+                    });
+                    if (_index4 > -1) {
+                        Vue.set(state.companies, _index4, organization);
+                    } else {
+                        state.companies.push(organization);
+                    }
+                }
+
                 _this2.commit('SET_ESTIMATE', response.data.estimate);
+
                 _this2.commit('SET_GOODS_ITEMS', response.data.goods_items);
 
                 state.change = false;

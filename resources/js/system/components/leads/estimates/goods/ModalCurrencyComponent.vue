@@ -64,7 +64,10 @@
 
                     <div class="small-12 medium-12 cell">
                         <fieldset>
-                            <legend>Скидка:</legend>
+                            <legend>Скидка <span
+                                v-if="manual"
+                                @click="returnComputed"
+                            >(удалить ручную)</span>:</legend>
                             <div class="grid-x grid-margin-x">
                                 <div class="small-12 medium-6 cell">
                                     <label>Скидка, %
@@ -171,6 +174,7 @@
         },
         data() {
             return {
+                isManual: this.item.is_manual = 1,
                 discountPercent: this.item.discount_percent,
                 discountCurrency: this.item.discount_currency / this.item.count,
                 curCount: this.item.count,
@@ -190,6 +194,9 @@
                 set (value) {
                     this.curCount = value;
                 }
+            },
+            manual() {
+                return this.isManual;
             },
             totalDiscount() {
                 return this.discountCurrency * this.curCount;
@@ -222,19 +229,30 @@
                 let percent = this.item.price / 100;
                 this.discountPercent = value;
                 this.discountCurrency = value * percent;
+                this.isManual = true;
                 this.$refs.discountCurrencyComponent.update(this.discountCurrency);
             },
             changeDiscountCurrency(value) {
                 let percent = this.item.price / 100;
                 this.discountCurrency = value;
                 this.discountPercent = value / percent;
+                this.isManual = true;
                 this.$refs.discountPercentComponent.update(this.discountPercent);
             },
             changeCount(value) {
                 this.curCount = value;
             },
+            returnComputed() {
+                this.isManual = false;
+
+                this.discountPercent = this.item.computed_discount_percent;
+                this.$refs.discountPercentComponent.update(this.discountPercent);
+
+                this.discountCurrency = this.item.computed_discount_currency;
+                this.$refs.discountCurrencyComponent.update(this.discountCurrency);
+            },
             update() {
-                if (this.item.computed_discount_percent != this.discountPercent || this.item.computed_discount_currency != this.discountCurrency) {
+                if (this.isManual) {
                     this.item.manual_discount_currency = this.discountCurrency;
                     this.item.manual_discount_percent = this.discountPercent;
                     this.item.is_manual = 1;

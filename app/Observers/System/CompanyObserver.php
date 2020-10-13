@@ -125,15 +125,7 @@ class CompanyObserver
             }
         }
 
-        // Почему то не отрабатывает
-//        $cleanCompanyName = ucfirst($cleanCompanyNameLowerCase);
-
-        // TODO - 11.10.20 - Топроное решение, чтоб сделать первую букву имени компании заглавное, т.к. сравнение на правовую форму происходит в нижнем регистре
-        $firstLetter = mb_substr($cleanCompanyNameLowerCase, 0, 1);
-        $firstLetter = mb_strtoupper($firstLetter);
-        $text = mb_substr($cleanCompanyNameLowerCase, 1);
-        $cleanCompanyName = "{$firstLetter}{$text}";
-
+        $cleanCompanyName = \Str::title($cleanCompanyNameLowerCase);
         $company->name = $cleanCompanyName;
 
         return $item;

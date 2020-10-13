@@ -730,19 +730,37 @@ class LeadController extends Controller
             }
         }
 
-
         $lead->load([
-            'location.city',
-            'user.client',
-            'organization.client',
-            'client',
             'main_phones',
             'extra_phones',
-            'medium',
-            'campaign',
-            'source',
-            'site',
-            'claims',
+            'location.city',
+            'user' => function ($q) {
+                $q->with([
+                    'main_phones',
+                    'location.city',
+                    'client',
+                    'organizations' => function ($q) {
+                        $q->with([
+                            'client',
+                        ])
+                            ->latest();
+                    },
+                ]);
+            },
+            'organization' => function ($q) {
+                $q->with([
+                    'main_phones',
+                    'location.city',
+                    'client',
+                    'representatives' => function ($q) {
+                        $q->with([
+                            'client',
+                        ])
+                            ->latest();
+                    },
+                ]);
+            },
+            'client.contract',
             'estimate' => function ($q) {
                 $q->with([
                     'goods_items' => function ($q) {
@@ -769,7 +787,11 @@ class LeadController extends Controller
                     'discounts'
                 ]);
             },
-            'client.contract',
+            'medium',
+            'campaign',
+            'source',
+            'site',
+            'claims',
             'lead_method',
             'choice' => function ($query) {
                 $query->orderBy('created_at', 'asc');

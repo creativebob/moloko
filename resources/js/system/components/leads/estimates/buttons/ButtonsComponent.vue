@@ -91,7 +91,7 @@
                 return this.estimate.is_registered === 1 && this.estimate.is_saled === 0;
             },
             disabledSaleButton() {
-                return this.$store.getters.paymentsAmount >= this.$store.getters.estimateTotal;
+                return this.$store.getters.paymentsAmount < this.$store.getters.estimateTotal;
             },
 
             change() {

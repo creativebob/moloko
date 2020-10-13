@@ -1,5 +1,8 @@
 const moduleLead = {
         state: {
+            users: [],
+            companies: [],
+
             lead: null,
             client: null,
             estimate: null,
@@ -10,6 +13,13 @@ const moduleLead = {
             loading: false,
         },
         mutations: {
+            SET_USERS(state, users) {
+                state.users = users;
+            },
+            SET_COMPANIES(state, companies) {
+                state.companies = companies;
+            },
+
             // Лид
             SET_LEAD(state, lead) {
                 if (lead.main_phones.length) {
@@ -181,33 +191,29 @@ const moduleLead = {
                         // Если есть ручная скидка
                         if (item.is_manual == 1) {
 
-                            if (item.manual_discount_currency == item.computed_discount_currency) {
-                                // Введенное значение совпало, скидываем ручную скидку
-                                this.commit('SET_COMPUTED_DISCOUNT', item);
-                            } else {
-                                item.price_discount = 0;
-                                item.total_price_discount = item.amount;
+                            item.price_discount = 0;
+                            item.total_price_discount = item.amount;
 
-                                item.catalogs_item_discount = 0;
-                                item.total_catalogs_item_discount = item.amount;
+                            item.catalogs_item_discount = 0;
+                            item.total_catalogs_item_discount = item.amount;
 
-                                item.estimate_discount = 0;
-                                item.total_estimate_discount = item.amount;
+                            item.estimate_discount = 0;
+                            item.total_estimate_discount = item.amount;
 
-                                item.client_discount_currency = 0;
-                                item.total_client_discount = item.amount;
+                            item.client_discount_currency = 0;
+                            item.total_client_discount = item.amount;
 
-                                item.total_manual_discount = item.amount - (item.manual_discount_currency * count);
-                                item.total = item.total_manual_discount;
+                            item.total_manual_discount = item.amount - (item.manual_discount_currency * count);
+                            item.total = item.total_manual_discount;
 
-                                item.total_computed_discount = 0;
+                            item.total_computed_discount = 0;
 
-                                item.discount_currency = item.manual_discount_currency * count;
-                                item.discount_percent = item.manual_discount_percent;
+                            item.discount_currency = item.manual_discount_currency * count;
+                            item.discount_percent = item.manual_discount_percent;
 
-                                let index = state.goodsItems.findIndex(obj => obj.id == item.id);
-                                Vue.set(state.goodsItems, index, item);
-                            }
+                            let index = state.goodsItems.findIndex(obj => obj.id == item.id);
+                            Vue.set(state.goodsItems, index, item);
+
                         } else {
                             // Иначе рассчитываем
                             this.commit('SET_COMPUTED_DISCOUNT', item);
@@ -356,15 +362,37 @@ const moduleLead = {
         },
         actions: {
             // Обновление лида и сметы
-            UPDATE({ state }, data) {
+            UPDATE({state}, data) {
                 state.loading = true;
                 axios
                     .patch('/admin/leads/axios_update/' + state.lead.id, data)
                     .then(response => {
                         // console.log(response.data);
 
-                        this.commit('SET_LEAD', response.data.lead);
+                        const lead = response.data.lead;
+                        this.commit('SET_LEAD', lead);
+                        if (lead.user) {
+                            const user = lead.user;
+                            const index = state.users.findIndex(obj => obj.id == user.id);
+                            if (index > -1) {
+                                Vue.set(state.users, index, user);
+                            } else {
+                                state.users.push(user);
+                            }
+                        }
+
+                        if (lead.organization) {
+                            const organization = lead.organization;
+                            const index = state.companies.findIndex(obj => obj.id == organization.id);
+                            if (index > -1) {
+                                Vue.set(state.companies, index, organization);
+                            } else {
+                                state.companies.push(organization);
+                            }
+                        }
+
                         this.commit('SET_ESTIMATE', response.data.estimate);
+
                         this.commit('SET_GOODS_ITEMS', response.data.goods_items);
 
                         state.change = false;
@@ -376,7 +404,7 @@ const moduleLead = {
             },
 
             // Продажа сметы
-            SALE_ESTIMATE({ state }) {
+            SALE_ESTIMATE({state}) {
                 state.loading = true;
                 axios
                     .patch('/admin/estimates/' + state.estimate.id + '/saling/')

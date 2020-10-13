@@ -43,7 +43,13 @@
         //     vueMask
         // },
         props: {
-            phone: Object,
+            phone: {
+                type: Object,
+                default: () => ({
+                    id: null,
+                    phone: null
+                }),
+            },
             name: {
                 type: String,
                 default: 'main_phone'
@@ -79,7 +85,7 @@
         },
         data() {
             return {
-                number: this.phone ? this.phone.phone : null,
+                number: this.phone.phone,
             }
         },
         methods: {

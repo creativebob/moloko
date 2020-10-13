@@ -256,21 +256,22 @@ class CartController extends Controller
 
             // Обработка имени компании
             if ($companyName) {
-                $cleanCompanyName = str_replace('"', "", $companyName);
+                $cleanCompanyName = str_replace('"', "", $company->name);
                 $cleanCompanyName = str_replace('\'', "", $cleanCompanyName);
 
-                $legalFormsList = LegalForm::get()
-                    ->pluck('name', 'id');
+                $legalForms = LegalForm::get();
 
                 $cleanCompanyNameLowerCase = mb_strtolower($cleanCompanyName, 'UTF-8');
-                foreach ($legalFormsList as $key => $value) {
-                    $valueLowerCase = mb_strtolower($value, 'UTF-8');
+                $item = null;
+                foreach ($legalForms as $legalForm) {
+                    $valueLowerCase = mb_strtolower($legalForm->name, 'UTF-8');
                     if (preg_match("/(^|\s)" . $valueLowerCase . "\s/i", $cleanCompanyNameLowerCase, $matches)) {
                         $cleanCompanyNameLowerCase = str_replace($matches[0], "", $cleanCompanyNameLowerCase);
+                        $item = $legalForm;
                     }
                 }
 
-                $cleanCompanyName = ucfirst($cleanCompanyNameLowerCase);
+                $cleanCompanyName = \Str::title($cleanCompanyNameLowerCase);
                 $company = Company::where('name', $cleanCompanyName)
                     ->first();
             }
@@ -290,7 +291,7 @@ class CartController extends Controller
                     'company_id' => $site->company_id,
                     'clientable_type' => 'App\Company'
                 ])
-                    ->whereIn('clientable_id', $organization->id)
+                    ->where('clientable_id', $organization->id)
                     ->first();
 
                 logs('leads_from_project')->info("Найдена компания, id: [{$organization->id}]. Проверена на клиента.");

@@ -372,17 +372,16 @@
 							</div>
 						</fieldset>
 
-						@includeIf('products.articles.'.$item->getTable().'.fieldsets')
+						@includeIf('products.articles.' . $item->getTable().'.fieldsets')
 
 						<fieldset class="fieldset-access">
 							<legend>Доступность</legend>
 
                                 @if ($item->archive == 1)
                                     {{-- Чекбокс архива --}}
-                                    {!! Form::hidden('archive', 1) !!}
-                                    {{-- @if ($article->draft) --}}
+                                    {!! Form::hidden('archive', 0) !!}
                                     <div class="small-12 cell checkbox">
-                                        {!! Form::checkbox('archive', 0, $article->draft, ['id' => 'checkbox-archive']) !!}
+                                        {!! Form::checkbox('archive', 0, $item->archive, ['id' => 'checkbox-archive']) !!}
                                         <label for="checkbox-archive"><span>Вывести из архива</span></label>
                                     </div>
                                 @endif
