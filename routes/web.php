@@ -907,20 +907,28 @@ Route::resource('applications', 'ApplicationController')->middleware('auth');
 
 
 // -------------------------------------- Товарные накладные ---------------------------------------------
-
-
-Route::any('/consignments/categories', 'ConsignmentController@categories')->name('consignments.categories');
-Route::patch('/consignments/{id}/posting', 'ConsignmentController@posting')->name('consignments.posting');
-Route::get('/consignments/{id}/unpost', 'ConsignmentController@unpost')->name('consignments.unpost');
+Route::any('/consignments/categories', 'ConsignmentController@categories')
+    ->name('consignments.categories');
+Route::patch('/consignments/{id}/posting', 'ConsignmentController@posting')
+    ->name('consignments.posting');
+Route::get('/consignments/{id}/unpost', 'ConsignmentController@unpost')
+    ->name('consignments.unpost');
 
 // Перерасчет накладых
-Route::get('/consignments/reposting', 'ConsignmentController@reposting')->name('consignments.reposting');
+Route::get('/consignments/reposting', 'ConsignmentController@reposting')
+    ->name('consignments.reposting');
 
 // Основные методы
-Route::resource('/consignments', 'ConsignmentController');
+Route::resource('/consignments', 'ConsignmentController')
+    ->except([
+        'store',
+        'show'
+    ]);
 
+// -------------------------------Пункты товарных накладных ---------------------------------------------
 //Route::any('/consignments_items', 'ConsignmentsItemController@store');
 Route::resource('/consignments_items', 'ConsignmentsItemController');
+
 
 // -------------------------------------- Наряды на производство ---------------------------------------------
 
