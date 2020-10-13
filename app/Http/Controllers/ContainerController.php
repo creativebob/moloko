@@ -469,6 +469,8 @@ class ContainerController extends Controller
             // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
             $this->changeCategory($request, $container);
 
+            $container->archive = $request->archive;
+
             $container->display = $request->display;
             $container->system = $request->system;
             $container->save();

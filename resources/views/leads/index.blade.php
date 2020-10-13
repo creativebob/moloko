@@ -229,18 +229,22 @@
         $.get("/admin/lead_appointed_check", function(data){
             if (data === 1) {
 
-              $.get("/admin/lead_appointed", {id: id}, function(html){
+              $.get("/admin/lead_appointed", {
+                  id: id
+              }, function(html){
                   $('#modal').html(html);
                   $('#add-appointed').foundation();
                   $('#add-appointed').foundation('open');
               });
             } else {
 
-              $.get("/admin/lead_take", {id: id}, function(date){
-                  $('#leads-' + date.id + ' .td-case-number').text(date.case_number);
-                  $('#leads-' + date.id + ' .td-name').html('<a href="/admin/leads/' + date.id + '/edit">' + date.name + '</a>');
-                  $('#leads-' + date.id + ' .td-action').html('');
-                  $('#leads-' + date.id + ' .td-manager').text(date.manager);
+              $.get("/admin/lead_take", {
+                  id: id
+              }, function(data){
+                  $('#leads-' + data.id + ' .td-case-number').text(data.case_number);
+                  $('#leads-' + data.id + ' .td-name').html('<a href="/admin/leads/' + data.id + '/edit">' + data.name + '</a><br><span class="tiny-text">' + data.company_name + '</span>');
+                  $('#leads-' + data.id + ' .td-action').html('');
+                  $('#leads-' + data.id + ' .td-manager').text(data.manager);
               });
             };
         });

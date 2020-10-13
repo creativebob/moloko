@@ -66,6 +66,7 @@ class CreatePricesServicesTable extends Migration
             $table->boolean('status')->default(0)->comment('Статус');
             $table->boolean('is_hit')->default(0)->comment('Хит');
             $table->boolean('is_new')->default(0)->comment('Новинка');
+            $table->boolean('is_priority')->default(0)->comment('Приоритет продажи');
 
             $table->boolean('is_show_price')->default(0)->comment('Показывать цену');
             $table->boolean('is_need_recalculate')->default(0)->comment('Требуется перерасчет');

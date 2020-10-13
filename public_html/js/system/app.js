@@ -82130,7 +82130,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     //     vueMask
     // },
     props: {
-        phone: Object,
+        phone: {
+            type: Object,
+            default: function _default() {
+                return {
+                    id: null,
+                    phone: null
+                };
+            }
+        },
         name: {
             type: String,
             default: 'main_phone'
@@ -82166,7 +82174,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     data: function data() {
         return {
-            number: this.phone ? this.phone.phone : null
+            number: this.phone.phone
         };
     },
 
@@ -87086,6 +87094,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
@@ -87097,6 +87108,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     data: function data() {
         return {
+            isManual: this.item.is_manual = 1,
             discountPercent: this.item.discount_percent,
             discountCurrency: this.item.discount_currency / this.item.count,
             curCount: this.item.count
@@ -87119,6 +87131,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.curCount = value;
             }
         },
+        manual: function manual() {
+            return this.isManual;
+        },
         totalDiscount: function totalDiscount() {
             return this.discountCurrency * this.curCount;
         },
@@ -87139,28 +87154,42 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var percent = this.item.price / 100;
             this.discountPercent = value;
             this.discountCurrency = value * percent;
+            this.isManual = true;
             this.$refs.discountCurrencyComponent.update(this.discountCurrency);
         },
         changeDiscountCurrency: function changeDiscountCurrency(value) {
             var percent = this.item.price / 100;
             this.discountCurrency = value;
             this.discountPercent = value / percent;
+            this.isManual = true;
             this.$refs.discountPercentComponent.update(this.discountPercent);
         },
         changeCount: function changeCount(value) {
             this.curCount = value;
         },
+        returnComputed: function returnComputed() {
+            this.isManual = false;
+
+            this.discountPercent = this.item.computed_discount_percent;
+            this.$refs.discountPercentComponent.update(this.discountPercent);
+
+            this.discountCurrency = this.item.computed_discount_currency;
+            this.$refs.discountCurrencyComponent.update(this.discountCurrency);
+        },
         update: function update() {
-            if (this.item.discount_percent != this.discountPercent || this.item.discount_currency / this.item.count != this.discountCurrency) {
+            if (this.isManual) {
                 this.item.manual_discount_currency = this.discountCurrency;
                 this.item.manual_discount_percent = this.discountPercent;
+                this.item.is_manual = 1;
+            } else {
+                this.item.manual_discount_currency = 0;
+                this.item.manual_discount_percent = 0;
+                this.item.is_manual = 0;
             }
 
             this.item.count = this.curCount;
-
-            $('#modal-estimates_goods_item-' + this.item.id).foundation('close');
-
             this.$emit('update', this.item);
+            $('#modal-estimates_goods_item-' + this.item.id).foundation('close');
         },
         reset: function reset() {
             if (!this.isRegistered) {
@@ -87319,7 +87348,15 @@ var render = function() {
               _vm._v(" "),
               _c("div", { staticClass: "small-12 medium-12 cell" }, [
                 _c("fieldset", [
-                  _c("legend", [_vm._v("Скидка:")]),
+                  _c("legend", [
+                    _vm._v("Скидка "),
+                    _vm.manual
+                      ? _c("span", { on: { click: _vm.returnComputed } }, [
+                          _vm._v("(удалить ручную)")
+                        ])
+                      : _vm._e(),
+                    _vm._v(":")
+                  ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "grid-x grid-margin-x" }, [
                     _c("div", { staticClass: "small-12 medium-6 cell" }, [
@@ -88974,7 +89011,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return this.estimate.is_registered === 1 && this.estimate.is_saled === 0;
         },
         disabledSaleButton: function disabledSaleButton() {
-            return this.$store.getters.paymentsAmount >= this.$store.getters.estimateTotal;
+            return this.$store.getters.paymentsAmount < this.$store.getters.estimateTotal;
         },
         change: function change() {
             return this.$store.state.lead.change;
@@ -88985,7 +89022,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     methods: {
         save: function save() {
-            var res = window.submitAjax('form-lead');
+            var res = window.submitAjax('form-lead-personal');
             if (res) {
 
                 var data = {
@@ -88999,7 +89036,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         },
         registerEstimate: function registerEstimate() {
-            var res = window.submitAjax('form-lead');
+            var res = window.submitAjax('form-lead-personal');
             if (res) {
 
                 var data = {
@@ -89688,6 +89725,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         paymentsAmount: function paymentsAmount() {
             return this.$store.getters.paymentsAmount;
+        },
+        lead: function lead() {
+            return this.$store.state.lead.lead;
         }
     },
     methods: {
@@ -89704,7 +89744,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     currency_id: this.currencyId,
                     date: this.date,
 
-                    contract_id: this.document.lead.client.contract.id,
+                    contract_id: this.lead.client.contract.id,
                     contract_type: 'App\\ContractsClient',
 
                     document_id: this.document.id,
@@ -95866,7 +95906,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             organization: this.lead.organization ? this.lead.organization : {
                 id: null,
-                name: null
+                name: this.lead.company_name
             },
             companyName: this.lead.company_name,
 
@@ -95881,8 +95921,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     created: function created() {
         this.lead.main_phone = this.lead.main_phones.length ? this.lead.main_phones[0].phone : null;
 
+        this.$store.commit('SET_USERS', this.users);
+        this.$store.commit('SET_COMPANIES', this.companies);
+
         this.$store.commit('SET_LEAD', this.lead);
         this.$store.commit('SET_CLIENT', this.lead.client);
+
         this.$store.commit('SET_ESTIMATE', this.lead.estimate);
         this.$store.commit('SET_GOODS_ITEMS', this.lead.estimate.goods_items);
         this.$store.commit('SET_SERVICES_ITEMS', this.lead.estimate.services_items);
@@ -95894,6 +95938,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     computed: {
         isDisabled: function isDisabled() {
             return this.$store.state.lead.estimate.is_registered == 1;
+        },
+        storeUsers: function storeUsers() {
+            return this.$store.state.lead.users;
+        },
+        storeCompanies: function storeCompanies() {
+            return this.$store.state.lead.companies;
         }
     },
     methods: {
@@ -95918,7 +95968,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         changePhone: function changePhone(value) {
             if (value.length == 17) {
                 var number = value.replace(/\D+/g, "");
-                var found = this.users.find(function (user) {
+                var found = this.storeUsers.find(function (user) {
                     return user.main_phones[0].phone == number;
                 });
                 this.updateUser(found);
@@ -96006,7 +96056,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.address = organization.location.address;
                 this.$refs.address.update(this.address);
 
-                if (!this.phone.phone && !this.name) {
+                if (!this.mainPhone && !this.name) {
 
                     if (organization.representatives.length) {
                         var user = organization.representatives[0];
@@ -96316,11 +96366,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     data: function data() {
         return {
-            curOrganization: this.organization.id ? this.organization : {
-                id: null,
-                name: null
-            },
-            name: this.organization.id ? this.organization.name : null,
+            curOrganization: this.organization,
+            name: this.organization.name,
 
             results: [],
             search: false,
@@ -96944,154 +96991,172 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "grid-x" }, [
-    _c("div", { staticClass: "cell small-12 large-shrink margin-left-15" }, [
-      _c("div", { staticClass: "grid-x grid-padding-x lead-contacts-block" }, [
-        _c("div", { staticClass: "large-shrink cell" }, [
-          _c(
-            "label",
-            [
-              _vm._v("Телефон\n                        "),
-              _c("phone-component", {
-                ref: "phone",
-                attrs: {
-                  phone: _vm.phone,
-                  required: true,
-                  disabled: _vm.isDisabled
-                },
-                on: { input: _vm.changePhone }
-              })
-            ],
-            1
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "large-auto cell" }, [
-          _c(
-            "label",
-            [
-              _vm._v("Контактное лицо\n                        "),
-              _c("string-component", {
-                ref: "name",
-                attrs: {
-                  value: _vm.name,
-                  required: true,
-                  disabled: _vm.isDisabled
-                },
-                on: { change: _vm.change },
-                model: {
-                  value: _vm.name,
-                  callback: function($$v) {
-                    _vm.name = $$v
-                  },
-                  expression: "name"
-                }
-              })
-            ],
-            1
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", {
-          staticClass: "small-12 cell",
-          attrs: { id: "port-autofind" }
-        }),
-        _vm._v(" "),
+  return _c(
+    "form",
+    { attrs: { id: "form-lead-personal", "data-abide": "", novalidate: "" } },
+    [
+      _c("div", { staticClass: "grid-x" }, [
         _c(
           "div",
-          { staticClass: "large-shrink cell" },
+          { staticClass: "cell small-12 large-shrink margin-left-15" },
           [
-            _c("search-city-component", {
-              ref: "cityId",
-              attrs: {
-                "start-cities": _vm.cities,
-                city: _vm.city,
-                disabled: _vm.isDisabled
-              },
-              on: { change: _vm.change }
-            })
-          ],
-          1
+            _c(
+              "div",
+              { staticClass: "grid-x grid-padding-x lead-contacts-block" },
+              [
+                _c("div", { staticClass: "large-shrink cell" }, [
+                  _c(
+                    "label",
+                    [
+                      _vm._v("Телефон\n                        "),
+                      _c("phone-component", {
+                        ref: "phone",
+                        attrs: {
+                          phone: _vm.phone,
+                          required: true,
+                          disabled: _vm.isDisabled
+                        },
+                        on: { input: _vm.changePhone }
+                      })
+                    ],
+                    1
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "large-auto cell" }, [
+                  _c(
+                    "label",
+                    [
+                      _vm._v("Контактное лицо\n                        "),
+                      _c("string-component", {
+                        ref: "name",
+                        attrs: {
+                          value: _vm.name,
+                          required: true,
+                          disabled: _vm.isDisabled
+                        },
+                        on: { change: _vm.change },
+                        model: {
+                          value: _vm.name,
+                          callback: function($$v) {
+                            _vm.name = $$v
+                          },
+                          expression: "name"
+                        }
+                      })
+                    ],
+                    1
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", {
+                  staticClass: "small-12 cell",
+                  attrs: { id: "port-autofind" }
+                }),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "large-shrink cell" },
+                  [
+                    _c("search-city-component", {
+                      ref: "cityId",
+                      attrs: {
+                        "start-cities": _vm.cities,
+                        city: _vm.city,
+                        disabled: _vm.isDisabled
+                      },
+                      on: { change: _vm.change }
+                    })
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "large-auto cell wrap-lead-address" },
+                  [
+                    _c(
+                      "label",
+                      [
+                        _vm._v("Адрес\n                        "),
+                        _c("string-component", {
+                          ref: "address",
+                          attrs: {
+                            name: "address",
+                            value: _vm.address,
+                            disabled: _vm.isDisabled
+                          },
+                          on: { change: _vm.change },
+                          model: {
+                            value: _vm.address,
+                            callback: function($$v) {
+                              _vm.address = $$v
+                            },
+                            expression: "address"
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  ]
+                )
+              ]
+            )
+          ]
         ),
         _vm._v(" "),
-        _c("div", { staticClass: "large-auto cell wrap-lead-address" }, [
-          _c(
-            "label",
-            [
-              _vm._v("Адрес\n                        "),
-              _c("string-component", {
-                ref: "address",
-                attrs: {
-                  name: "address",
-                  value: _vm.address,
-                  disabled: _vm.isDisabled
-                },
-                on: { change: _vm.change },
-                model: {
-                  value: _vm.address,
-                  callback: function($$v) {
-                    _vm.address = $$v
-                  },
-                  expression: "address"
-                }
-              })
-            ],
-            1
-          )
-        ])
-      ])
-    ]),
-    _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "small-12 large-auto cell wrap-lead-add-contacts" },
-      [
         _c(
           "div",
-          { staticClass: "grid-x grid-padding-x" },
+          { staticClass: "small-12 large-auto cell wrap-lead-add-contacts" },
           [
-            _c("organization-component", {
-              ref: "organization",
-              attrs: {
-                organization: _vm.organization,
-                "legal-forms": _vm.legalForms,
-                companies: _vm.companies,
-                disabled: _vm.isDisabled
-              },
-              on: { change: _vm.updateOrganization, input: _vm.change }
-            }),
-            _vm._v(" "),
-            _c("div", { staticClass: "small-12 cell wrap-lead-email" }, [
-              _c(
-                "label",
-                [
-                  _vm._v("E-mail\n                        "),
-                  _c("string-component", {
-                    ref: "email",
-                    attrs: {
-                      name: "email",
-                      value: _vm.email,
-                      disabled: _vm.isDisabled
-                    },
-                    on: { change: _vm.change },
-                    model: {
-                      value: _vm.email,
-                      callback: function($$v) {
-                        _vm.email = $$v
-                      },
-                      expression: "email"
-                    }
-                  })
-                ],
-                1
-              )
-            ])
-          ],
-          1
+            _c(
+              "div",
+              { staticClass: "grid-x grid-padding-x" },
+              [
+                _c("organization-component", {
+                  ref: "organization",
+                  attrs: {
+                    organization: _vm.organization,
+                    "legal-forms": _vm.legalForms,
+                    companies: _vm.storeCompanies,
+                    disabled: _vm.isDisabled
+                  },
+                  on: { change: _vm.updateOrganization, input: _vm.change }
+                }),
+                _vm._v(" "),
+                _c("div", { staticClass: "small-12 cell wrap-lead-email" }, [
+                  _c(
+                    "label",
+                    [
+                      _vm._v("E-mail\n                        "),
+                      _c("string-component", {
+                        ref: "email",
+                        attrs: {
+                          name: "email",
+                          value: _vm.email,
+                          disabled: _vm.isDisabled
+                        },
+                        on: { change: _vm.change },
+                        model: {
+                          value: _vm.email,
+                          callback: function($$v) {
+                            _vm.email = $$v
+                          },
+                          expression: "email"
+                        }
+                      })
+                    ],
+                    1
+                  )
+                ])
+              ],
+              1
+            )
+          ]
         )
-      ]
-    )
-  ])
+      ])
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -97286,6 +97351,66 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
@@ -97297,6 +97422,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     data: function data() {
         return {
+            view: 'view-list',
+
             catalogId: this.catalogsGoodsData.catalogsGoods[0].id,
             catalogs: this.catalogsGoodsData.catalogsGoods,
             catalogsItems: this.catalogsGoodsData.catalogsGoodsItems,
@@ -97456,7 +97583,7 @@ var render = function() {
             "ul",
             {
               directives: [{ name: "drilldown", rawName: "v-drilldown" }],
-              staticClass: "vertical menu",
+              staticClass: "vertical menu selecter-catalog-item",
               attrs: {
                 "data-back-button":
                   '<li class="js-drilldown-back"><a tabindex="0">Назад</a></li>'
@@ -97477,6 +97604,38 @@ var render = function() {
     _vm._v(" "),
     _c("div", { staticClass: "auto cell" }, [
       _c("div", { staticClass: "grid-x grid-padding-x" }, [
+        _c("div", { staticClass: "small-10 cell view-settings-panel" }, [
+          _c("div", {
+            staticClass: "one-icon-16 icon-view-list icon-button",
+            class: [{ active: _vm.view == "view-list" }],
+            on: {
+              click: function($event) {
+                _vm.view = "view-list"
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("div", {
+            staticClass: "one-icon-16 icon-view-block icon-button",
+            class: [{ active: _vm.view == "view-block" }],
+            on: {
+              click: function($event) {
+                _vm.view = "view-block"
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("div", {
+            staticClass: "one-icon-16 icon-view-card icon-button",
+            class: [{ active: _vm.view == "view-card" }],
+            on: {
+              click: function($event) {
+                _vm.view = "view-card"
+              }
+            }
+          })
+        ]),
+        _vm._v(" "),
         _vm._m(1),
         _vm._v(" "),
         _c("div", { attrs: { id: "block-prices_goods" } }, [
@@ -97491,74 +97650,199 @@ var render = function() {
                   expression: "listPrices.length > 0"
                 }
               ],
-              staticClass: "small-12 cell products-list view-list"
+              staticClass: "small-12 cell products-list",
+              class: _vm.view
             },
-            _vm._l(_vm.listPrices, function(price) {
-              return _c("li", [
-                _c(
-                  "a",
-                  {
-                    on: {
-                      click: function($event) {
-                        return _vm.addPriceToEstimate(price)
+            [
+              _vm._l(_vm.listPrices, function(price) {
+                return [
+                  _c(
+                    "li",
+                    {
+                      class: {
+                        priority: price.is_priority,
+                        hit: price.is_hit,
+                        new: price.is_new
                       }
-                    }
-                  },
-                  [
-                    _c("div", { staticClass: "media-object stack-for-small" }, [
-                      _vm._m(2, true),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "media-object-section cell" }, [
-                        _c("div", { staticClass: "grid-x grid-margin-x" }, [
-                          _c("div", { staticClass: "cell auto" }, [
-                            _c("h4", [
-                              _c(
-                                "span",
-                                { staticClass: "items-product-name" },
-                                [_vm._v(_vm._s(price.goods.article.name))]
-                              )
-                            ])
-                          ]),
-                          _vm._v(" "),
+                    },
+                    [
+                      _c(
+                        "a",
+                        {
+                          on: {
+                            click: function($event) {
+                              return _vm.addPriceToEstimate(price)
+                            }
+                          }
+                        },
+                        [
                           _c(
                             "div",
-                            { staticClass: "cell shrink wrap-product-price" },
+                            { staticClass: "media-object stack-for-small" },
                             [
+                              _vm._m(2, true),
+                              _vm._v(" "),
                               _c(
-                                "span",
-                                {
-                                  staticClass: "items-product-price",
-                                  class: [
-                                    {
-                                      "with-discount":
-                                        price.price != price.total
-                                    }
-                                  ]
-                                },
+                                "div",
+                                { staticClass: "media-object-section cell" },
                                 [
-                                  _vm._v(
-                                    _vm._s(
-                                      _vm._f("level")(
-                                        _vm._f("roundToTwo")(price.total)
+                                  _c(
+                                    "div",
+                                    { staticClass: "grid-x grid-margin-x" },
+                                    [
+                                      _c(
+                                        "div",
+                                        { staticClass: "cell auto price-name" },
+                                        [
+                                          _c("h4", [
+                                            _c(
+                                              "span",
+                                              {
+                                                staticClass:
+                                                  "items-product-name"
+                                              },
+                                              [
+                                                _vm._v(
+                                                  _vm._s(
+                                                    price.goods.article.name
+                                                  )
+                                                )
+                                              ]
+                                            )
+                                          ])
+                                        ]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "div",
+                                        {
+                                          staticClass:
+                                            "cell shrink wrap-product-price"
+                                        },
+                                        [
+                                          _c(
+                                            "span",
+                                            {
+                                              staticClass:
+                                                "items-product-price",
+                                              class: [
+                                                {
+                                                  "with-discount":
+                                                    price.price != price.total
+                                                }
+                                              ]
+                                            },
+                                            [
+                                              _vm._v(
+                                                _vm._s(
+                                                  _vm._f("level")(
+                                                    _vm._f("roundToTwo")(
+                                                      price.total_catalogs_item_discount
+                                                    )
+                                                  )
+                                                )
+                                              )
+                                            ]
+                                          ),
+                                          _vm._v(" "),
+                                          price.points
+                                            ? _c(
+                                                "span",
+                                                { staticClass: "points" },
+                                                [
+                                                  _vm._v(
+                                                    "(" +
+                                                      _vm._s(
+                                                        _vm._f("level")(
+                                                          _vm._f("roundToTwo")(
+                                                            price.points
+                                                          )
+                                                        )
+                                                      ) +
+                                                      ")"
+                                                  )
+                                                ]
+                                              )
+                                            : _vm._e()
+                                        ]
                                       )
-                                    )
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    { staticClass: "grid-x extra-info" },
+                                    [
+                                      _c("div", { staticClass: "cell auto" }, [
+                                        ((price.price -
+                                          price.total_catalogs_item_discount) *
+                                          100) /
+                                          price.price >
+                                        0
+                                          ? _c(
+                                              "span",
+                                              { staticClass: "price-discount" },
+                                              [
+                                                _vm._v(
+                                                  _vm._s(
+                                                    ((price.price -
+                                                      price.total_catalogs_item_discount) *
+                                                      100) /
+                                                      price.price
+                                                  ) + "%"
+                                                )
+                                              ]
+                                            )
+                                          : _vm._e(),
+                                        _vm._v(" "),
+                                        price.is_hit
+                                          ? _c(
+                                              "span",
+                                              { staticClass: "price-hit" },
+                                              [_vm._v("Hit")]
+                                            )
+                                          : _vm._e(),
+                                        _vm._v(" "),
+                                        price.is_new
+                                          ? _c(
+                                              "span",
+                                              { staticClass: "price-new" },
+                                              [_vm._v("New")]
+                                            )
+                                          : _vm._e()
+                                      ]),
+                                      _vm._v(" "),
+                                      _c(
+                                        "div",
+                                        { staticClass: "cell shrink" },
+                                        [
+                                          _vm._v(
+                                            "\n                                                3\n                                            "
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "p",
+                                    {
+                                      staticClass: "items-product-description"
+                                    },
+                                    [_vm._v(_vm._s(price.goods.description))]
                                   )
                                 ]
                               )
                             ]
                           )
-                        ]),
-                        _vm._v(" "),
-                        _c("p", { staticClass: "items-product-description" }, [
-                          _vm._v(_vm._s(price.goods.description))
-                        ])
-                      ])
-                    ])
-                  ]
-                )
-              ])
-            }),
-            0
+                        ]
+                      )
+                    ]
+                  )
+                ]
+              })
+            ],
+            2
           )
         ])
       ])
@@ -97611,7 +97895,9 @@ var render = function() {
               }),
               0
             )
-          ])
+          ]),
+          _vm._v(" "),
+          _vm._m(4)
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "grid-x align-center grid-padding-x" }, [
@@ -97660,9 +97946,7 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("div", { staticClass: "sprite-input-left icon-search" }),
         _vm._v(" "),
-        _c("span", { staticClass: "form-error" }, [
-          _vm._v("Обязательно нужно логиниться!")
-        ])
+        _c("span", { staticClass: "form-error" })
       ])
     ])
   },
@@ -97670,25 +97954,10 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "small-12 cell view-settings-panel" }, [
-      _c("div", {
-        staticClass: "one-icon-16 icon-view-list icon-button active",
-        attrs: { id: "toggler-view-list" }
-      }),
-      _vm._v(" "),
-      _c("div", {
-        staticClass: "one-icon-16 icon-view-block icon-button",
-        attrs: { id: "toggler-view-block" }
-      }),
-      _vm._v(" "),
-      _c("div", {
-        staticClass: "one-icon-16 icon-view-card icon-button",
-        attrs: { id: "toggler-view-card" }
-      }),
-      _vm._v(" "),
+    return _c("div", { staticClass: "small-2 cell global-settings-panel" }, [
       _c("div", {
         staticClass: "one-icon-16 icon-view-setting icon-button",
-        attrs: { id: "open-setting-view", "data-open": "modal-catalogs-goods" }
+        attrs: { "data-open": "modal-catalogs-goods" }
       })
     ])
   },
@@ -97708,7 +97977,85 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "grid-x" }, [
       _c("div", { staticClass: "small-12 cell modal-title" }, [
-        _c("h5", [_vm._v("Каталоги товаров")])
+        _c("h5", [_vm._v("Настройка каталога товаров")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "small-10 cell inputs" }, [
+      _c("div", { staticClass: "grid-x align-left" }, [
+        _c("div", { staticClass: "cell small-12 medium-4 checkbox" }, [
+          _c("input", {
+            attrs: {
+              type: "checkbox",
+              name: "show_hit",
+              id: "checkbox-show-hit"
+            }
+          }),
+          _vm._v(" "),
+          _c("label", { attrs: { for: "checkbox-show-hit" } }, [
+            _c("span", [_vm._v("Хиты")])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "cell small-12 medium-4 checkbox" }, [
+          _c("input", {
+            attrs: {
+              type: "checkbox",
+              name: "show_new",
+              id: "checkbox-show-new"
+            }
+          }),
+          _vm._v(" "),
+          _c("label", { attrs: { for: "checkbox-show-new" } }, [
+            _c("span", [_vm._v("Новинки")])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "cell small-12 medium-4 checkbox" }, [
+          _c("input", {
+            attrs: {
+              type: "checkbox",
+              name: "show_out_of_stock",
+              id: "checkbox-show-out-of-stock"
+            }
+          }),
+          _vm._v(" "),
+          _c("label", { attrs: { for: "checkbox-show-out-of-stock" } }, [
+            _c("span", [_vm._v("Нет на складе")])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "cell small-12 medium-4 checkbox" }, [
+          _c("input", {
+            attrs: {
+              type: "checkbox",
+              name: "show_priority",
+              id: "checkbox-show-priority"
+            }
+          }),
+          _vm._v(" "),
+          _c("label", { attrs: { for: "checkbox-show-priority" } }, [
+            _c("span", [_vm._v("Приоритет")])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "cell small-12 medium-4 checkbox" }, [
+          _c("input", {
+            attrs: {
+              type: "checkbox",
+              name: "show_preorder",
+              id: "checkbox-show-preorder"
+            }
+          }),
+          _vm._v(" "),
+          _c("label", { attrs: { for: "checkbox-show-preorder" } }, [
+            _c("span", [_vm._v("Под заказ")])
+          ])
+        ])
       ])
     ])
   }
@@ -105548,12 +105895,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     second_name: null,
                     first_name: null,
                     patronymic: null,
-                    main_phones: [function () {
-                        return {
-                            phone: {
-                                phone: null
-                            }
-                        };
+                    main_phones: [{
+                        phone: null
                     }],
                     location: {
                         address: null,
@@ -114289,6 +114632,9 @@ var store = {
 "use strict";
 var moduleLead = {
     state: {
+        users: [],
+        companies: [],
+
         lead: null,
         client: null,
         estimate: null,
@@ -114299,6 +114645,14 @@ var moduleLead = {
         loading: false
     },
     mutations: {
+        SET_USERS: function SET_USERS(state, users) {
+            state.users = users;
+        },
+        SET_COMPANIES: function SET_COMPANIES(state, companies) {
+            state.companies = companies;
+        },
+
+
         // Лид
         SET_LEAD: function SET_LEAD(state, lead) {
             if (lead.main_phones.length) {
@@ -114433,6 +114787,8 @@ var moduleLead = {
                         manual_discount_currency: 0,
                         manual_discount_percent: 0,
 
+                        is_manual: 0,
+
                         company_id: null
                     };
 
@@ -114448,9 +114804,8 @@ var moduleLead = {
             }
         },
         UPDATE_GOODS_ITEM: function UPDATE_GOODS_ITEM(state, item) {
-            var id = item.id;
-            var index = state.goodsItems.findIndex(function (item) {
-                return item.id === id;
+            var index = state.goodsItems.findIndex(function (obj) {
+                return obj.id === item.id;
             });
             this.commit('SET_AGGREGATIONS', item);
             item = state.goodsItems[index];
@@ -114472,38 +114827,36 @@ var moduleLead = {
 
                     // Скидки
                     // Иначе рассчитываем
-                    var _id = item.id;
                     var _index2 = state.goodsItems.findIndex(function (obj) {
-                        return obj.id == _id;
+                        return obj.id == item.id;
                     });
-
                     // Если есть ручная скидка
-                    if (item.manual_discount_currency > 0) {
+                    if (item.is_manual == 1) {
 
-                        if (item.manual_discount_currency == item.computed_discount_currency) {
-                            // Введенное значение совпало, скидываем ручную скидку
-                            this.commit('SET_COMPUTED_DISCOUNT', item);
-                        } else {
-                            item.price_discount = 0;
-                            item.total_price_discount = item.amount;
+                        item.price_discount = 0;
+                        item.total_price_discount = item.amount;
 
-                            item.catalogs_item_discount = 0;
-                            item.total_catalogs_item_discount = item.amount;
+                        item.catalogs_item_discount = 0;
+                        item.total_catalogs_item_discount = item.amount;
 
-                            item.estimate_discount = 0;
-                            item.total_estimate_discount = item.amount;
+                        item.estimate_discount = 0;
+                        item.total_estimate_discount = item.amount;
 
-                            item.client_discount_currency = 0;
-                            item.total_client_discount = item.amount;
+                        item.client_discount_currency = 0;
+                        item.total_client_discount = item.amount;
 
-                            item.total_manual_discount = item.manual_discount_currency * count;
-                            item.total = item.amount - item.total_manual_discount;
+                        item.total_manual_discount = item.amount - item.manual_discount_currency * count;
+                        item.total = item.total_manual_discount;
 
-                            item.total_computed_discount = item.computed_discount_currency * count;
+                        item.total_computed_discount = 0;
 
-                            item.discount_currency = item.total_manual_discount;
-                            item.discount_percent = item.manual_discount_percent;
-                        }
+                        item.discount_currency = item.manual_discount_currency * count;
+                        item.discount_percent = item.manual_discount_percent;
+
+                        var _index3 = state.goodsItems.findIndex(function (obj) {
+                            return obj.id == item.id;
+                        });
+                        Vue.set(state.goodsItems, _index3, item);
                     } else {
                         // Иначе рассчитываем
                         this.commit('SET_COMPUTED_DISCOUNT', item);
@@ -114605,9 +114958,10 @@ var moduleLead = {
             item.manual_discount_percent = 0;
             item.total_manual_discount = 0;
 
-            var id = item.id;
-            var index = state.goodsItems.findIndex(function (item) {
-                return item.id == id;
+            item.is_manual = 0;
+
+            var index = state.goodsItems.findIndex(function (obj) {
+                return obj.id == item.id;
             });
             Vue.set(state.goodsItems, index, item);
         },
@@ -114672,10 +115026,36 @@ var moduleLead = {
 
             state.loading = true;
             axios.patch('/admin/leads/axios_update/' + state.lead.id, data).then(function (response) {
-                console.log(response.data);
+                // console.log(response.data);
 
-                _this2.commit('SET_LEAD', response.data.lead);
+                var lead = response.data.lead;
+                _this2.commit('SET_LEAD', lead);
+                if (lead.user) {
+                    var user = lead.user;
+                    var index = state.users.findIndex(function (obj) {
+                        return obj.id == user.id;
+                    });
+                    if (index > -1) {
+                        Vue.set(state.users, index, user);
+                    } else {
+                        state.users.push(user);
+                    }
+                }
+
+                if (lead.organization) {
+                    var organization = lead.organization;
+                    var _index4 = state.companies.findIndex(function (obj) {
+                        return obj.id == organization.id;
+                    });
+                    if (_index4 > -1) {
+                        Vue.set(state.companies, _index4, organization);
+                    } else {
+                        state.companies.push(organization);
+                    }
+                }
+
                 _this2.commit('SET_ESTIMATE', response.data.estimate);
+
                 _this2.commit('SET_GOODS_ITEMS', response.data.goods_items);
 
                 state.change = false;
@@ -114695,7 +115075,7 @@ var moduleLead = {
 
             state.loading = true;
             axios.patch('/admin/estimates/' + state.estimate.id + '/saling/').then(function (response) {
-                console.log(response.data);
+                // console.log(response.data);
                 _this3.commit('SET_ESTIMATE', response.data);
             }).catch(function (error) {
                 console.log(error);

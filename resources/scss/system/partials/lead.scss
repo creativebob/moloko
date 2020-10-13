@@ -266,9 +266,18 @@ span.item-currency{
 
 // Добавление товара
 
-.view-settings-panel{
+
+.view-settings-panel, .global-settings-panel{
     padding: 8px 0px;
     margin-bottom: 10px;
+}
+
+.view-settings-panel{
+    padding-left: 0px !important;
+    text-align: left;
+}
+
+.global-settings-panel{
     text-align: right;
 }
 
@@ -277,20 +286,32 @@ span.item-currency{
 }
 
 
+.selecter-catalog-item{
+    a{
+        color: black;
+        font-size: 0.9rem;
+    }
+}
+
+
+
 .products-list{
 
     li {
         list-style-type: none;
         margin: 0;
         padding: 0;
+        transition: width 0.2s ease;
+        transition: height 0.2s ease;
 
         a {
+            font-family: SegoeUIRegular;
+            transition: background-color 0.3s ease;
             position: relative;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             display: block;
             float: left;
             padding: 10px;
-            margin: 1px;
             width: 100%;
             height: 30px;
             background-color: #fff;
@@ -299,6 +320,7 @@ span.item-currency{
             box-shadow: 1px 1px 0px 1px #eee;
             line-height: 1.2;
             text-decoration: none;
+            border: 1px solid white;
 
         }
 
@@ -311,6 +333,11 @@ span.item-currency{
 .view-list.products-list{
 
     li {
+
+        .with-discount {
+            color: red;
+        }
+
         a {
             .items-product-description{
                 display: none;
@@ -336,11 +363,19 @@ span.item-currency{
 
 .view-block.products-list{
 
+    max-height: 600px;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+
     li {
+
+        float: left;
+        width: 100%;
+
+
         a {
             padding: 10px;
-            margin: 1px;
-            width: 140px;
             height: 80px;
             background-color: #5B6B87;
             color: #fff;
@@ -351,12 +386,75 @@ span.item-currency{
             .items-product-img{
                 display: none;
             }
+
+
+            .points{
+                font-family: SegoeUIRegular;
+                color: #aaa;
+            }
+
+            .extra-info{
+                bottom: 3;
+            }
+            .price-name{
+                height: 48px;
+            }
+
+            .price-hit, .price-new, .price-discount{
+                font-size: 0.6rem;
+                margin-right: 3px;
+            }
+
+            .price-hit{
+                color: #ffa51f;
+            }
+
+            .price-new{
+                color: #82e23a;
+            }
+
+            .price-discount{
+                color: #ccc;            
+            }
+
+
         }
 
         a:hover{
             background-color: #4B5B77;
         }
+
+        a:active{
+            background-color: #ff239d;
+        }
+
+        &.priority{
+            a{
+                background-color: black;
+            }
+            
+        }
+
     }
+
+
+
+@media screen and (min-width: 500px) and (max-width: 1680px) {
+    li {
+        float: left;
+        width: 50%;
+    }
+}
+
+@media screen and (min-width: 1680px) and (max-width: 3000px) {
+    li {
+        float: left;
+        width: 33.33%;
+    }
+}
+
+
+
 }
 
 .view-card.products-list{

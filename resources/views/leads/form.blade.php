@@ -120,8 +120,19 @@
         </div>
     </div>
 
-    <!-- Правый блок -->
+
+
+
+<!-- Правый блок -->
     <div class="small-12 medium-7 large-5 cell">
+        {{ Form::model($lead, [
+    'route' => ['leads.update', $lead->id],
+    'data-abide', 'novalidate',
+    'id' => 'form-lead',
+    'files' => 'true'
+]) }}
+        {{ method_field('PATCH') }}
+        {!! Form::hidden('previous_url', url()->previous()) !!}
         <div class="grid-x tabs-right">
             <div class="small-12 cell">
                 <ul class="tabs-list" data-tabs id="tabs-leads">
@@ -398,9 +409,10 @@
             </div>
 
         </div>
-
+        {{ Form::close() }}
     </div>
     {{-- КОНЕЦ ПРАВОГО БЛОКА --}}
+
 
     {{--    <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">--}}
     {{--        @can('update', $lead)--}}

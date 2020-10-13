@@ -499,6 +499,8 @@ class RawController extends Controller
             // ПЕРЕНОС ГРУППЫ В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
             $this->changeCategory($request, $raw);
 
+            $raw->archive = $request->archive;
+
             $raw->display = $request->display;
             $raw->system = $request->system;
             $raw->save();

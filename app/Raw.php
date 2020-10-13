@@ -23,6 +23,7 @@ class Raw extends Model
     protected $fillable = [
         'category_id',
         'article_id',
+
         'unit_for_composition_id',
         'price_unit_id',
         'price_unit_category_id',
@@ -32,6 +33,9 @@ class Raw extends Model
         'portion_abbreviation',
         'unit_portion_id',
         'portion_count',
+
+        'archive',
+        'serial',
 
         'display',
         'system',

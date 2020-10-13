@@ -469,6 +469,8 @@ class AttachmentController extends Controller
             // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
             $this->changeCategory($request, $attachment);
 
+            $attachment->archive = $request->archive;
+
             $attachment->display = $request->display;
             $attachment->system = $request->system;
 

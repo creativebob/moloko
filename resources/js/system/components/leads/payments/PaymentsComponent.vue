@@ -148,7 +148,10 @@
             },
             paymentsAmount() {
                 return this.$store.getters.paymentsAmount;
-            }
+            },
+            lead() {
+                return this.$store.state.lead.lead;
+            },
         },
         methods: {
             changeDate(date) {
@@ -162,7 +165,7 @@
                         currency_id: this.currencyId,
                         date: this.date,
 
-                        contract_id: this.document.lead.client.contract.id,
+                        contract_id: this.lead.client.contract.id,
                         contract_type: 'App\\ContractsClient',
 
                         document_id: this.document.id,

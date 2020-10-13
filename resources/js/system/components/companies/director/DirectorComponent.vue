@@ -159,11 +159,9 @@
                     first_name: null,
                     patronymic: null,
                     main_phones: [
-                        () => ({
-                            phone: {
-                                phone: null
-                            }
-                        })
+                        {
+                            phone: null
+                        }
                     ],
                     location: {
                         address: null,

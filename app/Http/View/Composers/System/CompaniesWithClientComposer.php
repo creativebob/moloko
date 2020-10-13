@@ -23,7 +23,12 @@ class CompaniesWithClientComposer
             'organizations' => function ($q) {
                 $q->with([
                     'client',
-                    'representatives.client'
+                    'representatives' => function ($q) {
+                        $q->with([
+                            'client'
+                        ])
+                            ->latest();
+                    }
                 ]);
             }
         ]);

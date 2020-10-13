@@ -107,6 +107,18 @@
                                 <label for="checkbox-is_new"><span>Новинка</span></label>
                             </div>
 
+                            <div class="small-12 cell checkbox">
+                                {!! Form::hidden('is_preorder', 0) !!}
+                                {!! Form::checkbox('is_preorder', 1, $priceGoods->is_preorder, ['id' => 'checkbox-is_preorder']) !!}
+                                <label for="checkbox-is_preorder"><span>Продажа по предзаказу</span></label>
+                            </div>
+
+                            <div class="small-12 cell checkbox">
+                                {!! Form::hidden('is_priority', 0) !!}
+                                {!! Form::checkbox('is_priority', 1, $priceGoods->is_priority, ['id' => 'checkbox-is_priority']) !!}
+                                <label for="checkbox-is_priority"><span>Приоритет продажи для менеджеров</span></label>
+                            </div>
+
                         </div>
 
                     </div>

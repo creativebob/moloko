@@ -80,6 +80,8 @@ class PricesGoods extends Model
         'status',
         'is_hit',
         'is_new',
+        'is_priority',
+        'is_preorder',
 
         'is_show_price',
 

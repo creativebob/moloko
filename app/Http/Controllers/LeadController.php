@@ -551,6 +551,7 @@ class LeadController extends Controller
                 'computed_discount_currency' => $newGoodsItem['computed_discount_currency'],
                 'total_computed_discount' => $newGoodsItem['total_computed_discount'],
 
+                'is_manual' => $newGoodsItem['is_manual'],
                 'manual_discount_percent' => $newGoodsItem['manual_discount_percent'],
                 'manual_discount_currency' => $newGoodsItem['manual_discount_currency'],
                 'total_manual_discount' => $newGoodsItem['total_manual_discount'],
@@ -729,19 +730,37 @@ class LeadController extends Controller
             }
         }
 
-
         $lead->load([
-            'location.city',
-            'user.client',
-            'organization.client',
-            'client',
             'main_phones',
             'extra_phones',
-            'medium',
-            'campaign',
-            'source',
-            'site',
-            'claims',
+            'location.city',
+            'user' => function ($q) {
+                $q->with([
+                    'main_phones',
+                    'location.city',
+                    'client',
+                    'organizations' => function ($q) {
+                        $q->with([
+                            'client',
+                        ])
+                            ->latest();
+                    },
+                ]);
+            },
+            'organization' => function ($q) {
+                $q->with([
+                    'main_phones',
+                    'location.city',
+                    'client',
+                    'representatives' => function ($q) {
+                        $q->with([
+                            'client',
+                        ])
+                            ->latest();
+                    },
+                ]);
+            },
+            'client.contract',
             'estimate' => function ($q) {
                 $q->with([
                     'goods_items' => function ($q) {
@@ -768,7 +787,11 @@ class LeadController extends Controller
                     'discounts'
                 ]);
             },
-            'client.contract',
+            'medium',
+            'campaign',
+            'source',
+            'site',
+            'claims',
             'lead_method',
             'choice' => function ($query) {
                 $query->orderBy('created_at', 'asc');
@@ -1680,6 +1703,7 @@ class LeadController extends Controller
                 'name' => $lead->name ?? 'Имя не указано',
                 'case_number' => $lead->case_number,
                 'manager' => $lead->manager->first_name . ' ' . $lead->manager->second_name,
+                'company_name' => $lead->company_name,
             ];
             return response()->json($result);
         }

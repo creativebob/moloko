@@ -17,14 +17,7 @@
 
 @section('content')
 
-    {{ Form::model($lead, [
-        'route' => ['leads.update', $lead->id],
-        'data-abide', 'novalidate',
-        'id' => 'form-lead',
-        'files' => 'true'
-    ]) }}
-    {{ method_field('PATCH') }}
-    {!! Form::hidden('previous_url', url()->previous()) !!}
+
 
     @php
         if ($lead->manager_id == 1){
@@ -35,7 +28,7 @@
     @endphp
 
     @include('leads.form', ['submitButtonText' => 'Сохранить'])
-    {{ Form::close() }}
+
 @endsection
 
 @section('modals')
