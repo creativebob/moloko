@@ -14,10 +14,10 @@ class ConsignmentObserver
     public function creating(Consignment $consignment)
     {
         $this->store($consignment);
-        $consignment->receipt_date = now()->format('d.m.Y');
+        $consignment->receipt_date = today()->format('d.m.Y');
         $consignment->draft = true;
 
-        $consignment->filial_id = \Auth::user()->stafferFilialId;
+        $consignment->filial_id = auth()->user()->stafferFilialId;
     }
 
     public function updating(Consignment $consignment)
@@ -26,6 +26,13 @@ class ConsignmentObserver
 
         $stock = Stock::find($consignment->stock_id);
 	    $consignment->filial_id = $stock->filial_id;
+
+        $amount = 0;
+        $consignment->load('items');
+        if ($consignment->items->isNotEmpty()) {
+            $amount = $consignment->items->sum('amount');
+        }
+        $consignment->amount = $amount;
     }
 
     public function deleting(Consignment $consignment)
