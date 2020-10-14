@@ -63,7 +63,8 @@
             $('#hider-promotions').toggleClass('hider-on');
 
             // Запустить движение слайдов
-            // $('.single-item').slick('slickPlay');
+            $('.single-item').slick('slickPlay');
+
         });
 
         $(".single-item").slick({
@@ -77,7 +78,9 @@
 
                 breakpoint: 2000,
                 settings: {
-                    dots: true
+                    dots: true,
+                    autoplay: {{ $site->is_autochange }},
+                    autoplaySpeed: {{ $site->delay }}
                 }
 
             }, {

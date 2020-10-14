@@ -49,6 +49,8 @@ class Site extends Model
         'name',
         'alias',
 
+        'is_autochange',
+        'delay',
 
         'display',
         'system',
