@@ -31,7 +31,7 @@
                 ></estimates-goods-item-component>
             </tbody>
 
-            <tfoot>
+<!--             <tfoot>
                 <tr class="tfoot-discount-info">
                     <td colspan="3" class="tfoot-discount-name">Скидка 10% на заказ сделанный до 15 ноября 2020 года</td>
                     <td class="tfoot-discount-value">10%</td>
@@ -54,7 +54,7 @@
                     <td class="invert-show"><span>3400</span> руб.</td>
                     <td colspan="3"></td>
                 </tr>
-            </tfoot>
+            </tfoot> -->
 
             <!--            <tfoot>-->
             <!--                <tr>-->
