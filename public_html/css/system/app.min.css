@@ -10920,6 +10920,10 @@ table.list-employees {
   border-top: 5px solid #eee;
 }
 
+#table-estimate tbody tr:last-child td, .table-estimate tbody tr:last-child td {
+  border-bottom: 3px solid #eee;
+}
+
 .button-to-reserve {
   position: relative;
   top: 3px;
@@ -11114,7 +11118,6 @@ span.item-currency {
 }
 
 .view-settings-panel {
-  padding-left: 0px !important;
   text-align: left;
 }
 
@@ -11142,6 +11145,92 @@ span.item-currency {
 }
 
 .products-list li a {
+  display: block;
+  width: 100%;
+}
+
+.view-list.products-list .counter-price-goods {
+  display: none;
+}
+
+.view-list.products-list li {
+  width: 100%;
+  margin-bottom: 1px;
+}
+
+.view-list.products-list li .extra-info {
+  color: black;
+}
+
+.view-list.products-list li .with-discount {
+  color: red;
+}
+
+.view-list.products-list li a {
+  background-color: #ffffff;
+  padding: 8px 0.5rem 8px 1rem;
+  color: black;
+  font-size: 0.9rem;
+}
+
+.view-list.products-list li a .prise-photo {
+  display: none;
+}
+
+.view-list.products-list li a .items-product-description {
+  display: none;
+}
+
+.view-list.products-list li a .items-product-img {
+  display: none;
+}
+
+.view-list.products-list li a .wrap-product-price {
+  width: 60px;
+}
+
+.view-list.products-list li a .main-block {
+  width: 80%;
+}
+
+.view-list.products-list li a .extra-block {
+  width: 20%;
+}
+
+.view-list.products-list li a .points {
+  color: #ccc;
+}
+
+.view-list.products-list li a .price-hit {
+  color: #ffa51f;
+  font-size: 0.8rem;
+}
+
+.view-list.products-list li a .price-new {
+  color: #82e23a;
+  font-size: 0.8rem;
+}
+
+.view-list.products-list li a .price-discount {
+  color: #ccc;
+}
+
+.view-list.products-list li.priority a {
+  padding: 8px 0.5rem 8px 0.5rem;
+  border-left: 0.5rem solid black;
+}
+
+.view-list.products-list li a:hover {
+  background-color: #f7f7f7;
+}
+
+.view-block.products-list {
+  max-height: 600px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.view-block.products-list a {
   font-family: SegoeUIRegular;
   -webkit-transition: background-color 0.3s ease;
   transition: background-color 0.3s ease;
@@ -11162,35 +11251,8 @@ span.item-currency {
   border: 1px solid white;
 }
 
-.products-list li a:hover {
+.view-block.products-list a:hover {
   background-color: #f7f7f7;
-}
-
-.view-list.products-list li .with-discount {
-  color: red;
-}
-
-.view-list.products-list li a .items-product-description {
-  display: none;
-}
-
-.view-list.products-list li a .items-product-img {
-  display: none;
-}
-
-.view-list.products-list li a .wrap-product-price {
-  width: 60px;
-}
-
-.view-list.products-list li a:hover {
-  background-color: #f7f7f7;
-  font-weight: 600;
-}
-
-.view-block.products-list {
-  max-height: 600px;
-  overflow-y: auto;
-  overflow-x: hidden;
 }
 
 .view-block.products-list li {
@@ -11205,6 +11267,10 @@ span.item-currency {
   color: #fff;
 }
 
+.view-block.products-list li a .prise-photo {
+  display: none;
+}
+
 .view-block.products-list li a .items-product-description {
   display: none;
 }
@@ -11214,7 +11280,6 @@ span.item-currency {
 }
 
 .view-block.products-list li a .points {
-  font-family: SegoeUIRegular;
   color: #aaa;
 }
 
@@ -11269,6 +11334,10 @@ span.item-currency {
   }
 }
 
+.view-card.products-list li {
+  width: 100%;
+}
+
 .view-card.products-list li a {
   position: relative;
   font-size: 0.9rem;
@@ -11307,17 +11376,63 @@ span.item-currency {
   color: #999;
 }
 
+.view-card.products-list li a .points {
+  font-family: SegoeUIRegular;
+  color: #aaa;
+}
+
 .view-card.products-list li a:hover {
   background-color: #f7f7f7;
 }
 
 .catalog-bar .item-catalog:hover > a {
-  background-color: #ddd;
+  background-color: #f7f7f7;
 }
 
 .catalog-bar .get-products {
   color: #000;
   font-size: 0.9rem;
+}
+
+tfoot {
+  font-family: "SegoeUISemiBold";
+}
+
+tfoot td {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  font-weight: normal;
+  font-size: 0.9rem;
+}
+
+tfoot .tfoot-discount-info {
+  background-color: #fff797;
+}
+
+tfoot .tfoot-discount-info td {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+tfoot .tfoot-discount-info:first-child td {
+  margin-top: 5px;
+  border-top: 1px black solid;
+}
+
+tfoot .tfoot-discount-info .tfoot-discount-currency span {
+  padding: 0.3em 1em;
+  min-width: 70px;
+}
+
+tfoot .tfoot-discount-info:first-child {
+  padding-top: 10px;
+}
+
+tfoot tr.tfoot-estimate-amount td {
+  border-top: 3px black solid;
+  padding-top: 10px;
 }
 
 .green-button {

@@ -1,31 +1,51 @@
 <template>
 
-        <div id="search">
-                <input
-                        class="search-field"
-                        type="search"
-                        id="field-search"
-                        name="search"
-                        placeholder="Поиск"
-                        v-model="text"
-                        @input="dedounceSearch"
-                />
-            <div id="search-result-wrap" v-if=search>
+    <div id="search">
+            <input
+                    class="search-field"
+                    type="search"
+                    id="field-search"
+                    name="search"
+                    placeholder="Поиск"
+                    v-model="text"
+                    @input="dedounceSearch"
+            />
+        <div id="search-result-wrap" v-if=search>
 
-                <ul class="search-result-list">
+            <table class="search-result-list">
+                <tr v-for="(item, index) in results">
 
-                    <li v-for="item in results">
-                        <a :href="'/admin/clients/' + item.id + '/edit'">{{ item.clientable.name }}</a>
-                    </li>
+                    <td v-if="item.clientable.alias" class="search-result-name">
+                        <span><a :href="'/admin/clients/' + item.id + '/edit'">{{ item.clientable.name }}</a></span><span class="text-small"> (Представитель)</span><br>
+                        <span class="text-small">{{ item.clientable.location.city.name }}</span><span v-if="item.clientable.location.address" class="text-small">, {{ item.clientable.location.address }}</span><br>
+                        <span class="text-small">{{ item.clientable.main_phones[0].phone }}</span>
+                    </td>
 
-                </ul>
-            </div>
+                    <td v-if="!item.clientable.alias" class="search-result-name">
+                        <span><a :href="'/admin/clients/' + item.id + '/edit'">{{ item.clientable.name }}</a></span><br>
+                        <span class="text-small">{{ item.clientable.location.city.name }}</span><span v-if="item.clientable.location.address" class="text-small">, {{ item.clientable.location.address }}</span><br>
+                        <span class="text-small">{{ item.clientable.main_phones[0].phone }}</span>
+                    </td>
+
+                    <td class="search-result-info">
+                        <span v-if="(item.discount > 0)">{{ item.discount }}%</span> 
+                        <span v-if="item.is_vip">VIP</span>
+                    </td>
+
+                    <td class="search-result-id">
+                        {{ item.id }}
+                    </td>
+                </tr>
+            </table>
+
         </div>
+    </div>
 
 </template>
 
 <script>
     import _ from 'lodash'
+    import moment from 'moment'
 
     export default {
         data() {
@@ -69,12 +89,9 @@
                                     console.log(error)
                             });
 
-
-
                     } else {
                         this.reset();
                     }
-
 
             },
 
@@ -103,7 +120,18 @@
                 if (this.results.length == 1) {
                     this.add(0);
                 }
+            },
+            getFormatDate (value) {
+                return moment(String(value)).format('DD.MM.YYYY');
             }
-        }
+        },
+        filters: {
+            decimalPlaces(value) {
+                return parseFloat(value).toFixed(2);
+            },
+            decimalLevel: function (value) {
+                return parseFloat(value).toLocaleString();
+            },
+        },
     }
 </script>

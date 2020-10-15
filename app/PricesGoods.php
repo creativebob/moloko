@@ -94,7 +94,12 @@ class PricesGoods extends Model
         'system',
         'moderation'
     ];
-
+    
+    // Компания
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
 
     // Каталог
     public function catalog()

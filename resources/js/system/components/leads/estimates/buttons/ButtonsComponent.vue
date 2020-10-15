@@ -31,8 +31,9 @@
             <button
                 class="button"
                 :disabled="disabledSaleButton"
+                :class="{ disabledSaleButton : hide }"
                 @click.prevent="saleEstimate"
-            >Продать</button>
+            >Закрыть чек</button>
         </div>
 
         <div
@@ -49,7 +50,7 @@
         <div
             v-if="loading"
             class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top"
-        >Обновление</div>
+        >Идет обновление...</div>
 
     </div>
 </template>

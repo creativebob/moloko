@@ -1321,7 +1321,7 @@ class LeadController extends Controller
     public function search(Request $request, $search)
     {
 
-        $results = Lead::with('main_phones')->where('case_number', $search)
+        $results = Lead::with('main_phones', 'lead_method', 'stage')->where('case_number', $search)
             ->orWhere('name', 'LIKE', '%' . $search . '%')
             ->orWhere('company_name', 'LIKE', '%' . $search . '%')
             ->orWhereHas('phones', function ($q) use ($search) {
@@ -1330,16 +1330,6 @@ class LeadController extends Controller
             })
             ->orderBy('created_at')
             ->get();
-
-            // Модифицируем данные 
-            $modified = $results->map(function($value, $key) {
-                $value['badget'] = num_format($value['badget'], 0);
-                // $value['created_at'] = Carbon::parse($value['created_at']);
-                return $value;
-            });
-
-            $results = $modified->all();
-
 
         return response()->json($results);
 

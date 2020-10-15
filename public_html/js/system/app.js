@@ -85439,6 +85439,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
@@ -88105,7 +88126,9 @@ var render = function() {
             })
           }),
           1
-        )
+        ),
+        _vm._v(" "),
+        _vm._m(0)
       ]
     ),
     _vm._v(" "),
@@ -88117,7 +88140,7 @@ var render = function() {
         attrs: { id: "delete-estimates_goods_item", "data-reveal": "" }
       },
       [
-        _vm._m(0),
+        _vm._m(1),
         _vm._v(" "),
         _c("div", { staticClass: "grid-x align-center modal-content " }, [
           _c("div", { staticClass: "small-10 cell text-center" }, [
@@ -88145,13 +88168,75 @@ var render = function() {
             )
           ]),
           _vm._v(" "),
-          _vm._m(1)
+          _vm._m(2)
         ])
       ]
     )
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tfoot", [
+      _c("tr", { staticClass: "tfoot-discount-info" }, [
+        _c(
+          "td",
+          { staticClass: "tfoot-discount-name", attrs: { colspan: "3" } },
+          [_vm._v("Скидка 10% на заказ сделанный до 15 ноября 2020 года")]
+        ),
+        _vm._v(" "),
+        _c("td", { staticClass: "tfoot-discount-value" }, [_vm._v("10%")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "tfoot-discount-currency" }, [
+          _c("span", [_vm._v("3400 руб.")])
+        ]),
+        _vm._v(" "),
+        _c("td", {
+          staticClass: "tfoot-discount-currency",
+          attrs: { colspan: "3" }
+        })
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "tfoot-estimate-amount" }, [
+        _c("td", { attrs: { colspan: "3" } }, [_vm._v("Сумма без скидок:")]),
+        _vm._v(" "),
+        _c("td"),
+        _vm._v(" "),
+        _c("td", { attrs: { colspan: "3" } })
+      ]),
+      _vm._v(" "),
+      _c("tr", [
+        _c(
+          "td",
+          { staticClass: "tfoot-estimate-discount", attrs: { colspan: "3" } },
+          [_vm._v("Скидки:")]
+        ),
+        _vm._v(" "),
+        _c("td"),
+        _vm._v(" "),
+        _c("td", { attrs: { colspan: "3" } })
+      ]),
+      _vm._v(" "),
+      _c("tr", [
+        _c(
+          "td",
+          { staticClass: "tfoot-estimate-total", attrs: { colspan: "3" } },
+          [_vm._v("Итого к оплате:")]
+        ),
+        _vm._v(" "),
+        _c("td"),
+        _vm._v(" "),
+        _c("td", { staticClass: "invert-show" }, [
+          _c("span", [_vm._v("3400")]),
+          _vm._v(" руб.")
+        ]),
+        _vm._v(" "),
+        _c("td", { attrs: { colspan: "3" } })
+      ])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -88978,6 +89063,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
@@ -89228,6 +89314,7 @@ var render = function() {
               "button",
               {
                 staticClass: "button",
+                class: { disabledSaleButton: _vm.hide },
                 attrs: { disabled: _vm.disabledSaleButton },
                 on: {
                   click: function($event) {
@@ -89236,7 +89323,7 @@ var render = function() {
                   }
                 }
               },
-              [_vm._v("Продать")]
+              [_vm._v("Закрыть чек")]
             )
           ]
         )
@@ -89272,7 +89359,7 @@ var render = function() {
             staticClass:
               "small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top"
           },
-          [_vm._v("Обновление")]
+          [_vm._v("Идет обновление...")]
         )
       : _vm._e()
   ])
@@ -97402,15 +97489,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
@@ -97458,6 +97536,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         addPriceToEstimate: function addPriceToEstimate(price) {
             this.$store.commit('ADD_GOODS_ITEM_TO_ESTIMATE', price);
+        },
+        getPhotoPath: function getPhotoPath(price, format) {
+
+            // Умолчание по формату. Плюс защита от ошибок при указании формата
+            format != ('small' || 'medium' || 'large') ? format = 'medium' : format;
+            return '/storage/' + price.company_id + '/media/articles/' + price.goods.article.id + '/img/' + format + '/' + price.goods.article.photo.name;
         }
     },
     directives: {
@@ -97636,9 +97720,13 @@ var render = function() {
           })
         ]),
         _vm._v(" "),
-        _vm._m(1),
-        _vm._v(" "),
-        _c("div", { attrs: { id: "block-prices_goods" } }, [
+        _vm._m(1)
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "grid-x", attrs: { id: "block-prices_goods" } },
+        [
           _c(
             "ul",
             {
@@ -97676,165 +97764,141 @@ var render = function() {
                           }
                         },
                         [
-                          _c(
-                            "div",
-                            { staticClass: "media-object stack-for-small" },
-                            [
-                              _vm._m(2, true),
-                              _vm._v(" "),
-                              _c(
-                                "div",
-                                { staticClass: "media-object-section cell" },
-                                [
-                                  _c(
-                                    "div",
-                                    { staticClass: "grid-x grid-margin-x" },
-                                    [
+                          _vm.view == "view-card"
+                            ? _c("div", { staticClass: "prise-photo" }, [
+                                _c("img", {
+                                  attrs: {
+                                    src: _vm.getPhotoPath(price, "small")
+                                  }
+                                })
+                              ])
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "grid-x" }, [
+                            _c("div", { staticClass: "cell main-block" }, [
+                              _c("div", { staticClass: "grid-x" }, [
+                                _c(
+                                  "div",
+                                  { staticClass: "cell auto price-name" },
+                                  [
+                                    _c("h4", [
                                       _c(
-                                        "div",
-                                        { staticClass: "cell auto price-name" },
-                                        [
-                                          _c("h4", [
-                                            _c(
-                                              "span",
-                                              {
-                                                staticClass:
-                                                  "items-product-name"
-                                              },
-                                              [
-                                                _vm._v(
-                                                  _vm._s(
-                                                    price.goods.article.name
-                                                  )
-                                                )
-                                              ]
-                                            )
-                                          ])
-                                        ]
-                                      ),
-                                      _vm._v(" "),
-                                      _c(
-                                        "div",
-                                        {
-                                          staticClass:
-                                            "cell shrink wrap-product-price"
-                                        },
-                                        [
-                                          _c(
-                                            "span",
-                                            {
-                                              staticClass:
-                                                "items-product-price",
-                                              class: [
-                                                {
-                                                  "with-discount":
-                                                    price.price != price.total
-                                                }
-                                              ]
-                                            },
-                                            [
-                                              _vm._v(
-                                                _vm._s(
-                                                  _vm._f("level")(
-                                                    _vm._f("roundToTwo")(
-                                                      price.total_catalogs_item_discount
-                                                    )
-                                                  )
-                                                )
-                                              )
-                                            ]
-                                          ),
-                                          _vm._v(" "),
-                                          price.points
-                                            ? _c(
-                                                "span",
-                                                { staticClass: "points" },
-                                                [
-                                                  _vm._v(
-                                                    "(" +
-                                                      _vm._s(
-                                                        _vm._f("level")(
-                                                          _vm._f("roundToTwo")(
-                                                            price.points
-                                                          )
-                                                        )
-                                                      ) +
-                                                      ")"
-                                                  )
-                                                ]
-                                              )
-                                            : _vm._e()
-                                        ]
-                                      )
-                                    ]
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "div",
-                                    { staticClass: "grid-x extra-info" },
-                                    [
-                                      _c("div", { staticClass: "cell auto" }, [
-                                        ((price.price -
-                                          price.total_catalogs_item_discount) *
-                                          100) /
-                                          price.price >
-                                        0
-                                          ? _c(
-                                              "span",
-                                              { staticClass: "price-discount" },
-                                              [
-                                                _vm._v(
-                                                  _vm._s(
-                                                    ((price.price -
-                                                      price.total_catalogs_item_discount) *
-                                                      100) /
-                                                      price.price
-                                                  ) + "%"
-                                                )
-                                              ]
-                                            )
-                                          : _vm._e(),
-                                        _vm._v(" "),
-                                        price.is_hit
-                                          ? _c(
-                                              "span",
-                                              { staticClass: "price-hit" },
-                                              [_vm._v("Hit")]
-                                            )
-                                          : _vm._e(),
-                                        _vm._v(" "),
-                                        price.is_new
-                                          ? _c(
-                                              "span",
-                                              { staticClass: "price-new" },
-                                              [_vm._v("New")]
-                                            )
-                                          : _vm._e()
-                                      ]),
-                                      _vm._v(" "),
-                                      _c(
-                                        "div",
-                                        { staticClass: "cell shrink" },
+                                        "span",
+                                        { staticClass: "items-product-name" },
                                         [
                                           _vm._v(
-                                            "\n                                                3\n                                            "
+                                            _vm._s(price.goods.article.name)
                                           )
                                         ]
                                       )
-                                    ]
-                                  ),
+                                    ])
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      "cell shrink wrap-product-price"
+                                  },
+                                  [
+                                    _c(
+                                      "span",
+                                      {
+                                        staticClass: "items-product-price",
+                                        class: [
+                                          {
+                                            "with-discount":
+                                              price.price !=
+                                              price.total_catalogs_item_discount
+                                          }
+                                        ]
+                                      },
+                                      [
+                                        _vm._v(
+                                          _vm._s(
+                                            _vm._f("level")(
+                                              _vm._f("roundToTwo")(
+                                                price.total_catalogs_item_discount
+                                              )
+                                            )
+                                          )
+                                        )
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    price.points
+                                      ? _c("span", { staticClass: "points" }, [
+                                          _vm._v(
+                                            "(" +
+                                              _vm._s(
+                                                _vm._f("level")(
+                                                  _vm._f("roundToTwo")(
+                                                    price.points
+                                                  )
+                                                )
+                                              ) +
+                                              ")"
+                                          )
+                                        ])
+                                      : _vm._e()
+                                  ]
+                                )
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "cell extra-block" }, [
+                              _c("div", { staticClass: "grid-x extra-info" }, [
+                                _c("div", { staticClass: "cell auto" }, [
+                                  ((price.price -
+                                    price.total_catalogs_item_discount) *
+                                    100) /
+                                    price.price >
+                                  0
+                                    ? _c(
+                                        "span",
+                                        { staticClass: "price-discount-extra" },
+                                        [
+                                          _vm._v(
+                                            _vm._s(
+                                              ((price.price -
+                                                price.total_catalogs_item_discount) *
+                                                100) /
+                                                price.price
+                                            ) + "%"
+                                          )
+                                        ]
+                                      )
+                                    : _vm._e(),
                                   _vm._v(" "),
-                                  _c(
-                                    "p",
-                                    {
-                                      staticClass: "items-product-description"
-                                    },
-                                    [_vm._v(_vm._s(price.goods.description))]
-                                  )
-                                ]
-                              )
-                            ]
-                          )
+                                  price.is_hit
+                                    ? _c("span", { staticClass: "price-hit" }, [
+                                        _vm._v("Hit")
+                                      ])
+                                    : _vm._e(),
+                                  _vm._v(" "),
+                                  price.is_new
+                                    ? _c("span", { staticClass: "price-new" }, [
+                                        _vm._v("New")
+                                      ])
+                                    : _vm._e()
+                                ]),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      "cell shrink counter-price-goods"
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                                                3\n                                            "
+                                    )
+                                  ]
+                                )
+                              ])
+                            ])
+                          ])
                         ]
                       )
                     ]
@@ -97844,8 +97908,8 @@ var render = function() {
             ],
             2
           )
-        ])
-      ])
+        ]
+      )
     ]),
     _vm._v(" "),
     _c(
@@ -97855,7 +97919,7 @@ var render = function() {
         attrs: { id: "modal-catalogs-goods", "data-reveal": "" }
       },
       [
-        _vm._m(3),
+        _vm._m(2),
         _vm._v(" "),
         _c("div", { staticClass: "grid-x align-center modal-content" }, [
           _c("div", { staticClass: "small-10 cell text-center inputs" }, [
@@ -97897,7 +97961,7 @@ var render = function() {
             )
           ]),
           _vm._v(" "),
-          _vm._m(4)
+          _vm._m(3)
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "grid-x align-center grid-padding-x" }, [
@@ -97960,16 +98024,6 @@ var staticRenderFns = [
         attrs: { "data-open": "modal-catalogs-goods" }
       })
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "media-object-section items-product-img" },
-      [_c("div", { staticClass: "thumbnail" })]
-    )
   },
   function() {
     var _vm = this
@@ -106510,6 +106564,8 @@ module.exports = Component.exports
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_lodash__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_moment__);
 //
 //
 //
@@ -106545,6 +106601,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+
 
 
 
@@ -106594,6 +106654,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.reset();
             }
         },
+        getFormatDate: function getFormatDate(value) {
+            return __WEBPACK_IMPORTED_MODULE_1_moment___default()(String(value)).format('DD.MM.YYYY');
+        },
         clear: function clear() {
             if (this.error) {
                 // console.log('Клик по иконке ошибки на инпуте, обнуляем');
@@ -106620,6 +106683,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.add(0);
             }
         }
+    },
+    filters: {
+        decimalPlaces: function decimalPlaces(value) {
+            return parseFloat(value).toFixed(2);
+        },
+
+        decimalLevel: function decimalLevel(value) {
+            return parseFloat(value).toLocaleString();
+        }
+
     }
 });
 
@@ -106674,11 +106747,17 @@ var render = function() {
                     "a",
                     { attrs: { href: "/admin/leads/" + item.id + "/edit" } },
                     [
-                      _vm._v("Обращение "),
-                      _c("span", [_vm._v(_vm._s(item.number_case))]),
-                      _vm._v(" от " + _vm._s(item.created_at))
+                      _c("span", [_vm._v(_vm._s(item.id))]),
+                      _vm._v(
+                        " от " + _vm._s(_vm.getFormatDate(item.created_at))
+                      )
                     ]
-                  )
+                  ),
+                  _c("br"),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "text-small" }, [
+                    _vm._v(_vm._s(item.lead_method.name))
+                  ])
                 ]),
                 _vm._v(" "),
                 _c("td", { staticClass: "search-result-info" }, [
@@ -106688,11 +106767,29 @@ var render = function() {
                   _c("span", { staticClass: "text-small" }, [
                     _vm._v(_vm._s(item.company_name))
                   ]),
+                  item.company_name ? _c("br") : _vm._e(),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "text-small" }, [
+                    _vm._v(_vm._s(item.main_phones[0].phone))
+                  ]),
                   _c("br")
                 ]),
                 _vm._v(" "),
                 _c("td", { staticClass: "search-result-summa" }, [
-                  _c("span", [_vm._v(_vm._s(item.badget) + " руб.")])
+                  _c("span", [
+                    _vm._v(
+                      _vm._s(
+                        _vm._f("decimalLevel")(
+                          _vm._f("decimalPlaces")(item.badget)
+                        )
+                      ) + " руб."
+                    )
+                  ]),
+                  _c("br"),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "text-small" }, [
+                    _vm._v(_vm._s(item.stage.name))
+                  ])
                 ]),
                 _vm._v(" "),
                 _c("td", { staticClass: "search-result-id" }, [
@@ -106775,6 +106872,8 @@ module.exports = Component.exports
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_lodash__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_moment__);
 //
 //
 //
@@ -106801,6 +106900,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -106875,6 +106994,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             if (this.results.length == 1) {
                 this.add(0);
             }
+        },
+        getFormatDate: function getFormatDate(value) {
+            return __WEBPACK_IMPORTED_MODULE_1_moment___default()(String(value)).format('DD.MM.YYYY');
+        }
+    },
+    filters: {
+        decimalPlaces: function decimalPlaces(value) {
+            return parseFloat(value).toFixed(2);
+        },
+
+        decimalLevel: function decimalLevel(value) {
+            return parseFloat(value).toLocaleString();
         }
     }
 });
@@ -106921,15 +107052,94 @@ var render = function() {
     _vm.search
       ? _c("div", { attrs: { id: "search-result-wrap" } }, [
           _c(
-            "ul",
+            "table",
             { staticClass: "search-result-list" },
-            _vm._l(_vm.results, function(item) {
-              return _c("li", [
-                _c(
-                  "a",
-                  { attrs: { href: "/admin/clients/" + item.id + "/edit" } },
-                  [_vm._v(_vm._s(item.clientable.name))]
-                )
+            _vm._l(_vm.results, function(item, index) {
+              return _c("tr", [
+                item.clientable.alias
+                  ? _c("td", { staticClass: "search-result-name" }, [
+                      _c("span", [
+                        _c(
+                          "a",
+                          {
+                            attrs: {
+                              href: "/admin/clients/" + item.id + "/edit"
+                            }
+                          },
+                          [_vm._v(_vm._s(item.clientable.name))]
+                        )
+                      ]),
+                      _c("span", { staticClass: "text-small" }, [
+                        _vm._v(" (Представитель)")
+                      ]),
+                      _c("br"),
+                      _vm._v(" "),
+                      _c("span", { staticClass: "text-small" }, [
+                        _vm._v(_vm._s(item.clientable.location.city.name))
+                      ]),
+                      item.clientable.location.address
+                        ? _c("span", { staticClass: "text-small" }, [
+                            _vm._v(
+                              ", " + _vm._s(item.clientable.location.address)
+                            )
+                          ])
+                        : _vm._e(),
+                      _c("br"),
+                      _vm._v(" "),
+                      _c("span", { staticClass: "text-small" }, [
+                        _vm._v(_vm._s(item.clientable.main_phones[0].phone))
+                      ])
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                !item.clientable.alias
+                  ? _c("td", { staticClass: "search-result-name" }, [
+                      _c("span", [
+                        _c(
+                          "a",
+                          {
+                            attrs: {
+                              href: "/admin/clients/" + item.id + "/edit"
+                            }
+                          },
+                          [_vm._v(_vm._s(item.clientable.name))]
+                        )
+                      ]),
+                      _c("br"),
+                      _vm._v(" "),
+                      _c("span", { staticClass: "text-small" }, [
+                        _vm._v(_vm._s(item.clientable.location.city.name))
+                      ]),
+                      item.clientable.location.address
+                        ? _c("span", { staticClass: "text-small" }, [
+                            _vm._v(
+                              ", " + _vm._s(item.clientable.location.address)
+                            )
+                          ])
+                        : _vm._e(),
+                      _c("br"),
+                      _vm._v(" "),
+                      _c("span", { staticClass: "text-small" }, [
+                        _vm._v(_vm._s(item.clientable.main_phones[0].phone))
+                      ])
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _c("td", { staticClass: "search-result-info" }, [
+                  item.discount > 0
+                    ? _c("span", [_vm._v(_vm._s(item.discount) + "%")])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  item.is_vip ? _c("span", [_vm._v("VIP")]) : _vm._e()
+                ]),
+                _vm._v(" "),
+                _c("td", { staticClass: "search-result-id" }, [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(item.id) +
+                      "\n                "
+                  )
+                ])
               ])
             }),
             0
@@ -108011,6 +108221,8 @@ module.exports = Component.exports
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_lodash__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_moment__);
 //
 //
 //
@@ -108046,6 +108258,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+
 
 
 
@@ -108109,6 +108323,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.reset();
             }
         },
+        getFormatDate: function getFormatDate(value) {
+            return __WEBPACK_IMPORTED_MODULE_1_moment___default()(String(value)).format('DD.MM.YYYY');
+        },
         clear: function clear() {
             if (this.error) {
                 // console.log('Клик по иконке ошибки на инпуте, обнуляем');
@@ -108134,6 +108351,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             if (this.results.length == 1) {
                 this.add(0);
             }
+        }
+    },
+    filters: {
+        decimalPlaces: function decimalPlaces(value) {
+            return parseFloat(value).toFixed(2);
+        },
+
+        decimalLevel: function decimalLevel(value) {
+            return parseFloat(value).toLocaleString();
         }
     }
 });
@@ -108191,17 +108417,25 @@ var render = function() {
                       attrs: { href: "/admin/leads/" + item.number + "/edit" }
                     },
                     [
-                      _vm._v("Заказ "),
-                      _c("span", { staticClass: "bold" }, [
-                        _vm._v(_vm._s(item.number))
-                      ]),
-                      _vm._v(" от " + _vm._s(item.date))
+                      _c("span", [_vm._v(_vm._s(item.number))]),
+                      _vm._v(" от " + _vm._s(_vm.getFormatDate(item.date)))
                     ]
-                  )
+                  ),
+                  _c("br"),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "text-small" }, [_vm._v("Продано")])
                 ]),
                 _vm._v(" "),
                 _c("td", { staticClass: "search-result-summa" }, [
-                  _c("span", [_vm._v(_vm._s(item.total) + " руб.")])
+                  _c("span", [
+                    _vm._v(
+                      _vm._s(
+                        _vm._f("decimalLevel")(
+                          _vm._f("decimalPlaces")(item.total)
+                        )
+                      ) + " руб."
+                    )
+                  ])
                 ]),
                 _vm._v(" "),
                 _c("td", { staticClass: "search-result-info" }, [

@@ -5,12 +5,8 @@
             <thead>
             <tr>
                 <th>Наименование</th>
-                <!--                <th v-if="settings.length">Склад</th>-->
                 <th>Цена</th>
                 <th>Кол-во</th>
-                <!--                                        <th>Себестоимость</th>
-                                                            <th>ДопРасх</th>
-                                                            <th>Наценка</th> -->
                 <th class="td-discount">Скидка</th>
                 <th class="th-amount">Сумма</th>
                 <th class="th-delete"></th>
@@ -23,17 +19,42 @@
             </thead>
 
             <tbody>
-            <estimates-goods-item-component
-                v-for="(item, index) in items"
-                :item="item"
-                :index="index"
-                :key="item.id"
-                :settings="settings"
-                :stocks="stocks"
-                @open-modal-remove="openModal(item, index)"
-                @update="updateItem"
-            ></estimates-goods-item-component>
+                <estimates-goods-item-component
+                    v-for="(item, index) in items"
+                    :item="item"
+                    :index="index"
+                    :key="item.id"
+                    :settings="settings"
+                    :stocks="stocks"
+                    @open-modal-remove="openModal(item, index)"
+                    @update="updateItem"
+                ></estimates-goods-item-component>
             </tbody>
+
+            <tfoot>
+                <tr class="tfoot-discount-info">
+                    <td colspan="3" class="tfoot-discount-name">Скидка 10% на заказ сделанный до 15 ноября 2020 года</td>
+                    <td class="tfoot-discount-value">10%</td>
+                    <td class="tfoot-discount-currency"><span>3400 руб.</span></td>
+                    <td colspan="3" class="tfoot-discount-currency"></td>
+                </tr>
+                <tr class="tfoot-estimate-amount">
+                    <td colspan="3" class="">Сумма без скидок:</td>
+                    <td></td>
+                    <td colspan="3"></td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="tfoot-estimate-discount">Скидки:</td>
+                    <td></td>
+                    <td colspan="3"></td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="tfoot-estimate-total">Итого к оплате:</td>
+                    <td></td>
+                    <td class="invert-show"><span>3400</span> руб.</td>
+                    <td colspan="3"></td>
+                </tr>
+            </tfoot>
 
             <!--            <tfoot>-->
             <!--                <tr>-->

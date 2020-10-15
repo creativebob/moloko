@@ -117,13 +117,6 @@ class EstimateController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-            // Модифицируем данные 
-            $modified = $results->map(function($value, $key) {
-                $value['total'] = num_format($value['total'], 0);
-                // $value['created_at'] = Carbon::parse($value['created_at']);
-                return $value;
-            });
-
             return response()->json($results);
 
     }

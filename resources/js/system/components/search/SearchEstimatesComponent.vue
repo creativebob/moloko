@@ -14,10 +14,11 @@
                 <table class="search-result-list">
                     <tr v-for="(item, index) in results">
                         <td class="search-result-name">
-                            <a :href="'/admin/leads/' + item.number + '/edit'">Заказ <span class="bold">{{ item.number }}</span> от {{ item.date }}</a>
+                            <a :href="'/admin/leads/' + item.number + '/edit'"><span>{{ item.number }}</span> от {{ getFormatDate(item.date) }}</a><br>
+                            <span class="text-small">Продано</span>
                         </td>
                         <td  class="search-result-summa">
-                            <span>{{ item.total }} руб.</span>
+                            <span>{{ item.total | decimalPlaces | decimalLevel }} руб.</span>
                         </td>
                         <td class="search-result-info">
                             <span>{{ item.lead.name }}</span><br>
@@ -35,6 +36,7 @@
 
 <script>
     import _ from 'lodash'
+    import moment from 'moment'
 
     export default {
         data() {
@@ -98,6 +100,9 @@
                     }
 
             },
+            getFormatDate (value) {
+                return moment(String(value)).format('DD.MM.YYYY');
+            },
 
             clear() {
                 if (this.error) {
@@ -125,6 +130,14 @@
                     this.add(0);
                 }
             }
-        }
+        },
+        filters: {
+            decimalPlaces(value) {
+                return parseFloat(value).toFixed(2);
+            },
+            decimalLevel: function (value) {
+                return parseFloat(value).toLocaleString();
+            },
+        },
     }
 </script>

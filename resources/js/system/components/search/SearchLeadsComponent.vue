@@ -14,14 +14,17 @@
                 <table class="search-result-list">
                     <tr v-for="(item, index) in results">
                         <td class="search-result-name">
-                            <a :href="'/admin/leads/' + item.id + '/edit'">Обращение <span>{{ item.number_case }}</span> от {{ item.created_at }}</a>
+                            <a :href="'/admin/leads/' + item.id + '/edit'"><span>{{ item.id }}</span> от {{ getFormatDate(item.created_at) }}</a><br>
+                            <span class="text-small">{{ item.lead_method.name }}</span>
                         </td>
                         <td class="search-result-info">
                             <span>{{ item.name }}</span><br>
-                            <span class="text-small">{{ item.company_name }}</span><br>
+                            <span class="text-small">{{ item.company_name }}</span><br v-if="item.company_name">
+                            <span class="text-small">{{ item.main_phones[0].phone }}</span><br>
                         </td>
                         <td  class="search-result-summa">
-                            <span>{{ item.badget }} руб.</span>
+                            <span>{{ item.badget | decimalPlaces | decimalLevel }} руб.</span><br>
+                            <span class="text-small">{{ item.stage.name }}</span>
                         </td>
                         <td class="search-result-id">
                             {{ item.id }}
@@ -35,6 +38,7 @@
 
 <script>
     import _ from 'lodash'
+    import moment from 'moment'
 
     export default {
         data() {
@@ -61,7 +65,7 @@
             dedounceSearch: function() {
                 let delay = 300;
                 return _.debounce(this.check, delay);
-            }
+            },
         },
         methods: {
             check () {
@@ -85,6 +89,9 @@
                     }
 
 
+            },
+            getFormatDate (value) {
+                return moment(String(value)).format('DD.MM.YYYY');
             },
 
             clear() {
@@ -113,6 +120,15 @@
                     this.add(0);
                 }
             }
+        },
+        filters: {
+            decimalPlaces(value) {
+                return parseFloat(value).toFixed(2);
+            },
+            decimalLevel: function (value) {
+                return parseFloat(value).toLocaleString();
+            }
+
         }
     }
 </script>

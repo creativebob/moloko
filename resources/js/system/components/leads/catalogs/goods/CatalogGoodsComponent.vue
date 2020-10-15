@@ -34,8 +34,8 @@
         </div>
 
         <div class="auto cell">
-            <div class="grid-x grid-padding-x">
 
+            <div class="grid-x grid-padding-x">
                 <div class="small-10 cell view-settings-panel">
                     <div
                         class="one-icon-16 icon-view-list icon-button"
@@ -59,69 +59,64 @@
                         data-open="modal-catalogs-goods">
                     </div>
                 </div>
+            </div>
 
-                <div id="block-prices_goods">
+            <div class="grid-x" id="block-prices_goods">
+                <ul
+                        class="small-12 cell products-list"
+                        :class="view"
+                        v-show="listPrices.length > 0"
+                >
+                    <template v-for="price in listPrices">
+                        <li v-bind:class="{ priority: price.is_priority, hit: price.is_hit, new: price.is_new }">
+                            <a @click="addPriceToEstimate(price)">
 
-                    <ul
-                            class="small-12 cell products-list"
-                            :class="view"
-                            v-show="listPrices.length > 0"
-                    >
-                        <template
-                                v-for="price in listPrices"
-                        >
-                            <li v-bind:class="{ priority: price.is_priority, hit: price.is_hit, new: price.is_new}">
-                                <a
-                                        @click="addPriceToEstimate(price)"
-                                >
+                                <!-- Отрисовываем ссылку на фото только в режиме отображения товаров "Карточкой", дабы не грузить браузер -->
+                                <div v-if="view == 'view-card'" class="prise-photo">
+                                    <img :src="getPhotoPath(price, 'small')">
+                                </div>
 
-                                    <div class="media-object stack-for-small">
-                                        <div class="media-object-section items-product-img" >
-                                            <div class="thumbnail">
-    <!--                                         <img src="{{ getPhotoPath($cur_prices_goods->goods->article, 'small') }}">-->
+                                <div class="grid-x">
+                                    <div class="cell main-block">
+                                        <div class="grid-x">
+                                            <div class="cell auto price-name">
+                                                <h4>
+                                                    <span class="items-product-name">{{ price.goods.article.name }}</span>
+<!--                                                    <span class="items-product-manufacturer"> ({{ $cur_prices_goods->goods->article->manufacturer->name ?? '' }})</span>-->
+                                                </h4>
                                             </div>
-                                        </div>
 
-                                        <div class="media-object-section cell">
-
-                                            <div class="grid-x grid-margin-x">
-                                                <div class="cell auto price-name">
-                                                    <h4>
-                                                        <span class="items-product-name">{{ price.goods.article.name }}</span>
-    <!--                                                    <span class="items-product-manufacturer"> ({{ $cur_prices_goods->goods->article->manufacturer->name ?? '' }})</span>-->
-                                                    </h4>
-                                                </div>
-
-                                                <div class="cell shrink wrap-product-price">
-
-                                                    <span
-                                                        class="items-product-price"
-                                                        :class="[{'with-discount' : price.price != price.total }]"
-                                                    >{{ price.total_catalogs_item_discount | roundToTwo | level }}</span>
-                                                    <span v-if="price.points" class="points">({{ price.points | roundToTwo | level }})</span>
-                                                </div>
+                                            <div class="cell shrink wrap-product-price">
+                                                <span
+                                                    class="items-product-price"
+                                                    :class="[{'with-discount' : price.price != price.total_catalogs_item_discount }]"
+                                                >{{ price.total_catalogs_item_discount | roundToTwo | level }}</span>
+                                                <span v-if="price.points" class="points">({{ price.points | roundToTwo | level }})</span>
                                             </div>
-                                            <div class="grid-x extra-info">
-                                                <div class="cell auto">
-                                                    <span v-if="((price.price - price.total_catalogs_item_discount) * 100 / price.price)>0" class="price-discount">{{ (price.price - price.total_catalogs_item_discount) * 100 / price.price }}%</span>
-                                                    <span v-if="price.is_hit" class="price-hit">Hit</span>
-                                                    <span v-if="price.is_new" class="price-new">New</span>
-                                                </div>
-                                                <div class="cell shrink">
-                                                    3
-                                                </div>
-                                            </div>
-                                            <p class="items-product-description">{{ price.goods.description }}</p>
                                         </div>
                                     </div>
 
-                                </a>
-                            </li>
-                        </template>
-                     </ul>
-                </div>
+                                    <div class="cell extra-block">
+                                        <div class="grid-x extra-info">
+                                            <div class="cell auto">
+                                                <span v-if="((price.price - price.total_catalogs_item_discount) * 100 / price.price)>0" class="price-discount-extra">{{ (price.price - price.total_catalogs_item_discount) * 100 / price.price }}%</span>
+                                                <span v-if="price.is_hit" class="price-hit">Hit</span>
+                                                <span v-if="price.is_new" class="price-new">New</span>
+                                            </div>
+                                            <div class="cell shrink counter-price-goods">
+                                                3
+                                            </div>
+                                        </div>
+                                    </div>
 
-
+<!--                                                 <div class="cell desc-block">
+                                        <p class="items-product-description">{{ price.goods.description }}</p>
+                                    </div> -->
+                                </div>
+                            </a>
+                        </li>
+                    </template>
+                </ul>
             </div>
         </div>
 
@@ -169,10 +164,6 @@
                         </div>
                 </div>
             </div>
-
-
-
-
 
             <div class="grid-x align-center grid-padding-x">
                 <div class="small-6 medium-4 cell">
@@ -232,7 +223,13 @@
             },
             addPriceToEstimate(price) {
                 this.$store.commit('ADD_GOODS_ITEM_TO_ESTIMATE', price);
-            }
+            },
+            getPhotoPath(price, format) {
+
+                // Умолчание по формату. Плюс защита от ошибок при указании формата
+                (format != ('small' || 'medium' || 'large')) ? format = 'medium' : format;
+                return '/storage/' + price.company_id + '/media/articles/' + price.goods.article.id + '/img/' + format + '/' + price.goods.article.photo.name;
+            },
         },
         directives: {
             'drilldown': {

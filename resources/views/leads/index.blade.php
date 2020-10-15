@@ -133,7 +133,7 @@
             @if(($lead->payment > 0)&&($lead->payment < $lead->badget)) text-red @endif
             @if($lead->payment == $lead->badget) text-green @endif
 
-            ">{{ num_format($lead->badget, 0) }}</span>
+            ">{{ ($lead->estimate->total) ? num_format($lead->estimate->total, 0) : num_format($lead->badget, 0) }}</span>
 
             @if(($lead->payment != $lead->badget)&&($lead->payment != 0))
               <br><span class="tiny-text">{{ num_format($lead->payment, 0) }}</span>
