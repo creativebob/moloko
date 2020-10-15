@@ -15,7 +15,7 @@
 
                 @php
                     $model = $pageInfo->entity->model;
-                    $class = 'App\\' . $model . 'sCategory';
+                    $class = $model . 'sCategory';
                 @endphp
 {{--                {{ dd($class) }}--}}
 
@@ -29,7 +29,7 @@
 
 {{--                @php--}}
 {{--                    $model = $pageInfo->entity->model;--}}
-{{--                    $class = 'App\\' . $model . 'sGraphics';--}}
+{{--                    $class = $model . 'sGraphics';--}}
 {{--                @endphp--}}
 
 {{--                @can('index', $class)--}}

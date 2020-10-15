@@ -32876,9 +32876,9 @@ module.exports = g;
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(234)
+var __vue_script__ = __webpack_require__(211)
 /* template */
-var __vue_template__ = __webpack_require__(235)
+var __vue_template__ = __webpack_require__(212)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -62896,9 +62896,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;(function(root
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(203)
+var __vue_script__ = __webpack_require__(206)
 /* template */
-var __vue_template__ = __webpack_require__(207)
+var __vue_template__ = __webpack_require__(210)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -62943,7 +62943,7 @@ module.exports = Component.exports
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(233)
+var __vue_script__ = __webpack_require__(235)
 /* template */
 var __vue_template__ = __webpack_require__(236)
 /* template functional */
@@ -75425,11 +75425,11 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('input-phone-component', _
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('discount-mode-component', __webpack_require__(198));
 
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('consignment-component', __webpack_require__(201));
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('production-component', __webpack_require__(212));
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('production-component', __webpack_require__(214));
 
 // Смета на лиде
 // Vue.component('lead-init-component', require('./components/leads/LeadInitComponent'));
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('estimate-component', __webpack_require__(218));
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('estimate-component', __webpack_require__(220));
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('tab-payments-component', __webpack_require__(261));
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('payments-component', __webpack_require__(264));
 
@@ -78221,7 +78221,7 @@ var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(202)
 /* template */
-var __vue_template__ = __webpack_require__(211)
+var __vue_template__ = __webpack_require__(213)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -78238,7 +78238,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/js/system/components/consignments/ConsignmentComponent.vue"
+Component.options.__file = "resources/js/system/components/documents/consignments/ConsignmentComponent.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -78247,9 +78247,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-253f9fdc", Component.options)
+    hotAPI.createRecord("data-v-3743a68a", Component.options)
   } else {
-    hotAPI.reload("data-v-253f9fdc", Component.options)
+    hotAPI.reload("data-v-3743a68a", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -78418,208 +78418,598 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-	components: {
-		'select-categories-component': __webpack_require__(51),
-		'consignments-item-component': __webpack_require__(208)
-	},
-	props: {
-		consignment: Object,
-		selectData: Object,
-		currencies: {
-			type: Array,
-			default: [{
-				id: 1,
-				name: 'Рубль'
-			}]
-		}
-	},
-	data: function data() {
-		return {
-			// Сущности
-			entities: this.selectData.entities,
-			selectedEntity: this.selectData.entities[0].id,
-			entity_id: this.selectData.entities[0].id,
+    components: {
+        'consignments-item-component': __webpack_require__(203),
+        'select-categories-component': __webpack_require__(51),
+        'digit-component': __webpack_require__(7)
+    },
+    props: {
+        consignment: Object,
+        selectData: Object,
+        currencies: {
+            type: Array,
+            default: [{
+                id: 1,
+                name: 'Рубль'
+            }]
+        }
+    },
+    data: function data() {
+        return {
+            // Сущности
+            entities: this.selectData.entities,
+            selectedEntity: this.selectData.entities[0].id,
+            entity_id: this.selectData.entities[0].id,
 
-			//
-			items: this.consignment.items,
-			id: null,
-			count: null,
-			cost: null,
+            //
+            items: this.consignment.items,
+            id: null,
+            count: 0,
+            cost: 0,
 
-			// Категории для компонента выбора
-			categories: this.selectData.categories,
-			categoriesItems: this.selectData.items,
-			change: false,
-			itemUnit: null,
+            // Категории для компонента выбора
+            categories: this.selectData.categories,
+            categoriesItems: this.selectData.items,
+            change: false,
+            itemUnit: null,
 
-			// Производители
-			manufacturers: this.selectData.manufacturers,
-			itemManufacturer: null,
-			manufacturerId: null,
+            // Производители
+            manufacturers: this.selectData.manufacturers,
+            itemManufacturer: null,
+            manufacturerId: null,
 
-			// Валюте
-			currencyId: this.currencies[0].id
-		};
-	},
+            // Валюте
+            currencyId: this.currencies[0].id
+        };
+    },
 
-	computed: {
-		totalItemSum: function totalItemSum() {
-			return this.count * this.cost;
-		},
-		isDisabled: function isDisabled() {
-			return this.id == null || this.cost == null || this.count == null || this.count == 0;
-		},
-		itemsList: function itemsList() {
-			return this.items;
-		},
-		totalItemsCount: function totalItemsCount() {
-			return this.items.length;
-		},
-		totalItemsCost: function totalItemsCost() {
-			var cost = 0;
-			this.items.forEach(function (item) {
-				return cost += Number(item.amount);
-			});
-			return cost;
-		},
+    computed: {
+        totalItemSum: function totalItemSum() {
+            return this.count * parseFloat(this.cost);
+        },
+        isDisabled: function isDisabled() {
+            return this.id == null || this.cost == 0 || this.count == 0;
+        },
+        itemsList: function itemsList() {
+            return this.items;
+        },
+        totalItemsCount: function totalItemsCount() {
+            return this.items.length;
+        },
+        totalItemsCost: function totalItemsCost() {
+            var cost = 0;
+            this.items.forEach(function (item) {
+                return cost += Number(item.amount);
+            });
+            return cost;
+        },
 
 
-		// Списки для компонента выбора
-		selectCategories: function selectCategories() {
-			var _this = this;
+        // Списки для компонента выбора
+        selectCategories: function selectCategories() {
+            var _this = this;
 
-			return this.categories.filter(function (item) {
-				return item.entity_id === _this.entity_id;
-			});
-		},
-		selectCategoriesItems: function selectCategoriesItems() {
-			var _this2 = this;
+            return this.categories.filter(function (item) {
+                return item.entity_id === _this.entity_id;
+            });
+        },
+        selectCategoriesItems: function selectCategoriesItems() {
+            var _this2 = this;
 
-			return this.categoriesItems.filter(function (item) {
-				return item.entity_id === _this2.entity_id;
-			});
-		},
-		isPosted: function isPosted() {
-			return this.consignment.is_posted === 1;
-		},
-		manufacturer: function manufacturer() {
-			var _this3 = this;
+            return this.categoriesItems.filter(function (item) {
+                return item.entity_id === _this2.entity_id;
+            });
+        },
+        isReceipted: function isReceipted() {
+            return this.consignment.receipted_at;
+        },
+        manufacturer: function manufacturer() {
+            var _this3 = this;
 
-			return this.manufacturers.filter(function (item) {
-				if (item.id === _this3.itemManufacturer) {
-					_this3.manufacturerId = item.id;
-					return item;
-				}
-			});
-		}
-	},
+            return this.manufacturers.filter(function (item) {
+                if (item.id === _this3.itemManufacturer) {
+                    _this3.manufacturerId = item.id;
+                    return item;
+                }
+            });
+        }
+    },
+    methods: {
+        changeEntity: function changeEntity() {
+            var _this4 = this;
 
-	methods: {
-		changeCount: function changeCount(value) {
-			this.count = value;
-		},
-		changeCost: function changeCost(value) {
-			this.cost = value;
-		},
-		changeEntity: function changeEntity() {
-			var _this4 = this;
+            this.change = true;
 
-			this.change = true;
+            var count = 0;
+            this.categories.filter(function (item) {
+                if (item.entity_id === _this4.entity_id) {
+                    count++;
+                }
+            });
 
-			var count = 0;
-			this.categories.filter(function (item) {
-				if (item.entity_id === _this4.entity_id) {
-					count++;
-				}
-			});
+            if (count === 0) {
+                axios.post('/admin/consignments/categories', {
+                    entity_id: this.entity_id
+                }).then(function (response) {
+                    _this4.categories = _this4.categories.concat(response.data.categories);
+                    _this4.categoriesItems = _this4.categoriesItems.concat(response.data.items);
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            }
+        },
+        checkChange: function checkChange() {
+            this.change = false;
+        },
+        setId: function setId(id) {
+            var _this5 = this;
 
-			if (count === 0) {
-				axios.post('/admin/consignments/categories', {
-					entity_id: this.entity_id
-				}).then(function (response) {
-					_this4.categories = _this4.categories.concat(response.data.categories);
-					_this4.categoriesItems = _this4.categoriesItems.concat(response.data.items);
-				}).catch(function (error) {
-					console.log(error);
-				});
-			}
-		},
-		checkChange: function checkChange() {
-			this.change = false;
-		},
-		setId: function setId(id) {
-			var _this5 = this;
+            this.id = id;
+            if (id != null) {
+                this.categoriesItems.filter(function (item) {
+                    if (item.id === id && item.entity_id === _this5.entity_id) {
 
-			this.id = id;
-			if (id != null) {
-				this.categoriesItems.filter(function (item) {
-					if (item.id === id && item.entity_id === _this5.entity_id) {
+                        // Смотрим в чем принимать
+                        if (item.article.package_status === 1) {
+                            _this5.itemUnit = item.article.package_abbreviation;
+                        } else {
+                            _this5.itemUnit = item.article.unit.abbreviation;
+                        }
 
-						// Смотрим в чем принимать
-						if (item.article.package_status === 1) {
-							_this5.itemUnit = item.article.package_abbreviation;
-						} else {
-							_this5.itemUnit = item.article.unit.abbreviation;
-						}
+                        // Смотрим производителя
+                        if (item.article.manufacturer_id != null) {
+                            _this5.itemManufacturer = item.article.manufacturer_id;
+                        }
+                    }
+                });
+            } else {
+                this.itemUnit = null;
+                this.itemManufacturer = null;
+            }
+        },
+        addItem: function addItem() {
+            var _this6 = this;
 
-						// Смотрим производителя
-						if (item.article.manufacturer_id != null) {
-							_this5.itemManufacturer = item.article.manufacturer_id;
-						}
-					}
-				});
-			} else {
-				this.itemUnit = null;
-				this.itemManufacturer = null;
-			}
-		},
+            if (!this.isDisabled) {
+                this.disabledButton = true;
+                axios.post('/admin/consignments_items', {
+                    consignment_id: this.consignment.id,
+                    cmv_id: this.id,
+                    entity_id: this.entity_id,
+                    count: this.count,
+                    cost: this.cost,
+                    manufacturer_id: this.manufacturerId,
+                    currency_id: this.currencyId
+                }).then(function (response) {
+                    _this6.items.push(response.data);
 
-		addItem: function addItem() {
-			var _this6 = this;
+                    _this6.id = null;
+                    _this6.change = true;
+                    _this6.manufacturerId = null;
+                    _this6.itemManufacturer = null;
 
-			if (!this.isDisabled) {
-				this.disabledButton = true;
-				axios.post('/admin/consignments_items', {
-					consignment_id: this.consignment.id,
-					cmv_id: this.id,
-					entity_id: this.entity_id,
-					count: this.count,
-					cost: this.cost,
-					manufacturer_id: this.manufacturerId,
-					currency_id: this.currencyId
-				}).then(function (response) {
-					_this6.items.push(response.data);
-				}, this.id = null, this.count = null, this.cost = null, this.change = true, this.manufacturerId = null, this.itemManufacturer = null).catch(function (error) {
-					console.log(error);
-				});
-			}
-		},
-		updateItem: function updateItem(item, index) {
-			Vue.set(this.items, index, item);
-		},
+                    _this6.count = 0;
+                    _this6.$refs.countComponent.update(_this6.count);
+                    _this6.cost = 0;
+                    _this6.$refs.costComponent.update(_this6.cost);
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            }
+        },
+        updateItem: function updateItem(item, index) {
+            Vue.set(this.items, index, item);
+        },
+        deleteItem: function deleteItem(index) {
+            this.items.splice(index, 1);
+        }
+    },
+    filters: {
+        roundToTwo: function roundToTwo(value) {
+            return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
+        },
 
-		deleteItem: function deleteItem(index) {
-			this.items.splice(index, 1);
-		}
-	},
-
-	filters: {
-		roundToTwo: function roundToTwo(value) {
-			return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
-		},
-
-		// Создает разделители разрядов в строке с числами
-		level: function level(value) {
-			return Number(value).toLocaleString();
-		}
-	}
-
+        // Создает разделители разрядов в строке с числами
+        level: function level(value) {
+            return Number(value).toLocaleString();
+        }
+    }
 });
 
 /***/ }),
 /* 203 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(204)
+/* template */
+var __vue_template__ = __webpack_require__(205)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/system/components/documents/consignments/ConsignmentsItemComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-274a3eee", Component.options)
+  } else {
+    hotAPI.reload("data-v-274a3eee", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 204 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'consignments-item-component',
+    props: {
+        item: Object,
+        index: Number,
+        isReceipted: String
+    },
+    data: function data() {
+        return {
+            count: Number(this.item.count),
+            cost: Number(this.item.cost),
+            changeCount: false,
+            changeCost: false
+        };
+    },
+
+    computed: {
+        isArchive: function isArchive() {
+            return this.item.cmv.archive == 1;
+        },
+        isDraft: function isDraft() {
+            return this.item.cmv.article.draft == 1;
+        },
+        isChangeCount: function isChangeCount() {
+            if (this.changeCount) {
+                this.changeCost = false;
+            }
+            return this.changeCount;
+        },
+        isChangeCost: function isChangeCost() {
+            if (this.changeCost) {
+                this.changeCount = false;
+            }
+            return this.changeCost;
+        },
+        unitAbbreviation: function unitAbbreviation() {
+            var abbr = void 0;
+            if (this.item.cmv.article.package_status === 1) {
+                abbr = this.item.cmv.article.package_abbreviation;
+            } else {
+                abbr = this.item.cmv.article.unit.abbreviation;
+            }
+            return abbr;
+        }
+    },
+    methods: {
+        checkChangeCount: function checkChangeCount() {
+            if (!this.isReceipted) {
+                this.changeCount = !this.changeCount;
+            }
+        },
+        checkChangeCost: function checkChangeCost() {
+            if (!this.isReceipted) {
+                this.changeCost = !this.changeCost;
+            }
+        },
+
+        updateItem: function updateItem() {
+            var _this = this;
+
+            this.changeCount = false;
+            this.changeCost = false;
+            axios.patch('/admin/consignments_items/' + this.item.id, {
+                count: Number(this.count),
+                cost: Number(this.cost)
+            }).then(function (response) {
+                _this.$emit('update', response.data, _this.index);
+                _this.cost = Number(response.data.cost);
+                _this.count = Number(response.data.count);
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        deleteItem: function deleteItem() {
+            var _this2 = this;
+
+            axios.delete('/admin/consignments_items/' + this.item.id).then(function (response) {
+                if (response.data > 0) {
+                    _this2.$emit('remove');
+                }
+            }).catch(function (error) {
+                console.log(error);
+            });
+        }
+    },
+    directives: {
+        focus: {
+            inserted: function inserted(el) {
+                el.focus();
+            }
+        }
+    },
+
+    filters: {
+        roundToTwo: function roundToTwo(value) {
+            return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
+        },
+
+        // Создает разделители разрядов в строке с числами
+        level: function level(value) {
+            return Number(value).toLocaleString();
+        }
+    }
+});
+
+/***/ }),
+/* 205 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "tr",
+    {
+      class: [
+        { "cmv-archive": _vm.isArchive },
+        { "article-draft": _vm.isDraft }
+      ]
+    },
+    [
+      _c("td", [_vm._v(_vm._s(_vm.index + 1))]),
+      _vm._v(" "),
+      _c("td", [_vm._v(_vm._s(_vm.item.entity.name))]),
+      _vm._v(" "),
+      _c("td", [
+        _vm._v(
+          "\n            " +
+            _vm._s(_vm.item.cmv.article.name) +
+            "\n            "
+        ),
+        _vm.isArchive
+          ? _c("span", [_vm._v(" (Архивный)")])
+          : _vm.isDraft
+          ? _c("span", [_vm._v(" (Черновик)")])
+          : _vm._e()
+      ]),
+      _vm._v(" "),
+      _c("td", [_vm._v(_vm._s(_vm.item.manufacturer.company.name))]),
+      _vm._v(" "),
+      _c(
+        "td",
+        { on: { click: _vm.checkChangeCount } },
+        [
+          _vm.isChangeCount
+            ? [
+                _c("input", {
+                  directives: [
+                    { name: "focus", rawName: "v-focus" },
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.count,
+                      expression: "count"
+                    }
+                  ],
+                  attrs: { type: "number" },
+                  domProps: { value: _vm.count },
+                  on: {
+                    keydown: function($event) {
+                      if (
+                        !$event.type.indexOf("key") &&
+                        _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                      ) {
+                        return null
+                      }
+                      $event.preventDefault()
+                      return _vm.updateItem($event)
+                    },
+                    focusout: function($event) {
+                      _vm.changeCount = false
+                    },
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.count = $event.target.value
+                    }
+                  }
+                })
+              ]
+            : [
+                _vm._v(
+                  _vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.item.count)))
+                )
+              ]
+        ],
+        2
+      ),
+      _vm._v(" "),
+      _c("td", [_vm._v(_vm._s(_vm.unitAbbreviation))]),
+      _vm._v(" "),
+      _c(
+        "td",
+        { on: { click: _vm.checkChangeCost } },
+        [
+          _vm.isChangeCost
+            ? [
+                _c("input", {
+                  directives: [
+                    { name: "focus", rawName: "v-focus" },
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.cost,
+                      expression: "cost"
+                    }
+                  ],
+                  attrs: { type: "number" },
+                  domProps: { value: _vm.cost },
+                  on: {
+                    keydown: function($event) {
+                      if (
+                        !$event.type.indexOf("key") &&
+                        _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                      ) {
+                        return null
+                      }
+                      $event.preventDefault()
+                      return _vm.updateItem($event)
+                    },
+                    focusout: function($event) {
+                      _vm.changeCost = false
+                    },
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.cost = $event.target.value
+                    }
+                  }
+                })
+              ]
+            : [
+                _vm._v(
+                  _vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.item.cost)))
+                )
+              ]
+        ],
+        2
+      ),
+      _vm._v(" "),
+      _c("td", [_vm._v(_vm._s(_vm.item.currency.abbreviation))]),
+      _vm._v(" "),
+      _c("td", [
+        _vm._v(_vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.item.amount))))
+      ]),
+      _vm._v(" "),
+      !this.isReceipted
+        ? _c("td", [
+            _c("a", {
+              staticClass: "icon-delete sprite",
+              on: { click: _vm.deleteItem }
+            })
+          ])
+        : _vm._e()
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-274a3eee", module.exports)
+  }
+}
+
+/***/ }),
+/* 206 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -78722,7 +79112,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
-        'childrens-component': __webpack_require__(204)
+        'childrens-component': __webpack_require__(207)
     },
     name: 'select-categories-component',
     props: {
@@ -78854,15 +79244,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 204 */
+/* 207 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(205)
+var __vue_script__ = __webpack_require__(208)
 /* template */
-var __vue_template__ = __webpack_require__(206)
+var __vue_template__ = __webpack_require__(209)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -78901,7 +79291,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 205 */
+/* 208 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -78941,7 +79331,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 206 */
+/* 209 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -78988,7 +79378,7 @@ if (false) {
 }
 
 /***/ }),
-/* 207 */
+/* 210 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -79193,2888 +79583,7 @@ if (false) {
 }
 
 /***/ }),
-/* 208 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(1)
-/* script */
-var __vue_script__ = __webpack_require__(209)
-/* template */
-var __vue_template__ = __webpack_require__(210)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/js/system/components/consignments/ConsignmentsItemComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-30cf48dc", Component.options)
-  } else {
-    hotAPI.reload("data-v-30cf48dc", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 209 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    name: 'consignments-item-component',
-    props: {
-        item: Object,
-        index: Number,
-        isPosted: Boolean
-    },
-    data: function data() {
-        return {
-            count: Number(this.item.count),
-            cost: Number(this.item.cost),
-            changeCount: false,
-            changeCost: false
-        };
-    },
-
-    computed: {
-        isArchive: function isArchive() {
-            return this.item.cmv.archive == 1;
-        },
-        isChangeCount: function isChangeCount() {
-            if (this.changeCount) {
-                this.changeCost = false;
-            }
-            return this.changeCount;
-        },
-        isChangeCost: function isChangeCost() {
-            if (this.changeCost) {
-                this.changeCount = false;
-            }
-            return this.changeCost;
-        },
-        unitAbbreviation: function unitAbbreviation() {
-            var abbr = void 0;
-            if (this.item.cmv.article.package_status === 1) {
-                abbr = this.item.cmv.article.package_abbreviation;
-            } else {
-                abbr = this.item.cmv.article.unit.abbreviation;
-            }
-            return abbr;
-        }
-    },
-    methods: {
-        checkChangeCount: function checkChangeCount() {
-            if (!this.isPosted) {
-                this.changeCount = !this.changeCount;
-            }
-        },
-        checkChangeCost: function checkChangeCost() {
-            if (!this.isPosted) {
-                this.changeCost = !this.changeCost;
-            }
-        },
-
-        updateItem: function updateItem() {
-            var _this = this;
-
-            this.changeCount = false;
-            this.changeCost = false;
-            axios.patch('/admin/consignments_items/' + this.item.id, {
-                count: Number(this.count),
-                cost: Number(this.cost)
-            }).then(function (response) {
-                _this.$emit('update', response.data, _this.index);
-                _this.cost = Number(response.data.cost);
-                _this.count = Number(response.data.count);
-            }).catch(function (error) {
-                console.log(error);
-            });
-        },
-        deleteItem: function deleteItem() {
-            var _this2 = this;
-
-            axios.delete('/admin/consignments_items/' + this.item.id).then(function (response) {
-                if (response.data > 0) {
-                    _this2.$emit('remove');
-                }
-            }).catch(function (error) {
-                console.log(error);
-            });
-        }
-    },
-    directives: {
-        focus: {
-            inserted: function inserted(el) {
-                el.focus();
-            }
-        }
-    },
-
-    filters: {
-        roundToTwo: function roundToTwo(value) {
-            return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
-        },
-
-        // Создает разделители разрядов в строке с числами
-        level: function level(value) {
-            return Number(value).toLocaleString();
-        }
-    }
-});
-
-/***/ }),
-/* 210 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("tr", { class: [{ "cmv-archive": _vm.isArchive }] }, [
-    _c("td", [_vm._v(_vm._s(_vm.index + 1))]),
-    _vm._v(" "),
-    _c("td", [_vm._v(_vm._s(_vm.item.entity.name))]),
-    _vm._v(" "),
-    _c("td", [
-      _vm._v(_vm._s(_vm.item.cmv.article.name)),
-      _vm.isArchive ? _c("span", [_vm._v(" (Архивный)")]) : _vm._e()
-    ]),
-    _vm._v(" "),
-    _c("td", [_vm._v(_vm._s(_vm.item.manufacturer.company.name))]),
-    _vm._v(" "),
-    _c(
-      "td",
-      { on: { click: _vm.checkChangeCount } },
-      [
-        _vm.isChangeCount
-          ? [
-              _c("input", {
-                directives: [
-                  { name: "focus", rawName: "v-focus" },
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.count,
-                    expression: "count"
-                  }
-                ],
-                attrs: { type: "number" },
-                domProps: { value: _vm.count },
-                on: {
-                  keydown: function($event) {
-                    if (
-                      !$event.type.indexOf("key") &&
-                      _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-                    ) {
-                      return null
-                    }
-                    $event.preventDefault()
-                    return _vm.updateItem($event)
-                  },
-                  focusout: function($event) {
-                    _vm.changeCount = false
-                  },
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.count = $event.target.value
-                  }
-                }
-              })
-            ]
-          : [
-              _vm._v(
-                _vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.item.count)))
-              )
-            ]
-      ],
-      2
-    ),
-    _vm._v(" "),
-    _c("td", [_vm._v(_vm._s(_vm.unitAbbreviation))]),
-    _vm._v(" "),
-    _c(
-      "td",
-      { on: { click: _vm.checkChangeCost } },
-      [
-        _vm.isChangeCost
-          ? [
-              _c("input", {
-                directives: [
-                  { name: "focus", rawName: "v-focus" },
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.cost,
-                    expression: "cost"
-                  }
-                ],
-                attrs: { type: "number" },
-                domProps: { value: _vm.cost },
-                on: {
-                  keydown: function($event) {
-                    if (
-                      !$event.type.indexOf("key") &&
-                      _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-                    ) {
-                      return null
-                    }
-                    $event.preventDefault()
-                    return _vm.updateItem($event)
-                  },
-                  focusout: function($event) {
-                    _vm.changeCost = false
-                  },
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.cost = $event.target.value
-                  }
-                }
-              })
-            ]
-          : [
-              _vm._v(
-                _vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.item.cost)))
-              )
-            ]
-      ],
-      2
-    ),
-    _vm._v(" "),
-    _c("td", [_vm._v(_vm._s(_vm.item.currency.abbreviation))]),
-    _vm._v(" "),
-    _c("td", [
-      _vm._v(_vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.item.amount))))
-    ]),
-    _vm._v(" "),
-    !this.isPosted
-      ? _c("td", [
-          _c("a", {
-            staticClass: "icon-delete sprite",
-            on: { click: _vm.deleteItem }
-          })
-        ])
-      : _vm._e()
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-30cf48dc", module.exports)
-  }
-}
-
-/***/ }),
 /* 211 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("table", { staticClass: "table-invoice" }, [
-    _c("thead", [
-      _c("tr", [
-        _c("th", [_vm._v("№")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Тип:")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Наименование позиции:")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Производитель")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Кол-во:")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Ед. изм.:")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Цена:")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Валюта:")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Сумма:")]),
-        _vm._v(" "),
-        !_vm.isPosted ? _c("th") : _vm._e()
-      ])
-    ]),
-    _vm._v(" "),
-    _c(
-      "tbody",
-      { attrs: { id: "table-raws" } },
-      [
-        _vm._l(_vm.itemsList, function(item, index) {
-          return _c("consignments-item-component", {
-            key: item.id,
-            attrs: { item: item, index: index, "is-posted": _vm.isPosted },
-            on: {
-              update: _vm.updateItem,
-              remove: function($event) {
-                return _vm.deleteItem(index)
-              }
-            }
-          })
-        }),
-        _vm._v(" "),
-        !_vm.isPosted
-          ? _c("tr", { staticClass: "tr-add" }, [
-              _c("td", [_vm._v(_vm._s(_vm.items.length + 1))]),
-              _vm._v(" "),
-              _c("td", [
-                _c(
-                  "select",
-                  {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.entity_id,
-                        expression: "entity_id"
-                      }
-                    ],
-                    attrs: { name: "entity_id" },
-                    on: {
-                      change: [
-                        function($event) {
-                          var $$selectedVal = Array.prototype.filter
-                            .call($event.target.options, function(o) {
-                              return o.selected
-                            })
-                            .map(function(o) {
-                              var val = "_value" in o ? o._value : o.value
-                              return val
-                            })
-                          _vm.entity_id = $event.target.multiple
-                            ? $$selectedVal
-                            : $$selectedVal[0]
-                        },
-                        _vm.changeEntity
-                      ]
-                    }
-                  },
-                  _vm._l(_vm.entities, function(entity) {
-                    return _c(
-                      "option",
-                      {
-                        domProps: {
-                          value: entity.id,
-                          selected: entity.id === _vm.selectedEntity
-                        }
-                      },
-                      [_vm._v(_vm._s(entity.name))]
-                    )
-                  }),
-                  0
-                )
-              ]),
-              _vm._v(" "),
-              _c(
-                "td",
-                [
-                  _c("select-categories-component", {
-                    attrs: {
-                      "select-categories": _vm.selectCategories,
-                      "select-categories-items": _vm.selectCategoriesItems,
-                      change: _vm.change
-                    },
-                    on: { "set-id": _vm.setId, "check-change": _vm.checkChange }
-                  })
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "td",
-                [
-                  _vm.id != null
-                    ? [
-                        _vm.itemManufacturer != null
-                          ? _c("span", [
-                              _vm._v(
-                                "\n\t\t\t\t\t\t\t" +
-                                  _vm._s(_vm.manufacturer[0].company.name) +
-                                  "\n\t\t\t\t\t\t"
-                              )
-                            ])
-                          : [
-                              _c(
-                                "select",
-                                {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.manufacturerId,
-                                      expression: "manufacturerId"
-                                    }
-                                  ],
-                                  attrs: { name: "entity_id" },
-                                  on: {
-                                    change: function($event) {
-                                      var $$selectedVal = Array.prototype.filter
-                                        .call($event.target.options, function(
-                                          o
-                                        ) {
-                                          return o.selected
-                                        })
-                                        .map(function(o) {
-                                          var val =
-                                            "_value" in o ? o._value : o.value
-                                          return val
-                                        })
-                                      _vm.manufacturerId = $event.target
-                                        .multiple
-                                        ? $$selectedVal
-                                        : $$selectedVal[0]
-                                    }
-                                  }
-                                },
-                                _vm._l(_vm.manufacturers, function(
-                                  manufacturer
-                                ) {
-                                  return _c(
-                                    "option",
-                                    { domProps: { value: manufacturer.id } },
-                                    [_vm._v(_vm._s(manufacturer.company.name))]
-                                  )
-                                }),
-                                0
-                              )
-                            ]
-                      ]
-                    : _vm._e()
-                ],
-                2
-              ),
-              _vm._v(" "),
-              _c("td", [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.count,
-                      expression: "count"
-                    }
-                  ],
-                  attrs: { name: "count", type: "number" },
-                  domProps: { value: _vm.count },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.count = $event.target.value
-                    }
-                  }
-                })
-              ]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(_vm.itemUnit))]),
-              _vm._v(" "),
-              _c("td", [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.cost,
-                      expression: "cost"
-                    }
-                  ],
-                  attrs: { name: "cost", type: "number" },
-                  domProps: { value: _vm.cost },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.cost = $event.target.value
-                    }
-                  }
-                })
-              ]),
-              _vm._v(" "),
-              _c(
-                "td",
-                [
-                  _vm.currencies.length > 1
-                    ? _c("label", [
-                        _c(
-                          "select",
-                          {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.currencyId,
-                                expression: "currencyId"
-                              }
-                            ],
-                            on: {
-                              change: function($event) {
-                                var $$selectedVal = Array.prototype.filter
-                                  .call($event.target.options, function(o) {
-                                    return o.selected
-                                  })
-                                  .map(function(o) {
-                                    var val = "_value" in o ? o._value : o.value
-                                    return val
-                                  })
-                                _vm.currencyId = $event.target.multiple
-                                  ? $$selectedVal
-                                  : $$selectedVal[0]
-                              }
-                            }
-                          },
-                          _vm._l(_vm.currencies, function(currency) {
-                            return _c(
-                              "option",
-                              { domProps: { value: currency.id } },
-                              [_vm._v(_vm._s(currency.name))]
-                            )
-                          }),
-                          0
-                        )
-                      ])
-                    : [
-                        _vm._v(
-                          "\n                        " +
-                            _vm._s(_vm.currencies[0].name) +
-                            "\n                    "
-                        )
-                      ]
-                ],
-                2
-              ),
-              _vm._v(" "),
-              _c("td", [
-                _c("span", [
-                  _vm._v(_vm._s(_vm._f("roundToTwo")(_vm.totalItemSum)))
-                ])
-              ]),
-              _vm._v(" "),
-              _c("td", [
-                _c(
-                  "a",
-                  {
-                    staticClass: "button tiny",
-                    attrs: { disabled: _vm.isDisabled },
-                    on: { click: _vm.addItem }
-                  },
-                  [_vm._v("Добавить")]
-                )
-              ])
-            ])
-          : _vm._e()
-      ],
-      2
-    ),
-    _vm._v(" "),
-    _c("tfoot", [
-      _c("tr", [
-        _c("td", { attrs: { colspan: "7" } }, [_vm._v("Итого:")]),
-        _vm._v(" "),
-        _c("td"),
-        _vm._v(" "),
-        _c("td", [
-          _c("span", { staticClass: "font-accent" }, [
-            _vm._v(
-              _vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.totalItemsCost)))
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        !_vm.isPosted ? _c("td") : _vm._e()
-      ])
-    ])
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-253f9fdc", module.exports)
-  }
-}
-
-/***/ }),
-/* 212 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(1)
-/* script */
-var __vue_script__ = __webpack_require__(213)
-/* template */
-var __vue_template__ = __webpack_require__(217)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/js/system/components/productions/ProductionComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-f9e81e70", Component.options)
-  } else {
-    hotAPI.reload("data-v-f9e81e70", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 213 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-	components: {
-		'select-categories-component': __webpack_require__(51),
-		'productions-item-component': __webpack_require__(214)
-	},
-	props: {
-		production: Object,
-		selectData: Object
-	},
-	data: function data() {
-		return {
-			// Сущности
-			entities: this.selectData.entities,
-			selectedEntity: this.selectData.entities[0].id,
-			entity_id: this.selectData.entities[0].id,
-
-			//
-			items: this.production.items,
-			id: null,
-			count: null,
-
-			// Категории для компонента выбора
-			categories: this.selectData.categories,
-			categoriesItems: this.selectData.items,
-			change: false,
-			itemUnit: null,
-
-			// Производитель
-			manufacturer_id: null
-		};
-	},
-
-	computed: {
-		isDisabled: function isDisabled() {
-			return this.id == null || this.count == null || this.count == 0;
-		},
-		itemsList: function itemsList() {
-			return this.items;
-		},
-		totalItemsCount: function totalItemsCount() {
-			return this.items.length;
-		},
-
-
-		// Списки для компонента выбора
-		selectCategories: function selectCategories() {
-			var _this = this;
-
-			return this.categories.filter(function (item) {
-				return item.entity_id === _this.entity_id;
-			});
-		},
-		selectCategoriesItems: function selectCategoriesItems() {
-			var _this2 = this;
-
-			return this.categoriesItems.filter(function (item) {
-				return item.entity_id === _this2.entity_id;
-			});
-		},
-		isProduced: function isProduced() {
-			return this.production.is_produced === 1;
-		}
-	},
-
-	methods: {
-		changeCount: function changeCount(value) {
-			this.count = value;
-		},
-		changeEntity: function changeEntity() {
-			var _this3 = this;
-
-			this.change = true;
-
-			var count = 0;
-			this.categories.filter(function (item) {
-				if (item.entity_id === _this3.entity_id) {
-					count++;
-				}
-			});
-
-			if (count === 0) {
-				axios.post('/admin/productions/categories', {
-					entity_id: this.entity_id
-				}).then(function (response) {
-					_this3.categories = _this3.categories.concat(response.data.categories);
-					_this3.categoriesItems = _this3.categoriesItems.concat(response.data.items);
-				}).catch(function (error) {
-					console.log(error);
-				});
-			}
-		},
-		checkChange: function checkChange() {
-			this.change = false;
-		},
-		setId: function setId(id) {
-			var _this4 = this;
-
-			this.id = id;
-			if (id != null) {
-				this.categoriesItems.filter(function (item) {
-					if (item.id === id && item.entity_id === _this4.entity_id) {
-						if (item.article.package_status === 1) {
-							_this4.itemUnit = item.article.package_abbreviation;
-						} else {
-							_this4.itemUnit = item.article.unit.abbreviation;
-						}
-
-						_this4.manufacturer_id = item.article.manufacturer_id;
-					}
-				});
-			} else {
-				this.itemUnit = null;
-				this.manufacturer_id = null;
-			}
-		},
-
-		addItem: function addItem() {
-			var _this5 = this;
-
-			if (!this.isDisabled) {
-				this.disabledButton = true;
-				axios.post('/admin/productions_items', {
-					production_id: this.production.id,
-					cmv_id: this.id,
-					entity_id: this.entity_id,
-					count: this.count,
-					manufacturer_id: this.manufacturer_id
-				}).then(function (response) {
-					_this5.items.push(response.data);
-				}, this.id = null, this.count = null, this.change = true, this.manufacturer_id = null).catch(function (error) {
-					console.log(error);
-				});
-			}
-		},
-		updateItem: function updateItem(item, index) {
-			Vue.set(this.items, index, item);
-		},
-
-		deleteItem: function deleteItem(index) {
-			this.items.splice(index, 1);
-		}
-	},
-
-	filters: {
-		roundToTwo: function roundToTwo(value) {
-			return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
-		},
-
-		// Создает разделители разрядов в строке с числами
-		level: function level(value) {
-			return Number(value).toLocaleString();
-		}
-	}
-
-});
-
-/***/ }),
-/* 214 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(1)
-/* script */
-var __vue_script__ = __webpack_require__(215)
-/* template */
-var __vue_template__ = __webpack_require__(216)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/js/system/components/productions/ProductionsItemComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-0452c6c8", Component.options)
-  } else {
-    hotAPI.reload("data-v-0452c6c8", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 215 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    name: 'productions-item-component',
-    props: {
-        item: Object,
-        index: Number,
-        isProduced: Boolean
-    },
-    data: function data() {
-        return {
-            count: Number(this.item.count),
-            changeCount: false
-        };
-    },
-
-    computed: {
-        isArchive: function isArchive() {
-            return this.item.cmv.archive == 1;
-        },
-        isChangeCount: function isChangeCount() {
-            return this.changeCount;
-        },
-        unitAbbreviation: function unitAbbreviation() {
-            var abbr = void 0;
-            if (this.item.cmv.article.package_status === 1) {
-                abbr = this.item.cmv.article.package_abbreviation;
-            } else {
-                abbr = this.item.cmv.article.unit.abbreviation;
-            }
-            return abbr;
-        }
-    },
-    methods: {
-        checkChangeCount: function checkChangeCount() {
-            if (!this.isProduced) {
-                this.changeCount = !this.changeCount;
-            }
-        },
-
-        updateItem: function updateItem() {
-            var _this = this;
-
-            this.changeCount = false;
-            axios.patch('/admin/productions_items/' + this.item.id, {
-                count: Number(this.count)
-            }).then(function (response) {
-                _this.$emit('update', response.data, _this.index);
-                _this.count = Number(response.data.count);
-            }).catch(function (error) {
-                console.log(error);
-            });
-        },
-        deleteItem: function deleteItem() {
-            var _this2 = this;
-
-            axios.delete('/admin/productions_items/' + this.item.id).then(function (response) {
-                if (response.data > 0) {
-                    console.log('Удаляем - ' + _this2.item.id);
-                    _this2.$emit('remove');
-                }
-            }).catch(function (error) {
-                console.log(error);
-            });
-        }
-    },
-    directives: {
-        focus: {
-            inserted: function inserted(el) {
-                el.focus();
-            }
-        }
-    },
-
-    filters: {
-        roundToTwo: function roundToTwo(value) {
-            return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
-        },
-
-        // Создает разделители разрядов в строке с числами
-        level: function level(value) {
-            return Number(value).toLocaleString();
-        }
-    }
-});
-
-/***/ }),
-/* 216 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("tr", { class: [{ "cmv-archive": _vm.isArchive }] }, [
-    _c("td", [_vm._v(_vm._s(_vm.index + 1))]),
-    _vm._v(" "),
-    _c("td", [_vm._v(_vm._s(_vm.item.entity.name))]),
-    _vm._v(" "),
-    _c("td", [
-      _vm._v(_vm._s(_vm.item.cmv.article.name)),
-      _vm.isArchive ? _c("span", [_vm._v(" (Архивный)")]) : _vm._e()
-    ]),
-    _vm._v(" "),
-    _c(
-      "td",
-      { on: { click: _vm.checkChangeCount } },
-      [
-        _vm.isChangeCount
-          ? [
-              _c("input", {
-                directives: [
-                  { name: "focus", rawName: "v-focus" },
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.count,
-                    expression: "count"
-                  }
-                ],
-                attrs: { type: "number" },
-                domProps: { value: _vm.count },
-                on: {
-                  keydown: function($event) {
-                    if (
-                      !$event.type.indexOf("key") &&
-                      _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-                    ) {
-                      return null
-                    }
-                    $event.preventDefault()
-                    return _vm.updateItem($event)
-                  },
-                  focusout: function($event) {
-                    _vm.changeCount = false
-                  },
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.count = $event.target.value
-                  }
-                }
-              })
-            ]
-          : [
-              _vm._v(
-                _vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.item.count)))
-              )
-            ]
-      ],
-      2
-    ),
-    _vm._v(" "),
-    _c("td", [_vm._v(_vm._s(_vm.unitAbbreviation))]),
-    _vm._v(" "),
-    !this.isProduced
-      ? _c("td", [
-          _c("a", {
-            staticClass: "icon-delete sprite",
-            on: { click: _vm.deleteItem }
-          })
-        ])
-      : _vm._e()
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-0452c6c8", module.exports)
-  }
-}
-
-/***/ }),
-/* 217 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("table", { staticClass: "table-invoice" }, [
-    _c("thead", [
-      _c("tr", [
-        _c("th", [_vm._v("№")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Тип:")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Наименование позиции:")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Кол-во:")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Ед. изм.:")]),
-        _vm._v(" "),
-        !_vm.isProduced ? _c("th") : _vm._e()
-      ])
-    ]),
-    _vm._v(" "),
-    _c(
-      "tbody",
-      { attrs: { id: "table-raws" } },
-      [
-        _vm._l(_vm.itemsList, function(item, index) {
-          return _c("productions-item-component", {
-            key: item.id,
-            attrs: { item: item, index: index, "is-produced": _vm.isProduced },
-            on: {
-              update: _vm.updateItem,
-              remove: function($event) {
-                return _vm.deleteItem(index)
-              }
-            }
-          })
-        }),
-        _vm._v(" "),
-        !_vm.isProduced
-          ? _c("tr", { staticClass: "tr-add" }, [
-              _c("td", [_vm._v(_vm._s(_vm.items.length + 1))]),
-              _vm._v(" "),
-              _c("td", [
-                _c(
-                  "select",
-                  {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.entity_id,
-                        expression: "entity_id"
-                      }
-                    ],
-                    attrs: { name: "entity_id" },
-                    on: {
-                      change: [
-                        function($event) {
-                          var $$selectedVal = Array.prototype.filter
-                            .call($event.target.options, function(o) {
-                              return o.selected
-                            })
-                            .map(function(o) {
-                              var val = "_value" in o ? o._value : o.value
-                              return val
-                            })
-                          _vm.entity_id = $event.target.multiple
-                            ? $$selectedVal
-                            : $$selectedVal[0]
-                        },
-                        _vm.changeEntity
-                      ]
-                    }
-                  },
-                  _vm._l(_vm.entities, function(entity) {
-                    return _c(
-                      "option",
-                      {
-                        domProps: {
-                          value: entity.id,
-                          selected: entity.id === _vm.selectedEntity
-                        }
-                      },
-                      [_vm._v(_vm._s(entity.name))]
-                    )
-                  }),
-                  0
-                )
-              ]),
-              _vm._v(" "),
-              _c(
-                "td",
-                [
-                  _c("select-categories-component", {
-                    attrs: {
-                      "select-categories": _vm.selectCategories,
-                      "select-categories-items": _vm.selectCategoriesItems,
-                      change: _vm.change
-                    },
-                    on: { "set-id": _vm.setId, "check-change": _vm.checkChange }
-                  })
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c("td", [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.count,
-                      expression: "count"
-                    }
-                  ],
-                  attrs: { name: "count", type: "number" },
-                  domProps: { value: _vm.count },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.count = $event.target.value
-                    }
-                  }
-                })
-              ]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(_vm.itemUnit))]),
-              _vm._v(" "),
-              _c("td", [
-                _c(
-                  "a",
-                  {
-                    staticClass: "button tiny",
-                    attrs: { disabled: _vm.isDisabled },
-                    on: { click: _vm.addItem }
-                  },
-                  [_vm._v("Добавить")]
-                )
-              ])
-            ])
-          : _vm._e()
-      ],
-      2
-    ),
-    _vm._v(" "),
-    _c("tfoot", [
-      _c("tr", [
-        _c("td", { attrs: { colspan: "3" } }, [_vm._v("Итого:")]),
-        _vm._v(" "),
-        _c("td"),
-        _vm._v(" "),
-        !_vm.isProduced ? _c("td") : _vm._e(),
-        _c("td")
-      ])
-    ])
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-f9e81e70", module.exports)
-  }
-}
-
-/***/ }),
-/* 218 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(1)
-/* script */
-var __vue_script__ = __webpack_require__(219)
-/* template */
-var __vue_template__ = __webpack_require__(260)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/js/system/components/leads/estimates/EstimateComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-d340971c", Component.options)
-  } else {
-    hotAPI.reload("data-v-d340971c", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 219 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    components: {
-        'estimates-goods-items-component': __webpack_require__(220),
-        'estimates-services-items-component': __webpack_require__(248),
-        'buttons-component': __webpack_require__(254)
-    },
-    props: {
-        estimate: Object,
-        settings: {
-            type: Array,
-            default: function _default() {
-                return [];
-            }
-        },
-        stocks: {
-            type: Array,
-            default: function _default() {
-                return [];
-            }
-        }
-    },
-    created: function created() {
-        // this.$store.commit('SET_ESTIMATE', this.estimate);
-        // this.$store.commit('SET_GOODS_ITEMS', this.estimate.goods_items);
-        // this.$store.commit('SET_SERVICES_ITEMS', this.estimate.services_items);
-        // this.$store.commit('SET_DISCOUNTS', this.estimate.discounts);
-    },
-    data: function data() {
-        return {
-            //
-            id: null,
-
-            cost: null,
-
-            itemGoods: null,
-            itemGoodsName: null,
-            itemGoodsIndex: null,
-
-            itemServices: null,
-            itemServicesName: null,
-            itemServicesIndex: null
-        };
-    },
-
-    computed: {
-        // Товары
-        goodsList: function goodsList() {
-            return this.$store.state.lead.goodsItems;
-        },
-
-
-        // Услуги
-        servicesList: function servicesList() {
-            return this.$store.state.lead.servicesItems;
-        },
-
-
-        // Смета
-        estimateAmount: function estimateAmount() {
-            return this.$store.getters.estimateAmount;
-        },
-        estimateItemsDiscount: function estimateItemsDiscount() {
-            return this.$store.getters.estimateItemsDiscount;
-        },
-        estimateDiscount: function estimateDiscount() {
-            return this.$store.getters.estimateDiscount;
-        },
-        estimateDiscountCurrency: function estimateDiscountCurrency() {
-            return this.$store.getters.estimateDiscountCurrency;
-        },
-        estimateTotal: function estimateTotal() {
-            return this.$store.getters.estimateTotal;
-        },
-        estimateTotalPoints: function estimateTotalPoints() {
-            return this.$store.getters.estimateTotalPoints;
-        }
-    },
-    methods: {
-        openModalServices: function openModalServices(item, index) {
-            this.itemServicesIndex = index;
-            this.itemServices = item;
-            this.itemServicesName = item.product.process.name;
-        },
-
-        // changeCost: function(value) {
-        // 	this.cost = value;
-        // },
-        // checkChange: function () {
-        // 	this.change = false;
-        // },
-        // setId: function (id) {
-        // 	this.id = id;
-        // 	if (id != null) {
-        // 		this.categoriesItems.filter(item => {
-        // 			if (item.id === id && item.entity_id === this.entity_id) {
-        //
-        // 				// Смотрим в чем принимать
-        // 				if (item.article.package_status === 1) {
-        // 					this.itemUnit = item.article.package_abbreviation;
-        // 				} else {
-        // 					this.itemUnit = item.article.unit.abbreviation;
-        // 				}
-        //
-        // 				// Смотрим производителя
-        // 				if (item.article.manufacturer_id != null) {
-        // 					this.itemManufacturer = item.article.manufacturer_id;
-        // 				}
-        // 			}
-        // 		});
-        // 	} else {
-        // 		this.itemUnit = null;
-        // 		this.itemManufacturer = null;
-        // 	}
-        // },
-
-
-        updateServicesItem: function updateServicesItem(item) {
-            this.$store.commit('UPDATE_SERVICES_ITEM', item);
-        },
-
-        deleteServicesItem: function deleteServicesItem() {
-            this.$store.dispatch('REMOVE_SERVICES_ITEM_FROM_ESTIMATE', this.itemServices.id);
-            $('#delete-estimates_services_item').foundation('close');
-        }
-    },
-    filters: {
-        decimalPlaces: function decimalPlaces(value) {
-            return parseFloat(value).toFixed(2);
-        },
-
-        decimalLevel: function decimalLevel(value) {
-            return parseFloat(value).toLocaleString();
-        },
-        roundToTwo: function roundToTwo(value) {
-            return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
-        },
-        // Создает разделители разрядов в строке с числами
-        level: function level(value) {
-            return parseInt(value).toLocaleString();
-        },
-
-        // Отбраcывает дробную часть в строке с числами
-        onlyInteger: function onlyInteger(value) {
-            return Math.floor(value);
-        }
-    }
-
-});
-
-/***/ }),
-/* 220 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(1)
-/* script */
-var __vue_script__ = __webpack_require__(221)
-/* template */
-var __vue_template__ = __webpack_require__(247)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/js/system/components/leads/estimates/goods/EstimatesGoodsItemsComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-37b96cf4", Component.options)
-  } else {
-    hotAPI.reload("data-v-37b96cf4", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 221 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    components: {
-        'estimates-goods-item-component': __webpack_require__(222),
-        'reserves-component': __webpack_require__(244)
-    },
-    props: {
-        items: Array,
-        settings: Array,
-        stocks: Array
-    },
-    data: function data() {
-        return {
-            id: null,
-
-            count: null,
-            cost: null,
-            // discountPercent: Number(this.$store.state.lead.estimate.discount_percent),
-
-            item: null,
-            itemName: null,
-            itemIndex: null
-        };
-    },
-    mounted: function mounted() {
-        Foundation.reInit($('#delete-estimates_goods_item'));
-    },
-
-    computed: {
-        estimate: function estimate() {
-            return this.$store.state.lead.estimate;
-        },
-        isRegistered: function isRegistered() {
-            return this.$store.state.lead.estimate.is_registered === 1;
-        },
-        itemsAmount: function itemsAmount() {
-            var amount = 0;
-            this.items.forEach(function (item) {
-                return amount += parseFloat(item.amount);
-            });
-            return amount;
-        },
-        itemsDiscount: function itemsDiscount() {
-            var discount = 0;
-            this.items.forEach(function (item) {
-                return discount += parseFloat(item.discount_currency);
-            });
-            return discount;
-        },
-        itemsTotal: function itemsTotal() {
-            var total = 0;
-            this.items.forEach(function (item) {
-                return total += parseFloat(item.total);
-            });
-            return total;
-        },
-        itemsTotalPoints: function itemsTotalPoints() {
-            var points = 0;
-            this.items.forEach(function (item) {
-                return points += parseFloat(item.points);
-            });
-            return points;
-        }
-    },
-    methods: {
-        openModal: function openModal(item, index) {
-            this.itemIndex = index;
-            this.item = item;
-            this.itemName = item.goods.article.name;
-        },
-
-        updateItem: function updateItem(item) {
-            this.$store.commit('UPDATE_GOODS_ITEM', item);
-        },
-        deleteItem: function deleteItem() {
-            this.$store.commit('REMOVE_GOODS_ITEM', this.item.id);
-            $('#delete-estimates_goods_item').foundation('close');
-        }
-    },
-    filters: {
-        roundToTwo: function roundToTwo(value) {
-            return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
-        },
-        // Создает разделители разрядов в строке с числами
-        level: function level(value) {
-            return Number(value).toLocaleString();
-        }
-    },
-    directives: {
-        'reveal': {
-            bind: function bind(el) {
-                new Foundation.Reveal($(el));
-            }
-        }
-    }
-});
-
-/***/ }),
-/* 222 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(1)
-/* script */
-var __vue_script__ = __webpack_require__(223)
-/* template */
-var __vue_template__ = __webpack_require__(243)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/js/system/components/leads/estimates/goods/EstimatesGoodsItemComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-128d1d23", Component.options)
-  } else {
-    hotAPI.reload("data-v-128d1d23", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 223 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    components: {
-        'comment-component': __webpack_require__(224),
-        'currency-component': __webpack_require__(227),
-        'points-component': __webpack_require__(230),
-        'count-component': __webpack_require__(52),
-        'modal-component': __webpack_require__(237),
-        'digit-component': __webpack_require__(7),
-        'reserves-component': __webpack_require__(240)
-    },
-    props: {
-        item: Object,
-        index: Number,
-        settings: {
-            type: Array,
-            default: function _default() {
-                return [];
-            }
-        },
-        stocks: {
-            type: Array,
-            default: function _default() {
-                return [];
-            }
-        }
-    },
-    data: function data() {
-        return {
-            count: parseFloat(this.item.count),
-            stockId: null
-
-            // cost: Number(this.item.cost),
-            // changeCost: false,
-        };
-    },
-
-    // watch: {
-    //     count: ((val, oldVal) => {
-    //         if (val != oldVal) {
-    //             alert(val);
-    //         }
-    //     })
-    // },
-    mounted: function mounted() {
-        if (this.settings.length && this.stocks.length && this.item.stock_id === null) {
-            this.stockId = this.stocks[0].id;
-        } else {
-            this.stockId = this.item.stock_id;
-        }
-    },
-
-    computed: {
-        isArchive: function isArchive() {
-            return this.item.goods.archive == 1;
-        },
-        isRegistered: function isRegistered() {
-            return this.$store.state.lead.estimate.is_registered == 1;
-        },
-        itemCount: function itemCount() {
-            return Math.floor(this.item.count);
-        }
-        //     isChangeCost() {
-        //         if (this.changeCost) {
-        //             this.canChangeCount = false
-        //         }
-        //         return this.changeCost
-        //     },
-        //     unitAbbreviation() {
-        //         let abbr;
-        //         if (this.item.cmv.article.package_status === 1) {
-        //             abbr = this.item.cmv.article.package_abbreviation;
-        //         } else {
-        //             abbr = this.item.cmv.article.unit.abbreviation;
-        //         }
-        //         return abbr;
-        //     }
-        // count: {
-        //     get () {
-        //         return Number(this.item.count);
-        //     },
-        //     set (value) {
-        //         this.countInput = Number(value)
-        //     }
-        // },
-
-    },
-    methods: {
-        changeComment: function changeComment(comment) {
-            // Оновление ккомментария
-            this.item.comment = comment;
-            this.$store.commit('UPDATE_GOODS_ITEM', this.item);
-        },
-        changeCount: function changeCount(count) {
-            // Оновление количества из строки
-            this.item.count = count;
-            this.$store.commit('UPDATE_GOODS_ITEM', this.item);
-            this.$refs.modalCurrencyComponent.reset();
-        },
-        update: function update(item) {
-            // Обновление из модалки
-            this.$store.commit('UPDATE_GOODS_ITEM', item);
-        },
-        openModalRemove: function openModalRemove() {
-            // Открытие модалки удаления
-            this.$emit('open-modal-remove', this.item);
-        },
-        updatePrice: function updatePrice(item) {
-            // Обновление редима оплаты (валюта / поинты)
-            if (item.sale_mode == 2) {
-                this.$refs.modalCurrencyComponent.reset();
-            }
-
-            if (item.remove_from_page) {
-                this.$store.dispatch('REMOVE_GOODS_ITEM_FROM_ESTIMATE', item.remove_from_page);
-                // this.$refs.countComponent.setCount(item.count);
-            }
-            this.$store.commit('UPDATE_GOODS_ITEM', item);
-        }
-    },
-    directives: {
-        focus: {
-            inserted: function inserted(el) {
-                el.focus();
-            }
-        }
-    },
-    filters: {
-        decimalPlaces: function decimalPlaces(value) {
-            return parseFloat(value).toFixed(2);
-        },
-
-        decimalLevel: function decimalLevel(value) {
-            return parseFloat(value).toLocaleString();
-        },
-        roundToTwo: function roundToTwo(value) {
-            return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
-        },
-        // Создает разделители разрядов в строке с числами
-        level: function level(value) {
-            return parseInt(value).toLocaleString();
-        },
-
-        // Отбраcывает дробную часть в строке с числами
-        onlyInteger: function onlyInteger(value) {
-            return Math.floor(value);
-        }
-    }
-});
-
-/***/ }),
-/* 224 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(1)
-/* script */
-var __vue_script__ = __webpack_require__(225)
-/* template */
-var __vue_template__ = __webpack_require__(226)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/js/system/components/leads/estimates/goods/CommentComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-1187fcec", Component.options)
-  } else {
-    hotAPI.reload("data-v-1187fcec", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 225 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        comment: String
-    },
-    data: function data() {
-        return {
-            curComment: this.comment,
-            editComment: false
-        };
-    },
-
-    // created() {
-    //     document.addEventListener('click', () => this.editComment = false);
-    // },
-    // mounted() {
-    // Foundation.reInit($('#comment-dropdown-' + this.item.id));
-
-    // if (this.item.comment == null) {
-    //     this.editComment = true
-    // }
-    // },
-    // computed: {
-    //     showComment() {
-    //         if (this.item.comment != null) {
-    //             return this.item.comment.length > 0;
-    //         } else {
-    //             return false;
-    //         }
-    //     },
-    // },
-    methods: {
-        // changeEditComment() {
-        //     if (this.item.comment != null) {
-        //         this.editComment = !this.editComment;
-        //     }
-        // },
-        updateComment: function updateComment() {
-            this.editComment = false;
-            this.$emit('update', this.curComment);
-        }
-    }
-    // directives: {
-    //     'dropdown': {
-    //         bind: function (el) {
-    //             new Foundation.Dropdown($(el))
-    //         },
-    //     },
-    //     focus: {
-    //         inserted: function (el) {
-    //             el.focus()
-    //         }
-    //     }
-    // },
-});
-
-/***/ }),
-/* 226 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "wrap-comment" }, [
-    _c("span", {
-      staticClass: "icon-comment",
-      on: {
-        click: function($event) {
-          _vm.editComment = !_vm.editComment
-        }
-      }
-    }),
-    _vm._v(" "),
-    _vm.editComment
-      ? _c("div", { staticClass: "dropdown-comment dropdown-pane" }, [
-          _c(
-            "textarea",
-            {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.curComment,
-                  expression: "curComment"
-                }
-              ],
-              domProps: { value: _vm.curComment },
-              on: {
-                keydown: function($event) {
-                  if (
-                    !$event.type.indexOf("key") &&
-                    _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-                  ) {
-                    return null
-                  }
-                  $event.preventDefault()
-                  return _vm.updateComment($event)
-                },
-                blur: function($event) {
-                  return _vm.alert(1)
-                },
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.curComment = $event.target.value
-                }
-              }
-            },
-            [_vm._v(_vm._s(_vm.curComment))]
-          ),
-          _vm._v(" "),
-          _c("a", { staticClass: "button", on: { click: _vm.updateComment } }, [
-            _vm._v("Сохранить")
-          ])
-        ])
-      : _vm._e()
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-1187fcec", module.exports)
-  }
-}
-
-/***/ }),
-/* 227 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(1)
-/* script */
-var __vue_script__ = __webpack_require__(228)
-/* template */
-var __vue_template__ = __webpack_require__(229)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/js/system/components/leads/estimates/goods/price/CurrencyComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-acf96dac", Component.options)
-  } else {
-    hotAPI.reload("data-v-acf96dac", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 228 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        item: Object
-    },
-    computed: {
-        isRegistered: function isRegistered() {
-            return this.$store.state.lead.estimate.is_registered == 1;
-        },
-        havePoints: function havePoints() {
-            return this.item.points > 0;
-        }
-    },
-    methods: {
-        setPointsMode: function setPointsMode() {
-            this.item.sale_mode = 2;
-            this.$emit('update', this.item);
-        }
-    },
-    filters: {
-        roundToTwo: function roundToTwo(value) {
-            return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
-        },
-        // Создает разделители разрядов в строке с числами
-        level: function level(value) {
-            return parseInt(value).toLocaleString();
-        },
-
-        // Отбраcывает дробную часть в строке с числами
-        onlyInteger: function onlyInteger(value) {
-            return Math.floor(value);
-        }
-    }
-});
-
-/***/ }),
-/* 229 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "td",
-    [
-      _vm._v(
-        "\n    " +
-          _vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.item.price))) +
-          " "
-      ),
-      _c("span", { staticClass: "item-currency" }, [
-        _vm._v(_vm._s(_vm.item.currency.abbreviation))
-      ]),
-      _vm._v(" "),
-      _vm.havePoints
-        ? [
-            _vm.isRegistered
-              ? _c("span", { staticClass: "points" }, [
-                  _vm._v("(" + _vm._s(_vm.item.points) + ")")
-                ])
-              : _c(
-                  "span",
-                  {
-                    staticClass: "points points-mode",
-                    on: { click: _vm.setPointsMode }
-                  },
-                  [_vm._v("(" + _vm._s(_vm.item.points) + ")")]
-                )
-          ]
-        : _vm._e()
-    ],
-    2
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-acf96dac", module.exports)
-  }
-}
-
-/***/ }),
-/* 230 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(1)
-/* script */
-var __vue_script__ = __webpack_require__(231)
-/* template */
-var __vue_template__ = __webpack_require__(232)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/js/system/components/leads/estimates/goods/price/PointsComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-628cb318", Component.options)
-  } else {
-    hotAPI.reload("data-v-628cb318", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 231 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        item: Object
-    },
-    computed: {
-        isRegistered: function isRegistered() {
-            return this.$store.state.lead.estimate.is_registered == 1;
-        },
-        havePoints: function havePoints() {
-            return this.item.points > 0;
-        }
-    },
-    methods: {
-        setCurrencyMode: function setCurrencyMode() {
-            this.item.sale_mode = 1;
-            this.$emit('update', this.item);
-        }
-    },
-    filters: {
-        roundToTwo: function roundToTwo(value) {
-            return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
-        },
-        // Создает разделители разрядов в строке с числами
-        level: function level(value) {
-            return parseInt(value).toLocaleString();
-        },
-
-        // Отбраcывает дробную часть в строке с числами
-        onlyInteger: function onlyInteger(value) {
-            return Math.floor(value);
-        }
-    }
-});
-
-/***/ }),
-/* 232 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "td",
-    [
-      _vm._v("\n    " + _vm._s(_vm.item.points) + " поинтов\n\n    "),
-      _vm.havePoints
-        ? [
-            _vm.isRegistered
-              ? _c("span", { staticClass: "points" }, [
-                  _vm._v(
-                    "(" +
-                      _vm._s(
-                        _vm._f("level")(_vm._f("roundToTwo")(_vm.item.price))
-                      ) +
-                      ")"
-                  )
-                ])
-              : _c(
-                  "span",
-                  {
-                    staticClass: "points points-mode",
-                    on: { click: _vm.setCurrencyMode }
-                  },
-                  [
-                    _vm._v(
-                      "(" +
-                        _vm._s(
-                          _vm._f("level")(_vm._f("roundToTwo")(_vm.item.price))
-                        ) +
-                        ")"
-                    )
-                  ]
-                )
-          ]
-        : _vm._e()
-    ],
-    2
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-628cb318", module.exports)
-  }
-}
-
-/***/ }),
-/* 233 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    components: {
-        'digit-component': __webpack_require__(7)
-    },
-    props: {
-        count: [String, Number],
-        limit: {
-            type: [Number, String],
-            default: 99999999
-        }
-    },
-    data: function data() {
-        return {
-            number: parseInt(this.count)
-        };
-    },
-
-    watch: {
-        count: function count(val) {
-            this.update(val);
-        }
-    },
-    methods: {
-        deduct: function deduct() {
-            if (this.number > 0) {
-                this.number -= 1;
-                this.$refs.countComponent.update(this.number);
-                this.$emit('update', this.number);
-            }
-        },
-        add: function add() {
-            if (this.number <= this.limit) {
-                this.number += 1;
-                this.$refs.countComponent.update(this.number);
-                this.$emit('update', this.number);
-            }
-        },
-        change: function change(value) {
-            this.number = value;
-            this.$emit('update', this.number);
-        },
-        update: function update(value) {
-            this.number = value;
-            this.$refs.countComponent.update(this.number);
-        }
-    },
-    directives: {
-        focus: {
-            inserted: function inserted(el) {
-                el.focus();
-            }
-        }
-    },
-    filters: {
-        decimalPlaces: function decimalPlaces(value) {
-            return parseFloat(value).toFixed(2);
-        },
-
-        decimalLevel: function decimalLevel(value) {
-            return parseFloat(value).toLocaleString();
-        },
-        roundToTwo: function roundToTwo(value) {
-            return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
-        },
-        // Создает разделители разрядов в строке с числами
-        level: function level(value) {
-            return parseInt(value).toLocaleString();
-        },
-
-        // Отбраcывает дробную часть в строке с числами
-        onlyInteger: function onlyInteger(value) {
-            return Math.floor(value);
-        }
-    }
-});
-
-/***/ }),
-/* 234 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -82313,7 +79822,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 235 */
+/* 212 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -82378,6 +79887,2539 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-2c629f22", module.exports)
   }
 }
+
+/***/ }),
+/* 213 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("table", { staticClass: "table-invoice" }, [
+    _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("№")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Тип:")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Наименование позиции:")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Производитель")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Кол-во:")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Ед. изм.:")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Цена:")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Валюта:")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Сумма:")]),
+        _vm._v(" "),
+        !_vm.isReceipted ? _c("th") : _vm._e()
+      ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "tbody",
+      { attrs: { id: "table-raws" } },
+      [
+        _vm._l(_vm.itemsList, function(item, index) {
+          return _c("consignments-item-component", {
+            key: item.id,
+            attrs: {
+              item: item,
+              index: index,
+              "is-receipted": _vm.isReceipted
+            },
+            on: {
+              update: _vm.updateItem,
+              remove: function($event) {
+                return _vm.deleteItem(index)
+              }
+            }
+          })
+        }),
+        _vm._v(" "),
+        !_vm.isReceipted
+          ? _c("tr", { staticClass: "tr-add" }, [
+              _c("td", [_vm._v(_vm._s(_vm.items.length + 1))]),
+              _vm._v(" "),
+              _c("td", [
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.entity_id,
+                        expression: "entity_id"
+                      }
+                    ],
+                    attrs: { name: "entity_id" },
+                    on: {
+                      change: [
+                        function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.entity_id = $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        },
+                        _vm.changeEntity
+                      ]
+                    }
+                  },
+                  _vm._l(_vm.entities, function(entity) {
+                    return _c(
+                      "option",
+                      {
+                        domProps: {
+                          value: entity.id,
+                          selected: entity.id === _vm.selectedEntity
+                        }
+                      },
+                      [_vm._v(_vm._s(entity.name) + "\n                    ")]
+                    )
+                  }),
+                  0
+                )
+              ]),
+              _vm._v(" "),
+              _c(
+                "td",
+                [
+                  _c("select-categories-component", {
+                    attrs: {
+                      "select-categories": _vm.selectCategories,
+                      "select-categories-items": _vm.selectCategoriesItems,
+                      change: _vm.change
+                    },
+                    on: { "set-id": _vm.setId, "check-change": _vm.checkChange }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "td",
+                [
+                  _vm.id != null
+                    ? [
+                        _vm.itemManufacturer != null
+                          ? _c("span", [
+                              _vm._v(
+                                "\n\t\t\t\t\t\t\t" +
+                                  _vm._s(_vm.manufacturer[0].company.name) +
+                                  "\n\t\t\t\t\t\t"
+                              )
+                            ])
+                          : [
+                              _c(
+                                "select",
+                                {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.manufacturerId,
+                                      expression: "manufacturerId"
+                                    }
+                                  ],
+                                  attrs: { name: "entity_id" },
+                                  on: {
+                                    change: function($event) {
+                                      var $$selectedVal = Array.prototype.filter
+                                        .call($event.target.options, function(
+                                          o
+                                        ) {
+                                          return o.selected
+                                        })
+                                        .map(function(o) {
+                                          var val =
+                                            "_value" in o ? o._value : o.value
+                                          return val
+                                        })
+                                      _vm.manufacturerId = $event.target
+                                        .multiple
+                                        ? $$selectedVal
+                                        : $$selectedVal[0]
+                                    }
+                                  }
+                                },
+                                _vm._l(_vm.manufacturers, function(
+                                  manufacturer
+                                ) {
+                                  return _c(
+                                    "option",
+                                    { domProps: { value: manufacturer.id } },
+                                    [
+                                      _vm._v(
+                                        _vm._s(manufacturer.company.name) +
+                                          "\n                            "
+                                      )
+                                    ]
+                                  )
+                                }),
+                                0
+                              )
+                            ]
+                      ]
+                    : _vm._e()
+                ],
+                2
+              ),
+              _vm._v(" "),
+              _c(
+                "td",
+                [
+                  _c("digit-component", {
+                    ref: "countComponent",
+                    attrs: { value: _vm.count, "decimal-place": 0 },
+                    model: {
+                      value: _vm.count,
+                      callback: function($$v) {
+                        _vm.count = $$v
+                      },
+                      expression: "count"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(_vm.itemUnit))]),
+              _vm._v(" "),
+              _c(
+                "td",
+                [
+                  _c("digit-component", {
+                    ref: "costComponent",
+                    attrs: { value: _vm.cost },
+                    model: {
+                      value: _vm.cost,
+                      callback: function($$v) {
+                        _vm.cost = $$v
+                      },
+                      expression: "cost"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "td",
+                [
+                  _vm.currencies.length > 1
+                    ? _c("label", [
+                        _c(
+                          "select",
+                          {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.currencyId,
+                                expression: "currencyId"
+                              }
+                            ],
+                            on: {
+                              change: function($event) {
+                                var $$selectedVal = Array.prototype.filter
+                                  .call($event.target.options, function(o) {
+                                    return o.selected
+                                  })
+                                  .map(function(o) {
+                                    var val = "_value" in o ? o._value : o.value
+                                    return val
+                                  })
+                                _vm.currencyId = $event.target.multiple
+                                  ? $$selectedVal
+                                  : $$selectedVal[0]
+                              }
+                            }
+                          },
+                          _vm._l(_vm.currencies, function(currency) {
+                            return _c(
+                              "option",
+                              { domProps: { value: currency.id } },
+                              [
+                                _vm._v(
+                                  _vm._s(currency.name) +
+                                    "\n                        "
+                                )
+                              ]
+                            )
+                          }),
+                          0
+                        )
+                      ])
+                    : [
+                        _vm._v(
+                          "\n                    " +
+                            _vm._s(_vm.currencies[0].name) +
+                            "\n                "
+                        )
+                      ]
+                ],
+                2
+              ),
+              _vm._v(" "),
+              _c("td", [
+                _c("span", [
+                  _vm._v(_vm._s(_vm._f("roundToTwo")(_vm.totalItemSum)))
+                ])
+              ]),
+              _vm._v(" "),
+              _c("td", [
+                _c(
+                  "a",
+                  {
+                    staticClass: "button tiny",
+                    attrs: { disabled: _vm.isDisabled },
+                    on: { click: _vm.addItem }
+                  },
+                  [_vm._v("Добавить")]
+                )
+              ])
+            ])
+          : _vm._e()
+      ],
+      2
+    ),
+    _vm._v(" "),
+    _c("tfoot", [
+      _c("tr", [
+        _c("td", { attrs: { colspan: "7" } }, [_vm._v("Итого:")]),
+        _vm._v(" "),
+        _c("td"),
+        _vm._v(" "),
+        _c("td", [
+          _c("span", { staticClass: "font-accent" }, [
+            _vm._v(
+              _vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.totalItemsCost)))
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        !_vm.isReceipted ? _c("td") : _vm._e()
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-3743a68a", module.exports)
+  }
+}
+
+/***/ }),
+/* 214 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(215)
+/* template */
+var __vue_template__ = __webpack_require__(219)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/system/components/documents/productions/ProductionComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-88f9f89e", Component.options)
+  } else {
+    hotAPI.reload("data-v-88f9f89e", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 215 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    components: {
+        'productions-item-component': __webpack_require__(216),
+        'select-categories-component': __webpack_require__(51),
+        'digit-component': __webpack_require__(7)
+    },
+    props: {
+        production: Object,
+        selectData: Object
+    },
+    data: function data() {
+        return {
+            // Сущности
+            entities: this.selectData.entities,
+            selectedEntity: this.selectData.entities[0].id,
+            entity_id: this.selectData.entities[0].id,
+
+            //
+            items: this.production.items,
+            id: null,
+            count: 0,
+
+            // Категории для компонента выбора
+            categories: this.selectData.categories,
+            categoriesItems: this.selectData.items,
+            change: false,
+            itemUnit: null,
+
+            // Производитель
+            manufacturer_id: null
+        };
+    },
+
+    computed: {
+        isDisabled: function isDisabled() {
+            return this.id == null || this.count == 0;
+        },
+        itemsList: function itemsList() {
+            return this.items;
+        },
+        totalItemsCount: function totalItemsCount() {
+            return this.items.length;
+        },
+
+
+        // Списки для компонента выбора
+        selectCategories: function selectCategories() {
+            var _this = this;
+
+            return this.categories.filter(function (item) {
+                return item.entity_id === _this.entity_id;
+            });
+        },
+        selectCategoriesItems: function selectCategoriesItems() {
+            var _this2 = this;
+
+            return this.categoriesItems.filter(function (item) {
+                return item.entity_id === _this2.entity_id;
+            });
+        },
+        isProduced: function isProduced() {
+            return this.production.produced_at;
+        }
+    },
+
+    methods: {
+        changeCount: function changeCount(value) {
+            this.count = value;
+        },
+        changeEntity: function changeEntity() {
+            var _this3 = this;
+
+            this.change = true;
+
+            var count = 0;
+            this.categories.filter(function (item) {
+                if (item.entity_id === _this3.entity_id) {
+                    count++;
+                }
+            });
+
+            if (count === 0) {
+                axios.post('/admin/productions/categories', {
+                    entity_id: this.entity_id
+                }).then(function (response) {
+                    _this3.categories = _this3.categories.concat(response.data.categories);
+                    _this3.categoriesItems = _this3.categoriesItems.concat(response.data.items);
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            }
+        },
+
+        checkChange: function checkChange() {
+            this.change = false;
+        },
+        setId: function setId(id) {
+            var _this4 = this;
+
+            this.id = id;
+            if (id != null) {
+                this.categoriesItems.filter(function (item) {
+                    if (item.id === id && item.entity_id === _this4.entity_id) {
+                        if (item.article.package_status === 1) {
+                            _this4.itemUnit = item.article.package_abbreviation;
+                        } else {
+                            _this4.itemUnit = item.article.unit.abbreviation;
+                        }
+
+                        _this4.manufacturer_id = item.article.manufacturer_id;
+                    }
+                });
+            } else {
+                this.itemUnit = null;
+                this.manufacturer_id = null;
+            }
+        },
+
+        addItem: function addItem() {
+            var _this5 = this;
+
+            if (!this.isDisabled) {
+                this.disabledButton = true;
+                axios.post('/admin/productions_items', {
+                    production_id: this.production.id,
+                    cmv_id: this.id,
+                    entity_id: this.entity_id,
+                    count: this.count,
+                    manufacturer_id: this.manufacturer_id
+                }).then(function (response) {
+                    _this5.items.push(response.data);
+
+                    _this5.id = null;
+                    _this5.change = true;
+                    _this5.manufacturer_id = null;
+
+                    _this5.count = 0;
+                    _this5.$refs.countComponent.update(_this5.count);
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            }
+        },
+        updateItem: function updateItem(item, index) {
+            Vue.set(this.items, index, item);
+        },
+
+        deleteItem: function deleteItem(index) {
+            this.items.splice(index, 1);
+        }
+    },
+
+    filters: {
+        roundToTwo: function roundToTwo(value) {
+            return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
+        },
+
+        // Создает разделители разрядов в строке с числами
+        level: function level(value) {
+            return Number(value).toLocaleString();
+        }
+    }
+
+});
+
+/***/ }),
+/* 216 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(217)
+/* template */
+var __vue_template__ = __webpack_require__(218)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/system/components/documents/productions/ProductionsItemComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-86d8195a", Component.options)
+  } else {
+    hotAPI.reload("data-v-86d8195a", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 217 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'productions-item-component',
+    props: {
+        item: Object,
+        index: Number,
+        isProduced: String
+    },
+    data: function data() {
+        return {
+            count: Number(this.item.count),
+            changeCount: false
+        };
+    },
+
+    computed: {
+        isArchive: function isArchive() {
+            return this.item.cmv.archive == 1;
+        },
+        isChangeCount: function isChangeCount() {
+            return this.changeCount;
+        },
+        unitAbbreviation: function unitAbbreviation() {
+            var abbr = void 0;
+            if (this.item.cmv.article.package_status === 1) {
+                abbr = this.item.cmv.article.package_abbreviation;
+            } else {
+                abbr = this.item.cmv.article.unit.abbreviation;
+            }
+            return abbr;
+        }
+    },
+    methods: {
+        checkChangeCount: function checkChangeCount() {
+            if (!this.isProduced) {
+                this.changeCount = !this.changeCount;
+            }
+        },
+
+        updateItem: function updateItem() {
+            var _this = this;
+
+            this.changeCount = false;
+            axios.patch('/admin/productions_items/' + this.item.id, {
+                count: Number(this.count)
+            }).then(function (response) {
+                _this.$emit('update', response.data, _this.index);
+                _this.count = Number(response.data.count);
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        deleteItem: function deleteItem() {
+            var _this2 = this;
+
+            axios.delete('/admin/productions_items/' + this.item.id).then(function (response) {
+                if (response.data > 0) {
+                    console.log('Удаляем - ' + _this2.item.id);
+                    _this2.$emit('remove');
+                }
+            }).catch(function (error) {
+                console.log(error);
+            });
+        }
+    },
+    directives: {
+        focus: {
+            inserted: function inserted(el) {
+                el.focus();
+            }
+        }
+    },
+
+    filters: {
+        roundToTwo: function roundToTwo(value) {
+            return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
+        },
+
+        // Создает разделители разрядов в строке с числами
+        level: function level(value) {
+            return Number(value).toLocaleString();
+        }
+    }
+});
+
+/***/ }),
+/* 218 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("tr", { class: [{ "cmv-archive": _vm.isArchive }] }, [
+    _c("td", [_vm._v(_vm._s(_vm.index + 1))]),
+    _vm._v(" "),
+    _c("td", [_vm._v(_vm._s(_vm.item.entity.name))]),
+    _vm._v(" "),
+    _c("td", [
+      _vm._v(_vm._s(_vm.item.cmv.article.name)),
+      _vm.isArchive ? _c("span", [_vm._v(" (Архивный)")]) : _vm._e()
+    ]),
+    _vm._v(" "),
+    _c(
+      "td",
+      { on: { click: _vm.checkChangeCount } },
+      [
+        _vm.isChangeCount
+          ? [
+              _c("input", {
+                directives: [
+                  { name: "focus", rawName: "v-focus" },
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.count,
+                    expression: "count"
+                  }
+                ],
+                attrs: { type: "number" },
+                domProps: { value: _vm.count },
+                on: {
+                  keydown: function($event) {
+                    if (
+                      !$event.type.indexOf("key") &&
+                      _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                    ) {
+                      return null
+                    }
+                    $event.preventDefault()
+                    return _vm.updateItem($event)
+                  },
+                  focusout: function($event) {
+                    _vm.changeCount = false
+                  },
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.count = $event.target.value
+                  }
+                }
+              })
+            ]
+          : [
+              _vm._v(
+                _vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.item.count)))
+              )
+            ]
+      ],
+      2
+    ),
+    _vm._v(" "),
+    _c("td", [_vm._v(_vm._s(_vm.unitAbbreviation))]),
+    _vm._v(" "),
+    !this.isProduced
+      ? _c("td", [
+          _c("a", {
+            staticClass: "icon-delete sprite",
+            on: { click: _vm.deleteItem }
+          })
+        ])
+      : _vm._e()
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-86d8195a", module.exports)
+  }
+}
+
+/***/ }),
+/* 219 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("table", { staticClass: "table-invoice" }, [
+    _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("№")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Тип:")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Наименование позиции:")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Кол-во:")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Ед. изм.:")]),
+        _vm._v(" "),
+        !_vm.isProduced ? _c("th") : _vm._e()
+      ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "tbody",
+      { attrs: { id: "table-raws" } },
+      [
+        _vm._l(_vm.itemsList, function(item, index) {
+          return _c("productions-item-component", {
+            key: item.id,
+            attrs: { item: item, index: index, "is-produced": _vm.isProduced },
+            on: {
+              update: _vm.updateItem,
+              remove: function($event) {
+                return _vm.deleteItem(index)
+              }
+            }
+          })
+        }),
+        _vm._v(" "),
+        !_vm.isProduced
+          ? _c("tr", { staticClass: "tr-add" }, [
+              _c("td", [_vm._v(_vm._s(_vm.items.length + 1))]),
+              _vm._v(" "),
+              _c("td", [
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.entity_id,
+                        expression: "entity_id"
+                      }
+                    ],
+                    attrs: { name: "entity_id" },
+                    on: {
+                      change: [
+                        function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.entity_id = $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        },
+                        _vm.changeEntity
+                      ]
+                    }
+                  },
+                  _vm._l(_vm.entities, function(entity) {
+                    return _c(
+                      "option",
+                      {
+                        domProps: {
+                          value: entity.id,
+                          selected: entity.id === _vm.selectedEntity
+                        }
+                      },
+                      [_vm._v(_vm._s(entity.name) + "\n                ")]
+                    )
+                  }),
+                  0
+                )
+              ]),
+              _vm._v(" "),
+              _c(
+                "td",
+                [
+                  _c("select-categories-component", {
+                    attrs: {
+                      "select-categories": _vm.selectCategories,
+                      "select-categories-items": _vm.selectCategoriesItems,
+                      change: _vm.change
+                    },
+                    on: { "set-id": _vm.setId, "check-change": _vm.checkChange }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "td",
+                [
+                  _c("digit-component", {
+                    ref: "countComponent",
+                    attrs: { value: _vm.count, "decimal-place": 0 },
+                    model: {
+                      value: _vm.count,
+                      callback: function($$v) {
+                        _vm.count = $$v
+                      },
+                      expression: "count"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(_vm.itemUnit))]),
+              _vm._v(" "),
+              _c("td", [
+                _c(
+                  "a",
+                  {
+                    staticClass: "button tiny",
+                    attrs: { disabled: _vm.isDisabled },
+                    on: { click: _vm.addItem }
+                  },
+                  [_vm._v("Добавить")]
+                )
+              ])
+            ])
+          : _vm._e()
+      ],
+      2
+    ),
+    _vm._v(" "),
+    _c("tfoot", [
+      _c("tr", [
+        _c("td", { attrs: { colspan: "3" } }, [_vm._v("Итого:")]),
+        _vm._v(" "),
+        _c("td"),
+        _vm._v(" "),
+        !_vm.isProduced ? _c("td") : _vm._e(),
+        _vm._v(" "),
+        _c("td")
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-88f9f89e", module.exports)
+  }
+}
+
+/***/ }),
+/* 220 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(221)
+/* template */
+var __vue_template__ = __webpack_require__(260)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/system/components/leads/estimates/EstimateComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-d340971c", Component.options)
+  } else {
+    hotAPI.reload("data-v-d340971c", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 221 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    components: {
+        'estimates-goods-items-component': __webpack_require__(222),
+        'estimates-services-items-component': __webpack_require__(248),
+        'buttons-component': __webpack_require__(254)
+    },
+    props: {
+        estimate: Object,
+        settings: {
+            type: Array,
+            default: function _default() {
+                return [];
+            }
+        },
+        stocks: {
+            type: Array,
+            default: function _default() {
+                return [];
+            }
+        }
+    },
+    created: function created() {
+        // this.$store.commit('SET_ESTIMATE', this.estimate);
+        // this.$store.commit('SET_GOODS_ITEMS', this.estimate.goods_items);
+        // this.$store.commit('SET_SERVICES_ITEMS', this.estimate.services_items);
+        // this.$store.commit('SET_DISCOUNTS', this.estimate.discounts);
+    },
+    data: function data() {
+        return {
+            //
+            id: null,
+
+            cost: null,
+
+            itemGoods: null,
+            itemGoodsName: null,
+            itemGoodsIndex: null,
+
+            itemServices: null,
+            itemServicesName: null,
+            itemServicesIndex: null
+        };
+    },
+
+    computed: {
+        // Товары
+        goodsList: function goodsList() {
+            return this.$store.state.lead.goodsItems;
+        },
+
+
+        // Услуги
+        servicesList: function servicesList() {
+            return this.$store.state.lead.servicesItems;
+        },
+
+
+        // Смета
+        estimateAmount: function estimateAmount() {
+            return this.$store.getters.estimateAmount;
+        },
+        estimateItemsDiscount: function estimateItemsDiscount() {
+            return this.$store.getters.estimateItemsDiscount;
+        },
+        estimateDiscount: function estimateDiscount() {
+            return this.$store.getters.estimateDiscount;
+        },
+        estimateDiscountCurrency: function estimateDiscountCurrency() {
+            return this.$store.getters.estimateDiscountCurrency;
+        },
+        estimateTotal: function estimateTotal() {
+            return this.$store.getters.estimateTotal;
+        },
+        estimateTotalPoints: function estimateTotalPoints() {
+            return this.$store.getters.estimateTotalPoints;
+        }
+    },
+    methods: {
+        openModalServices: function openModalServices(item, index) {
+            this.itemServicesIndex = index;
+            this.itemServices = item;
+            this.itemServicesName = item.product.process.name;
+        },
+
+        // changeCost: function(value) {
+        // 	this.cost = value;
+        // },
+        // checkChange: function () {
+        // 	this.change = false;
+        // },
+        // setId: function (id) {
+        // 	this.id = id;
+        // 	if (id != null) {
+        // 		this.categoriesItems.filter(item => {
+        // 			if (item.id === id && item.entity_id === this.entity_id) {
+        //
+        // 				// Смотрим в чем принимать
+        // 				if (item.article.package_status === 1) {
+        // 					this.itemUnit = item.article.package_abbreviation;
+        // 				} else {
+        // 					this.itemUnit = item.article.unit.abbreviation;
+        // 				}
+        //
+        // 				// Смотрим производителя
+        // 				if (item.article.manufacturer_id != null) {
+        // 					this.itemManufacturer = item.article.manufacturer_id;
+        // 				}
+        // 			}
+        // 		});
+        // 	} else {
+        // 		this.itemUnit = null;
+        // 		this.itemManufacturer = null;
+        // 	}
+        // },
+
+
+        updateServicesItem: function updateServicesItem(item) {
+            this.$store.commit('UPDATE_SERVICES_ITEM', item);
+        },
+
+        deleteServicesItem: function deleteServicesItem() {
+            this.$store.dispatch('REMOVE_SERVICES_ITEM_FROM_ESTIMATE', this.itemServices.id);
+            $('#delete-estimates_services_item').foundation('close');
+        }
+    },
+    filters: {
+        decimalPlaces: function decimalPlaces(value) {
+            return parseFloat(value).toFixed(2);
+        },
+
+        decimalLevel: function decimalLevel(value) {
+            return parseFloat(value).toLocaleString();
+        },
+        roundToTwo: function roundToTwo(value) {
+            return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
+        },
+        // Создает разделители разрядов в строке с числами
+        level: function level(value) {
+            return parseInt(value).toLocaleString();
+        },
+
+        // Отбраcывает дробную часть в строке с числами
+        onlyInteger: function onlyInteger(value) {
+            return Math.floor(value);
+        }
+    }
+
+});
+
+/***/ }),
+/* 222 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(223)
+/* template */
+var __vue_template__ = __webpack_require__(247)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/system/components/leads/estimates/goods/EstimatesGoodsItemsComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-37b96cf4", Component.options)
+  } else {
+    hotAPI.reload("data-v-37b96cf4", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 223 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    components: {
+        'estimates-goods-item-component': __webpack_require__(224),
+        'reserves-component': __webpack_require__(244)
+    },
+    props: {
+        items: Array,
+        settings: Array,
+        stocks: Array
+    },
+    data: function data() {
+        return {
+            id: null,
+
+            count: null,
+            cost: null,
+            // discountPercent: Number(this.$store.state.lead.estimate.discount_percent),
+
+            item: null,
+            itemName: null,
+            itemIndex: null
+        };
+    },
+    mounted: function mounted() {
+        Foundation.reInit($('#delete-estimates_goods_item'));
+    },
+
+    computed: {
+        estimate: function estimate() {
+            return this.$store.state.lead.estimate;
+        },
+        isRegistered: function isRegistered() {
+            return this.$store.state.lead.estimate.is_registered === 1;
+        },
+        itemsAmount: function itemsAmount() {
+            var amount = 0;
+            this.items.forEach(function (item) {
+                return amount += parseFloat(item.amount);
+            });
+            return amount;
+        },
+        itemsDiscount: function itemsDiscount() {
+            var discount = 0;
+            this.items.forEach(function (item) {
+                return discount += parseFloat(item.discount_currency);
+            });
+            return discount;
+        },
+        itemsTotal: function itemsTotal() {
+            var total = 0;
+            this.items.forEach(function (item) {
+                return total += parseFloat(item.total);
+            });
+            return total;
+        },
+        itemsTotalPoints: function itemsTotalPoints() {
+            var points = 0;
+            this.items.forEach(function (item) {
+                return points += parseFloat(item.points);
+            });
+            return points;
+        }
+    },
+    methods: {
+        openModal: function openModal(item, index) {
+            this.itemIndex = index;
+            this.item = item;
+            this.itemName = item.goods.article.name;
+        },
+
+        updateItem: function updateItem(item) {
+            this.$store.commit('UPDATE_GOODS_ITEM', item);
+        },
+        deleteItem: function deleteItem() {
+            this.$store.commit('REMOVE_GOODS_ITEM', this.item.id);
+            $('#delete-estimates_goods_item').foundation('close');
+        }
+    },
+    filters: {
+        roundToTwo: function roundToTwo(value) {
+            return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
+        },
+        // Создает разделители разрядов в строке с числами
+        level: function level(value) {
+            return Number(value).toLocaleString();
+        }
+    },
+    directives: {
+        'reveal': {
+            bind: function bind(el) {
+                new Foundation.Reveal($(el));
+            }
+        }
+    }
+});
+
+/***/ }),
+/* 224 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(225)
+/* template */
+var __vue_template__ = __webpack_require__(243)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/system/components/leads/estimates/goods/EstimatesGoodsItemComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-128d1d23", Component.options)
+  } else {
+    hotAPI.reload("data-v-128d1d23", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 225 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    components: {
+        'comment-component': __webpack_require__(226),
+        'currency-component': __webpack_require__(229),
+        'points-component': __webpack_require__(232),
+        'count-component': __webpack_require__(52),
+        'modal-component': __webpack_require__(237),
+        'digit-component': __webpack_require__(7),
+        'reserves-component': __webpack_require__(240)
+    },
+    props: {
+        item: Object,
+        index: Number,
+        settings: {
+            type: Array,
+            default: function _default() {
+                return [];
+            }
+        },
+        stocks: {
+            type: Array,
+            default: function _default() {
+                return [];
+            }
+        }
+    },
+    data: function data() {
+        return {
+            count: parseFloat(this.item.count),
+            stockId: null
+
+            // cost: Number(this.item.cost),
+            // changeCost: false,
+        };
+    },
+
+    // watch: {
+    //     count: ((val, oldVal) => {
+    //         if (val != oldVal) {
+    //             alert(val);
+    //         }
+    //     })
+    // },
+    mounted: function mounted() {
+        if (this.settings.length && this.stocks.length && this.item.stock_id === null) {
+            this.stockId = this.stocks[0].id;
+        } else {
+            this.stockId = this.item.stock_id;
+        }
+    },
+
+    computed: {
+        isArchive: function isArchive() {
+            return this.item.goods.archive == 1;
+        },
+        isRegistered: function isRegistered() {
+            return this.$store.state.lead.estimate.is_registered == 1;
+        },
+        itemCount: function itemCount() {
+            return Math.floor(this.item.count);
+        }
+        //     isChangeCost() {
+        //         if (this.changeCost) {
+        //             this.canChangeCount = false
+        //         }
+        //         return this.changeCost
+        //     },
+        //     unitAbbreviation() {
+        //         let abbr;
+        //         if (this.item.cmv.article.package_status === 1) {
+        //             abbr = this.item.cmv.article.package_abbreviation;
+        //         } else {
+        //             abbr = this.item.cmv.article.unit.abbreviation;
+        //         }
+        //         return abbr;
+        //     }
+        // count: {
+        //     get () {
+        //         return Number(this.item.count);
+        //     },
+        //     set (value) {
+        //         this.countInput = Number(value)
+        //     }
+        // },
+
+    },
+    methods: {
+        changeComment: function changeComment(comment) {
+            // Оновление ккомментария
+            this.item.comment = comment;
+            this.$store.commit('UPDATE_GOODS_ITEM', this.item);
+        },
+        changeCount: function changeCount(count) {
+            // Оновление количества из строки
+            this.item.count = count;
+            this.$store.commit('UPDATE_GOODS_ITEM', this.item);
+            this.$refs.modalCurrencyComponent.reset();
+        },
+        update: function update(item) {
+            // Обновление из модалки
+            this.$store.commit('UPDATE_GOODS_ITEM', item);
+        },
+        openModalRemove: function openModalRemove() {
+            // Открытие модалки удаления
+            this.$emit('open-modal-remove', this.item);
+        },
+        updatePrice: function updatePrice(item) {
+            // Обновление редима оплаты (валюта / поинты)
+            if (item.sale_mode == 2) {
+                this.$refs.modalCurrencyComponent.reset();
+            }
+
+            if (item.remove_from_page) {
+                this.$store.dispatch('REMOVE_GOODS_ITEM_FROM_ESTIMATE', item.remove_from_page);
+                // this.$refs.countComponent.setCount(item.count);
+            }
+            this.$store.commit('UPDATE_GOODS_ITEM', item);
+        }
+    },
+    directives: {
+        focus: {
+            inserted: function inserted(el) {
+                el.focus();
+            }
+        }
+    },
+    filters: {
+        decimalPlaces: function decimalPlaces(value) {
+            return parseFloat(value).toFixed(2);
+        },
+
+        decimalLevel: function decimalLevel(value) {
+            return parseFloat(value).toLocaleString();
+        },
+        roundToTwo: function roundToTwo(value) {
+            return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
+        },
+        // Создает разделители разрядов в строке с числами
+        level: function level(value) {
+            return parseInt(value).toLocaleString();
+        },
+
+        // Отбраcывает дробную часть в строке с числами
+        onlyInteger: function onlyInteger(value) {
+            return Math.floor(value);
+        }
+    }
+});
+
+/***/ }),
+/* 226 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(227)
+/* template */
+var __vue_template__ = __webpack_require__(228)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/system/components/leads/estimates/goods/CommentComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-1187fcec", Component.options)
+  } else {
+    hotAPI.reload("data-v-1187fcec", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 227 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        comment: String
+    },
+    data: function data() {
+        return {
+            curComment: this.comment,
+            editComment: false
+        };
+    },
+
+    // created() {
+    //     document.addEventListener('click', () => this.editComment = false);
+    // },
+    // mounted() {
+    // Foundation.reInit($('#comment-dropdown-' + this.item.id));
+
+    // if (this.item.comment == null) {
+    //     this.editComment = true
+    // }
+    // },
+    // computed: {
+    //     showComment() {
+    //         if (this.item.comment != null) {
+    //             return this.item.comment.length > 0;
+    //         } else {
+    //             return false;
+    //         }
+    //     },
+    // },
+    methods: {
+        // changeEditComment() {
+        //     if (this.item.comment != null) {
+        //         this.editComment = !this.editComment;
+        //     }
+        // },
+        updateComment: function updateComment() {
+            this.editComment = false;
+            this.$emit('update', this.curComment);
+        }
+    }
+    // directives: {
+    //     'dropdown': {
+    //         bind: function (el) {
+    //             new Foundation.Dropdown($(el))
+    //         },
+    //     },
+    //     focus: {
+    //         inserted: function (el) {
+    //             el.focus()
+    //         }
+    //     }
+    // },
+});
+
+/***/ }),
+/* 228 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "wrap-comment" }, [
+    _c("span", {
+      staticClass: "icon-comment",
+      on: {
+        click: function($event) {
+          _vm.editComment = !_vm.editComment
+        }
+      }
+    }),
+    _vm._v(" "),
+    _vm.editComment
+      ? _c("div", { staticClass: "dropdown-comment dropdown-pane" }, [
+          _c(
+            "textarea",
+            {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.curComment,
+                  expression: "curComment"
+                }
+              ],
+              domProps: { value: _vm.curComment },
+              on: {
+                keydown: function($event) {
+                  if (
+                    !$event.type.indexOf("key") &&
+                    _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                  ) {
+                    return null
+                  }
+                  $event.preventDefault()
+                  return _vm.updateComment($event)
+                },
+                blur: function($event) {
+                  return _vm.alert(1)
+                },
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.curComment = $event.target.value
+                }
+              }
+            },
+            [_vm._v(_vm._s(_vm.curComment))]
+          ),
+          _vm._v(" "),
+          _c("a", { staticClass: "button", on: { click: _vm.updateComment } }, [
+            _vm._v("Сохранить")
+          ])
+        ])
+      : _vm._e()
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-1187fcec", module.exports)
+  }
+}
+
+/***/ }),
+/* 229 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(230)
+/* template */
+var __vue_template__ = __webpack_require__(231)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/system/components/leads/estimates/goods/price/CurrencyComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-acf96dac", Component.options)
+  } else {
+    hotAPI.reload("data-v-acf96dac", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 230 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        item: Object
+    },
+    computed: {
+        isRegistered: function isRegistered() {
+            return this.$store.state.lead.estimate.is_registered == 1;
+        },
+        havePoints: function havePoints() {
+            return this.item.points > 0;
+        }
+    },
+    methods: {
+        setPointsMode: function setPointsMode() {
+            this.item.sale_mode = 2;
+            this.$emit('update', this.item);
+        }
+    },
+    filters: {
+        roundToTwo: function roundToTwo(value) {
+            return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
+        },
+        // Создает разделители разрядов в строке с числами
+        level: function level(value) {
+            return parseInt(value).toLocaleString();
+        },
+
+        // Отбраcывает дробную часть в строке с числами
+        onlyInteger: function onlyInteger(value) {
+            return Math.floor(value);
+        }
+    }
+});
+
+/***/ }),
+/* 231 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "td",
+    [
+      _vm._v(
+        "\n    " +
+          _vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.item.price))) +
+          " "
+      ),
+      _c("span", { staticClass: "item-currency" }, [
+        _vm._v(_vm._s(_vm.item.currency.abbreviation))
+      ]),
+      _vm._v(" "),
+      _vm.havePoints
+        ? [
+            _vm.isRegistered
+              ? _c("span", { staticClass: "points" }, [
+                  _vm._v("(" + _vm._s(_vm.item.points) + ")")
+                ])
+              : _c(
+                  "span",
+                  {
+                    staticClass: "points points-mode",
+                    on: { click: _vm.setPointsMode }
+                  },
+                  [_vm._v("(" + _vm._s(_vm.item.points) + ")")]
+                )
+          ]
+        : _vm._e()
+    ],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-acf96dac", module.exports)
+  }
+}
+
+/***/ }),
+/* 232 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(233)
+/* template */
+var __vue_template__ = __webpack_require__(234)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/system/components/leads/estimates/goods/price/PointsComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-628cb318", Component.options)
+  } else {
+    hotAPI.reload("data-v-628cb318", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 233 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        item: Object
+    },
+    computed: {
+        isRegistered: function isRegistered() {
+            return this.$store.state.lead.estimate.is_registered == 1;
+        },
+        havePoints: function havePoints() {
+            return this.item.points > 0;
+        }
+    },
+    methods: {
+        setCurrencyMode: function setCurrencyMode() {
+            this.item.sale_mode = 1;
+            this.$emit('update', this.item);
+        }
+    },
+    filters: {
+        roundToTwo: function roundToTwo(value) {
+            return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
+        },
+        // Создает разделители разрядов в строке с числами
+        level: function level(value) {
+            return parseInt(value).toLocaleString();
+        },
+
+        // Отбраcывает дробную часть в строке с числами
+        onlyInteger: function onlyInteger(value) {
+            return Math.floor(value);
+        }
+    }
+});
+
+/***/ }),
+/* 234 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "td",
+    [
+      _vm._v("\n    " + _vm._s(_vm.item.points) + " поинтов\n\n    "),
+      _vm.havePoints
+        ? [
+            _vm.isRegistered
+              ? _c("span", { staticClass: "points" }, [
+                  _vm._v(
+                    "(" +
+                      _vm._s(
+                        _vm._f("level")(_vm._f("roundToTwo")(_vm.item.price))
+                      ) +
+                      ")"
+                  )
+                ])
+              : _c(
+                  "span",
+                  {
+                    staticClass: "points points-mode",
+                    on: { click: _vm.setCurrencyMode }
+                  },
+                  [
+                    _vm._v(
+                      "(" +
+                        _vm._s(
+                          _vm._f("level")(_vm._f("roundToTwo")(_vm.item.price))
+                        ) +
+                        ")"
+                    )
+                  ]
+                )
+          ]
+        : _vm._e()
+    ],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-628cb318", module.exports)
+  }
+}
+
+/***/ }),
+/* 235 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    components: {
+        'digit-component': __webpack_require__(7)
+    },
+    props: {
+        count: [String, Number],
+        limit: {
+            type: [Number, String],
+            default: 99999999
+        }
+    },
+    data: function data() {
+        return {
+            number: parseInt(this.count)
+        };
+    },
+
+    watch: {
+        count: function count(val) {
+            this.update(val);
+        }
+    },
+    methods: {
+        deduct: function deduct() {
+            if (this.number > 0) {
+                this.number -= 1;
+                this.$refs.countComponent.update(this.number);
+                this.$emit('update', this.number);
+            }
+        },
+        add: function add() {
+            if (this.number <= this.limit) {
+                this.number += 1;
+                this.$refs.countComponent.update(this.number);
+                this.$emit('update', this.number);
+            }
+        },
+        change: function change(value) {
+            this.number = value;
+            this.$emit('update', this.number);
+        },
+        update: function update(value) {
+            this.number = value;
+            this.$refs.countComponent.update(this.number);
+        }
+    },
+    directives: {
+        focus: {
+            inserted: function inserted(el) {
+                el.focus();
+            }
+        }
+    },
+    filters: {
+        decimalPlaces: function decimalPlaces(value) {
+            return parseFloat(value).toFixed(2);
+        },
+
+        decimalLevel: function decimalLevel(value) {
+            return parseFloat(value).toLocaleString();
+        },
+        roundToTwo: function roundToTwo(value) {
+            return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
+        },
+        // Создает разделители разрядов в строке с числами
+        level: function level(value) {
+            return parseInt(value).toLocaleString();
+        },
+
+        // Отбраcывает дробную часть в строке с числами
+        onlyInteger: function onlyInteger(value) {
+            return Math.floor(value);
+        }
+    }
+});
 
 /***/ }),
 /* 236 */

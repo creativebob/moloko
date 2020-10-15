@@ -303,7 +303,7 @@ class EstimateController extends Controller
                     foreach ($estimate->goods_items as $item) {
 
 //                        $entity_document = Entity::where('alias', $item->document->getTable())->first();
-//                        $model_document = 'App\\' . $entity_document->model;
+//                        $model_document = $entity_document->model;
 
 //                        if ($item->document->getTable() == 'estimates') {
 //                            $model_document_item = $model_document.'sGoodsItem';
@@ -319,7 +319,7 @@ class EstimateController extends Controller
                         if ($storage) {
 
 //                            $entity_storage = Entity::where('alias', $storage->getTable())->first();
-//                            $model_storage = 'App\\' . $entity_storage->model;
+//                            $model_storage = $entity_storage->model;
 
                             // проверяем наличие резерва по позиции
                             if (optional($item->reserve)->count > 0) {

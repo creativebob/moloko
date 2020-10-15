@@ -15,6 +15,8 @@ use App\Goods;
 use App\GoodsCategory;
 use App\Http\Controllers\System\Traits\Clientable;
 use App\Http\Controllers\Traits\UserControllerTrait;
+use App\Models\System\Documents\Consignment;
+use App\Models\System\Documents\Production;
 use App\Models\System\External\Price;
 use App\Models\System\External\PricesType;
 use App\OldLead;
@@ -61,6 +63,34 @@ class ParserController extends Controller
     public function test()
     {
         dd(__METHOD__);
+    }
+
+    /**
+     * Обновление накладных
+     */
+    public function setReceiptedAt()
+    {
+        $consignments = Consignment::where('is_posted', 1)
+            ->get();
+        foreach ($consignments as $consignment) {
+            $consignment->update([
+                'receipted_at' => $consignment->updated_at
+            ]);
+        }
+    }
+
+    /**
+     * Обновление нарядов
+     */
+    public function setProducedAt()
+    {
+        $productions = Production::where('is_produced', 1)
+            ->get();
+        foreach ($productions as $production) {
+            $production->update([
+                'produced_at' => $production->updated_at
+            ]);
+        }
     }
 
     /**

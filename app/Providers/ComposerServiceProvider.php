@@ -230,8 +230,8 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('products.articles.common.edit.edit', ArticlesCategoriesWithGroupsComposer::class);
         view()->composer('products.processes.common.edit.edit', ProcessesCategoriesWithGroupsComposer::class);
 
-        view()->composer('system.pages.consignments.edit', ArticlesCategoriesWithItemsComposer::class);
-        view()->composer('system.pages.productions.edit', ArticlesCategoriesWithItemsComposerForManufacturer::class);
+        view()->composer('system.pages.documents.consignments.edit', ArticlesCategoriesWithItemsComposer::class);
+        view()->composer('system.pages.documents.productions.edit', ArticlesCategoriesWithItemsComposerForManufacturer::class);
 
         view()->composer(['includes.selects.source_with_source_services'], SourceWithSourceServicesComposer::class);
         view()->composer(['includes.selects.source_services'], SourceServicesComposer::class);

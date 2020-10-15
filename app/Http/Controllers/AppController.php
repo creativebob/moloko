@@ -56,7 +56,7 @@ class AppController extends Controller
             ->first([
                 'model'
             ]);
-        $model = 'App\\'.$entity->model;
+        $model = $entity->model;
 
         $categories = $model::whereNull('parent_id')
         ->get();
@@ -76,7 +76,7 @@ class AppController extends Controller
     public function draft_article($alias, $id)
     {
         $entity = Entity::whereAlias($alias)->first(['model']);
-        $model = 'App\\'.$entity->model;
+        $model = $entity->model;
 
         $item = $model::find($id);
 
@@ -97,7 +97,7 @@ class AppController extends Controller
     public function draft_process($alias, $id)
     {
         $entity = Entity::whereAlias($alias)->first(['model']);
-        $model = 'App\\'.$entity->model;
+        $model = $entity->model;
 
         $item = $model::find($id);
 
@@ -120,7 +120,7 @@ class AppController extends Controller
     {
 
     	$entity = Entity::whereAlias($entity_alias)->first(['model']);
-    	$model = 'App\\'.$entity->model;
+    	$model = $entity->model;
 
         $i = 1;
         foreach ($request->$entity_alias as $item) {
@@ -140,7 +140,7 @@ class AppController extends Controller
 
         $entity_model = Entity::whereAlias($request->entity_alias)
             ->value('model');
-        $model = 'App\\' . $entity_model;
+        $model = $entity_model;
 
         // $item = $model::find($request->id);
         // $item->system = ($request->action == 'lock') ? 1 : null;
@@ -174,7 +174,7 @@ class AppController extends Controller
     {
         $entity_model = Entity::whereAlias($request->entity_alias)
             ->value('model');
-    	$model = 'App\\' . $entity_model;
+    	$model = $entity_model;
 
         $item = $model::where('id', $request->id)
             ->update([
@@ -194,7 +194,7 @@ class AppController extends Controller
     {
 
         $entity = Entity::whereAlias($request->entity_alias)->first(['model']);
-        $model = 'App\\'.$entity->model;
+        $model = $entity->model;
 
         $id = $request->id;
 

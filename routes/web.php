@@ -45,6 +45,9 @@ Route::get('/parsers/add_role', 'ParserController@addRole');
 Route::get('/parsers/set-morphs-aliases', 'ParserController@setMorphsAliases');
 Route::get('/parsers/set-organizations', 'ParserController@setOrganizations');
 
+Route::get('/parsers/set-receipted-at', 'ParserController@setReceiptedAt');
+Route::get('/parsers/set-produced-at', 'ParserController@setProducedAt');
+
 Route::get('/parsers/test', 'ParserController@test');
 
 
@@ -62,7 +65,7 @@ Route::get('/roll_house/set_company_id', 'System\External\RollHouseController@se
 // Тесты
 Route::get('/test', 'System\TestController@test');
 
-Route::get('sendmail', function() {
+Route::get('sendmail', function () {
 
     // Отправляем почту
     App\Notifications\System\Notifications::sendMail();
@@ -409,7 +412,11 @@ Route::any('/raws_create_mode', 'RawController@ajax_change_create_mode');
 
 // ---------------------------------- Склады сырья -------------------------------------------
 // Основные методы
-Route::resource('/raws_stocks', 'RawsStockController');
+Route::resource('/raws_stocks', 'RawsStockController')
+    ->only([
+        'index'
+    ]);
+
 
 // ------------------------------------- Категории упаковок -------------------------------------------
 // Текущая добавленная/удаленная категория
@@ -443,7 +450,10 @@ Route::any('/containers_create_mode', 'ContainerController@ajax_change_create_mo
 
 // ---------------------------------- Склады упаковок -------------------------------------------
 // Основные методы
-Route::resource('/containers_stocks', 'ContainersStockController');
+Route::resource('/containers_stocks', 'ContainersStockController')
+    ->only([
+        'index'
+    ]);
 
 
 // ------------------------------------- Категории вложений -------------------------------------------
@@ -478,7 +488,10 @@ Route::any('/attachments_create_mode', 'ContainerController@ajax_change_create_m
 
 // ---------------------------------- Склады вложений -------------------------------------------
 // Основные методы
-Route::resource('/attachments_stocks', 'AttachmentsStockController');
+Route::resource('/attachments_stocks', 'AttachmentsStockController')
+    ->only([
+        'index'
+    ]);
 
 
 // ------------------------------------- Категории инструментов -------------------------------------------
@@ -508,7 +521,11 @@ Route::any('/tools_create_mode', 'ToolController@ajax_change_create_mode')->midd
 
 // ---------------------------------- Склады инструментов -------------------------------------------
 // Основные методы
-Route::resource('/tools_stocks', 'ToolsStockController');
+Route::resource('/tools_stocks', 'ToolsStockController')
+    ->only([
+        'index'
+    ]);
+
 
 // ---------------------------------- Помещения -------------------------------------------
 
@@ -598,7 +615,10 @@ Route::any('/processes_groups_list', 'ProcessesGroupController@ajax_processes_gr
 
 // ---------------------------------- Склады упаковок -------------------------------------------
 // Основные методы
-Route::resource('/goods_stocks', 'GoodsStockController');
+Route::resource('/goods_stocks', 'GoodsStockController')
+    ->only([
+        'index'
+    ]);
 
 
 // -------------------------------- Категории услуг -------------------------------------------
@@ -909,12 +929,13 @@ Route::resource('applications', 'ApplicationController')->middleware('auth');
 // -------------------------------------- Товарные накладные ---------------------------------------------
 Route::any('/consignments/categories', 'ConsignmentController@categories')
     ->name('consignments.categories');
-Route::patch('/consignments/{id}/posting', 'ConsignmentController@posting')
-    ->name('consignments.posting');
-Route::get('/consignments/{id}/unpost', 'ConsignmentController@unpost')
-    ->name('consignments.unpost');
-
-// Перерасчет накладых
+// Оприходование
+Route::patch('/consignments/{id}/receipting', 'ConsignmentController@receipting')
+    ->name('consignments.receipting');
+// Отмена оприходования
+Route::get('/consignments/{id}/unreceipting', 'ConsignmentController@unreceipting')
+    ->name('consignments.unreceipting');
+// Переоприходование
 Route::get('/consignments/reposting', 'ConsignmentController@reposting')
     ->name('consignments.reposting');
 
@@ -927,20 +948,41 @@ Route::resource('/consignments', 'ConsignmentController')
 
 // -------------------------------Пункты товарных накладных ---------------------------------------------
 //Route::any('/consignments_items', 'ConsignmentsItemController@store');
-Route::resource('/consignments_items', 'ConsignmentsItemController');
+Route::resource('/consignments_items', 'ConsignmentsItemController')
+    ->except([
+        'index',
+        'create',
+        'edit'
+    ]);
 
 
 // -------------------------------------- Наряды на производство ---------------------------------------------
-
-Route::any('/productions/categories', 'ProductionController@categories')->name('productions.categories');;
-Route::patch('/productions/{id}/produced', 'ProductionController@produced')->name('productions.produced');
-Route::get('/productions/{id}/unproduced', 'ProductionController@unproduced')->name('productions.unproduced');
-Route::get('/productions/reproduced/{num}', 'ProductionController@reproduced')->name('productions.reproduced');
+Route::any('/productions/categories', 'ProductionController@categories')
+    ->name('productions.categories');
+// Производство
+Route::patch('/productions/{id}/producing', 'ProductionController@producing')
+    ->name('productions.producing');
+// Отмена производства
+Route::get('/productions/{id}/unproducing', 'ProductionController@unproducing')
+    ->name('productions.unproducing');
+// Перепроизводство
+Route::get('/productions/reproduced/{num}', 'ProductionController@reproducing')
+    ->name('productions.reproducing');
 // Основные методы
-Route::resource('/productions', 'ProductionController');
+Route::resource('/productions', 'ProductionController')
+    ->except([
+        'store',
+        'show'
+    ]);
 
+// -------------------------------Пункты нарядов на производство ---------------------------------------------
 //Route::get('/productions_items', 'ProductionsItemController@store');
-Route::resource('/productions_items', 'ProductionsItemController');
+Route::resource('/productions_items', 'ProductionsItemController')
+    ->except([
+        'index',
+        'create',
+        'edit'
+    ]);
 
 
 // ------------------------------------ Производители ----------------------------------------------------
@@ -1362,9 +1404,9 @@ Route::prefix('catalogs_services/{catalog_id}')->group(function () {
 // --------------------------- Продвижение -------------------------------------
 // Основные методы
 Route::resource('/promotions', 'PromotionController')
-->except([
-    'show'
-]);
+    ->except([
+        'show'
+    ]);
 
 
 // --------------------------- Рассылки -------------------------------------

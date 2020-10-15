@@ -15,7 +15,7 @@ class CategoriesComposer
         $entity = Entity::whereAlias($category_entity)
         ->first(['model']);
         // dd($entity);
-        $model = 'App\\'.$entity->model;
+        $model = $entity->model;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($category_entity, false, 'index');

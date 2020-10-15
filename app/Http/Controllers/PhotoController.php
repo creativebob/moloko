@@ -233,7 +233,7 @@ class PhotoController extends Controller
 
         $entity = Entity::whereAlias($request->entity)
         ->first(['model']);
-        $model = 'App\\'.$entity->model;
+        $model = $entity->model;
 
         $item = $model::with('album.photos')
         // ->moderatorLimit($answer)
@@ -256,7 +256,7 @@ class PhotoController extends Controller
 
             // Обновляем id альбома
             $entity = Entity::whereAlias($request->entity)->first();
-            $model = 'App\\'.$entity->model;
+            $model = $entity->model;
             $item = $model::with('album')->find($request->id);
 
             if (isset($item->album)) {

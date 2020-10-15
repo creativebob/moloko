@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\System\Stocks\ContainersStock;
 use App\Models\System\Traits\Cmvable;
 use App\Models\System\Traits\Commonable;
 use Illuminate\Database\Eloquent\Model;

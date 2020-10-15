@@ -28,7 +28,7 @@ class ArticlesCategoriesWithItemsComposerForManufacturer
         $alias = $entity_alias.'_categories';
 
         $entity_categories = Entity::whereAlias($alias)->first(['model']);
-        $model = 'App\\'.$entity_categories->model;
+        $model = $entity_categories->model;
 
         // Получаем из сессии необходимые данные
         $answer = operator_right($entity_categories->alias, false, 'index');

@@ -20,7 +20,7 @@ class ImageController extends Controller
             'model',
             'alias'
         ]);
-        $model = 'App\\'.$entity->model;
+        $model = $entity->model;
 
         $item = $model::with('photo')
             ->find($item_id);
