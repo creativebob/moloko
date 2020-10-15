@@ -64,9 +64,38 @@ class ParserController extends Controller
     {
         dd(__METHOD__);
     }
-
+    
+    /**
+     * Обновление моделей для сущностей производства и складов
+     *
+     * @return string
+     */
+    public function updateProductionsEntitiesModel()
+    {
+        $entities = Entity::get();
+        foreach ($entities as $entity) {
+            if ($entity->model == "Production" || $entity->model == "Consignment") {
+                $entity->update([
+                   'model' => "App\Models\System\Documents\\{$entity->model}"
+                ]);
+            } else if ($entity->model == "GoodsStock" || $entity->model == "RawsStock" || $entity->model == "ContainersStock" || $entity->model == "AttachmentsStock" || $entity->model == "ToolsStock") {
+                $entity->update([
+                    'model' => "App\Models\System\Stocks\\{$entity->model}"
+                ]);
+            } else {
+                $entity->update([
+                    'model' => "App\\{$entity->model}"
+                ]);
+            }
+        }
+        
+        return "Модели сущностей обновлены";
+    }
+    
     /**
      * Обновление накладных
+     *
+     * @return string
      */
     public function setReceiptedAt()
     {
@@ -77,10 +106,14 @@ class ParserController extends Controller
                 'receipted_at' => $consignment->updated_at
             ]);
         }
+        
+        return "Накладным проставлено receipted_at";
     }
-
+    
     /**
      * Обновление нарядов
+     *
+     * @return string
      */
     public function setProducedAt()
     {
@@ -91,6 +124,21 @@ class ParserController extends Controller
                 'produced_at' => $production->updated_at
             ]);
         }
+    
+        return "Нарядам проставлено produced_at";
+    }
+    
+    /**
+     * Запуск команды на перерегистрацию документов
+     */
+    public function startRegisteringDocumentsCommand()
+    {
+        dd(auth()->user());
+        
+        $filialId = auth()->user()->stafferFilialId;
+        // TODO - 15.10.2020 - Трейт моделей Cmvable отношение cost опирается на stafferFilialId, нужно решение через консоль, т.к. через браузер за 3 минуты не варик парсить
+        \Artisan::call("documents:registering {$filialId}");
+        
     }
 
     /**

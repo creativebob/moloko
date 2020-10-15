@@ -16,7 +16,10 @@ class RegisteringDocumentsCommand extends Command
      * @var string
      */
     protected $signature = 'documents:registering';
-
+//    protected $signature = 'documents:registering
+//                            {filialId : Id филиала должности пользователя}
+//                            ';
+    
     /**
      * The console command description.
      *
@@ -59,6 +62,9 @@ class RegisteringDocumentsCommand extends Command
             \DB::table($name)->truncate();
         }
         \DB::statement("SET foreign_key_checks=1");
+        
+//        $filialId = $this->argument('filialId');
+//        define('FILIAL_ID', $filialId);
 
         $consignments = Consignment::with([
             'items' => function ($q) {
