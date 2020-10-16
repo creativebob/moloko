@@ -88126,7 +88126,9 @@ var render = function() {
             })
           }),
           1
-        )
+        ),
+        _vm._v(" "),
+        _vm._m(0)
       ]
     ),
     _vm._v(" "),
@@ -88138,7 +88140,7 @@ var render = function() {
         attrs: { id: "delete-estimates_goods_item", "data-reveal": "" }
       },
       [
-        _vm._m(0),
+        _vm._m(1),
         _vm._v(" "),
         _c("div", { staticClass: "grid-x align-center modal-content " }, [
           _c("div", { staticClass: "small-10 cell text-center" }, [
@@ -88162,17 +88164,79 @@ var render = function() {
                   }
                 }
               },
-              [_vm._v("Удалить\n                    ")]
+              [_vm._v("Удалить\n                ")]
             )
           ]),
           _vm._v(" "),
-          _vm._m(1)
+          _vm._m(2)
         ])
       ]
     )
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tfoot", [
+      _c("tr", { staticClass: "tfoot-discount-info" }, [
+        _c(
+          "td",
+          { staticClass: "tfoot-discount-name", attrs: { colspan: "3" } },
+          [_vm._v("Скидка 10% на заказ сделанный до 15 ноября 2020 года")]
+        ),
+        _vm._v(" "),
+        _c("td", { staticClass: "tfoot-discount-value" }, [_vm._v("10%")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "tfoot-discount-currency" }, [
+          _c("span", [_vm._v("3400 руб.")])
+        ]),
+        _vm._v(" "),
+        _c("td", {
+          staticClass: "tfoot-discount-currency",
+          attrs: { colspan: "3" }
+        })
+      ]),
+      _vm._v(" "),
+      _c("tr", { staticClass: "tfoot-estimate-amount" }, [
+        _c("td", { attrs: { colspan: "3" } }, [_vm._v("Сумма без скидок:")]),
+        _vm._v(" "),
+        _c("td"),
+        _vm._v(" "),
+        _c("td", { attrs: { colspan: "3" } })
+      ]),
+      _vm._v(" "),
+      _c("tr", [
+        _c(
+          "td",
+          { staticClass: "tfoot-estimate-discount", attrs: { colspan: "3" } },
+          [_vm._v("Скидки:")]
+        ),
+        _vm._v(" "),
+        _c("td"),
+        _vm._v(" "),
+        _c("td", { attrs: { colspan: "3" } })
+      ]),
+      _vm._v(" "),
+      _c("tr", [
+        _c(
+          "td",
+          { staticClass: "tfoot-estimate-total", attrs: { colspan: "3" } },
+          [_vm._v("Итого к оплате:")]
+        ),
+        _vm._v(" "),
+        _c("td"),
+        _vm._v(" "),
+        _c("td", { staticClass: "invert-show" }, [
+          _c("span", [_vm._v("3400")]),
+          _vm._v(" руб.")
+        ]),
+        _vm._v(" "),
+        _c("td", { attrs: { colspan: "3" } })
+      ])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
