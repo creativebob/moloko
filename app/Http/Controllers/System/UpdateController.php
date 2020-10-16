@@ -6,7 +6,7 @@ use App\Action;
 use App\ActionEntity;
 use App\Channel;
 use App\Entity;
-use App\EstimatesGoodsItem;
+use App\Models\System\Documents\EstimatesGoodsItem;
 use App\Http\Controllers\Controller;
 use App\Menu;
 use App\Notification;

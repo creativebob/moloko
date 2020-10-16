@@ -505,7 +505,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Сметы',
                 'alias' => 'estimates',
-                'model' => 'App\Estimate',
+                'model' => 'App\Models\System\Documents\Estimate',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,

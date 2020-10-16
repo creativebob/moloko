@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\View\Composers\Project;
+namespace App\Http\View\Composers\System;
 
 use App\Discount;
 use Illuminate\View\View;
@@ -9,11 +9,10 @@ class DiscountsForEstimatesComposer
 {
     public function compose(View $view)
     {
-        $site = $view->site;
-        $discount = Discount::where([
-            'company_id' => $site->company_id,
-            'archive' => false
-        ])
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right('discounts', true, 'index');
+        
+        $discount = Discount::where('archive', false)
             ->whereHas('entity', function ($q) {
                 $q->where('alias', 'estimates');
             })
@@ -22,6 +21,8 @@ class DiscountsForEstimatesComposer
                 $q->where('ended_at', '>=', now())
                     ->orWhereNull('ended_at');
             })
+            ->moderatorLimit($answer)
+            ->companiesLimit($answer)
             ->first();
 
         return $view->with(compact('discount'));

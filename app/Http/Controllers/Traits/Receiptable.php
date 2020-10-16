@@ -58,7 +58,6 @@ trait Receiptable
             'cmv_id' => $item->cmv_id
         ])
         ->sum('count');
-        define('COUNT_STOCK', $stocksCount);
 
         logs('documents')
             ->info('Значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
@@ -105,8 +104,8 @@ trait Receiptable
                 ->info('Значения min: ' . $cost_item->min . ', max: ' . $cost_item->max . ', average: ' . $cost_item->average);
 
             $cost_average = $cost_item->average;
-            if (COUNT_STOCK > 0) {
-                $average = ((COUNT_STOCK * $cost_average) + ($count * $cost)) / (COUNT_STOCK + $count);
+            if ($stocksCount > 0) {
+                $average = (($stocksCount * $cost_average) + ($count * $cost)) / ($stocksCount + $count);
             } else {
                 $average = $cost;
             };

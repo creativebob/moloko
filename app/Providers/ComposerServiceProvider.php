@@ -19,6 +19,7 @@ use App\Http\View\Composers\System\CitiesWithAreaRegionCountryComposer;
 use App\Http\View\Composers\System\CitySearchComposer;
 use App\Http\View\Composers\System\ClientsCitiesComposer;
 use App\Http\View\Composers\System\ClientsCountComposer;
+use App\Http\View\Composers\System\DiscountsForEstimatesComposer;
 use App\Http\View\Composers\System\LeadHistoryComposer;
 use App\Http\View\Composers\System\UsersWithClientComposer;
 use App\Http\View\Composers\System\CmvArchivesCountComposer;
@@ -433,6 +434,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('leads.personal', CompaniesWithClientComposer::class);
         view()->composer('leads.personal', LegalFormsComposer::class);
         view()->composer('leads.tabs.history', LeadHistoryComposer::class);
+        view()->composer('leads.tabs.estimate', DiscountsForEstimatesComposer::class);
 
         // Сотрудники
         view()->composer('system.pages.hr.employees.includes.title_active', EmployeesDismissalCountComposer::class);

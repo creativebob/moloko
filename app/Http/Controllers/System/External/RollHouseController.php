@@ -7,7 +7,7 @@ use App\ArticlesGroup;
 use App\CatalogsGoodsItem;
 use App\Client;
 use App\ContractsClient;
-use App\Estimate;
+use App\Models\System\Documents\Estimate;
 use App\Goods;
 use App\GoodsCategory;
 use App\Http\Controllers\Controller;
@@ -1004,7 +1004,7 @@ class RollHouseController extends Controller
                                                 'contract_id' => $contracts_client->id,
                                                 'contract_type' => 'App\ContractsClient',
                                                 'document_id' => $estimate->id,
-                                                'document_type' => 'App\Estimate',
+                                                'document_type' => 'App\Models\System\Documents\Estimate',
                                                 'payments_type_id' => 1,
                                                 'amount' => $check->cash,
                                                 'date' => $check->created->format('d.m.Y'),
@@ -1023,7 +1023,7 @@ class RollHouseController extends Controller
                                                 'contract_id' => $contracts_client->id,
                                                 'contract_type' => 'App\ContractsClient',
                                                 'document_id' => $estimate->id,
-                                                'document_type' => 'App\Estimate',
+                                                'document_type' => 'App\Models\System\Documents\Estimate',
                                                 'payments_type_id' => 2,
                                                 'amount' => $check->cashless,
                                                 'date' => Carbon::parse($check->created)->format('d.m.Y'),

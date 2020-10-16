@@ -772,6 +772,8 @@ Route::post('/leads/autofind/{phone}', 'LeadController@ajax_autofind_phone');
 
 // Регистрация
 Route::patch('/estimates/{id}/registering', 'EstimateController@registering');
+// Отмена регистрации
+    Route::patch('/estimates/{id}/unregistering', 'EstimateController@unregistering');
 // Производство
 Route::patch('/estimates/{id}/produce', 'EstimateController@produce');
 // Продажа
@@ -803,7 +805,10 @@ Route::resource('/estimates_services_items', 'EstimatesServicesItemController');
 
 // --------------------------------------- Платежи -----------------------------------------------
 // Основные методы
-Route::resource('/payments', 'PaymentController');
+Route::resource('/payments', 'PaymentController')
+    ->only([
+        'store'
+    ]);
 
 // --------------------------------------- Заказы -----------------------------------------------
 

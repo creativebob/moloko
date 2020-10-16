@@ -30,8 +30,6 @@
         >
             <button
                 class="button"
-                :disabled="disabledSaleButton"
-                :class="{ disabledSaleButton : hide }"
                 @click.prevent="saleEstimate"
             >Закрыть чек</button>
         </div>
@@ -81,7 +79,7 @@
             },
 
             isRegistered() {
-                return this.$store.state.lead.estimate.registered_at === 1;
+                return this.$store.state.lead.estimate.registered_at !== null;
             },
 
             showRegisterButton() {
@@ -89,12 +87,8 @@
             },
 
             showSaleButton() {
-                return this.estimate.registered_at && this.estimate.saled_at;
+                return this.estimate.registered_at && this.estimate.saled_at === null && this.$store.getters.paymentsAmount >= this.$store.getters.estimateTotal;
             },
-            disabledSaleButton() {
-                return this.$store.getters.paymentsAmount < this.$store.getters.estimateTotal;
-            },
-
             change() {
                 return this.$store.state.lead.change;
             },

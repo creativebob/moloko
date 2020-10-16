@@ -144,7 +144,7 @@
 
         computed: {
 		    isShow() {
-		        return this.$store.state.lead.estimate.registered_at && this.$store.state.lead.estimate.saled_at && this.$store.getters.paymentsAmount < this.$store.getters.estimateTotal;
+		        return this.$store.state.lead.estimate.registered_at && !this.$store.state.lead.estimate.saled_at && this.$store.getters.paymentsAmount < this.$store.getters.estimateTotal;
             },
             paymentsAmount() {
                 return this.$store.getters.paymentsAmount;
@@ -165,11 +165,12 @@
                         currency_id: this.currencyId,
                         date: this.date,
 
+                        // TODO - 16.10.20 - Избавиться от харкода моделей
                         contract_id: this.lead.client.contract.id,
                         contract_type: 'App\\ContractsClient',
 
                         document_id: this.document.id,
-                        document_type: 'App\\Estimate'
+                        document_type: 'App\\Models\\System\\Documents\\Estimate'
                     };
                     // console.log(data);
                     axios

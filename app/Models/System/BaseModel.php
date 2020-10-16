@@ -24,7 +24,7 @@ class BaseModel extends Model
     use TemplateTraitScopes;
     use ModeratorLimitTraitScopes;
     use SuppliersTraitScopes;
-    use Filter;
+//    use Filter;
     use BooklistFilter;
 
     public function company()

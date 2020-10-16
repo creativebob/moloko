@@ -1,5 +1,26 @@
 <template>
 	<div>
+        <table
+            v-if="goodsItems.length > 0 || servicesItems.length > 0"
+            class="table-estimate lead-estimate"
+            id="table-estimate_goods_items"
+        >
+
+            <thead>
+            <tr>
+                <th>Наименование</th>
+                <th>Цена</th>
+                <th>Кол-во</th>
+                <th class="td-discount">Скидка</th>
+                <th class="th-amount">Сумма</th>
+                <th class="th-delete"></th>
+
+                <reserves-component
+                    :settings="settings"
+                ></reserves-component>
+
+            </tr>
+            </thead>
         <template v-if="goodsItems.length > 0">
             <estimates-goods-items-component
                 :items="goodsItems"
@@ -14,12 +35,39 @@
                 :settings="settings"
             ></estimates-services-items-component>
         </template>
+            <tfoot>
 
-        <div v-if="estimateAmount > 0">Общая стоимость: {{ estimateAmount | decimalPlaces | decimalLevel }}</div>
-        <div v-if="estimateTotalPoints > 0">Сумма поинтов: {{ estimateTotalPoints | onlyInteger | decimalLevel }}</div>
-        <div v-if="estimateItemsDiscount > 0">Сумма скидок по позициям: {{ estimateItemsDiscount | decimalPlaces | decimalLevel }}</div>
-        <div v-if="estimateDiscountCurrency > 0">{{ estimateDiscount.name}}<span v-if="estimateDiscount.mode == 1"> {{ estimateDiscount.percent | decimalPlaces | decimalLevel }}%</span>: {{ estimateDiscountCurrency | decimalPlaces | decimalLevel }}</div>
-        <div v-if="estimateTotal > 0">Итого к оплате: {{ estimateTotal | decimalPlaces | decimalLevel }}</div>
+            <tr v-if="discount" class="tfoot-discount-info">
+                <td colspan="3" class="tfoot-discount-name">{{ discount.name }}</td>
+                <td class="tfoot-discount-value">{{ discount.percent | decimalPlaces }}</td>
+                <td class="tfoot-discount-currency"><span>{{ estimateAmount | decimalPlaces | decimalLevel }} руб.</span></td>
+                <td colspan="3" class="tfoot-discount-currency"></td>
+            </tr>
+            <tr v-if="discount" class="tfoot-estimate-amount">
+                <td colspan="3" class="">Сумма без скидок:</td>
+                <td>{{ estimateAmount | decimalPlaces | decimalLevel }}</td>
+                <td colspan="3"></td>
+            </tr>
+            <tr v-if="discount">
+                <td colspan="3" class="tfoot-estimate-discount">Скидки:</td>
+                <td>{{ estimateItemsDiscount | decimalPlaces | decimalLevel }}</td>
+                <td colspan="3"></td>
+            </tr>
+
+            <tr>
+                <td colspan="3" class="tfoot-estimate-total">Итого к оплате:</td>
+                <td></td>
+                <td class="invert-show"><span>{{ estimateTotal | decimalPlaces | decimalLevel }}</span> руб.</td>
+                <td colspan="3"></td>
+            </tr>
+            </tfoot>
+        </table>
+
+<!--        <div v-if="estimateAmount > 0">Общая стоимость: {{ estimateAmount | decimalPlaces | decimalLevel }}</div>-->
+<!--        <div v-if="estimateTotalPoints > 0">Сумма поинтов: {{ estimateTotalPoints | onlyInteger | decimalLevel }}</div>-->
+<!--        <div v-if="estimateItemsDiscount > 0">Сумма скидок по позициям: {{ estimateItemsDiscount | decimalPlaces | decimalLevel }}</div>-->
+<!--        <div v-if="estimateDiscountCurrency > 0">{{ estimateDiscount.name}}<span v-if="estimateDiscount.mode == 1"> {{ estimateDiscount.percent | decimalPlaces | decimalLevel }}%</span>: {{ estimateDiscountCurrency | decimalPlaces | decimalLevel }}</div>-->
+<!--        <div v-if="estimateTotal > 0">Итого к оплате: {{ estimateTotal | decimalPlaces | decimalLevel }}</div>-->
 
         <buttons-component></buttons-component>
 	</div>
@@ -28,6 +76,7 @@
 <script>
     export default {
 		components: {
+            'reserves-component': require('./goods/reserves/ReservesComponent'),
 			'estimates-goods-items-component': require('./goods/EstimatesGoodsItemsComponent'),
             'estimates-services-items-component': require('./services/EstimatesServicesItemsComponent'),
             'buttons-component': require('./buttons/ButtonsComponent'),
@@ -44,6 +93,12 @@
                 type: Array,
                 default: () => {
                     return [];
+                }
+            },
+            discount: {
+                type: Object,
+                default: () => {
+                    return {};
                 }
             },
         },

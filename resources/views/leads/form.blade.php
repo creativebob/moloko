@@ -31,12 +31,14 @@
                     </li>
 
                     @can ('index', App\Client::class)
-                        <li class="tabs-title" id="tab-client"><a href="#content-panel-client" aria-selected="true">Карточка
-                                клиента</a></li>
+                        <li class="tabs-title">
+                            <a data-tabs-target="content-panel-client" href="#content-panel-client">Карточка клиента</a>
+                        </li>
                     @endcan
 
                     {{-- <li class="tabs-title" id="tab-address"><a href="#content-panel-address" aria-selected="true">Адреса</a></li> --}}
-                    <li class="tabs-title" id="tab-history"><a href="#tab-history" aria-selected="true">История</a>
+                    <li class="tabs-title">
+                        <a data-tabs-target="tab-history" href="#tab-history">История</a>
                     </li>
                 </ul>
 
@@ -48,7 +50,6 @@
                     <div class="tabs-panel is-active" id="tab-estimate">
                         @include('leads.tabs.estimate')
                     </div>
-
 
                     {{-- КЛИЕНТ --}}
                     <div class="tabs-panel" id="content-panel-client">
@@ -92,8 +93,6 @@
                     </div>
                     {{-- КОНЕЦ КЛИЕНТ --}}
 
-
-
                     {{-- АДРЕСА --}}
                     <div class="tabs-panel" id="content-panel-address">
                         <div class="grid-x grid-padding-x">
@@ -103,15 +102,11 @@
                     </div>
                     {{-- КОНЕЦ АДРЕСА --}}
 
-
-
                     {{-- ИСТОРИЯ --}}
                     <div class="tabs-panel" id="tab-history">
                         @include('leads.tabs.history')
                     </div>
                     {{-- КОНЕЦ ИСТОРИЯ --}}
-
-
 
                     {{-- Конец контента доп таба --}}
                 </div>
@@ -121,9 +116,7 @@
     </div>
 
 
-
-
-<!-- Правый блок -->
+    <!-- Правый блок -->
     <div class="small-12 medium-7 large-5 cell">
         {{ Form::model($lead, [
     'route' => ['leads.update', $lead->id],
@@ -134,19 +127,19 @@
         {{ method_field('PATCH') }}
         {!! Form::hidden('previous_url', url()->previous()) !!}
         <div class="grid-x tabs-right">
-            <div class="small-12 cell">
+            <div class="cell small-12">
                 <ul class="tabs-list" data-tabs id="tabs-leads">
                     <li class="tabs-title is-active">
                         <a href="#content-panel-notes" aria-selected="true">События</a>
                     </li>
 
-                    @can('create', App\Estimate::class)
+                    @can('create', App\Models\System\Documents\Estimate::class)
                         <li class="tabs-title">
                             <a data-tabs-target="tab-catalog_goods" href="#tab-catalog_goods">Товары</a>
                         </li>
                     @endcan
 
-                    @can('create', App\Estimate::class)
+                    @can('create', App\Models\System\Documents\Estimate::class)
                         <li class="tabs-title">
                             <a data-tabs-target="tab-catalog_services" href="#tab-catalog_services">Услуги</a>
                         </li>
@@ -162,8 +155,8 @@
                     <tab-payments-component></tab-payments-component>
 
                     {{-- <li class="tabs-title"><a href="#content-panel-measurements" aria-selected="true">Замеры</a></li> --}}
-                    <li class="tabs-title" id="tab-attribution">
-                        <a data-tabs-target="content-panel-attribution" href="#content-panel-attribution">Аттрибуция</a>
+                    <li class="tabs-title">
+                        <a data-tabs-target="tab-attribution" href="#tab-attribution">Аттрибуция</a>
                     </li>
                 </ul>
             </div>
@@ -221,7 +214,6 @@
                     <div class="tabs-panel" id="tab-catalog_services">
                         @include('leads.tabs.catalogs_services')
                     </div>
-
 
                     {{-- ДОКУМЕНТЫ
                     <div class="tabs-panel" id="content-panel-documents">
@@ -290,124 +282,12 @@
                         @include('leads.tabs.payments')
                     </div>
 
-                    {{-- АТТРИБУЦИЯ --}}
-                    <div class="tabs-panel" id="content-panel-attribution">
-                        <div class="grid-x grid-padding-x">
-                            <div class="small-12 cell">
-                                <table class="table-attributions">
-                                    <tr>
-                                    <tr>
-                                        <td>Тип обращения:</td>
-                                        <td id="lead-type-name">{{ $lead->lead_type->name ?? ''}}</td>
-                                        <td>
-
-                                            @if (($lead->manager_id == Auth::user()->id) || (Auth::user()->staff[0]->position_id == 4))
-                                                <a id="change-lead-type" class="button tiny">Изменить</a>
-                                            @endif
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Способ обращения:</td>
-                                        <td>
-
-                                            {{-- Будем мутить селект в ручную --}}
-
-                                            {{-- @php
-                                            if($lead->lead_method->mode != 1){
-
-                                            $disabled_method_list = 'disabled';} else {
-                                            $disabled_method_list = '';};
-                                            @endphp --}}
-
-                                            @include('includes.selects.lead_methods', ['lead_method_id' => $lead->lead_method_id])
-
-                                        </td>
-                                        <td></td>
-                                    </tr>
-                                    <td>Интерес:</td>
-                                    <td>
-                                        {{ Form::select('choice_tag', $choices, genChoiceTag($lead), ['disabled' => ($lead->lead_method_id == 2)]) }}</td>
-                                    <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Предварительная стоимость:</td>
-                                        <td>
-                                            <lead-badget-component></lead-badget-component>
-                                        </td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Склад списания:</td>
-                                        <td>
-                                            @php
-                                                $disabled = null;
-                                                    if ($lead->estimate->saled_at || $lead->estimate->is_reserved == 1) {
-                                                    $disabled = true;
-                                                }
-                                            @endphp
-                                            {{--                                                @if ($stocks->isNotEmpty())--}}
-                                            {{--                                                <select-stocks-component :stock-id="{{ $lead->estimate->stock_id }}" :stocks='@json($stocks)'></select-stocks-component>--}}
-                                            {{--                                                @include('includes.selects.stocks', ['stock_id' => $lead->estimate->stock_id, 'disabled' =>  $disabled])--}}
-                                            {{--                                                    @endif--}}
-                                        </td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Источник:</td>
-                                        <td>{{ $lead->source->name ?? ''}}</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Сайт:</td>
-                                        <td>{{ $lead->site->name ?? ''}}</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Тип трафика:</td>
-                                        <td>{{ $lead->medium->name ?? ''}}</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Рекламная кампания:</td>
-                                        <td>{{ $lead->campaign_id ?? ''}}</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Объявление:</td>
-                                        <td>{{ $lead->utm_content ?? ''}}</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Ключевая фраза:</td>
-                                        <td>{{ $lead->utm_term ?? ''}}</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Менеджер:</td>
-                                        <td>{{ $lead->manager->name }}</td>
-                                        <td>
-                                            @if (extra_right('lead-appointment') || (extra_right('lead-appointment-self') && ($lead->manager_id == Auth::user()->id)) || ($lead->manager_id == Auth::user()->id))
-                                                <a id="lead-free" class="button tiny">Освободить</a>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Активных задач:</td>
-                                        <td>{{ $lead->challenges_active_count ?? ''}}</td>
-                                        <td></td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
+                    {{-- Аттрибуция --}}
+                    <div class="tabs-panel" id="tab-attribution">
+                        @include('leads.tabs.attribution')
                     </div>
-                    {{-- КОНЕЦ АТТРИБУЦИИ --}}
-
-
                 </div>
-
             </div>
-
         </div>
         {{ Form::close() }}
     </div>

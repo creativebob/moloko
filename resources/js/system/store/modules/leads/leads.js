@@ -142,8 +142,6 @@ const moduleLead = {
                             estimate_discount_id: price.estimate_discount_id,
                             estimate_discount_unit: parseFloat(price.estimate_discount),
 
-                            client_discount_percent: state.client ? state.client.discount : 0,
-
                             manual_discount_currency: 0,
                             manual_discount_percent: 0,
 
@@ -208,10 +206,10 @@ const moduleLead = {
                             item.total_price_discount = item.amount - item.price_discount;
 
                             item.catalogs_item_discount = item.catalogs_item_discount_unit * count;
-                            item.total_catalogs_item_discount = item.amount - item.catalogs_item_discount;
+                            item.total_catalogs_item_discount = item.total_price_discount - item.catalogs_item_discount;
 
                             item.estimate_discount = item.estimate_discount_unit * count;
-                            item.total_estimate_discount = item.amount - item.estimate_discount;
+                            item.total_estimate_discount = item.total_catalogs_item_discount - item.estimate_discount;
 
                             item.client_discount_percent = state.client ? state.client.discount : 0;
 
@@ -369,6 +367,107 @@ const moduleLead = {
                         this.commit('SET_GOODS_ITEMS', response.data.goods_items);
 
                         state.change = false;
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+                    .finally(() => (state.loading = false));
+            },
+
+            // Резервы
+            // Смета
+            RESERVE_ESTIMATE({state}) {
+                state.loading = true;
+                axios
+                    .post('/admin/estimates/' + state.estimate.id + '/reserving')
+                    .then(response => {
+                        // console.log(response.data);
+                        if (response.data.msg.length > 0) {
+                            let msg = '';
+                            response.data.msg.forEach(item => {
+                                if (item !== null) {
+                                    msg = msg + '- ' + item + '\r\n';
+                                }
+                            });
+                            if (msg !== '') {
+                                alert(msg);
+                            }
+                        }
+                        this.commit('SET_GOODS_ITEMS', response.data.items);
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+                    .finally(() => (state.loading = false));
+            },
+            UNRESERVE_ESTIMATE({state}) {
+                state.loading = true;
+                axios
+                    .post('/admin/estimates/' + state.estimate.id + '/unreserving')
+                    .then(response => {
+                        if (response.data.msg.length > 0) {
+                            let msg = '';
+                            response.data.msg.forEach(item => {
+                                if (item !== null) {
+                                    msg = msg + '- ' + item + '\r\n';
+                                }
+                            });
+                            if (msg !== '') {
+                                alert(msg);
+                            }
+                        }
+                        this.commit('SET_GOODS_ITEMS', response.data.items);
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+                    .finally(() => (state.loading = false));
+            },
+
+            // Пункт сметы
+            RESERVE_GOODS_ITEM({state}, id) {
+                state.loading = true;
+                const index = state.goodsItems.findIndex(obj => obj.id === id);
+                let item = state.goodsItems[index];
+                axios
+                    .post('/admin/estimates_goods_items/' + id + '/reserving', {
+                        count: item.count
+                    })
+                    .then(response => {
+                        if (response.data.msg !== null) {
+                            alert(response.data.msg);
+                        }
+                        Vue.set(state.goodsItems, index, response.data.item);
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+                    .finally(() => (state.loading = false));
+            },
+            UNRESERVE_GOODS_ITEM({state}, id) {
+                state.loading = true;
+                const index = state.goodsItems.findIndex(obj => obj.id === id);
+                axios
+                    .post('/admin/estimates_goods_items/' + id + '/unreserving')
+                    .then(response => {
+                        if (response.data.msg !== null) {
+                            alert(response.data.msg);
+                        }
+                        Vue.set(state.goodsItems, index, response.data.item);
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+                    .finally(() => (state.loading = false));
+            },
+
+            // Отмена регистрации
+            UNREGISTER_ESTIMATE({state}) {
+                state.loading = true;
+                axios
+                    .patch('/admin/estimates/' + state.estimate.id + '/unregistering')
+                    .then(response => {
+                        this.commit('SET_ESTIMATE', response.data);
                     })
                     .catch(error => {
                         console.log(error)

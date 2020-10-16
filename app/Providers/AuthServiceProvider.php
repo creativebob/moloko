@@ -187,8 +187,8 @@ use App\CatalogsService;
 use App\Policies\CatalogsServicePolicy;
 use App\CatalogsServicesItem;
 use App\Policies\CatalogsServicesItemPolicy;
-use App\Estimate;
-use App\Policies\EstimatePolicy;
+use App\Models\System\Documents\Estimate;
+use App\Policies\Documents\EstimatePolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider

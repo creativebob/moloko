@@ -1,23 +1,18 @@
 <?php
 
-namespace App;
+namespace App\Models\System\Documents;
 
-use App\Models\System\Traits\Commonable;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\System\BaseModel;
+use App\PricesService;
+use App\Service;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
-// Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
-class EstimatesGoodsItem extends Model
+class EstimatesServicesItem extends BaseModel
 {
-    // Включаем кеш
-    use Cachable;
-
-    use SoftDeletes;
-
-    use Commonable;
-
+    // use SoftDeletes;
+//    use Cachable;
+    
     protected $dates = [
         'deleted_at'
     ];
@@ -29,8 +24,6 @@ class EstimatesGoodsItem extends Model
         'goods_id',
         'currency_id',
         'sale_mode',
-
-        'stock_id',
 
         'comment',
 
@@ -83,8 +76,6 @@ class EstimatesGoodsItem extends Model
         'margin_currency',
         'margin_percent',
 
-        'is_reserved',
-
         'sort',
 
         'display',
@@ -106,44 +97,23 @@ class EstimatesGoodsItem extends Model
     // Прайс
     public function price()
     {
-        return $this->belongsTo(PricesGoods::class);
+        return $this->belongsTo(PricesService::class);
     }
 
-    public function price_goods()
+    public function price_service()
     {
-        return $this->belongsTo(PricesGoods::class, 'price_id');
+        return $this->belongsTo(PricesService::class, 'price_id');
     }
 
-    // Товар
-    public function goods()
+    // Услуга
+    public function service()
     {
-        return $this->belongsTo(Goods::class);
+        return $this->belongsTo(Service::class);
     }
 
     public function product()
     {
-        return $this->belongsTo(Goods::class, 'goods_id');
+        return $this->belongsTo(Service::class, 'service_id');
     }
 
-    public function cmv()
-    {
-        return $this->belongsTo(Goods::class, 'goods_id');
-    }
-
-    // Резерв
-    public function reserve()
-    {
-        return $this->morphOne(Reserve::class, 'documents_item');
-    }
-
-    // Склад
-    public function stock()
-    {
-        return $this->belongsTo(Stock::class);
-    }
-
-    public function currency()
-    {
-        return $this->belongsTo(Currency::class);
-    }
 }

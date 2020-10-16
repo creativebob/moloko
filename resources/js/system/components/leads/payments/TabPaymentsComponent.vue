@@ -2,7 +2,7 @@
     <li
         v-show="isShow"
         class="tabs-title">
-        <a href="#tab-payments" aria-selected="true">Оплата</a>
+        <a data-tabs-target="tab-payments" href="#tab-payments">Оплата</a>
     </li>
 </template>
 
@@ -13,6 +13,5 @@
                 return this.$store.state.lead.estimate.registered_at;
             }
         }
-
     }
 </script>

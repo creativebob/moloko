@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\System\Documents\Estimate;
 use App\Models\System\Traits\Quietlable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
@@ -334,7 +335,7 @@ class Lead extends Model
     // Основной заказ
     // public function main_estimates()
     // {
-    //     return $this->hasMany('App\Estimate')->whereNull('draft');
+    //     return $this->hasMany('App\Models\System\Documents\Estimate')->whereNull('draft');
     // }
 
     // Текущий заказ

@@ -1,25 +1,23 @@
 <?php
 
-namespace App;
+namespace App\Models\System\Documents;
 
-use App\Models\System\Traits\Commonable;
+use App\Models\System\BaseModel;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
-// Подключаем кеш
 // use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
-class Estimate extends Model
+class Estimate extends BaseModel
 {
-
-    // Включаем кеш
-    // use Cachable;
-
     use SoftDeletes;
-
-    use Commonable;
-
+    // use Cachable;
+    
+    protected $with = [
+        'client',
+        'payments',
+        'discounts'
+    ];
+    
     protected $dates = [
         'deleted_at',
         'date',
@@ -100,13 +98,13 @@ class Estimate extends Model
     // Лид
     public function lead()
     {
-        return $this->belongsTo(Lead::class);
+        return $this->belongsTo('App\Lead');
     }
 
     // Клиент
     public function client()
     {
-        return $this->belongsTo(Client::class);
+        return $this->belongsTo('App\Client');
     }
 
     // Товары
@@ -125,18 +123,18 @@ class Estimate extends Model
     // Резервы
     public function reserves()
     {
-        return $this->morphMany(Reserve::class, 'document');
+        return $this->morphMany('App\Reserve', 'document');
     }
 
     // Платежи
     public function payments()
     {
-        return $this->morphMany(Payment::class, 'document');
+        return $this->morphMany('App\Payment', 'document');
     }
 
     public function discounts()
     {
-        return $this->belongsToMany(Discount::class);
+        return $this->belongsToMany('App\Discount');
     }
 
     // Фильтр

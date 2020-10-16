@@ -102,12 +102,14 @@
         </td>
 
         <td
-            v-if="settings.length && isRegistered"
-            class="td-action"
+            v-if="isRegistered"
+            class="td-reserve"
         >
-            <reserves-component
-                :item="item"
-            ></reserves-component>
+            <reserve-component
+                :reserve="item.reserve"
+                @reserve="reserve"
+                @unreserve="unreserve"
+            ></reserve-component>
         </td>
 
         <modal-component
@@ -127,7 +129,7 @@
             'count-component': require('../../../inputs/CountWithButtonsComponent'),
             'modal-component': require('./ModalCurrencyComponent'),
             'digit-component': require('../../../inputs/DigitComponent'),
-            'reserves-component': require('./reserves/ItemReservesComponent'),
+            'reserve-component': require('./reserves/ReserveComponent'),
         },
         props: {
             item: Object,
@@ -175,6 +177,9 @@
             isRegistered() {
                 return this.$store.state.lead.estimate.registered_at;
             },
+            // hasUser() {
+            //     return this.$store.state.lead.lead.user_id !== null;
+            // },
 
             itemCount() {
                 return Math.floor(this.item.count);
@@ -235,8 +240,12 @@
                 }
                 this.$store.commit('UPDATE_GOODS_ITEM', item)
             },
-
-
+            reserve() {
+                this.$store.dispatch('RESERVE_GOODS_ITEM', this.item.id);
+            },
+            unreserve() {
+                this.$store.dispatch('UNRESERVE_GOODS_ITEM', this.item.id);
+            }
         },
         directives: {
             focus: {

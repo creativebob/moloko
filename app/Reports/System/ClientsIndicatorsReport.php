@@ -5,7 +5,7 @@ namespace App\Reports\System;
 use App\Client;
 use App\ClientsIndicator;
 use App\Company;
-use App\Estimate;
+use App\Models\System\Documents\Estimate;
 use App\Unit;
 use Carbon\Carbon;
 

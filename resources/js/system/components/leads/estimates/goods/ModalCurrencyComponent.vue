@@ -185,7 +185,7 @@
         },
         computed: {
             isRegistered() {
-                return this.$store.state.lead.estimate.registered_at;
+                return this.$store.state.lead.estimate.registered_at !== null;
             },
             count: {
                 get() {

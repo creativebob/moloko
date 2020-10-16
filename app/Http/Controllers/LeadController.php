@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Client;
 use App\Company;
 use App\ContractsClient;
-use App\Estimate;
-use App\EstimatesGoodsItem;
+use App\Http\Controllers\Traits\Estimatable;
+use App\Models\System\Documents\Estimate;
+use App\Models\System\Documents\EstimatesGoodsItem;
 use App\Http\Controllers\System\Traits\Leadable;
 use App\Http\Controllers\System\Traits\Locationable;
 use App\Http\Controllers\System\Traits\Phonable;
@@ -53,6 +54,7 @@ class LeadController extends Controller
     use Phonable;
     use Locationable;
     use Timestampable;
+    use Estimatable;
 
     /**
      * Display a listing of the resource.
@@ -149,9 +151,8 @@ class LeadController extends Controller
 //        ->booleanArrayFilter($request, 'challenges_active_count')
 //        ->dateIntervalFilter($request, 'created_at')
             ->booklistFilter($request)
-            ->orderBy('created_at', 'desc')
+            ->latest('created_at')
             ->paginate(30);
-
 //         dd($leads);
 
         // -----------------------------------------------------------------------------------------------------------
@@ -400,30 +401,8 @@ class LeadController extends Controller
             'organization.client',
             'client',
             'main_phones',
-            'estimate' => function ($q) {
-                $q->with([
-                    'goods_items' => function ($q) {
-                        $q->with([
-                            'product.article',
-                            'reserve',
-                            'stock:id,name',
-                            'price_goods',
-                            'currency'
-                        ]);
-                    },
-                    'services_items' => function ($q) {
-                        $q->with([
-                            'product.process',
-                        ]);
-                    },
-                    'payments' => function ($q) {
-                        $q->with([
-                            'type',
-                            'currency'
-                        ]);
-                    },
-                ]);
-            },
+            '            \'estimate\',
+',
         ])
             ->companiesLimit($answer)
             ->filials($answer)
@@ -578,94 +557,19 @@ class LeadController extends Controller
             $sort++;
         }
 
-        $oldGoodsItemsIds = $lead->estimate->goods_items->pluck('id')->toArray();
+        $oldGoodsItemsIds = $lead->estimate->goods_items
+            ->pluck('id')
+            ->toArray();
 
         $deleteIds = array_diff($oldGoodsItemsIds, $newGoodsItemsIds);
         $res = EstimatesGoodsItem::destroy($deleteIds);
 
         // Аггрегация сметы
-        $estimate = $lead->estimate;
-
-        $estimate->load([
-            'goods_items',
-            'services_items',
+        $this->aggregateEstimate($lead->estimate);
+        $lead->load([
+            'estimate'
         ]);
-
-        $cost = 0;
-        $amount = 0;
-        $points = 0;
-
-        $priceDiscount = 0;
-        $catalogsItemDiscount = 0;
-        $estimateDiscount = 0;
-        $clientDiscount = 0;
-        $manualDiscount = 0;
-
-        $total = 0;
-        $totalPoints = 0;
-        $totalBonuses = 0;
-
-        if ($estimate->goods_items->isNotEmpty()) {
-            $cost += $estimate->goods_items->sum('cost');
-            $amount += $estimate->goods_items->sum('amount');
-            $points += $estimate->goods_items->sum('points');
-
-            $priceDiscount += $estimate->goods_items->sum('price_discount');
-            $catalogsItemDiscount += $estimate->goods_items->sum('catalogs_item_discount');
-            $estimateDiscount += $estimate->goods_items->sum('estimate_discount');
-            $clientDiscount += $estimate->goods_items->sum('client_discount_currency');
-            $manualDiscount += $estimate->goods_items->sum('manual_discount_currency');
-
-            $total += $estimate->goods_items->sum('total');
-            $totalPoints += $estimate->goods_items->sum('total_points');
-            $totalBonuses += $estimate->goods_items->sum('total_bonuses');
-        }
-
-//        if ($estimate->services_items->isNotEmpty()) {
-//            $cost += $estimate->services_items->sum('cost');
-//            $amount += $estimate->services_items->sum('amount');
-//            $total += $estimate->services_items->sum('total');
-//        }
-
-        // Скидки
-        $discountCurrency = 0;
-        $discountPercent = 0;
-        if ($total > 0) {
-            $discountCurrency = $amount - $total;
-            $discountPercent = $discountCurrency * 100 / $amount;
-        }
-
-        // Маржа
-        $marginCurrency = $total - $cost;
-        if ($total > 0) {
-            $marginPercent = ($marginCurrency / $total * 100);
-        } else {
-            $marginPercent = $marginCurrency * 100;
-        }
-
-        $data = [
-            'cost' => $cost,
-            'amount' => $amount,
-            'points' => $points,
-
-            'price_discount' => $priceDiscount,
-            'catalogs_item_discount' => $catalogsItemDiscount,
-            'estimate_discount' => $estimateDiscount,
-            'client_discount' => $clientDiscount,
-            'manual_discount' => $manualDiscount,
-
-            'discount_currency' => $discountCurrency,
-            'discount_percent' => $discountPercent,
-
-            'total' => $total,
-            'total_points' => $totalPoints,
-            'total_bonuses' => $totalBonuses,
-
-            'margin_currency' => $marginCurrency,
-            'margin_percent' => $marginPercent,
-        ];
-
-        $estimate->update($data);
+        $estimate = $lead->estimate;
 
         // Регистрация сметы
         if ($request->has('is_registered')) {
@@ -776,14 +680,7 @@ class LeadController extends Controller
                             'product.process',
                         ]);
                     },
-                    'payments' => function ($q) {
-                        $q->with([
-                            'type',
-                            'currency'
-                        ]);
-                    },
                     'lead.client.contract',
-                    'discounts'
                 ]);
             },
             'medium',

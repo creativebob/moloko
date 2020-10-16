@@ -10,7 +10,7 @@ use App\CatalogsGoods;
 use App\CatalogsGoodsItem;
 use App\Client;
 use App\ContractsClient;
-use App\Estimate;
+use App\Models\System\Documents\Estimate;
 use App\Goods;
 use App\GoodsCategory;
 use App\Http\Controllers\System\Traits\Clientable;
@@ -74,7 +74,7 @@ class ParserController extends Controller
     {
         $entities = Entity::get();
         foreach ($entities as $entity) {
-            if ($entity->model == "Production" || $entity->model == "Consignment") {
+            if ($entity->model == "Production" || $entity->model == "Consignment" || $entity->model == "Estimate") {
                 $entity->update([
                    'model' => "App\Models\System\Documents\\{$entity->model}"
                 ]);
@@ -156,12 +156,7 @@ class ParserController extends Controller
      */
     public function startRegisteringDocumentsCommand()
     {
-        dd(auth()->user());
-        
-        $filialId = auth()->user()->stafferFilialId;
-        // TODO - 15.10.2020 - Трейт моделей Cmvable отношение cost опирается на stafferFilialId, нужно решение через консоль, т.к. через браузер за 3 минуты не варик парсить
-        \Artisan::call("documents:registering {$filialId}");
-        
+        \Artisan::call("documents:registering");
     }
 
     /**

@@ -143,7 +143,7 @@ class Client extends Model
     // Получаем заказы
     public function orders()
     {
-        return $this->hasMany('App\Estimate', 'client_id');
+        return $this->hasMany('App\Models\System\Documents\Estimate', 'client_id');
     }
 
     public function estimates()

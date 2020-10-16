@@ -6,6 +6,7 @@ use App\Http\Controllers\Traits\Offable;
 use App\Http\Controllers\Traits\Receiptable;
 use App\Models\System\Documents\Consignment;
 use App\Models\System\Documents\Production;
+use App\User;
 use Illuminate\Console\Command;
 
 class RegisteringDocumentsCommand extends Command
@@ -16,9 +17,6 @@ class RegisteringDocumentsCommand extends Command
      * @var string
      */
     protected $signature = 'documents:registering';
-//    protected $signature = 'documents:registering
-//                            {filialId : Id филиала должности пользователя}
-//                            ';
     
     /**
      * The console command description.
@@ -55,16 +53,19 @@ class RegisteringDocumentsCommand extends Command
             'attachments_stocks',
             'containers_stocks',
             'tools_stocks',
+            
             'costs',
             'costs_histories',
+            
+            'receipts',
+            'offs',
         ];
         foreach ($names as $name) {
             \DB::table($name)->truncate();
         }
         \DB::statement("SET foreign_key_checks=1");
         
-//        $filialId = $this->argument('filialId');
-//        define('FILIAL_ID', $filialId);
+        \Auth::loginUsingId(4);
 
         $consignments = Consignment::with([
             'items' => function ($q) {

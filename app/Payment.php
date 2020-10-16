@@ -42,6 +42,11 @@ class Payment extends Model
     use Filter;
     use BooklistFilter;
     use DateIntervalFilter;
+    
+    protected $with = [
+        'type',
+        'currency'
+    ];
 
     protected $dates = [
         'deleted_at',

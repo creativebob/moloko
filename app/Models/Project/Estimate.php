@@ -2,7 +2,7 @@
 
 namespace App\Models\Project;
 
-use App\EstimatesGoodsItem;
+use App\Models\System\Documents\EstimatesGoodsItem;
 use App\Lead;
 use App\Models\Project\Traits\Publicable;
 use App\Models\System\Traits\Commonable;
@@ -65,12 +65,12 @@ class Estimate extends Model
     // Товары
     public function goods_items()
     {
-        return $this->hasMany('App\EstimatesGoodsItem');
+        return $this->hasMany('App\Models\System\Documents\EstimatesGoodsItem');
     }
 
     // Услуги
     public function services_items()
     {
-        return $this->hasMany('App\EstimatesServicesItem');
+        return $this->hasMany('App\Models\System\Documents\EstimatesServicesItem');
     }
 }

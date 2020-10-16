@@ -144,7 +144,7 @@
         },
         computed: {
             isDisabled() {
-                return this.$store.state.lead.estimate.registered_at;
+                return this.$store.state.lead.estimate.registered_at !== null;
             },
             storeUsers() {
                 return this.$store.state.lead.users;

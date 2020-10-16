@@ -191,7 +191,7 @@ class VkusnyashkaParser
                             'contract_type' => 'App\ContractsClient',
 
                             'document_id' => $estimate->id,
-                            'document_type' => 'App\Estimate'
+                            'document_type' => 'App\Models\System\Documents\Estimate'
                         ];
 
                         $payment = Payment::create($paymentData);

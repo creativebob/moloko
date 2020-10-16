@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\System\Traits;
 
 use App\Client;
-use App\Estimate;
+use App\Models\System\Documents\Estimate;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Request;
 

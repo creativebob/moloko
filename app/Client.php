@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\System\Documents\Estimate;
 use App\Models\System\Traits\Archiveable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -144,7 +145,7 @@ class Client extends Model
     // Получаем заказы
     public function orders()
     {
-        return $this->hasMany('App\Estimate', 'client_id');
+        return $this->hasMany('App\Models\System\Documents\Estimate', 'client_id');
     }
 
     public function estimates()

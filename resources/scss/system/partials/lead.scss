@@ -58,6 +58,12 @@
 }
 
 // Оформлением сметы на ЛИДе
+.th-reserves {
+
+    .button-to-reserve {
+        opacity: 0.3;
+    }
+}
 .button-to-reserve{
     position: relative;
     top: 3px;
@@ -206,7 +212,7 @@ input.case_number_field[readonly]{
         margin-top: 3px;
         margin-bottom: 3px;
         height: 26px;
-        padding: 0 10px;        
+        padding: 0 10px;
     }
 
     .left, .right{
@@ -385,7 +391,7 @@ span.item-currency{
             }
 
             .price-discount{
-                color: #ccc;            
+                color: #ccc;
             }
         }
 
@@ -483,7 +489,7 @@ span.item-currency{
             }
 
             .price-discount{
-                color: #ccc;            
+                color: #ccc;
             }
 
 
@@ -501,7 +507,7 @@ span.item-currency{
             a{
                 background-color: black;
             }
-            
+
         }
 
     }
@@ -608,12 +614,12 @@ tfoot{
             padding-top: 6px;
             padding-bottom: 6px;
             font-size: 0.9rem;
-            font-weight: 500;            
+            font-weight: 500;
         }
 
         &:first-child td{
             margin-top: 5px;
-            border-top: 1px black solid;             
+            border-top: 1px black solid;
         }
 
         .tfoot-discount-currency{
@@ -634,7 +640,7 @@ tfoot{
         td{
             border-top: 3px black solid;
             padding-top: 10px;
-        }      
+        }
     }
 
     .tfoot-estimate-amount, .tfoot-estimate-discount, .tfoot-estimate-total{

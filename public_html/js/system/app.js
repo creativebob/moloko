@@ -78864,12 +78864,13 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('presets-component', __web
 // Услуги
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('processes-categories-with-groups-component', __webpack_require__(327));
 
+// Лиды
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('lead-personal-component', __webpack_require__(330));
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('catalog-goods-component', __webpack_require__(340));
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('catalog-services-component', __webpack_require__(345));
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('lead-badget-component', __webpack_require__(348));
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('select-stocks-component', __webpack_require__(351));
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('goods-lister-component', __webpack_require__(354));
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('button-unregister-component', __webpack_require__(480));
 
 // Скидки
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('discounts-component', __webpack_require__(357));
@@ -84461,9 +84462,58 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
+        'reserves-component': __webpack_require__(486),
         'estimates-goods-items-component': __webpack_require__(227),
         'estimates-services-items-component': __webpack_require__(253),
         'buttons-component': __webpack_require__(259)
@@ -84480,6 +84530,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             type: Array,
             default: function _default() {
                 return [];
+            }
+        },
+        discount: {
+            type: Object,
+            default: function _default() {
+                return {};
             }
         }
     },
@@ -84648,60 +84704,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
         'estimates-goods-item-component': __webpack_require__(229),
-        'reserves-component': __webpack_require__(249)
+        'reserves-component': __webpack_require__(486)
     },
     props: {
         items: Array,
@@ -84963,6 +84970,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
@@ -84972,7 +84981,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         'count-component': __webpack_require__(52),
         'modal-component': __webpack_require__(242),
         'digit-component': __webpack_require__(7),
-        'reserves-component': __webpack_require__(245)
+        'reserve-component': __webpack_require__(483)
     },
     props: {
         item: Object,
@@ -85022,6 +85031,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         isRegistered: function isRegistered() {
             return this.$store.state.lead.estimate.registered_at;
         },
+
+        // hasUser() {
+        //     return this.$store.state.lead.lead.user_id !== null;
+        // },
+
         itemCount: function itemCount() {
             return Math.floor(this.item.count);
         }
@@ -85081,6 +85095,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 // this.$refs.countComponent.setCount(item.count);
             }
             this.$store.commit('UPDATE_GOODS_ITEM', item);
+        },
+        reserve: function reserve() {
+            this.$store.dispatch('RESERVE_GOODS_ITEM', this.item.id);
+        },
+        unreserve: function unreserve() {
+            this.$store.dispatch('UNRESERVE_GOODS_ITEM', this.item.id);
         }
     },
     directives: {
@@ -86065,7 +86085,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     computed: {
         isRegistered: function isRegistered() {
-            return this.$store.state.lead.estimate.registered_at;
+            return this.$store.state.lead.estimate.registered_at !== null;
         },
 
         count: {
@@ -86476,181 +86496,9 @@ if (false) {
 }
 
 /***/ }),
-/* 245 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(1)
-/* script */
-var __vue_script__ = __webpack_require__(246)
-/* template */
-var __vue_template__ = __webpack_require__(247)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/js/system/components/leads/estimates/goods/reserves/ItemReservesComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-334b8a47", Component.options)
-  } else {
-    hotAPI.reload("data-v-334b8a47", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 246 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        item: Object
-    },
-    computed: {
-        isReservedClass: function isReservedClass() {
-            if (this.item.reserve !== null) {
-                if (this.item.reserve.count > 0) {
-                    return 'wrap-reserved-info active';
-                }
-            }
-            return 'wrap-reserved-info';
-        },
-        isReserved: function isReserved() {
-            if (this.item.reserve !== null) {
-                if (this.item.reserve.count > 0) {
-                    return true;
-                }
-            }
-            return false;
-        },
-        reservedCount: function reservedCount() {
-            if (this.item.reserve !== null) {
-                if (this.item.reserve.count > 0) {
-                    return this.item.reserve.count;
-                }
-            }
-            return 0;
-        }
-    },
-    methods: {
-        reserveEstimateItem: function reserveEstimateItem() {
-            var _this = this;
-
-            axios.post('/admin/estimates_goods_items/' + this.item.id + '/reserving').then(function (response) {
-                if (response.data.msg !== null) {
-                    alert(response.data.msg);
-                }
-                _this.$emit('update', response.data.item);
-            }).catch(function (error) {
-                console.log(error);
-            });
-        },
-        unreserveEstimateItem: function unreserveEstimateItem() {
-            var _this2 = this;
-
-            axios.post('/admin/estimates_goods_items/' + this.item.id + '/unreserving').then(function (response) {
-                if (response.data.msg !== null) {
-                    alert(response.data.msg);
-                }
-                _this2.$emit('update', response.data.item);
-            }).catch(function (error) {
-                console.log(error);
-            });
-        }
-    }
-});
-
-/***/ }),
-/* 247 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { class: _vm.isReservedClass }, [
-    !_vm.isReserved
-      ? _c("span", {
-          staticClass: "button-to-reserve",
-          attrs: { title: "Позицию в резерв!" },
-          on: { click: _vm.reserveEstimateItem }
-        })
-      : _c("span", {
-          staticClass: "button-to-reserve unreserve",
-          attrs: { title: "Снять с резерва!" },
-          on: { click: _vm.unreserveEstimateItem }
-        }),
-    _vm._v(" "),
-    _vm.reservedCount > 0
-      ? _c("span", { staticClass: "reserved-count" }, [
-          _vm._v(
-            _vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.reservedCount)))
-          )
-        ])
-      : _vm._e()
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-334b8a47", module.exports)
-  }
-}
-
-/***/ }),
+/* 245 */,
+/* 246 */,
+/* 247 */,
 /* 248 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -86786,11 +86634,16 @@ var render = function() {
           : _vm._e()
       ]),
       _vm._v(" "),
-      _vm.settings.length && _vm.isRegistered
+      _vm.isRegistered
         ? _c(
             "td",
-            { staticClass: "td-action" },
-            [_c("reserves-component", { attrs: { item: _vm.item } })],
+            { staticClass: "td-reserve" },
+            [
+              _c("reserve-component", {
+                attrs: { reserve: _vm.item.reserve },
+                on: { reserve: _vm.reserve, unreserve: _vm.unreserve }
+              })
+            ],
             1
           )
         : _vm._e(),
@@ -86815,184 +86668,9 @@ if (false) {
 }
 
 /***/ }),
-/* 249 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(1)
-/* script */
-var __vue_script__ = __webpack_require__(250)
-/* template */
-var __vue_template__ = __webpack_require__(251)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/js/system/components/leads/estimates/goods/reserves/EstimateReservesComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-964e5d5c", Component.options)
-  } else {
-    hotAPI.reload("data-v-964e5d5c", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 250 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        settings: Array
-    },
-    computed: {
-        estimate: function estimate() {
-            return this.$store.state.lead.estimate;
-        },
-        isRegistered: function isRegistered() {
-            return this.$store.state.lead.estimate.registered_at;
-        },
-        isReserved: function isReserved() {
-            var result = [];
-            result = this.$store.state.lead.goodsItems.filter(function (item) {
-                if (item.reserve !== null) {
-                    if (item.reserve.count > 0) {
-                        return item;
-                    }
-                }
-            });
-            return result.length > 0;
-        }
-    },
-    methods: {
-        reserveEstimateItems: function reserveEstimateItems() {
-            var _this = this;
-
-            axios.post('/admin/estimates/' + this.estimate.id + '/reserving').then(function (response) {
-                console.log(response.data);
-                if (response.data.msg.length > 0) {
-                    var msg = '';
-                    response.data.msg.forEach(function (item) {
-                        if (item !== null) {
-                            msg = msg + '- ' + item + '\r\n';
-                        }
-                    });
-                    if (msg !== '') {
-                        alert(msg);
-                    }
-                }
-                _this.$store.commit('UPDATE_GOODS_ITEMS', response.data.items);
-            }).catch(function (error) {
-                console.log(error);
-            });
-        },
-        unreserveEstimateItems: function unreserveEstimateItems() {
-            var _this2 = this;
-
-            axios.post('/admin/estimates/' + this.estimate.id + '/unreserving').then(function (response) {
-                console.log(response.data);
-                if (response.data.msg.length > 0) {
-                    var msg = '';
-                    response.data.msg.forEach(function (item) {
-                        if (item !== null) {
-                            msg = msg + '- ' + item + '\r\n';
-                        }
-                    });
-                    if (msg !== '') {
-                        alert(msg);
-                    }
-                }
-                _this2.$store.commit('UPDATE_GOODS_ITEMS', response.data.items);
-            }).catch(function (error) {
-                console.log(error);
-            });
-        }
-    }
-});
-
-/***/ }),
-/* 251 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _vm.isRegistered
-    ? _c("th", { staticClass: "th-action" }, [
-        _vm.isReserved
-          ? _c("span", {
-              staticClass: "button-to-reserve",
-              attrs: { title: "Снять все с резерва!" },
-              on: { click: _vm.unreserveEstimateItems }
-            })
-          : _c("span", {
-              staticClass: "button-to-reserve",
-              attrs: { title: "Зарезервировать все!" },
-              on: { click: _vm.reserveEstimateItems }
-            })
-      ])
-    : _vm._e()
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-964e5d5c", module.exports)
-  }
-}
-
-/***/ }),
+/* 249 */,
+/* 250 */,
+/* 251 */,
 /* 252 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -87000,101 +86678,70 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c(
-      "table",
-      {
-        staticClass: "table-estimate lead-estimate",
-        attrs: { id: "table-estimate_goods_items" }
-      },
-      [
-        _c("thead", [
-          _c(
-            "tr",
-            [
-              _c("th", [_vm._v("Наименование")]),
-              _vm._v(" "),
-              _c("th", [_vm._v("Цена")]),
-              _vm._v(" "),
-              _c("th", [_vm._v("Кол-во")]),
-              _vm._v(" "),
-              _c("th", { staticClass: "td-discount" }, [_vm._v("Скидка")]),
-              _vm._v(" "),
-              _c("th", { staticClass: "th-amount" }, [_vm._v("Сумма")]),
-              _vm._v(" "),
-              _c("th", { staticClass: "th-delete" }),
-              _vm._v(" "),
-              _c("reserves-component", { attrs: { settings: _vm.settings } })
-            ],
-            1
-          )
-        ]),
-        _vm._v(" "),
-        _c(
-          "tbody",
-          _vm._l(_vm.items, function(item, index) {
-            return _c("estimates-goods-item-component", {
-              key: item.id,
-              attrs: {
-                item: item,
-                index: index,
-                settings: _vm.settings,
-                stocks: _vm.stocks
-              },
-              on: {
-                "open-modal-remove": function($event) {
-                  return _vm.openModal(item, index)
-                },
-                update: _vm.updateItem
-              }
-            })
-          }),
-          1
-        )
-      ]
-    ),
-    _vm._v(" "),
-    _c(
-      "div",
-      {
-        directives: [{ name: "reveal", rawName: "v-reveal" }],
-        staticClass: "reveal rev-small",
-        attrs: { id: "delete-estimates_goods_item", "data-reveal": "" }
-      },
-      [
-        _vm._m(0),
-        _vm._v(" "),
-        _c("div", { staticClass: "grid-x align-center modal-content " }, [
-          _c("div", { staticClass: "small-10 cell text-center" }, [
-            _c("p", [
-              _vm._v('Удаляем "' + _vm._s(_vm.itemName) + '", вы уверены?')
+  return _c(
+    "tbody",
+    [
+      _vm._l(_vm.items, function(item, index) {
+        return _c("estimates-goods-item-component", {
+          key: item.id,
+          attrs: {
+            item: item,
+            index: index,
+            settings: _vm.settings,
+            stocks: _vm.stocks
+          },
+          on: {
+            "open-modal-remove": function($event) {
+              return _vm.openModal(item, index)
+            },
+            update: _vm.updateItem
+          }
+        })
+      }),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          directives: [{ name: "reveal", rawName: "v-reveal" }],
+          staticClass: "reveal rev-small",
+          attrs: { id: "delete-estimates_goods_item", "data-reveal": "" }
+        },
+        [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("div", { staticClass: "grid-x align-center modal-content " }, [
+            _c("div", { staticClass: "small-10 cell text-center" }, [
+              _c("p", [
+                _vm._v('Удаляем "' + _vm._s(_vm.itemName) + '", вы уверены?')
+              ])
             ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "grid-x align-center grid-padding-x" }, [
-          _c("div", { staticClass: "small-6 medium-4 cell" }, [
-            _c(
-              "button",
-              {
-                staticClass: "button modal-button",
-                attrs: { "data-close": "", type: "submit" },
-                on: {
-                  click: function($event) {
-                    $event.preventDefault()
-                    return _vm.deleteItem($event)
-                  }
-                }
-              },
-              [_vm._v("Удалить\n                    ")]
-            )
           ]),
           _vm._v(" "),
-          _vm._m(1)
-        ])
-      ]
-    )
-  ])
+          _c("div", { staticClass: "grid-x align-center grid-padding-x" }, [
+            _c("div", { staticClass: "small-6 medium-4 cell" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "button modal-button",
+                  attrs: { "data-close": "", type: "submit" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.deleteItem($event)
+                    }
+                  }
+                },
+                [_vm._v("Удалить\n                ")]
+              )
+            ]),
+            _vm._v(" "),
+            _vm._m(1)
+          ])
+        ]
+      )
+    ],
+    2
+  )
 }
 var staticRenderFns = [
   function() {
@@ -87922,8 +87569,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
@@ -87948,16 +87593,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return this.$store.state.lead.goodsItems;
         },
         isRegistered: function isRegistered() {
-            return this.$store.state.lead.estimate.registered_at === 1;
+            return this.$store.state.lead.estimate.registered_at !== null;
         },
         showRegisterButton: function showRegisterButton() {
             return this.$store.state.lead.goodsItems.length > 0 || this.$store.state.lead.servicesItems.length > 0;
         },
         showSaleButton: function showSaleButton() {
-            return this.estimate.registered_at && this.estimate.saled_at;
-        },
-        disabledSaleButton: function disabledSaleButton() {
-            return this.$store.getters.paymentsAmount < this.$store.getters.estimateTotal;
+            return this.estimate.registered_at && this.estimate.saled_at === null && this.$store.getters.paymentsAmount >= this.$store.getters.estimateTotal;
         },
         change: function change() {
             return this.$store.state.lead.change;
@@ -88174,8 +87816,6 @@ var render = function() {
               "button",
               {
                 staticClass: "button",
-                class: { disabledSaleButton: _vm.hide },
-                attrs: { disabled: _vm.disabledSaleButton },
                 on: {
                   click: function($event) {
                     $event.preventDefault()
@@ -88245,108 +87885,181 @@ var render = function() {
   return _c(
     "div",
     [
-      _vm.goodsItems.length > 0
-        ? [
-            _c("estimates-goods-items-component", {
-              attrs: {
-                items: _vm.goodsItems,
-                settings: _vm.settings,
-                stocks: _vm.stocks
-              }
-            })
-          ]
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.servicesItems.length > 0
-        ? [
-            _c("estimates-services-items-component", {
-              attrs: { items: _vm.servicesItems, settings: _vm.settings }
-            })
-          ]
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.estimateAmount > 0
-        ? _c("div", [
-            _vm._v(
-              "Общая стоимость: " +
-                _vm._s(
-                  _vm._f("decimalLevel")(
-                    _vm._f("decimalPlaces")(_vm.estimateAmount)
-                  )
+      _vm.goodsItems.length > 0 || _vm.servicesItems.length > 0
+        ? _c(
+            "table",
+            {
+              staticClass: "table-estimate lead-estimate",
+              attrs: { id: "table-estimate_goods_items" }
+            },
+            [
+              _c("thead", [
+                _c(
+                  "tr",
+                  [
+                    _c("th", [_vm._v("Наименование")]),
+                    _vm._v(" "),
+                    _c("th", [_vm._v("Цена")]),
+                    _vm._v(" "),
+                    _c("th", [_vm._v("Кол-во")]),
+                    _vm._v(" "),
+                    _c("th", { staticClass: "td-discount" }, [
+                      _vm._v("Скидка")
+                    ]),
+                    _vm._v(" "),
+                    _c("th", { staticClass: "th-amount" }, [_vm._v("Сумма")]),
+                    _vm._v(" "),
+                    _c("th", { staticClass: "th-delete" }),
+                    _vm._v(" "),
+                    _c("reserves-component", {
+                      attrs: { settings: _vm.settings }
+                    })
+                  ],
+                  1
                 )
-            )
-          ])
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.estimateTotalPoints > 0
-        ? _c("div", [
-            _vm._v(
-              "Сумма поинтов: " +
-                _vm._s(
-                  _vm._f("decimalLevel")(
-                    _vm._f("onlyInteger")(_vm.estimateTotalPoints)
-                  )
-                )
-            )
-          ])
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.estimateItemsDiscount > 0
-        ? _c("div", [
-            _vm._v(
-              "Сумма скидок по позициям: " +
-                _vm._s(
-                  _vm._f("decimalLevel")(
-                    _vm._f("decimalPlaces")(_vm.estimateItemsDiscount)
-                  )
-                )
-            )
-          ])
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.estimateDiscountCurrency > 0
-        ? _c("div", [
-            _vm._v(_vm._s(_vm.estimateDiscount.name)),
-            _vm.estimateDiscount.mode == 1
-              ? _c("span", [
-                  _vm._v(
-                    " " +
-                      _vm._s(
-                        _vm._f("decimalLevel")(
-                          _vm._f("decimalPlaces")(_vm.estimateDiscount.percent)
+              ]),
+              _vm._v(" "),
+              _vm.goodsItems.length > 0
+                ? [
+                    _c("estimates-goods-items-component", {
+                      attrs: {
+                        items: _vm.goodsItems,
+                        settings: _vm.settings,
+                        stocks: _vm.stocks
+                      }
+                    })
+                  ]
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.servicesItems.length > 0
+                ? [
+                    _c("estimates-services-items-component", {
+                      attrs: {
+                        items: _vm.servicesItems,
+                        settings: _vm.settings
+                      }
+                    })
+                  ]
+                : _vm._e(),
+              _vm._v(" "),
+              _c("tfoot", [
+                _vm.discount
+                  ? _c("tr", { staticClass: "tfoot-discount-info" }, [
+                      _c(
+                        "td",
+                        {
+                          staticClass: "tfoot-discount-name",
+                          attrs: { colspan: "3" }
+                        },
+                        [_vm._v(_vm._s(_vm.discount.name))]
+                      ),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "tfoot-discount-value" }, [
+                        _vm._v(
+                          _vm._s(_vm._f("decimalPlaces")(_vm.discount.percent))
                         )
-                      ) +
-                      "%"
-                  )
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "tfoot-discount-currency" }, [
+                        _c("span", [
+                          _vm._v(
+                            _vm._s(
+                              _vm._f("decimalLevel")(
+                                _vm._f("decimalPlaces")(_vm.estimateAmount)
+                              )
+                            ) + " руб."
+                          )
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("td", {
+                        staticClass: "tfoot-discount-currency",
+                        attrs: { colspan: "3" }
+                      })
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.discount
+                  ? _c("tr", { staticClass: "tfoot-estimate-amount" }, [
+                      _c("td", { attrs: { colspan: "3" } }, [
+                        _vm._v("Сумма без скидок:")
+                      ]),
+                      _vm._v(" "),
+                      _c("td", [
+                        _vm._v(
+                          _vm._s(
+                            _vm._f("decimalLevel")(
+                              _vm._f("decimalPlaces")(_vm.estimateAmount)
+                            )
+                          )
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { attrs: { colspan: "3" } })
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.discount
+                  ? _c("tr", [
+                      _c(
+                        "td",
+                        {
+                          staticClass: "tfoot-estimate-discount",
+                          attrs: { colspan: "3" }
+                        },
+                        [_vm._v("Скидки:")]
+                      ),
+                      _vm._v(" "),
+                      _c("td", [
+                        _vm._v(
+                          _vm._s(
+                            _vm._f("decimalLevel")(
+                              _vm._f("decimalPlaces")(_vm.estimateItemsDiscount)
+                            )
+                          )
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { attrs: { colspan: "3" } })
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _c("tr", [
+                  _c(
+                    "td",
+                    {
+                      staticClass: "tfoot-estimate-total",
+                      attrs: { colspan: "3" }
+                    },
+                    [_vm._v("Итого к оплате:")]
+                  ),
+                  _vm._v(" "),
+                  _c("td"),
+                  _vm._v(" "),
+                  _c("td", { staticClass: "invert-show" }, [
+                    _c("span", [
+                      _vm._v(
+                        _vm._s(
+                          _vm._f("decimalLevel")(
+                            _vm._f("decimalPlaces")(_vm.estimateTotal)
+                          )
+                        )
+                      )
+                    ]),
+                    _vm._v(" руб.")
+                  ]),
+                  _vm._v(" "),
+                  _c("td", { attrs: { colspan: "3" } })
                 ])
-              : _vm._e(),
-            _vm._v(
-              ": " +
-                _vm._s(
-                  _vm._f("decimalLevel")(
-                    _vm._f("decimalPlaces")(_vm.estimateDiscountCurrency)
-                  )
-                )
-            )
-          ])
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.estimateTotal > 0
-        ? _c("div", [
-            _vm._v(
-              "Итого к оплате: " +
-                _vm._s(
-                  _vm._f("decimalLevel")(
-                    _vm._f("decimalPlaces")(_vm.estimateTotal)
-                  )
-                )
-            )
-          ])
+              ])
+            ],
+            2
+          )
         : _vm._e(),
       _vm._v(" "),
       _c("buttons-component")
     ],
-    2
+    1
   )
 }
 var staticRenderFns = []
@@ -88427,7 +88140,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return this.$store.state.lead.estimate.registered_at;
         }
     }
-
 });
 
 /***/ }),
@@ -88452,9 +88164,13 @@ var render = function() {
       staticClass: "tabs-title"
     },
     [
-      _c("a", { attrs: { href: "#tab-payments", "aria-selected": "true" } }, [
-        _vm._v("Оплата")
-      ])
+      _c(
+        "a",
+        {
+          attrs: { "data-tabs-target": "tab-payments", href: "#tab-payments" }
+        },
+        [_vm._v("Оплата")]
+      )
     ]
   )
 }
@@ -88668,7 +88384,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     computed: {
         isShow: function isShow() {
-            return this.$store.state.lead.estimate.registered_at && this.$store.state.lead.estimate.saled_at && this.$store.getters.paymentsAmount < this.$store.getters.estimateTotal;
+            return this.$store.state.lead.estimate.registered_at && !this.$store.state.lead.estimate.saled_at && this.$store.getters.paymentsAmount < this.$store.getters.estimateTotal;
         },
         paymentsAmount: function paymentsAmount() {
             return this.$store.getters.paymentsAmount;
@@ -88691,11 +88407,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     currency_id: this.currencyId,
                     date: this.date,
 
+                    // TODO - 16.10.20 - Избавиться от харкода моделей
                     contract_id: this.lead.client.contract.id,
                     contract_type: 'App\\ContractsClient',
 
                     document_id: this.document.id,
-                    document_type: 'App\\Estimate'
+                    document_type: 'App\\Models\\System\\Documents\\Estimate'
                 };
                 // console.log(data);
                 axios.post('/admin/payments', data).then(function (response) {
@@ -94870,7 +94587,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     computed: {
         isDisabled: function isDisabled() {
-            return this.$store.state.lead.estimate.registered_at;
+            return this.$store.state.lead.estimate.registered_at !== null;
         },
         storeUsers: function storeUsers() {
             return this.$store.state.lead.users;
@@ -97271,112 +96988,9 @@ if (false) {
 }
 
 /***/ }),
-/* 348 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(1)
-/* script */
-var __vue_script__ = __webpack_require__(349)
-/* template */
-var __vue_template__ = __webpack_require__(350)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/js/system/components/LeadBadgetComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-133f0409", Component.options)
-  } else {
-    hotAPI.reload("data-v-133f0409", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 349 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-        components: {
-                'input-digit-component': __webpack_require__(186)
-        },
-        computed: {
-                estimateTotal: function estimateTotal() {
-                        return Number(this.$store.getters.estimateTotal);
-                }
-        }
-});
-
-/***/ }),
-/* 350 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("input", {
-    attrs: { name: "badget", type: "number" },
-    domProps: { value: _vm.estimateTotal }
-  })
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-133f0409", module.exports)
-  }
-}
-
-/***/ }),
+/* 348 */,
+/* 349 */,
+/* 350 */,
 /* 351 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -113647,8 +113261,6 @@ var moduleLead = {
                         estimate_discount_id: price.estimate_discount_id,
                         estimate_discount_unit: parseFloat(price.estimate_discount),
 
-                        client_discount_percent: state.client ? state.client.discount : 0,
-
                         manual_discount_currency: 0,
                         manual_discount_percent: 0,
 
@@ -113716,10 +113328,10 @@ var moduleLead = {
                         item.total_price_discount = item.amount - item.price_discount;
 
                         item.catalogs_item_discount = item.catalogs_item_discount_unit * count;
-                        item.total_catalogs_item_discount = item.amount - item.catalogs_item_discount;
+                        item.total_catalogs_item_discount = item.total_price_discount - item.catalogs_item_discount;
 
                         item.estimate_discount = item.estimate_discount_unit * count;
-                        item.total_estimate_discount = item.amount - item.estimate_discount;
+                        item.total_estimate_discount = item.total_catalogs_item_discount - item.estimate_discount;
 
                         item.client_discount_percent = state.client ? state.client.discount : 0;
 
@@ -113901,16 +113513,130 @@ var moduleLead = {
         },
 
 
-        // Продажа сметы
-        SALE_ESTIMATE: function SALE_ESTIMATE(_ref2) {
+        // Резервы
+        // Смета
+        RESERVE_ESTIMATE: function RESERVE_ESTIMATE(_ref2) {
             var _this3 = this;
 
             var state = _ref2.state;
 
             state.loading = true;
+            axios.post('/admin/estimates/' + state.estimate.id + '/reserving').then(function (response) {
+                // console.log(response.data);
+                if (response.data.msg.length > 0) {
+                    var msg = '';
+                    response.data.msg.forEach(function (item) {
+                        if (item !== null) {
+                            msg = msg + '- ' + item + '\r\n';
+                        }
+                    });
+                    if (msg !== '') {
+                        alert(msg);
+                    }
+                }
+                _this3.commit('SET_GOODS_ITEMS', response.data.items);
+            }).catch(function (error) {
+                console.log(error);
+            }).finally(function () {
+                return state.loading = false;
+            });
+        },
+        UNRESERVE_ESTIMATE: function UNRESERVE_ESTIMATE(_ref3) {
+            var _this4 = this;
+
+            var state = _ref3.state;
+
+            state.loading = true;
+            axios.post('/admin/estimates/' + state.estimate.id + '/unreserving').then(function (response) {
+                if (response.data.msg.length > 0) {
+                    var msg = '';
+                    response.data.msg.forEach(function (item) {
+                        if (item !== null) {
+                            msg = msg + '- ' + item + '\r\n';
+                        }
+                    });
+                    if (msg !== '') {
+                        alert(msg);
+                    }
+                }
+                _this4.commit('SET_GOODS_ITEMS', response.data.items);
+            }).catch(function (error) {
+                console.log(error);
+            }).finally(function () {
+                return state.loading = false;
+            });
+        },
+
+
+        // Пункт сметы
+        RESERVE_GOODS_ITEM: function RESERVE_GOODS_ITEM(_ref4, id) {
+            var state = _ref4.state;
+
+            state.loading = true;
+            var index = state.goodsItems.findIndex(function (obj) {
+                return obj.id === id;
+            });
+            var item = state.goodsItems[index];
+            axios.post('/admin/estimates_goods_items/' + id + '/reserving', {
+                count: item.count
+            }).then(function (response) {
+                if (response.data.msg !== null) {
+                    alert(response.data.msg);
+                }
+                Vue.set(state.goodsItems, index, response.data.item);
+            }).catch(function (error) {
+                console.log(error);
+            }).finally(function () {
+                return state.loading = false;
+            });
+        },
+        UNRESERVE_GOODS_ITEM: function UNRESERVE_GOODS_ITEM(_ref5, id) {
+            var state = _ref5.state;
+
+            state.loading = true;
+            var index = state.goodsItems.findIndex(function (obj) {
+                return obj.id === id;
+            });
+            axios.post('/admin/estimates_goods_items/' + id + '/unreserving').then(function (response) {
+                if (response.data.msg !== null) {
+                    alert(response.data.msg);
+                }
+                Vue.set(state.goodsItems, index, response.data.item);
+            }).catch(function (error) {
+                console.log(error);
+            }).finally(function () {
+                return state.loading = false;
+            });
+        },
+
+
+        // Отмена регистрации
+        UNREGISTER_ESTIMATE: function UNREGISTER_ESTIMATE(_ref6) {
+            var _this5 = this;
+
+            var state = _ref6.state;
+
+            state.loading = true;
+            axios.patch('/admin/estimates/' + state.estimate.id + '/unregistering').then(function (response) {
+                _this5.commit('SET_ESTIMATE', response.data);
+            }).catch(function (error) {
+                console.log(error);
+            }).finally(function () {
+                return state.loading = false;
+            });
+        },
+
+
+        // Продажа сметы
+        SALE_ESTIMATE: function SALE_ESTIMATE(_ref7) {
+            var _this6 = this;
+
+            var state = _ref7.state;
+
+            state.loading = true;
             axios.patch('/admin/estimates/' + state.estimate.id + '/saling/').then(function (response) {
                 // console.log(response.data);
-                _this3.commit('SET_ESTIMATE', response.data);
+                _this6.commit('SET_ESTIMATE', response.data);
             }).catch(function (error) {
                 console.log(error);
             }).finally(function () {
@@ -113972,10 +113698,10 @@ var moduleLead = {
         // },
 
         // Услуги
-        ADD_SERVICES_ITEM_TO_ESTIMATE: function ADD_SERVICES_ITEM_TO_ESTIMATE(_ref3, priceId) {
-            var _this4 = this;
+        ADD_SERVICES_ITEM_TO_ESTIMATE: function ADD_SERVICES_ITEM_TO_ESTIMATE(_ref8, priceId) {
+            var _this7 = this;
 
-            var state = _ref3.state;
+            var state = _ref8.state;
 
             if (state.estimate.registered_at) {
                 axios.post('/admin/estimates_services_items', {
@@ -113994,7 +113720,7 @@ var moduleLead = {
                             state.servicesItems.push(item);
                         }
 
-                        _this4.commit('UPDATE_ESTIMATE');
+                        _this7.commit('UPDATE_ESTIMATE');
                     } else {
                         alert('Невозможно добавить позицию, так как цена изменилась. Удалите позицию со старой ценой и добавьте позицию заново');
                     }
@@ -114003,10 +113729,10 @@ var moduleLead = {
                 });
             }
         },
-        REMOVE_SERVICES_ITEM_FROM_ESTIMATE: function REMOVE_SERVICES_ITEM_FROM_ESTIMATE(_ref4, itemId) {
-            var _this5 = this;
+        REMOVE_SERVICES_ITEM_FROM_ESTIMATE: function REMOVE_SERVICES_ITEM_FROM_ESTIMATE(_ref9, itemId) {
+            var _this8 = this;
 
-            var state = _ref4.state;
+            var state = _ref9.state;
 
             if (state.estimate.registered_at) {
                 axios.delete('/admin/estimates_services_items/' + itemId).then(function (response) {
@@ -114016,7 +113742,7 @@ var moduleLead = {
                         });
                         state.servicesItems.splice(index, 1);
 
-                        _this5.commit('UPDATE_ESTIMATE');
+                        _this8.commit('UPDATE_ESTIMATE');
                     }
                 }).catch(function (error) {
                     console.log(error);
@@ -115166,6 +114892,412 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-33b2379e", module.exports)
+  }
+}
+
+/***/ }),
+/* 480 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(481)
+/* template */
+var __vue_template__ = __webpack_require__(482)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/system/components/leads/buttons/UnregisterComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-2c59e7d8", Component.options)
+  } else {
+    hotAPI.reload("data-v-2c59e7d8", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 481 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    computed: {
+        isShow: function isShow() {
+            return this.$store.state.lead.estimate.registered_at !== null && this.$store.getters.paymentsAmount == 0;
+        }
+    },
+    methods: {
+        unregisterEstimate: function unregisterEstimate() {
+            this.$store.dispatch('UNREGISTER_ESTIMATE');
+        }
+    }
+});
+
+/***/ }),
+/* 482 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm.isShow
+    ? _c(
+        "a",
+        { staticClass: "button", on: { click: _vm.unregisterEstimate } },
+        [_vm._v("Отменить оформление")]
+      )
+    : _vm._e()
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-2c59e7d8", module.exports)
+  }
+}
+
+/***/ }),
+/* 483 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(484)
+/* template */
+var __vue_template__ = __webpack_require__(485)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/system/components/leads/estimates/goods/reserves/ReserveComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-28447886", Component.options)
+  } else {
+    hotAPI.reload("data-v-28447886", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 484 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        reserve: Object
+    },
+    computed: {
+        isReservedClass: function isReservedClass() {
+            if (this.reserve !== null) {
+                if (this.reserve.count > 0) {
+                    return 'wrap-reserved-info active';
+                }
+            }
+            return 'wrap-reserved-info';
+        },
+        isReserved: function isReserved() {
+            if (this.reserve !== null) {
+                if (this.reserve.count > 0) {
+                    return true;
+                }
+            }
+            return false;
+        },
+        reservedCount: function reservedCount() {
+            if (this.reserve !== null) {
+                if (this.reserve.count > 0) {
+                    return this.reserve.count;
+                }
+            }
+            return 0;
+        }
+    },
+    methods: {
+        reserving: function reserving() {
+            this.$emit('reserve');
+        },
+        unreserving: function unreserving() {
+            this.$emit('unreserve');
+        }
+    },
+    filters: {
+        level: function level(value) {
+            return parseInt(value).toLocaleString();
+        },
+        // Отбраcывает дробную часть в строке с числами
+        onlyInteger: function onlyInteger(value) {
+            return Math.floor(value);
+        }
+    }
+});
+
+/***/ }),
+/* 485 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { class: _vm.isReservedClass }, [
+    !_vm.isReserved
+      ? _c("span", {
+          staticClass: "button-to-reserve",
+          attrs: { title: "Позицию в резерв!" },
+          on: { click: _vm.reserving }
+        })
+      : _c("span", {
+          staticClass: "button-to-reserve unreserve",
+          attrs: { title: "Снять с резерва!" },
+          on: { click: _vm.unreserving }
+        }),
+    _vm._v(" "),
+    _vm.reservedCount > 0
+      ? _c("span", { staticClass: "reserved-count" }, [
+          _vm._v(
+            _vm._s(_vm._f("level")(_vm._f("onlyInteger")(_vm.reservedCount)))
+          )
+        ])
+      : _vm._e()
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-28447886", module.exports)
+  }
+}
+
+/***/ }),
+/* 486 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(487)
+/* template */
+var __vue_template__ = __webpack_require__(488)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/system/components/leads/estimates/goods/reserves/ReservesComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-ef04cccc", Component.options)
+  } else {
+    hotAPI.reload("data-v-ef04cccc", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 487 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        settings: Array
+    },
+    computed: {
+        isRegistered: function isRegistered() {
+            return this.$store.state.lead.estimate.registered_at;
+        },
+        isReserved: function isReserved() {
+            var result = [];
+            result = this.$store.state.lead.goodsItems.filter(function (item) {
+                if (item.reserve !== null) {
+                    if (item.reserve.count > 0) {
+                        return item;
+                    }
+                }
+            });
+            return result.length > 0;
+        }
+    },
+    methods: {
+        reserve: function reserve() {
+            this.$store.dispatch('RESERVE_ESTIMATE');
+        },
+        unreserve: function unreserve() {
+            this.$store.dispatch('UNRESERVE_ESTIMATE');
+        }
+    }
+});
+
+/***/ }),
+/* 488 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm.isRegistered
+    ? _c("th", { staticClass: "th-reserves" }, [
+        _vm.isReserved
+          ? _c("span", {
+              staticClass: "button-to-reserve",
+              attrs: { title: "Снять все с резерва!" },
+              on: { click: _vm.unreserve }
+            })
+          : _c("span", {
+              staticClass: "button-to-reserve",
+              attrs: { title: "Зарезервировать все!" },
+              on: { click: _vm.reserve }
+            })
+      ])
+    : _vm._e()
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-ef04cccc", module.exports)
   }
 }
 

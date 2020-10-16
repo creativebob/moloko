@@ -1,22 +1,24 @@
 <?php
 
-namespace App;
+namespace App\Models\System\Documents;
 
-use App\Models\System\Traits\Commonable;
-use Illuminate\Database\Eloquent\Model;
-
-// Подключаем кеш
+use App\Goods;
+use App\Models\System\BaseModel;
+use App\PricesGoods;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
-class EstimatesServicesItem extends Model
+class EstimatesGoodsItem extends BaseModel
 {
-    // Включаем кеш
-    use Cachable;
+    use SoftDeletes;
+//    use Cachable;
 
-    // use SoftDeletes;
-
-    use Commonable;
-
+    protected $with = [
+        'goods.article',
+        'currency',
+        'reserve'
+    ];
+    
     protected $dates = [
         'deleted_at'
     ];
@@ -28,6 +30,8 @@ class EstimatesServicesItem extends Model
         'goods_id',
         'currency_id',
         'sale_mode',
+
+        'stock_id',
 
         'comment',
 
@@ -80,6 +84,8 @@ class EstimatesServicesItem extends Model
         'margin_currency',
         'margin_percent',
 
+        'is_reserved',
+
         'sort',
 
         'display',
@@ -101,23 +107,44 @@ class EstimatesServicesItem extends Model
     // Прайс
     public function price()
     {
-        return $this->belongsTo(PricesService::class);
+        return $this->belongsTo(PricesGoods::class);
     }
 
-    public function price_service()
+    public function price_goods()
     {
-        return $this->belongsTo(PricesService::class, 'price_id');
+        return $this->belongsTo(PricesGoods::class, 'price_id');
     }
 
-    // Услуга
-    public function service()
+    // Товар
+    public function goods()
     {
-        return $this->belongsTo(Service::class);
+        return $this->belongsTo(Goods::class);
     }
 
     public function product()
     {
-        return $this->belongsTo(Service::class, 'service_id');
+        return $this->belongsTo(Goods::class, 'goods_id');
     }
 
+    public function cmv()
+    {
+        return $this->belongsTo(Goods::class, 'goods_id');
+    }
+
+    // Резерв
+    public function reserve()
+    {
+        return $this->morphOne('App\Reserve', 'documents_item');
+    }
+
+    // Склад
+    public function stock()
+    {
+        return $this->belongsTo('App\Stock');
+    }
+
+    public function currency()
+    {
+        return $this->belongsTo('App\Currency');
+    }
 }

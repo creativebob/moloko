@@ -3,7 +3,7 @@
 namespace App\Console\Commands\System;
 
 use App\Client;
-use App\Estimate;
+use App\Models\System\Documents\Estimate;
 use Illuminate\Console\Command;
 
 class ClientsIndicatorsDay extends Command
