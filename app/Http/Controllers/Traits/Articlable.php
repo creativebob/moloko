@@ -484,7 +484,7 @@ trait Articlable
 
             $entity = Entity::where('alias', $item->category->getTable())
                 ->first(['model']);
-            $model = 'App\\'.$entity->model;
+            $model = $entity->model;
 
             $new_category = $model::find($category_id);
             $new_category->groups()->attach($request->articles_group_id);

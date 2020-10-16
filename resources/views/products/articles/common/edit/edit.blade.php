@@ -309,7 +309,10 @@
 	                            <div class="grid-x grid-margin-x">
 	                                <div class="small-12 medium-6 cell">
 	                                    <label>Себестоимость
-	                                        {{ Form::number('cost_default', null) }}
+                                            <digit-component
+                                                name="cost_default"
+                                                :value="{{ $article->cost_default }}"
+                                            ></digit-component>
 	                                    </label>
 	                                </div>
 {{--	                                <div class="small-12 medium-6 cell">--}}
@@ -377,9 +380,10 @@
 						<fieldset class="fieldset-access">
 							<legend>Доступность</legend>
 
+                                {{-- Чекбокс архива --}}
+                                {!! Form::hidden('archive', 0) !!}
                                 @if ($item->archive == 1)
-                                    {{-- Чекбокс архива --}}
-                                    {!! Form::hidden('archive', 0) !!}
+
                                     <div class="small-12 cell checkbox">
                                         {!! Form::checkbox('archive', 0, $item->archive, ['id' => 'checkbox-archive']) !!}
                                         <label for="checkbox-archive"><span>Вывести из архива</span></label>

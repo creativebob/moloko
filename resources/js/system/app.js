@@ -33,8 +33,8 @@ Vue.component('input-phone-component', require('./components/inputs/PhoneCompone
 
 Vue.component('discount-mode-component', require('./components/discounts/DiscountModeComponent'));
 
-Vue.component('consignment-component', require('./components/consignments/ConsignmentComponent.vue'));
-Vue.component('production-component', require('./components/productions/ProductionComponent.vue'));
+Vue.component('consignment-component', require('./components/documents/consignments/ConsignmentComponent.vue'));
+Vue.component('production-component', require('./components/documents/productions/ProductionComponent.vue'));
 
 // Смета на лиде
 // Vue.component('lead-init-component', require('./components/leads/LeadInitComponent'));

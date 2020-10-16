@@ -216,7 +216,7 @@ class ArticlesGroupController extends Controller
         $entity = Entity::whereAlias($request->entity)
         ->first(['model']);
         // dd($entity);
-        $model = 'App\\'.$entity->model;
+        $model = $entity->model;
 
         $category = $model::withCount('groups')
         ->with(['groups'])
@@ -250,7 +250,7 @@ class ArticlesGroupController extends Controller
         $entity = Entity::whereAlias($request->entity)
         ->first(['model']);
         // dd($entity);
-        $model = 'App\\'.$entity->model;
+        $model = $entity->model;
 
         $category = $model::with(['groups' => function ($q) {
             $q->with('unit');

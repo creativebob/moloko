@@ -128,7 +128,7 @@ class ApplicationController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $application = Application::with(
-            'stage', 
+            'stage',
             'author')
         ->moderatorLimit($answer)
         ->authors($answer)
@@ -161,7 +161,7 @@ class ApplicationController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $application = Application::with(
-            'stage', 
+            'stage',
             'author')
         ->moderatorLimit($answer)
         ->authors($answer)
@@ -259,7 +259,7 @@ class ApplicationController extends Controller
 
     //     $composition->product_id = $request->item_id;
     //     // $composition->order_compositions_id = 1;
-    //     $composition->product_type = 'App\\' . $entity->model;
+    //     $composition->product_type = $entity->model;
 
     //     $composition->application_id = $application->id;
     //     $composition->company_id = $company_id;

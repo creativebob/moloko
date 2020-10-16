@@ -9,7 +9,7 @@ class CategoriesDrilldownComposer
 	public function compose(View $view)
 	{
         $entity = Entity::whereAlias($view->entity)->first();
-        $model = 'App\\'.$entity->model;
+        $model = $entity->model;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($entity->alias, false, getmethod('index'));

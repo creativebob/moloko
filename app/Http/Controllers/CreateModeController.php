@@ -27,7 +27,7 @@ class CreateModeController extends Controller
 			case 'mode-select':
 
 			$entity = Entity::whereAlias($request->category_entity)->first(['model']);
-			$model = 'App\\'.$entity->model;
+			$model = $entity->model;
 
 			$category = $model::with(['groups' => function ($q) {
 				$q->with('unit');

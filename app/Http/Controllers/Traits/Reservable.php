@@ -19,7 +19,7 @@ trait Reservable
     public function reserve($item)
     {
         $entity_document = Entity::where('alias', $item->document->getTable())->first();
-        $model_document = 'App\\' . $entity_document->model;
+        $model_document = $entity_document->model;
 
         if ($item->document->getTable() == 'estimates') {
             $model_document_item = $model_document.'sGoodsItem';
@@ -37,7 +37,7 @@ trait Reservable
         $product = $item->product;
 
         $entity_product = Entity::where('alias', $product->getTable())->first();
-        $model_product = 'App\\'.$entity_product->model;
+        $model_product = $entity_product->model;
 
 //      dd($stock_goods);
 

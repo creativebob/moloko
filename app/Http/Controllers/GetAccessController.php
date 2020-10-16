@@ -58,25 +58,25 @@ class GetAccessController extends Controller
         $user->login_date = now();
         $user->save();
 
-        if($user->access_block == 1){
+        if ($user->access_block == 1) {
             abort(403, "Сорян, вам сюда нельзя! Блокировочка!");
         };
 
         // Собираем данные о компании
-        if($user->company_id != null){
+        if ($user->company_id != null) {
 
 
             // Получаем все отделы компании
             $departments = Department::whereCompany_id($user->company_id)->get();
 
             // Настройка прав бога, если он авторизован под компанией
-            foreach($departments as $department){
+            foreach ($departments as $department) {
 
                 // Пишем в сессию список отделов
                 $access['company_info']['departments'][$department->id] = $department->name;
 
                 // Пишем в сессию список филиалов
-                if($department->parent_id == null){
+                if ($department->parent_id == null) {
                     $access['company_info']['filials'][$department->id] = $department->name;
                 };
             }
@@ -88,7 +88,7 @@ class GetAccessController extends Controller
         // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
         // Если пользователь авторизованный посетитель сайта - обычный клиент компании.
-        if($user->user_type == 0){
+        if ($user->user_type == 0) {
 
             // Пока что гасим его на входе. Это раздел будем пистаь позже...
             abort(403, "Отлично, мы видим, что вы наш авторизованный КЛИЕНТ!");
@@ -100,25 +100,25 @@ class GetAccessController extends Controller
         // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
         // Если пользователь являеться пользователем CRM System.
-        if($user->user_type == 1){
+        if ($user->user_type == 1) {
 
 
             // ЕСЛИ ПОЛЬЗОВАТЕЛЬ БОГ:
-            if($user->god == 1){
+            if ($user->god == 1) {
 
                 $user_department_id = null;
 
                 $rights = Right::all();
-                foreach($rights as $right){
+                foreach ($rights as $right) {
 
                     // Пишем богу все права
-                    if($right->directive == 'allow'){
+                    if ($right->directive == 'allow') {
                         $all_rights[$right->alias_right]['right_id'] = $right->id;
                     };
 
                 };
 
-                if($user->company_id == null){
+                if ($user->company_id == null) {
 
                     // Настройка прав бога, если не определена компания
 
@@ -131,10 +131,12 @@ class GetAccessController extends Controller
 
 
             // ЕСЛИ ПОЛЬЗОВАТЕЛЬ СОТРУДНИК
-            if($user->god == null){
+            if ($user->god == null) {
 
                 // Вырубаемся, если пользователь не имеет ID компании
-                if($user->company_id == null){abort(403, "Пользователь не имеет связи с компанией");};
+                if ($user->company_id == null) {
+                    abort(403, "Пользователь не имеет связи с компанией");
+                };
 
                 // Получаем данные на пользователя
                 $user = User::with(['staff', 'staff.position.page', 'roles', 'roles.rights', 'roles.rights.actionentity.entity', 'booklists', 'booklists.list_items', 'company'])->find($user->id);
@@ -142,7 +144,7 @@ class GetAccessController extends Controller
                 // Проверяем, устроен ли пользователь в компании
                 $user_department = $user->staff->first();
 
-                if($user->staff->first() == null){
+                if ($user->staff->first() == null) {
                     abort(403, "Пользователь не устроен в компании!");
                 };
 
@@ -154,16 +156,19 @@ class GetAccessController extends Controller
                 // Получаем массив дополнительных прав
                 $extra_rights = $user->staff[0]->position->charges->pluck('name', 'alias')->toArray();
 
-                if($user_department != null){
+                if ($user_department != null) {
                     $user_filial_id = $user_department->filial_id;
                     $user_department_id = $user_department->department_id;
-                } else {abort(403, "Пользователь не устроен в компании!");};
+                } else {
+                    abort(403, "Пользователь не устроен в компании!");
+                };
 
                 // dd($user->filial_id);
 
                 // Вырубаемся, если пользователь не имеет ID компании, филиала или департамента
-                if(($user->filial_id == null)||($user_department_id == null)){
-                    abort(403, "Пользователь не имеет связи с филиалом или должностью");};
+                if (($user->filial_id == null) || ($user_department_id == null)) {
+                    abort(403, "Пользователь не имеет связи с филиалом или должностью");
+                };
 
                 // dd($user->staff);
 
@@ -174,66 +179,73 @@ class GetAccessController extends Controller
                 //     $mymass[] = $staffer->filial_id;
                 // }
 
-                    // ПОЛУЧАЕМ АВТОРОВ ---------------------------------------------------------------------------------------
-                    // Если есть списки авторов, то указываем их
+                // ПОЛУЧАЕМ АВТОРОВ ---------------------------------------------------------------------------------------
+                // Если есть списки авторов, то указываем их
 
-                    if(count($user->booklists) > 0){
-                        foreach ($user->booklists as $booklist) {
-                            foreach ($booklist->list_items as $list_item) {
-                                $list_authors[] = $list_item->item_entity;
-                            };
+                if (count($user->booklists) > 0) {
+                    foreach ($user->booklists as $booklist) {
+                        foreach ($booklist->list_items as $list_item) {
+                            $list_authors[] = $list_item->item_entity;
                         };
-                    } else {$list_authors = null;};
+                    };
+                } else {
+                    $list_authors = null;
+                };
 
-                    if(!isset($list_authors)){$list_authors = null;};
+                if (!isset($list_authors)) {
+                    $list_authors = null;
+                };
 
-                    // -------------------------------------------------------------------------------------------------------
+                // -------------------------------------------------------------------------------------------------------
 
-                    // Получаем все филиалы компании (Будут использоваться при снятии филиалозависимости)
-                    $all_filials_user = Department::whereCompany_id($user->company_id)->whereNull('filial_id')->pluck('name', 'id')->toArray();
+                // Получаем все филиалы компании (Будут использоваться при снятии филиалозависимости)
+                $all_filials_user = Department::whereCompany_id($user->company_id)->whereNull('filial_id')->pluck('name', 'id')->toArray();
 
-                    // Формируеться список филиалов и отделов доступных на каждую сущность
-                    foreach($user->roles as $role) {
-                        foreach($role->rights as $right){
+                // Формируеться список филиалов и отделов доступных на каждую сущность
+                foreach ($user->roles as $role) {
+                    foreach ($role->rights as $right) {
 
-                                $all_rights[$right->alias_right]['right_id'] = $right->id;
+                        $all_rights[$right->alias_right]['right_id'] = $right->id;
 
-                                // Собираем из всех ролей отделы и формируем их список к текущему праву
-                                $all_rights[$right->alias_right]['departments'][$role->pivot->department_id] = $departments->where('id', $role->pivot->department_id)->first()->name;
+                        // Собираем из всех ролей отделы и формируем их список к текущему праву
+                        $all_rights[$right->alias_right]['departments'][$role->pivot->department_id] = $departments->where('id', $role->pivot->department_id)->first()->name;
 
 
-                                // При обработке права на просмотр чужих записей добавляем список авторов к праву
-                                if($right->alias_right == 'authors-users-allow'){$all_rights[$right->alias_right]['authors'] = $list_authors;};
+                        // При обработке права на просмотр чужих записей добавляем список авторов к праву
+                        if ($right->alias_right == 'authors-users-allow') {
+                            $all_rights[$right->alias_right]['authors'] = $list_authors;
+                        };
 
-                                $nl = $role->rights->where('alias_right', 'nolimit-' . $right->actionentity->entity->alias . '-allow')->count();
+                        $nl = $role->rights->where('alias_right', 'nolimit-' . $right->actionentity->entity->alias . '-allow')->count();
 
-                                if($nl != 0){
+                        if ($nl != 0) {
 
-                                    // Если существует безлимит на филиалы
-                                    $all_rights[$right->alias_right]['filials'] = $all_filials_user;
+                            // Если существует безлимит на филиалы
+                            $all_rights[$right->alias_right]['filials'] = $all_filials_user;
 
-                                } else {
+                        } else {
 
-                                    // Собираем из всех ролей филиалы и формируем их список к текущему праву
-                                    if($departments->where('id', $role->pivot->department_id)->first()->parent_id == null){
-                                    $all_rights[$right->alias_right]['filials'][$role->pivot->department_id] = $departments->where('id', $role->pivot->department_id)->first()->name;};
-                                }
-
-                                // // При обработке права на просмотр чужих записей добавляем список авторов к праву
-                                // if($right->alias_right == $right->entity->alias . 'nolimit-allow'){$all_rights[$right->alias_right]['authors'] = $list_authors;};
-
+                            // Собираем из всех ролей филиалы и формируем их список к текущему праву
+                            if ($departments->where('id', $role->pivot->department_id)->first()->parent_id == null) {
+                                $all_rights[$right->alias_right]['filials'][$role->pivot->department_id] = $departments->where('id', $role->pivot->department_id)->first()->name;
+                            };
                         }
 
+                        // // При обработке права на просмотр чужих записей добавляем список авторов к праву
+                        // if($right->alias_right == $right->entity->alias . 'nolimit-allow'){$all_rights[$right->alias_right]['authors'] = $list_authors;};
 
                     }
 
-                    // dd($all_rights);
+
+                }
+
+                // dd($all_rights);
 
 
-                    if(!isset($all_rights)){
-                        Auth::logout();
-                        abort(403, "У пользователя отсутствуют права!");
-                    };
+                if (!isset($all_rights)) {
+                    Auth::logout();
+                    abort(403, "У пользователя отсутствуют права!");
+                };
 
             };
 
@@ -245,7 +257,7 @@ class GetAccessController extends Controller
             $access['user_info']['company_id'] = $user->company_id;
             $access['user_info']['filial_id'] = $user->filial_id;
             $access['user_info']['department_id'] = $user_department_id;
-            if(isset($user_position_id)){
+            if (isset($user_position_id)) {
                 $access['user_info']['position_id'] = $user_position_id;
                 $access['user_info']['extra_rights'] = $extra_rights;
             }
@@ -272,7 +284,7 @@ class GetAccessController extends Controller
             // $user_challenges = $challenges;
             // $access['user_info']['challenges'] = $user_challenges;
 
-            if($user->company != null){
+            if ($user->company != null) {
                 $access['company_info']['company_id'] = $user->company_id;
                 $access['company_info']['company_name'] = $user->company->name;
                 $access['company_info']['company_designation'] = $user->company->designation;
@@ -293,18 +305,18 @@ class GetAccessController extends Controller
             $entities_list = [];
 
 
-            foreach($user->roles as $role) {
-                foreach($role->rights as $right){
+            foreach ($user->roles as $role) {
+                foreach ($role->rights as $right) {
 
                     // Статичное указание ID действия 'index' - 2
-                    if($right->action_id == 2){
-                        if($user->can('index', 'App\\' . $right->actionentity->entity->model)) {
+                    if ($right->action_id == 2) {
+                        if ($user->can('index', $right->actionentity->entity->model)) {
                             $entities_list[] = $right->actionentity->entity->id;
                         };
                     };
                 }
             }
-            // dd($entities_list);
+//             dd($entities_list);
 
             $access['settings']['entities_list'] = $entities_list;
 
@@ -334,18 +346,22 @@ class GetAccessController extends Controller
             ]);
 
 
-
-            if(isset($user_redirect)){
-                return redirect($user_redirect);
-            ;};
-
-
-            if(isset($request->link)){$link = $request->link;};
+            if (isset($user_redirect)) {
+                return redirect($user_redirect);;
+            };
 
 
-            if(isset($request->method)){$action_method = $request->method;};
-            if(isset($request->action_array)){$action_array = $request->action_array;};
+            if (isset($request->link)) {
+                $link = $request->link;
+            };
 
+
+            if (isset($request->method)) {
+                $action_method = $request->method;
+            };
+            if (isset($request->action_array)) {
+                $action_array = $request->action_array;
+            };
 
 
             // if((isset($action_method))&&(isset($action_method))){
@@ -353,7 +369,7 @@ class GetAccessController extends Controller
             //     return redirect()->action($action_method, $action_array);
 
             // } else {
-                return redirect()->route($link);
+            return redirect()->route($link);
             // };
 
         };

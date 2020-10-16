@@ -2,7 +2,7 @@
     @foreach ($notifications as $notification)
 
         @php
-            $model = 'App\\' . $notification->trigger->entity->model;
+            $model = $notification->trigger->entity->model;
         @endphp
         @can('index', $model)
             <li>

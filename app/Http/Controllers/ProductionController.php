@@ -5,12 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Traits\Offable;
 use App\Http\Controllers\Traits\Receiptable;
 use App\Stock;
-use Illuminate\Support\Facades\Log;
 use App\Entity;
 use App\Http\Requests\System\ProductionUpdateRequest;
 use App\Off;
-use App\Production;
-use App\ProductionsItem;
+use App\Models\System\Documents\Production;
+use App\Models\System\Documents\ProductionsItem;
 use Illuminate\Http\Request;
 
 class ProductionController extends Controller
@@ -35,7 +34,9 @@ class ProductionController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function index(Request $request)
     {
@@ -46,8 +47,8 @@ class ProductionController extends Controller
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         $productions = Production::with([
-        	'author',
-	        'items',
+            'author',
+            'items',
             'stock'
         ])
             ->moderatorLimit($answer)
@@ -76,66 +77,36 @@ class ProductionController extends Controller
         // Инфо о странице
         $pageInfo = pageInfo($this->entityAlias);
 
-        return view('system.pages.productions.index', compact('productions', 'pageInfo', 'filter'));
+        return view('system.pages.documents.productions.index', compact('productions', 'pageInfo', 'filter'));
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function create()
     {
         // Подключение политики
         $this->authorize(getmethod('store'), Production::class);
 
-        if (is_null(\Auth::user()->company->we_manufacturer)) {
-            // Описание ошибки
-//            $ajax_error = [];
-//            $ajax_error['title'] = "Обратите внимание!"; // Верхняя часть модалки
-//            $ajax_error['text'] = "Для начала необходимо стать производителем. А уже потом будем производить товары. Ок?";
-//            $ajax_error['link'] = "/admin/companies"; // Ссылка на кнопке
-//            $ajax_error['title_link'] = "Идем в раздел компаний"; // Текст на кнопке
-//
-//            return view('ajax_error', compact('ajax_error'));
-
+        if (is_null(auth()->user()->company->we_manufacturer)) {
             return back()
                 ->withErrors(['msg' => 'Для начала необходимо стать производителем. А уже потом будем производить товары. Ок?']);
         }
 
         $production = Production::create();
-        // dd($production);
 
         return redirect()->route('productions.edit', $production->id);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Production  $production
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
-     * @param integer $id
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function edit($id)
     {
@@ -160,20 +131,25 @@ class ProductionController extends Controller
             ->find($id);
 //        dd($production);
 
+        if (empty($production)) {
+            abort(403, __('errors.not_found'));
+        }
+
         $this->authorize(getmethod(__FUNCTION__), $production);
 
         // Инфо о странице
         $pageInfo = pageInfo($this->entityAlias);
 
-        return view('system.pages.productions.edit', compact('production', 'pageInfo'));
+        return view('system.pages.documents.productions.edit', compact('production', 'pageInfo'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Production  $production
-     * @return \Illuminate\Http\Response
+     * @param ProductionUpdateRequest $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function update(ProductionUpdateRequest $request, $id)
     {
@@ -185,6 +161,11 @@ class ProductionController extends Controller
             ->authors($answer)
             ->systemItem($answer)
             ->find($id);
+//        dd($production);
+
+        if (empty($production)) {
+            abort(403, __('errors.not_found'));
+        }
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $production);
@@ -192,17 +173,15 @@ class ProductionController extends Controller
         $data = $request->input();
         $production->update($data);
 
-        $production->amount = $this->getAmount($production);
-        $production->save();
-
         return redirect()->route('productions.index');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Production  $production
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function destroy($id)
     {
@@ -212,10 +191,15 @@ class ProductionController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $production = Production::with('items')
-	    ->moderatorLimit($answer)
+            ->moderatorLimit($answer)
             ->authors($answer)
             ->systemItem($answer)
             ->find($id);
+//        dd($production);
+
+        if (empty($production)) {
+            abort(403, __('errors.not_found'));
+        }
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $production);
@@ -225,7 +209,7 @@ class ProductionController extends Controller
         if ($production) {
             return redirect()->route('productions.index');
         } else {
-            abort(403, 'Ошибка при удалении наряда на производство');
+            abort(403, __('errors.destroy'));
         }
     }
 
@@ -234,10 +218,10 @@ class ProductionController extends Controller
         $entity = Entity::find($request->entity_id);
 
         $entityAlias = $entity->alias;
-        $alias = $entityAlias.'_categories';
+        $alias = $entityAlias . '_categories';
 
         $entity_categories = Entity::whereAlias($alias)->first(['model']);
-        $model = 'App\\'.$entity_categories->model;
+        $model = $entity_categories->model;
 
         // Получаем из сессии необходимые данные
         $answer = operator_right($entity_categories->alias, false, 'index');
@@ -247,7 +231,7 @@ class ProductionController extends Controller
             ->with([
                 $entityAlias => function ($q) {
                     $q->with([
-                        'article' => function($q) {
+                        'article' => function ($q) {
                             $q->with([
                                 'unit',
                                 'manufacturer'
@@ -259,8 +243,7 @@ class ProductionController extends Controller
                             $q->where('draft', false)
                                 ->whereHas('manufacturer', function ($q) {
                                     $q->where('manufacturer_id', \Auth::user()->company_id);
-                                })
-                            ;
+                                });
                         });
                 }
             ])
@@ -275,7 +258,7 @@ class ProductionController extends Controller
 //        dd($categories_tree);
 
         $items = [];
-        foreach($categories as $category) {
+        foreach ($categories as $category) {
             $category->entity_id = $entity->id;
 
             if (isset($category->$entityAlias)) {
@@ -310,16 +293,15 @@ class ProductionController extends Controller
     }
 
     /**
-     * Производство наряда
+     * Производство
      *
      * @param ProductionUpdateRequest $request
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function produced(ProductionUpdateRequest $request, $id)
+    public function producing(ProductionUpdateRequest $request, $id)
     {
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('update'));
 
@@ -328,16 +310,21 @@ class ProductionController extends Controller
             ->authors($answer)
             ->systemItem($answer)
             ->find($id);
+//        dd($production);
 
-        if ($production->is_produced == 0) {
-            // Подключение политики
-            $this->authorize(getmethod('update'), $production);
+        if (empty($production)) {
+            abort(403, __('errors.not_found'));
+        }
 
+        // Подключение политики
+        $this->authorize(getmethod('update'), $production);
+
+        if (empty($production->produced_at)) {
             $data = $request->input();
             $production->update($data);
 
             $production->load([
-                'items' => function($q) {
+                'items' => function ($q) {
                     $q->with([
                         'cmv' => function ($q) {
                             $q->with([
@@ -370,16 +357,21 @@ class ProductionController extends Controller
 
             if ($production->items->isNotEmpty()) {
 
-                foreach ($production->items as $item) {
-                    if ($item->cmv->archive == 1) {
-                        return back()
-                            ->withErrors(['msg' => 'Наряд содержит архивные позиции, оприходование невозможно!']);
-                    }
+                $draft = $production->items->firstWhere('cmv.article.draft', 1);
+                if ($draft) {
+                    return back()
+                        ->withErrors(['msg' => 'Наряд содержит черновые позиции, производство невозможно!']);
                 }
 
-                $stock_general = Stock::find($production->stock_id);
+                $archive = $production->items->firstWhere('cmv.archive', 1);
+                if ($archive) {
+                    return back()
+                        ->withErrors(['msg' => 'Наряд содержит архивные позиции, производство невозможно!']);
+                }
 
                 set_time_limit(0);
+
+                $stockGeneral = Stock::find($production->stock_id);
 
                 // Если нужна проверка остатка на складах
                 if ($request->has('leftover')) {
@@ -397,24 +389,24 @@ class ProductionController extends Controller
                         ];
 
                         $entity_document = Entity::where('alias', $item->document->getTable())->first();
-                        $model_document = 'App\\' . $entity_document->model;
+                        $model_document = $entity_document->model;
 
-                        $model_document_item = $model_document.'sItem';
+                        $model_document_item = $model_document . 'sItem';
 
 
                         foreach ($relations as $relation_name) {
                             if ($item->cmv->article->$relation_name->isNotEmpty()) {
 
                                 $entity_composition = Entity::where('alias', $relation_name)->first();
-                                $model_composition = 'App\\'.$entity_composition->model;
+                                $model_composition = $entity_composition->model;
 
-                                $entity_stock = Entity::where('alias', $relation_name.'_stocks')->first();
-                                $model_stock = 'App\\'.$entity_stock->model;
+                                $entity_stock = Entity::where('alias', $relation_name . '_stocks')->first();
+                                $model_stock = $entity_stock->model;
 
                                 foreach ($item->cmv->article->$relation_name as $composition) {
 
                                     // Списываем позицию состава
-                                    $stock_composition = $composition->stocks->where('stock_id', $stock_general->id)->where('filial_id', $stock_general->filial_id)->where('manufacturer_id', $composition->article->manufacturer_id)->first();
+                                    $stock_composition = $composition->stocks->where('stock_id', $stockGeneral->id)->where('filial_id', $stockGeneral->filial_id)->where('manufacturer_id', $composition->article->manufacturer_id)->first();
 //                          dd($stock_production);
 
                                     if ($stock_composition) {
@@ -424,7 +416,7 @@ class ProductionController extends Controller
                                         $total = $stock_composition->count - $composition_count;
 
                                         if ($total < 0) {
-                                            $errors['msg'][] = 'Для позиции ' . $number . ' не хватает ' . $total . ' ' . $composition->article->unit->abbreviation .  ' "' . $composition->article->name . '" для производства';
+                                            $errors['msg'][] = 'Для позиции ' . $number . ' не хватает ' . $total . ' ' . $composition->article->unit->abbreviation . ' "' . $composition->article->name . '" для производства';
                                         } else {
                                             $result[$item->id][] = [
                                                 'entity' => $composition->getTable(),
@@ -432,7 +424,7 @@ class ProductionController extends Controller
                                                 'model' => $model_composition,
                                                 'stock_id' => $stock_composition->id,
                                                 'stock_model' => $model_stock,
-                                                'cost' => $composition->cost->average * $count * $composition->portion ,
+                                                'cost' => $composition->cost->average * $count * $composition->portion,
                                                 'amount' => $composition->portion * $count * $item->count * $composition->cost->average,
                                                 'count' => $composition->portion * $count * $item->count,
                                                 'weight' => $composition->weight * $count * $item->count,
@@ -457,19 +449,19 @@ class ProductionController extends Controller
                     };
                 }
 
-                Log::channel('documents')
+                logs('documents')
                     ->info('========================================== НАЧАЛО НАРЯДА ПРОИЗВОДСТВА C ID: ' . $production->id . ' ==============================================');
-                Log::channel('documents')
+                logs('documents')
                     ->info('Режим проверки остатка = ' . $request->has('leftover'));
 
                 foreach ($production->items as $item) {
 
-                    Log::channel('documents')
+                    logs('documents')
                         ->info('=== ПЕРЕБИРАЕМ ПУНКТ ' . $item->getTable() . ' ' . $item->id . ' ===');
 
                     $cost = 0;
                     $amount = 0;
-                    $is_wrong = 0;
+                    $isWrong = 0;
 
                     // С проверкой остатка
                     if ($request->has('leftover')) {
@@ -477,16 +469,16 @@ class ProductionController extends Controller
 
                         foreach ($compositions as $composition) {
 
-                            Log::channel('documents')
+                            logs('documents')
                                 ->info('=== СПИСАНИЕ ' . $composition['entity'] . ' ' . $composition['id'] . ' ===');
 
                             $stock_composition = $composition['stock_model']::find($composition['stock_id']);
 
-                            Log::channel('documents')
+                            logs('documents')
                                 ->info('Существует склад ' . $stock_composition->getTable() . ' c id: ' . $stock_composition->id);
 
 
-                            Log::channel('documents')
+                            logs('documents')
                                 ->info('Значения count: ' . $stock_composition->count . ', weight: ' . $stock_composition->weight . ', volume: ' . $stock_composition->volume);
 
                             $stock_composition->count -= $composition['count'];
@@ -494,7 +486,7 @@ class ProductionController extends Controller
                             $stock_composition->volume -= $composition['volume'];
                             $stock_composition->save();
 
-                            Log::channel('documents')
+                            logs('documents')
                                 ->info('Обновлены значения count: ' . $stock_composition->count . ', weight: ' . $stock_composition->weight . ', volume: ' . $stock_composition->volume);
 
                             //                                dd($composition);
@@ -514,10 +506,10 @@ class ProductionController extends Controller
                             $cost += $composition['cost'];
                             $amount += $composition['amount'];
 
-                            Log::channel('documents')
+                            logs('documents')
                                 ->info('Записали списание с id: ' . $off->id . ', count: ' . $off->count . ', cost: ' . $off->cost . ', amount: ' . $off->amount);
 
-                            Log::channel('documents')
+                            logs('documents')
                                 ->info('=== КОНЕЦ СПИСАНИЯ ===
                                     ');
                         }
@@ -525,7 +517,7 @@ class ProductionController extends Controller
                         // Без проверки остатка
                         $res = $this->production($item);
                         $cost = $res['cost'];
-                        $is_wrong = $res['is_wrong'];
+                        $isWrong = $res['is_wrong'];
                         $amount = $cost * $item->count;
                     }
 
@@ -539,17 +531,16 @@ class ProductionController extends Controller
                     ]);
 
                     // Приходование
-                    $this->receipt($item, $is_wrong);
+                    $this->receipt($item, $isWrong);
                 }
 
                 $production->update([
-                    'is_produced' => true,
-                    'amount' => $this->getAmount($production)
+                    'produced_at' => now(),
                 ]);
 
-                Log::channel('documents')
+                logs('documents')
                     ->info('Произведен наряд c id: ' . $production->id);
-                Log::channel('documents')
+                logs('documents')
                     ->info('========================================== КОНЕЦ ПРОИЗВОДСТВА НАРЯДА ==============================================
 				
 				');
@@ -578,24 +569,24 @@ class ProductionController extends Controller
         $this->authorize(getmethod('update'), $production);
 
         $production->load([
-            'items' => function($q) {
+            'items' => function ($q) {
                 $q->with([
                     'cmv' => function ($q) {
                         $q->with([
                             'article' => function ($q) {
                                 $q->with([
                                     'raws' => function ($q) {
-		                                $q->with([
-		                                    'cost',
-		                                    'stock'
-		                                ]);
-		                            },
-	                                'containers' => function ($q) {
-		                                $q->with([
-			                                'cost',
-			                                'stock'
-		                                ]);
-	                                },
+                                        $q->with([
+                                            'cost',
+                                            'stock'
+                                        ]);
+                                    },
+                                    'containers' => function ($q) {
+                                        $q->with([
+                                            'cost',
+                                            'stock'
+                                        ]);
+                                    },
                                 ]);
                             }
                         ]);
@@ -603,53 +594,53 @@ class ProductionController extends Controller
                     'entity'
                 ]);
             },
-	        'offs' => function ($q) {
-			    $q->with([
-				    'cmv' => function ($q) {
-					    $q->with([
-						    'cost',
-						    'stock',
-						    'article'
-					    ]);
-				    },
-			    ]);
+            'offs' => function ($q) {
+                $q->with([
+                    'cmv' => function ($q) {
+                        $q->with([
+                            'cost',
+                            'stock',
+                            'article'
+                        ]);
+                    },
+                ]);
             },
         ]);
 //		dd($production);
 
         if ($production->items->isNotEmpty()) {
 
-	        Log::channel('documents')
-		        ->info('========================================== ОТМЕНА НАРЯДА ПРОИЗВОДСТВА ==============================================');
+            logs('documents')
+                ->info('========================================== ОТМЕНА НАРЯДА ПРОИЗВОДСТВА ==============================================');
 
             $grouped_items = $production->items->groupBy('entity.alias');
 //			dd($grouped_items);
 
             foreach ($grouped_items as $alias => $items) {
-                $entity = Entity::where('alias', $alias.'_stocks')->first();
-                $model = 'App\\'.$entity->model;
+                $entity = Entity::where('alias', $alias . '_stocks')->first();
+                $model = $entity->model;
 
-	            foreach ($items as $item) {
-                    Log::channel('documents')
-                        ->info('=== ПЕРЕБИРАЕМ ПУНКТ ' . $item->getTable() .' ' . $item->id . ' ===');
+                foreach ($items as $item) {
+                    logs('documents')
+                        ->info('=== ПЕРЕБИРАЕМ ПУНКТ ' . $item->getTable() . ' ' . $item->id . ' ===');
 
-                    Log::channel('documents')
+                    logs('documents')
                         ->info('=== ПЕРЕБИРАЕМ СПИСАНИЯ И ПРИХОДУЕМ СОСТАВ ===');
 
                     foreach ($item->offs as $off) {
 
                         $cmv = $off->cmv;
 
-                        Log::channel('documents')
+                        logs('documents')
                             ->info('=== ПРИХОДОВАНИЕ ' . $cmv->getTable() . ' ' . $cmv->id . ' ===');
 
                         // Склад
                         $stock = $cmv->stock;
 
-                        Log::channel('documents')
+                        logs('documents')
                             ->info('Существует склад ' . $stock->getTable() . ' c id: ' . $stock->id);
 
-                        Log::channel('documents')
+                        logs('documents')
                             ->info('Значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
 
                         $stock_count = $stock->count;
@@ -659,15 +650,15 @@ class ProductionController extends Controller
                         $stock->volume += ($cmv->article->volume * $off->count);
                         $stock->save();
 
-                        Log::channel('documents')
+                        logs('documents')
                             ->info('Обновлены значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
 
                         // Себестоимость
                         $cost = $cmv->cost;
 
-                        Log::channel('documents')
+                        logs('documents')
                             ->info('Существует себестоимость c id: ' . $cost->id);
-                        Log::channel('documents')
+                        logs('documents')
                             ->info('Значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
 
                         $cost_average = $cost->average;
@@ -679,49 +670,49 @@ class ProductionController extends Controller
                         $cost->average = $average;
                         $cost->save();
 
-                        Log::channel('documents')
+                        logs('documents')
                             ->info('Обновлены значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
 
                         $off->delete();
 
-                        Log::channel('documents')
+                        logs('documents')
                             ->info('Удалено списание с id:' . $off->id);
 
-                        Log::channel('documents')
+                        logs('documents')
                             ->info('=== КОНЕЦ ПРИХОДОВАНИЯ ===');
                     }
 
-                    Log::channel('documents')
+                    logs('documents')
                         ->info('=== КОНЕЦ ПЕРЕБОРА СПИСАНИЯ И ПРИХОДОВАНИЯ СОСТАВА ===');
 
-		            Log::channel('documents')
-			            ->info('=== СПИСАНИЕ ' . $item->cmv->getTable() . ' ' . $item->cmv->id . ' ===');
+                    logs('documents')
+                        ->info('=== СПИСАНИЕ ' . $item->cmv->getTable() . ' ' . $item->cmv->id . ' ===');
 
-		            // Склад
-		            $stock = $item->cmv->stock;
+                    // Склад
+                    $stock = $item->cmv->stock;
 
-		            Log::channel('documents')
-			            ->info('Существует склад ' . $stock->getTable() . ' c id: ' . $stock->id);
-		            Log::channel('documents')
-			            ->info('Значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
+                    logs('documents')
+                        ->info('Существует склад ' . $stock->getTable() . ' c id: ' . $stock->id);
+                    logs('documents')
+                        ->info('Значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
 
-		            $stock_count = $stock->count;
+                    $stock_count = $stock->count;
 
-		            $stock->count -= $item->count;
-		            $stock->weight -= ($item->cmv->article->weight * $item->count);
-		            $stock->volume -= ($item->cmv->article->volume * $item->count);
-		            $stock->save();
+                    $stock->count -= $item->count;
+                    $stock->weight -= ($item->cmv->article->weight * $item->count);
+                    $stock->volume -= ($item->cmv->article->volume * $item->count);
+                    $stock->save();
 
-		            Log::channel('documents')
-			            ->info('Обновлены значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
+                    logs('documents')
+                        ->info('Обновлены значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
 
-		            // Себестоимость
-		            $cost = $item->cmv->cost;
+                    // Себестоимость
+                    $cost = $item->cmv->cost;
 
-		            Log::channel('documents')
-			            ->info('Существует себестоимость c id: ' . $cost->id);
-		            Log::channel('documents')
-			            ->info('Значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
+                    logs('documents')
+                        ->info('Существует себестоимость c id: ' . $cost->id);
+                    logs('documents')
+                        ->info('Значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
 
                     // Получаем из сессии необходимые данные
                     $answer = operator_right('consignments_items', true, 'index');
@@ -767,36 +758,36 @@ class ProductionController extends Controller
                         ];
                     }
 
-		            $cost->update($data_cost);
+                    $cost->update($data_cost);
 //					dd($cost);
 
-		            Log::channel('documents')
-			            ->info('Обновлены значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
-		            Log::channel('documents')
-			            ->info('=== КОНЕЦ СПИСАНИЯ ===');
+                    logs('documents')
+                        ->info('Обновлены значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
+                    logs('documents')
+                        ->info('=== КОНЕЦ СПИСАНИЯ ===');
 
                     $item->update([
                         'cost' => 0
                     ]);
 
-                    Log::channel('documents')
+                    logs('documents')
                         ->info('Обновляем себестоимость за еденицу в пункте наряда: 0');
 
-                    Log::channel('documents')
+                    logs('documents')
                         ->info('=== КОНЕЦ ПЕРЕБОРА ПУНКТА ===
                         ');
 
-	            }
+                }
             }
 
             $production->update([
                 'is_produced' => false
             ]);
 
-	        Log::channel('documents')
-		        ->info('Отменен наряд c id: ' . $production->id);
-	        Log::channel('documents')
-		        ->info('========================================== КОНЕЦ ОТМЕНЫ НАРЯДА ==============================================
+            logs('documents')
+                ->info('Отменен наряд c id: ' . $production->id);
+            logs('documents')
+                ->info('========================================== КОНЕЦ ОТМЕНЫ НАРЯДА ==============================================
 				
 				');
 
@@ -826,7 +817,7 @@ class ProductionController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $productions = Production::with([
-            'items' => function($q) {
+            'items' => function ($q) {
                 $q->with([
                     'cmv' => function ($q) {
                         $q->with([
@@ -858,9 +849,8 @@ class ProductionController extends Controller
             ->companiesLimit($answer)
             ->where('is_produced', true)
             ->whereIn('id', $ids)
-            ->chunk(1, function($productions) use ($request)
-            {
-                foreach ($productions as $production){
+            ->chunk(1, function ($productions) use ($request) {
+                foreach ($productions as $production) {
                     if ($production->is_produced == 1) {
 
 //		dd($production);
@@ -868,8 +858,7 @@ class ProductionController extends Controller
                         if ($production->items->isNotEmpty()) {
 
 
-
-                            $stock_general = Stock::find($production->stock_id);
+                            $stockGeneral = Stock::find($production->stock_id);
 
                             // Если нужна проверка остатка на слкдах
                             if ($request->has('leftover')) {
@@ -887,24 +876,24 @@ class ProductionController extends Controller
                                     ];
 
                                     $entity_document = Entity::where('alias', $item->document->getTable())->first();
-                                    $model_document = 'App\\' . $entity_document->model;
+                                    $model_document = $entity_document->model;
 
-                                    $model_document_item = $model_document.'sItem';
+                                    $model_document_item = $model_document . 'sItem';
 
 
                                     foreach ($relations as $relation_name) {
                                         if ($item->cmv->article->$relation_name->isNotEmpty()) {
 
                                             $entity_composition = Entity::where('alias', $relation_name)->first();
-                                            $model_composition = 'App\\'.$entity_composition->model;
+                                            $model_composition = $entity_composition->model;
 
-                                            $entity_stock = Entity::where('alias', $relation_name.'_stocks')->first();
-                                            $model_stock = 'App\\'.$entity_stock->model;
+                                            $entity_stock = Entity::where('alias', $relation_name . '_stocks')->first();
+                                            $model_stock = $entity_stock->model;
 
                                             foreach ($item->cmv->article->$relation_name as $composition) {
 
                                                 // Списываем позицию состава
-                                                $stock_composition = $composition->stocks->where('stock_id', $stock_general->id)->where('filial_id', $stock_general->filial_id)->where('manufacturer_id', $composition->article->manufacturer_id)->first();
+                                                $stock_composition = $composition->stocks->where('stock_id', $stockGeneral->id)->where('filial_id', $stockGeneral->filial_id)->where('manufacturer_id', $composition->article->manufacturer_id)->first();
 //                          dd($stock_production);
 
                                                 if ($stock_composition) {
@@ -914,7 +903,7 @@ class ProductionController extends Controller
                                                     $total = $stock_composition->count - $composition_count;
 
                                                     if ($total < 0) {
-                                                        $errors['msg'][] = 'Для позиции ' . $number . ' не хватает ' . $total . ' ' . $composition->article->unit->abbreviation .  ' "' . $composition->article->name . '" для производства';
+                                                        $errors['msg'][] = 'Для позиции ' . $number . ' не хватает ' . $total . ' ' . $composition->article->unit->abbreviation . ' "' . $composition->article->name . '" для производства';
                                                     } else {
                                                         $result[$item->id][] = [
                                                             'entity' => $composition->getTable(),
@@ -922,7 +911,7 @@ class ProductionController extends Controller
                                                             'model' => $model_composition,
                                                             'stock_id' => $stock_composition->id,
                                                             'stock_model' => $model_stock,
-                                                            'cost' => $composition->cost->average * $count * $composition->portion ,
+                                                            'cost' => $composition->cost->average * $count * $composition->portion,
                                                             'amount' => $composition->portion * $count * $item->count * $composition->cost->average,
                                                             'count' => $composition->portion * $count * $item->count,
                                                             'weight' => $composition->weight * $count * $item->count,
@@ -947,19 +936,19 @@ class ProductionController extends Controller
                                 };
                             }
 
-                            Log::channel('documents')
+                            logs('documents')
                                 ->info('========================================== НАЧАЛО НАРЯДА ПРОИЗВОДСТВА C ID: ' . $production->id . ' ==============================================');
-                            Log::channel('documents')
+                            logs('documents')
                                 ->info('Режим проверки остатка = ' . $request->has('leftover'));
 
                             foreach ($production->items as $item) {
 
-                                Log::channel('documents')
+                                logs('documents')
                                     ->info('=== ПЕРЕБИРАЕМ ПУНКТ ' . $item->getTable() . ' ' . $item->id . ' ===');
 
                                 $cost = 0;
                                 $amount = 0;
-                                $is_wrong = 0;
+                                $isWrong = 0;
 
                                 // С проверкой остатка
                                 if ($request->has('leftover')) {
@@ -967,16 +956,16 @@ class ProductionController extends Controller
 
                                     foreach ($compositions as $composition) {
 
-                                        Log::channel('documents')
+                                        logs('documents')
                                             ->info('=== СПИСАНИЕ ' . $composition['entity'] . ' ' . $composition['id'] . ' ===');
 
                                         $stock_composition = $composition['stock_model']::find($composition['stock_id']);
 
-                                        Log::channel('documents')
+                                        logs('documents')
                                             ->info('Существует склад ' . $stock_composition->getTable() . ' c id: ' . $stock_composition->id);
 
 
-                                        Log::channel('documents')
+                                        logs('documents')
                                             ->info('Значения count: ' . $stock_composition->count . ', weight: ' . $stock_composition->weight . ', volume: ' . $stock_composition->volume);
 
                                         $stock_composition->count -= $composition['count'];
@@ -984,7 +973,7 @@ class ProductionController extends Controller
                                         $stock_composition->volume -= $composition['volume'];
                                         $stock_composition->save();
 
-                                        Log::channel('documents')
+                                        logs('documents')
                                             ->info('Обновлены значения count: ' . $stock_composition->count . ', weight: ' . $stock_composition->weight . ', volume: ' . $stock_composition->volume);
 
                                         //                                dd($composition);
@@ -1004,10 +993,10 @@ class ProductionController extends Controller
                                         $cost += $composition['cost'];
                                         $amount += $composition['amount'];
 
-                                        Log::channel('documents')
+                                        logs('documents')
                                             ->info('Записали списание с id: ' . $off->id . ', count: ' . $off->count . ', cost: ' . $off->cost . ', amount: ' . $off->amount);
 
-                                        Log::channel('documents')
+                                        logs('documents')
                                             ->info('=== КОНЕЦ СПИСАНИЯ ===
                                     ');
                                     }
@@ -1015,7 +1004,7 @@ class ProductionController extends Controller
                                     // Без проверки остатка
                                     $res = $this->production($item);
                                     $cost = $res['cost'];
-                                    $is_wrong = $res['is_wrong'];
+                                    $isWrong = $res['is_wrong'];
                                     $amount = $cost * $item->count;
                                 }
 
@@ -1029,17 +1018,16 @@ class ProductionController extends Controller
                                 ]);
 
                                 // Приходование
-                                $this->receipt($item, $is_wrong);
+                                $this->receipt($item, $isWrong);
                             }
 
                             $production->update([
-                                'is_produced' => true,
-                                'amount' => $this->getAmount($production)
+                                'produced_at' => now(),
                             ]);
 
-                            Log::channel('documents')
+                            logs('documents')
                                 ->info('Произведен наряд c id: ' . $production->id);
-                            Log::channel('documents')
+                            logs('documents')
                                 ->info('========================================== КОНЕЦ ПРОИЗВОДСТВА НАРЯДА ==============================================
 				
 				');
@@ -1052,18 +1040,6 @@ class ProductionController extends Controller
 //        dd($productions);
 
 
-
-
         return redirect()->route('productions.index');
-    }
-
-    public function getAmount($production)
-    {
-        $amount = 0;
-        $production->load('items');
-        if ($production->items->isNotEmpty()) {
-            $amount = $production->items->sum('amount');
-        }
-        return $amount;
     }
 }

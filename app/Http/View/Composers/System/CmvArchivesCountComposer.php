@@ -15,9 +15,8 @@ class CmvArchivesCountComposer
             // Получаем из сессии необходимые данные (Функция находиться в Helpers)
             $answer = operator_right($view->entity, false, 'index');
 
-            $entity = Entity::where('alias', $view->entity)
-                ->first(['model']);
-            $model = 'App\\'.$entity->model;
+            $model = Entity::where('alias', $view->entity)
+                ->value('model');
 
             $archivesCount = $model::moderatorLimit($answer)
                 ->companiesLimit($answer)

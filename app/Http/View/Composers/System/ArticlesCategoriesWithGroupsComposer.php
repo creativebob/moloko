@@ -11,7 +11,7 @@ class ArticlesCategoriesWithGroupsComposer
 	{
 
         $entity = Entity::whereAlias($view->category_entity)->first(['model']);
-        $model = 'App\\'.$entity->model;
+        $model = $entity->model;
 
         // Получаем из сессии необходимые данные
         $answer = operator_right($entity->alias, false, 'index');

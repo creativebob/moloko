@@ -15,6 +15,8 @@ use App\Goods;
 use App\GoodsCategory;
 use App\Http\Controllers\System\Traits\Clientable;
 use App\Http\Controllers\Traits\UserControllerTrait;
+use App\Models\System\Documents\Consignment;
+use App\Models\System\Documents\Production;
 use App\Models\System\External\Price;
 use App\Models\System\External\PricesType;
 use App\OldLead;
@@ -61,6 +63,82 @@ class ParserController extends Controller
     public function test()
     {
         dd(__METHOD__);
+    }
+    
+    /**
+     * Обновление моделей для сущностей производства и складов
+     *
+     * @return string
+     */
+    public function updateProductionsEntitiesModel()
+    {
+        $entities = Entity::get();
+        foreach ($entities as $entity) {
+            if ($entity->model == "Production" || $entity->model == "Consignment") {
+                $entity->update([
+                   'model' => "App\Models\System\Documents\\{$entity->model}"
+                ]);
+            } else if ($entity->model == "GoodsStock" || $entity->model == "RawsStock" || $entity->model == "ContainersStock" || $entity->model == "AttachmentsStock" || $entity->model == "ToolsStock") {
+                $entity->update([
+                    'model' => "App\Models\System\Stocks\\{$entity->model}"
+                ]);
+            } else {
+                $entity->update([
+                    'model' => "App\\{$entity->model}"
+                ]);
+            }
+        }
+        
+        return "Модели сущностей обновлены";
+    }
+    
+    /**
+     * Обновление накладных
+     *
+     * @return string
+     */
+    public function setReceiptedAt()
+    {
+        $consignments = Consignment::where('is_posted', 1)
+            ->get();
+        foreach ($consignments as $consignment) {
+            $consignment->update([
+                'receipted_at' => $consignment->updated_at
+            ]);
+        }
+        
+        return "Накладным проставлено receipted_at";
+    }
+    
+    /**
+     * Обновление нарядов
+     *
+     * @return string
+     */
+    public function setProducedAt()
+    {
+        $productions = Production::where('is_produced', 1)
+            ->get();
+        foreach ($productions as $production) {
+            $production->update([
+                'produced_at' => $production->updated_at
+            ]);
+        }
+    
+        return "Нарядам проставлено produced_at";
+    }
+    
+    /**
+     * Запуск команды на перерегистрацию документов
+     */
+    public function startRegisteringDocumentsCommand()
+    {
+        dd(auth()->user());
+        
+        $filialId = auth()->user()->stafferFilialId;
+        // TODO - 15.10.2020 - Трейт моделей Cmvable отношение cost опирается на stafferFilialId, нужно решение через консоль, т.к. через браузер за 3 минуты не варик парсить
+        \Artisan::call("documents:registering {$filialId}");
+        
     }
 
     /**
