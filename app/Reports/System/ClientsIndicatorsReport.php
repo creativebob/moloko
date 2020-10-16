@@ -72,8 +72,8 @@ class ClientsIndicatorsReport
 //            ->has('estimates')
             ->with([
                 'estimates' => function ($q) use ($endDate) {
-                    $q->whereNotNull('registered_date')
-                        ->where('registered_date', '<', $endDate)
+                    $q->whereNotNull('registered_at')
+                        ->where('registered_at', '<', $endDate)
                         ->orderBy('created_at');
                 },
                 'actual_blacklist',
@@ -81,12 +81,12 @@ class ClientsIndicatorsReport
             ])
             ->withCount([
                 'estimates' => function ($q) use ($endDate) {
-                    $q->whereNotNull('registered_date')
-                        ->where('registered_date', '<', $endDate);
+                    $q->whereNotNull('registered_at')
+                        ->where('registered_at', '<', $endDate);
                 }
             ])
 //            ->whereHas('estimates', function($q)  use ($endDate) {
-//                $q->where('registered_date', '<', $endDate);
+//                $q->where('registered_at', '<', $endDate);
 //            })
             //            ->when($authUser, function ($q) use ($authUser) {
             //                $q->where('company_id', $authUser->company_id);
@@ -126,7 +126,7 @@ class ClientsIndicatorsReport
 //                dd($clients->first()->estimates->last());
             $activeClients = $clients->filter(function ($client) use ($endDatePeriodActive) {
 //                    if ($client->estimates->last() != null) {
-                return $client->estimates->last()->registered_date > $endDatePeriodActive;
+                return $client->estimates->last()->registered_at > $endDatePeriodActive;
 //                    }
             });
             $data['active_count'] = $activeClients->count();
@@ -134,7 +134,7 @@ class ClientsIndicatorsReport
             // Находим активных клиентов в предыдущем периоде
             $activeClientsPrevious = $clients->filter(function ($client) use ($startDate, $endDatePreviousPeriodActive) {
 //                    if ($client->estimates->last() != null) {
-                return $client->first_order_date < $startDate && $client->estimates->where('registered_date', '<', $startDate)->last()->registered_date > $endDatePreviousPeriodActive;
+                return $client->first_order_date < $startDate && $client->estimates->where('registered_at', '<', $startDate)->last()->registered_date > $endDatePreviousPeriodActive;
 //                    }
             });
             $data['active_previous_count'] = $activeClientsPrevious->count();
@@ -142,7 +142,7 @@ class ClientsIndicatorsReport
 
             $lostClients = $clients->filter(function ($client) use ($startDatePeriodActive, $endDatePeriodActive) {
 //                    if ($client->estimates->last() != null) {
-                return $client->estimates->last()->registered_date <= $endDatePeriodActive;
+                return $client->estimates->last()->registered_at <= $endDatePeriodActive;
 //                    }
             });
             $data['lost_count'] = $lostClients->count();
@@ -154,7 +154,7 @@ class ClientsIndicatorsReport
 
             $lostClientsPeriod = $clients->filter(function ($client) use ($startDatePeriodActive, $endDatePeriodActive) {
 //                    if ($client->estimates->last() != null) {
-                return $client->estimates->last()->registered_date >= $startDatePeriodActive && $client->estimates->last()->registered_date < $endDatePeriodActive;
+                return $client->estimates->last()->registered_at >= $startDatePeriodActive && $client->estimates->last()->registered_date < $endDatePeriodActive;
 //                    }
             });
             $data['lost_clients_period_count'] = $lostClientsPeriod->count();
@@ -176,32 +176,32 @@ class ClientsIndicatorsReport
 
             $customersPeriod = $clients->filter(function ($client) use ($startDate, $endDate) {
 //                    if ($client->estimates->last() != null) {
-                return $client->estimates->last()->registered_date >= $startDate && $client->estimates->last()->registered_date < $endDate;
+                return $client->estimates->last()->registered_at >= $startDate && $client->estimates->last()->registered_date < $endDate;
 //                    }
             });
             $data['customers_period_count'] = $customersPeriod->count();
 
             $estimates = Estimate::where([
                 'company_id' => $companyId,
-                'is_registered' => true
             ])
-                ->where('registered_date', '<', $endDate)
+                ->whereNotNull('registered_at')
+                ->where('registered_at', '<', $endDate)
                 ->get();
 
 //                dd($startDate);
-            $registeredEstimatesPeriod = $estimates->where('registered_date', '>=', $startDate)
-                ->where('registered_date', '<', $endDate);
+            $registeredEstimatesPeriod = $estimates->where('registered_at', '>=', $startDate)
+                ->where('registered_at', '<', $endDate);
 
             $activeClientsIds = $activeClients->pluck(['id']);
             $activeClientsRegisteredEstimates = $estimates->whereIn('client_id', $activeClientsIds);
 
             $data['orders_count'] = $activeClientsRegisteredEstimates->count();
             $data['orders_period_count'] = $registeredEstimatesPeriod->count();
-            $data['lead_close_rate'] = $data['orders_period_count'] / $estimates->where('registered_date', '>=', $startDate)->count();
+            $data['lead_close_rate'] = $data['orders_period_count'] / $estimates->where('registered_at', '>=', $startDate)->count();
 
             $repeatClientsCount = 0;
             foreach ($clients as $client) {
-                $estimatesPeriod = $client->estimates->where('is_registered', true)->where('registered_date', '>=', $startDate)->where('registered_date', '<', $endDate);
+                $estimatesPeriod = $client->estimates->where('registered_at', '!=', null)->where('registered_at', '>=', $startDate)->where('registered_at', '<', $endDate);
 
                 if ($estimatesPeriod->count() > 1) {
                     $repeatClientsCount++;

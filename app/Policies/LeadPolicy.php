@@ -67,7 +67,7 @@ class LeadPolicy
             return false;
         }
 
-        if ($model->estimate->is_saled == 1) {
+        if ($model->estimate->saled_at) {
             return false;
         }
 

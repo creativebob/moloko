@@ -149,7 +149,7 @@
                   </td>
 
           <td class="td-status">
-            @if($lead->estimate->is_saled) Чек закрыт @else Открыт @endif
+            @if($lead->estimate->saled_at) Чек закрыт @else Открыт @endif
           </td>
 
            <td class="td-shipment_at">

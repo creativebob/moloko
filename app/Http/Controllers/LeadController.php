@@ -290,7 +290,7 @@ class LeadController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $lead);
 
-        if ($lead->draft == false && $lead->estimate->is_registered) {
+        if ($lead->draft == false && $lead->estimate->registered_at) {
             // Если есть клиент у лида, сравниваем скидку
             if ($lead->client) {
                 $this->updateClientDiscount($lead);
@@ -704,8 +704,7 @@ class LeadController extends Controller
 
             $estimate->update([
                 'client_id' => $clientId,
-                'is_registered' => true,
-                'registered_date' => today(),
+                'registered_at' => now(),
             ]);
         } else {
             $lead->estimate->update([
@@ -1140,8 +1139,7 @@ class LeadController extends Controller
 
             $estimate->update([
                 'client_id' => $clientId,
-                'is_registered' => true,
-                'registered_date' => today(),
+                'registered_at' => now(),
             ]);
         } else {
             $lead->estimate->update([

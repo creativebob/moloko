@@ -102,19 +102,16 @@ const moduleLead = {
             },
 
             ADD_GOODS_ITEM_TO_ESTIMATE(state, price) {
-                if (state.estimate.is_registered === 0) {
+                if (!state.estimate.registered_at) {
 
                     // TODO - 25.09.20 - Нужна будет проверка на серийность
-                    let index = state.goodsItems.findIndex(item => item.price_id == price.id);
+                    let index = state.goodsItems.findIndex(obj => obj.price_id == price.id);
                     if (index > -1) {
                         let item = state.goodsItems[index];
-
                         item.count = parseFloat(item.count) + 1;
-
-                        this.commit('SET_AGGREGATIONS', item);
-                        item = state.goodsItems[index];
-
                         Vue.set(state.goodsItems, index, item);
+
+                        this.commit('SET_AGGREGATIONS', index);
                     } else {
                         let item = {
                             id: state.goodsItems.length + 1,
@@ -154,27 +151,24 @@ const moduleLead = {
 
                             company_id: null,
                         };
-
-                        let id = item.id;
-                        let index = state.goodsItems.findIndex(item => item.id == id);
-                        this.commit('SET_AGGREGATIONS', item);
-                        item = state.goodsItems[index];
-
                         state.goodsItems.push(item);
+                        index = state.goodsItems.findIndex(obj => obj.id == item.id);
+
+                        this.commit('SET_AGGREGATIONS', index);
                     }
                 }
             },
             UPDATE_GOODS_ITEM(state, item) {
-                let index = state.goodsItems.findIndex(obj => obj.id === item.id);
-                this.commit('SET_AGGREGATIONS', item);
-                item = state.goodsItems[index];
+                const index = state.goodsItems.findIndex(obj => obj.id === item.id);
                 Vue.set(state.goodsItems, index, item);
+
+                this.commit('SET_AGGREGATIONS', index);
             },
 
-            SET_AGGREGATIONS(state, item) {
+            SET_AGGREGATIONS(state, index) {
                 this.commit('SET_CHANGE');
-
-                var count = item.count;
+                let item = state.goodsItems[index];
+                const count = item.count;
 
                 switch (item.sale_mode) {
                     case (1):
@@ -186,8 +180,6 @@ const moduleLead = {
                         item.amount = parseFloat(item.price) * count;
 
                         // Скидки
-                        // Иначе рассчитываем
-                        let index = state.goodsItems.findIndex(obj => obj.id == item.id);
                         // Если есть ручная скидка
                         if (item.is_manual == 1) {
 
@@ -210,15 +202,45 @@ const moduleLead = {
 
                             item.discount_currency = item.manual_discount_currency * count;
                             item.discount_percent = item.manual_discount_percent;
-
-                            let index = state.goodsItems.findIndex(obj => obj.id == item.id);
-                            Vue.set(state.goodsItems, index, item);
-
                         } else {
                             // Иначе рассчитываем
-                            this.commit('SET_COMPUTED_DISCOUNT', item);
+                            item.price_discount = item.price_discount_unit * count;
+                            item.total_price_discount = item.amount - item.price_discount;
+
+                            item.catalogs_item_discount = item.catalogs_item_discount_unit * count;
+                            item.total_catalogs_item_discount = item.amount - item.catalogs_item_discount;
+
+                            item.estimate_discount = item.estimate_discount_unit * count;
+                            item.total_estimate_discount = item.amount - item.estimate_discount;
+
+                            item.client_discount_percent = state.client ? state.client.discount : 0;
+
+                            if (item.client_discount_percent > 0) {
+                                item.client_discount_unit_currency = item.total_estimate_discount / 100 * item.client_discount_percent / count;
+                                item.client_discount_currency = item.client_discount_unit_currency * count;
+                            } else {
+                                item.client_discount_unit_currency = 0;
+                                item.client_discount_currency = 0;
+                            }
+                            item.total_client_discount = item.total_estimate_discount - item.client_discount_currency;
+
+                            item.total = item.total_client_discount;
+
+                            item.discount_currency = item.amount - item.total;
+                            if (item.discount_currency > 0) {
+                                item.discount_percent = item.discount_currency * 100 / item.amount;
+                            } else {
+                                item.discount_percent = 0;
+                            }
+
+                            item.computed_discount_percent = item.discount_percent;
+                            item.computed_discount_currency = item.discount_currency / count;
+                            item.total_computed_discount = item.discount_currency;
+
+                            item.manual_discount_currency = 0;
+                            item.manual_discount_percent = 0;
+                            item.total_manual_discount = 0;
                         }
-                        item = state.goodsItems[index];
 
                         // Маржа
                         let totalPrice = parseFloat(item.price) - item.price_discount_unit - item.catalogs_item_discount_unit - item.estimate_discount_unit - item.client_discount_unit_currency;
@@ -269,67 +291,18 @@ const moduleLead = {
                         break;
                 }
 
-                let id = item.id;
-                let index = state.goodsItems.findIndex(item => item.id == id);
-                Vue.set(state.goodsItems, index, item);
-            },
-            SET_COMPUTED_DISCOUNT(state, item) {
-                const count = item.count;
-
-                item.price_discount = item.price_discount_unit * count;
-                item.total_price_discount = item.amount - item.price_discount;
-
-                item.catalogs_item_discount = item.catalogs_item_discount_unit * count;
-                item.total_catalogs_item_discount = item.amount - item.catalogs_item_discount;
-
-                item.estimate_discount = item.estimate_discount_unit * count;
-                item.total_estimate_discount = item.amount - item.estimate_discount;
-
-                item.client_discount_percent = state.client ? state.client.discount : 0;
-
-                if (item.client_discount_percent > 0) {
-                    item.client_discount_unit_currency = item.total_estimate_discount / 100 * item.client_discount_percent / count;
-                    item.client_discount_currency = item.client_discount_unit_currency * count;
-                } else {
-                    item.client_discount_unit_currency = 0;
-                    item.client_discount_currency = 0;
-                }
-                item.total_client_discount = item.total_estimate_discount - item.client_discount_currency;
-
-                item.total = item.total_client_discount;
-
-                item.discount_currency = item.amount - item.total;
-                if (item.discount_currency > 0) {
-                    item.discount_percent = item.discount_currency * 100 / item.amount;
-                } else {
-                    item.discount_percent = 0;
-                }
-
-                item.computed_discount_percent = item.discount_percent;
-                item.computed_discount_currency = item.discount_currency / count;
-                item.total_computed_discount = item.discount_currency;
-
-                item.manual_discount_currency = 0;
-                item.manual_discount_percent = 0;
-                item.total_manual_discount = 0;
-
-                item.is_manual = 0;
-
-                let index = state.goodsItems.findIndex(obj => obj.id == item.id);
                 Vue.set(state.goodsItems, index, item);
             },
 
             REMOVE_GOODS_ITEM(state, id) {
-                let index = state.goodsItems.findIndex(item => item.id === id);
+                const index = state.goodsItems.findIndex(obj => obj.id === id);
                 state.goodsItems.splice(index, 1);
                 this.commit('SET_CHANGE');
             },
             UPDATE_GOODS_ITEMS(state) {
                 state.goodsItems.forEach(item => {
-                    let index = state.goodsItems.findIndex(obj => obj.id === item.id);
-                    this.commit('SET_AGGREGATIONS', item);
-                    item = state.goodsItems[index];
-                    Vue.set(state.goodsItems, index, item);
+                    const index = state.goodsItems.findIndex(obj => obj.id === item.id);
+                    this.commit('SET_AGGREGATIONS', index);
                 });
             },
 
@@ -472,7 +445,7 @@ const moduleLead = {
 
             // Услуги
             ADD_SERVICES_ITEM_TO_ESTIMATE({state}, priceId) {
-                if (state.estimate.is_registered === 0) {
+                if (state.estimate.registered_at) {
                     axios
                         .post('/admin/estimates_services_items', {
                             estimate_id: state.estimate.id,
@@ -501,7 +474,7 @@ const moduleLead = {
                 }
             },
             REMOVE_SERVICES_ITEM_FROM_ESTIMATE({state}, itemId) {
-                if (state.estimate.is_registered === 0) {
+                if (state.estimate.registered_at) {
                     axios
                         .delete('/admin/estimates_services_items/' + itemId)
                         .then(response => {
@@ -641,9 +614,14 @@ const moduleLead = {
             },
 
             // Товары
-            getGoodsItem: state => id => {
-                let index = state.goodsItems.findIndex(item => item.id == id);
-                return state.goodsItems[index];
+            countGoodsItemInEstimate: state => id => {
+                let count = 0;
+                state.goodsItems.forEach(item => {
+                    if (item.price_id == id) {
+                        count += parseFloat(item.count);
+                    }
+                });
+                return count;
             },
 
             // Клиент

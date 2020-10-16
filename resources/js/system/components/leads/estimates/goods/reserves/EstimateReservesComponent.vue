@@ -30,7 +30,7 @@
             },
 
             isRegistered() {
-                return this.$store.state.lead.estimate.is_registered === 1;
+                return this.$store.state.lead.estimate.registered_at;
             },
 
             isReserved() {

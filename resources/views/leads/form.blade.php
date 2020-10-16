@@ -342,7 +342,7 @@
                                         <td>
                                             @php
                                                 $disabled = null;
-                                                    if ($lead->estimate->is_saled == 1 || $lead->estimate->is_reserved == 1) {
+                                                    if ($lead->estimate->saled_at || $lead->estimate->is_reserved == 1) {
                                                     $disabled = true;
                                                 }
                                             @endphp

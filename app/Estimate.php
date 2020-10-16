@@ -23,11 +23,12 @@ class Estimate extends Model
     protected $dates = [
         'deleted_at',
         'date',
-        'registered_date',
+        'registered_at',
+        'saled_at',
     ];
 
     protected $casts = [
-        'date' => 'datetime:d.m.Y', 
+        'date' => 'datetime:d.m.Y',
     ];
 
     protected $fillable = [
@@ -45,14 +46,10 @@ class Estimate extends Model
 
         'draft',
 
-        'is_registered',
-        'registered_date',
-
+        'registered_at',
+        'saled_at',
         'is_produced',
-
-        'is_saled',
-        'saled_date',
-
+        
         'is_dismissed',
         'is_main',
         'is_create_parse',
@@ -148,7 +145,7 @@ class Estimate extends Model
 
         // if (request('cities')) {
         //     $query->where(
-        //         'client', 
+        //         'client',
         //         function ($q) {
         //             $query->whereHasMorph(
         //                 'clientable',
@@ -205,7 +202,7 @@ class Estimate extends Model
         }
 
         if (! is_null(request('saled'))) {
-            $query->where('is_saled', request('saled'));
+            $query->where('saled_at', request('saled'));
         }
 
         if (request('total_min')) {
@@ -242,12 +239,12 @@ class Estimate extends Model
 
 
         // TODO - 01.07.20 - Фильтруем по дате регистрации, нужно фильтровать по дате продажи
-        if (request('registered_date_min')) {
-            $query->whereDate('registered_date', '>=', Carbon::createFromFormat('d.m.Y', request()->registered_date_min));
+        if (request('registered_at_min')) {
+            $query->whereDate('registered_at', '>=', Carbon::createFromFormat('d.m.Y', request()->registered_at_min));
         }
 
-        if (request('registered_date_max')) {
-            $query->whereDate('registered_date', '<=', Carbon::createFromFormat('d.m.Y', request()->registered_date_max));
+        if (request('registered_at_max')) {
+            $query->whereDate('registered_at', '<=', Carbon::createFromFormat('d.m.Y', request()->registered_at_max));
         }
 
 

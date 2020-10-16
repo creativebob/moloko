@@ -46,6 +46,7 @@ Route::get('/parsers/set-morphs-aliases', 'ParserController@setMorphsAliases');
 Route::get('/parsers/set-organizations', 'ParserController@setOrganizations');
 
 Route::get('/parsers/update-productions-entities-models', 'ParserController@updateProductionsEntitiesModel');
+    Route::get('/parsers/set-registered-at', 'ParserController@setRegisteredAt');
 Route::get('/parsers/set-receipted-at', 'ParserController@setReceiptedAt');
 Route::get('/parsers/set-produced-at', 'ParserController@setProducedAt');
     

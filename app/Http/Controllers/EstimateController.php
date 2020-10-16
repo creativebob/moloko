@@ -73,7 +73,7 @@ class EstimateController extends Controller
             ->authors($answer)
             ->systemItem($answer) // Фильтр по системным записям
             ->where('draft', false)
-            ->where('is_registered', true)
+            ->whereNotNull('registered_at')
 //        ->whereNotNull('client_id')
 //            ->booklistFilter($request)  // Фильтр по спискам
 //            ->filter($request, 'client_id')
@@ -113,7 +113,8 @@ class EstimateController extends Controller
                     $q->where('phone', $search)
                     ->orWhere('crop', $search);
                 });
-            })->where('is_registered', true)
+            })
+            ->whereNotNull('registered_at')
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -134,7 +135,8 @@ class EstimateController extends Controller
             $q->whereHas('phones', function ($q) use ($search) {
                 $q->where('crop', $search);
             });
-        })->where('is_registered', true)
+        })
+            ->whereNotNull('registered_at')
         ->orderBy('created_at', 'desc')
         ->get();
         return response()->json($results);
@@ -190,7 +192,7 @@ class EstimateController extends Controller
         ])
             ->find($id);
 
-        if ($estimate->is_registered == 0) {
+        if ($estimate->registered_at) {
 
             // Отдаем работу по редактировнию лида трейту
             $this->updateLead($request, $estimate->lead);
@@ -278,8 +280,7 @@ class EstimateController extends Controller
 
             $estimate->update([
                 'client_id' => $client->id,
-                'is_registered' => true,
-                'registered_date' => today(),
+                'registered_at' => now(),
             ]);
 
             logs('documents')->info("========================================== КОНЕЦ РЕГИСТРАЦИИ СМЕТЫ, ID: {$estimate->id} =============================================== ");
@@ -318,7 +319,7 @@ class EstimateController extends Controller
         ])
             ->find($id);
 
-        if ($estimate->is_saled == 0) {
+        if (!$estimate->saled_at) {
             // Подключение политики
 //        $this->authorize(getmethod('update'), $lead);
 
@@ -499,14 +500,13 @@ class EstimateController extends Controller
         ])
         ->find($id);
 
-        if ($estimate->is_saled == 0) {
+        if (!$estimate->saled_at) {
 
             // Обновляем показатели клиента
             $this->setIndicators($estimate);
 
             $estimate->update([
-                'is_saled' => true,
-                'saled_date' => today(),
+                'saled_at' => now(),
             ]);
 
         }
@@ -533,7 +533,7 @@ class EstimateController extends Controller
             ->find($id);
 //        dd($estimate);
 
-        if ($estimate->is_saled == 0) {
+        if (!$estimate->saled_at) {
             // Подключение политики
 //        $this->authorize(getmethod('update'), $lead);
 
@@ -599,7 +599,7 @@ class EstimateController extends Controller
             ->find($id);
 //        dd($estimate);
 
-        if ($estimate->is_saled == 0) {
+        if (!$estimate->saled_at) {
             // Подключение политики
 //        $this->authorize(getmethod('update'), $lead);
 

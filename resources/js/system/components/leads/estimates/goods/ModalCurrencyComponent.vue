@@ -174,7 +174,7 @@
         },
         data() {
             return {
-                isManual: this.item.is_manual = 1,
+                isManual: this.item.is_manual == 1,
                 discountPercent: this.item.discount_percent,
                 discountCurrency: this.item.discount_currency / this.item.count,
                 curCount: this.item.count,
@@ -185,7 +185,7 @@
         },
         computed: {
             isRegistered() {
-                return this.$store.state.lead.estimate.is_registered == 1;
+                return this.$store.state.lead.estimate.registered_at;
             },
             count: {
                 get() {

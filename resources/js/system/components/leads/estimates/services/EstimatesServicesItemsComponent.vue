@@ -92,7 +92,7 @@
                 itemName: null,
                 itemIndex: null,
 
-                isRegistered: this.$store.state.lead.estimate.is_registered === 1,
+                isRegistered: this.$store.state.lead.estimate.registered_at,
             }
         },
         computed: {

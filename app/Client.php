@@ -342,13 +342,13 @@ class Client extends Model
         // TODO - 01.07.20 - Фильтруем по дате регистрации, нужно фильтровать по дате продажи
         if (request('estimate_date_min')) {
             $query->whereHas('estimates', function ($q) {
-                $q->whereDate('registered_date', '>=', Carbon::createFromFormat('d.m.Y', request()->estimate_date_min));
+                $q->whereDate('registered_at', '>=', Carbon::createFromFormat('d.m.Y', request()->estimate_date_min));
             });
         }
 
         if (request('estimate_date_max')) {
             $query->whereHas('estimates', function ($q) {
-                $q->whereDate('registered_date', '<=', Carbon::createFromFormat('d.m.Y', request()->estimate_date_max));
+                $q->whereDate('registered_at', '<=', Carbon::createFromFormat('d.m.Y', request()->estimate_date_max));
             });
         }
 

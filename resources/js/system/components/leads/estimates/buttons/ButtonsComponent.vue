@@ -81,7 +81,7 @@
             },
 
             isRegistered() {
-                return this.$store.state.lead.estimate.is_registered === 1;
+                return this.$store.state.lead.estimate.registered_at === 1;
             },
 
             showRegisterButton() {
@@ -89,7 +89,7 @@
             },
 
             showSaleButton() {
-                return this.estimate.is_registered === 1 && this.estimate.is_saled === 0;
+                return this.estimate.registered_at && this.estimate.saled_at;
             },
             disabledSaleButton() {
                 return this.$store.getters.paymentsAmount < this.$store.getters.estimateTotal;

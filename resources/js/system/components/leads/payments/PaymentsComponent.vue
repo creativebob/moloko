@@ -144,7 +144,7 @@
 
         computed: {
 		    isShow() {
-		        return this.$store.state.lead.estimate.is_registered == 1 && this.$store.state.lead.estimate.is_saled == 0 && this.$store.getters.paymentsAmount < this.$store.getters.estimateTotal;
+		        return this.$store.state.lead.estimate.registered_at && this.$store.state.lead.estimate.saled_at && this.$store.getters.paymentsAmount < this.$store.getters.estimateTotal;
             },
             paymentsAmount() {
                 return this.$store.getters.paymentsAmount;

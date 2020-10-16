@@ -1,16 +1,18 @@
 <template>
-
 	<div>
-        <template v-if="goodsList.length > 0">
+        <template v-if="goodsItems.length > 0">
             <estimates-goods-items-component
-                :items="goodsList"
+                :items="goodsItems"
                 :settings="settings"
                 :stocks="stocks"
             ></estimates-goods-items-component>
         </template>
 
-        <template v-if="servicesList.length > 0">
-            <estimates-services-items-component :items="servicesList"></estimates-services-items-component>
+        <template v-if="servicesItems.length > 0">
+            <estimates-services-items-component
+                :items="servicesItems"
+                :settings="settings"
+            ></estimates-services-items-component>
         </template>
 
         <div v-if="estimateAmount > 0">Общая стоимость: {{ estimateAmount | decimalPlaces | decimalLevel }}</div>
@@ -20,9 +22,7 @@
         <div v-if="estimateTotal > 0">Итого к оплате: {{ estimateTotal | decimalPlaces | decimalLevel }}</div>
 
         <buttons-component></buttons-component>
-
 	</div>
-
 </template>
 
 <script>
@@ -47,36 +47,20 @@
                 }
             },
         },
-        created: function () {
+        // created() {
             // this.$store.commit('SET_ESTIMATE', this.estimate);
             // this.$store.commit('SET_GOODS_ITEMS', this.estimate.goods_items);
             // this.$store.commit('SET_SERVICES_ITEMS', this.estimate.services_items);
             // this.$store.commit('SET_DISCOUNTS', this.estimate.discounts);
-        },
-		data() {
-			return {
-				//
-				id: null,
-
-				cost: null,
-
-				itemGoods: null,
-				itemGoodsName: null,
-				itemGoodsIndex: null,
-
-                itemServices: null,
-                itemServicesName: null,
-                itemServicesIndex: null,
-			}
-		},
+        // },
 		computed: {
 		    // Товары
-			goodsList() {
+			goodsItems() {
 				return this.$store.state.lead.goodsItems;
 			},
 
             // Услуги
-            servicesList() {
+            servicesItems() {
                 return this.$store.state.lead.servicesItems;
             },
 
@@ -99,57 +83,6 @@
             estimateTotalPoints() {
                 return this.$store.getters.estimateTotalPoints;
             },
-
-
-
-		},
-		methods: {
-            openModalServices(item, index) {
-                this.itemServicesIndex = index;
-                this.itemServices = item;
-                this.itemServicesName = item.product.process.name;
-            },
-			// changeCost: function(value) {
-			// 	this.cost = value;
-			// },
-			// checkChange: function () {
-			// 	this.change = false;
-			// },
-			// setId: function (id) {
-			// 	this.id = id;
-			// 	if (id != null) {
-			// 		this.categoriesItems.filter(item => {
-			// 			if (item.id === id && item.entity_id === this.entity_id) {
-			//
-			// 				// Смотрим в чем принимать
-			// 				if (item.article.package_status === 1) {
-			// 					this.itemUnit = item.article.package_abbreviation;
-			// 				} else {
-			// 					this.itemUnit = item.article.unit.abbreviation;
-			// 				}
-			//
-			// 				// Смотрим производителя
-			// 				if (item.article.manufacturer_id != null) {
-			// 					this.itemManufacturer = item.article.manufacturer_id;
-			// 				}
-			// 			}
-			// 		});
-			// 	} else {
-			// 		this.itemUnit = null;
-			// 		this.itemManufacturer = null;
-			// 	}
-			// },
-
-
-            updateServicesItem: function(item) {
-                this.$store.commit('UPDATE_SERVICES_ITEM', item);
-            },
-
-            deleteServicesItem() {
-                this.$store.dispatch('REMOVE_SERVICES_ITEM_FROM_ESTIMATE', this.itemServices.id);
-                $('#delete-estimates_services_item').foundation('close');
-            },
-
 		},
         filters: {
             decimalPlaces(value) {
@@ -158,19 +91,9 @@
             decimalLevel: function (value) {
                 return parseFloat(value).toLocaleString();
             },
-            roundToTwo: function (value) {
-                return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
-            },
-            // Создает разделители разрядов в строке с числами
-            level: function (value) {
-                return parseInt(value).toLocaleString();
-            },
-
-            // Отбраcывает дробную часть в строке с числами
             onlyInteger(value) {
                 return Math.floor(value);
             },
         },
-
 	}
 </script>

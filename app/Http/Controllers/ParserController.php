@@ -93,6 +93,29 @@ class ParserController extends Controller
     }
     
     /**
+     * Обновление смет
+     *
+     * @return string
+     */
+    public function setRegisteredAt()
+    {
+        $estimates = Estimate::where('is_registered', 1)
+            ->get();
+        foreach ($estimates as $estimate) {
+            $data = [];
+            if ($estimate->is_registered == 1) {
+                $data['registered_at'] = $estimate->updated_at;
+            }
+            if ($estimate->is_saled == 1) {
+                $data['saled_at'] = $estimate->updated_at;
+            }
+            $estimate->update($data);
+        }
+        
+        return "Сметам проставлено registered_at и saled_at";
+    }
+    
+    /**
      * Обновление накладных
      *
      * @return string

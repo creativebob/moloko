@@ -800,15 +800,15 @@ class RollHouseController extends Controller
 
                                     'number' => $lead->case_number,
                                     'date' => $check->created->format('d.m.Y'),
-                                    'registered_date' => $check->created,
+                                    'registered_at' => $check->created,
 
                                     'company_id' => $companyId,
                                     'author_id' => hideGod($authUser),
 
                                     'is_main' => 1,
                                     'is_dismissed' => ($check->progress == 2) ? 0 : 1,
-                                    'is_registered' => 1,
-                                    'is_saled' => 1,
+                                    'registered_at' => $check->created,
+                                    'saled_at' => $check->created,
 
                                     'created_at' => $check->created,
                                     'timestamps' => false,
@@ -1126,7 +1126,7 @@ class RollHouseController extends Controller
             'estimate.goods_items'
         ])
             ->whereHas('estimate', function ($q) {
-                $q->where('is_registered', false);
+                $q->whereNull('registered_at');
             })
             ->orderBy('id')
             ->get();
@@ -1163,7 +1163,7 @@ class RollHouseController extends Controller
 
             $estimate = $lead->estimate;
 
-            if ($estimate->is_registered == 0) {
+            if (! $estimate->registered_at) {
 
                 logs('documents')->info("========================================== НАЧАЛО РЕГИСТРАЦИИ СМЕТЫ, ID: {$estimate->id} =============================================== ");
 
@@ -1191,8 +1191,7 @@ class RollHouseController extends Controller
 
                 $estimate->update([
                     'client_id' => $client->id,
-                    'is_registered' => true,
-                    'registered_date' => $estimate->created_at,
+                    'registered_at' => $estimate->created_at,
                     'amount' => $amount,
                     'discount' => $discount,
                     'total' => $total,
@@ -1200,13 +1199,13 @@ class RollHouseController extends Controller
 
                 logs('documents')->info("========================================== КОНЕЦ РЕГИСТРАЦИИ СМЕТЫ, ID: {$estimate->id} =============================================== ");
 
-                if ($estimate->is_saled == 0) {
+                if (! $estimate->saled_at) {
 
                     // Обновляем показатели клиента
                     $this->setIndicators($estimate);
 
                     $estimate->update([
-                        'is_saled' => true,
+                        'saled_at' => now(),
                     ]);
 
                 }

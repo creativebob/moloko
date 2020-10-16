@@ -397,11 +397,9 @@ class RollHouseParser
                                     'is_main' => 1,
                                     'is_dismissed' => ($check->progress == 2) ? 0 : 1,
 
-                                    'is_registered' => 1,
-                                    'registered_date' => $check->created,
+                                    'registered_at' => $check->created,
 
-                                    'is_saled' => 1,
-                                    'saled_date' => $check->created,
+                                    'saled_at' => $check->created,
 
                                     'created_at' => $check->created,
                                     'timestamps' => false,
@@ -606,8 +604,8 @@ class RollHouseParser
 
                                     $total = Estimate::where([
                                         'client_id' => $client->id,
-                                        'is_saled' => true
                                     ])
+                                        ->whereNotNull('saled_at')
                                         ->sum('total');
                                     $data['customer_equity'] = $total + $estimate->total;
 
@@ -1223,11 +1221,9 @@ class RollHouseParser
                         'is_main' => 1,
                         'is_dismissed' => ($check->progress == 2) ? 0 : 1,
 
-                        'is_registered' => 1,
-                        'registered_date' => $check->created,
-
-                        'is_saled' => 1,
-                        'saled_date' => $check->created,
+                        'registered_at' => $check->created,
+                        
+                        'saled_at' => $check->created,
 
                         'created_at' => $check->created,
                         'timestamps' => false,
@@ -1434,8 +1430,8 @@ class RollHouseParser
 
                         $total = Estimate::where([
                             'client_id' => $client->id,
-                            'is_saled' => true
                         ])
+                            ->whereNotNull('saled_at')
                             ->sum('total');
                         $data['customer_equity'] = $total + $estimate->total;
 

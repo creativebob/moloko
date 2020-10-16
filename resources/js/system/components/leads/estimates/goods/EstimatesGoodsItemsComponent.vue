@@ -119,12 +119,6 @@
         },
         data() {
             return {
-                id: null,
-
-                count: null,
-                cost: null,
-                // discountPercent: Number(this.$store.state.lead.estimate.discount_percent),
-
                 item: null,
                 itemName: null,
                 itemIndex: null,
@@ -138,7 +132,7 @@
                 return this.$store.state.lead.estimate;
             },
             isRegistered() {
-                return this.$store.state.lead.estimate.is_registered === 1;
+                return this.$store.state.lead.estimate.registered_at;
             },
             itemsAmount() {
                 let amount = 0;
@@ -168,7 +162,6 @@
                 });
                 return points;
             },
-
         },
         methods: {
             openModal(item, index) {
@@ -176,22 +169,23 @@
                 this.item = item;
                 this.itemName = item.goods.article.name;
             },
-            updateItem: function (item) {
+            updateItem(item) {
                 this.$store.commit('UPDATE_GOODS_ITEM', item);
             },
             deleteItem() {
                 this.$store.commit('REMOVE_GOODS_ITEM', this.item.id);
                 $('#delete-estimates_goods_item').foundation('close');
             },
-
         },
         filters: {
-            roundToTwo: function (value) {
-                return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
+            decimalPlaces(value) {
+                return parseFloat(value).toFixed(2);
             },
-            // Создает разделители разрядов в строке с числами
-            level: function (value) {
-                return Number(value).toLocaleString();
+            decimalLevel: function (value) {
+                return parseFloat(value).toLocaleString();
+            },
+            onlyInteger(value) {
+                return Math.floor(value);
             },
         },
         directives: {
