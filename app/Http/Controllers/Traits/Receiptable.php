@@ -32,6 +32,9 @@ trait Receiptable
 	    $filialId = $stockGeneral->filial_id;
 
         // Склад
+        $item->load([
+            'cmv.stocks'
+        ]);
         $stock = $item->cmv->stocks->where('stock_id', $stockGeneral->id)
             ->where('filial_id', $stockGeneral->filial_id)
             ->where('manufacturer_id', $item->manufacturer_id)
@@ -72,8 +75,11 @@ trait Receiptable
                 ->info('Принимаем в стандартных ' . $item->cmv->article->unit->abbreviation . ' в количестве ' . $count);
         }
 
+        $newCount = $stock->count += $count;
+
         $data = [
-            'count' => $stock->count += $count,
+            'count' => $newCount,
+            'free' => ($newCount > 0) ? $newCount : 0,
             'weight' => $stock->weight += ($item->cmv->article->weight * $count),
             'volume' => $stock->volume += ($item->cmv->article->volume * $count),
         ];

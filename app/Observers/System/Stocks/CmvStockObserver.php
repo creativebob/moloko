@@ -14,12 +14,16 @@ class CmvStockObserver extends BaseObserver
      */
     public function setFree($stock)
     {
-        if ($stock->count < 0) {
-            $stock->free = 0;
-        }
-        // TODO - 14.10.2020 - Нужна логика по расчету свободных остатков в зависимости от резервов
-//        else {
-//            $stock->free = $stock->count;
+
+        // Приходуем / списываем
+//        if ($stock->isDirty('count')) {
+//
 //        }
+//
+//        // Ставим / снимаем резерв
+//        if ($stock->isDirty('reserve')) {
+//
+//        }
+
     }
 }

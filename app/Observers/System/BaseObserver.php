@@ -17,7 +17,7 @@ class BaseObserver
         $item->display = $request->get('display', true);
         $item->system = $request->get('system', false);
 
-        $user = $request->user();
+        $user = auth()->user();
         $item->company_id = $user->company_id;
         $item->author_id = $this->getUserId($user);
 
