@@ -55,6 +55,7 @@ class Goods extends Model
 
     public function getRestAttribute()
     {
+        // TODO - 17.10.20 - Выбирать склад по правильному филиалу
         if(!empty($this->hasMany(GoodsStock::class, 'cmv_id')->where('filial_id', 1)->first())){
             return $this->hasMany(GoodsStock::class, 'cmv_id')->where('filial_id', 1)->first()->free;
         } else {

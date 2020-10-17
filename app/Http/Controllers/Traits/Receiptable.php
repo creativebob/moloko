@@ -79,7 +79,7 @@ trait Receiptable
 
         $data = [
             'count' => $newCount,
-            'free' => ($newCount > 0) ? $newCount : 0,
+            'free' => ($newCount > 0) ? ($newCount - $stock->reserve) : 0,
             'weight' => $stock->weight += ($item->cmv->article->weight * $count),
             'volume' => $stock->volume += ($item->cmv->article->volume * $count),
         ];

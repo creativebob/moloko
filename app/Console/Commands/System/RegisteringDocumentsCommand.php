@@ -46,24 +46,27 @@ class RegisteringDocumentsCommand extends Command
 
         set_time_limit(0);
 
-        \DB::statement("SET foreign_key_checks=0");
-        $names = [
-            'goods_stocks',
-            'raws_stocks',
-            'attachments_stocks',
-            'containers_stocks',
-            'tools_stocks',
-
-            'costs',
-            'costs_histories',
-
-            'receipts',
-            'offs',
-        ];
-        foreach ($names as $name) {
-            \DB::table($name)->truncate();
-        }
-        \DB::statement("SET foreign_key_checks=1");
+//        \DB::statement("SET foreign_key_checks=0");
+//        $names = [
+//            'goods_stocks',
+//            'raws_stocks',
+//            'attachments_stocks',
+//            'containers_stocks',
+//            'tools_stocks',
+//
+//            'costs',
+//            'costs_histories',
+//
+//            'receipts',
+//            'offs',
+//
+//            'reserves',
+//            'reserves_histories',
+//        ];
+//        foreach ($names as $name) {
+//            \DB::table($name)->truncate();
+//        }
+//        \DB::statement("SET foreign_key_checks=1");
 
         \Auth::loginUsingId(4);
 
