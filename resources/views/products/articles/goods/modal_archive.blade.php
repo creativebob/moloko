@@ -6,18 +6,18 @@
   </div>
   <div class="grid-x align-center modal-content ">
     <ul>
-      @if($item->stocks->sum('count') > 0)
-          <li class="small-10 cell">
-              <h6>На складе присутствуют остатки товара: {{ $item->stocks->sum('count') }} </h6>
-              <ol>
-                  @foreach($item->stocks as $stock)
-                    <li>
-                        <a href="{{ route('goods_stocks.edit', $stock->id) }}" target="_blank">{{ $stock->stock->name }}: {{ num_format($stock->count, 2) }} {{ $item->article->unit->abbreviation }}</a>
-                    </li>
-                  @endforeach
-              </ol>
-          </li>
-      @endif
+{{--      @if($item->stocks->sum('count') > 0)--}}
+{{--          <li class="small-10 cell">--}}
+{{--              <h6>На складе присутствуют остатки товара: {{ $item->stocks->sum('count') }} </h6>--}}
+{{--              <ol>--}}
+{{--                  @foreach($item->stocks as $stock)--}}
+{{--                    <li>--}}
+{{--                        <a href="{{ route('goods_stocks.edit', $stock->id) }}" target="_blank">{{ $stock->stock->name }}: {{ num_format($stock->count, 2) }} {{ $item->article->unit->abbreviation }}</a>--}}
+{{--                    </li>--}}
+{{--                  @endforeach--}}
+{{--              </ol>--}}
+{{--          </li>--}}
+{{--      @endif--}}
 
       @if($item->in_kits->isNotEmpty())
           <li class="small-10 cell">
