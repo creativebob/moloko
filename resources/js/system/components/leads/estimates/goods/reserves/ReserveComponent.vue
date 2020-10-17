@@ -51,13 +51,21 @@
                 }
                 return 0;
             },
+            isLoading() {
+                return this.$store.state.lead.loading;
+            }
         },
         methods: {
             reserving() {
-                this.$emit('reserve');
+                if (! this.isLoading) {
+                    this.$emit('reserve');
+                }
+
             },
             unreserving() {
-                this.$emit('unreserve');
+                if (! this.isLoading) {
+                    this.$emit('unreserve');
+                }
             },
         },
         filters: {

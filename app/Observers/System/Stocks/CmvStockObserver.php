@@ -16,9 +16,10 @@ class CmvStockObserver extends BaseObserver
     {
         if ($stock->count < 0) {
             $stock->free = 0;
-        } else {
-            // TODO - 14.10.2020 - Нужна логика по расчету свободных остатков в зависимости от резервов
-            $stock->free = $stock->count;
         }
+        // TODO - 14.10.2020 - Нужна логика по расчету свободных остатков в зависимости от резервов
+//        else {
+//            $stock->free = $stock->count;
+//        }
     }
 }

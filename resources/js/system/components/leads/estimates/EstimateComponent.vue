@@ -40,7 +40,7 @@
             <tr v-if="discount" class="tfoot-discount-info">
                 <td colspan="3" class="tfoot-discount-name">{{ discount.name }}</td>
                 <td class="tfoot-discount-value">{{ discount.percent | decimalPlaces }}</td>
-                <td class="tfoot-discount-currency"><span>{{ estimateAmount | decimalPlaces | decimalLevel }} руб.</span></td>
+                <td class="tfoot-discount-currency"><span>{{ estimateDiscount | decimalPlaces | decimalLevel }} руб.</span></td>
                 <td colspan="3" class="tfoot-discount-currency"></td>
             </tr>
             <tr v-if="discount" class="tfoot-estimate-amount">

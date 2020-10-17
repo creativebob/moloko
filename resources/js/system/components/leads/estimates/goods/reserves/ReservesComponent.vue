@@ -38,14 +38,21 @@
                     }
                 });
                 return result.length > 0;
+            },
+            isLoading() {
+                return this.$store.state.lead.loading;
             }
         },
         methods: {
             reserve() {
-                this.$store.dispatch('RESERVE_ESTIMATE');
+                if (! this.isLoading) {
+                    this.$store.dispatch('RESERVE_ESTIMATE');
+                }
             },
             unreserve() {
-                this.$store.dispatch('UNRESERVE_ESTIMATE');
+                if (! this.isLoading) {
+                    this.$store.dispatch('UNRESERVE_ESTIMATE');
+                }
             },
         }
     }

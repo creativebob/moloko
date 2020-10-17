@@ -44,13 +44,15 @@ class EstimatesGoodsItemController extends Controller
         $answer = operator_right('stocks', true, getmethod('index'));
         
         // TODO - 16.10.20 - Пока что берем первый склад
-        $stockId = Stock::where('filial_id', auth()->user()->stafferFilialId)
-            ->moderatorLimit($answer)
-            ->companiesLimit($answer)
+        $stockId = Stock::
+//        where('filial_id', auth()->user()->stafferFilialId)
+//            ->moderatorLimit($answer)
+//            ->companiesLimit($answer)
             // ->filials($answer)
-            ->authors($answer)
-            ->systemItem($answer)
-            ->value('id');
+//            ->authors($answer)
+//            ->systemItem($answer)
+//            ->
+            value('id');
         
         // Если включены настройки для складов, то проверяем сколько складов в системе, и если один, то берем его id
 //        $settings = getSettings();
@@ -321,6 +323,9 @@ class EstimatesGoodsItemController extends Controller
         $estimatesGoodsItem->load([
             'stock:id,name',
             'price_goods',
+            'goods.article',
+            'currency',
+            'reserve'
         ]);
         
         return response()->json([
