@@ -99,8 +99,7 @@ class ParserController extends Controller
      */
     public function setRegisteredAt()
     {
-        $estimates = Estimate::where('is_registered', 1)
-            ->get();
+        $estimates = Estimate::get();
         foreach ($estimates as $estimate) {
             $data = [];
             if ($estimate->is_registered == 1) {
