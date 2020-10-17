@@ -2,7 +2,7 @@
     <li
         v-show="isShow"
         class="tabs-title">
-        <a href="#tab-payments" aria-selected="true">Оплата</a>
+        <a data-tabs-target="tab-payments" href="#tab-payments">Оплата</a>
     </li>
 </template>
 
@@ -10,9 +10,8 @@
     export default {
         computed: {
             isShow() {
-                return this.$store.state.lead.estimate.is_registered == 1;
+                return this.$store.state.lead.estimate.registered_at;
             }
         }
-
     }
 </script>

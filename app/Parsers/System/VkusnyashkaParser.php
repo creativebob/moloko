@@ -38,7 +38,7 @@ class VkusnyashkaParser
             foreach ($leads as $lead) {
                 $estimate = $lead->estimate;
 
-                if ($estimate->is_registered == 0) {
+                if ($estimate->registered_at) {
 
                     logs('documents')->info("========================================== НАЧАЛО РЕГИСТРАЦИИ СМЕТЫ, ID: {$estimate->id} =============================================== ");
 
@@ -175,8 +175,7 @@ class VkusnyashkaParser
 
                     $estimate->update([
                         'client_id' => $client->id,
-                        'is_registered' => true,
-                        'registered_date' => $estimate->created_at,
+                        'registered_at' => $estimate->updated_at,
                     ]);
 
                     logs('documents')->info("========================================== КОНЕЦ РЕГИСТРАЦИИ СМЕТЫ, ID: {$estimate->id} =============================================== ");
@@ -192,20 +191,19 @@ class VkusnyashkaParser
                             'contract_type' => 'App\ContractsClient',
 
                             'document_id' => $estimate->id,
-                            'document_type' => 'App\Estimate'
+                            'document_type' => 'App\Models\System\Documents\Estimate'
                         ];
 
                         $payment = Payment::create($paymentData);
                     }
 
-                    if ($estimate->is_saled == 0) {
+                    if (!$estimate->saled_at) {
 
                         // Обновляем показатели клиента
                         $this->setIndicators($estimate);
 
                         $estimate->update([
-                            'is_saled' => true,
-                            'saled_date' => $lead->created_at,
+                            'saled_at' => $lead->created_at,
                         ]);
 
                     }

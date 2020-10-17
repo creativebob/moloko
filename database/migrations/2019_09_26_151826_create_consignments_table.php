@@ -22,7 +22,7 @@ class CreateConsignmentsTable extends Migration
             $table->string('name')->nullable()->comment('Короткое название накладной');
             $table->text('description')->nullable()->comment('Описание');
 
-            $table->date('receipt_date')->nullable()->comment('Дата приема');
+            $table->date('date')->nullable()->comment('Дата приема');
             $table->string('number')->index()->nullable()->comment('Номер накладной');
 
             $table->bigInteger('supplier_id')->unsigned()->nullable()->comment('Id поставщика');
@@ -32,8 +32,8 @@ class CreateConsignmentsTable extends Migration
             $table->foreign('stock_id')->references('id')->on('stocks');
 
             $table->decimal('amount', 12, 4)->default(0)->comment('Сумма');
-	        $table->boolean('draft')->default(1)->comment('Черновик');
-            $table->boolean('is_posted')->default(0)->comment('Оприходовано');
+            $table->timestamp('receipted_at')->nullable()->comment('Оприходовано');
+            $table->boolean('draft')->default(1)->comment('Черновик');
 
 
             // Общие настройки

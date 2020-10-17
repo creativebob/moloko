@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\System\Documents\Estimate;
 use App\Models\System\Traits\Archiveable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -144,7 +145,7 @@ class Client extends Model
     // Получаем заказы
     public function orders()
     {
-        return $this->hasMany('App\Estimate', 'client_id');
+        return $this->hasMany('App\Models\System\Documents\Estimate', 'client_id');
     }
 
     public function estimates()
@@ -342,13 +343,13 @@ class Client extends Model
         // TODO - 01.07.20 - Фильтруем по дате регистрации, нужно фильтровать по дате продажи
         if (request('estimate_date_min')) {
             $query->whereHas('estimates', function ($q) {
-                $q->whereDate('registered_date', '>=', Carbon::createFromFormat('d.m.Y', request()->estimate_date_min));
+                $q->whereDate('registered_at', '>=', Carbon::createFromFormat('d.m.Y', request()->estimate_date_min));
             });
         }
 
         if (request('estimate_date_max')) {
             $query->whereHas('estimates', function ($q) {
-                $q->whereDate('registered_date', '<=', Carbon::createFromFormat('d.m.Y', request()->estimate_date_max));
+                $q->whereDate('registered_at', '<=', Carbon::createFromFormat('d.m.Y', request()->estimate_date_max));
             });
         }
 

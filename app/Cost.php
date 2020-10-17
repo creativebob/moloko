@@ -18,7 +18,7 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\MorphTo; 
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 // Фильтры
 // use App\Scopes\Filters\Filter;
@@ -49,7 +49,12 @@ class Cost extends Model
 
     // public $timestamps = false;
     
-    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
+    
     protected $fillable = [
         'min',
         'max',

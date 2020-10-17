@@ -4,18 +4,24 @@ namespace App\Observers\System;
 
 use App\Payment;
 
-use App\Observers\System\Traits\Commonable;
-
-class PaymentObserver
+class PaymentObserver extends BaseObserver
 {
-
-    use Commonable;
-
+    
+    /**
+     * Handle the payment "creating" event.
+     *
+     * @param Payment $payment
+     */
     public function creating(Payment $payment)
     {
         $this->store($payment);
     }
-
+    
+    /**
+     * Handle the payment "created" event.
+     *
+     * @param Payment $payment
+     */
     public function created(Payment $payment)
     {
         $contract = $payment->contract;
@@ -28,16 +34,5 @@ class PaymentObserver
            'paid' => $paid,
            'debit' => $debit
         ]);
-
-    }
-
-    public function updating(Payment $payment)
-    {
-        $this->update($payment);
-    }
-
-    public function deleting(Payment $payment)
-    {
-        $this->destroy($payment);
     }
 }

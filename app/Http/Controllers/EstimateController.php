@@ -9,35 +9,36 @@ use App\Http\Controllers\System\Traits\Clientable;
 use App\Http\Controllers\System\Traits\Companable;
 use App\Http\Controllers\System\Traits\Locationable;
 use App\Http\Controllers\System\Traits\Phonable;
+use App\Http\Controllers\Traits\Estimatable;
 use App\Http\Controllers\Traits\Offable;
 use App\Http\Controllers\Traits\Photable;
 use App\Http\Controllers\Traits\Reservable;
 use App\Http\Controllers\Traits\UserControllerTrait;
 use App\Http\Requests\System\LeadRequest;
-use Illuminate\Support\Facades\Log;
-use App\Estimate;
+use App\Models\System\Documents\Estimate;
 use App\Http\Controllers\Traits\LeadControllerTrait;
 use App\Lead;
 use App\Stock;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 
 class EstimateController extends Controller
 {
-
-    // Настройки сконтроллера
-    public function __construct(Estimate $estimate)
+    protected $entityAlias;
+    protected $entityDependence;
+    
+    /**
+     * EstimateController constructor.
+     */
+    public function __construct()
     {
         $this->middleware('auth');
-        $this->estimate = $estimate;
-        $this->class = Estimate::class;
-        $this->model = 'App\Estimate';
-        $this->entity_alias = with(new $this->class)->getTable();
-        $this->entity_dependence = false;
+        $this->entityAlias = 'estimates';
+        $this->entityDependence = false;
     }
 
     use UserControllerTrait;
     use LeadControllerTrait;
+    use Estimatable;
     use Locationable;
     use Phonable;
     use Photable;
@@ -45,16 +46,14 @@ class EstimateController extends Controller
     use Companable;
     use Reservable;
     use Offable;
-
-
-
+    
     public function index(Request $request)
     {
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), Estimate::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // -------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
@@ -69,11 +68,11 @@ class EstimateController extends Controller
         ])
             ->moderatorLimit($answer)
             ->companiesLimit($answer)
-            // ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+            // ->filials($answer)
             ->authors($answer)
-            ->systemItem($answer) // Фильтр по системным записям
+            ->systemItem($answer)
             ->where('draft', false)
-            ->where('is_registered', true)
+            ->whereNotNull('registered_at')
 //        ->whereNotNull('client_id')
 //            ->booklistFilter($request)  // Фильтр по спискам
 //            ->filter($request, 'client_id')
@@ -86,7 +85,7 @@ class EstimateController extends Controller
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter = setFilter($this->entity_alias, $request, [
+        $filter = setFilter($this->entityAlias, $request, [
             // 'client',               // Клиенты
             'booklist'              // Списки пользователя
         ]);
@@ -95,12 +94,11 @@ class EstimateController extends Controller
 
 
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entityAlias);
 
         return view('estimates.index', compact('estimates', 'pageInfo'));
     }
-
-
+    
     public function search(Request $request, $search)
     {
 
@@ -113,7 +111,8 @@ class EstimateController extends Controller
                     $q->where('phone', $search)
                     ->orWhere('crop', $search);
                 });
-            })->where('is_registered', true)
+            })
+            ->whereNotNull('registered_at')
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -134,45 +133,12 @@ class EstimateController extends Controller
             $q->whereHas('phones', function ($q) use ($search) {
                 $q->where('crop', $search);
             });
-        })->where('is_registered', true)
+        })
+            ->whereNotNull('registered_at')
         ->orderBy('created_at', 'desc')
         ->get();
         return response()->json($results);
 
-    }
-
-
-    public function create()
-    {
-        //
-    }
-
-
-    public function store(Request $request)
-    {
-        //
-    }
-
-    public function show(Request $request, $id)
-    {
-        //
-    }
-
-    public function edit(Request $request, $id)
-    {
-        //
-    }
-
-
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-
-    public function destroy(Request $request, $id)
-    {
-        //
     }
 
     /**
@@ -190,7 +156,7 @@ class EstimateController extends Controller
         ])
             ->find($id);
 
-        if ($estimate->is_registered == 0) {
+        if ($estimate->registered_at) {
 
             // Отдаем работу по редактировнию лида трейту
             $this->updateLead($request, $estimate->lead);
@@ -278,8 +244,7 @@ class EstimateController extends Controller
 
             $estimate->update([
                 'client_id' => $client->id,
-                'is_registered' => true,
-                'registered_date' => today(),
+                'registered_at' => now(),
             ]);
 
             logs('documents')->info("========================================== КОНЕЦ РЕГИСТРАЦИИ СМЕТЫ, ID: {$estimate->id} =============================================== ");
@@ -293,6 +258,56 @@ class EstimateController extends Controller
                 ->withErrors(['msg' => 'Смета уже оформлена'])
                 ->withInput();
         }
+    }
+    
+    /**
+     * Отмена регистраии сметы
+     *
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function unregistering($id)
+    {
+        // ГЛАВНЫЙ ЗАПРОС:
+        $estimate = Estimate::find($id);
+        
+        if ($estimate->registered_at && $estimate->payments->isEmpty()) {
+            
+            $estimate->update([
+                'registered_at' => null,
+            ]);
+        }
+        
+        return response()->json($estimate);
+    }
+    
+    /**
+     * Продажа сметы
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function saling($id)
+    {
+        // ГЛАВНЫЙ ЗАПРОС:
+        $estimate = Estimate::with([
+            'client'
+        ])
+            ->find($id);
+        
+        if (! $estimate->saled_at) {
+            
+            // Обновляем показатели клиента
+            $this->setIndicators($estimate);
+            
+            $estimate->update([
+                'saled_at' => now(),
+            ]);
+            
+        }
+        
+        return response()->json($estimate);
     }
 
     /**
@@ -318,7 +333,7 @@ class EstimateController extends Controller
         ])
             ->find($id);
 
-        if ($estimate->is_saled == 0) {
+        if (!$estimate->saled_at) {
             // Подключение политики
 //        $this->authorize(getmethod('update'), $lead);
 
@@ -346,7 +361,7 @@ class EstimateController extends Controller
                     foreach ($estimate->goods_items as $item) {
 
 //                        $entity_document = Entity::where('alias', $item->document->getTable())->first();
-//                        $model_document = 'App\\' . $entity_document->model;
+//                        $model_document = $entity_document->model;
 
 //                        if ($item->document->getTable() == 'estimates') {
 //                            $model_document_item = $model_document.'sGoodsItem';
@@ -362,7 +377,7 @@ class EstimateController extends Controller
                         if ($storage) {
 
 //                            $entity_storage = Entity::where('alias', $storage->getTable())->first();
-//                            $model_storage = 'App\\' . $entity_storage->model;
+//                            $model_storage = $entity_storage->model;
 
                             // проверяем наличие резерва по позиции
                             if (optional($item->reserve)->count > 0) {
@@ -405,7 +420,7 @@ class EstimateController extends Controller
                     };
                 }
 
-                Log::channel('documents')
+                logs('documents')
                     ->info('========================================== НАЧАЛО ПРОИЗВОДТСВА СМЕТЫ, ID: ' . $estimate->id . ' ==============================================');
 
                 $estimate->goods_items->load('document');
@@ -440,9 +455,9 @@ class EstimateController extends Controller
                 }
                 $estimate->update($data);
 
-                Log::channel('documents')
+                logs('documents')
                     ->info('Произведена смета c id: ' . $estimate->id);
-                Log::channel('documents')
+                logs('documents')
                     ->info('========================================== КОНЕЦ ПРОИЗВОДТСВА СМЕТЫ ==============================================
                 
                 ');
@@ -483,44 +498,11 @@ class EstimateController extends Controller
 
 //        return redirect()->route('leads.index');
     }
-
-    /**
-     * Продажа сметы
-     *
-     * @param Request $request
-     * @param $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function saling($id)
+    
+    public function reserving($id)
     {
-        // ГЛАВНЫЙ ЗАПРОС:
+
         $estimate = Estimate::with([
-            'client'
-        ])
-        ->find($id);
-
-        if ($estimate->is_saled == 0) {
-
-            // Обновляем показатели клиента
-            $this->setIndicators($estimate);
-
-            $estimate->update([
-                'is_saled' => true,
-                'saled_date' => today(),
-            ]);
-
-        }
-
-        return response()->json($estimate);
-    }
-
-    public function reserving(Request $request, $id)
-    {
-//        dd($request);
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $estimate = Estimate::with([
-//            'lead',
             'goods_items' => function ($q) {
                 $q->with([
                     'price',
@@ -533,25 +515,18 @@ class EstimateController extends Controller
             ->find($id);
 //        dd($estimate);
 
-        if ($estimate->is_saled == 0) {
-            // Подключение политики
-//        $this->authorize(getmethod('update'), $lead);
-
-//            $lead = $estimate->lead;
-//            // Отдаем работу по редактировнию лида трейту
-//            $this->updateLead($request, $lead);
+        if (!$estimate->saled_at) {
 
             if ($estimate->goods_items->isNotEmpty()) {
-                Log::channel('documents')
+                logs('documents')
                     ->info('========================================== НАЧАЛО РЕЗЕРВИРОВАНИЯ СМЕТЫ, ID: ' . $estimate->id . ' ==============================================');
 
                 $result = [];
                 foreach ($estimate->goods_items as $item) {
-//                    $item->load('document');
                     $result[] = $this->reserve($item);
                 }
 
-                Log::channel('documents')
+                logs('documents')
                     ->info('========================================== КОНЕЦ РЕЗЕРВИРОВАНИЯ СМЕТЫ ==============================================
                 
                 ');
@@ -560,8 +535,8 @@ class EstimateController extends Controller
                     'goods_items' => function ($q) {
                         $q->with([
                             'product.article',
-                            'reserve',
-                            'stock:id,name'
+                            'stock:id,name',
+                            'price_goods',
                         ]);
                     }
                 ]);
@@ -576,7 +551,7 @@ class EstimateController extends Controller
     }
 
     /**
-     * Снатие резерва со сметы
+     * Снятие резерва со сметы
      *
      * @param Request $request
      * @param $id
@@ -599,7 +574,7 @@ class EstimateController extends Controller
             ->find($id);
 //        dd($estimate);
 
-        if ($estimate->is_saled == 0) {
+        if (!$estimate->saled_at) {
             // Подключение политики
 //        $this->authorize(getmethod('update'), $lead);
 
@@ -614,7 +589,7 @@ class EstimateController extends Controller
             if ($estimate->goods_items->isNotEmpty()) {
 //                            dd('Ща буит');
 
-                Log::channel('documents')
+                logs('documents')
                     ->info('========================================== НАЧАЛО ОТМЕНЫ РЕЗЕРВИРОВАНИЯ СМЕТЫ, ID: ' . $estimate->id . ' ==============================================');
 
                 $result = [];
@@ -623,7 +598,7 @@ class EstimateController extends Controller
                     $result[] = $this->unreserve($item);
                 }
 
-                Log::channel('documents')
+                logs('documents')
                     ->info('========================================== КОНЕЦ ОТМЕНЫ РЕЗЕРВИРОВАНИЯ СМЕТЫ ==============================================
                 
                 ');

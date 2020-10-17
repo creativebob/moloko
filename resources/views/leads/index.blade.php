@@ -129,15 +129,16 @@
           </td>
 
           <td class="td-badget">
-            <span class="
-            @if(($lead->payment > 0)&&($lead->payment < $lead->badget)) text-red @endif
-            @if($lead->payment == $lead->badget) text-green @endif
+              <span class="
+                @if($lead->estimate->payments->sum('amount') < $lead->estimate->total)) text-red @endif
+                @if($lead->estimate->payments->sum('amount') >= $lead->estimate->total) text-green @endif
+                @if($lead->estimate->total == 0) text-grey @endif
+                "
+            >{{ ($lead->estimate->total > 0) ? num_format($lead->estimate->total, 0) : num_format($lead->badget, 0) }}</span>
 
-            ">{{ ($lead->estimate->total) ? num_format($lead->estimate->total, 0) : num_format($lead->badget, 0) }}</span>
-
-            @if(($lead->payment != $lead->badget)&&($lead->payment != 0))
-              <br><span class="tiny-text">{{ num_format($lead->payment, 0) }}</span>
-            @endif
+{{--            @if(($lead->payment != $lead->badget)&&($lead->payment != 0))--}}
+{{--              <br><span class="tiny-text">{{ num_format($lead->payment, 0) }}</span>--}}
+{{--            @endif--}}
           </td>
 
           <td class="td-stage">{{ $lead->stage->name }}</td>
@@ -149,7 +150,7 @@
                   </td>
 
           <td class="td-status">
-            @if($lead->estimate->is_saled) Чек закрыт @else Открыт @endif
+            @if($lead->estimate->saled_at) Чек закрыт @else Открыт @endif
           </td>
 
            <td class="td-shipment_at">
@@ -241,8 +242,9 @@
               $.get("/admin/lead_take", {
                   id: id
               }, function(data){
+                  const companyName = data.company_name !== null ? data.company_name : "";
                   $('#leads-' + data.id + ' .td-case-number').text(data.case_number);
-                  $('#leads-' + data.id + ' .td-name').html('<a href="/admin/leads/' + data.id + '/edit">' + data.name + '</a><br><span class="tiny-text">' + data.company_name + '</span>');
+                  $('#leads-' + data.id + ' .td-name').html('<a href="/admin/leads/' + data.id + '/edit">' + data.name + '</a><br><span class="tiny-text">' + companyName + '</span>');
                   $('#leads-' + data.id + ' .td-action').html('');
                   $('#leads-' + data.id + ' .td-manager').text(data.manager);
               });

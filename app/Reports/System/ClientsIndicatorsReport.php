@@ -5,7 +5,7 @@ namespace App\Reports\System;
 use App\Client;
 use App\ClientsIndicator;
 use App\Company;
-use App\Estimate;
+use App\Models\System\Documents\Estimate;
 use App\Unit;
 use Carbon\Carbon;
 
@@ -19,11 +19,12 @@ class ClientsIndicatorsReport
      * @param null $companyId
      * @return mixed
      */
-    public static function getIndicators($date = null, $period = 'month', $companyId = null) {
+    public static function getIndicators($date = null, $period = 'month', $companyId = null)
+    {
         set_time_limit(0);
 
         // Если крон
-        if (! $date) {
+        if (!$date) {
             $date = today()->subMonth()->toDateString();
         }
 
@@ -71,8 +72,8 @@ class ClientsIndicatorsReport
 //            ->has('estimates')
             ->with([
                 'estimates' => function ($q) use ($endDate) {
-                    $q->whereNotNull('registered_date')
-                        ->where('registered_date', '<', $endDate)
+                    $q->whereNotNull('registered_at')
+                        ->where('registered_at', '<', $endDate)
                         ->orderBy('created_at');
                 },
                 'actual_blacklist',
@@ -80,12 +81,12 @@ class ClientsIndicatorsReport
             ])
             ->withCount([
                 'estimates' => function ($q) use ($endDate) {
-                    $q->whereNotNull('registered_date')
-                        ->where('registered_date', '<', $endDate);
+                    $q->whereNotNull('registered_at')
+                        ->where('registered_at', '<', $endDate);
                 }
             ])
 //            ->whereHas('estimates', function($q)  use ($endDate) {
-//                $q->where('registered_date', '<', $endDate);
+//                $q->where('registered_at', '<', $endDate);
 //            })
             //            ->when($authUser, function ($q) use ($authUser) {
             //                $q->where('company_id', $authUser->company_id);
@@ -120,151 +121,152 @@ class ClientsIndicatorsReport
 //                //                return $clientsIndicator;
 //                //                abort(403, "Отчет за {$clientsIndicator->start_date->format('d.m.Y')} уже существует в бд.");
 //            } else {
-                $data['count'] = $clients->count();
+            $data['count'] = $clients->count();
 
 //                dd($clients->first()->estimates->last());
-                $activeClients = $clients->filter(function ($client) use ($endDatePeriodActive) {
+            $activeClients = $clients->filter(function ($client) use ($endDatePeriodActive) {
 //                    if ($client->estimates->last() != null) {
-                        return $client->estimates->last()->registered_date > $endDatePeriodActive;
+                return $client->estimates->last()->registered_at > $endDatePeriodActive;
 //                    }
-                });
-                $data['active_count'] = $activeClients->count();
+            });
+            $data['active_count'] = $activeClients->count();
 
-                // Находим активных клиентов в предыдущем периоде
-                $activeClientsPrevious = $clients->filter(function ($client) use ($startDate, $endDatePreviousPeriodActive) {
+            // Находим активных клиентов в предыдущем периоде
+            $activeClientsPrevious = $clients->filter(function ($client) use ($startDate, $endDatePreviousPeriodActive) {
 //                    if ($client->estimates->last() != null) {
-                        return $client->first_order_date < $startDate && $client->estimates->where('registered_date', '<', $startDate)->last()->registered_date > $endDatePreviousPeriodActive;
+                return $client->first_order_date < $startDate && $client->estimates->where('registered_at', '<', $startDate)->last()->registered_date > $endDatePreviousPeriodActive;
 //                    }
-                });
-                $data['active_previous_count'] = $activeClientsPrevious->count();
-                logs('clients')->info("Количество клиентов которые были действующими в предыдущий период (с {$startDatePreviousPeriodActive} по {$endDatePreviousPeriodActive}): {$activeClientsPrevious->count()}");
+            });
+            $data['active_previous_count'] = $activeClientsPrevious->count();
+            logs('clients')->info("Количество клиентов которые были действующими в предыдущий период (с {$startDatePreviousPeriodActive} по {$endDatePreviousPeriodActive}): {$activeClientsPrevious->count()}");
 
-                $lostClients = $clients->filter(function ($client) use ($startDatePeriodActive, $endDatePeriodActive) {
+            $lostClients = $clients->filter(function ($client) use ($startDatePeriodActive, $endDatePeriodActive) {
 //                    if ($client->estimates->last() != null) {
-                        return $client->estimates->last()->registered_date <= $endDatePeriodActive;
+                return $client->estimates->last()->registered_at <= $endDatePeriodActive;
 //                    }
-                });
-                $data['lost_count'] = $lostClients->count();
+            });
+            $data['lost_count'] = $lostClients->count();
 
-                $data['deleted_count'] = Client::whereNotNull('deleted_at')->withTrashed()->count();
-                $data['blacklist_count'] = $clients->whereNotNull('actual_blacklist')->count();
+            $data['deleted_count'] = Client::whereNotNull('deleted_at')->withTrashed()->count();
+            $data['blacklist_count'] = $clients->whereNotNull('actual_blacklist')->count();
 
-                $data['new_clients_period_count'] = $clients->where('first_order_date', '>=', $startDate)->where('first_order_date', '<', $endDate)->count();
+            $data['new_clients_period_count'] = $clients->where('first_order_date', '>=', $startDate)->where('first_order_date', '<', $endDate)->count();
 
-                $lostClientsPeriod = $clients->filter(function ($client) use ($startDatePeriodActive, $endDatePeriodActive) {
+            $lostClientsPeriod = $clients->filter(function ($client) use ($startDatePeriodActive, $endDatePeriodActive) {
 //                    if ($client->estimates->last() != null) {
-                        return $client->estimates->last()->registered_date >= $startDatePeriodActive && $client->estimates->last()->registered_date < $endDatePeriodActive;
+                return $client->estimates->last()->registered_at >= $startDatePeriodActive && $client->estimates->last()->registered_date < $endDatePeriodActive;
 //                    }
-                });
-                $data['lost_clients_period_count'] = $lostClientsPeriod->count();
+            });
+            $data['lost_clients_period_count'] = $lostClientsPeriod->count();
 
-                if (($data['active_previous_count'] + $data['new_clients_period_count'] - $data['lost_clients_period_count']) != $data['active_count']) {
-                    logs('clients')->info("Отчет по показателям от {$startDate->format('d.m.Y')} на период: {$unit->name} для компании {$company->name}: ОБНАРУЖЕНО НЕСООТВЕТСТВИЕ КЛИЕНТОВ!
+            if (($data['active_previous_count'] + $data['new_clients_period_count'] - $data['lost_clients_period_count']) != $data['active_count']) {
+                logs('clients')->info("Отчет по показателям от {$startDate->format('d.m.Y')} на период: {$unit->name} для компании {$company->name}: ОБНАРУЖЕНО НЕСООТВЕТСТВИЕ КЛИЕНТОВ!
                         Активные на предыдущий период: [{$data['active_previous_count']}], новые: [{$data['new_clients_period_count']}], потерянные: [{$data['lost_clients_period_count']}], активные на конец: [{$data['active_count']}]
                     ");
-                }
+            }
 
 
-                if ($data['active_previous_count'] > 0) {
-                    $data['customer_retention_rate'] = ($data['active_count'] - $data['new_clients_period_count']) / $data['active_previous_count'];
-                    $data['churn_rate'] = $data['lost_clients_period_count'] / $data['active_previous_count'];
-                } else {
-                    $data['customer_retention_rate'] = 1;
-                    $data['churn_rate'] = 0;
-                }
+            if ($data['active_previous_count'] > 0) {
+                $data['customer_retention_rate'] = ($data['active_count'] - $data['new_clients_period_count']) / $data['active_previous_count'];
+                $data['churn_rate'] = $data['lost_clients_period_count'] / $data['active_previous_count'];
+            } else {
+                $data['customer_retention_rate'] = 1;
+                $data['churn_rate'] = 0;
+            }
 
-                $customersPeriod = $clients->filter(function ($client) use ($startDate, $endDate) {
+            $customersPeriod = $clients->filter(function ($client) use ($startDate, $endDate) {
 //                    if ($client->estimates->last() != null) {
-                        return $client->estimates->last()->registered_date >= $startDate && $client->estimates->last()->registered_date < $endDate;
+                return $client->estimates->last()->registered_at >= $startDate && $client->estimates->last()->registered_date < $endDate;
 //                    }
-                });
-                $data['customers_period_count'] = $customersPeriod->count();
+            });
+            $data['customers_period_count'] = $customersPeriod->count();
 
-                $estimates = Estimate::where([
-                    'company_id' => $companyId,
-                    'is_registered' => true
-                ])
-                    ->where('registered_date', '<', $endDate)
-                    ->get();
+            $estimates = Estimate::where([
+                'company_id' => $companyId,
+            ])
+                ->whereNotNull('registered_at')
+                ->where('registered_at', '<', $endDate)
+                ->get();
 
 //                dd($startDate);
-                $registeredEstimatesPeriod = $estimates->where('registered_date', '>=', $startDate)
-                    ->where('registered_date', '<', $endDate);
+            $registeredEstimatesPeriod = $estimates->where('registered_at', '>=', $startDate)
+                ->where('registered_at', '<', $endDate);
 
-                $activeClientsIds = $activeClients->pluck(['id']);
-                $activeClientsRegisteredEstimates = $estimates->whereIn('client_id', $activeClientsIds);
+            $activeClientsIds = $activeClients->pluck(['id']);
+            $activeClientsRegisteredEstimates = $estimates->whereIn('client_id', $activeClientsIds);
 
-                $data['orders_count'] = $activeClientsRegisteredEstimates->count();
-                $data['orders_period_count'] = $registeredEstimatesPeriod->count();
-                $data['lead_close_rate'] = $data['orders_period_count'] / $estimates->where('registered_date', '>=', $startDate)->count();
+            $data['orders_count'] = $activeClientsRegisteredEstimates->count();
+            $data['orders_period_count'] = $registeredEstimatesPeriod->count();
+            $data['lead_close_rate'] = $data['orders_period_count'] / $estimates->where('registered_at', '>=', $startDate)->count();
 
-                $repeatClientsCount = 0;
-                foreach ($clients as $client) {
-                    $estimatesPeriod = $client->estimates->where('is_registered', true)->where('registered_date', '>=', $startDate)->where('registered_date', '<', $endDate);
+            $repeatClientsCount = 0;
+            foreach ($clients as $client) {
+                $estimatesPeriod = $client->estimates->where('registered_at', '!=', null)->where('registered_at', '>=', $startDate)->where('registered_at', '<', $endDate);
 
-                    if ($estimatesPeriod->count() > 1) {
-                        $repeatClientsCount++;
-                    }
+                if ($estimatesPeriod->count() > 1) {
+                    $repeatClientsCount++;
                 }
-                $data['repeat_purchase_rate'] = $repeatClientsCount / $data['customers_period_count'];
+            }
+            $data['repeat_purchase_rate'] = $repeatClientsCount / $data['customers_period_count'];
 
-                $sumOrdersActiveClients = $activeClients->sum('estimates_count');
-                $data['purchase_frequency'] = $sumOrdersActiveClients / $data['active_count'];
-                $data['purchase_frequency_period'] = $data['orders_period_count'] / $data['customers_period_count'];
-                $data['order_gap_analysis'] = $daysInPeriod / $data['purchase_frequency_period'];
+            $sumOrdersActiveClients = $activeClients->sum('estimates_count');
+            $data['purchase_frequency'] = $sumOrdersActiveClients / $data['active_count'];
+            $data['purchase_frequency_period'] = $data['orders_period_count'] / $data['customers_period_count'];
+            $data['order_gap_analysis'] = $daysInPeriod / $data['purchase_frequency_period'];
 
-                $data['orders_revenue'] = $activeClientsRegisteredEstimates->sum('total');
-                $data['orders_revenue_period'] = $registeredEstimatesPeriod->sum('total');
-                $data['arpu'] = $data['orders_revenue_period'] / $data['active_count'];
-                $data['arppu'] = $data['orders_revenue_period'] / $data['customers_period_count'];
-                $data['paying_share'] = $data['arpu'] / $data['arppu'];
+            $data['orders_revenue'] = $activeClientsRegisteredEstimates->sum('total');
+            $data['orders_revenue_period'] = $registeredEstimatesPeriod->sum('total');
+            $data['arpu'] = $data['orders_revenue_period'] / $data['active_count'];
+            $data['arppu'] = $data['orders_revenue_period'] / $data['customers_period_count'];
+            $data['paying_share'] = $data['arpu'] / $data['arppu'];
 
-                if ($data['customer_retention_rate'] < 1) {
-                    $data['lifetime'] = 100 / (100 - ($data['customer_retention_rate'] * 100));
-                } else {
-                    $data['lifetime'] = 12;
-                }
+            if ($data['customer_retention_rate'] < 1) {
+                $data['lifetime'] = 100 / (100 - ($data['customer_retention_rate'] * 100));
+            } else {
+                $data['lifetime'] = 12;
+            }
 
-                // TODO - 27.04.20 - Если нет потерянных клиентов, то деление на 0
+            // TODO - 27.04.20 - Если нет потерянных клиентов, то деление на 0
+
 //                if ($data['lost_count'] > 0) {
 //                    $data['lifetime_fact'] = $lostClients->sum('lifetime') / $data['lost_count'];
 //                } else {
 //                    $data['lifetime_fact'] = 0;
 //                }
 
-                $data['average_order_value'] = $data['orders_revenue'] / $data['orders_count'];
-                $data['average_order_value_period'] = $data['orders_revenue_period'] / $data['orders_period_count'];
+            $data['average_order_value'] = $data['orders_revenue'] / $data['orders_count'];
+            $data['average_order_value_period'] = $data['orders_revenue_period'] / $data['orders_period_count'];
 
-                $data['customer_value'] = $data['average_order_value'] * $data['purchase_frequency'];
-                $data['customer_value_period'] = $data['average_order_value_period'] * $data['purchase_frequency_period'];
+            $data['customer_value'] = $data['average_order_value'] * $data['purchase_frequency'];
+            $data['customer_value_period'] = $data['average_order_value_period'] * $data['purchase_frequency_period'];
 
-                $data['ltv'] = $data['lifetime'] * $data['average_order_value'] * $data['purchase_frequency'];
-                $data['ltv_period'] = $data['lifetime'] * $data['average_order_value_period'] * $data['purchase_frequency_period'];
-                $data['customer_equity'] = $data['ltv'] * $data['active_count'];
+            $data['ltv'] = $data['lifetime'] * $data['average_order_value'] * $data['purchase_frequency'];
+            $data['ltv_period'] = $data['lifetime'] * $data['average_order_value_period'] * $data['purchase_frequency_period'];
+            $data['customer_equity'] = $data['ltv'] * $data['active_count'];
 
-                $loyalityClients = $activeClients->whereNotNull('loyalty_score');
+            $loyalityClients = $activeClients->whereNotNull('loyalty_score');
 
-                if ($loyalityClients->isNotEmpty()) {
-                    $loyalityClientsCount = $loyalityClients->count();
-                    $promotersCount = 0;
-                    $detractorsCount = 0;
+            if ($loyalityClients->isNotEmpty()) {
+                $loyalityClientsCount = $loyalityClients->count();
+                $promotersCount = 0;
+                $detractorsCount = 0;
 
-                    foreach ($loyalityClients as $loyalityClient) {
-                        if ($loyalityClient->loyalty_score->loyalty_score < 7) {
-                            $detractorsCount++;
-                        }
-                        if ($loyalityClient->loyalty_score->loyalty_score > 8) {
-                            $promotersCount++;
-                        }
+                foreach ($loyalityClients as $loyalityClient) {
+                    if ($loyalityClient->loyalty_score->loyalty_score < 7) {
+                        $detractorsCount++;
                     }
-
-                    $detractorsPercent = ($detractorsCount * 100) / $loyalityClientsCount;
-                    $promotersPercent = ($promotersCount * 100) / $loyalityClientsCount;
-
-                    $data['nps'] = $promotersPercent - $detractorsPercent;
-                } else {
-                    $data['nps'] = 0;
+                    if ($loyalityClient->loyalty_score->loyalty_score > 8) {
+                        $promotersCount++;
+                    }
                 }
+
+                $detractorsPercent = ($detractorsCount * 100) / $loyalityClientsCount;
+                $promotersPercent = ($promotersCount * 100) / $loyalityClientsCount;
+
+                $data['nps'] = $promotersPercent - $detractorsPercent;
+            } else {
+                $data['nps'] = 0;
+            }
 
 //                dd($data);
             if ($clientsIndicator->id) {
@@ -272,9 +274,8 @@ class ClientsIndicatorsReport
             } else {
                 $clientsIndicator = ClientsIndicator::create($data);
             }
-
-
-                logs('clients')->info("Сформирован отчет по показателям клиентской базы от {$startDate->format('d.m.Y')} на период: {$unit->name}, для компании: {$company->name}");
+            logs('clients')
+                ->info("Сформирован отчет по показателям клиентской базы от {$startDate->format('d.m.Y')} на период: {$unit->name}, для компании: {$company->name}");
 //            }
         }
 

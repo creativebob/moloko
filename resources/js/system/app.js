@@ -33,8 +33,8 @@ Vue.component('input-phone-component', require('./components/inputs/PhoneCompone
 
 Vue.component('discount-mode-component', require('./components/discounts/DiscountModeComponent'));
 
-Vue.component('consignment-component', require('./components/consignments/ConsignmentComponent.vue'));
-Vue.component('production-component', require('./components/productions/ProductionComponent.vue'));
+Vue.component('consignment-component', require('./components/documents/consignments/ConsignmentComponent.vue'));
+Vue.component('production-component', require('./components/documents/productions/ProductionComponent.vue'));
 
 // Смета на лиде
 // Vue.component('lead-init-component', require('./components/leads/LeadInitComponent'));
@@ -61,12 +61,14 @@ Vue.component('presets-component', require('./components/products/articles/prese
 // Услуги
 Vue.component('processes-categories-with-groups-component', require('./components/ProcessesCategoriesWithGroupsComponent.vue'));
 
+
+// Лиды
 Vue.component('lead-personal-component', require('./components/leads/LeadPersonalComponent'));
 Vue.component('catalog-goods-component', require('./components/leads/catalogs/goods/CatalogGoodsComponent.vue'));
 Vue.component('catalog-services-component', require('./components/leads/catalogs/services/CatalogServicesComponent.vue'));
-Vue.component('lead-badget-component', require('./components/LeadBadgetComponent.vue'));
 Vue.component('select-stocks-component', require('./components/common/selects/SelectStocksComponent.vue'));
 Vue.component('goods-lister-component', require('./components/leads/GoodsListerComponent'));
+Vue.component('button-unregister-component', require('./components/leads/buttons/UnregisterComponent'));
 
 // Скидки
 Vue.component('discounts-component', require('./components/common/discounts/DiscountsComponent'));

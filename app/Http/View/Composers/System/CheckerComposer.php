@@ -9,7 +9,7 @@ class CheckerComposer
 	{
 
         // Запрос для чекбокса
-        $model = 'App\\'.$view->model;
+        $model = $view->model;
 
         $items = $model::get();
         $name = $view->relation ?? str_plural(snake_case($view->model));

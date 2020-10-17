@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\System\Documents\Estimate;
 use App\Models\System\Traits\Commonable;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Model;

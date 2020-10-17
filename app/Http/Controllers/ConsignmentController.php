@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Traits\Receiptable;
-use Illuminate\Support\Facades\Log;
-use App\Consignment;
-use App\ConsignmentsItem;
+use App\Models\System\Documents\Consignment;
+use App\Models\System\Documents\ConsignmentsItem;
 use App\Entity;
 use App\Http\Requests\System\ConsignmentUpdateRequest;
 use Illuminate\Http\Request;
@@ -75,7 +74,7 @@ class ConsignmentController extends Controller
         // Инфо о странице
         $pageInfo = pageInfo($this->entityAlias);
 
-        return view('system.pages.consignments.index', compact('consignments', 'pageInfo', 'filter'));
+        return view('system.pages.documents.consignments.index', compact('consignments', 'pageInfo', 'filter'));
     }
 
     /**
@@ -140,7 +139,7 @@ class ConsignmentController extends Controller
         // Инфо о странице
         $pageInfo = pageInfo($this->entityAlias);
 
-        return view('system.pages.consignments.edit', compact('consignment', 'pageInfo'));
+        return view('system.pages.documents.consignments.edit', compact('consignment', 'pageInfo'));
     }
 
     /**
@@ -221,7 +220,7 @@ class ConsignmentController extends Controller
         $alias = $entityAlias . '_categories';
 
         $entity_categories = Entity::whereAlias($alias)->first(['model']);
-        $model = 'App\\' . $entity_categories->model;
+        $model = $entity_categories->model;
 
         // Получаем из сессии необходимые данные
         $answer = operator_right($entity_categories->alias, false, 'index');
@@ -293,7 +292,7 @@ class ConsignmentController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function posting(ConsignmentUpdateRequest $request, $id)
+    public function receipting(ConsignmentUpdateRequest $request, $id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('update'));
@@ -303,11 +302,16 @@ class ConsignmentController extends Controller
             ->authors($answer)
             ->systemItem($answer)
             ->find($id);
+//        dd($consignment);
 
-        if ($consignment->is_posted == 0) {
-            // Подключение политики
-            $this->authorize(getmethod('update'), $consignment);
+        if (empty($consignment)) {
+            abort(403, __('errors.not_found'));
+        }
 
+        // Подключение политики
+        $this->authorize(getmethod('update'), $consignment);
+
+        if (empty($consignment->receipted_at)) {
             $data = $request->input();
             $consignment->update($data);
 
@@ -329,34 +333,37 @@ class ConsignmentController extends Controller
 
             if ($consignment->items->isNotEmpty()) {
 
-                foreach ($consignment->items as $item) {
-                    if ($item->cmv->archive == 1) {
-                        return back()
-                            ->withErrors(['msg' => 'Накладная содержит архивные позиции, оприходование невозможно!']);
-                    }
+                $draft = $consignment->items->firstWhere('cmv.article.draft', 1);
+                if ($draft) {
+                    return back()
+                        ->withErrors(['msg' => 'Накладная содержит черновые позиции, оприходование невозможно!']);
                 }
 
-                Log::channel('documents')
-                    ->info('========================================== НАЧАЛО ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ, ID: ' . $consignment->id . ' ==============================================');
+                $archive = $consignment->items->firstWhere('cmv.archive', 1);
+                if ($archive) {
+                    return back()
+                        ->withErrors(['msg' => 'Накладная содержит архивные позиции, оприходование невозможно!']);
+                }
 
+                set_time_limit(0);
+
+                logs('documents')
+                    ->info("========================================== НАЧАЛО ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ ==============================================");
 
                 foreach ($consignment->items as $item) {
                     $this->receipt($item);
                 }
 
-
                 $consignment->update([
-                    'is_posted' => true,
-                    'amount' => $this->getAmount($consignment)
+                    'receipted_at' => now(),
                 ]);
 
-                Log::channel('documents')
-                    ->info('Оприходована накладная c id: ' . $consignment->id);
-                Log::channel('documents')
-                    ->info('========================================== КОНЕЦ ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ ==============================================
+                logs('documents')
+                    ->info("Оприходована накладная c id: {$consignment->id}");
+                logs('documents')
+                    ->info('======================================== КОНЕЦ ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ ==============================================
 				
 				');
-
 
             } else {
                 abort(403, __('errors.not_items'));
@@ -366,7 +373,7 @@ class ConsignmentController extends Controller
         return redirect()->route('consignments.index');
     }
 
-    public function unpost($id)
+    public function unreceipting($id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -397,7 +404,7 @@ class ConsignmentController extends Controller
 
         if ($consignment->items->isNotEmpty()) {
 
-            Log::channel('documents')
+            logs('documents')
                 ->info('========================================== НАЧАЛО ОТМЕНЫ ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ ==============================================');
 
             $grouped_items = $consignment->items->groupBy('entity.alias');
@@ -405,21 +412,21 @@ class ConsignmentController extends Controller
 
             foreach ($grouped_items as $alias => $items) {
                 $entity = Entity::where('alias', $alias . '_stocks')->first();
-                $model = 'App\\' . $entity->model;
+                $model = $entity->model;
 
                 foreach ($items as $item) {
-                    Log::channel('documents')
+                    logs('documents')
                         ->info('=== ПЕРЕБИРАЕМ ПУНКТ ' . $item->getTable() . ' ' . $item->id . ' ===');
 
                     // Склад
                     $stock = $item->cmv->stock;
 
-                    Log::channel('documents')
+                    logs('documents')
                         ->info('Существует склад ' . $stock->getTable() . ' c id: ' . $stock->id);
 
                     $stock_count = $stock->count;
 
-                    Log::channel('documents')
+                    logs('documents')
                         ->info('Значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
 
                     $stock->count -= $item->count;
@@ -427,15 +434,15 @@ class ConsignmentController extends Controller
                     $stock->volume -= ($item->cmv->article->volume * $item->count);
                     $stock->save();
 
-                    Log::channel('documents')
+                    logs('documents')
                         ->info('Обновлены значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
 
                     // Себестоимость
                     $cost = $item->cmv->cost;
 
-                    Log::channel('documents')
+                    logs('documents')
                         ->info('Существует себестоимость c id: ' . $cost->id);
-                    Log::channel('documents')
+                    logs('documents')
                         ->info('Значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
 
                     // Получаем из сессии необходимые данные
@@ -478,10 +485,10 @@ class ConsignmentController extends Controller
                     $cost->save();
 //					dd($cost);
 
-                    Log::channel('documents')
+                    logs('documents')
                         ->info('Обновлены значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
 
-                    Log::channel('documents')
+                    logs('documents')
                         ->info('=== КОНЕЦ ПЕРЕБОРА ПУНКТА ===
                         ');
 
@@ -489,13 +496,12 @@ class ConsignmentController extends Controller
             }
 
             $consignment->update([
-                'is_posted' => false,
-                'amount' => $this->getAmount($consignment)
+                'receipted_at' => null,
             ]);
 
-            Log::channel('documents')
+            logs('documents')
                 ->info('Откат оприходования накладной c id: ' . $consignment->id);
-            Log::channel('documents')
+            logs('documents')
                 ->info('========================================== КОНЕЦ ОТМЕНЫ ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ ==============================================
 				
 				');
@@ -532,13 +538,13 @@ class ConsignmentController extends Controller
             },
         ])
             ->companiesLimit($answer)
-            ->where('is_posted', true)
+            ->whereNotNull('receipted_at')
             ->chunk(5, function ($consignments) {
                 foreach ($consignments as $consignment) {
                     if ($consignment->is_posted == 1) {
                         if ($consignment->items->isNotEmpty()) {
 
-                            Log::channel('documents')
+                            logs('documents')
                                 ->info('========================================== НАЧАЛО ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ, ID: ' . $consignment->id . ' ==============================================');
 
                             foreach ($consignment->items as $item) {
@@ -552,12 +558,11 @@ class ConsignmentController extends Controller
 
                             $consignment->update([
                                 'is_posted' => true,
-                                'amount' => $this->getAmount($consignment)
                             ]);
 
-                            Log::channel('documents')
+                            logs('documents')
                                 ->info('Оприходована накладная c id: ' . $consignment->id);
-                            Log::channel('documents')
+                            logs('documents')
                                 ->info('========================================== КОНЕЦ ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ ==============================================
 				
 				            ');
@@ -569,13 +574,4 @@ class ConsignmentController extends Controller
         return redirect()->route('consignments.index');
     }
 
-    public function getAmount($consignment)
-    {
-        $amount = 0;
-        $consignment->load('items');
-        if ($consignment->items->isNotEmpty()) {
-            $amount = $consignment->items->sum('amount');
-        }
-        return $amount;
-    }
 }

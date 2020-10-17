@@ -70,11 +70,7 @@ class Update210420Tables extends Migration
             $table->decimal('surplus', 12, 4)->default(0)->comment('Излишек оплаты')->after('certificate_amount');
             $table->decimal('losses_from_points', 12, 4)->default(0)->comment('Потери от поинтов')->after('surplus');
 
-            $table->date('registered_date')->nullable()->comment('Дата оформления')->after('is_registered');
-
-            $table->boolean('is_main')->default(1)->comment('Главная')->after('registered_date');
-
-            $table->date('saled_date')->nullable()->comment('Дата продажи')->after('is_saled');
+            $table->boolean('is_main')->default(1)->comment('Главная')->after('registered_at');
 
             $table->boolean('is_dismissed')->default(0)->comment('Отменено')->after('is_main');
 
@@ -351,7 +347,6 @@ class Update210420Tables extends Migration
                 'manual_discount',
                 'margin_percent',
                 'margin_currency',
-                'is_registered',
                 'is_dismissed',
                 'is_main',
                 'external',
@@ -360,7 +355,6 @@ class Update210420Tables extends Migration
                 'surplus',
                 'is_create_parse',
                 'certificate_amount',
-                'saled_date',
                 'total_points',
                 'total_bonuses'
             ]);

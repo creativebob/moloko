@@ -135,7 +135,7 @@ class OrderController extends Controller
 
         $composition->product_id = $request->item_id;
         // $composition->order_compositions_id = 1;
-        $composition->product_type = 'App\\' . $entity->model;
+        $composition->product_type = $entity->model;
 
         $composition->order_id = $order->id;
         $composition->company_id = $company_id;

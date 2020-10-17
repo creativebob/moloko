@@ -18,6 +18,7 @@ use App\Models\Project\Promotion;
 use App\Phone;
 use App\PricesGoods;
 use App\Source;
+use App\Stock;
 use App\User;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Http\Request;
@@ -452,8 +453,11 @@ class CartController extends Controller
                 $pricesGoodsIds = array_keys($cart['prices']);
                 $pricesGoods = PricesGoods::with('goods.article')
                     ->find($pricesGoodsIds);
-
-                $stockId = null;
+    
+                // TODO - 16.10.20 - Пока что берем первый склад
+                $stockId = Stock::where('filial_id', $lead->filial_id)
+                    ->value('id');
+                
                 // Если включены настройки для складов, то проверяем сколько складов в системе, и если один, то берем его id
 //                $settings = $site->company->settings;
 //                if ($settings->isNotEmpty()) {
@@ -465,9 +469,14 @@ class CartController extends Controller
 //
 //                    if ($stocks) {
 //                        if ($stocks->count() == 1) {
-//                            $stock_id = $stocks->first()->id;
+//                            $stockId = $stocks->first()->id;
+//                        } else {
+//                            $stockId = $stocks->first()->id;
 //                        }
 //                    }
+//                } else {
+//                    $stockId = Stock::where('filial_id', $lead->filial_id)
+//                        ->value('id');
 //                }
 
                 // Вписываем пункты сметы
@@ -600,7 +609,6 @@ class CartController extends Controller
             $estimate->save();
 
             // Обновляем бюджет лида
-            // TODO - 23.10.19 - Сделать адекватное сохранение в корзине
             $lead->badget = $total;
             $lead->order_amount_base = $total;
             $lead->saveQuietly();

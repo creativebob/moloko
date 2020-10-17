@@ -3,7 +3,7 @@
 namespace App\Console\Commands\System;
 
 use App\Client;
-use App\Estimate;
+use App\Models\System\Documents\Estimate;
 use Illuminate\Console\Command;
 
 class ClientsIndicatorsDay extends Command
@@ -52,9 +52,9 @@ class ClientsIndicatorsDay extends Command
 
             $estimatesTotalSum = Estimate::where([
                 'company_id' => $company_id,
-                'is_registered' => true
             ])
-                ->whereDate('registered_date', '>', today()->subYear())
+                ->whereNotNull('registered_at')
+                ->whereDate('registered_at', '>', today()->subYear())
                 ->sum('total');
 //            dd($estimatesTotalSum);
 
@@ -68,7 +68,7 @@ class ClientsIndicatorsDay extends Command
             $continue95Percent = true;
 
             $clients = $clients->sortByDesc(function ($client) {
-                return $client->estimates->where('registered_date', '>=', today()->subYear())->sum('total');
+                return $client->estimates->where('registered_at', '>=', today()->subYear())->sum('total');
             });
 
             $clientsA = [];
@@ -95,28 +95,28 @@ class ClientsIndicatorsDay extends Command
                 $thirdPeriodStart = today()->subDays($period * 3);
                 $fourthPeriodStart = today()->subDays($period * 4);
 
-                $registeredEstimates = $client->estimates->where('is_registered', true);
+                $registeredEstimates = $client->estimates->where('registered_at', '!=', null);
 
                 $fourthPeriodOrders = 0;
-                $estimateFourthPeriodCount = $registeredEstimates->whereBetween('registered_date', [$fourthPeriodStart, $thirdPeriodStart])->count();
+                $estimateFourthPeriodCount = $registeredEstimates->whereBetween('registered_at', [$fourthPeriodStart, $thirdPeriodStart])->count();
                 if ($estimateFourthPeriodCount > 0) {
                     $fourthPeriodOrders = 1;
                 }
 
                 $thirdPeriodOrders = 0;
-                $estimateThirdPeriodCount = $registeredEstimates->whereBetween('registered_date', [$thirdPeriodStart, $secondPeriodStart])->count();
+                $estimateThirdPeriodCount = $registeredEstimates->whereBetween('registered_at', [$thirdPeriodStart, $secondPeriodStart])->count();
                 if ($estimateThirdPeriodCount > 0) {
                     $thirdPeriodOrders = 1;
                 }
 
                 $secondPeriodOrders = 0;
-                $estimateSecondPeriodCount = $registeredEstimates->whereBetween('registered_date', [$secondPeriodStart, $firstPeriodStart])->count();
+                $estimateSecondPeriodCount = $registeredEstimates->whereBetween('registered_at', [$secondPeriodStart, $firstPeriodStart])->count();
                 if ($estimateSecondPeriodCount > 0) {
                     $secondPeriodOrders = 1;
                 }
 
                 $firstPeriodOrders = 0;
-                $estimateFirstPeriodCount = $registeredEstimates->whereBetween('registered_date', [$firstPeriodStart, today()])->count();
+                $estimateFirstPeriodCount = $registeredEstimates->whereBetween('registered_at', [$firstPeriodStart, today()])->count();
                 if ($estimateFirstPeriodCount > 0) {
                     $firstPeriodOrders = 1;
                 }
@@ -158,7 +158,7 @@ class ClientsIndicatorsDay extends Command
                         $f = 5;
                     }
 
-                    $monetary = $registeredEstimates->whereBetween('registered_date', [$firstPeriodStart, today()])->sum('total');
+                    $monetary = $registeredEstimates->whereBetween('registered_at', [$firstPeriodStart, today()])->sum('total');
                     $m = 0;
                     if ($monetary >= 8000) {
                         $m = 1;
@@ -176,7 +176,7 @@ class ClientsIndicatorsDay extends Command
                     $data['rfm'] = (int)$rfm;
 
                     $clientEstimatesTotalYearSum = $client->estimates
-                        ->where('registered_date', '>=', today()->subYear())
+                        ->where('registered_at', '>=', today()->subYear())
                         ->where('is_dismissed', false)
                         ->sum('total');
 //                dd($clientEstimatesTotalYearSum);

@@ -80,7 +80,7 @@
                 @if($sections->isNotEmpty())
                 @foreach($sections as $section)
                     @php
-                    $model = 'App\\' . $section->model;
+                    $model = $section->model;
                     @endphp
                     @can('index', $model)
                 <tr class="item" id="sites-{{ $site->id }}" data-name="{{ $site->name }}">

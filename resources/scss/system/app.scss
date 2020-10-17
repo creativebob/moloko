@@ -2455,7 +2455,7 @@ a#task-toggle{
             background-position: -32px -448px;
             background-color: $content-bg-color;
         }
-        
+
         .icon-search:focus {
             background-color: $content-bg-color;
         }
@@ -4015,6 +4015,10 @@ em.raw-portion-item{
 
 .text-green{
     color: #1ac11a;
+}
+
+.text-grey {
+    color: #999;
 }
 
 .td-price-status{

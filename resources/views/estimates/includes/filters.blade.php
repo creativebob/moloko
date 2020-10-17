@@ -60,8 +60,8 @@
         </div>
 
         <div class="cell small-12 medium-6">
-            @include('includes.inputs.min_max_date', ['name' => 'registered_date', 'title' => 'Дата оформления заказа'])
-        </div>        
+            @include('includes.inputs.min_max_date', ['name' => 'registered_at', 'title' => 'Дата оформления заказа'])
+        </div>
 
     </div>
 </div>

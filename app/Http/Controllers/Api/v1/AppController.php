@@ -12,7 +12,7 @@ class AppController extends Controller
     public function categories_index($category_entity)
     {
         $entity = Entity::whereAlias($category_entity)->first(['model']);
-        $model = 'App\\'.$entity->model;
+        $model = $entity->model;
 
         $categories = $model::with([
             'groups:id,name'
@@ -40,14 +40,14 @@ class AppController extends Controller
         $res['groups'] = $groups;
         return response()->json($res);
     }
-	
+
 	public function categories_select($entity_alias)
 	{
 		$alias = $entity_alias.'_categories';
-		
+
 		$entity = Entity::whereAlias($alias)->first(['model']);
-		$model = 'App\\'.$entity->model;
-		
+		$model = $entity->model;
+
 		$categories = $model::with([
 			$entity_alias.'.article:id,name'
 		])
@@ -57,17 +57,17 @@ class AppController extends Controller
 				'parent_id',
 			]);
 //		dd($categories);
-		
+
 		$items = [];
 		foreach($categories as $category) {
-			
+
 			if (isset($category->$entity_alias)) {
 				foreach ($category->$entity_alias as $item) {
 					$item->article->category_id = $category->id;
 					$items[] = $item->article;
 				}
 			}
-			
+
 			if (isset($category->childCategories)) {
 				if (isset($category->$entity_alias)) {
 					foreach ($category->childCategories as $childCategory) {
@@ -80,7 +80,7 @@ class AppController extends Controller
 			}
 		}
 //        dd($items);
-		
+
 		$res['categories'] = buildTree($categories);
 		$res['items'] = $items;
 		return response()->json($res);

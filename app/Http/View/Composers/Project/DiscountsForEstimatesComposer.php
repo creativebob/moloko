@@ -12,7 +12,6 @@ class DiscountsForEstimatesComposer
         $site = $view->site;
         $discount = Discount::where([
             'company_id' => $site->company_id,
-            'display' => true,
             'archive' => false
         ])
             ->whereHas('entity', function ($q) {

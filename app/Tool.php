@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\System\Traits\Commonable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -24,7 +25,7 @@ use App\Scopes\Filters\BooklistFilter;
 
 class Tool extends Model
 {
-    // Включаем кеш
+//    use Commonable;
     use Cachable;
 
     use Notifiable;

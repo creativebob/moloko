@@ -1,76 +1,15 @@
 <template>
-    <div>
-        <table class="table-estimate lead-estimate" id="table-estimate_goods_items">
-
-            <thead>
-            <tr>
-                <th>Наименование</th>
-                <th>Цена</th>
-                <th>Кол-во</th>
-                <th class="td-discount">Скидка</th>
-                <th class="th-amount">Сумма</th>
-                <th class="th-delete"></th>
-
-                <reserves-component
-                    :settings="settings"
-                ></reserves-component>
-
-            </tr>
-            </thead>
-
-            <tbody>
-                <estimates-goods-item-component
-                    v-for="(item, index) in items"
-                    :item="item"
-                    :index="index"
-                    :key="item.id"
-                    :settings="settings"
-                    :stocks="stocks"
-                    @open-modal-remove="openModal(item, index)"
-                    @update="updateItem"
-                ></estimates-goods-item-component>
-            </tbody>
-
-<!--             <tfoot>
-                <tr class="tfoot-discount-info">
-                    <td colspan="3" class="tfoot-discount-name">Скидка 10% на заказ сделанный до 15 ноября 2020 года</td>
-                    <td class="tfoot-discount-value">10%</td>
-                    <td class="tfoot-discount-currency"><span>3400 руб.</span></td>
-                    <td colspan="3" class="tfoot-discount-currency"></td>
-                </tr>
-                <tr class="tfoot-estimate-amount">
-                    <td colspan="3" class="">Сумма без скидок:</td>
-                    <td></td>
-                    <td colspan="3"></td>
-                </tr>
-                <tr>
-                    <td colspan="3" class="tfoot-estimate-discount">Скидки:</td>
-                    <td></td>
-                    <td colspan="3"></td>
-                </tr>
-                <tr>
-                    <td colspan="3" class="tfoot-estimate-total">Итого к оплате:</td>
-                    <td></td>
-                    <td class="invert-show"><span>3400</span> руб.</td>
-                    <td colspan="3"></td>
-                </tr>
-            </tfoot> -->
-
-            <!--            <tfoot>-->
-            <!--                <tr>-->
-            <!--                    <td colspan="4" class="text-right">Итого:</td>-->
-            <!--                    <td>{{ itemsAmount | roundToTwo | level }}</td>-->
-            <!--                    <td colspan="1"></td>-->
-            <!--                </tr>-->
-            <!--                <tr>-->
-            <!--                    <td colspan="4" class="text-right">Итого со скидкой ({{ discountPercent }}%):</td>-->
-            <!--                    <td>{{ itemsTotal | roundToTwo | level }}</td>-->
-            <!--                    <td colspan="1"></td>-->
-            <!--                </tr>-->
-            <!--            </tfoot>-->
-
-        </table>
-
+    <tbody>
+        <estimates-goods-item-component
+            v-for="(item, index) in items"
+            :item="item"
+            :index="index"
+            :key="item.id"
+            :settings="settings"
+            :stocks="stocks"
+            @open-modal-remove="openModal(item, index)"
+            @update="updateItem"
+        ></estimates-goods-item-component>
         <div
             class="reveal rev-small"
             id="delete-estimates_goods_item"
@@ -102,15 +41,27 @@
                 </div>
             </div>
         </div>
-    </div>
+    </tbody>
 
+    <!--            <tfoot>-->
+    <!--                <tr>-->
+    <!--                    <td colspan="4" class="text-right">Итого:</td>-->
+    <!--                    <td>{{ itemsAmount | roundToTwo | level }}</td>-->
+    <!--                    <td colspan="1"></td>-->
+    <!--                </tr>-->
+    <!--                <tr>-->
+    <!--                    <td colspan="4" class="text-right">Итого со скидкой ({{ discountPercent }}%):</td>-->
+    <!--                    <td>{{ itemsTotal | roundToTwo | level }}</td>-->
+    <!--                    <td colspan="1"></td>-->
+    <!--                </tr>-->
+    <!--            </tfoot>-->
 </template>
 
 <script>
     export default {
         components: {
             'estimates-goods-item-component': require('./EstimatesGoodsItemComponent'),
-            'reserves-component': require('./reserves/EstimateReservesComponent'),
+            'reserves-component': require('./reserves/ReservesComponent'),
         },
         props: {
             items: Array,
@@ -119,12 +70,6 @@
         },
         data() {
             return {
-                id: null,
-
-                count: null,
-                cost: null,
-                // discountPercent: Number(this.$store.state.lead.estimate.discount_percent),
-
                 item: null,
                 itemName: null,
                 itemIndex: null,
@@ -138,7 +83,7 @@
                 return this.$store.state.lead.estimate;
             },
             isRegistered() {
-                return this.$store.state.lead.estimate.is_registered === 1;
+                return this.$store.state.lead.estimate.registered_at;
             },
             itemsAmount() {
                 let amount = 0;
@@ -168,7 +113,6 @@
                 });
                 return points;
             },
-
         },
         methods: {
             openModal(item, index) {
@@ -176,22 +120,23 @@
                 this.item = item;
                 this.itemName = item.goods.article.name;
             },
-            updateItem: function (item) {
+            updateItem(item) {
                 this.$store.commit('UPDATE_GOODS_ITEM', item);
             },
             deleteItem() {
                 this.$store.commit('REMOVE_GOODS_ITEM', this.item.id);
                 $('#delete-estimates_goods_item').foundation('close');
             },
-
         },
         filters: {
-            roundToTwo: function (value) {
-                return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
+            decimalPlaces(value) {
+                return parseFloat(value).toFixed(2);
             },
-            // Создает разделители разрядов в строке с числами
-            level: function (value) {
-                return Number(value).toLocaleString();
+            decimalLevel: function (value) {
+                return parseFloat(value).toLocaleString();
+            },
+            onlyInteger(value) {
+                return Math.floor(value);
             },
         },
         directives: {

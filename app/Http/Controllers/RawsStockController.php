@@ -2,40 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use App\RawsStock;
+use App\Models\System\Stocks\RawsStock;
 use Illuminate\Http\Request;
 
 class RawsStockController extends Controller
 {
 
-    // Настройки сконтроллера
-    public function __construct(RawsStock $raws_stock)
+    protected $entityAlias;
+    protected $entityDependence;
+
+    /**
+     * RawsStockController constructor.
+     */
+    public function __construct()
     {
         $this->middleware('auth');
-        $this->raws_stock = $raws_stock;
-        $this->class = RawsStock::class;
-        $this->model = 'App\RawsStock';
-        $this->entity_alias = with(new $this->class)->getTable();
-        $this->entity_dependence = true;
+        $this->entityAlias = 'raws_stocks';
+        $this->entityDependence = true;
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function index()
     {
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), RawsStock::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
         // dd($answer);
-
-        // -----------------------------------------------------------------------------------------------------------------------------
-        // ГЛАВНЫЙ ЗАПРОС
-        // -----------------------------------------------------------------------------------------------------------------------------
 
         $stocks = RawsStock::with([
             'cmv.article.unit',
@@ -52,49 +51,23 @@ class RawsStockController extends Controller
         // dd($stocks);
 
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_alias);
-//        dd($pageInfo);
+        $pageInfo = pageInfo($this->entityAlias);
 
         return view('system.common.stocks.index', compact('stocks', 'pageInfo', 'filter'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for editing the specified resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Request $request, $id)
-    {
-
-    }
-
     public function edit($id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         $stock = RawsStock::moderatorLimit($answer)
         ->authors($answer)
@@ -105,32 +78,10 @@ class RawsStockController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $stock);
 
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entityAlias);
         // dd($pageInfo);
 
         return view('system.common.stocks.edit', compact('stock', 'pageInfo', 'filter'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

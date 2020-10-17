@@ -2,37 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use App\ToolsStock;
+use App\Models\System\Stocks\ToolsStock;
 use Illuminate\Http\Request;
 
 class ToolsStockController extends Controller
 {
 
-    // Настройки сконтроллера
-    public function __construct(ToolsStock $tools_stock)
+    protected $entityAlias;
+    protected $entityDependence;
+
+    /**
+     * ToolsStockController constructor.
+     */
+    public function __construct()
     {
         $this->middleware('auth');
-        $this->tools_stock = $tools_stock;
-        $this->class = ToolsStock::class;
-        $this->model = 'App\ToolsStock';
-        $this->entity_alias = with(new $this->class)->getTable();
-        $this->entity_dependence = true;
+        $this->entityAlias = 'tools_stocks';
+        $this->entityDependence = true;
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function index()
     {
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
-        // dd($answer);
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), ToolsStock::class);
 
-        // -----------------------------------------------------------------------------------------------------------------------------
-        // ГЛАВНЫЙ ЗАПРОС
-        // -----------------------------------------------------------------------------------------------------------------------------
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
+        // dd($answer);
 
         $stocks = ToolsStock::with([
             'cmv.article.unit',
@@ -49,75 +51,8 @@ class ToolsStockController extends Controller
 //         dd($stocks);
 
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_alias);
-//        dd($pageInfo);
+        $pageInfo = pageInfo($this->entityAlias);
 
         return view('system.common.stocks.index', compact('stocks', 'pageInfo', 'filter'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }

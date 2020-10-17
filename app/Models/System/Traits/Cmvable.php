@@ -48,7 +48,8 @@ trait Cmvable
     // Себестоимость
     public function cost()
     {
-        return $this->morphOne(Cost::class, 'cmv')->where('filial_id', auth()->user()->stafferFilialId);
+        return $this->morphOne(Cost::class, 'cmv')
+            ->where('filial_id', auth()->user()->stafferFilialId);
     }
 
 	public function costs()
@@ -99,9 +100,13 @@ trait Cmvable
             if($this->article->manufacturer_id){
 
                 if($this->portion_status){
-                    return $this->morphMany(Cost::class, 'cmv')->where('manufacturer_id', $this->article->manufacturer_id)->first()->average * $this->unit_portion->ratio * $this->portion_count;
+                    return $this->morphMany(Cost::class, 'cmv')
+                            ->where('manufacturer_id', $this->article->manufacturer_id)
+                            ->first()->average * $this->unit_portion->ratio * $this->portion_count;
                 } else {
-                    return $this->morphMany(Cost::class, 'cmv')->where('manufacturer_id', $this->article->manufacturer_id)->first()->average;
+                    return $this->morphMany(Cost::class, 'cmv')
+                        ->where('manufacturer_id', $this->article->manufacturer_id)
+                        ->first()->average;
                 }
 
             } else {

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\EstimatesServicesItem;
+use App\Models\System\Documents\EstimatesServicesItem;
 use App\PricesService;
 use Illuminate\Http\Request;
 
@@ -18,7 +18,7 @@ class EstimatesServicesItemController extends Controller
         $this->middleware('auth');
         $this->estimate = $estimates_services_item;
         $this->class = EstimatesServicesItem::class;
-        $this->model = 'App\EstimatesServicesItem';
+        $this->model = 'App\Models\System\Documents\EstimatesServicesItem';
         $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = false;
     }
@@ -121,7 +121,7 @@ class EstimatesServicesItemController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\EstimatesGoodsItem  $estimatesItem
+     * @param  \App\Models\System\Documents\EstimatesGoodsItem  $estimatesItem
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -132,7 +132,7 @@ class EstimatesServicesItemController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\EstimatesGoodsItem  $estimatesItem
+     * @param  \App\Models\System\Documents\EstimatesGoodsItem  $estimatesItem
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -144,7 +144,7 @@ class EstimatesServicesItemController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\EstimatesGoodsItem  $estimatesItem
+     * @param  \App\Models\System\Documents\EstimatesGoodsItem  $estimatesItem
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -168,7 +168,7 @@ class EstimatesServicesItemController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\EstimatesGoodsItem  $estimatesItem
+     * @param  \App\Models\System\Documents\EstimatesGoodsItem  $estimatesItem
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

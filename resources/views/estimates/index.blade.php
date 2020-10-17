@@ -30,8 +30,8 @@
                 <tr id="thead-content">
                     <th class="td-drop"></th>
                     <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
-                    <th class="td-date">Дата заказа</th> 
-                    <th class="td-number">Номер заказа</th>                   
+                    <th class="td-date">Дата заказа</th>
+                    <th class="td-number">Номер заказа</th>
                     <th class="td-name">Клиент</th>
                     <th class="td-phone">Телефон</th>
                     <th class="td-amount">Сумма</th>
@@ -63,11 +63,11 @@
                     <label class="label-check" for="check-{{ $estimate->id }}"></label>
                 </td>
                 <td class="td-date">
-                    <span>{{ $estimate->registered_date->format('d.m.Y') }}</span><br>
-                    <span class="tiny-text">{{ $estimate->registered_date->format('H:i') }}</span>
-                </td>                 
+                    <span>{{ $estimate->registered_at->format('d.m.Y') }}</span><br>
+                    <span class="tiny-text">{{ $estimate->registered_at->format('H:i') }}</span>
+                </td>
                 <td class="td-number"><a href="/admin/leads/{{ $estimate->lead_id }}/edit">{{ $estimate->number }}</a>
-                </td>               
+                </td>
                 <td class="td-name">
                   <a href="/admin/estimates?client_id={{ $estimate->client_id }}" class="filter_link" title="Фильтровать">
                     {{ $estimate->client->clientable->name ?? 'Имя не указано' }}
@@ -103,7 +103,7 @@
                   <td class="td-margin_currency">{{ num_format($estimate->margin_currency, 0) }} <sup>{{ num_format($estimate->margin_percent, 0) }}%</sup></td>
                 @endif
 
-              <td class="td-saled">{{ ($estimate->is_saled == 1) ? 'Чек закрыт' : '' }}</td>
+              <td class="td-saled">{{ ($estimate->saled_at) ? 'Чек закрыт' : '' }}</td>
               <td class="td-dissmissed">{{ ($estimate->is_dissmissed == 1) ? 'Списан' : '' }}</td>
 
               <td class="td-delete">

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\System\Traits;
 
 use App\Client;
-use App\Estimate;
+use App\Models\System\Documents\Estimate;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Request;
 
@@ -76,8 +76,8 @@ trait Clientable
 
         $total = Estimate::where([
             'client_id' => $client->id,
-            'is_saled' => true
         ])
+            ->whereNotNull('saled_at')
             ->sum('total');
         $data['customer_equity'] = $total + $estimate->total;
 

@@ -10,11 +10,13 @@ use App\CatalogsGoods;
 use App\CatalogsGoodsItem;
 use App\Client;
 use App\ContractsClient;
-use App\Estimate;
+use App\Models\System\Documents\Estimate;
 use App\Goods;
 use App\GoodsCategory;
 use App\Http\Controllers\System\Traits\Clientable;
 use App\Http\Controllers\Traits\UserControllerTrait;
+use App\Models\System\Documents\Consignment;
+use App\Models\System\Documents\Production;
 use App\Models\System\External\Price;
 use App\Models\System\External\PricesType;
 use App\OldLead;
@@ -61,6 +63,100 @@ class ParserController extends Controller
     public function test()
     {
         dd(__METHOD__);
+    }
+    
+    /**
+     * Обновление моделей для сущностей производства и складов
+     *
+     * @return string
+     */
+    public function updateProductionsEntitiesModel()
+    {
+        $entities = Entity::get();
+        foreach ($entities as $entity) {
+            if ($entity->model == "Production" || $entity->model == "Consignment" || $entity->model == "Estimate") {
+                $entity->update([
+                   'model' => "App\Models\System\Documents\\{$entity->model}"
+                ]);
+            } else if ($entity->model == "GoodsStock" || $entity->model == "RawsStock" || $entity->model == "ContainersStock" || $entity->model == "AttachmentsStock" || $entity->model == "ToolsStock") {
+                $entity->update([
+                    'model' => "App\Models\System\Stocks\\{$entity->model}"
+                ]);
+            } else {
+                $entity->update([
+                    'model' => "App\\{$entity->model}"
+                ]);
+            }
+        }
+        
+        return "Модели сущностей обновлены";
+    }
+    
+    /**
+     * Обновление смет
+     *
+     * @return string
+     */
+    public function setRegisteredAt()
+    {
+        $estimates = Estimate::where('is_registered', 1)
+            ->get();
+        foreach ($estimates as $estimate) {
+            $data = [];
+            if ($estimate->is_registered == 1) {
+                $data['registered_at'] = $estimate->updated_at;
+            }
+            if ($estimate->is_saled == 1) {
+                $data['saled_at'] = $estimate->updated_at;
+            }
+            $estimate->update($data);
+        }
+        
+        return "Сметам проставлено registered_at и saled_at";
+    }
+    
+    /**
+     * Обновление накладных
+     *
+     * @return string
+     */
+    public function setReceiptedAt()
+    {
+        $consignments = Consignment::where('is_posted', 1)
+            ->get();
+        foreach ($consignments as $consignment) {
+            $consignment->update([
+                'receipted_at' => $consignment->updated_at
+            ]);
+        }
+        
+        return "Накладным проставлено receipted_at";
+    }
+    
+    /**
+     * Обновление нарядов
+     *
+     * @return string
+     */
+    public function setProducedAt()
+    {
+        $productions = Production::where('is_produced', 1)
+            ->get();
+        foreach ($productions as $production) {
+            $production->update([
+                'produced_at' => $production->updated_at
+            ]);
+        }
+    
+        return "Нарядам проставлено produced_at";
+    }
+    
+    /**
+     * Запуск команды на перерегистрацию документов
+     */
+    public function startRegisteringDocumentsCommand()
+    {
+        \Artisan::call("documents:registering");
     }
 
     /**

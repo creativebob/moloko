@@ -274,13 +274,13 @@ class OldLead extends Model
     // Заказы
     public function estimates()
     {
-        return $this->hasMany('App\Estimate');
+        return $this->hasMany('App\Models\System\Documents\Estimate');
     }
 
     // Основной заказ
     public function main_estimates()
     {
-        return $this->hasMany('App\Estimate')->whereNull('draft');
+        return $this->hasMany('App\Models\System\Documents\Estimate')->whereNull('draft');
     }
 
     // Текущий заказ

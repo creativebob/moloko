@@ -1,7 +1,7 @@
 <script type="application/javascript">
 
 	var id = '{{ $id }}';
-	var model = 'App\\{{ $model }}';
+	var model = '{{ $model }}';
 
 	// alert(model);
 	// Функция добавленяи комментария

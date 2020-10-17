@@ -67,55 +67,12 @@
                         :class="view"
                         v-show="listPrices.length > 0"
                 >
-                    <template v-for="price in listPrices">
-                        <li v-bind:class="{ priority: price.is_priority, hit: price.is_hit, new: price.is_new }">
-                            <a @click="addPriceToEstimate(price)">
-
-                                <!-- Отрисовываем ссылку на фото только в режиме отображения товаров "Карточкой", дабы не грузить браузер -->
-                                <div v-if="view == 'view-card'" class="prise-photo">
-                                    <img :src="getPhotoPath(price, 'small')">
-                                </div>
-
-                                <div class="grid-x">
-                                    <div class="cell main-block">
-                                        <div class="grid-x">
-                                            <div class="cell auto price-name">
-                                                <h4>
-                                                    <span class="items-product-name">{{ price.goods.article.name }}</span>
-<!--                                                    <span class="items-product-manufacturer"> ({{ $cur_prices_goods->goods->article->manufacturer->name ?? '' }})</span>-->
-                                                </h4>
-                                            </div>
-
-                                            <div class="cell shrink wrap-product-price">
-                                                <span
-                                                    class="items-product-price"
-                                                    :class="[{'with-discount' : price.price != price.total_catalogs_item_discount }]"
-                                                >{{ price.total_catalogs_item_discount | roundToTwo | level }}</span>
-                                                <span v-if="price.points" class="points">({{ price.points | roundToTwo | level }})</span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="cell extra-block">
-                                        <div class="grid-x extra-info">
-                                            <div class="cell auto">
-                                                <span v-if="((price.price - price.total_catalogs_item_discount) * 100 / price.price)>0" class="price-discount-extra">{{ (price.price - price.total_catalogs_item_discount) * 100 / price.price }}%</span>
-                                                <span v-if="price.is_hit" class="price-hit">Hit</span>
-                                                <span v-if="price.is_new" class="price-new">New</span>
-                                            </div>
-                                            <div class="cell shrink counter-price-goods">
-                                                3
-                                            </div>
-                                        </div>
-                                    </div>
-
-<!--                                                 <div class="cell desc-block">
-                                        <p class="items-product-description">{{ price.goods.description }}</p>
-                                    </div> -->
-                                </div>
-                            </a>
-                        </li>
-                    </template>
+                    <price-goods-component
+                        v-for="price in listPrices"
+                        :price="price"
+                        :view="view"
+                        :key="price.id"
+                    ></price-goods-component>
                 </ul>
             </div>
         </div>
@@ -182,7 +139,8 @@
 <script>
     export default {
         components: {
-            'childrens-component': require('../common/CatalogsItemsChildrensComponent.vue')
+            'childrens-component': require('../common/CatalogsItemsChildrensComponent'),
+            'price-goods-component': require('./PriceGoodsComponent'),
         },
         props: {
             catalogsGoodsData: Object,
@@ -236,17 +194,6 @@
                 bind: function (el) {
                     new Foundation.Drilldown($(el))
                 }
-            },
-        },
-
-        filters: {
-            roundToTwo: function (value) {
-                return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
-            },
-
-            // Создает разделители разрядов в строке с числами
-            level: function (value) {
-                return Number(value).toLocaleString();
             },
         },
     }

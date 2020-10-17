@@ -81,7 +81,7 @@ const moduleLead = {
     actions: {
         // Товары
         ADD_GOODS_ITEM_TO_ESTIMATE({ state }, priceId) {
-            if (state.estimate.is_registered === 0) {
+            if (state.estimate.registered_at) {
 
                 axios
                     .post('/admin/estimates_goods_items', {
@@ -112,7 +112,7 @@ const moduleLead = {
             }
         },
         REMOVE_GOODS_ITEM_FROM_ESTIMATE({ state }, itemId) {
-            if (state.estimate.is_registered === 0) {
+            if (state.estimate.registered_at) {
                 axios
                     .delete('/admin/estimates_goods_items/' + itemId)
                     .then(response => {
@@ -132,7 +132,7 @@ const moduleLead = {
 
         // Услуги
         ADD_SERVICES_ITEM_TO_ESTIMATE({ state }, priceId) {
-            if (state.estimate.is_registered === 0) {
+            if (state.estimate.registered_at) {
                 axios
                     .post('/admin/estimates_services_items', {
                         estimate_id: state.estimate.id,
@@ -161,7 +161,7 @@ const moduleLead = {
             }
         },
         REMOVE_SERVICES_ITEM_FROM_ESTIMATE({ state }, itemId) {
-            if (state.estimate.is_registered === 0) {
+            if (state.estimate.registered_at) {
                 axios
                     .delete('/admin/estimates_services_items/' + itemId)
                     .then(response => {

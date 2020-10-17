@@ -4,106 +4,65 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\System\ProductionsItemStoreRequest;
 use App\Http\Requests\System\ProductionsItemUpdateRequest;
-use App\ProductionsItem;
-use Illuminate\Http\Request;
+use App\Models\System\Documents\ProductionsItem;
 
 class ProductionsItemController extends Controller
 {
 
-    // Настройки сконтроллера
+    /**
+     * ProductionsItemController constructor.
+     */
     public function __construct()
     {
         $this->middleware('auth');
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param ProductionsItemStoreRequest $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(ProductionsItemStoreRequest $request)
     {
         $data = $request->input();
-        $production_item = ProductionsItem::create($data);
+        $productionsItem = ProductionsItem::create($data);
 
-        $production_item->load([
+        $productionsItem->load([
             'cmv.article.unit',
             'entity:id,name,alias'
         ]);
 
-        return response()->json($production_item);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\ProductionsItem  $productionsItem
-     * @return \Illuminate\Http\Response
-     */
-    public function show(ProductionsItem $productionsItem)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\ProductionsItem  $productionsItem
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(ProductionsItem $productionsItem)
-    {
-        //
+        return response()->json($productionsItem);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\ProductionsItem  $productionsItem
-     * @return \Illuminate\Http\Response
+     * @param ProductionsItemUpdateRequest $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(ProductionsItemUpdateRequest $request, $id)
     {
-        $production_item = ProductionsItem::find($id);
+        $productionsItem = ProductionsItem::find($id);
 
         $data = $request->input();
-        $production_item->update($data);
+        $productionsItem->update($data);
 
-        $production_item->load([
+        $productionsItem->load([
             'cmv.article.unit',
             'entity:id,name,alias'
         ]);
 
-        return response()->json($production_item);
+        return response()->json($productionsItem);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\ProductionsItem  $productionsItem
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)
     {

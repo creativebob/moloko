@@ -18,7 +18,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Компании',
                 'alias' => 'companies',
-                'model' => 'Company',
+                'model' => 'App\Company',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -30,7 +30,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Сущности',
                 'alias' => 'entities',
-                'model' => 'Entity',
+                'model' => 'App\Entity',
                 'rights' => false,
                 'system' => true,
                 'author_id' => 1,
@@ -42,7 +42,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Роли',
                 'alias' => 'roles',
-                'model' => 'Role',
+                'model' => 'App\Role',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -56,7 +56,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Сайты',
                 'alias' => 'sites',
-                'model' => 'Site',
+                'model' => 'App\Site',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -69,7 +69,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Категории навигаци',
                 'alias' => 'navigations_categories',
-                'model' => 'NavigationsCategory',
+                'model' => 'App\NavigationsCategory',
                 'rights' => false,
                 'system' => true,
                 'author_id' => 1,
@@ -82,7 +82,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Категории альбомов',
                 'alias' => 'albums_categories',
-                'model' => 'AlbumsCategory',
+                'model' => 'App\AlbumsCategory',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -94,7 +94,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Должности',
                 'alias' => 'positions',
-                'model' => 'Position',
+                'model' => 'App\Position',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -106,7 +106,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Списки',
                 'alias' => 'booklists',
-                'model' => 'Booklist',
+                'model' => 'App\Booklist',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -118,7 +118,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Секторы',
                 'alias' => 'sectors',
-                'model' => 'Sector',
+                'model' => 'App\Sector',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -130,7 +130,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Категории товаров',
                 'alias' => 'goods_categories',
-                'model' => 'GoodsCategory',
+                'model' => 'App\GoodsCategory',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -142,7 +142,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Категории сырья',
                 'alias' => 'raws_categories',
-                'model' => 'RawsCategory',
+                'model' => 'App\RawsCategory',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -154,7 +154,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Категории упаковок',
                 'alias' => 'containers_categories',
-                'model' => 'ContainersCategory',
+                'model' => 'App\ContainersCategory',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -166,7 +166,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Категории вложений',
                 'alias' => 'attachments_categories',
-                'model' => 'AttachmentsCategory',
+                'model' => 'App\AttachmentsCategory',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -178,7 +178,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Категории инструментов',
                 'alias' => 'tools_categories',
-                'model' => 'ToolsCategory',
+                'model' => 'App\ToolsCategory',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -190,7 +190,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Категории помещений',
                 'alias' => 'rooms_categories',
-                'model' => 'RoomsCategory',
+                'model' => 'App\RoomsCategory',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -202,7 +202,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Категории расходных материалов',
                 'alias' => 'expendables_categories',
-                'model' => 'ExpendablesCategory',
+                'model' => 'App\ExpendablesCategory',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -214,7 +214,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Категории услуг',
                 'alias' => 'services_categories',
-                'model' => 'ServicesCategory',
+                'model' => 'App\ServicesCategory',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -226,7 +226,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Категории рабочих процессов',
                 'alias' => 'workflows_categories',
-                'model' => 'WorkflowsCategory',
+                'model' => 'App\WorkflowsCategory',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -238,7 +238,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Страны',
                 'alias' => 'countries',
-                'model' => 'Country',
+                'model' => 'App\Country',
                 'rights' => false,
                 'system' => true,
                 'author_id' => 1,
@@ -251,7 +251,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Населенные пункты',
                 'alias' => 'cities',
-                'model' => 'City',
+                'model' => 'App\City',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -263,7 +263,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Расписания',
                 'alias' => 'schedules',
-                'model' => 'Schedule',
+                'model' => 'App\Schedule',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -275,7 +275,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Метрики',
                 'alias' => 'metrics',
-                'model' => 'Metric',
+                'model' => 'App\Metric',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -287,7 +287,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Лиды',
                 'alias' => 'leads',
-                'model' => 'Lead',
+                'model' => 'App\Lead',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -299,7 +299,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Каталоги товаров',
                 'alias' => 'catalogs_goods',
-                'model' => 'CatalogsGoods',
+                'model' => 'App\CatalogsGoods',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -311,7 +311,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Каталоги услуг',
                 'alias' => 'catalogs_services',
-                'model' => 'CatalogsService',
+                'model' => 'App\CatalogsService',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -323,7 +323,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Рубрикаторы',
                 'alias' => 'rubricators',
-                'model' => 'Rubricator',
+                'model' => 'App\Rubricator',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -335,7 +335,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Этапы',
                 'alias' => 'stages',
-                'model' => 'Stage',
+                'model' => 'App\Stage',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -347,7 +347,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Внутренние комментарии',
                 'alias' => 'notes',
-                'model' => 'Note',
+                'model' => 'App\Note',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -359,7 +359,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Задачи',
                 'alias' => 'challenges',
-                'model' => 'Challenge',
+                'model' => 'App\Challenge',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -371,7 +371,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Рекламации',
                 'alias' => 'claims',
-                'model' => 'Claim',
+                'model' => 'App\Claim',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -383,7 +383,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Исходящие заказы',
                 'alias' => 'orders',
-                'model' => 'Order',
+                'model' => 'App\Order',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -395,7 +395,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Отзывы',
                 'alias' => 'feedbacks',
-                'model' => 'Feedback',
+                'model' => 'App\Feedback',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -407,7 +407,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Аккаунты',
                 'alias' => 'accounts',
-                'model' => 'Account',
+                'model' => 'App\Account',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -419,7 +419,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Правила',
                 'alias' => 'rules',
-                'model' => 'Rule',
+                'model' => 'App\Rule',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -431,7 +431,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Склады',
                 'alias' => 'stocks',
-                'model' => 'Stock',
+                'model' => 'App\Stock',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -443,7 +443,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Заявки поставщикам',
                 'alias' => 'applications',
-                'model' => 'Application',
+                'model' => 'App\Application',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -456,32 +456,32 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Товарные накладные',
                 'alias' => 'consignments',
-                'model' => 'Consignment',
+                'model' => 'App\Models\System\Documents\Consignment',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
                 'site' => 0,
                 'metric' => 0,
-                'view_path' => 'consignments',
+                'view_path' => 'system.pages.documents.consignments',
                 'page_id' => $pages->firstWhere('alias', 'consignments')->id,
             ],
             [
                 'name' => 'Наряды на производство',
                 'alias' => 'productions',
-                'model' => 'Production',
+                'model' => 'App\Models\System\Documents\Production',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
                 'site' => 0,
                 'metric' => 0,
-                'view_path' => 'productions',
+                'view_path' => 'system.pages.documents.productions',
                 'page_id' => $pages->firstWhere('alias', 'productions')->id,
             ],
 
             [
                 'name' => 'Показатели',
                 'alias' => 'indicators',
-                'model' => 'Indicator',
+                'model' => 'App\Indicator',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -493,7 +493,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Настройка фоток',
                 'alias' => 'photo_settings',
-                'model' => 'PhotoSetting',
+                'model' => 'App\PhotoSetting',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -505,7 +505,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Сметы',
                 'alias' => 'estimates',
-                'model' => 'Estimate',
+                'model' => 'App\Models\System\Documents\Estimate',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -517,7 +517,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Группы артикулов',
                 'alias' => 'articles_groups',
-                'model' => 'ArticlesGroup',
+                'model' => 'App\ArticlesGroup',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -529,7 +529,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Группы процессов',
                 'alias' => 'processes_groups',
-                'model' => 'ProcessesGroup',
+                'model' => 'App\ProcessesGroup',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -542,7 +542,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Продвижения',
                 'alias' => 'promotions',
-                'model' => 'Promotion',
+                'model' => 'App\Promotion',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -555,7 +555,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Рассылки',
                 'alias' => 'dispatches',
-                'model' => 'Dispatch',
+                'model' => 'App\Dispatch',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -568,7 +568,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Домены',
                 'alias' => 'domains',
-                'model' => 'Domain',
+                'model' => 'App\Domain',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -581,7 +581,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Источники трафика',
                 'alias' => 'sources',
-                'model' => 'Source',
+                'model' => 'App\Source',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -591,10 +591,10 @@ class EntitiesTableSeeder extends Seeder
                 'page_id' => $pages->firstWhere('alias', 'sources')->id,
             ],
 
-             [
+            [
                 'name' => 'Настройки',
                 'alias' => 'settings',
-                'model' => 'Setting',
+                'model' => 'App\Setting',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -607,7 +607,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Портфолио',
                 'alias' => 'portfolios',
-                'model' => 'Portfolio',
+                'model' => 'App\Portfolio',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -620,7 +620,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Категории выполненных работ',
                 'alias' => 'outcomes_categories',
-                'model' => 'OutcomesCategory',
+                'model' => 'App\OutcomesCategory',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -633,7 +633,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Скидки',
                 'alias' => 'discounts',
-                'model' => 'Discount',
+                'model' => 'App\Discount',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -807,7 +807,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Поставщики',
                 'alias' => 'suppliers',
-                'model' => 'Supplier',
+                'model' => 'App\Supplier',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -819,7 +819,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Клиенты',
                 'alias' => 'clients',
-                'model' => 'Client',
+                'model' => 'App\Client',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -831,7 +831,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Дилеры',
                 'alias' => 'dealers',
-                'model' => 'Dealer',
+                'model' => 'App\Dealer',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -843,7 +843,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Производители',
                 'alias' => 'manufacturers',
-                'model' => 'Manufacturer',
+                'model' => 'App\Manufacturer',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -855,7 +855,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Вендоры',
                 'alias' => 'vendors',
-                'model' => 'Vendor',
+                'model' => 'App\Vendor',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -869,7 +869,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Отделы',
                 'alias' => 'departments',
-                'model' => 'Department',
+                'model' => 'App\Department',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -881,7 +881,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Штат',
                 'alias' => 'staff',
-                'model' => 'Staffer',
+                'model' => 'App\Staffer',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -893,7 +893,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Страницы',
                 'alias' => 'pages',
-                'model' => 'Page',
+                'model' => 'App\Page',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -905,7 +905,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Навигации',
                 'alias' => 'navigations',
-                'model' => 'Navigation',
+                'model' => 'App\Navigation',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -917,7 +917,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Пользователи',
                 'alias' => 'users',
-                'model' => 'User',
+                'model' => 'App\User',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -930,7 +930,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Альбомы',
                 'alias' => 'albums',
-                'model' => 'Album',
+                'model' => 'App\Album',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -942,7 +942,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Товары',
                 'alias' => 'goods',
-                'model' => 'Goods',
+                'model' => 'App\Goods',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -954,7 +954,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Сырьё',
                 'alias' => 'raws',
-                'model' => 'Raw',
+                'model' => 'App\Raw',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -966,7 +966,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Упаковка',
                 'alias' => 'containers',
-                'model' => 'Container',
+                'model' => 'App\Container',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -978,7 +978,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Вложение',
                 'alias' => 'attachments',
-                'model' => 'Attachment',
+                'model' => 'App\Attachment',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -990,7 +990,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Инструменты',
                 'alias' => 'tools',
-                'model' => 'Tool',
+                'model' => 'App\Tool',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -1002,7 +1002,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Помещения',
                 'alias' => 'rooms',
-                'model' => 'Room',
+                'model' => 'App\Room',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -1014,7 +1014,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Услуги',
                 'alias' => 'services',
-                'model' => 'Service',
+                'model' => 'App\Service',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -1026,7 +1026,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Рабочие процессы',
                 'alias' => 'workflows',
-                'model' => 'Workflow',
+                'model' => 'App\Workflow',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -1039,7 +1039,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Пункты каталогов товаров',
                 'alias' => 'catalogs_goods_items',
-                'model' => 'CatalogsGoodsItem',
+                'model' => 'App\CatalogsGoodsItem',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -1051,7 +1051,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Пункты каталогов услуг',
                 'alias' => 'catalogs_services_items',
-                'model' => 'CatalogsServicesItem',
+                'model' => 'App\CatalogsServicesItem',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -1063,7 +1063,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Рубрики',
                 'alias' => 'rubricators_items',
-                'model' => 'RubricatorsItem',
+                'model' => 'App\RubricatorsItem',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -1075,7 +1075,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Прайс услуги',
                 'alias' => 'prices_services',
-                'model' => 'PricesService',
+                'model' => 'App\PricesService',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -1087,7 +1087,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Прайс товара',
                 'alias' => 'prices_goods',
-                'model' => 'PricesGoods',
+                'model' => 'App\PricesGoods',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -1099,7 +1099,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Артикулы',
                 'alias' => 'articles',
-                'model' => 'Article',
+                'model' => 'App\Article',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -1111,7 +1111,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Процессы',
                 'alias' => 'processes',
-                'model' => 'Process',
+                'model' => 'App\Process',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -1124,7 +1124,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Разделы портфолио',
                 'alias' => 'portfolios_items',
-                'model' => 'PortfoliosItem',
+                'model' => 'App\PortfoliosItem',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -1137,7 +1137,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Выполненные работы',
                 'alias' => 'outcomes',
-                'model' => 'Outcome',
+                'model' => 'App\Outcome',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -1153,7 +1153,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Меню',
                 'alias' => 'menus',
-                'model' => 'Menu',
+                'model' => 'App\Menu',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -1165,7 +1165,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Фотографии',
                 'alias' => 'photos',
-                'model' => 'Photo',
+                'model' => 'App\Photo',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -1177,7 +1177,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Сотрудники',
                 'alias' => 'employees',
-                'model' => 'Employee',
+                'model' => 'App\Employee',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -1189,7 +1189,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Новости',
                 'alias' => 'news',
-                'model' => 'News',
+                'model' => 'App\News',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -1201,7 +1201,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Банковские счета',
                 'alias' => 'bank_accounts',
-                'model' => 'BankAccount',
+                'model' => 'App\BankAccount',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -1214,67 +1214,67 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Склад сырья',
                 'alias' => 'raws_stocks',
-                'model' => 'RawsStock',
+                'model' => 'App\Models\System\Stocks\RawsStock',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('raws')->first(['id'])->id,
-                'view_path' => 'raws_stocks',
+                'view_path' => 'system.pages.cmv_stocks.raws_stocks',
                 'page_id' => $pages->firstWhere('alias', 'raws_stocks')->id,
             ],
-	        [
-		        'name' => 'Склад упаковок',
-		        'alias' => 'containers_stocks',
-		        'model' => 'ContainersStock',
-		        'rights' => true,
-		        'system' => true,
-		        'author_id' => 1,
-		        'site' => 0,
-		        'ancestor_id' => Entity::whereAlias('containers')->first(['id'])->id,
-		        'view_path' => 'containers_stocks',
-		        'page_id' => $pages->firstWhere('alias', 'containers_stocks')->id,
-	        ],
+            [
+                'name' => 'Склад упаковок',
+                'alias' => 'containers_stocks',
+                'model' => 'App\Models\System\Stocks\ContainersStock',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('containers')->first(['id'])->id,
+                'view_path' => 'system.pages.cmv_stocks.containers_stocks',
+                'page_id' => $pages->firstWhere('alias', 'containers_stocks')->id,
+            ],
             [
                 'name' => 'Склад вложений',
                 'alias' => 'attachments_stocks',
-                'model' => 'AttachmentsStock',
+                'model' => 'App\Models\System\Stocks\AttachmentsStock',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('attachments')->first(['id'])->id,
-                'view_path' => 'attachments_stocks',
+                'view_path' => 'system.pages.cmv_stocks.attachments_stocks',
                 'page_id' => $pages->firstWhere('alias', 'attachments_stocks')->id,
             ],
-	        [
-		        'name' => 'Склад товаров',
-		        'alias' => 'goods_stocks',
-		        'model' => 'GoodsStock',
-		        'rights' => true,
-		        'system' => true,
-		        'author_id' => 1,
-		        'site' => 0,
-		        'ancestor_id' => Entity::whereAlias('goods')->first(['id'])->id,
-		        'view_path' => 'goods_stocks',
-		        'page_id' => $pages->firstWhere('alias', 'goods_stocks')->id,
-	        ],
+            [
+                'name' => 'Склад товаров',
+                'alias' => 'goods_stocks',
+                'model' => 'App\Models\System\Stocks\GoodsStock',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('goods')->first(['id'])->id,
+                'view_path' => 'system.pages.cmv_stocks.goods_stocks',
+                'page_id' => $pages->firstWhere('alias', 'goods_stocks')->id,
+            ],
             [
                 'name' => 'Склад инструментов',
                 'alias' => 'tools_stocks',
-                'model' => 'ToolsStock',
+                'model' => 'App\Models\System\Stocks\ToolsStock',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('tools')->first(['id'])->id,
-                'view_path' => 'goods_stocks',
+                'view_path' => 'system.pages.cmv_stocks.goods_stocks',
                 'page_id' => $pages->firstWhere('alias', 'tools_stocks')->id,
             ],
             [
                 'name' => 'Кейсы',
                 'alias' => 'business_cases',
-                'model' => 'BusinessCase',
+                'model' => 'App\BusinessCase',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
@@ -1293,5 +1293,5 @@ class EntitiesTableSeeder extends Seeder
         //     'consist_id' => Entity::where('alias', 'raws')->first(['id'])->id
         // ]);
 
-}
+    }
 }

@@ -16,9 +16,6 @@ class CreateProductionsTable extends Migration
         Schema::create('productions', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
-            $table->foreign('company_id')->references('id')->on('companies');
-
             $table->bigInteger('filial_id')->unsigned()->nullable()->comment('Id отдела');
             $table->foreign('filial_id')->references('id')->on('departments');
 
@@ -35,11 +32,14 @@ class CreateProductionsTable extends Migration
             $table->foreign('stock_id')->references('id')->on('stocks');
 
             $table->decimal('amount', 12, 4)->default(0)->comment('Сумма');
+            $table->timestamp('produced_at')->nullable()->comment('Произведено');
             $table->boolean('draft')->default(1)->comment('Черновик');
-            $table->boolean('is_produced')->default(0)->comment('Произведено');
 
 
             // Общие настройки
+            $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
+            $table->foreign('company_id')->references('id')->on('companies');
+
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
             $table->boolean('display')->default(1)->comment('Отображение на сайте');
             $table->boolean('system')->default(0)->comment('Системная запись');

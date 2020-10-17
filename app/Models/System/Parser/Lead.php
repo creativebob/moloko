@@ -307,7 +307,7 @@ class Lead extends Model
     // Основной заказ
     // public function main_estimates()
     // {
-    //     return $this->hasMany('App\Estimate')->whereNull('draft');
+    //     return $this->hasMany('App\Models\System\Documents\Estimate')->whereNull('draft');
     // }
 
     // Текущий заказ

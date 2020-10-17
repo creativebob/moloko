@@ -2,22 +2,15 @@
 
 namespace App;
 
-use App\Models\System\Traits\Commonable;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\System\BaseModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
-// Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
-class Reserve extends Model
+class Reserve extends BaseModel
 {
-
-    // Включаем кеш
-    use Cachable;
-
+    
     use SoftDeletes;
-
-    use Commonable;
+    use Cachable;
 
     protected $fillable = [
         'stock_id',
@@ -29,7 +22,6 @@ class Reserve extends Model
         'cmv_id',
         'cmv_type',
         'count',
-
     ];
 
     // Тмц

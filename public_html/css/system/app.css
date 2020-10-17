@@ -10924,6 +10924,10 @@ table.list-employees {
   border-bottom: 3px solid #eee;
 }
 
+.th-reserves .button-to-reserve {
+  opacity: 0.3;
+}
+
 .button-to-reserve {
   position: relative;
   top: 3px;
@@ -13452,6 +13456,10 @@ em.raw-portion-item {
 
 .text-green {
   color: #1ac11a;
+}
+
+.text-grey {
+  color: #999;
 }
 
 .td-price-status {

@@ -48,8 +48,6 @@ class Update130420Tables extends Migration
         Schema::table('estimates', function (Blueprint $table) {
             $table->dropForeign('estimates_stock_id_foreign');
             $table->dropColumn('stock_id');
-
-            $table->boolean('is_registered')->default(0)->comment('Зарегистрирована')->after('draft');
         });
 
         Schema::table('settings', function (Blueprint $table) {
@@ -165,8 +163,6 @@ class Update130420Tables extends Migration
         Schema::table('estimates', function (Blueprint $table) {
             $table->bigInteger('stock_id')->nullable()->unsigned()->comment('Id склада');
             $table->foreign('stock_id')->references('id')->on('stocks');
-
-            $table->dropColumn('is_registered');
         });
 
         Schema::table('settings', function (Blueprint $table) {

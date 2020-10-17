@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 
 // Модели
-use App\Estimate;
+use App\Models\System\Documents\Estimate;
 use App\Navigation;
 use App\Menu;
 use App\Page;

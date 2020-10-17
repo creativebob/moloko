@@ -28,8 +28,8 @@
                 <textarea
                     @keydown.enter.prevent="updateComment"
                     v-model="curComment"
-                    @blur="alert(1)"
                 >{{ curComment }}</textarea>
+<!--            @blur="alert(1)"-->
             <a
                 class="button"
                 @click="updateComment"

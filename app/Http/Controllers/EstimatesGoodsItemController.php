@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Estimate;
-use App\EstimatesGoodsItem;
+use App\Http\Controllers\Traits\Estimatable;
+use App\Models\System\Documents\Estimate;
+use App\Models\System\Documents\EstimatesGoodsItem;
 use App\Stock;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Traits\Reservable;
@@ -20,32 +21,13 @@ class EstimatesGoodsItemController extends Controller
     {
         $this->middleware('auth');
         $this->class = EstimatesGoodsItem::class;
-        $this->model = 'App\EstimatesGoodsItem';
+        $this->model = 'App\Models\System\Documents\EstimatesGoodsItem';
         $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = false;
     }
-
+    
+    use Estimatable;
     use Reservable;
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -57,22 +39,49 @@ class EstimatesGoodsItemController extends Controller
     {
         $success = true;
         $stockId = null;
-
+    
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right('stocks', true, getmethod('index'));
+        
+        // TODO - 16.10.20 - Пока что берем первый склад
+        $stockId = Stock::where('filial_id', auth()->user()->stafferFilialId)
+            ->moderatorLimit($answer)
+            ->companiesLimit($answer)
+            // ->filials($answer)
+            ->authors($answer)
+            ->systemItem($answer)
+            ->value('id');
+        
         // Если включены настройки для складов, то проверяем сколько складов в системе, и если один, то берем его id
-        $settings = getSettings();
-        if ($settings->isNotEmpty()) {
-            $stocks = Stock::where('filial_id', auth()->user()->stafferFilialId)
-                ->get([
-                    'id',
-                    'filial_id'
-                ]);
-
-            if ($stocks) {
-                if ($stocks->count() == 1) {
-                    $stockId = $stocks->first()->id;
-                }
-            }
-        }
+//        $settings = getSettings();
+//        if ($settings->isNotEmpty()) {
+//            $stocks = Stock::moderatorLimit($answer)
+//                ->companiesLimit($answer)
+//                // ->filials($answer)
+//                ->authors($answer)
+//                ->systemItem($answer)
+//                ->get();
+////            $stocks = Stock::where('filial_id', auth()->user()->stafferFilialId)
+////                ->get([
+////                    'id',
+////                    'filial_id'
+////                ]);
+//
+//            if ($stocks) {
+//                if ($stocks->count() == 1) {
+//                    $stockId = $stocks->first()->id;
+//                } else {
+//                    $stockId = $stocks->first()->id;
+//                }
+//            }
+//        } else {
+//            $stockId = Stock::moderatorLimit($answer)
+//                ->companiesLimit($answer)
+//                // ->filials($answer)
+//                ->authors($answer)
+//                ->systemItem($answer)
+//                ->value('id');
+//        }
 
         $priceGoods = PricesGoods::with([
             'product.article'
@@ -148,7 +157,7 @@ class EstimatesGoodsItemController extends Controller
         }
 
         if ($success) {
-            $this->estimateUpdate($estimatesGoodsItem->estimate);
+            $this->aggregateEstimate($estimatesGoodsItem->estimate);
 
             $result = [
                 'success' => $success,
@@ -170,34 +179,12 @@ class EstimatesGoodsItemController extends Controller
 
         return response()->json($result);
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param \App\EstimatesGoodsItem $estimatesItem
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param \App\EstimatesGoodsItem $estimatesItem
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
+    
     /**
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \App\EstimatesGoodsItem $estimatesItem
+     * @param \App\Models\System\Documents\EstimatesGoodsItem $estimatesItem
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -254,7 +241,7 @@ class EstimatesGoodsItemController extends Controller
             'stock:id,name',
             'currency'
         ]);
-        $this->estimateUpdate($estimatesGoodsItem->estimate);
+        $this->aggregateEstimate($estimatesGoodsItem->estimate);
 
         if ($merge > 0) {
             $estimatesGoodsItem->remove_from_page = $merge;
@@ -282,11 +269,11 @@ class EstimatesGoodsItemController extends Controller
             ->find($id);
 
         if (isset($estimatesGoodsItem->reserve)) {
-            Log::channel('documents')
+            logs('documents')
                 ->info('========================================== УДАЛЯЕМ ПУНКТ СМЕТЫ, ИМЕЮЩИЙ РЕЗЕРВ, ID: ' . $estimatesGoodsItem->id . ' ==============================================');
             $this->unreserve($estimatesGoodsItem);
             $result = $estimatesGoodsItem->delete();
-            Log::channel('documents')
+            logs('documents')
                 ->info('========================================== КОНЕЦ УДАЛЕНИЯ ПУНКТА СМЕТЫ, ИМЕЮЩЕГО РЕЗЕРВ ==============================================
 
                 ');
@@ -294,160 +281,87 @@ class EstimatesGoodsItemController extends Controller
             $result = $estimatesGoodsItem->forceDelete();
         }
 
-        $this->estimateUpdate($estimatesGoodsItem->estimate);
+        $this->aggregateEstimate($estimatesGoodsItem->estimate);
         return response()->json($result);
     }
-
+    
     /**
-     * Обновление итоговых значений сметы
+     * Резерв пункта сметы
      *
-     * @param $estimate
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function estimateUpdate($estimate)
+    public function reserving($id)
     {
-        $estimate->load([
-            'goods_items',
-            'services_items',
-        ]);
-
-        $cost = 0;
-        $amount = 0;
-        $points = 0;
-
-        $priceDiscount = 0;
-        $catalogsItemDiscount = 0;
-        $estimateDiscount = 0;
-        $clientDiscount = 0;
-        $manualDiscount = 0;
-
-        $total = 0;
-        $totalPoints = 0;
-        $totalBonuses = 0;
-
-        if ($estimate->goods_items->isNotEmpty()) {
-            $cost += $estimate->goods_items->sum('cost');
-            $amount += $estimate->goods_items->sum('amount');
-            $points += $estimate->goods_items->sum('points');
-
-            $priceDiscount += $estimate->goods_items->sum('price_discount');
-            $catalogsItemDiscount += $estimate->goods_items->sum('catalogs_item_discount');
-            $estimateDiscount += $estimate->goods_items->sum('estimate_discount');
-            $clientDiscount += $estimate->goods_items->sum('client_discount_currency');
-            $manualDiscount += $estimate->goods_items->sum('manual_discount_currency');
-
-            $total += $estimate->goods_items->sum('total');
-            $totalPoints += $estimate->goods_items->sum('total_points');
-            $totalBonuses += $estimate->goods_items->sum('total_bonuses');
-        }
-
-//        if ($estimate->services_items->isNotEmpty()) {
-//            $cost += $estimate->services_items->sum('cost');
-//            $amount += $estimate->services_items->sum('amount');
-//            $total += $estimate->services_items->sum('total');
-//        }
-
-
-        // Скидки
-        $discountCurrency = 0;
-        $discountPercent = 0;
-        if ($total > 0) {
-            $discountCurrency = $amount - $total;
-            $discountPercent = $discountCurrency * 100 / $amount;
-        }
-
-        // Маржа
-        $marginCurrency = $total - $cost;
-        if ($total > 0) {
-            $marginPercent = ($marginCurrency / $total * 100);
-        } else {
-            $marginPercent = $marginCurrency * 100;
-        }
-
-        $data = [
-            'cost' => $cost,
-            'amount' => $amount,
-            'points' => $points,
-
-            'price_discount' => $priceDiscount,
-            'catalogs_item_discount' => $catalogsItemDiscount,
-            'estimate_discount' => $estimateDiscount,
-            'client_discount' => $clientDiscount,
-            'manual_discount' => $manualDiscount,
-
-            'discount_currency' => $discountCurrency,
-            'discount_percent' => $discountPercent,
-
-            'total' => $total,
-            'total_points' => $totalPoints,
-            'total_bonuses' => $totalBonuses,
-
-            'margin_currency' => $marginCurrency,
-            'margin_percent' => $marginPercent,
-        ];
-
-        $estimate->update($data);
-    }
-
-    public function reserving(Request $request, $id)
-    {
-
-        $estimates_goods_item = EstimatesGoodsItem::with([
+        $estimatesGoodsItem = EstimatesGoodsItem::with([
             'product.article',
             'document',
             'reserve'
         ])
             ->find($id);
-
-        Log::channel('documents')
-            ->info('========================================== НАЧАЛО РЕЗЕРВИРОВАНИЯ ПУНКТА СМЕТЫ, ID: ' . $estimates_goods_item->id . ' ==============================================');
-
-        $result = $this->reserve($estimates_goods_item);
-
-        Log::channel('documents')
+        
+        logs('documents')
+            ->info('========================================== НАЧАЛО РЕЗЕРВИРОВАНИЯ ПУНКТА СМЕТЫ, ID: ' . $estimatesGoodsItem->id . ' ==============================================');
+        // Еслои количество пришедшее количество не равно количеству в бд
+//        if ($estimatesGoodsItem->count != $request->count) {
+//            $estimatesGoodsItem->update([
+//                'count' => $request->count
+//            ]);
+//            $estimatesGoodsItem->count = $request->count;
+//            $this->aggregateEstimate($estimatesGoodsItem->estimate);
+//        }
+        
+        $result = $this->reserve($estimatesGoodsItem);
+        
+        logs('documents')
             ->info('========================================== КОНЕЦ РЕЗЕРВИРОВАНИЯ ПУНКТА СМЕТЫ ==============================================
                 
                 ');
-
-        $estimates_goods_item->load([
-            'product.article',
-            'reserve',
-            'stock:id,name'
+        
+        $estimatesGoodsItem->load([
+            'stock:id,name',
+            'price_goods',
         ]);
-
+        
         return response()->json([
-            'item' => $estimates_goods_item,
+            'item' => $estimatesGoodsItem,
             'msg' => $result
         ]);
     }
-
-    public function unreserving(Request $request, $id)
+    
+    /**
+     * Отмена резерва пункта сметы
+     *
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function unreserving($id)
     {
-
-        $estimates_goods_item = EstimatesGoodsItem::with([
+        
+        $estimatesGoodsItem = EstimatesGoodsItem::with([
             'product.article',
             'document',
             'reserve'
         ])
             ->find($id);
-
-        Log::channel('documents')
-            ->info('========================================== НАЧАЛО СНЯТИЯ РЕЗЕРВИРОВАНИЯ ПУНКТА СМЕТЫ, ID: ' . $estimates_goods_item->id . ' ==============================================');
-
-        $result = $this->unreserve($estimates_goods_item);
-
-        Log::channel('documents')
+        
+        logs('documents')
+            ->info('========================================== НАЧАЛО СНЯТИЯ РЕЗЕРВИРОВАНИЯ ПУНКТА СМЕТЫ, ID: ' . $estimatesGoodsItem->id . ' ==============================================');
+        
+        $result = $this->unreserve($estimatesGoodsItem);
+        
+        logs('documents')
             ->info('========================================== КОНЕЦ СНЯТИЯ РЕЗЕРВИРОВАНИЯ ПУНКТА СМЕТЫ ==============================================
                 
                 ');
-
-        $estimates_goods_item->load([
-            'product.article',
-            'reserve',
-            'stock:id,name'
+    
+        $estimatesGoodsItem->load([
+            'stock:id,name',
+            'price_goods',
         ]);
-
+        
         return response()->json([
-            'item' => $estimates_goods_item,
+            'item' => $estimatesGoodsItem,
             'msg' => $result
         ]);
     }

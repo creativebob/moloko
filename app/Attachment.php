@@ -2,10 +2,10 @@
 
 namespace App;
 
+use App\Models\System\Stocks\AttachmentsStock;
 use App\Models\System\Traits\Cmvable;
 use App\Models\System\Traits\Commonable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 // Подключаем кеш
@@ -13,14 +13,10 @@ use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
 class Attachment extends Model
 {
-    // Включаем кеш
-//    use Cachable;
-
-    use Notifiable;
-    use SoftDeletes;
-
     use Commonable;
     use Cmvable;
+    use SoftDeletes;
+//    use Cachable;
 
     protected $fillable = [
         'category_id',
@@ -53,7 +49,7 @@ class Attachment extends Model
     public function compositions()
     {
         return $this->belongsToMany(Article::class, 'article_attachment')
-            ->whereHas('cur_goods', function($q) {
+            ->whereHas('cur_goods', function ($q) {
                 $q->where('archive', false);
             });
     }
@@ -61,19 +57,19 @@ class Attachment extends Model
     public function in_cleans()
     {
         return $this->belongsToMany(Article::class, 'article_attachment')
-        ->where('draft', false)
-        ->whereHas('in_goods', function($q) {
-            $q->where('archive', false);
-        });
+            ->where('draft', false)
+            ->whereHas('in_goods', function ($q) {
+                $q->where('archive', false);
+            });
     }
 
     public function in_drafts()
     {
         return $this->belongsToMany(Article::class, 'article_attachment')
-        ->where('draft', true)
-        ->whereHas('in_goods', function($q) {
-            $q->where('archive', false);
-        });
+            ->where('draft', true)
+            ->whereHas('in_goods', function ($q) {
+                $q->where('archive', false);
+            });
     }
 
     // Склад
