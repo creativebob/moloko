@@ -26,8 +26,8 @@ class Goods extends Model
 
     public function getRestAttribute()
     {
-        if(!empty($this->hasMany('App\GoodsStock', 'cmv_id')->where('filial_id', 1)->first())){
-            return $this->hasMany('App\GoodsStock', 'cmv_id')->where('filial_id', 1)->first()->free;
+        if(!empty($this->hasMany('App\Models\System\Stocks\GoodsStock', 'cmv_id')->where('filial_id', 1)->first())){
+            return $this->hasMany('App\Models\System\Stocks\GoodsStock', 'cmv_id')->where('filial_id', 1)->first()->free;
         } else {
             return null;
         }
