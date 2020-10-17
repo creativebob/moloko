@@ -69,12 +69,12 @@ Route::get('/roll_house/set_company_id', 'System\External\RollHouseController@se
 // Тесты
 Route::get('/test', 'System\TestController@test');
 
-Route::get('sendmail', function () {
-
-    // Отправляем почту
-    App\Notifications\System\Notifications::sendMail();
-
-})->middleware('auth');
+//Route::get('sendmail', function () {
+//
+//    // Отправляем почту
+//    App\Notifications\System\Notifications::sendMail();
+//
+//})->middleware('auth');
 
 // Всякая хрень для проверки
 // Route::resource('/site_api', 'ApiController');
