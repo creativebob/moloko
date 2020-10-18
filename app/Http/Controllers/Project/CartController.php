@@ -257,7 +257,7 @@ class CartController extends Controller
 
             // Обработка имени компании
             if ($companyName) {
-                $cleanCompanyName = str_replace('"', "", $company->name);
+                $cleanCompanyName = str_replace('"', "", $companyName);
                 $cleanCompanyName = str_replace('\'', "", $cleanCompanyName);
 
                 $legalForms = LegalForm::get();

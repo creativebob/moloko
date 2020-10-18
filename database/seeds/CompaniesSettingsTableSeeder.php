@@ -1,11 +1,11 @@
 <?php
 
 use Illuminate\Database\Seeder;
-
-use App\UsersSetting;
-use App\UsersSettingsCategory;
-
-class UsersSettingsTableSeeder extends Seeder
+    
+    use App\CompaniesSetting;
+    use App\CompaniesSettingsCategory;
+    
+    class CompaniesSettingsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,38 +14,38 @@ class UsersSettingsTableSeeder extends Seeder
      */
     public function run()
     {
-        $settingsCategories = UsersSettingsCategory::get();
-
-        UsersSetting::insert([
+        $settingsCategories = CompaniesSettingsCategory::get();
+    
+        CompaniesSetting::insert([
         	[
-                'name' => 'Хиты',
-                'alias' => 'lead-catalog-show-hit',
-                'category_id' => $settingsCategories->firstWhere('alias', 'lead-show-catalog')->id
+                'name' => 'Продажа со склада',
+                'alias' => 'sale-from-stock',
+                'category_id' => $settingsCategories->firstWhere('alias', 'sales')->id
         	],
             [
-                'name' => 'Новинки',
-                'alias' => 'lead-catalog-show-new',
-                'category_id' => $settingsCategories->firstWhere('alias', 'lead-show-catalog')->id
+                'name' => 'Продажа под заказ',
+                'alias' => 'sale-for-order',
+                'category_id' => $settingsCategories->firstWhere('alias', 'sales')->id
             ],
             [
-                'name' => 'Нет на складе',
-                'alias' => 'lead-catalog-show-out-of-stock',
-                'category_id' => $settingsCategories->firstWhere('alias', 'lead-show-catalog')->id
+                'name' => 'Продажа под производство',
+                'alias' => 'sale-for-production',
+                'category_id' => $settingsCategories->firstWhere('alias', 'sales')->id
             ],
             [
-                'name' => 'Приоритет',
-                'alias' => 'lead-catalog-show-priority',
-                'category_id' => $settingsCategories->firstWhere('alias', 'lead-show-catalog')->id
+                'name' => 'Показатели клиентской базы',
+                'alias' => 'clients-indicators',
+                'category_id' => $settingsCategories->firstWhere('alias', 'cron')->id
             ],
             [
-                'name' => 'Б/у',
-                'alias' => 'lead-catalog-show-used',
-                'category_id' => $settingsCategories->firstWhere('alias', 'lead-show-catalog')->id
+                'name' => 'Перерасчет скидок',
+                'alias' => 'discounts-recalculate',
+                'category_id' => $settingsCategories->firstWhere('alias', 'cron')->id
             ],
             [
-                'name' => 'Под заказ',
-                'alias' => 'lead-catalog-show-preorder',
-                'category_id' => $settingsCategories->firstWhere('alias', 'lead-show-catalog')->id
+                'name' => 'Приоритет компании',
+                'alias' => 'search-company-priority',
+                'category_id' => $settingsCategories->firstWhere('alias', 'leads')->id
             ],
         ]);
     }

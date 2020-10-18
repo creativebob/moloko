@@ -57,7 +57,7 @@ class ProductionController extends Controller
             ->systemItem($answer)
             // ->whereNull('draft')
             ->booklistFilter($request)
-            ->filter($request, 'supplier_id')
+//            ->filter($request, 'supplier_id')
             ->orderBy('moderation', 'desc')
             ->latest('created_at')
             ->paginate(30);

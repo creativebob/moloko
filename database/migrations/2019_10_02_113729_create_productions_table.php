@@ -22,7 +22,7 @@ class CreateProductionsTable extends Migration
             $table->string('name')->nullable()->comment('Короткое название накладной');
             $table->text('description')->nullable()->comment('Описание');
 
-            $table->date('receipt_date')->nullable()->comment('Дата приема');
+            $table->date('date')->nullable()->comment('Дата приема');
             $table->string('number')->index()->nullable()->comment('Номер накладной');
 
             $table->bigInteger('manufacturer_id')->unsigned()->nullable()->comment('Id производителя');
