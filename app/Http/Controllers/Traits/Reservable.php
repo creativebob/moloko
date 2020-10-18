@@ -60,14 +60,16 @@ trait Reservable
                     $result = "По позиции \"{$item->product->article->name}\" резерв поставлен не на все количество, недостаточно " . ($itemCount - $storage->free);
 
                     $itemCount = $storage->free;
-
-                    $storage->free -= $itemCount;
                     $storage->reserve += $itemCount;
+                    $storage->free -= $itemCount;
                 } else {
                     $result = null;
-                    $storage->free -= $item->count;
-                    $storage->reserve += $item->count;
+                    $storage->reserve += $itemCount;
+                    $storage->free -= $itemCount;
                 }
+    
+                logs('documents')
+                    ->info('Существует склад ' . $storage->getTable() . ' c id: ' . $storage->id);
 
                 $storage->save();
 
@@ -78,8 +80,7 @@ trait Reservable
                     $reserve = $item->reserve;
                     $reserve->count += $itemCount;
                     $reserve->save();
-
-
+                    
                     $reserve->history()->save(
                         ReservesHistory::make([
                             'count' => $itemCount
@@ -156,10 +157,11 @@ trait Reservable
                 logs('documents')
                     ->info('Значения count: ' . $storage->count . ', reserve: ' . $storage->reserve . ', free: ' . $storage->free);
 
-                $reserve_count = $item->reserve->count;
-
-                $storage->free += $reserve_count;
-                $storage->reserve -= $reserve_count;
+                $reserveCount = $item->reserve->count;
+    
+                $storage->reserve -= $reserveCount;
+                $storage->free += $reserveCount;
+                
                 $storage->save();
 
 
@@ -195,7 +197,7 @@ trait Reservable
                     ');
             }  else {
                 logs('documents')
-                    ->info('Склада нет, негде ставить в резерв');
+                    ->info('Склада нет, негде снимать с резерва');
                 $result = "По позиции \"{$item->product->article->name}\" не существует склада, невозможно снять с резерва";
             }
         } else {

@@ -85674,14 +85674,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }
             });
             return result.length > 0;
+        },
+        isLoading: function isLoading() {
+            return this.$store.state.lead.loading;
         }
     },
     methods: {
         reserve: function reserve() {
-            this.$store.dispatch('RESERVE_ESTIMATE');
+            if (!this.isLoading) {
+                this.$store.dispatch('RESERVE_ESTIMATE');
+            }
         },
         unreserve: function unreserve() {
-            this.$store.dispatch('UNRESERVE_ESTIMATE');
+            if (!this.isLoading) {
+                this.$store.dispatch('UNRESERVE_ESTIMATE');
+            }
         }
     }
 });
@@ -87728,14 +87735,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }
             }
             return 0;
+        },
+        isLoading: function isLoading() {
+            return this.$store.state.lead.loading;
         }
     },
     methods: {
         reserving: function reserving() {
-            this.$emit('reserve');
+            if (!this.isLoading) {
+                this.$emit('reserve');
+            }
         },
         unreserving: function unreserving() {
-            this.$emit('unreserve');
+            if (!this.isLoading) {
+                this.$emit('unreserve');
+            }
         }
     },
     filters: {
@@ -89253,12 +89267,9 @@ var render = function() {
                           _vm._v(
                             _vm._s(
                               _vm._f("decimalLevel")(
-                                _vm._f("decimalPlaces")(
-                                  (_vm.estimateAmount * _vm.discount.percent) /
-                                    100
-                                )
+                                _vm._f("decimalPlaces")(_vm.estimateDiscount)
                               )
-                            )
+                            ) + " руб."
                           )
                         ])
                       ]),
@@ -115550,51 +115561,29 @@ var moduleLead = {
             var discount = goodsDiscount + servicesDiscount;
             return discount.toFixed(2);
         },
-        // estimateDiscount: state => {
-        //     let discount = null;
-        //     if (state.discounts && state.discounts.length) {
-        //         discount = state.estimate.discounts[0];
-        //     }
-        //     return discount;
-        // },
-        // estimateDiscountCurrency: state => {
-        //     let goodsTotal = 0,
-        //         servicesTotal = 0;
-        //
-        //     if (state.goodsItems.length) {
-        //         state.goodsItems.forEach(item => {
-        //             return goodsTotal += parseFloat(item.total)
-        //         });
-        //     }
-        //
-        //     if (state.servicesItems.length) {
-        //         state.servicesItems.forEach(item => {
-        //             return servicesTotal += parseFloat(item.total)
-        //         });
-        //     }
-        //
-        //     let total = goodsTotal + servicesTotal;
-        //
-        //     let discount = null,
-        //         discountCurrency = 0;
-        //     if (state.discounts && state.discounts.length) {
-        //         discount = state.estimate.discounts[0];
-        //     }
-        //     if (discount) {
-        //         switch (discount.mode) {
-        //             case (1):
-        //                 let percent = total / 100;
-        //                 discountCurrency = discount.percent * percent;
-        //                 break;
-        //
-        //             case (2):
-        //                 discountCurrency = discount.currency;
-        //                 break;
-        //         }
-        //     }
-        //
-        //     return discountCurrency;
-        // },
+        estimateDiscount: function estimateDiscount(state) {
+            var goodsDiscount = 0,
+                servicesDiscount = 0;
+
+            if (state.goodsItems.length) {
+                state.goodsItems.forEach(function (item) {
+                    if (item.is_manual == 0) {
+                        goodsDiscount += parseFloat(item.estimate_discount);
+                    }
+                });
+            }
+
+            if (state.servicesItems.length) {
+                state.servicesItems.forEach(function (item) {
+                    if (item.is_manual == 0) {
+                        return servicesDiscount += parseFloat(item.estimate_discount);
+                    }
+                });
+            }
+
+            var discount = goodsDiscount + servicesDiscount;
+            return discount.toFixed(2);
+        },
         estimateTotal: function estimateTotal(state) {
             var total = 0;
 

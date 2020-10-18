@@ -50,7 +50,13 @@ trait Offable
                     $stockGeneral = Stock::find($item->document->stock_id);
 //                    dd($stock_production);
 
-                    $stockComposition = $composition->stocks->where('stock_id', $stockGeneral->id)->where('filial_id', $stockGeneral->filial_id)->where('manufacturer_id', $composition->article->manufacturer_id)->first();
+                    $composition->load([
+                        'stocks'
+                    ]);
+                    $stockComposition = $composition->stocks->where('stock_id', $stockGeneral->id)
+                        ->where('filial_id', $stockGeneral->filial_id)
+                        ->where('manufacturer_id', $composition->article->manufacturer_id)
+                        ->first();
                     if ($stockComposition) {
                         logs('documents')
                             ->info('Существует склад ' . $stockComposition->getTable() . ' c id: ' . $stockComposition->id);
@@ -78,8 +84,11 @@ trait Offable
                     // Получаем себестоимость
                     $count = $composition->pivot->value;
 
+                    $newCount = $stockComposition->count -= ($composition->portion * $count * $item->count);
+
                     $data = [
-                        'count' => $stockComposition->count -= ($composition->portion * $count * $item->count),
+                        'count' => $newCount,
+                        'free' => $newCount > 0 ? $newCount : 0,
                         'weight' => $stockComposition->weight -= ($composition->weight * $count * $item->count),
                         'volume' => $stockComposition->volume -= ($composition->volume * $count * $item->count)
                     ];
@@ -171,7 +180,13 @@ trait Offable
             ->value('model');
 
 //      dd($stock_goods);
-        $stock = $product->stocks->where('stock_id', $stockGeneral->id)->where('filial_id', $stockGeneral->filial_id)->where('manufacturer_id', $product->article->manufacturer_id)->first();
+        $product->load([
+           'stocks'
+        ]);
+        $stock = $product->stocks->where('stock_id', $stockGeneral->id)
+            ->where('filial_id', $stockGeneral->filial_id)
+            ->where('manufacturer_id', $product->article->manufacturer_id)
+            ->first();
         if ($stock) {
             logs('documents')
                 ->info('Существует склад ' . $stock->getTable() . ' c id: ' . $stock->id);

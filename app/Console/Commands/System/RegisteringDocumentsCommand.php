@@ -17,7 +17,7 @@ class RegisteringDocumentsCommand extends Command
      * @var string
      */
     protected $signature = 'documents:registering';
-    
+
     /**
      * The console command description.
      *
@@ -46,25 +46,28 @@ class RegisteringDocumentsCommand extends Command
 
         set_time_limit(0);
 
-        \DB::statement("SET foreign_key_checks=0");
-        $names = [
-            'goods_stocks',
-            'raws_stocks',
-            'attachments_stocks',
-            'containers_stocks',
-            'tools_stocks',
-            
-            'costs',
-            'costs_histories',
-            
-            'receipts',
-            'offs',
-        ];
-        foreach ($names as $name) {
-            \DB::table($name)->truncate();
-        }
-        \DB::statement("SET foreign_key_checks=1");
-        
+       \DB::statement("SET foreign_key_checks=0");
+       $names = [
+           'goods_stocks',
+           'raws_stocks',
+           'attachments_stocks',
+           'containers_stocks',
+           'tools_stocks',
+
+           // 'costs',
+           // 'costs_histories',
+
+           'receipts',
+           'offs',
+
+           'reserves',
+           'reserves_histories',
+       ];
+       foreach ($names as $name) {
+           \DB::table($name)->truncate();
+       }
+       \DB::statement("SET foreign_key_checks=1");
+
         \Auth::loginUsingId(4);
 
         $consignments = Consignment::with([
@@ -82,6 +85,7 @@ class RegisteringDocumentsCommand extends Command
             },
         ])
             ->whereNotNull('receipted_at')
+            ->whereYear('created_at', 2020)
             ->get();
 
         foreach ($consignments as $consignment) {
@@ -98,7 +102,7 @@ class RegisteringDocumentsCommand extends Command
                 ->info('======================================== КОНЕЦ ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ ==============================================
 				
 				');
-            echo "Накладная {$consignment->id} переприходована";
+            echo "Накладная {$consignment->id} переприходована\r\n";
         }
 
         $productions = Production::with([
@@ -132,6 +136,7 @@ class RegisteringDocumentsCommand extends Command
             },
         ])
             ->whereNotNull('produced_at')
+            ->whereYear('created_at', 2020)
             ->get();
 
         foreach ($productions as $production) {
@@ -162,9 +167,9 @@ class RegisteringDocumentsCommand extends Command
                 ->info('Произведен наряд c id: ' . $production->id);
             logs('documents')
                 ->info('========================================== КОНЕЦ ПРОИЗВОДСТВА НАРЯДА ==============================================
-				
+
 				');
-            echo "Наряд {$production->id} перепроизведен";
+            echo "Наряд {$production->id} перепроизведен\r\n";
         }
 
         echo "Гатова";

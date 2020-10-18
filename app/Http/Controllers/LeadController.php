@@ -16,6 +16,7 @@ use App\Http\Controllers\System\Traits\Userable;
 use App\Http\Controllers\Traits\Offable;
 use App\Http\Controllers\Traits\Photable;
 use App\Representative;
+use App\Stock;
 use App\User;
 use App\Lead;
 use App\LeadType;
@@ -481,12 +482,22 @@ class LeadController extends Controller
 
         $newGoodsItemsIds = [];
         $sort = 1;
+    
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right('stocks', true, getmethod('index'));
+    
+        // TODO - 16.10.20 - Пока что берем первый склад
+        $stock = Stock::companiesLimit($answer)
+        ->first();
+        $stockId = optional($stock)->id;
+        return $stockId;
 
         foreach ($newGoodsItems as $newGoodsItem) {
 
             $data = [
                 'estimate_id' => $newGoodsItem['estimate_id'],
                 'price_id' => $newGoodsItem['price_id'],
+                'stock_id' => $stockId,
 
                 'goods_id' => $newGoodsItem['goods_id'],
                 'currency_id' => $newGoodsItem['currency_id'],
@@ -835,12 +846,21 @@ class LeadController extends Controller
 
         $newGoodsItemsIds = [];
         $sort = 1;
+    
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right('stocks', true, getmethod('index'));
+        
+        // TODO - 16.10.20 - Пока что берем первый склад
+        $stock = Stock::companiesLimit($answer)
+            ->first();
+        $stockId = optional($stock)->id;
 
         foreach ($newGoodsItems as $newGoodsItem) {
 
             $data = [
                 'estimate_id' => $newGoodsItem['estimate_id'],
                 'price_id' => $newGoodsItem['price_id'],
+                'stock_id' => $stockId,
 
                 'goods_id' => $newGoodsItem['goods_id'],
                 'currency_id' => $newGoodsItem['currency_id'],
@@ -914,90 +934,13 @@ class LeadController extends Controller
 
         $deleteIds = array_diff($oldGoodsItemsIds, $newGoodsItemsIds);
         $res = EstimatesGoodsItem::destroy($deleteIds);
-
+    
         // Аггрегация сметы
-        $estimate = $lead->estimate;
-
-        $estimate->load([
-            'goods_items',
-            'services_items',
+        $this->aggregateEstimate($lead->estimate);
+        $lead->load([
+            'estimate'
         ]);
-
-        $cost = 0;
-        $amount = 0;
-        $points = 0;
-
-        $priceDiscount = 0;
-        $catalogsItemDiscount = 0;
-        $estimateDiscount = 0;
-        $clientDiscount = 0;
-        $manualDiscount = 0;
-
-        $total = 0;
-        $totalPoints = 0;
-        $totalBonuses = 0;
-
-        if ($estimate->goods_items->isNotEmpty()) {
-            $cost += $estimate->goods_items->sum('cost');
-            $amount += $estimate->goods_items->sum('amount');
-            $points += $estimate->goods_items->sum('points');
-
-            $priceDiscount += $estimate->goods_items->sum('price_discount');
-            $catalogsItemDiscount += $estimate->goods_items->sum('catalogs_item_discount');
-            $estimateDiscount += $estimate->goods_items->sum('estimate_discount');
-            $clientDiscount += $estimate->goods_items->sum('client_discount_currency');
-            $manualDiscount += $estimate->goods_items->sum('manual_discount_currency');
-
-            $total += $estimate->goods_items->sum('total');
-            $totalPoints += $estimate->goods_items->sum('total_points');
-            $totalBonuses += $estimate->goods_items->sum('total_bonuses');
-        }
-
-//        if ($estimate->services_items->isNotEmpty()) {
-//            $cost += $estimate->services_items->sum('cost');
-//            $amount += $estimate->services_items->sum('amount');
-//            $total += $estimate->services_items->sum('total');
-//        }
-
-        // Скидки
-        $discountCurrency = 0;
-        $discountPercent = 0;
-        if ($total > 0) {
-            $discountCurrency = $amount - $total;
-            $discountPercent = $discountCurrency * 100 / $amount;
-        }
-
-        // Маржа
-        $marginCurrency = $total - $cost;
-        if ($total > 0) {
-            $marginPercent = ($marginCurrency / $total * 100);
-        } else {
-            $marginPercent = $marginCurrency * 100;
-        }
-
-        $data = [
-            'cost' => $cost,
-            'amount' => $amount,
-            'points' => $points,
-
-            'price_discount' => $priceDiscount,
-            'catalogs_item_discount' => $catalogsItemDiscount,
-            'estimate_discount' => $estimateDiscount,
-            'client_discount' => $clientDiscount,
-            'manual_discount' => $manualDiscount,
-
-            'discount_currency' => $discountCurrency,
-            'discount_percent' => $discountPercent,
-
-            'total' => $total,
-            'total_points' => $totalPoints,
-            'total_bonuses' => $totalBonuses,
-
-            'margin_currency' => $marginCurrency,
-            'margin_percent' => $marginPercent,
-        ];
-
-        $estimate->update($data);
+        $estimate = $lead->estimate;
 
         // Регистрация сметы
         if ($request->has('is_registered')) {
