@@ -30,7 +30,7 @@ const moduleLead = {
 
                 state.lead = lead;
             },
-            UPDATE_LEAD(state, lead) {
+            UPDATE_LEAD_PERSONAL(state, lead) {
                 state.lead.main_phone = lead.main_phone;
                 state.lead.name = lead.name;
                 state.lead.company_name = lead.company_name;
@@ -41,6 +41,12 @@ const moduleLead = {
                 state.lead.user_id = lead.user_id;
                 state.lead.organization_id = lead.organization_id;
                 state.lead.client_id = lead.client_id;
+
+                this.commit('SET_CHANGE');
+            },
+            UPDATE_LEAD_EVENT(state, lead) {
+                state.lead.stage_id = lead.stage_id;
+                state.lead.shipment_at = lead.shipment_at;
 
                 this.commit('SET_CHANGE');
             },

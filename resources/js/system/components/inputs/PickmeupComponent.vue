@@ -9,6 +9,7 @@
             v-model="date"
             :name="name"
             :id="'pickmeup-' + name"
+            @change="change"
         >
 <!--        <div-->
 <!--            class="sprite-input-right"-->
@@ -98,6 +99,9 @@
             clear() {
                 this.date = '';
             },
+            change() {
+                this.$emit('change', this.date);
+            }
         },
 
         // computed: {

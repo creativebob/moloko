@@ -170,7 +170,7 @@
                     client_id: this.client ? this.client.id : null,
                 };
 
-                this.$store.commit('UPDATE_LEAD', data)
+                this.$store.commit('UPDATE_LEAD_PERSONAL', data)
 
             },
             changePhone(value) {

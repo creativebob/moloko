@@ -402,8 +402,7 @@ class LeadController extends Controller
             'organization.client',
             'client',
             'main_phones',
-            '            \'estimate\',
-',
+            'estimate',
         ])
             ->companiesLimit($answer)
             ->filials($answer)
@@ -423,6 +422,9 @@ class LeadController extends Controller
             'user_id' => $newLead['user_id'],
             'organization_id' => $newLead['organization_id'],
             'client_id' => $newLead['client_id'],
+            
+            'stage_id' => $newLead['stage_id'],
+            'shipment_at' => $newLead['shipment_at'],
         ];
 
         $location = $this->getLocation(1, $newLead['location']['city_id'], $newLead['location']['address']);
@@ -454,6 +456,8 @@ class LeadController extends Controller
                 $dataLead['user_id'] = $user->id;
                 $dataLead['private_status'] = 0;
             }
+    
+            $dataLead['private_status'] = 0;
         }
 
         // Проверка организации
@@ -786,6 +790,9 @@ class LeadController extends Controller
             'user_id' => $newLead['user_id'],
             'organization_id' => $newLead['organization_id'],
             'client_id' => $newLead['client_id'],
+    
+            'stage_id' => $newLead['stage_id'],
+            'shipment_at' => $newLead['shipment_at'],
         ];
 
         $location = $this->getLocation(1, $newLead['location']['city_id'], $newLead['location']['address']);
@@ -834,6 +841,8 @@ class LeadController extends Controller
 
             $dataLead['organization_id'] = $company->id;
         }
+        
+        $datLead['private_status'] = isset($dataLead['company_name']) ? 1 : 0;
 
 //        return $dataLead;
 

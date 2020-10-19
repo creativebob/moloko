@@ -1,7 +1,7 @@
 <template>
     <div class="grid-x">
         <div
-            v-if="! isRegistered && change"
+            v-if="change"
             class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top"
         >
             <a
