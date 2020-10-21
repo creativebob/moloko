@@ -83411,7 +83411,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return this.$store.state.lead.goodsItems.length > 0 || this.$store.state.lead.servicesItems.length > 0;
         },
         showSaleButton: function showSaleButton() {
-            return this.estimate.registered_at && this.estimate.saled_at === null && this.$store.getters.PAYMENTS_AMOUNT >= this.$store.getters.ESTIMATE_AGGREGATIONS.total;
+            return this.estimate.registered_at && this.estimate.saled_at === null && this.$store.getters.PAYMENTS_AMOUNT >= this.$store.getters.ESTIMATE_AGGREGATIONS.estimate.total;
         },
         change: function change() {
             return this.$store.state.lead.change;
@@ -83535,7 +83535,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return this.estimate.registered_at && !this.estimate.saled_at;
         },
         isDisabled: function isDisabled() {
-            return this.$store.getters.PAYMENTS_AMOUNT >= this.$store.getters.ESTIMATE_AGGREGATIONS.total;
+            return this.$store.getters.PAYMENTS_AMOUNT >= this.$store.getters.ESTIMATE_AGGREGATIONS.estimate.total;
         }
     },
     methods: {
@@ -83962,7 +83962,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
     computed: {
         isShow: function isShow() {
-            return this.$store.state.lead.estimate.registered_at;
+            return this.$store.state.lead.estimate.registered_at !== null;
         }
     }
 });
@@ -84210,10 +84210,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     computed: {
         isShow: function isShow() {
-            return this.$store.state.lead.estimate.registered_at && !this.$store.state.lead.estimate.saled_at && this.$store.getters.PAYMENTS_AMOUNT < this.$store.getters.ESTIMATE_AGGREGATIONS.total;
-        },
-        paymentsAmount: function paymentsAmount() {
-            return this.$store.getters.paymentsAmount;
+            return this.$store.state.lead.estimate.registered_at && this.$store.state.lead.estimate.saled_at === null && this.$store.getters.PAYMENTS_AMOUNT < this.$store.getters.ESTIMATE_AGGREGATIONS.estimate.total;
         },
         lead: function lead() {
             return this.$store.state.lead.lead;
