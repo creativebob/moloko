@@ -11,6 +11,8 @@
             :value="number"
             @input="change"
             :decimal-place="0"
+            :limit-min="limitMin"
+            :limit-max="limitMax"
             ref="countComponent"
         ></digit-component>
         <button
@@ -30,14 +32,18 @@
         },
         props: {
             count: [String, Number],
-            limit: {
+            limitMin: {
+                type: [Number, String],
+                default: 0
+            },
+            limitMax: {
                 type: [Number, String],
                 default: 99999999
             },
         },
         data() {
             return {
-                number: parseInt(this.count),
+                number: parseFloat(this.count),
             }
         },
         watch: {
@@ -47,14 +53,14 @@
         },
         methods: {
             deduct() {
-                if (this.number > 0) {
+                if (this.number > this.limitMin) {
                     this.number -= 1;
                     this.$refs.countComponent.update(this.number);
                     this.$emit('update', this.number);
                 }
             },
             add() {
-                if (this.number <= this.limit) {
+                if (this.number <= this.limitMax) {
                     this.number += 1;
                     this.$refs.countComponent.update(this.number);
                     this.$emit('update', this.number);
@@ -65,7 +71,7 @@
                 this.$emit('update', this.number);
             },
             update(value) {
-                this.number = value;
+                this.number = parseFloat(value);
                 this.$refs.countComponent.update(this.number);
             },
         },

@@ -20,7 +20,7 @@
                 return this.estimate.registered_at && !this.estimate.saled_at;
             },
             isDisabled() {
-                return this.$store.getters.paymentsAmount >= this.$store.getters.estimateTotal;
+                return this.$store.getters.PAYMENTS_AMOUNT >= this.$store.getters.ESTIMATE_AGGREGATIONS.total;
             }
         },
         methods: {

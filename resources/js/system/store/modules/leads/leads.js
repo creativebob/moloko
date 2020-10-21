@@ -73,34 +73,6 @@ const moduleLead = {
             SET_ESTIMATE(state, estimate) {
                 state.estimate = estimate;
             },
-            UPDATE_ESTIMATE(state) {
-                // var amount = 0;
-                // if (state.goodsItems.length > 0) {
-                //     var goodsItemsAmount = 0;
-                //     state.goodsItems.forEach(function(item) {
-                //         return goodsItemsAmount += Number(item.amount)
-                //     });
-                //     state.goodsItems.amount = goodsItemsAmount;
-                //     amount += goodsItemsAmount;
-                // }
-                // if (state.servicesItems.length > 0) {
-                //     var servicesItemsAmount = 0;
-                //     state.servicesItems.forEach(function(item) {
-                //         return servicesItemsAmount += Number(item.amount)
-                //     });
-                //     state.servicesItems.amount = servicesItemsAmount
-                //     amount += servicesItemsAmount;
-                // }
-                // state.estimate.amount = amount;
-                //
-                // let total = 0;
-                // if (amount > 0) {
-                //     let discountAmount = (amount * state.estimate.discount_percent) / 100;
-                //
-                //     total += amount - discountAmount;
-                // }
-                // state.estimate.total = total;
-            },
 
             // Товары
             SET_GOODS_ITEMS(state, goodsItems) {
@@ -137,7 +109,7 @@ const moduleLead = {
                             cost_unit: parseFloat(price.goods.article.cost_default),
                             price: parseFloat(price.price),
                             points: price.points,
-                            count: 1,
+                            count: "1.00",
 
                             price_discount_id: price.price_discount_id,
                             price_discount_unit: parseFloat(price.price_discount),
@@ -162,6 +134,39 @@ const moduleLead = {
                     }
                 }
             },
+
+            UPDATE_GOODS_ITEM_COMMENT(state, data) {
+                this.commit('SET_CHANGE');
+                const index = state.goodsItems.findIndex(obj => obj.id === data.id);
+                let item = state.goodsItems[index];
+                item.comment = data.comment;
+                Vue.set(state.goodsItems, index, item);
+            },
+            UPDATE_GOODS_ITEM_COUNT(state, data) {
+                this.commit('SET_CHANGE');
+                const index = state.goodsItems.findIndex(obj => obj.id === data.id);
+                let item = state.goodsItems[index];
+                item.count = data.count;
+                Vue.set(state.goodsItems, index, item);
+
+                this.commit('SET_AGGREGATIONS', index);
+            },
+            UPDATE_GOODS_ITEM_IS_MANUAL(state, data) {
+                this.commit('SET_CHANGE');
+                const index = state.goodsItems.findIndex(obj => obj.id === data.id);
+                let item = state.goodsItems[index];
+
+                item.manual_discount_currency = data.manual_discount_currency;
+                item.manual_discount_percent = data.manual_discount_percent;
+                item.is_manual = data.is_manual;
+
+                item.count = data.count;
+
+                Vue.set(state.goodsItems, index, item);
+
+                this.commit('SET_AGGREGATIONS', index);
+            },
+
             UPDATE_GOODS_ITEM(state, item) {
                 const index = state.goodsItems.findIndex(obj => obj.id === item.id);
                 Vue.set(state.goodsItems, index, item);
@@ -170,9 +175,10 @@ const moduleLead = {
             },
 
             SET_AGGREGATIONS(state, index) {
-                this.commit('SET_CHANGE');
                 let item = state.goodsItems[index];
-                const count = item.count;
+
+                const count = parseFloat(item.count);
+                item.count = parseFloat(item.count).toFixed(2);
 
                 switch (item.sale_mode) {
                     case (1):
@@ -247,7 +253,12 @@ const moduleLead = {
                         }
 
                         // Маржа
-                        let totalPrice = parseFloat(item.price) - item.price_discount_unit - item.catalogs_item_discount_unit - item.estimate_discount_unit - item.client_discount_unit_currency;
+                        let totalPrice = 0;
+                        if (item.is_manual == 0) {
+                            totalPrice = parseFloat(item.price) - item.price_discount_unit - item.catalogs_item_discount_unit - item.estimate_discount_unit - item.client_discount_unit_currency;
+                        } else {
+                            totalPrice = parseFloat(item.price) - item.manual_discount_currency;
+                        }
                         item.margin_currency_unit = totalPrice - item.cost_unit;
                         item.margin_currency = item.total - item.cost;
 
@@ -318,13 +329,9 @@ const moduleLead = {
                 let id = item.id;
                 let index = state.servicesItems.findIndex(item => item.id === id);
                 Vue.set(state.servicesItems, index, item);
-
-                this.commit('UPDATE_ESTIMATE');
             },
             UPDATE_SERVICES_ITEMS(state, servicesItems) {
                 state.servicesItems = servicesItems;
-
-                this.commit('UPDATE_ESTIMATE');
             },
 
             // Изменения
@@ -495,210 +502,69 @@ const moduleLead = {
                     })
                     .finally(() => (state.loading = false));
             },
-
-            // Товары
-
-            // ADD_GOODS_ITEM_TO_ESTIMATE({ state }, priceId) {
-            //     if (state.estimate.is_registered === 0) {
-            //
-            //         axios
-            //             .post('/admin/estimates_goods_items', {
-            //                 estimate_id: state.estimate.id,
-            //                 price_id: priceId,
-            //                 client_discount_percent: state.client ? state.client.discount : 0,
-            //             })
-            //             .then(response => {
-            //                 if (response.data.success) {
-            //                     let item = response.data.item,
-            //                         index = state.goodsItems.findIndex(obj => obj.id === item.id);
-            //
-            //                     if (index > -1) {
-            //                         Vue.set(state.goodsItems, index, item);
-            //                     } else {
-            //                         state.goodsItems.push(item);
-            //                     }
-            //
-            //                     this.commit('UPDATE_ESTIMATE');
-            //                 } else {
-            //                     alert('Невозможно добавить позицию, так как цена изменилась. Удалите позицию со старой ценой и добавьте позицию заново');
-            //                 }
-            //
-            //             })
-            //             .catch(error => {
-            //                 console.log(error)
-            //             });
-            //     }
-            // },
-            // REMOVE_GOODS_ITEM_FROM_ESTIMATE({state}, itemId) {
-            //     if (state.estimate.is_registered === 0) {
-            //         axios
-            //             .delete('/admin/estimates_goods_items/' + itemId)
-            //             .then(response => {
-            //                 if (response.data > 0) {
-            //
-            //                     let index = state.goodsItems.findIndex(obj => obj.id === itemId);
-            //                     state.goodsItems.splice(index, 1);
-            //
-            //                     this.commit('UPDATE_ESTIMATE');
-            //                 }
-            //             })
-            //             .catch(error => {
-            //                 console.log(error)
-            //             });
-            //     }
-            // },
-
-            // Услуги
-            ADD_SERVICES_ITEM_TO_ESTIMATE({state}, priceId) {
-                if (state.estimate.registered_at) {
-                    axios
-                        .post('/admin/estimates_services_items', {
-                            estimate_id: state.estimate.id,
-                            price_id: priceId,
-                        })
-                        .then(response => {
-                            if (response.data.success) {
-                                let item = response.data.item,
-                                    index = state.servicesItems.findIndex(obj => obj.id === item.id);
-
-                                if (index > -1) {
-                                    Vue.set(state.servicesItems, index, item);
-                                } else {
-                                    state.servicesItems.push(item);
-                                }
-
-                                this.commit('UPDATE_ESTIMATE');
-                            } else {
-                                alert('Невозможно добавить позицию, так как цена изменилась. Удалите позицию со старой ценой и добавьте позицию заново');
-                            }
-
-                        })
-                        .catch(error => {
-                            console.log(error)
-                        });
-                }
-            },
-            REMOVE_SERVICES_ITEM_FROM_ESTIMATE({state}, itemId) {
-                if (state.estimate.registered_at) {
-                    axios
-                        .delete('/admin/estimates_services_items/' + itemId)
-                        .then(response => {
-                            if (response.data > 0) {
-                                let index = state.servicesItems.findIndex(obj => obj.id === itemId);
-                                state.servicesItems.splice(index, 1);
-
-                                this.commit('UPDATE_ESTIMATE');
-                            }
-                        })
-                        .catch(error => {
-                            console.log(error)
-                        });
-                }
-            }
-            ,
         },
         getters: {
             // Смета
-            estimateAmount: state => {
+            ESTIMATE_AGGREGATIONS: state => {
                 let goodsAmount = 0,
-                    servicesAmount = 0;
+                    goodsTotal = 0,
+                    goodsTotalPoints = 0,
+                    goodsDiscount = 0,
+                    goodsItemsDiscount = 0;
 
                 if (state.goodsItems.length) {
                     state.goodsItems.forEach(item => {
-                        return goodsAmount += parseFloat(item.amount)
+                        goodsAmount += parseFloat(item.amount);
+                        goodsTotal += parseFloat(item.total);
+                        goodsTotalPoints += parseFloat(item.total_points);
+                        goodsDiscount += parseFloat(item.estimate_discount);
+                        goodsItemsDiscount += parseFloat(item.discount_currency)
                     });
                 }
+
+                let servicesAmount = 0,
+                    servicesTotal = 0,
+                    servicesTotalPoints = 0,
+                    servicesDiscount = 0,
+                    servicesItemsDiscount = 0;
 
                 if (state.servicesItems.length) {
                     state.servicesItems.forEach(item => {
-                        return servicesAmount += parseFloat(item.amount)
+                        servicesAmount += parseFloat(item.amount);
+                        servicesTotal += parseFloat(item.total);
+                        servicesTotalPoints += parseFloat(item.total_points);
+                        servicesDiscount += parseFloat(item.estimate_discount);
+                        servicesItemsDiscount += parseFloat(item.discount_currency)
                     });
                 }
 
-                let amount = goodsAmount + servicesAmount;
-                return amount.toFixed(2);
-            },
-            estimateTotalPoints: state => {
-                let goodsTotalPoints = 0,
-                    servicesTotalPoints = 0;
-
-                if (state.goodsItems.length) {
-                    state.goodsItems.forEach(item => {
-                        return goodsTotalPoints += parseFloat(item.total_points)
-                    });
-                }
-
-                if (state.servicesItems.length) {
-                    state.servicesItems.forEach(item => {
-                        return servicesTotalPoints += parseFloat(item.total_points)
-                    });
-                }
-
-                let totalPoints = goodsTotalPoints + servicesTotalPoints;
-                return totalPoints.toFixed(2);
-            },
-            estimateItemsDiscount: state => {
-                let goodsDiscount = 0,
-                    servicesDiscount = 0;
-
-                if (state.goodsItems.length) {
-                    state.goodsItems.forEach(item => {
-                        return goodsDiscount += parseFloat(item.discount_currency)
-                    });
-                }
-
-                if (state.servicesItems.length) {
-                    state.servicesItems.forEach(item => {
-                        return servicesDiscount += parseFloat(item.discount_currency)
-                    });
-                }
-
-                let discount = goodsDiscount + servicesDiscount;
-                return discount.toFixed(2);
-            },
-            estimateDiscount: state => {
-                let goodsDiscount = 0,
-                    servicesDiscount = 0;
-
-                if (state.goodsItems.length) {
-                    state.goodsItems.forEach(item => {
-                        if (item.is_manual == 0) {
-                            goodsDiscount += parseFloat(item.estimate_discount);
-                        }
-
-                    });
-                }
-
-                if (state.servicesItems.length) {
-                    state.servicesItems.forEach(item => {
-                        if (item.is_manual == 0) {
-                            return servicesDiscount += parseFloat(item.estimate_discount);
-                        }
-                    });
-                }
-
-                let discount = goodsDiscount + servicesDiscount;
-                return discount.toFixed(2);
-            },
-            estimateTotal: state => {
-                let total = 0;
-
-                if (state.goodsItems.length) {
-                    state.goodsItems.forEach(item => {
-                        return total += parseFloat(item.total)
-                    });
-                }
-
-                if (state.servicesItems.length) {
-                    state.servicesItems.forEach(item => {
-                        return total += parseFloat(item.total)
-                    });
-                }
-                return parseFloat(total);
+                return {
+                    goods: {
+                        amount: goodsAmount.toFixed(2),
+                        total: goodsTotal.toFixed(2),
+                        totalPoints: goodsTotalPoints.toFixed(2),
+                        discount: goodsDiscount.toFixed(2),
+                        itemsDiscount: goodsItemsDiscount.toFixed(2),
+                    },
+                    services: {
+                        amount: servicesAmount.toFixed(2),
+                        total: servicesTotal.toFixed(2),
+                        totalPoints: servicesTotalPoints.toFixed(2),
+                        discount: servicesDiscount.toFixed(2),
+                        itemsDiscount: servicesItemsDiscount.toFixed(2),
+                    },
+                    estimate: {
+                        amount: (goodsAmount + servicesAmount).toFixed(2),
+                        total: (goodsTotal + servicesTotal).toFixed(2),
+                        totalPoints: (goodsTotalPoints + servicesTotalPoints).toFixed(2),
+                        discount: (goodsDiscount + servicesDiscount).toFixed(2),
+                        itemsDiscount: (goodsItemsDiscount + servicesItemsDiscount).toFixed(2),
+                    },
+                };
             },
 
             // Товары
-            countGoodsItemInEstimate: state => id => {
+            COUNT_GOODS_ITEM_IN_ESTIMATE: state => id => {
                 let count = 0;
                 state.goodsItems.forEach(item => {
                     if (item.price_id == id) {
@@ -707,14 +573,12 @@ const moduleLead = {
                 });
                 return count;
             },
-
-            // Клиент
-            clientDiscountPercent: state => {
-                return state.client ? state.client.discount : 0;
+            GOODS_ITEM: state => id => {
+                return state.goodsItems.find(item => item.id == id);;
             },
 
             // Платежи
-            paymentsAmount: state => {
+            PAYMENTS_AMOUNT: state => {
                 let amount = 0;
                 if (state.estimate.payments.length) {
                     state.estimate.payments.forEach(function (item) {
@@ -723,9 +587,7 @@ const moduleLead = {
                 }
                 return amount;
             }
-
         }
-    }
-;
+    };
 
 export default moduleLead;

@@ -125,7 +125,7 @@
                 client: this.lead.client,
             }
         },
-        created: function () {
+        created() {
             this.lead.main_phone = this.lead.main_phones.length ? this.lead.main_phones[0].phone : null;
 
             this.$store.commit('SET_USERS', this.users);
@@ -144,7 +144,7 @@
         },
         computed: {
             isDisabled() {
-                return this.$store.state.lead.estimate.registered_at !== null;
+                return this.$store.state.lead.estimate.registered_at !== null || this.$store.state.lead.loading == true;
             },
             storeUsers() {
                 return this.$store.state.lead.users;

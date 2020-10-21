@@ -232,6 +232,26 @@ class Article extends Model
         return $this->hasOne(Goods::class);
     }
 
+    public function raw()
+    {
+        return $this->hasOne(Raw::class);
+    }
+
+    public function tool()
+    {
+        return $this->hasOne(Tool::class);
+    }
+
+    public function container()
+    {
+        return $this->hasOne(Container::class);
+    }
+
+    public function attachment()
+    {
+        return $this->hasOne(Attachment::class);
+    }
+
     // Единица измерения
     public function unit()
     {

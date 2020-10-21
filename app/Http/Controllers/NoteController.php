@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 // Модели
+use App\Entity;
 use App\Note;
 
 // Валидация
@@ -37,7 +38,10 @@ class NoteController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Note::class);
 
-        $item = $request->model::find($request->id);
+        $model = Entity::where('alias', $request->entity)
+            ->value('model');
+
+        $item = $model::find($request->id);
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -64,7 +68,8 @@ class NoteController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $note = Note::moderatorLimit($answer)->find($id);
+        $note = Note::moderatorLimit($answer)
+            ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $note);

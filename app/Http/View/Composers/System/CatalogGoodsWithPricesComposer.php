@@ -34,7 +34,8 @@ class CatalogGoodsWithPricesComposer
                                     'draft',
                                     'cost_default'
                                 ]);
-                            }
+                            },
+                            'stocks'
                         ])
                         ->where('archive', false)
                         ->select([

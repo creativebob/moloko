@@ -51,6 +51,7 @@
                             <digit-component
                                 v-model="amount"
                                 ref="countComponent"
+                                @enter="addPayment"
                             ></digit-component>
                             <div class="input-group-button">
                                 <a
@@ -98,7 +99,7 @@
                 <tfoot>
                     <tr>
                         <td colspan="2" class="text-right">Итого</td>
-                        <td>{{ paymentsAmount | roundToTwo | level }}</td>
+                        <td>{{ PAYMENTS_AMOUNT | roundToTwo | level }}</td>
                     </tr>
                 </tfoot>
             </table>
@@ -144,7 +145,7 @@
 
         computed: {
 		    isShow() {
-		        return this.$store.state.lead.estimate.registered_at && !this.$store.state.lead.estimate.saled_at && this.$store.getters.paymentsAmount < this.$store.getters.estimateTotal;
+		        return this.$store.state.lead.estimate.registered_at && !this.$store.state.lead.estimate.saled_at && this.$store.getters.PAYMENTS_AMOUNT < this.$store.getters.ESTIMATE_AGGREGATIONS.total;
             },
             paymentsAmount() {
                 return this.$store.getters.paymentsAmount;

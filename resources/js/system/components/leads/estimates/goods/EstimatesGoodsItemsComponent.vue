@@ -2,13 +2,12 @@
     <tbody>
         <estimates-goods-item-component
             v-for="(item, index) in items"
-            :item="item"
+            :id="item.id"
             :index="index"
             :key="item.id"
             :settings="settings"
             :stocks="stocks"
             @open-modal-remove="openModal(item, index)"
-            @update="updateItem"
         ></estimates-goods-item-component>
         <div
             class="reveal rev-small"
@@ -119,9 +118,6 @@
                 this.itemIndex = index;
                 this.item = item;
                 this.itemName = item.goods.article.name;
-            },
-            updateItem(item) {
-                this.$store.commit('UPDATE_GOODS_ITEM', item);
             },
             deleteItem() {
                 this.$store.commit('REMOVE_GOODS_ITEM', this.item.id);

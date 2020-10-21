@@ -422,7 +422,7 @@ class LeadController extends Controller
             'user_id' => $newLead['user_id'],
             'organization_id' => $newLead['organization_id'],
             'client_id' => $newLead['client_id'],
-            
+
             'stage_id' => $newLead['stage_id'],
             'shipment_at' => $newLead['shipment_at'],
         ];
@@ -456,7 +456,7 @@ class LeadController extends Controller
                 $dataLead['user_id'] = $user->id;
                 $dataLead['private_status'] = 0;
             }
-    
+
             $dataLead['private_status'] = 0;
         }
 
@@ -486,10 +486,10 @@ class LeadController extends Controller
 
         $newGoodsItemsIds = [];
         $sort = 1;
-    
+
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right('stocks', true, getmethod('index'));
-    
+
         // TODO - 16.10.20 - Пока что берем первый склад
         $stock = Stock::companiesLimit($answer)
         ->first();
@@ -790,7 +790,7 @@ class LeadController extends Controller
             'user_id' => $newLead['user_id'],
             'organization_id' => $newLead['organization_id'],
             'client_id' => $newLead['client_id'],
-    
+
             'stage_id' => $newLead['stage_id'],
             'shipment_at' => $newLead['shipment_at'],
         ];
@@ -841,7 +841,7 @@ class LeadController extends Controller
 
             $dataLead['organization_id'] = $company->id;
         }
-        
+
         $datLead['private_status'] = isset($dataLead['company_name']) ? 1 : 0;
 
 //        return $dataLead;
@@ -855,10 +855,10 @@ class LeadController extends Controller
 
         $newGoodsItemsIds = [];
         $sort = 1;
-    
+
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right('stocks', true, getmethod('index'));
-        
+
         // TODO - 16.10.20 - Пока что берем первый склад
         $stock = Stock::companiesLimit($answer)
             ->first();
@@ -913,6 +913,7 @@ class LeadController extends Controller
                 'computed_discount_currency' => $newGoodsItem['computed_discount_currency'],
                 'total_computed_discount' => $newGoodsItem['total_computed_discount'],
 
+                'is_manual' => $newGoodsItem['is_manual'],
                 'manual_discount_percent' => $newGoodsItem['manual_discount_percent'],
                 'manual_discount_currency' => $newGoodsItem['manual_discount_currency'],
                 'total_manual_discount' => $newGoodsItem['total_manual_discount'],
@@ -943,7 +944,7 @@ class LeadController extends Controller
 
         $deleteIds = array_diff($oldGoodsItemsIds, $newGoodsItemsIds);
         $res = EstimatesGoodsItem::destroy($deleteIds);
-    
+
         // Аггрегация сметы
         $this->aggregateEstimate($lead->estimate);
         $lead->load([

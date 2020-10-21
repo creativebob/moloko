@@ -181,7 +181,7 @@ const moduleLead = {
     getters: {
 
         // Смета
-        estimateAmount: state => {
+        ESTIMATE_AMOUNT: state => {
             let goodsAmount = 0,
                 servicesAmount = 0;
 
@@ -200,7 +200,7 @@ const moduleLead = {
             let amount = goodsAmount + servicesAmount;
             return amount.toFixed(2);
         },
-        estimateTotalPoints: state => {
+        ESTIMATE_TOTAL_POINTS: state => {
             let goodsTotalPoints = 0,
                 servicesTotalPoints = 0;
 
@@ -219,7 +219,7 @@ const moduleLead = {
             let totalPoints = goodsTotalPoints + servicesTotalPoints;
             return totalPoints.toFixed(2);
         },
-        estimateItemsDiscount: state => {
+        ESTIMATE_ITEMS_DISCOUNT: state => {
             let goodsDiscount = 0,
                 servicesDiscount = 0;
 
@@ -238,14 +238,14 @@ const moduleLead = {
             let discount = goodsDiscount + servicesDiscount;
             return discount.toFixed(2);
         },
-        // estimateDiscount: state => {
+        // ESTIMATE_DISCOUNT: state => {
         //     let discount = null;
         //     if (state.discounts && state.discounts.length) {
         //         discount = state.estimate.discounts[0];
         //     }
         //     return discount;
         // },
-        // estimateDiscountCurrency: state => {
+        // ESTIMATE_DISCOUNTCurrency: state => {
         //     let goodsTotal = 0,
         //         servicesTotal = 0;
         //
@@ -283,7 +283,7 @@ const moduleLead = {
         //
         //     return discountCurrency;
         // },
-        estimateTotal: state => {
+        ESTIMATE_TOTAL: state => {
             let goodsTotal = 0,
                 servicesTotal = 0;
 

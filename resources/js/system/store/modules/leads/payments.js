@@ -14,7 +14,7 @@ const moduleLead = {
     },
     getters: {
         // Платежи
-        paymentsAmount: state => {
+        PAYMENTS_AMOUNT: state => {
             let amount = 0;
             if (state.estimate.payments.length) {
                 state.estimate.payments.forEach(function(item) {

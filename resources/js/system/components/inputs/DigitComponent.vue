@@ -51,7 +51,11 @@
                 type: Boolean,
                 default: false
             },
-            limit: {
+            limitMin: {
+                type: [Number, String],
+                default: 0
+            },
+            limitMax: {
                 type: [Number, String],
                 default: 99999999
             },
@@ -63,13 +67,32 @@
 				// limit_status: false,
 				// reg_rate: /^(\d+)(\.{1})(\d{3,})$/,
 				// count_item: this.value,
+                reg: null
 			}
 		},
-        // watch: {
-        //     count(val) {
-        //         this.count = parseFloat(val).toFixed(this.decimalPlace);
-        //     },
-        // },
+        mounted() {
+            if (this.decimalPlace > 0) {
+                this.reg = new RegExp('^[0-9]*(\.[0-9]{0,2})?$');
+                // this.reg = new RegExp('^[\d]+([,\.][\d]{0,' + this.decimalPlace + '})?$');
+            } else {
+                this.reg = /^\d+$/;
+            }
+        },
+        watch: {
+            count(val) {
+                // alert('Результат валидации - ' + parseFloat(val).toFixed(this.decimalPlace).match(this.reg));
+                // this.count = parseFloat(val).toFixed(this.decimalPlace);
+
+                // alert(this.count);
+
+                // const res = this.reg.test(val);
+                // // alert(res)
+                // if (! res) {
+                //
+                // }
+
+            },
+        },
 		methods: {
             update(count) {
                 this.count = parseFloat(count).toFixed(this.decimalPlace);
@@ -104,7 +127,7 @@
             },
             blur(value) {
                 if (this.count == '') {
-                    this.count = 0;
+                    this.count = this.limitMin;
                 }
 
                 let array = this.getDecimalArray(value),
@@ -136,12 +159,17 @@
                 // this.count = parseFloat(this.count).toFixed(this.decimalPlace);
 
                 if (value == '') {
-                    value = 0;
+                    value = this.limitMin;
                 }
 
-                if (value != '' && parseFloat(value) > this.limit) {
-                    value = this.limit;
-                    this.count = this.limit;
+                if (value != '' && parseFloat(value) > this.limitMax) {
+                    value = this.limitMax;
+                    this.count = this.limitMax;
+                }
+
+                if (value != '' && parseFloat(value) < this.limitMin) {
+                    value = this.limitMin;
+                    this.count = this.limitMin;
                 }
                 // let reg = '/(([0-9]{1,})?[\\.]?[\\,]?[0-9]{0,' + this.decimalPlace + '})/';
                 // value = value.toString().replace(reg , '');

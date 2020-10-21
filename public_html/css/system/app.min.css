@@ -362,10 +362,6 @@ input[type='search'] {
   color: #cacaca;
 }
 
-::-moz-placeholder {
-  color: #cacaca;
-}
-
 ::-ms-input-placeholder {
   color: #cacaca;
 }
@@ -597,10 +593,6 @@ select[multiple] {
 }
 
 .is-invalid-input:not(:focus)::-webkit-input-placeholder {
-  color: #cc4b37;
-}
-
-.is-invalid-input:not(:focus)::-moz-placeholder {
   color: #cc4b37;
 }
 
@@ -11186,15 +11178,20 @@ tr:hover .button-to-reserve {
 
 .commentable .icon-comment {
   position: relative;
+  opacity: 0;
   -webkit-transition: opacity 0.5s ease;
   transition: opacity 0.5s ease;
 }
 
-.commentable .hide-comment {
-  opacity: 0;
+.commentable .comment .icon-comment {
+  opacity: 0.4;
 }
 
 .commentable:hover .icon-comment {
+  opacity: 0.8;
+}
+
+.commentable:hover .icon-comment:hover {
   opacity: 1;
 }
 

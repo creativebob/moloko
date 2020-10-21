@@ -193,6 +193,30 @@
                         @if(!empty($item->in_cleans))
                             @if($item->in_cleans->count() > 0)
                                 <span class="badge success" title="В составе активных товаров: {{ $item->in_cleans->implode('id', ', ') }}">{{ $item->in_cleans->count() }}</span>
+{{--                                <span--}}
+{{--                                    class="badge success"--}}
+{{--                                    data-open="modal-in_cleans-{{ $item->id }}"--}}
+{{--                                >{{ $item->in_cleans->count() }}</span>--}}
+
+{{--                                <div class="reveal rev-small" id="modal-in_cleans-{{ $item->id }}" data-reveal>--}}
+{{--                                    <div class="grid-x">--}}
+{{--                                        <div class="small-12 cell modal-title">--}}
+{{--                                            <h5>{{ $item->article->name }} в составе товаров:</h5>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                    <div class="grid-x align-center modal-content ">--}}
+{{--                                        <div class="small-10 cell text-center">--}}
+{{--                                            <ul>--}}
+{{--                                                @foreach($item->in_cleans as $article)--}}
+{{--                                                    <li>--}}
+{{--                                                        <a href="{{ route('goods.edit', $article->cur_goods->id) }}">{{ $article->name }}</a>--}}
+{{--                                                    </li>--}}
+{{--                                                @endforeach--}}
+{{--                                            </ul>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                    <div data-close class="icon-close-modal sprite close-modal remove-modal"></div>--}}
+{{--                                </div>--}}
                             @endif
                         @endif
 
@@ -229,7 +253,6 @@
                     @if ($entity == 'goods')
                         @include('products.articles.goods.modal_archive')
                     @endif
-
                 </tr>
                 @endforeach
                 @endif
@@ -254,6 +277,8 @@
     @if ($entity != 'goods')
         @include('includes.modals.modal-archive')
     @endif
+
+
 
     @include('includes.modals.modal-replicate')
 @endsection

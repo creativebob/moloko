@@ -2,7 +2,6 @@
     <div class="cell small-12 large-12">
 
         <lead-events-component
-            :lead="{{ $lead }}"
             :stages='@json($stages)'
         ></lead-events-component>
 

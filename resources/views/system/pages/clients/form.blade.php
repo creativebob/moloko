@@ -56,7 +56,7 @@
                         :value="{{ $client->discount }}"
                         @endif
                         :decimal-place="0"
-                        :limit="100"
+                        :limit-max="100"
                     ></digit-component>
 {{--                    {!! Form::number('discount', $client->discount) !!}--}}
 {{--                    @include('includes.inputs.count', ['name' => 'discount', 'value' => $client->discount])--}}

@@ -1,9 +1,9 @@
 <script>
-    $(document).ready(function () {
+    // $(document).ready(function () {
 
-        $('.view-list').each(function(index) {
-            $(this).hide();
-        });
+        // $('.view-list').each(function(index) {
+        //     $(this).hide();
+        // });
 
         // $(document).on('change', '#select-stocks', function(event) {
         //     event.preventDefault();
@@ -21,7 +21,7 @@
         //     };
         // });
 
-    });
+    // });
 
 </script>
 
