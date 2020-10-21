@@ -433,6 +433,8 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('leads.personal', UsersWithClientComposer::class);
         view()->composer('leads.personal', CompaniesWithClientComposer::class);
         view()->composer('leads.personal', LegalFormsComposer::class);
+    
+        view()->composer('leads.tabs.events', StagesComposer::class);
         view()->composer('leads.tabs.history', LeadHistoryComposer::class);
         view()->composer('leads.tabs.estimate', DiscountsForEstimatesComposer::class);
 

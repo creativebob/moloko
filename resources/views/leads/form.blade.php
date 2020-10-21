@@ -130,7 +130,7 @@
             <div class="cell small-12">
                 <ul class="tabs-list" data-tabs id="tabs-leads">
                     <li class="tabs-title is-active">
-                        <a href="#content-panel-notes" aria-selected="true">События</a>
+                        <a href="#tab-events" aria-selected="true">События</a>
                     </li>
 
                     @can('create', App\Models\System\Documents\Estimate::class)
@@ -165,44 +165,8 @@
 
                 <div class="tabs-content tabs-leads" data-tabs-content="tabs-leads">
                     {{-- Взаимодействия: задачи и события --}}
-                    <div class="tabs-panel is-active" id="content-panel-notes">
-                        <div class="grid-x grid-padding-x">
-                            <div class="small-12 large-12 cell">
-
-
-                                <fieldset class="fieldset-challenge">
-                                    <legend>Контроль процесса:</legend>
-                                    <div class="grid-x grid-padding-x">
-                                        <div class="small-12 large-6 cell">
-
-                                            {{-- Подключаем этапы процесса --}}
-                                            @include('includes.selects.stages', ['value' => $lead->stage_id])
-
-                                        </div>
-                                        <div class="small-3 medium-6 large-3 cell">
-                                            <label>Дата отгрузки
-                                                <pickmeup-component
-                                                    name="shipment_date"
-                                                    value="{{ isset($lead->shipment_at) ? $lead->shipment_at : null }}"
-                                                ></pickmeup-component>
-                                            </label>
-                                            {{--                                        @include('includes.inputs.date', ['name' => 'shipment_date', 'value' => isset($lead->shipment_at) ? $lead->shipment_at->format('d.m.Y') : null])--}}
-                                        </div>
-                                        <div class="small-3 medium-6 large-3 cell">
-                                            <label>Время отгрузки:
-                                                @include('includes.inputs.time', ['name' => 'shipment_time', 'placeholder' => true, 'value' => isset($lead->shipment_at) ? $lead->shipment_at->format('H:i') : null])
-                                            </label>
-                                        </div>
-                                    </div>
-                                </fieldset>
-
-                                {{-- Подключаем задачи --}}
-                                @include('includes.challenges.fieldset', ['item' => $lead])
-
-                                {{-- Подключаем комментарии --}}
-                                @include('includes.notes.fieldset', ['item' => $lead])
-                            </div>
-                        </div>
+                    <div class="tabs-panel is-active" id="tab-events">
+                        @include('leads.tabs.events')
                     </div>
 
                     {{-- КАТАЛОГ ТОВАРОВ --}}

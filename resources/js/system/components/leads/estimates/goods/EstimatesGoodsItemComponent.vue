@@ -19,11 +19,16 @@
                 ></span>
             </template>
 
-            <comment-component
+            <span
                 v-else
-                :item="item.comment"
-                @update="changeComment"
-            ></comment-component>
+                :class="[{'comment' : hasComment}]"
+            >
+                <comment-component
+                    :comment="item.comment"
+                    @update="changeComment"
+                ></comment-component>
+            </span>
+
         </td>
 
         <!--        <td v-if="settings.length && stocks.length">-->
@@ -66,6 +71,7 @@
             <count-component
                 v-else
                 :count="item.count"
+                :limit-min="1"
                 @update="changeCount"
                 ref="countComponent"
             ></count-component>
@@ -113,7 +119,7 @@
         </td>
 
         <modal-component
-            :item="item"
+            :id="id"
             ref="modalCurrencyComponent"
             @update="update"
         ></modal-component>
@@ -132,7 +138,8 @@
             'reserve-component': require('./reserves/ReserveComponent'),
         },
         props: {
-            item: Object,
+            id: Number,
+            // item: Object,
             index: Number,
             settings: {
                 type: Array,
@@ -149,11 +156,9 @@
         },
         data() {
             return {
-                count: parseFloat(this.item.count),
+                // count: parseFloat(this.item.count),
                 stockId: null,
 
-                // cost: Number(this.item.cost),
-                // changeCost: false,
             }
         },
         // watch: {
@@ -171,58 +176,41 @@
             }
         },
         computed: {
-            isArchive() {
-                return this.item.goods.archive == 1;
+            item() {
+                return this.$store.getters.GOODS_ITEM(this.id);
             },
             isRegistered() {
                 return this.$store.state.lead.estimate.registered_at;
             },
-            // hasUser() {
-            //     return this.$store.state.lead.lead.user_id !== null;
-            // },
-
-            itemCount() {
-                return Math.floor(this.item.count);
+            isArchive() {
+                return this.item.goods.archive == 1;
+            },
+            hasComment() {
+                return this.item.comment !== null && this.item.comment !== "";
             }
-            //     isChangeCost() {
-            //         if (this.changeCost) {
-            //             this.canChangeCount = false
-            //         }
-            //         return this.changeCost
-            //     },
-            //     unitAbbreviation() {
-            //         let abbr;
-            //         if (this.item.cmv.article.package_status === 1) {
-            //             abbr = this.item.cmv.article.package_abbreviation;
-            //         } else {
-            //             abbr = this.item.cmv.article.unit.abbreviation;
-            //         }
-            //         return abbr;
-            //     }
-            // count: {
-            //     get () {
-            //         return Number(this.item.count);
-            //     },
-            //     set (value) {
-            //         this.countInput = Number(value)
-            //     }
-            // },
         },
         methods: {
             changeComment(comment) {
                 // Оновление ккомментария
-                this.item.comment = comment;
-                this.$store.commit('UPDATE_GOODS_ITEM', this.item)
+                let data = {
+                    id: this.id,
+                    comment: comment
+                };
+                this.$store.commit('UPDATE_GOODS_ITEM_COMMENT', data)
             },
             changeCount(count) {
                 // Оновление количества из строки
-                this.item.count = count;
-                this.$store.commit('UPDATE_GOODS_ITEM', this.item);
+                // this.item.count = count;
+                const data = {
+                    id: this.id,
+                    count: count
+                };
+                this.$store.commit('UPDATE_GOODS_ITEM_COUNT', data);
                 this.$refs.modalCurrencyComponent.reset();
             },
-            update(item) {
+            update(data) {
                 // Обновление из модалки
-                this.$store.commit('UPDATE_GOODS_ITEM', item)
+                this.$store.commit('UPDATE_GOODS_ITEM_IS_MANUAL', data)
             },
             openModalRemove() {
                 // Открытие модалки удаления

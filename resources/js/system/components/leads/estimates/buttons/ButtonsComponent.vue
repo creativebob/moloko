@@ -1,7 +1,7 @@
 <template>
     <div class="grid-x">
         <div
-            v-if="! isRegistered && change"
+            v-if="change"
             class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top"
         >
             <a
@@ -87,7 +87,7 @@
             },
 
             showSaleButton() {
-                return this.estimate.registered_at && this.estimate.saled_at === null && this.$store.getters.paymentsAmount >= this.$store.getters.estimateTotal;
+                return this.estimate.registered_at && this.estimate.saled_at === null && this.$store.getters.PAYMENTS_AMOUNT >= this.$store.getters.ESTIMATE_AGGREGATIONS.estimate.total;
             },
             change() {
                 return this.$store.state.lead.change;

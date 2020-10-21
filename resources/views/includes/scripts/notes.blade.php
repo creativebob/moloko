@@ -1,18 +1,17 @@
 <script type="application/javascript">
 
-	var id = '{{ $id }}';
-	var model = '{{ $model }}';
+	let id = '{{ $id }}';
+	let entity = '{{ $entity }}';
 
-	// alert(model);
 	// Функция добавленяи комментария
-	function addNote (id, model) {
+	function addNote (id, entity) {
 		$.ajax({
 			headers: {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			},
 			url: '/admin/notes',
 			type: "POST",
-			data: {id: id, model: model, body: $('textarea[name=add_body]').val()},
+			data: {id: id, entity: entity, body: $('textarea[name=add_body]').val()},
 			success: function(html){
 				$('#tr-add-note').after(html);
 				$('textarea[name=add_body]').val('');
@@ -26,8 +25,7 @@
 	function editNote (parent) {
 		// Находим описание сущности, id и название удаляемого элемента в родителе
 
-		var id = parent.attr('id').split('-')[1];
-		var name = parent.data('name');
+		let id = parent.attr('id').split('-')[1];
 
 		$.ajax({
 			headers: {
@@ -47,7 +45,7 @@
 	// Добавление комментария
 	$(document).on('click', '#add-note', function(event) {
 		event.preventDefault();
-		addNote (id, model);
+		addNote (id, entity);
 	});
 
 	// При создании коммента ловим enter
@@ -57,7 +55,7 @@
 		if ((event.keyCode == 13) && (event.shiftKey == false)) { //если нажали Enter, то true
 			event.preventDefault();
 			// event.stopPropagation();
-			addNote (id, model);
+			addNote (id, entity);
 			// alert($('input[name=add-body]').val());
 		}
 	});
@@ -69,9 +67,8 @@
 		event.preventDefault();
 
 		// Находим описание сущности, id и название удаляемого элемента в родителе
-		var parent = $(this).closest('.item');
-		var id = parent.attr('id').split('-')[1];
-		var name = parent.data('name');
+		let parent = $(this).closest('.item');
+		let id = parent.attr('id').split('-')[1];
 
 		$.ajax({
 			headers: {
@@ -112,9 +109,8 @@
 		event.preventDefault();
 
 		// Находим описание сущности, id и название удаляемого элемента в родителе
-		var parent = $(this).closest('.item');
-		var id = parent.attr('id').split('-')[1];
-		var name = parent.data('name');
+		let parent = $(this).closest('.item');
+		let id = parent.attr('id').split('-')[1];
 
 		$.ajax({
 			headers: {

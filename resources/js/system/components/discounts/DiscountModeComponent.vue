@@ -20,7 +20,7 @@
             <digit-component
                 name="percent"
                 :value="discount.percent"
-                :limit="100"
+                :limit-max="100"
                 :disabled="disabled"
             ></digit-component>
         </label>

@@ -72,11 +72,10 @@
                                 <div class="small-12 medium-6 cell">
                                     <label>Скидка, %
                                         <digit-component
-                                            name="discount_percent"
                                             :value="discountPercent"
                                             @input="changeDiscountPercent"
                                             :disabled="isRegistered"
-                                            :limit="100"
+                                            :limit-max="100"
                                             ref="discountPercentComponent"
                                         ></digit-component>
                                     </label>
@@ -84,11 +83,10 @@
                                 <div class="small-12 medium-6 cell">
                                     <label>Скидка, руб
                                         <digit-component
-                                            name="discount_currency"
                                             :value="discountCurrency"
                                             @input="changeDiscountCurrency"
                                             :disabled="isRegistered"
-                                            :limit="item.price"
+                                            :limit-max="item.price"
                                             ref="discountCurrencyComponent"
                                         ></digit-component>
                                     </label>
@@ -106,6 +104,7 @@
                             <count-component
                                 v-else
                                 :count="item.count"
+                                :limit-min="1"
                                 @update="changeCount"
                                 ref="countComponent"
                             ></count-component>
@@ -170,26 +169,34 @@
             'count-component': require('../../../inputs/CountWithButtonsComponent'),
         },
         props: {
-            item: Object,
+            id: Number,
         },
         data() {
             return {
-                isManual: this.item.is_manual == 1,
-                discountPercent: this.item.discount_percent,
-                discountCurrency: this.item.discount_currency / this.item.count,
-                curCount: this.item.count,
+                isManual: this.$store.getters.GOODS_ITEM(this.id).is_manual == 1,
+                discountPercent: this.$store.getters.GOODS_ITEM(this.id).discount_percent,
+                discountCurrency: this.$store.getters.GOODS_ITEM(this.id).discount_currency,
+                curCount: this.$store.getters.GOODS_ITEM(this.id).count,
             }
         },
         mounted() {
-            Foundation.reInit($('#modal-estimates_goods_item-' + this.item.id));
+            Foundation.reInit($('#modal-estimates_goods_item-' + this.id));
+
+            // this.isManual = this.$store.getters.GOODS_ITEM(this.id).is_manual == 1;
+            // this.discountPercent = this.$store.getters.GOODS_ITEM(this.id).discount_percent;
+            // this.discountCurrency = this.$store.getters.GOODS_ITEM(this.id).discount_currency;
+            // this.curCount = this.$store.getters.GOODS_ITEM(this.id).count;
         },
         computed: {
+            item() {
+                return this.$store.getters.GOODS_ITEM(this.id);
+            },
             isRegistered() {
                 return this.$store.state.lead.estimate.registered_at !== null;
             },
             count: {
                 get() {
-                    return this.curCount;
+                    return parseFloat(this.$store.getters.GOODS_ITEM(this.id).count);
                 },
                 set (value) {
                     this.curCount = value;
@@ -212,17 +219,6 @@
             count(val) {
                 this.curCount = val;
             },
-
-            // item(obj) {
-            //     alert(1)
-            //     this.reset();
-            // }
-            // discountPercent(val) {
-            //     this.discountPercent = val;
-            // },
-            // discountCurrency(val) {
-            //     this.discountCurrency = val / this.curCount;
-            // },
         },
         methods: {
             changeDiscountPercent(value) {
@@ -252,19 +248,23 @@
                 this.$refs.discountCurrencyComponent.update(this.discountCurrency);
             },
             update() {
+                let data = {
+                    id: this.id
+                };
                 if (this.isManual) {
-                    this.item.manual_discount_currency = this.discountCurrency;
-                    this.item.manual_discount_percent = this.discountPercent;
-                    this.item.is_manual = 1;
+                    data.manual_discount_currency = this.discountCurrency;
+                    data.manual_discount_percent = this.discountPercent;
+                    data.is_manual = 1;
                 } else {
-                    this.item.manual_discount_currency = 0;
-                    this.item.manual_discount_percent = 0;
-                    this.item.is_manual = 0;
+                    data.manual_discount_currency = 0;
+                    data.manual_discount_percent = 0;
+                    data.is_manual = 0;
                 }
 
-                this.item.count = this.curCount;
-                this.$emit('update', this.item);
-                $('#modal-estimates_goods_item-' + this.item.id).foundation('close');
+                data.count = this.curCount;
+
+                this.$emit('update', data);
+                $('#modal-estimates_goods_item-' + this.id).foundation('close');
             },
             reset() {
                 if (!this.isRegistered) {

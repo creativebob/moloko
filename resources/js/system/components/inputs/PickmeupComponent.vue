@@ -1,23 +1,29 @@
 <template>
-        <input
-            type="text"
-            class="date-field"
-            autocomplete="off"
-            pattern="[0-9]{2}.[0-9]{2}.[0-9]{4}"
-            :required="required"
-            :disabled="disabled"
-            v-model="date"
-            :name="name"
-            :id="'pickmeup-' + name"
-        >
-<!--        <div-->
-<!--            class="sprite-input-right"-->
-<!--            :class="status"-->
-<!--            @click="clear"-->
-<!--        >-->
-<!--        </div>-->
-<!--    <label class="label-icon">{{ title }}-->
-<!--    </label>-->
+    <!--    <div class="grid-x">-->
+    <!--        <div class="cell small-11">-->
+    <input
+        type="text"
+        class="date-field"
+        autocomplete="off"
+        pattern="[0-9]{2}.[0-9]{2}.[0-9]{4}"
+        :required="required"
+        :disabled="disabled"
+        v-model="date"
+        :name="name"
+        :id="'pickmeup-' + name"
+        @change="change"
+    >
+    <!--        </div>-->
+    <!--                <span class="char">×</span>-->
+    <!--        <div class="cell small-1">-->
+    <!--            <span-->
+    <!--                v-if="showClear"-->
+    <!--                @click="clear"-->
+    <!--            >×</span>-->
+    <!--        </div>-->
+    <!--    </div>-->
+    <!--    <label class="label-icon">{{ title }}-->
+    <!--    </label>-->
 </template>
 
 <script>
@@ -47,13 +53,12 @@
             // },
         },
         mounted() {
-
             this.$pickmeup("input[name='" + this.name + "']", {
-                position : "bottom",
-                format	: 'd.m.Y',
-                hide_on_select : true,
-                locale : 'ru',
-                default_date : this.required
+                position: "bottom",
+                format: 'd.m.Y',
+                hide_on_select: true,
+                locale: 'ru',
+                default_date: this.required
             });
 
             if (this.value) {
@@ -65,53 +70,39 @@
                 }
             }
 
-            var $vm = this;
+            let $vm = this;
             $('#pickmeup-' + this.name).on('pickmeup-change', function (e) {
                 $vm.date = e.detail.formatted_date;
                 $vm.$emit('change', $vm.date);
             });
         },
-        // computed: {
-        //     status() {
-        //         let result;
-        //         if (this.date) {
-        //             result = 'sprite-16 icon-error'
-        //         }
-        //         return result;
-        //     },
-        //
-        // },
-
         data() {
             return {
                 date: '',
             }
         },
+        // computed: {
+        //     showClear() {
+        //         return this.date !== '';
+        //     },
+        // },
         methods: {
-            // setDate(value) {
-            //     this.date = value;
-            //
-            // :value="date"
-            // @input="setDate($event.target.value)"
-            // @change="setDate($event.target.value)"
+            // input(value) {
+            // alert(value);
             // },
             clear() {
                 this.date = '';
+                this.change();
             },
-        },
-
-        // computed: {
-        //     isRequired() {
-        //         return this.required;
-        //     }
-        // },
-
-        filters: {
-            formatDate: function (value) {
-                if (value) {
-                    return moment(String(value)).format('DD.MM.YYYY')
-                }
+            change() {
+                this.$emit('change', this.date);
             },
+            update(date) {
+                this.date = moment(String(date)).format('DD.MM.YYYY');
+            },
+            // check() {
+            // alert(this.date);
+            // }
         },
     }
 </script>

@@ -15,16 +15,16 @@
                 <div class="small-12 cell search-in-catalog-panel">
 
                     <ul
-                            class="vertical menu selecter-catalog-item"
-                            v-drilldown
-                            data-back-button='<li class="js-drilldown-back"><a tabindex="0">Назад</a></li>'
+                        class="vertical menu selecter-catalog-item"
+                        v-drilldown
+                        data-back-button='<li class="js-drilldown-back"><a tabindex="0">Назад</a></li>'
                     >
 
                         <childrens-component
-                                v-for="catalogGoodsItem in catalogGoodsItemsList"
-                                :item="catalogGoodsItem"
-                                :key="catalogGoodsItem.id"
-                                @get="getPrices"
+                            v-for="catalogGoodsItem in catalogGoodsItemsList"
+                            :item="catalogGoodsItem"
+                            :key="catalogGoodsItem.id"
+                            @get="changeCatalogsItem"
                         ></childrens-component>
 
                     </ul>
@@ -63,12 +63,11 @@
 
             <div class="grid-x" id="block-prices_goods">
                 <ul
-                        class="small-12 cell products-list"
-                        :class="view"
-                        v-show="listPrices.length > 0"
+                    class="cell small-12 products-list"
+                    :class="view"
                 >
                     <price-goods-component
-                        v-for="price in listPrices"
+                        v-for="price in pricesList"
                         :price="price"
                         :view="view"
                         :key="price.id"
@@ -87,48 +86,51 @@
                 <div class="small-10 cell text-center inputs">
 
                     <select
-                            v-model="changeCatalogId"
+                        v-model="changeCatalogId"
                     >
                         <option
-                                :value="catalog.id"
-                                v-for="catalog in catalogs"
-                                :selected="catalogId"
-                        >{{ catalog.name}}</option>
+                            :value="catalog.id"
+                            v-for="catalog in catalogs"
+                            :selected="catalogId"
+                        >{{ catalog.name}}
+                        </option>
                     </select>
                 </div>
-                <div class="small-10 cell inputs">
-                        <div class="grid-x align-left">
-                            <div class="cell small-12 medium-4 checkbox">
-                                <input type="checkbox" name="show_hit" id="checkbox-show-hit">
-                                <label for="checkbox-show-hit"><span>Хиты</span></label>
-                            </div>
-                             <div class="cell small-12 medium-4 checkbox">
-                                <input type="checkbox" name="show_new" id="checkbox-show-new">
-                                <label for="checkbox-show-new"><span>Новинки</span></label>
-                            </div>
-                             <div class="cell small-12 medium-4 checkbox">
-                                <input type="checkbox" name="show_out_of_stock" id="checkbox-show-out-of-stock">
-                                <label for="checkbox-show-out-of-stock"><span>Нет на складе</span></label>
-                            </div>
-                            <div class="cell small-12 medium-4 checkbox">
-                                <input type="checkbox" name="show_priority" id="checkbox-show-priority">
-                                <label for="checkbox-show-priority"><span>Приоритет</span></label>
-                            </div>
-                             <div class="cell small-12 medium-4 checkbox">
-                                <input type="checkbox" name="show_preorder" id="checkbox-show-preorder">
-                                <label for="checkbox-show-preorder"><span>Под заказ</span></label>
-                            </div>
+
+                <div class="cell small-10 inputs">
+                    <div class="grid-x align-left">
+                        <div class="cell small-12 medium-4 checkbox">
+                            <input type="checkbox" name="show_hit" id="checkbox-show-hit">
+                            <label for="checkbox-show-hit"><span>Хиты</span></label>
                         </div>
+                        <div class="cell small-12 medium-4 checkbox">
+                            <input type="checkbox" name="show_new" id="checkbox-show-new">
+                            <label for="checkbox-show-new"><span>Новинки</span></label>
+                        </div>
+                        <div class="cell small-12 medium-4 checkbox">
+                            <input type="checkbox" name="show_out_of_stock" id="checkbox-show-out-of-stock">
+                            <label for="checkbox-show-out-of-stock"><span>Нет на складе</span></label>
+                        </div>
+                        <div class="cell small-12 medium-4 checkbox">
+                            <input type="checkbox" name="show_priority" id="checkbox-show-priority">
+                            <label for="checkbox-show-priority"><span>Приоритет</span></label>
+                        </div>
+                        <div class="cell small-12 medium-4 checkbox">
+                            <input type="checkbox" name="show_preorder" id="checkbox-show-preorder">
+                            <label for="checkbox-show-preorder"><span>Под заказ</span></label>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div class="grid-x align-center grid-padding-x">
                 <div class="small-6 medium-4 cell">
                     <button
-                            class="button modal-button button-change-catalog_goods"
-                            type="submit"
-                            @click.prevent="changeCatalog"
-                    >Использовать</button>
+                        class="button modal-button button-change-catalog_goods"
+                        type="submit"
+                        @click.prevent="changeCatalog"
+                    >Использовать
+                    </button>
                 </div>
             </div>
             <div data-close class="icon-close-modal sprite close-modal"></div>
@@ -151,12 +153,13 @@
                 view: 'view-list',
 
                 catalogId: this.catalogsGoodsData.catalogsGoods[0].id,
+                catalogsItemId: this.catalogsGoodsData.catalogsGoodsItems[0].id,
                 catalogs: this.catalogsGoodsData.catalogsGoods,
                 catalogsItems: this.catalogsGoodsData.catalogsGoodsItems,
                 prices: this.catalogsGoodsData.catalogsGoodsPrices,
                 listPrices: [],
                 changeCatalogId: this.catalogsGoodsData.catalogsGoods[0].id
-        }
+            }
         },
         computed: {
             catalogGoodsItemsList() {
@@ -164,17 +167,21 @@
                     return item.catalogs_goods_id === this.catalogId;
                 });
             },
+            pricesList() {
+                return this.prices.filter(item => {
+                    return item.catalogs_goods_item_id === this.catalogsItemId;
+                });
+            }
         },
         methods: {
-            getPrices(id) {
-                this.listPrices = this.prices.filter(item => {
-                    return item.catalogs_goods_item_id === id;
-                });
+            changeCatalogsItem(id) {
+                this.catalogsItemId = id;
             },
             changeCatalog() {
                 if (this.catalogId !== this.changeCatalogId) {
                     this.catalogId = this.changeCatalogId;
-                    this.getPrices(0);
+                    const item = this.catalogsItems.find(obj => obj.catalogs_goods_item_id == this.catalogId);
+                    this.changeCatalogsItem(item.id);
                 }
 
                 $('#modal-catalogs-goods').foundation('close');

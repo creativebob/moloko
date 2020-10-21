@@ -53,27 +53,33 @@ class Raw extends Model
     public function compositions()
     {
         return $this->belongsToMany(Article::class, 'article_raw')
-        ->whereHas('cur_goods', function($q) {
-            $q->where('archive', false);
-        });
+            ->whereHas('cur_goods', function ($q) {
+                $q->where('archive', false);
+            });
     }
 
     public function in_cleans()
     {
         return $this->belongsToMany(Article::class, 'article_raw')
-        ->where('draft', false)
-        ->whereHas('in_goods', function($q) {
-            $q->where('archive', false);
-        });
+            ->where('draft', false)
+            ->with([
+                'cur_goods'
+            ])
+            ->whereHas('cur_goods', function ($q) {
+                $q->where('archive', false);
+            });
     }
 
     public function in_drafts()
     {
         return $this->belongsToMany(Article::class, 'article_raw')
-        ->where('draft', true)
-        ->whereHas('in_goods', function($q) {
-            $q->where('archive', false);
-        });
+            ->where('draft', true)
+            ->with([
+                'cur_goods'
+            ])
+            ->whereHas('cur_goods', function ($q) {
+                $q->where('archive', false);
+            });
     }
 
     // Склад
@@ -82,7 +88,8 @@ class Raw extends Model
         return $this->hasMany(RawsStock::class, 'cmv_id');
     }
 
-    public function getNameAttribute() {
+    public function getNameAttribute()
+    {
         $value = $this->article->name;
         return $value;
     }

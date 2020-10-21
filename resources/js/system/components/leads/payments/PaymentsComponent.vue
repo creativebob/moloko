@@ -110,6 +110,7 @@
                             <digit-component
                                 v-model="amount"
                                 ref="countComponent"
+                                @enter="addPayment"
                             ></digit-component>
                             <div class="input-group-button">
                                 <a
@@ -203,14 +204,14 @@
 
         computed: {
 		    isShow() {
-		        return this.$store.state.lead.estimate.registered_at && !this.$store.state.lead.estimate.saled_at && this.$store.getters.paymentsAmount < this.$store.getters.estimateTotal;
-            },
-            paymentsAmount() {
-                return this.$store.getters.paymentsAmount;
+		        return this.$store.state.lead.estimate.registered_at && this.$store.state.lead.estimate.saled_at === null && this.$store.getters.PAYMENTS_AMOUNT < this.$store.getters.ESTIMATE_AGGREGATIONS.estimate.total;
             },
             lead() {
                 return this.$store.state.lead.lead;
             },
+            paymentsAmount() {
+		        return this.$store.getters.PAYMENTS_AMOUNT;
+            }
         },
         methods: {
             changeDate(date) {

@@ -176,11 +176,11 @@
 
     </script>
 
-    @include('includes.scripts.notes', ['id' => $lead->id, 'model' => 'Lead'])
-    @include('includes.scripts.challenges', ['id' => $lead->id, 'model' => 'Lead'])
+    @include('includes.scripts.notes', ['id' => $lead->id, 'entity' => "leads"])
+    @include('includes.scripts.challenges', ['id' => $lead->id, 'model' => "App\Lead"])
     @include('includes.contragents.contragents', ['id' => $lead->id])
 
-    @include('leads.pricing.pricing-script', ['id' => $lead->id, 'model' => 'Lead'])
+    @include('leads.pricing.pricing-script', ['id' => $lead->id, 'model' => "App\Lead"])
 @endpush
 
 

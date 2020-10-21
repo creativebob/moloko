@@ -25,9 +25,10 @@ class NoteRequest extends FormRequest
     public function rules()
     {
         return [
-            'body' => 'string', 
-            'model' => 'string',    
-            'id' => 'integer',          
+            'id' => 'integer',
+            'alias' => 'string',
+
+            'body' => 'string',
         ];
     }
 }

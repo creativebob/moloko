@@ -16,7 +16,7 @@
                 <digit-component
                     name="discount_percent"
                     :value="discountPercent"
-                    :limit="100"
+                    :limit-max="100"
                     @input="changeDiscountPercent"
                     ref="discountPercentComponent"
                 ></digit-component>
@@ -27,7 +27,7 @@
                 <digit-component
                     name="discount_currency"
                     :value="discountCurrency"
-                    :limit="price"
+                    :limit-max="price"
                     @input="changeDiscountCurrency"
                     ref="discountCurrencyComponent"
                 ></digit-component>

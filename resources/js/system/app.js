@@ -28,7 +28,6 @@ Vue.use(Vuex);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
 // Инпуты
-Vue.component('input-time-component', require('./components/inputs/TimeComponent'));
 Vue.component('input-phone-component', require('./components/inputs/PhoneComponent'));
 
 Vue.component('discount-mode-component', require('./components/discounts/DiscountModeComponent'));
@@ -63,7 +62,9 @@ Vue.component('processes-categories-with-groups-component', require('./component
 
 
 // Лиды
-Vue.component('lead-personal-component', require('./components/leads/LeadPersonalComponent'));
+// Vue.component('lead-init-component', require('./components/leads/InitComponent'));
+Vue.component('lead-personal-component', require('./components/leads/PersonalComponent'));
+Vue.component('lead-events-component', require('./components/leads/EventsComponent'));
 Vue.component('catalog-goods-component', require('./components/leads/catalogs/goods/CatalogGoodsComponent.vue'));
 Vue.component('catalog-services-component', require('./components/leads/catalogs/services/CatalogServicesComponent.vue'));
 Vue.component('select-stocks-component', require('./components/common/selects/SelectStocksComponent.vue'));
@@ -134,6 +135,9 @@ pickmeup.defaults.locales['ru'] = {
 };
 
 Vue.prototype.$pickmeup = window.pickmeup;
+
+window.vuetimepicker = require('vue2-timepicker');
+Vue.prototype.$vuetimepicker = window.vuetimepicker;
 
 // Vuex хранилище
 import store from './store/index.js';

@@ -32,7 +32,10 @@
 @import "./partials/check-order";
 
 // ------------------------ Pickmeup ----------------------------------------
-@import "./partials/pickmeup";
+@import "components/inputs/pickmeup";
+
+// ------------------------ Time Picker ----------------------------------------
+@import "components/inputs/time";
 
 // ----------------------- Спрайты ----------------------------------------------
 @import "./partials/sprites_16";
