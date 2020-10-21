@@ -11439,6 +11439,58 @@ tfoot tr.tfoot-estimate-amount td {
   padding-top: 10px;
 }
 
+.button-payment-back {
+  background-color: #dd0000;
+}
+
+.button-payment-back:hover {
+  background-color: #990000;
+}
+
+.change-wrap {
+  margin-top: 1.1rem;
+  padding: 0.3rem 0 0.5rem 0;
+}
+
+.fields-payment-wrap {
+  padding-bottom: 1rem;
+}
+
+.fields-payment-wrap input.input-payment {
+  font-family: "PFDinDisplayPro-Med";
+  font-size: 1.4rem;
+  height: auto;
+  padding: 0 1rem;
+  margin-bottom: 0;
+}
+
+@media screen and (min-width: 640px) {
+  .fields-payment-wrap input.input-payment {
+    max-width: 120px;
+  }
+}
+
+.fields-payment-wrap .button-add-electronically {
+  font-size: 0.8rem;
+  outline: none;
+  color: #1779ba;
+  cursor: pointer;
+}
+
+.change-text {
+  color: #666666;
+}
+
+.change-value {
+  font-family: "PFDinDisplayPro-Med";
+  font-size: 1rem;
+  color: #333333;
+}
+
+.button-cash-type, .button-electronically-type, .button-bank-type {
+  background-color: #7e9a06;
+}
+
 .green-button {
   background-color: #7e9a06;
   padding: 0.3em 1em;

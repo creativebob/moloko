@@ -1,11 +1,70 @@
 <template>
-    <div class="grid-x grid-padding-x">
+    <div class="grid-x grid-padding-x payment-block">
         <div
             v-if="isShow"
             class="cell small-12"
         >
-            <div class="grid-x grid-padding-x">
 
+            <div class="grid-x grid-padding-x selector-type-payment">
+                <div class="cell auto">
+                    <button type="button" class="button hollow button-cash-type">Наличные</button>
+                    <button type="button" class="button hollow button-electronically-type">Банковская карта</button>
+                </div>
+                <div class="cell shrink">
+                    <button type="button" class="button hollow button-bank-type">Выставить счёт</button>
+                </div>
+            </div>
+            
+            <div class="grid-x grid-padding-x">
+                <div class="cell shrink">
+                    <button type="button" class="button hollow">Без сдачи</button>
+                </div>
+                <div class="cell auto self-right">
+                    <div class="grid-x grid-padding-x">
+                        <div class="cell auto self-left denominations">
+                            <button type="button" class="button hollow tiny denomination-50">50</button>
+                            <button type="button" class="button hollow tiny denomination-100">100</button>
+                            <button type="button" class="button hollow tiny denomination-200">200</button>
+                            <button type="button" class="button hollow tiny denomination-500">500</button>
+                            <button type="button" class="button hollow tiny denomination-1000">1000</button>
+                            <button type="button" class="button hollow tiny denomination-2000">2000</button>
+                            <button type="button" class="button hollow tiny denomination-5000">5000</button>
+                        </div>
+                        <div class="cell shrink self-right">
+                            <button type="button" class="button tiny button-payment-back">Назад</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-x grid-padding-x">
+                <div class="cell small-12 medium-shrink fields-payment-wrap">
+                    <div class="grid-x grid-padding-x">
+                        <div class="cell small-12 medium-6 payment-cash-wrap">
+                            <label for="input-payment-add-cash">Наличными:</label>
+                            <input type="text" id="input-payment-add-cash" class="input-payment cash">
+                            <button type="button" class="button-add-electronically">+ доплата по карте</button>
+                        </div>
+                        <div class="cell small-12 medium-6 payment-electronically-wrap">
+                            <div class="electronically">
+                                <label for="input-payment-add-electronically">По карте:</label>
+                                <input type="text" id="input-payment-add-electronically" class="input-payment electronically">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cell small-12 medium-auto change-wrap">
+                    <span class="change-text">Сдача клиенту: </span><span class="change-value">350<span> руб.</span></span>
+                </div>
+            </div>
+
+            <div class="grid-x grid-padding-x">
+                <div class="cell small-12 medium-12 large-12 invert-show">
+                    <button type="button" class="button">Принять оплату и закрыть чек</button>
+                </div>
+            </div>
+
+            <div class="grid-x grid-padding-x" v-if="false">
                 <div class="cell small-3">
                     <label>Дата:
                         <pickmeup-component

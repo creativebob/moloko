@@ -89656,6 +89656,65 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -90223,74 +90282,40 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "grid-x grid-padding-x" }, [
+  return _c("div", { staticClass: "grid-x grid-padding-x payment-block" }, [
     _vm.isShow
       ? _c("div", { staticClass: "cell small-12" }, [
-          _c("div", { staticClass: "grid-x grid-padding-x" }, [
-            _c("div", { staticClass: "cell small-3" }, [
-              _c(
-                "label",
-                [
-                  _vm._v("Дата:\n                        "),
-                  _c("pickmeup-component", {
-                    attrs: { required: true },
-                    on: { change: _vm.changeDate }
-                  }),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "form-error" }, [
-                    _vm._v("Выберите дату!")
-                  ])
-                ],
-                1
-              )
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "cell small-3" }, [
-              _c("label", [
-                _vm._v("Тип платежа:\n                        "),
-                _c(
-                  "select",
-                  {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.paymentsTypeId,
-                        expression: "paymentsTypeId"
-                      }
+          _vm._m(0),
+          _vm._v(" "),
+          _vm._m(1),
+          _vm._v(" "),
+          _vm._m(2),
+          _vm._v(" "),
+          _vm._m(3),
+          _vm._v(" "),
+          false
+            ? _c("div", { staticClass: "grid-x grid-padding-x" }, [
+                _c("div", { staticClass: "cell small-3" }, [
+                  _c(
+                    "label",
+                    [
+                      _vm._v("Дата:\n                        "),
+                      _c("pickmeup-component", {
+                        attrs: { required: true },
+                        on: { change: _vm.changeDate }
+                      }),
+                      _vm._v(" "),
+                      _c("span", { staticClass: "form-error" }, [
+                        _vm._v("Выберите дату!")
+                      ])
                     ],
-                    on: {
-                      change: function($event) {
-                        var $$selectedVal = Array.prototype.filter
-                          .call($event.target.options, function(o) {
-                            return o.selected
-                          })
-                          .map(function(o) {
-                            var val = "_value" in o ? o._value : o.value
-                            return val
-                          })
-                        _vm.paymentsTypeId = $event.target.multiple
-                          ? $$selectedVal
-                          : $$selectedVal[0]
-                      }
-                    }
-                  },
-                  _vm._l(_vm.paymentsTypes, function(paymentsType) {
-                    return _c(
-                      "option",
-                      { domProps: { value: paymentsType.id } },
-                      [_vm._v(_vm._s(paymentsType.name))]
-                    )
-                  }),
-                  0
-                )
-              ])
-            ]),
-            _vm._v(" "),
-            _vm.currencies.length > 1
-              ? _c("div", { staticClass: "cell small-3" }, [
+                    1
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "cell small-3" }, [
                   _c("label", [
-                    _vm._v("Валюта:\n                        "),
+                    _vm._v("Тип платежа:\n                        "),
                     _c(
                       "select",
                       {
@@ -90298,8 +90323,8 @@ var render = function() {
                           {
                             name: "model",
                             rawName: "v-model",
-                            value: _vm.currencyId,
-                            expression: "currencyId"
+                            value: _vm.paymentsTypeId,
+                            expression: "paymentsTypeId"
                           }
                         ],
                         on: {
@@ -90312,66 +90337,110 @@ var render = function() {
                                 var val = "_value" in o ? o._value : o.value
                                 return val
                               })
-                            _vm.currencyId = $event.target.multiple
+                            _vm.paymentsTypeId = $event.target.multiple
                               ? $$selectedVal
                               : $$selectedVal[0]
                           }
                         }
                       },
-                      _vm._l(_vm.currencies, function(currency) {
+                      _vm._l(_vm.paymentsTypes, function(paymentsType) {
                         return _c(
                           "option",
-                          { domProps: { value: currency.id } },
-                          [_vm._v(_vm._s(currency.name))]
+                          { domProps: { value: paymentsType.id } },
+                          [_vm._v(_vm._s(paymentsType.name))]
                         )
                       }),
                       0
                     )
                   ])
-                ])
-              : _vm._e(),
-            _vm._v(" "),
-            _c("div", { staticClass: "cell small-3" }, [
-              _c("label", [
-                _vm._v("Сумма\n                        "),
-                _c(
-                  "div",
-                  { staticClass: "input-group" },
-                  [
-                    _c("digit-component", {
-                      ref: "countComponent",
-                      model: {
-                        value: _vm.amount,
-                        callback: function($$v) {
-                          _vm.amount = $$v
-                        },
-                        expression: "amount"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "input-group-button" }, [
-                      _c(
-                        "a",
-                        {
-                          staticClass: "button",
-                          on: { click: _vm.addPayment }
-                        },
-                        [_vm._v("+")]
-                      )
+                ]),
+                _vm._v(" "),
+                _vm.currencies.length > 1
+                  ? _c("div", { staticClass: "cell small-3" }, [
+                      _c("label", [
+                        _vm._v("Валюта:\n                        "),
+                        _c(
+                          "select",
+                          {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.currencyId,
+                                expression: "currencyId"
+                              }
+                            ],
+                            on: {
+                              change: function($event) {
+                                var $$selectedVal = Array.prototype.filter
+                                  .call($event.target.options, function(o) {
+                                    return o.selected
+                                  })
+                                  .map(function(o) {
+                                    var val = "_value" in o ? o._value : o.value
+                                    return val
+                                  })
+                                _vm.currencyId = $event.target.multiple
+                                  ? $$selectedVal
+                                  : $$selectedVal[0]
+                              }
+                            }
+                          },
+                          _vm._l(_vm.currencies, function(currency) {
+                            return _c(
+                              "option",
+                              { domProps: { value: currency.id } },
+                              [_vm._v(_vm._s(currency.name))]
+                            )
+                          }),
+                          0
+                        )
+                      ])
                     ])
-                  ],
-                  1
-                )
+                  : _vm._e(),
+                _vm._v(" "),
+                _c("div", { staticClass: "cell small-3" }, [
+                  _c("label", [
+                    _vm._v("Сумма\n                        "),
+                    _c(
+                      "div",
+                      { staticClass: "input-group" },
+                      [
+                        _c("digit-component", {
+                          ref: "countComponent",
+                          model: {
+                            value: _vm.amount,
+                            callback: function($$v) {
+                              _vm.amount = $$v
+                            },
+                            expression: "amount"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "input-group-button" }, [
+                          _c(
+                            "a",
+                            {
+                              staticClass: "button",
+                              on: { click: _vm.addPayment }
+                            },
+                            [_vm._v("+")]
+                          )
+                        ])
+                      ],
+                      1
+                    )
+                  ])
+                ])
               ])
-            ])
-          ])
+            : _vm._e()
         ])
       : _vm._e(),
     _vm._v(" "),
     _vm.payments.length
       ? _c("div", { staticClass: "cell small-12" }, [
           _c("table", { staticClass: "unstriped" }, [
-            _vm._m(0),
+            _vm._m(4),
             _vm._v(" "),
             _c(
               "tbody",
@@ -90420,6 +90489,228 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "grid-x grid-padding-x selector-type-payment" },
+      [
+        _c("div", { staticClass: "cell auto" }, [
+          _c(
+            "button",
+            {
+              staticClass: "button hollow button-cash-type",
+              attrs: { type: "button" }
+            },
+            [_vm._v("Наличные")]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "button hollow button-electronically-type",
+              attrs: { type: "button" }
+            },
+            [_vm._v("Банковская карта")]
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "cell shrink" }, [
+          _c(
+            "button",
+            {
+              staticClass: "button hollow button-bank-type",
+              attrs: { type: "button" }
+            },
+            [_vm._v("Выставить счёт")]
+          )
+        ])
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "grid-x grid-padding-x" }, [
+      _c("div", { staticClass: "cell shrink" }, [
+        _c(
+          "button",
+          { staticClass: "button hollow", attrs: { type: "button" } },
+          [_vm._v("Без сдачи")]
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "cell auto self-right" }, [
+        _c("div", { staticClass: "grid-x grid-padding-x" }, [
+          _c("div", { staticClass: "cell auto self-left denominations" }, [
+            _c(
+              "button",
+              {
+                staticClass: "button hollow tiny denomination-50",
+                attrs: { type: "button" }
+              },
+              [_vm._v("50")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "button hollow tiny denomination-100",
+                attrs: { type: "button" }
+              },
+              [_vm._v("100")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "button hollow tiny denomination-200",
+                attrs: { type: "button" }
+              },
+              [_vm._v("200")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "button hollow tiny denomination-500",
+                attrs: { type: "button" }
+              },
+              [_vm._v("500")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "button hollow tiny denomination-1000",
+                attrs: { type: "button" }
+              },
+              [_vm._v("1000")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "button hollow tiny denomination-2000",
+                attrs: { type: "button" }
+              },
+              [_vm._v("2000")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "button hollow tiny denomination-5000",
+                attrs: { type: "button" }
+              },
+              [_vm._v("5000")]
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "cell shrink self-right" }, [
+            _c(
+              "button",
+              {
+                staticClass: "button tiny button-payment-back",
+                attrs: { type: "button" }
+              },
+              [_vm._v("Назад")]
+            )
+          ])
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "grid-x grid-padding-x" }, [
+      _c(
+        "div",
+        { staticClass: "cell small-12 medium-shrink fields-payment-wrap" },
+        [
+          _c("div", { staticClass: "grid-x grid-padding-x" }, [
+            _c(
+              "div",
+              { staticClass: "cell small-12 medium-6 payment-cash-wrap" },
+              [
+                _c("label", { attrs: { for: "input-payment-add-cash" } }, [
+                  _vm._v("Наличными:")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  staticClass: "input-payment cash",
+                  attrs: { type: "text", id: "input-payment-add-cash" }
+                }),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "button-add-electronically",
+                    attrs: { type: "button" }
+                  },
+                  [_vm._v("+ доплата по карте")]
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass:
+                  "cell small-12 medium-6 payment-electronically-wrap"
+              },
+              [
+                _c("div", { staticClass: "electronically" }, [
+                  _c(
+                    "label",
+                    { attrs: { for: "input-payment-add-electronically" } },
+                    [_vm._v("По карте:")]
+                  ),
+                  _vm._v(" "),
+                  _c("input", {
+                    staticClass: "input-payment electronically",
+                    attrs: {
+                      type: "text",
+                      id: "input-payment-add-electronically"
+                    }
+                  })
+                ])
+              ]
+            )
+          ])
+        ]
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "cell small-12 medium-auto change-wrap" }, [
+        _c("span", { staticClass: "change-text" }, [_vm._v("Сдача клиенту: ")]),
+        _c("span", { staticClass: "change-value" }, [
+          _vm._v("350"),
+          _c("span", [_vm._v(" руб.")])
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "grid-x grid-padding-x" }, [
+      _c(
+        "div",
+        { staticClass: "cell small-12 medium-12 large-12 invert-show" },
+        [
+          _c("button", { staticClass: "button", attrs: { type: "button" } }, [
+            _vm._v("Принять оплату и закрыть чек")
+          ])
+        ]
+      )
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
