@@ -99,7 +99,7 @@
                 <tfoot>
                     <tr>
                         <td colspan="2" class="text-right">Итого</td>
-                        <td>{{ PAYMENTS_AMOUNT | roundToTwo | level }}</td>
+                        <td>{{ paymentsAmount | roundToTwo | level }}</td>
                     </tr>
                 </tfoot>
             </table>
@@ -150,6 +150,9 @@
             lead() {
                 return this.$store.state.lead.lead;
             },
+            paymentsAmount() {
+		        return this.$store.getters.PAYMENTS_AMOUNT;
+            }
         },
         methods: {
             changeDate(date) {

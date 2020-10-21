@@ -84214,6 +84214,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         lead: function lead() {
             return this.$store.state.lead.lead;
+        },
+        paymentsAmount: function paymentsAmount() {
+            return this.$store.getters.PAYMENTS_AMOUNT;
         }
     },
     methods: {
@@ -84896,7 +84899,7 @@ var render = function() {
                 _c("td", [
                   _vm._v(
                     _vm._s(
-                      _vm._f("level")(_vm._f("roundToTwo")(_vm.PAYMENTS_AMOUNT))
+                      _vm._f("level")(_vm._f("roundToTwo")(_vm.paymentsAmount))
                     )
                   )
                 ])
