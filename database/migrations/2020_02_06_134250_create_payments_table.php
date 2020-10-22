@@ -19,15 +19,23 @@ class CreatePaymentsTable extends Migration
             $table->morphs('contract');
             $table->morphs('document');
 
-            $table->bigInteger('payments_type_id')->unsigned()->nullable()->comment('Id типа платежа');
-            $table->foreign('payments_type_id')->references('id')->on('payments_types');
+            $table->timestamp('registered_at')->comment('Время регистрации');
 
-            $table->decimal('amount', 12, 4)->default(0)->comment('Сумма');
+            $table->decimal('cash', 10, 2)->default(0)->comment('Сумма наличного платежа');
+            $table->decimal('electronically', 10, 2)->default(0)->comment('Сумма электронного платежа');
 
-            $table->date('date')->nullable()->comment('Дата');
+            $table->string('type')->comment('Тип');
+
+            $table->decimal('total', 10, 2)->default(0)->comment('Итого оплачено');
+
+            $table->decimal('change', 10, 2)->default(0)->comment('Сдача');
+
+            $table->bigInteger('payments_method_id')->unsigned()->nullable()->comment('Id метода платежа');
+            $table->foreign('payments_method_id')->references('id')->on('payments_methods');
 
             $table->bigInteger('currency_id')->unsigned()->nullable()->comment('Id валюты');
             $table->foreign('currency_id')->references('id')->on('currencies');
+
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

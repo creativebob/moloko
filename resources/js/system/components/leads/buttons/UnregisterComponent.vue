@@ -10,7 +10,7 @@
 export default {
     computed: {
         isShow() {
-            return this.$store.state.lead.estimate.registered_at !== null && this.$store.getters.PAYMENTS_AMOUNT == 0;
+            return this.$store.state.lead.estimate.registered_at !== null && this.$store.getters.PAYMENTS_TOTAL == 0;
         },
     },
     methods: {

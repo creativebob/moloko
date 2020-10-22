@@ -42,9 +42,9 @@ class Payment extends Model
     use Filter;
     use BooklistFilter;
     use DateIntervalFilter;
-    
+
     protected $with = [
-        'type',
+        'method',
         'currency'
     ];
 
@@ -54,12 +54,17 @@ class Payment extends Model
     ];
 
     protected $fillable = [
-        'payments_type_id',
-        'amount',
+        'registered_at',
 
+        'cash',
+        'electronically',
+        'total',
+        'change',
+
+        'type',
+
+        'payments_method_id',
         'currency_id',
-
-        'date',
 
         'contract_id',
         'contract_type',
@@ -72,15 +77,21 @@ class Payment extends Model
         'moderation'
     ];
 
-    public function setDateAttribute($value)
-    {
-        $this->attributes['date'] = Carbon::createFromFormat('d.m.Y', $value);
-    }
+//    public function setDateAttribute($value)
+//    {
+//        $this->attributes['date'] = Carbon::createFromFormat('d.m.Y', $value);
+//    }
 
     // Тип
     public function type()
     {
         return $this->belongsTo(PaymentsType::class, 'payments_type_id');
+    }
+
+    // Метод
+    public function method()
+    {
+        return $this->belongsTo(PaymentsMethod::class, 'payments_method_id');
     }
 
     // Договор

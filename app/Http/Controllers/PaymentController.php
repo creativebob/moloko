@@ -14,7 +14,7 @@ class PaymentController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     /**
      * Store a newly created resource in storage.
      *
@@ -23,8 +23,6 @@ class PaymentController extends Controller
      */
     public function store(Request $request)
     {
-    
-        // TODO - 16.10.20 - Избавиться от харкода моделей
         $data = $request->input();
         $payment = Payment::create($data);
         $payment->load([

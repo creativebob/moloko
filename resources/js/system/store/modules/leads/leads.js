@@ -5,9 +5,12 @@ const moduleLead = {
 
             lead: null,
             client: null,
+
             estimate: null,
             goodsItems: [],
             servicesItems: [],
+
+            payments: [],
 
             change: false,
             loading: false,
@@ -339,10 +342,10 @@ const moduleLead = {
                 state.change = true;
             },
 
-            // Платежи
-            ADD_PAYMENT(state, payment) {
-                state.estimate.payments.push(payment);
-            }
+
+            SET_PAYMENTS(state, payments) {
+                state.payments = payments;
+            },
         },
         actions: {
             // Обновление лида и сметы
@@ -502,6 +505,30 @@ const moduleLead = {
                     })
                     .finally(() => (state.loading = false));
             },
+
+
+            // Внесение платежа
+            ADD_PAYMENT({state}, data) {
+                state.loading = true;
+
+                // TODO - 16.10.20 - Избавиться от харкода
+                data.payments_method_id = 4;
+                data.currency_id = 1;
+                data.contract_id = state.client.contract.id;
+                data.contract_type = 'App\\ContractsClient';
+                data.document_id = state.lead.estimate.id;
+                data.document_type = 'App\\Models\\System\\Documents\\Estimate';
+
+                axios
+                    .post('/admin/payments', data)
+                    .then(response => {
+                        state.payments.push(response.data);
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+                    .finally(() => (state.loading = false));
+            },
         },
         getters: {
             // Смета
@@ -578,14 +605,14 @@ const moduleLead = {
             },
 
             // Платежи
-            PAYMENTS_AMOUNT: state => {
-                let amount = 0;
-                if (state.estimate.payments.length) {
-                    state.estimate.payments.forEach(function (item) {
-                        return amount += parseFloat(item.amount)
+            PAYMENTS_TOTAL: state => {
+                let total = 0;
+                if (state.payments.length) {
+                    state.payments.forEach(item => {
+                        return total += parseFloat(item.total)
                     });
                 }
-                return amount;
+                return total;
             }
         }
     };
