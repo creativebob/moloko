@@ -64,7 +64,42 @@ class ParserController extends Controller
     {
         dd(__METHOD__);
     }
-    
+
+    /**
+     * Парсер таблицы платежей
+     *
+     * @return string
+     */
+    public function updatePayments()
+    {
+        $payments = Payment::get();
+
+        foreach($payments as $payment) {
+            $data = [
+                'registered_at' => $payment->created_at,
+                'payments_method_id' => 4,
+            ];
+            if ($payment->document_type == 'App\Estimate') {
+                $data['document_type'] = 'App\Models\System\Documents\Estimate';
+            }
+
+            if ($payment->payments_type_id == 1) {
+                $data['cash'] = $payment->amount;
+                $data['electronically'] = 0;
+                $data['total'] = $payment->amount;
+                $data['type'] = 'cash';
+            } else {
+                $data['cash'] = 0;
+                $data['electronically'] = $payment->amount;
+                $data['total'] = $payment->amount;
+                $data['type'] = 'electronically';
+            }
+
+            $payment->update($data);
+        }
+        return "Гатова";
+    }
+
     /**
      * Обновление моделей для сущностей производства и складов
      *
@@ -88,10 +123,10 @@ class ParserController extends Controller
                 ]);
             }
         }
-        
+
         return "Модели сущностей обновлены";
     }
-    
+
     /**
      * Обновление смет
      *
@@ -110,10 +145,10 @@ class ParserController extends Controller
             }
             $estimate->update($data);
         }
-        
+
         return "Сметам проставлено registered_at и saled_at";
     }
-    
+
     /**
      * Обновление накладных
      *
@@ -128,10 +163,10 @@ class ParserController extends Controller
                 'receipted_at' => $consignment->updated_at
             ]);
         }
-        
+
         return "Накладным проставлено receipted_at";
     }
-    
+
     /**
      * Обновление нарядов
      *
@@ -146,10 +181,10 @@ class ParserController extends Controller
                 'produced_at' => $production->updated_at
             ]);
         }
-    
+
         return "Нарядам проставлено produced_at";
     }
-    
+
     /**
      * Запуск команды на перерегистрацию документов
      */

@@ -46,11 +46,13 @@ Route::get('/parsers/set-morphs-aliases', 'ParserController@setMorphsAliases');
 Route::get('/parsers/set-organizations', 'ParserController@setOrganizations');
 
 Route::get('/parsers/update-productions-entities-models', 'ParserController@updateProductionsEntitiesModel');
-    Route::get('/parsers/set-registered-at', 'ParserController@setRegisteredAt');
+Route::get('/parsers/set-registered-at', 'ParserController@setRegisteredAt');
 Route::get('/parsers/set-receipted-at', 'ParserController@setReceiptedAt');
 Route::get('/parsers/set-produced-at', 'ParserController@setProducedAt');
-    
-    Route::get('/parsers/start-registering-documents-command', 'ParserController@startRegisteringDocumentsCommand');
+
+Route::get('/parsers/start-registering-documents-command', 'ParserController@startRegisteringDocumentsCommand');
+
+Route::get('/parsers/update-payments', 'ParserController@updatePayments');
 
 Route::get('/parsers/test', 'ParserController@test');
 
@@ -773,7 +775,7 @@ Route::post('/leads/autofind/{phone}', 'LeadController@ajax_autofind_phone');
 // Регистрация
 Route::patch('/estimates/{id}/registering', 'EstimateController@registering');
 // Отмена регистрации
-    Route::patch('/estimates/{id}/unregistering', 'EstimateController@unregistering');
+Route::patch('/estimates/{id}/unregistering', 'EstimateController@unregistering');
 // Производство
 Route::patch('/estimates/{id}/produce', 'EstimateController@produce');
 // Продажа

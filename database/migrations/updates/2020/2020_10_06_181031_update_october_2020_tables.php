@@ -26,6 +26,27 @@ class UpdateOctober2020Tables extends Migration
             $table->boolean('is_autochange')->default(0)->comment('Авто-смена слайдов')->after('is_slider');
             $table->integer('delay')->nullable()->comment('Время задержки')->after('is_autochange');
         });
+
+        Schema::table('payments', function (Blueprint $table) {
+            $table->dropColumn([
+                'payments_type_id',
+                'amount',
+                'date',
+            ]);
+
+            $table->timestamp('registered_at')->comment('Время регистрации')->after('document_id');
+
+            $table->decimal('cash', 10, 2)->default(0)->comment('Сумма наличного платежа')->after('registered_at');
+            $table->decimal('electronically', 10, 2)->default(0)->comment('Сумма электронного платежа')->after('cash');
+
+            $table->string('type')->comment('Тип')->after('electronically');
+
+            $table->decimal('total', 10, 2)->default(0)->comment('Итого оплачено')->after('type');
+
+            $table->decimal('change', 10, 2)->default(0)->comment('Сдача')->after('total');
+
+            $table->bigInteger('payments_method_id')->unsigned()->nullable()->comment('Id метода платежа')->after('change');
+        });
     }
 
     /**
@@ -53,6 +74,22 @@ class UpdateOctober2020Tables extends Migration
                 'is_autochange',
                 'delay',
             ]);
+        });
+
+        Schema::table('payments', function (Blueprint $table) {
+            $table->dropColumn([
+                'registered_at',
+                'cash',
+                'electronically',
+                'type',
+                'total',
+                'change',
+                'payments_method_id',
+            ]);
+
+            $table->bigInteger('payments_type_id')->unsigned()->nullable()->comment('Id типа платежа');
+            $table->decimal('amount', 12, 4)->default(0)->comment('Сумма');
+            $table->date('date')->nullable()->comment('Дата');
         });
     }
 }

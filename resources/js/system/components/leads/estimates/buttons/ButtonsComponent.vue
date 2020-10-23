@@ -87,7 +87,7 @@
             },
 
             showSaleButton() {
-                return this.estimate.registered_at && this.estimate.saled_at === null && this.$store.getters.PAYMENTS_AMOUNT >= this.$store.getters.ESTIMATE_AGGREGATIONS.estimate.total;
+                return this.estimate.registered_at && this.estimate.saled_at === null && this.$store.getters.PAYMENTS_TOTAL >= this.$store.getters.ESTIMATE_AGGREGATIONS.estimate.total;
             },
             change() {
                 return this.$store.state.lead.change;

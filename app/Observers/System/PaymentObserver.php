@@ -6,7 +6,7 @@ use App\Payment;
 
 class PaymentObserver extends BaseObserver
 {
-    
+
     /**
      * Handle the payment "creating" event.
      *
@@ -15,8 +15,24 @@ class PaymentObserver extends BaseObserver
     public function creating(Payment $payment)
     {
         $this->store($payment);
+        $payment->total = $payment->cash + $payment->electronically;
+
+        if ($payment->cash > 0 && $payment->electronically == 0) {
+            $payment->type = 'cash';
+        }
+
+        if ($payment->cash == 0 && $payment->electronically > 0) {
+            $payment->type = 'electronically';
+        }
+
+        if ($payment->cash > 0 && $payment->electronically > 0) {
+            $payment->type = 'mixed';
+        }
+
+        $payment->registered_at = now();
+
     }
-    
+
     /**
      * Handle the payment "created" event.
      *
@@ -27,8 +43,8 @@ class PaymentObserver extends BaseObserver
         $contract = $payment->contract;
 
         // TODO - 06.02.20 - Нужна проверка на отрицательные значения, обновление договора в обсервере возможно
-        $paid = $contract->paid + $payment->amount;
-        $debit = $contract->debit - $payment->amount;
+        $paid = $contract->paid + $payment->total;
+        $debit = $contract->debit - $payment->total;
 
         $contract->update([
            'paid' => $paid,
