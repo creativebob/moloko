@@ -69,7 +69,7 @@
             </div>
 
             <div
-                v-if="change > 0"
+                v-if="change > 0.01"
                 class="cell small-12 medium-shrink change-wrap"
             >
                 <span class="change-text">Сдача клиенту: </span><span class="change-value">{{ change | decimalPlaces | decimalLevel }}<span> руб.</span></span>
@@ -136,6 +136,7 @@
             setTotal() {
                 this.cash = this.estimateTotal;
                 this.$refs.cashComponent.update(this.cash);
+                this.mixed = false;
             },
             addDenomination(denomination) {
                 this.cash = parseFloat(this.cash) + denomination;

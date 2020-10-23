@@ -27,6 +27,7 @@
                             v-if="is_bank_payment"
                             type="button"
                             class="button hollow button-bank-type"
+                            @click="setType('bank')"
                         >Выставить счёт
                         </button>
                     </div>
@@ -41,6 +42,10 @@
                 v-else-if="type == 'electronically'"
                 @reset="setType"
             ></electronically-component>
+            <bank-component
+                v-else-if="type == 'bank'"
+                @reset="setType"
+            ></bank-component>
         </div>
     </div>
 </template>
@@ -50,6 +55,7 @@
         components: {
             'cash-component': require('./types/CashComponent'),
             'electronically-component': require('./types/ElectronicallyComponent'),
+            'bank-component': require('./types/BankComponent'),
         },
         props: {
             currencies: Array,
@@ -59,7 +65,7 @@
                 type: null,
                 is_cash_payment: true,
                 is_electronically_payment: true,
-                is_bank_payment: false
+                is_bank_payment: true
             }
         },
         methods: {

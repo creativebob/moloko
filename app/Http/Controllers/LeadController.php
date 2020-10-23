@@ -978,10 +978,6 @@ class LeadController extends Controller
                 $clientId = $lead->client_id;
             }
 
-            $lead->estimate->update([
-                'client_id' => $clientId,
-            ]);
-
             $contracts_client = ContractsClient::create([
                 'client_id' => $clientId,
                 'amount' => $estimate->total,
@@ -1013,7 +1009,6 @@ class LeadController extends Controller
                 ]);
             }
         }
-
 
         $lead->load([
             'location.city',

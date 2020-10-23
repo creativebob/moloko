@@ -84243,11 +84243,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
         'cash-component': __webpack_require__(261),
-        'electronically-component': __webpack_require__(264)
+        'electronically-component': __webpack_require__(264),
+        'bank-component': __webpack_require__(486)
     },
     props: {
         currencies: Array
@@ -84257,7 +84263,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             type: null,
             is_cash_payment: true,
             is_electronically_payment: true,
-            is_bank_payment: false
+            is_bank_payment: true
         };
     },
 
@@ -84462,6 +84468,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         setTotal: function setTotal() {
             this.cash = this.estimateTotal;
             this.$refs.cashComponent.update(this.cash);
+            this.mixed = false;
         },
         addDenomination: function addDenomination(denomination) {
             this.cash = parseFloat(this.cash) + denomination;
@@ -84640,7 +84647,7 @@ var render = function() {
         ]
       ),
       _vm._v(" "),
-      _vm.change > 0
+      _vm.change > 0.01
         ? _c(
             "div",
             { staticClass: "cell small-12 medium-shrink change-wrap" },
@@ -84920,7 +84927,12 @@ var render = function() {
                           "button",
                           {
                             staticClass: "button hollow button-bank-type",
-                            attrs: { type: "button" }
+                            attrs: { type: "button" },
+                            on: {
+                              click: function($event) {
+                                return _vm.setType("bank")
+                              }
+                            }
                           },
                           [_vm._v("Выставить счёт\n                    ")]
                         )
@@ -84936,6 +84948,8 @@ var render = function() {
             })
           : _vm.type == "electronically"
           ? _c("electronically-component", { on: { reset: _vm.setType } })
+          : _vm.type == "bank"
+          ? _c("bank-component", { on: { reset: _vm.setType } })
           : _vm._e()
       ],
       1
@@ -125706,6 +125720,129 @@ $(document).on('click', '.filter-close', function () {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 481 */,
+/* 482 */,
+/* 483 */,
+/* 484 */,
+/* 485 */,
+/* 486 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(487)
+/* template */
+var __vue_template__ = __webpack_require__(488)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/system/components/leads/payments/types/BankComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-f755bc90", Component.options)
+  } else {
+    hotAPI.reload("data-v-f755bc90", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 487 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    methods: {
+        resetType: function resetType() {
+            this.$emit('reset');
+        }
+    }
+});
+
+/***/ }),
+/* 488 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "cell small-12" }, [
+    _c("div", { staticClass: "grid-x grid-padding-x" }, [
+      _c("div", { staticClass: "cell shrink self-left" }, [
+        _vm._v("\n            Банк\n        ")
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "cell shrink self-right" }, [
+        _c(
+          "button",
+          {
+            staticClass: "button tiny button-payment-back",
+            attrs: { type: "button" },
+            on: { click: _vm.resetType }
+          },
+          [_vm._v("Назад\n            ")]
+        )
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-f755bc90", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);
