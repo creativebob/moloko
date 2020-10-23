@@ -130,8 +130,8 @@
 
           <td class="td-badget">
               <span class="
-                @if($lead->estimate->payments->sum('amount') < $lead->estimate->total)) text-red @endif
-                @if($lead->estimate->payments->sum('amount') >= $lead->estimate->total) text-green @endif
+                @if($lead->estimate->payments->sum('total') < $lead->estimate->total)) text-red @endif
+                @if($lead->estimate->payments->sum('total') >= $lead->estimate->total) text-green @endif
                 @if($lead->estimate->total == 0) text-grey @endif
                 "
             >{{ ($lead->estimate->total > 0) ? num_format($lead->estimate->total, 0) : num_format($lead->badget, 0) }}</span>
