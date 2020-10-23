@@ -84491,7 +84491,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         addPayment: function addPayment() {
             var data = {
                 cash: this.estimateTotal - this.electronically,
-                change: this.change,
+                cash_taken: this.cash,
+                cash_change: this.change,
                 electronically: this.electronically
             };
             this.$store.dispatch('ADD_PAYMENT', data);
@@ -85044,6 +85045,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             if (this.payment.cash == 0 && this.payment.electronically > 0) {
                 return 'Терминал';
+            }
+
+            if (this.payment.cash > 0 && this.payment.electronically > 0) {
+                return 'Смешанный';
             }
         }
     },

@@ -23,6 +23,14 @@ use Telegram\Bot\Keyboard\Keyboard;
 class TelegramController extends Controller
 {
 
+    /**
+     * TelegramController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function get_bot()
     {
         $response = Telegram::getMe();

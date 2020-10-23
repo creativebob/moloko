@@ -3,24 +3,19 @@
 namespace App;
 
 use App\Models\System\BaseModel;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Dispatch extends BaseModel
+class MailingListItem extends BaseModel
 {
-
     use SoftDeletes;
-    use Cachable;
+//    use Cachable;
 
     protected $fillable = [
-        'entity_type',
         'entity_id',
+        'entity_type',
 
-        'email',
-
-        'is_delivered',
-        'is_opened',
-        'is_spamed',
+        'mailing_list_id',
 
         'display',
         'system',

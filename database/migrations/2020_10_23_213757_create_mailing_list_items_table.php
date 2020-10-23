@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePaymentsTable extends Migration
+class CreateMailingListItemsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,29 +13,13 @@ class CreatePaymentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('payments', function (Blueprint $table) {
+        Schema::create('mailing_list_items', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->morphs('contract');
-            $table->morphs('document');
+            $table->morphs('entity');
 
-            $table->timestamp('registered_at')->comment('Время регистрации');
-
-            $table->decimal('cash', 10, 2)->default(0)->comment('Сумма наличного платежа');
-            $table->decimal('electronically', 10, 2)->default(0)->comment('Сумма электронного платежа');
-
-            $table->string('type')->comment('Тип');
-
-            $table->decimal('total', 10, 2)->default(0)->comment('Итого оплачено');
-
-            $table->decimal('cash_taken ', 10, 2)->default(0)->comment('Принято наличных');
-            $table->decimal('cash_change ', 10, 2)->default(0)->comment('Сдача');
-
-            $table->bigInteger('payments_method_id')->unsigned()->nullable()->comment('Id метода платежа');
-            $table->foreign('payments_method_id')->references('id')->on('payments_methods');
-
-            $table->bigInteger('currency_id')->unsigned()->nullable()->comment('Id валюты');
-            $table->foreign('currency_id')->references('id')->on('currencies');
+            $table->bigInteger('mailing_list_id')->unsigned()->nullable()->comment('Id списка рассылки');
+            $table->foreign('mailing_list_id')->references('id')->on('mailing_list');
 
 
             // Общие настройки
@@ -53,7 +37,6 @@ class CreatePaymentsTable extends Migration
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
 
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -64,6 +47,6 @@ class CreatePaymentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('payments');
+        Schema::dropIfExists('mailing_list_items');
     }
 }
