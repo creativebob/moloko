@@ -1014,7 +1014,7 @@ class LeadController extends Controller
             'location.city',
             'user.client',
             'organization.client',
-            'client',
+            'client.contract',
             'main_phones',
             'extra_phones',
             'medium',
@@ -1044,7 +1044,6 @@ class LeadController extends Controller
                             'currency'
                         ]);
                     },
-                    'lead.client.contract',
                     'discounts'
                 ]);
             },
