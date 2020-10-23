@@ -53,13 +53,13 @@ class Notifications
     // Тестируем отправку почты
     public static function sendMail()
     {
-        $to_name = 'Антону Павловичу';
+        $to_name = 'Любимому клиенту';
         $to_email = 'creativebob@yandex.ru';
         $data = array('name'=>"Антон Павлович", "body" => "Мы хотим продать вам интересные штучки!");
 
-        Mail::send('emails/offers/myoffer', $data, function($message) use ($to_name, $to_email) {
-            $message->to($to_email, $to_name)->subject('Коммерческое предложение');
-            $message->from('smpcreativebob@gmail.com','Алексей');
+        Mail::send('system/templates/emails/offers/newyear2021/index', $data, function($message) use ($to_name, $to_email) {
+            $message->to($to_email, $to_name)->subject('Новогодние подарки 2021');
+            $message->from('smpcreativebob@gmail.com','Вкусняшка');
         });
     }
 
