@@ -48,8 +48,8 @@ class ExtraSourcesTableSeeder extends Seeder
                 'author_id' => 1,
             ],
             [
-                'name' => 'Собственная email рассылка',
-                'description' => 'Рассылка средствами программы',
+                'name' => 'Email рассылка',
+                'description' => 'Рассылка писем на электронную почту',
                 'domain' => '',
                 'utm' => 'letter',
                 'author_id' => 1,
