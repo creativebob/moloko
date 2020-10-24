@@ -19,7 +19,7 @@ class CreatePaymentsTable extends Migration
             $table->morphs('contract');
             $table->morphs('document');
 
-            $table->timestamp('registered_at')->comment('Время регистрации');
+            $table->timestamp('registered_at')->nullable()->comment('Время регистрации');
 
             $table->decimal('cash', 10, 2)->default(0)->comment('Сумма наличного платежа');
             $table->decimal('electronically', 10, 2)->default(0)->comment('Сумма электронного платежа');
@@ -28,8 +28,8 @@ class CreatePaymentsTable extends Migration
 
             $table->decimal('total', 10, 2)->default(0)->comment('Итого оплачено');
 
-            $table->decimal('cash_taken ', 10, 2)->default(0)->comment('Принято наличных');
-            $table->decimal('cash_change ', 10, 2)->default(0)->comment('Сдача');
+            $table->decimal('cash_taken', 10, 2)->default(0)->comment('Принято наличных');
+            $table->decimal('cash_change', 10, 2)->default(0)->comment('Сдача');
 
             $table->bigInteger('payments_method_id')->unsigned()->nullable()->comment('Id метода платежа');
             $table->foreign('payments_method_id')->references('id')->on('payments_methods');

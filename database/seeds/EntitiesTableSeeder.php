@@ -11,7 +11,8 @@ class EntitiesTableSeeder extends Seeder
     public function run()
     {
 
-        $pages = Page::where('site_id', 1)->get(['id', 'alias']);
+        $pages = Page::where('site_id', 1)
+            ->get(['id', 'alias']);
 
         // Первый уровень
         Entity::insert([
@@ -547,13 +548,13 @@ class EntitiesTableSeeder extends Seeder
                 'name' => 'Рассылки',
                 'alias' => 'dispatches',
                 'model' => 'App\Dispatch',
-                'rights' => true,
+                'rights' => false,
                 'system' => true,
                 'author_id' => 1,
                 'site' => 0,
                 'metric' => 0,
                 'view_path' => 'dispatches',
-                'page_id' => $pages->firstWhere('alias', 'dispatches')->id,
+                'page_id' => null,
             ],
             [
                 'name' => 'Домены',
@@ -638,6 +639,42 @@ class EntitiesTableSeeder extends Seeder
                 'metric' => 0,
                 'view_path' => 'templates_categories',
                 'page_id' => $pages->firstWhere('alias', 'templates_categories')->id,
+            ],
+            [
+                'name' => 'Подписчики',
+                'alias' => 'subscribers',
+                'model' => 'App\Subscriber',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'metric' => 0,
+                'view_path' => 'subscribers',
+                'page_id' => $pages->firstWhere('alias', 'subscribers')->id,
+            ],
+            [
+                'name' => 'Список для рассылки',
+                'alias' => 'mailing_lists',
+                'model' => 'App\MailingList',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'metric' => 0,
+                'view_path' => 'mailing_lists',
+                'page_id' => $pages->firstWhere('alias', 'mailing_lists')->id,
+            ],
+            [
+                'name' => 'Рассылки',
+                'alias' => 'mailings',
+                'model' => 'App\Mailing',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'metric' => 0,
+                'view_path' => 'mailings',
+                'page_id' => $pages->firstWhere('alias', 'mailings')->id,
             ],
             // TODO - 04.06.19 - Чистка сущностей
             // [
@@ -1184,6 +1221,18 @@ class EntitiesTableSeeder extends Seeder
                 'ancestor_id' => Entity::whereAlias('productions')->value('id'),
                 'view_path' => 'productions',
                 'page_id' => null,
+            ],
+            [
+                'name' => 'Шаблоны',
+                'alias' => 'templates',
+                'model' => 'App\Template',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('templates_categories')->value('id'),
+                'view_path' => 'templates',
+                'page_id' => $pages->firstWhere('alias', 'templates')->id,
             ],
         ]);
 

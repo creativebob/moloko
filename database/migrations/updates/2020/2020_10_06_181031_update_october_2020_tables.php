@@ -34,7 +34,7 @@ class UpdateOctober2020Tables extends Migration
                 'date',
             ]);
 
-            $table->timestamp('registered_at')->comment('Время регистрации')->after('document_id');
+            $table->timestamp('registered_at')->nullable()->comment('Время регистрации')->after('document_id');
 
             $table->decimal('cash', 10, 2)->default(0)->comment('Сумма наличного платежа')->after('registered_at');
             $table->decimal('electronically', 10, 2)->default(0)->comment('Сумма электронного платежа')->after('cash');

@@ -53,6 +53,8 @@ class Entity extends Model
         'alias',
         'model',
 
+        'rights',
+
         'display',
         'system',
         'moderation'

@@ -33,6 +33,7 @@ Route::get('/update', 'System\UpdateController@update');
 Route::get('/updates/vkusnyashka', 'System\UpdateController@update_vkusnyashka');
 Route::get('/updates/add_discounts_entity', 'System\UpdateController@addDiscountsEntity');
 Route::get('/updates/add_discounts_recalculate_notification', 'System\UpdateController@addDiscountsRecalculateNotification');
+Route::get('/updates/add-mailings-entities', 'System\UpdateController@addMailingsEntities');
 
 // Парсеры
 Route::get('/update_parser', 'ParserController@parser');
