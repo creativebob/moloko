@@ -32,6 +32,291 @@ class UpdateController extends Controller
     }
 
     /**
+     * Добавление в развернутую систему сущностей для рассылок с правами
+     *
+     * @return string
+     */
+    public function addMailingsEntities()
+    {
+        // Правим существующую сущность dispatches
+        Entity::where('alias', 'dispatches')
+            ->update([
+                'rights' => false,
+            ]);
+
+        $menu = Menu::where('alias', 'admin/dispatches')
+            ->first();
+        $menu->forceDelete();
+
+        $page = Page::where('alias', 'dispatches')
+            ->first();
+        $page->forceDelete();
+
+
+        Page::insert([
+            // Рассылки
+            [
+                'name' => 'Подписчики',
+                'site_id' => 1,
+                'title' => 'Подписчики',
+                'description' => 'Подписчики',
+                'alias' => 'subscribers',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+            [
+                'name' => 'Категории шаблонов',
+                'site_id' => 1,
+                'title' => 'Категории шаблонов',
+                'description' => 'Категории шаблонов',
+                'alias' => 'templates_categories',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+            [
+                'name' => 'Шаблоны',
+                'site_id' => 1,
+                'title' => 'Шаблоны',
+                'description' => 'Шаблоны',
+                'alias' => 'templates',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+            [
+                'name' => 'Списки рассылок',
+                'site_id' => 1,
+                'title' => 'Списки рассылок',
+                'description' => 'Списки рассылок',
+                'alias' => 'mailing_lists',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+            [
+                'name' => 'Рассылки',
+                'site_id' => 1,
+                'title' => 'Рассылки',
+                'description' => 'Рассылки',
+                'alias' => 'mailings',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+        ]);
+        echo "Добавлены страницы рассылок<br><br>";
+
+        $pages = Page::get();
+        $menus = Menu::get();
+
+        Menu::insert([
+            [
+                'name' => 'Подписчики',
+                'icon' => null,
+                'alias' => 'admin/subscribers',
+                'tag' => 'subscribers',
+                'parent_id' => $menus->firstWhere('tag', 'marketings')->id,
+                'page_id' => $pages->firstWhere('alias', 'subscribers')->id,
+                'navigation_id' => 1,
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+                'sort' => 5,
+            ],
+            [
+                'name' => 'Категории шаблонов',
+                'icon' => null,
+                'alias' => 'admin/templates_categories',
+                'tag' => 'templates_categories',
+                'parent_id' => $menus->firstWhere('tag', 'marketings')->id,
+                'page_id' => $pages->firstWhere('alias', 'templates_categories')->id,
+                'navigation_id' => 1,
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+                'sort' => 5,
+            ],
+            [
+                'name' => 'Шаблоны',
+                'icon' => null,
+                'alias' => 'admin/templates',
+                'tag' => 'templates',
+                'parent_id' => $menus->firstWhere('tag', 'marketings')->id,
+                'page_id' => $pages->firstWhere('alias', 'templates')->id,
+                'navigation_id' => 1,
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+                'sort' => 5,
+            ],
+            [
+                'name' => 'Списки рассылок',
+                'icon' => null,
+                'alias' => 'admin/mailing_lists',
+                'tag' => 'mailing_lists',
+                'parent_id' => $menus->firstWhere('tag', 'marketings')->id,
+                'page_id' => $pages->firstWhere('alias', 'mailing_lists')->id,
+                'navigation_id' => 1,
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+                'sort' => 5,
+            ],
+            [
+                'name' => 'Рассылки',
+                'icon' => null,
+                'alias' => 'admin/mailings',
+                'tag' => 'mailings',
+                'parent_id' => $menus->firstWhere('tag', 'marketings')->id,
+                'page_id' => $pages->firstWhere('alias', 'mailings')->id,
+                'navigation_id' => 1,
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+                'sort' => 5,
+            ],
+        ]);
+        echo "Добавлены пункты меню для рассылок<br><br>";
+
+        $entities = Entity::get([
+            'id',
+            'alias',
+        ]);
+        Entity::insert([
+            [
+                'name' => 'Категории шаблонов',
+                'alias' => 'templates_categories',
+                'model' => 'App\TemplatesCategory',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'metric' => 0,
+                'view_path' => 'templates_categories',
+                'page_id' => $pages->firstWhere('alias', 'templates_categories')->id,
+            ],
+            [
+                'name' => 'Подписчики',
+                'alias' => 'subscribers',
+                'model' => 'App\Subscriber',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'metric' => 0,
+                'view_path' => 'subscribers',
+                'page_id' => $pages->firstWhere('alias', 'subscribers')->id,
+            ],
+            [
+                'name' => 'Список для рассылки',
+                'alias' => 'mailing_lists',
+                'model' => 'App\MailingList',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'metric' => 0,
+                'view_path' => 'mailing_lists',
+                'page_id' => $pages->firstWhere('alias', 'mailing_lists')->id,
+            ],
+            [
+                'name' => 'Рассылки',
+                'alias' => 'mailings',
+                'model' => 'App\Mailing',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'metric' => 0,
+                'view_path' => 'mailings',
+                'page_id' => $pages->firstWhere('alias', 'mailings')->id,
+            ],
+        ]);
+
+        Entity::insert([
+            [
+                'name' => 'Шаблоны',
+                'alias' => 'templates',
+                'model' => 'App\Template',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('templates_categories')->value('id'),
+                'view_path' => 'templates',
+                'page_id' => $pages->firstWhere('alias', 'templates')->id,
+            ],
+        ]);
+        echo 'Добавлены сущности рассылок<br><br>';
+
+        // Наваливание прав
+        $entities = Entity::whereIn('alias', [
+            'templates_categories',
+            'subscribers',
+            'mailing_lists',
+            'mailings',
+            'templates',
+        ])
+            ->get();
+
+        foreach ($entities as $entity) {
+            // Генерируем права
+            $actions = Action::get();
+            $mass = [];
+
+            foreach ($actions as $action) {
+                $mass[] = ['action_id' => $action->id, 'entity_id' => $entity->id, 'alias_action_entity' => $action->method . '-' . $entity->alias];
+            };
+            DB::table('action_entity')->insert($mass);
+
+            $actionentities = ActionEntity::where('entity_id', $entity->id)->get();
+            $mass = [];
+
+            foreach ($actionentities as $actionentity) {
+
+                $mass[] = ['name' => "Разрешение на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'allow', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-allow'];
+
+                $mass[] = ['name' => "Запрет на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'deny', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-deny'];
+            };
+
+            DB::table('rights')->insert($mass);
+
+            $actionentities = $actionentities->pluck('id')->toArray();
+
+            // Получаем все существующие разрешения (allow)
+            $rights = Right::whereIn('object_entity', $actionentities)->where('directive', 'allow')->get();
+
+            $mass = [];
+            // Генерируем права на полный доступ
+            foreach ($rights as $right) {
+                $mass[] = [
+                    'right_id' => $right->id,
+                    'role_id' => 1,
+                    'system' => 1
+                ];
+            };
+
+            DB::table('right_role')->insert($mass);
+        }
+
+        echo "Добавлены права на сущности рассылок<br><br>";
+
+        return "<strong>Добавление сущностей рассылок завершено</strong>";
+    }
+
+    /**
      * Добавление в развернутую систему оповещения о контроле скидок
      *
      * @return string
@@ -129,12 +414,12 @@ class UpdateController extends Controller
         $entities = Entity::where('alias', 'discounts')
             ->get();
 
-        foreach($entities as $entity) {
+        foreach ($entities as $entity) {
             // Генерируем права
             $actions = Action::get();
             $mass = [];
 
-            foreach($actions as $action){
+            foreach ($actions as $action) {
                 $mass[] = ['action_id' => $action->id, 'entity_id' => $entity->id, 'alias_action_entity' => $action->method . '-' . $entity->alias];
             };
             DB::table('action_entity')->insert($mass);
@@ -142,7 +427,7 @@ class UpdateController extends Controller
             $actionentities = ActionEntity::where('entity_id', $entity->id)->get();
             $mass = [];
 
-            foreach($actionentities as $actionentity){
+            foreach ($actionentities as $actionentity) {
 
                 $mass[] = ['name' => "Разрешение на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'allow', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-allow'];
 
@@ -158,7 +443,7 @@ class UpdateController extends Controller
 
             $mass = [];
             // Генерируем права на полный доступ
-            foreach($rights as $right){
+            foreach ($rights as $right) {
                 $mass[] = [
                     'right_id' => $right->id,
                     'role_id' => 1,
@@ -193,12 +478,12 @@ class UpdateController extends Controller
         echo "В миграциях переименована таблица дилеров<br><br>";
 
         Widget::where('tag', 'sales-department-burden')->update([
-           'tag' => 'sales_department_burden'
+            'tag' => 'sales_department_burden'
         ]);
         echo "Обновлен тег виджета нагружки отдела продаж<br><br>";
 
         $estimatesEntity = Entity::where('alias', 'estimates')
-        ->first();
+            ->first();
         $estimatesEntity->update([
             'name' => 'Клиентские заказы'
         ]);
@@ -223,7 +508,7 @@ class UpdateController extends Controller
         $estimatesGoodsItems = EstimatesGoodsItem::whereNull('total')
             ->get();
         foreach ($estimatesGoodsItems as $estimatesGoodsItem) {
-            if($estimatesGoodsItem->discount_percent) {
+            if ($estimatesGoodsItem->discount_percent) {
                 $estimatesGoodsItem->discount_currency = ($estimatesGoodsItem->amount * $estimatesGoodsItem->discount_percent / 100);
                 $estimatesGoodsItem->total = $estimatesGoodsItem->amount - $estimatesGoodsItem->discount_currency;
             } else {
@@ -250,7 +535,7 @@ class UpdateController extends Controller
             'alias' => 'catalogs-goods'
         ])
             ->update([
-               'alias' => 'catalogs-goods-items'
+                'alias' => 'catalogs-goods-items'
             ]);
         echo "Переимеенован алиас страницы раздела каталога<br><br>";
 
@@ -277,7 +562,7 @@ class UpdateController extends Controller
         $users = User::whereNull('name')
             ->get();
 
-        foreach($users as $user) {
+        foreach ($users as $user) {
             $cur_user = $user;
             $cur_user->name = $cur_user->first_name . ' ' . $cur_user->second_name;
 //            dd($user);
@@ -556,12 +841,12 @@ class UpdateController extends Controller
         ])
             ->get();
 
-        foreach($entities as $entity) {
+        foreach ($entities as $entity) {
             // Генерируем права
             $actions = Action::get();
             $mass = [];
 
-            foreach($actions as $action){
+            foreach ($actions as $action) {
                 $mass[] = ['action_id' => $action->id, 'entity_id' => $entity->id, 'alias_action_entity' => $action->method . '-' . $entity->alias];
             };
             DB::table('action_entity')->insert($mass);
@@ -569,7 +854,7 @@ class UpdateController extends Controller
             $actionentities = ActionEntity::where('entity_id', $entity->id)->get();
             $mass = [];
 
-            foreach($actionentities as $actionentity){
+            foreach ($actionentities as $actionentity) {
 
                 $mass[] = ['name' => "Разрешение на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'allow', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-allow'];
 
@@ -585,7 +870,7 @@ class UpdateController extends Controller
 
             $mass = [];
             // Генерируем права на полный доступ
-            foreach($rights as $right){
+            foreach ($rights as $right) {
                 $mass[] = [
                     'right_id' => $right->id,
                     'role_id' => 1,

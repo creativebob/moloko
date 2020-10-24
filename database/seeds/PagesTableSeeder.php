@@ -46,7 +46,6 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => true,
             ],
-
             [
                 'name' => 'Настройки',
                 'site_id' => 1,
@@ -58,7 +57,6 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => true,
             ],
-
 
             // ----------------- Основной блок (База) ------------------------
 
@@ -219,7 +217,6 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => true,
             ],
-
             [
                 'name' => 'Банки',
                 'site_id' => 1,
@@ -255,9 +252,6 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => true,
             ],
-
-
-
 
             // ------------------------- Маркетинг --------------------------------
             [
@@ -440,7 +434,6 @@ class PagesTableSeeder extends Seeder
             ],
 
             // ------------------------------ Продукция --------------------------
-
             [
                 'name' => 'Группы артикулов',
                 'site_id' => 1,
@@ -452,7 +445,6 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => true,
             ],
-
             [
                 'name' => 'Группы процессов',
                 'site_id' => 1,
@@ -712,6 +704,62 @@ class PagesTableSeeder extends Seeder
                 'display' => true,
             ],
 
+            // Рассылки
+            [
+                'name' => 'Подписчики',
+                'site_id' => 1,
+                'title' => 'Подписчики',
+                'description' => 'Подписчики',
+                'alias' => 'subscribers',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+            [
+                'name' => 'Категории шаблонов',
+                'site_id' => 1,
+                'title' => 'Категории шаблонов',
+                'description' => 'Категории шаблонов',
+                'alias' => 'templates_categories',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+            [
+                'name' => 'Шаблоны',
+                'site_id' => 1,
+                'title' => 'Шаблоны',
+                'description' => 'Шаблоны',
+                'alias' => 'templates',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+            [
+                'name' => 'Списки рассылок',
+                'site_id' => 1,
+                'title' => 'Списки рассылок',
+                'description' => 'Списки рассылок',
+                'alias' => 'mailing_lists',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+            [
+                'name' => 'Рассылки',
+                'site_id' => 1,
+                'title' => 'Рассылки',
+                'description' => 'Рассылки',
+                'alias' => 'mailings',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
 
 
             // Расходные материалы
@@ -726,8 +774,6 @@ class PagesTableSeeder extends Seeder
             //     'author_id' => 1,
             //     'display' => true,
             // ],
-
-
 
             // ----------------- Нераспределенные ---------------------------
             [
@@ -829,8 +875,6 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => true,
             ],
-
-
             [
                 'name' => 'Рубрикатор',
                 'site_id' => 1,
@@ -942,7 +986,6 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => true,
             ],
-
             [
                 'name' => 'Товарные накладные',
                 'site_id' => 1,
@@ -965,7 +1008,6 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => true,
             ],
-
             [
                 'name' => 'Показатели',
                 'site_id' => 1,
@@ -988,7 +1030,6 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => true,
             ],
-
             [
                 'name' => 'Продвижения',
                 'site_id' => 1,
@@ -1000,7 +1041,6 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => true,
             ],
-
             [
                 'name' => 'Рассылки',
                 'site_id' => 1,
@@ -1012,7 +1052,6 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => true,
             ],
-
             [
                 'name' => 'Категории выполненных работ',
                 'site_id' => 1,

@@ -159,7 +159,8 @@
             addPayment() {
                 const data = {
                     cash: this.estimateTotal - this.electronically,
-                    change: this.change,
+                    cash_taken: this.cash,
+                    cash_change: this.change,
                     electronically: this.electronically,
                 };
                 this.$store.dispatch('ADD_PAYMENT', data);

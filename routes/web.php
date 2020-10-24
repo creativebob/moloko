@@ -33,6 +33,7 @@ Route::get('/update', 'System\UpdateController@update');
 Route::get('/updates/vkusnyashka', 'System\UpdateController@update_vkusnyashka');
 Route::get('/updates/add_discounts_entity', 'System\UpdateController@addDiscountsEntity');
 Route::get('/updates/add_discounts_recalculate_notification', 'System\UpdateController@addDiscountsRecalculateNotification');
+Route::get('/updates/add-mailings-entities', 'System\UpdateController@addMailingsEntities');
 
 // Парсеры
 Route::get('/update_parser', 'ParserController@parser');
@@ -71,24 +72,27 @@ Route::get('/roll_house/set_company_id', 'System\External\RollHouseController@se
 // Тесты
 Route::get('/test', 'System\TestController@test');
 
-Route::get('sendmail', function () {
-
-   // Отправляем почту
-   App\Notifications\System\Notifications::sendMail();
-
-})->middleware('auth');
+//Route::get('sendmail', function () {
+//
+//   // Отправляем почту
+//   App\Notifications\System\Notifications::sendMail();
+//
+//})->middleware('auth');
 
 // Всякая хрень для проверки
 // Route::resource('/site_api', 'ApiController');
 
-Route::get('/img/{item_id}/{entity}/{size?}', 'ImageController@show')->name('get_photo')//    ->where('path', '.*')
-;
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/img/{item_id}/{entity}/{size?}', 'ImageController@show')
+    ->name('get_photo');
+//    ->where('path', '.*')
+Route::get('/home', 'HomeController@index')
+    ->name('home');
 
 
 // ----------------------------- Рабочий стол -------------------------------------
 
 Route::get('/dashboard', 'DashboardController@index')->name('dashboard.index');
+
 
 // -------------------------------------- Директории ---------------------------------------------------
 Route::get('directories', 'DirectoryController@index')->middleware('auth')->name('directories.index');
@@ -217,22 +221,16 @@ Route::get('/sort_catalog_parser', 'ParserController@sort_catalog_parser')->midd
 // })->middleware('auth');
 
 // ------------------------------------ Telegram ----------------------------------------
-
 // Получаем бота
-Route::get('/get_bot', 'TelegramController@get_bot')->middleware('auth');
-
+Route::get('/get_bot', 'TelegramController@get_bot');
 // Устанавливаем webhook
-Route::get('/set_webhook', 'TelegramController@set_webhook')->middleware('auth');
-
+Route::get('/set_webhook', 'TelegramController@set_webhook');
 // Удаляем webhook
-Route::get('/remove_webhook', 'TelegramController@remove_webhook')->middleware('auth');
-
+Route::get('/remove_webhook', 'TelegramController@remove_webhook');
 // Ручное получение сообщений, для тестов
 Route::get('/telegram_updates', 'TelegramController@get_updates');
-
 // Получаем сообщение от бота
 Route::post('/telegram_message', 'TelegramController@get_message');
-// Route::post('/'.env('TELEGRAM_BOT_TOKEN'), 'TelegramController@get_message');
 
 Route::get('/vk', 'VkController@market')->middleware('auth');
 
@@ -245,46 +243,40 @@ Route::get('/vk', 'VkController@market')->middleware('auth');
 
 // -------------------------------------- Основные операции ------------------------------------------
 // Сортировка
-Route::post('/sort/{entity_alias}', 'AppController@ajax_sort')->middleware('auth');
+Route::post('/sort/{entity_alias}', 'AppController@ajax_sort');
 // Системная запись
-Route::post('/system', 'AppController@ajax_system')->middleware('auth');
+Route::post('/system', 'AppController@ajax_system');
 // Отображение на сайте
-Route::post('/display', 'AppController@ajax_display')->middleware('auth');
+Route::post('/display', 'AppController@ajax_display');
 // Отображение на сайте
-Route::post('/check', 'AppController@ajax_check')->middleware('auth');
+Route::post('/check', 'AppController@ajax_check');
 // Пересчитать уровни категорий
-Route::get('/recalculate_categories/{entity}', 'AppController@recalculate_categories')->middleware('auth');
+Route::get('/recalculate_categories/{entity}', 'AppController@recalculate_categories');
 // Пересохраниение связи категории с группой (пока категории товаров)
 Route::get('/resave_categories_groups', 'AppController@resaveCategoriesGroups');
 
 
-Route::get('/draft_article/{entity}/{id}', 'AppController@draft_article')->middleware('auth');
-Route::get('/draft_process/{entity}/{id}', 'AppController@draft_process')->middleware('auth');
+Route::get('/draft_article/{entity}/{id}', 'AppController@draft_article');
+Route::get('/draft_process/{entity}/{id}', 'AppController@draft_process');
+
 // --------------------------------------- Настройки -----------------------------------------------
-
 Route::any('/set_setting', 'SettingController@ajax_set_setting')->middleware('auth');
-
 Route::resource('/settings', 'SettingController')->middleware('auth');
 
 
 // ---------------------------------------- Телефоны --------------------------------------------------
-
 Route::post('/add_extra_phone', 'PhoneController@ajax_add_extra_phone')->middleware('auth')->name('phones.add_extra_phone');;
 
 
-// -------------------------------------- Пользователи ------------------------------------------------
-
+// -------------------------------------- Профиль ------------------------------------------------
 //Route::resource('/users', 'UserController')->middleware('auth');
 Route::get('/profile', 'UserController@profile')
-    ->middleware('auth')
     ->name('users.profile');
 Route::patch('/update_profile', 'UserController@update_profile')
-    ->middleware('auth')
     ->name('users.update_profile');
 
 
 // ---------------------------------- Категории альбомов -------------------------------------------
-
 // Текущая добавленная/удаленная категория альбомов
 Route::any('/albums_categories', 'AlbumsCategoryController@index');
 // Основные методы
@@ -292,7 +284,6 @@ Route::resource('/albums_categories', 'AlbumsCategoryController');
 
 
 // --------------------------------------- Альбомы -----------------------------------------------
-
 Route::resource('/albums', 'AlbumController');
 // Route::get('/albums', 'AlbumController@index')->middleware('auth')->name('albums.index');
 // Route::get('/albums/create', 'AlbumController@create')->middleware('auth')->name('albums.create');
@@ -355,7 +346,6 @@ Route::post('/ajax_get_metric_value', 'MetricController@ajax_get_metric_value')-
 
 
 // ---------------------------------------- Состав -------------------------------------------------
-
 Route::any('/get_units_list', 'UnitController@get_units_list')->middleware('auth');
 Route::post('/ajax_get_article_inputs', 'ArticleController@get_inputs')->middleware('auth');
 
@@ -1476,6 +1466,36 @@ Route::any('/clients_indicators/compute/year', 'System\Widgets\ClientsIndicatorC
 
 // Route::any('archive_prices_service', 'PricesServiceController@ajax_archive');
 // Route::delete('prices_service', 'PricesServiceController@ajax_destroy');
+
+
+// --------------------------- Подписчики -------------------------------------
+// Основные методы
+Route::resource('/subscribers', 'SubscriberController');
+
+
+// --------------------------- Категории шаблонов -------------------------------------
+// Текущая добавленная/удаленная категория альбомов
+Route::any('/templates_categories', 'TemplatesCategoryController@index');
+// Основные методы
+Route::resource('/templates_categories', 'TemplatesCategoryController');
+
+// --------------------------- Шаблоны -------------------------------------
+// Основные методы
+Route::resource('/templates', 'TemplateController');
+
+
+// --------------------------- Списки рассылок -------------------------------------
+// Основные методы
+Route::resource('/mailing_lists', 'MailingListController');
+
+// --------------------------- Пункты списка рассылки -------------------------------------
+// Основные методы
+Route::resource('/mailing_list_items', 'MailingListItemController');
+
+
+// --------------------------- Рассылки -------------------------------------
+// Основные методы
+Route::resource('/mailings', 'MailingController');
 
 
 // ------------------------------------- Отображение сессии -----------------------------------------

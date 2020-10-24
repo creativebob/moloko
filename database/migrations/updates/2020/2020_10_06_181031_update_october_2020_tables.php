@@ -34,7 +34,7 @@ class UpdateOctober2020Tables extends Migration
                 'date',
             ]);
 
-            $table->timestamp('registered_at')->comment('Время регистрации')->after('document_id');
+            $table->timestamp('registered_at')->nullable()->comment('Время регистрации')->after('document_id');
 
             $table->decimal('cash', 10, 2)->default(0)->comment('Сумма наличного платежа')->after('registered_at');
             $table->decimal('electronically', 10, 2)->default(0)->comment('Сумма электронного платежа')->after('cash');
@@ -46,6 +46,24 @@ class UpdateOctober2020Tables extends Migration
             $table->decimal('change', 10, 2)->default(0)->comment('Сдача')->after('total');
 
             $table->bigInteger('payments_method_id')->unsigned()->nullable()->comment('Id метода платежа')->after('change');
+        });
+
+        Schema::table('dispatches', function (Blueprint $table) {
+            $table->dropForeign('dispatches_channel_id_foreign');
+
+            $table->dropColumn([
+                'name',
+                'body',
+                'channel_id'
+            ]);
+
+            $table->morphs('entity');
+
+            $table->string('email')->comment('Email')->after('entity_id');
+
+            $table->boolean('is_delivered')->default(0)->comment('Доставлено')->after('email');
+            $table->boolean('is_opened')->default(0)->comment('Открыто')->after('is_delivered');
+            $table->boolean('is_spamed')->default(0)->comment('Спам')->after('is_opened');
         });
     }
 
@@ -90,6 +108,23 @@ class UpdateOctober2020Tables extends Migration
             $table->bigInteger('payments_type_id')->unsigned()->nullable()->comment('Id типа платежа');
             $table->decimal('amount', 12, 4)->default(0)->comment('Сумма');
             $table->date('date')->nullable()->comment('Дата');
+        });
+
+        Schema::table('dispatches', function (Blueprint $table) {
+            $table->dropColumn([
+                'entity_type',
+                'entity_id',
+                'email',
+                'is_delivered',
+                'is_opened',
+                'is_spamed',
+            ]);
+
+            $table->string('name')->nullable()->comment('Название');
+            $table->text('body')->nullable()->comment('Текст');
+
+            $table->bigInteger('channel_id')->unsigned()->nullable()->comment('Id канала');
+//            $table->foreign('channel_id')->references('id')->on('channels');
         });
     }
 }

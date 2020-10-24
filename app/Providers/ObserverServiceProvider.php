@@ -5,6 +5,9 @@ namespace App\Providers;
 use App\ArticlesGroup;
 use App\Attachment;
 use App\AttachmentsCategory;
+use App\Mailing;
+use App\MailingList;
+use App\MailingListItem;
 use App\Models\System\Documents\Consignment;
 use App\Models\System\Documents\ConsignmentsItem;
 use App\Models\System\Documents\Production;
@@ -48,6 +51,9 @@ use App\Observers\System\Documents\ConsignmentObserver;
 use App\Observers\System\Documents\ConsignmentsItemObserver;
 use App\Observers\System\Documents\ProductionObserver;
 use App\Observers\System\Documents\ProductionsItemObserver;
+use App\Observers\System\MailingListItemObserver;
+use App\Observers\System\MailingListObserver;
+use App\Observers\System\MailingObserver;
 use App\Observers\System\Stocks\AttachmentsStockObserver;
 use App\Observers\System\BusinessCaseObserver;
 use App\Observers\System\CatalogsGoodsItemObserver;
@@ -104,7 +110,10 @@ use App\Observers\System\RoomsCategoryObserver;
 use App\Observers\System\SectorObserver;
 use App\Observers\System\ServicesCategoryObserver;
 use App\Observers\System\StafferObserver;
+use App\Observers\System\SubscriberObserver;
 use App\Observers\System\SupplierObserver;
+use App\Observers\System\TemplateObserver;
+use App\Observers\System\TemplatesCategoryObserver;
 use App\Observers\System\VectorObserver;
 use App\Observers\System\VendorObserver;
 use App\Observers\System\WorkflowsCategoryObserver;
@@ -132,7 +141,10 @@ use App\RoomsCategory;
 use App\Sector;
 use App\ServicesCategory;
 use App\Staffer;
+use App\Subscriber;
 use App\Supplier;
+use App\Template;
+use App\TemplatesCategory;
 use App\Vector;
 use App\Vendor;
 use App\WorkflowsCategory;
@@ -293,7 +305,6 @@ class ObserverServiceProvider extends ServiceProvider
         Page::observe(PageObserver::class);
         Menu::observe(MenuObserver::class);
         Promotion::observe(PromotionObserver::class);
-        Dispatch::observe(DispatchObserver::class);
 
         // Плагины
         Plugin::observe(PluginObserver::class);
@@ -339,6 +350,15 @@ class ObserverServiceProvider extends ServiceProvider
         Portfolio::observe(PortfolioObserver::class);
         PortfoliosItem::observe(PortfoliosItemObserver::class);
         BusinessCase::observe(BusinessCaseObserver::class);
+
+        // Email Рассылки
+        Subscriber::observe(SubscriberObserver::class);
+        TemplatesCategory::observe(TemplatesCategoryObserver::class);
+        Template::observe(TemplateObserver::class);
+        Mailing::observe(MailingObserver::class);
+        MailingList::observe(MailingListObserver::class);
+        MailingListItem::observe(MailingListItemObserver::class);
+        Dispatch::observe(DispatchObserver::class);
     }
 
     /**

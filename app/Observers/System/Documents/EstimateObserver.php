@@ -1,6 +1,6 @@
 <?php
-    
-    namespace App\Observers\System\Documents;
+
+namespace App\Observers\System\Documents;
 
 use App\Models\System\Documents\Estimate;
 use App\Observers\System\BaseObserver;
@@ -18,7 +18,7 @@ class EstimateObserver extends BaseObserver
         $estimate->currency_id = 1;
 //        $estimate->date = now()->format('d.m.Y');
     }
-    
+
     /**
      * Handle the estimate "updating" event.
      *
@@ -28,7 +28,7 @@ class EstimateObserver extends BaseObserver
     {
         $this->update($estimate);
     }
-    
+
     /**
      * Handle the estimate "deleting" event.
      *

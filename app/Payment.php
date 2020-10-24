@@ -59,7 +59,9 @@ class Payment extends Model
         'cash',
         'electronically',
         'total',
-        'change',
+
+        'cash_taken',
+        'cash_change',
 
         'type',
 

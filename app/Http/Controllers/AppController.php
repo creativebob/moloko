@@ -18,6 +18,14 @@ use Illuminate\Http\Request;
 
 class AppController extends Controller
 {
+    /**
+     * AppController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     use Categorable;
 
     public function resaveCategoriesGroups()

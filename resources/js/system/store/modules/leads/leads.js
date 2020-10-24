@@ -378,6 +378,10 @@ const moduleLead = {
                             }
                         }
 
+                        if (lead.client) {
+                            this.commit('SET_CLIENT', lead.client);
+                        }
+
                         this.commit('SET_ESTIMATE', response.data.estimate);
 
                         this.commit('SET_GOODS_ITEMS', response.data.goods_items);

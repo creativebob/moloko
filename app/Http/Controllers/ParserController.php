@@ -88,6 +88,9 @@ class ParserController extends Controller
                 $data['electronically'] = 0;
                 $data['total'] = $payment->amount;
                 $data['type'] = 'cash';
+
+                $data['cash_taken'] = $payment->amount;
+                $data['cash_change'] = 0;
             } else {
                 $data['cash'] = 0;
                 $data['electronically'] = $payment->amount;

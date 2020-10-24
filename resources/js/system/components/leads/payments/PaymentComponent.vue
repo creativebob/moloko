@@ -22,6 +22,10 @@
                 if (this.payment.cash == 0 && this.payment.electronically > 0) {
                     return 'Терминал';
                 }
+
+                if (this.payment.cash > 0 && this.payment.electronically > 0) {
+                    return 'Смешанный';
+                }
             }
         },
         filters: {

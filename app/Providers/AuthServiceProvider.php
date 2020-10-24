@@ -8,6 +8,8 @@ use App\AttachmentsCategory;
 use App\BusinessCase;
 use App\Container;
 use App\ContainersCategory;
+use App\Mailing;
+use App\MailingList;
 use App\Models\System\Documents\Consignment;
 use App\Models\System\Documents\Production;
 use App\Models\System\Stocks\AttachmentsStock;
@@ -33,6 +35,8 @@ use App\Policies\Documents\ConsignmentPolicy;
 use App\Policies\Documents\ProductionPolicy;
 use App\Policies\DomainPolicy;
 use App\Policies\IndicatorPolicy;
+use App\Policies\MailingListPolicy;
+use App\Policies\MailingPolicy;
 use App\Policies\MetricPolicy;
 use App\Policies\OrderPolicy;
 use App\Policies\OutcomePolicy;
@@ -48,6 +52,9 @@ use App\Policies\Stocks\AttachmentsStockPolicy;
 use App\Policies\Stocks\ContainersStockPolicy;
 use App\Policies\Stocks\GoodsStockPolicy;
 use App\Policies\Stocks\RawsStockPolicy;
+use App\Policies\SubscriberPolicy;
+use App\Policies\TemplatePolicy;
+use App\Policies\TemplatesCategoryPolicy;
 use App\Policies\ToolsStockPolicy;
 use App\Policies\VendorPolicy;
 use App\Portfolio;
@@ -59,6 +66,9 @@ use App\Models\System\Stocks\RawsStock;
 use App\Schedule;
 use App\CompaniesSetting;
 use App\Models\System\Stocks\ToolsStock;
+use App\Subscriber;
+use App\Template;
+use App\TemplatesCategory;
 use App\User;
 use App\RightsRole;
 use App\Company;
@@ -352,6 +362,13 @@ class AuthServiceProvider extends ServiceProvider
         Portfolio::class => PortfolioPolicy::class,
         PortfoliosItem::class => PortfoliosItemPolicy::class,
         BusinessCase::class => BusinessCasePolicy::class,
+
+        // Email рассылки
+        Subscriber::class => SubscriberPolicy::class,
+        TemplatesCategory::class => TemplatesCategoryPolicy::class,
+        Template::class => TemplatePolicy::class,
+        Mailing::class => MailingPolicy::class,
+        MailingList::class => MailingListPolicy::class,
     ];
 
     public function boot()

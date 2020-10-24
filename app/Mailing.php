@@ -6,21 +6,21 @@ use App\Models\System\BaseModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
-class Dispatch extends BaseModel
+class Mailing extends BaseModel
 {
-
     use SoftDeletes;
     use Cachable;
 
     protected $fillable = [
-        'entity_type',
-        'entity_id',
+        'name',
+        'description',
 
-        'email',
+        'subject',
+        'from_name',
+        'from_email',
 
-        'is_delivered',
-        'is_opened',
-        'is_spamed',
+        'template_id',
+        'mailing_list_id',
 
         'display',
         'system',
