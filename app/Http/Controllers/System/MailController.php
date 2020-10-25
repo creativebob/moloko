@@ -22,7 +22,7 @@ class MailController extends Controller
     public function send()
     {
         $to_name = 'Любимому клиенту';
-        $to_email = 'makc_berluskone@mail.ru';
+        $to_email = 'creativebob@yandex.ru';
         $data = [
             'name' => "Антон Павлович",
             "body" => "Мы хотим продать вам интересные штучки!"
