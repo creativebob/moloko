@@ -481,7 +481,8 @@ class AppController extends Controller
         if ($subscriber) {
             if ($subscriber->token == $request->token) {
                 $subscriber->update([
-                    'is_allowed' => false
+                    'is_allowed' => false,
+                    'editor_id' => 1
                 ]);
             }
         }
