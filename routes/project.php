@@ -15,6 +15,9 @@
 Route::get('/', 'AppController@start')
     ->name('project.start');
 
+Route::get('/unsubscribe/{id}', 'AppController@unsubscribe')
+    ->name('project.unsubscribe');
+
 
 // Смена города
 //Route::get('/filials', 'AppController@filials')

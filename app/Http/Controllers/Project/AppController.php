@@ -469,4 +469,13 @@ class AppController extends Controller
         }
     }
 
+
+    public function unsubscribe(Request $request, $id)
+    {
+        $site = $this->site;
+        $page = $site->pages_public->firstWhere('alias', 'unsubscribe');
+
+        return view($site->alias.'.pages.unsubscribe.index', compact('site', 'page'));
+    }
+
 }

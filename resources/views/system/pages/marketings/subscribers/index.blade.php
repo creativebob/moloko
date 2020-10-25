@@ -7,10 +7,18 @@
 @section('exсel')
 {{--    <button class="button" type="button" data-toggle="dropdown-inport_excel">Импорт</button>--}}
 {{--    <div class="dropdown-pane" id="dropdown-inport_excel" data-dropdown data-auto-focus="true">--}}
-        {!! Form::open(['route' => 'subscribers.excelImport', 'files' => true]) !!}
-        <input name="subscribers" type="file">
-        <input type="submit" class="button tiny" value="Загрузить">
-        {!! Form::close() !!}
+<button class="button" data-open="modal-import">Импорт</button>
+<div class="reveal" id="modal-import" data-reveal>
+    <h1>Импорт</h1>
+    {!! Form::open(['route' => 'subscribers.excelImport', 'files' => true]) !!}
+    <input name="subscribers" type="file">
+    <input type="submit" class="button tiny" value="Загрузить">
+    {!! Form::close() !!}
+    <button class="close-button" data-close aria-label="Close modal" type="button">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
 {{--    </div>--}}
 
 @endsection
