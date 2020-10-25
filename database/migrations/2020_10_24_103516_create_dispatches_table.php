@@ -16,6 +16,9 @@ class CreateDispatchesTable extends Migration
         Schema::create('dispatches', function (Blueprint $table) {
             $table->bigIncrements('id');
 
+            $table->bigInteger('mailing_id')->unsigned()->nullable()->comment('Id рассылки');
+            $table->foreign('mailing_id')->references('id')->on('mailings');
+
             $table->morphs('entity');
 
             $table->string('email')->comment('Email');

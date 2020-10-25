@@ -16,6 +16,8 @@ class Dispatch extends BaseModel
         'entity_type',
         'entity_id',
 
+        'mailing_id',
+
         'email',
 
         'is_delivered',

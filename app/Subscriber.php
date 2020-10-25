@@ -25,4 +25,9 @@ class Subscriber extends BaseModel
         'moderation'
     ];
 
+    public function dispatches()
+    {
+        return $this->morphMany(Dispatch::class, 'entity');
+    }
+
 }

@@ -19,7 +19,7 @@ class CreateTemplatesTable extends Migration
             $table->string('name')->index()->comment('Название');
             $table->text('description')->nullable()->comment('Описание');
 
-            $table->bigInteger('category_id')->nullable()->unsigned()->comment('Id категории сырья');
+            $table->bigInteger('category_id')->nullable()->unsigned()->comment('Id категории шаблонов');
 //            $table->foreign('category_id')->references('id')->on('raws_categories');
 
             $table->string('path')->nullable()->comment('Путь');

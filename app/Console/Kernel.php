@@ -7,6 +7,7 @@ use App\Console\Commands\System\ClientsIndicatorsDay;
 use App\Console\Commands\System\ClientsIndicatorsCommand;
 use App\Console\Commands\System\DiscountsRecalculateCommand;
 use App\Console\Commands\System\Parsers\RollHouseCommand;
+use App\Console\Commands\System\Parsers\VkusnyashkaMailingCommand;
 use App\Console\Commands\System\TestCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -96,6 +97,13 @@ class Kernel extends ConsoleKernel
             // Парсер лидов для РХ
             $schedule->command(RollHouseCommand::class)
                 ->everyMinute();
+        }
+
+        // Рассылка ВК
+        if (config('app.vkusnyashka_mailing')) {
+              $schedule->command(VkusnyashkaMailingCommand::class)
+                  ->everyFiveMinutes();
+//                ->hourly();
         }
 
         // Ежедневный отчет

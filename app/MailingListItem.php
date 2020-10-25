@@ -21,4 +21,9 @@ class MailingListItem extends BaseModel
         'system',
         'moderation'
     ];
+
+    public function entity()
+    {
+        return $this->morphTo();
+    }
 }

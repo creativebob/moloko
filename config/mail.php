@@ -133,6 +133,8 @@ return [
 
     'log_channel' => env('MAIL_LOG_CHANNEL'),
 
+
+    // TODO - 25.10.20 - Новые настройки для отправки почты, разобраться что означают
     'stream' => [
         'ssl' => [
             'allow_self_signed' => true,

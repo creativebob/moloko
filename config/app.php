@@ -276,6 +276,6 @@ return [
     // Мультидоменность (для РХ)
     'multidomains' => env('MULTI_DOMAINS', false),
 
-
+    'vkusnyashka_mailing'  => env('VKUSNYASHKA_MAILING', false),
 
 ];

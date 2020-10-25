@@ -41,13 +41,13 @@
 
                             <div class="small-12 medium-6 cell">
                                 <label>От кого (имя)
-                                    @include('includes.inputs.name', ['name' => 'from_name'])
+                                    @include('includes.inputs.name', ['name' => 'from_name', 'value' => config('mail.from.name')] )
                                 </label>
                             </div>
 
                             <div class="small-12 medium-6 cell">
                                 <label>От кого (email)
-                                    @include('includes.inputs.email', ['name' => 'from_email'])
+                                    @include('includes.inputs.email', ['name' => 'from_email', 'value' => config('mail.from.address')])
                                 </label>
                             </div>
 
