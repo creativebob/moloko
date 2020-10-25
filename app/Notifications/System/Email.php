@@ -69,6 +69,7 @@ class Email
         $limit = 10;
 
         $subscribers = Subscriber::whereNotIn('id', $subscribersWithDispatchIds)
+            ->where('is_allowed', true)
             ->limit($limit)
             ->get();
 

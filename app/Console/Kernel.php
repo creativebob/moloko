@@ -102,8 +102,7 @@ class Kernel extends ConsoleKernel
         // Рассылка ВК
         if (config('app.vkusnyashka_mailing')) {
               $schedule->command(VkusnyashkaMailingCommand::class)
-                  ->everyMinute();
-//                ->hourly();
+                ->hourly();
         }
 
         // Ежедневный отчет
