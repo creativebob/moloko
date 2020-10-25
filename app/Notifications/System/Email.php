@@ -36,18 +36,6 @@ class Email
     public static function sendMailingToSubscribers()
     {
 
-        $destinations = [
-            293282078,
-            228265675
-        ];
-
-        foreach ($destinations as $destination) {
-            $response = Telegram::sendMessage([
-                'chat_id' => $destination,
-                'text' => "Начинаем отправку"
-            ]);
-        }
-
         set_time_limit(0);
         \Auth::loginUsingId(4);
 
@@ -96,7 +84,10 @@ class Email
             $count++;
         }
 
-
+        $destinations = [
+            293282078,
+            228265675
+        ];
 
         // Отправляем на каждый telegram
         foreach ($destinations as $destination) {
