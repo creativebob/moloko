@@ -11,6 +11,9 @@ use Illuminate\Http\Request;
 
 class DiscountController extends Controller
 {
+    
+    protected $entityAlias;
+    protected $entityDependence;
 
     /**
      * DiscountController constructor.
@@ -18,10 +21,8 @@ class DiscountController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->class = Discount::class;
-        $this->model = 'App\Discount';
-        $this->entity_alias = with(new $this->class)->getTable();
-        $this->entity_dependence = true;
+        $this->entityAlias = 'discounts';
+        $this->entityDependence = true;
     }
 
     use Timestampable;
@@ -37,10 +38,10 @@ class DiscountController extends Controller
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), Discount::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         $discounts = Discount::with([
             'author',
@@ -61,7 +62,7 @@ class DiscountController extends Controller
             ->paginate(30);
 
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entityAlias);
 
         return view('system.pages.marketings.discounts.index', compact('discounts', 'pageInfo'));
     }
@@ -75,11 +76,11 @@ class DiscountController extends Controller
     public function create()
     {
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), Discount::class);
 
         $discount = Discount::make();
 
-        $pageInfo = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entityAlias);
 
         return view('system.pages.marketings.discounts.create', compact('discount', 'pageInfo'));
     }
@@ -94,7 +95,7 @@ class DiscountController extends Controller
     public function store(DiscountRequest $request)
     {
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), Discount::class);
 
         $data = $request->input();
 
@@ -109,7 +110,7 @@ class DiscountController extends Controller
         if ($discount) {
             return redirect()->route('discounts.index');
         } else {
-            abort(403, 'Ошибка записи');
+            abort(403, __('errors.store'));
         }
     }
 
@@ -133,16 +134,21 @@ class DiscountController extends Controller
     public function edit($id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         $discount = Discount::moderatorLimit($answer)
             ->find($id);
+//        dd($discount);
+    
+        if (empty($discount)) {
+            abort(403, __('errors.not_found'));
+        }
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $discount);
 
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entityAlias);
 
         return view('system.pages.marketings.discounts.edit', compact('discount', 'pageInfo'));
     }
@@ -158,7 +164,7 @@ class DiscountController extends Controller
     public function update(DiscountRequest $request, $id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $discount = Discount::moderatorLimit($answer)
@@ -205,7 +211,7 @@ class DiscountController extends Controller
     public function archive($id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         $discount = Discount::with('entity')
         ->moderatorLimit($answer)

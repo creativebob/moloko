@@ -26,4 +26,12 @@ class Mailing extends BaseModel
         'system',
         'moderation'
     ];
+    
+    public function list() {
+        return $this->belongsTo(MailingList::class, 'mailing_list_id');
+    }
+    
+    public function template() {
+        return $this->belongsTo(Template::class);
+    }
 }

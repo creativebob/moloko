@@ -6,7 +6,10 @@ use App\ContractsClient;
 use App\Discount;
 use App\Http\Controllers\System\Traits\Clientable;
 use App\Lead;
+use App\MailingList;
+use App\MailingListItem;
 use App\Payment;
+use App\Subscriber;
 use Telegram\Bot\Exceptions\TelegramResponseException;
 
 class VkusnyashkaParser
@@ -233,5 +236,50 @@ class VkusnyashkaParser
             }
         }
 
+    }
+    
+    /**
+     * Добавление новых подписчиков в список рассылки
+     *
+     * @return string
+     */
+    public static function addSubscribersToMailing()
+    {
+        
+        set_time_limit(0);
+    
+        \Auth::loginUsingId(4);
+        
+        $mailingList = MailingList::with('items')
+            ->where('company_id', auth()->user()->company_id)
+            ->first();
+//        dd($mailingList);
+        
+        $subscribersIds = $mailingList->items->where('entity_type', 'App\Subscriber')->pluck('id');
+//        dd($subscribersIds);
+        
+        $subscribers = Subscriber::whereNotIn('id', $subscribersIds)
+            ->get();
+        $newSubscriberIds = $subscribers->pluck('id');
+//        dd($newSubscriberIds);
+        
+        $countSubscribers = count($newSubscriberIds);
+        
+        if ($countSubscribers > 0) {
+            $data = [];
+            foreach ($newSubscriberIds as $id) {
+                $data[] = MailingListItem::make([
+                    'mailing_list_id' => $mailingList->id,
+                    'entity_id' => $id,
+                    'entity_type' => 'App\Subscriber'
+                ]);
+            }
+    
+            $mailingList->items()->saveMany($data);
+            echo "Добавлены новые подписчики: [{$countSubscribers}]";
+        } else {
+            echo "Новые подписчики не найдены";
+        }
+        
     }
 }

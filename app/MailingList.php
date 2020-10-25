@@ -19,4 +19,8 @@ class MailingList extends BaseModel
         'system',
         'moderation'
     ];
+    
+    public function items() {
+        return $this->hasMany(MailingListItem::class);
+    }
 }

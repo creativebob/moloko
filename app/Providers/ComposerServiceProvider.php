@@ -21,6 +21,8 @@ use App\Http\View\Composers\System\ClientsCitiesComposer;
 use App\Http\View\Composers\System\ClientsCountComposer;
 use App\Http\View\Composers\System\DiscountsForEstimatesComposer;
 use App\Http\View\Composers\System\LeadHistoryComposer;
+use App\Http\View\Composers\System\MailingListsComposer;
+use App\Http\View\Composers\System\TemplatesComposer;
 use App\Http\View\Composers\System\UsersWithClientComposer;
 use App\Http\View\Composers\System\CmvArchivesCountComposer;
 use App\Http\View\Composers\System\CompaniesWithClientComposer;
@@ -410,6 +412,9 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.processes_types', ProcessesTypesComposer::class);
 
         view()->composer('includes.selects.rooms', RoomsComposer::class);
+    
+        view()->composer('includes.selects.templates', TemplatesComposer::class);
+        view()->composer('includes.selects.mailing_lists', MailingListsComposer::class);
 
         view()->composer('news.rubricators.rubricators', RubricatorsComposer::class);
         view()->composer('news.rubricators.select_rubricators_items', RubricatorsItemsComposer::class);

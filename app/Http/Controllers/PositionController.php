@@ -11,6 +11,9 @@ use Illuminate\Http\Request;
 
 class PositionController extends Controller
 {
+    
+    protected $entityAlias;
+    protected $entityDependence;
 
     /**
      * PositionController constructor
@@ -18,10 +21,8 @@ class PositionController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->class = Position::class;
-        $this->model = 'App\Position';
-        $this->entity_alias = with(new $this->class)->getTable();
-        $this->entity_dependence = false;
+        $this->entityAlias = 'positions';
+        $this->entityDependence = false;
     }
 
     /**
@@ -35,14 +36,14 @@ class PositionController extends Controller
     {
 
         // Включение контроля активного фильтра
-        $filter_url = autoFilter($request, $this->entity_alias);
+        $filter_url = autoFilter($request, $this->entityAlias);
         if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Position::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // -------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
@@ -73,7 +74,7 @@ class PositionController extends Controller
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter = setFilter($this->entity_alias, $request, [
+        $filter = setFilter($this->entityAlias, $request, [
             'company',                 // Компания
             // 'author',                  // Автор
             // 'city',                 // Город
@@ -83,7 +84,7 @@ class PositionController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entityAlias);
 
         return view('system.pages.hr.positions.index', compact('positions', 'pageInfo', 'filter'));
     }
@@ -101,7 +102,7 @@ class PositionController extends Controller
 
         $position = Position::make();
 
-        $pageInfo = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entityAlias);
 
         return view('system.pages.hr.positions.create', compact('position', 'pageInfo'));
     }
@@ -145,16 +146,6 @@ class PositionController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param $id
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param $id
@@ -164,7 +155,7 @@ class PositionController extends Controller
     public function edit($id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         $position = Position::moderatorLimit($answer)
             ->find($id);
@@ -173,7 +164,7 @@ class PositionController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $position);
 
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entityAlias);
 
         return view('system.pages.hr.positions.edit', compact('position', 'pageInfo'));
     }
@@ -189,7 +180,7 @@ class PositionController extends Controller
     public function update(PositionRequest $request, $id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $position = Position::moderatorLimit($answer)
@@ -313,7 +304,7 @@ class PositionController extends Controller
     public function archive($id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, 'delete');
+        $answer = operator_right($this->entityAlias, $this->entityDependence, 'delete');
 
         $position = Position::with([
             'actual_staff'
@@ -356,7 +347,7 @@ class PositionController extends Controller
         };
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // -------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС

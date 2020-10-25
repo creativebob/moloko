@@ -1469,6 +1469,9 @@ Route::any('/clients_indicators/compute/year', 'System\Widgets\ClientsIndicatorC
 
 
 // --------------------------- Подписчики -------------------------------------
+    // Excel
+    Route::post('/subscribers/excel-import', 'SubscriberController@excelImport')
+        ->name('subscribers.excelImport');
 // Основные методы
 Route::resource('/subscribers', 'SubscriberController');
 
@@ -1495,7 +1498,10 @@ Route::resource('/mailing_list_items', 'MailingListItemController');
 
 // --------------------------- Рассылки -------------------------------------
 // Основные методы
-Route::resource('/mailings', 'MailingController');
+Route::resource('/mailings', 'MailingController')
+->except([
+    'show'
+]);
 
 
 // ------------------------------------- Отображение сессии -----------------------------------------

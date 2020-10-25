@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MailingListItem extends BaseModel
 {
-    use SoftDeletes;
+//    use SoftDeletes;
 //    use Cachable;
 
     protected $fillable = [

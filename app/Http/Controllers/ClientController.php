@@ -611,7 +611,7 @@ class ClientController extends Controller
     }
 
     /**
-     * Импорт клиент ской базы из excel
+     * Импорт клиентской базы из excel
      *
      * @return \Maatwebsite\Excel\BinaryFileResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
      * @throws \PhpOffice\PhpSpreadsheet\Exception
