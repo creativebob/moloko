@@ -27,6 +27,8 @@ class CreateSubscribersTable extends Migration
             $table->bigInteger('site_id')->unsigned()->nullable()->comment('Id сайта');
 //            $table->foreign('site_id')->references('id')->on('sites');
 
+            $table->string('token', 30)->unique()->comment('Токен');
+
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
 //            $table->foreign('company_id')->references('id')->on('companies');

@@ -34,7 +34,7 @@
                             </div>
 
                             <div class="small-12 medium-6 cell">
-                                <label>Обьект
+                                <label>Заголовок
                                     @include('includes.inputs.name', ['name' => 'subject'])
                                 </label>
                             </div>

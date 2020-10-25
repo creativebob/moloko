@@ -14,6 +14,9 @@ class SubscriberObserver extends BaseObserver
     public function creating(Subscriber $subscriber)
     {
         $this->store($subscriber);
+
+        $token = $this->getToken(\Str::random(30));
+        $subscriber->token = $token;
     }
 
     /**
@@ -34,5 +37,16 @@ class SubscriberObserver extends BaseObserver
     public function deleting(Subscriber $subscriber)
     {
         $this->destroy($subscriber);
+    }
+
+    public function getToken($token) {
+        $res = Subscriber::where('token', $token)
+            ->first();
+        if ($res) {
+            $token = \Str::random(30);
+            $this->getToken($token);
+        } else {
+            return $token;
+        }
     }
 }

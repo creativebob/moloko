@@ -79,6 +79,8 @@ Route::get('/test', 'System\TestController@test');
 //
 //})->middleware('auth');
 
+Route::get('/mails/send', 'System\MailController@send');
+
 // Всякая хрень для проверки
 // Route::resource('/site_api', 'ApiController');
 
