@@ -28,7 +28,7 @@ class MailController extends Controller
             "body" => "Мы хотим продать вам интересные штучки!"
         ];
 
-        Mail::send('system/templates/emails/offers/newyear2021/index', $data, function($message) use ($to_name, $to_email) {
+        Mail::send('vkusnyashka/templates/emails/offers/newyear2021/index', $data, function($message) use ($to_name, $to_email) {
             $message->to($to_email, $to_name)->subject('Новогодние подарки 2021');
             $message->from('smpcreativebob@gmail.com','Вкусняшка');
         });
