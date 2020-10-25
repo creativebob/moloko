@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class LegalFormsTableSeeder extends Seeder
+class ExtraLegalFormsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.

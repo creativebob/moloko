@@ -29,6 +29,7 @@ class SourceServicesTableSeeder extends Seeder
 		$flamp_id = Source::where('utm', 'flamp')->first()->id;
 		$mytarget_id = Source::where('utm', 'mytarget')->first()->id;
 		$pinterest_id = Source::where('utm', 'pinterest')->first()->id;
+		$letter_id = Source::where('utm', 'letter')->first()->id;
 
         SourceService::insert([
         	// [
@@ -226,7 +227,15 @@ class SourceServicesTableSeeder extends Seeder
 		        'domain' => 'target.my.com',
                 'author_id' => 1,
                 'source_id' => $mytarget_id,
-			],			
+			],
+        	[
+		        'name' => 'Аккаунт на Gmail (почтовый сервер)',
+		        'alias' => 'mail-gmail',
+		        'domain' => 'gmail.com',
+                'author_id' => 1,
+                'source_id' => $letter_id,
+			],
+
         ]);
     }
 }
