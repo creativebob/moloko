@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Project;
 use App\Http\Controllers\Project\Traits\Commonable;
 use App\Http\Controllers\Project\Traits\Userable;
 
+use App\Models\Project\Subscriber;
 use Carbon\Carbon;
 use App\Lead;
 use App\PricesGoods;
@@ -474,6 +475,18 @@ class AppController extends Controller
     {
         $site = $this->site;
         $page = $site->pages_public->firstWhere('alias', 'unsubscribe');
+
+        $subscriber = Subscriber::find($id);
+
+        if ($subscriber) {
+            if ($subscriber->token == $request->token) {
+                $subscriber->update([
+                    'is_allowed' => false
+                ]);
+            }
+        }
+
+
 
         return view($site->alias.'.pages.unsubscribe.index', compact('site', 'page'));
     }
