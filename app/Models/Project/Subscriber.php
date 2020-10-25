@@ -2,14 +2,16 @@
 
 namespace App\Models\Project;
 
-use App\Models\System\BaseModel;
+use App\Models\Project\Traits\Publicable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
-class Subscriber extends BaseModel
+class Subscriber extends Model
 {
-    use SoftDeletes;
+    use Publicable;
     use Cachable;
+    use SoftDeletes;
 
     protected $fillable = [
         'is_allowed',
