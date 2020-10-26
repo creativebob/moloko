@@ -54,7 +54,7 @@ class Email
             ])
             ->pluck('id');
 
-        $limit = 30;
+        $limit = 400;
 
         $subscribers = Subscriber::whereNotIn('id', $subscribersWithDispatchIds)
             ->where('is_allowed', true)
