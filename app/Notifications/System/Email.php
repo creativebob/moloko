@@ -54,7 +54,7 @@ class Email
             ])
             ->pluck('id');
 
-        $limit = 400;
+        $limit = 35;
 
         $subscribers = Subscriber::whereNotIn('id', $subscribersWithDispatchIds)
             ->whereNull('denied_at')
