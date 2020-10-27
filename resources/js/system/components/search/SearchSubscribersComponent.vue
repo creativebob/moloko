@@ -13,28 +13,9 @@
 
             <table class="search-result-list">
                 <tr v-for="(item, index) in results">
-
-                    <td v-if="item.clientable.alias" class="search-result-name">
-                        <span><a
-                            :href="'/admin/clients/' + item.id + '/edit'">{{ item.clientable.name }}</a></span><span
-                        class="text-small"> (Представитель)</span><br>
-                        <span class="text-small">{{ item.clientable.location.city.name }}</span><span
-                        v-if="item.clientable.location.address" class="text-small">, {{ item.clientable.location.address }}</span><br>
-                        <span class="text-small">{{ item.clientable.main_phones[0].phone }}</span>
-                    </td>
-
-                    <td v-if="!item.clientable.alias" class="search-result-name">
-                        <span><a :href="'/admin/clients/' + item.id + '/edit'">{{ item.clientable.name }}</a></span><br>
-                        <span class="text-small">{{ item.clientable.location.city.name }}</span><span
-                        v-if="item.clientable.location.address" class="text-small">, {{ item.clientable.location.address }}</span><br>
-                        <span class="text-small">{{ item.clientable.main_phones[0].phone }}</span>
-                    </td>
-
                     <td class="search-result-info">
-                        <span v-if="(item.discount > 0)">{{ item.discount }}%</span>
-                        <span v-if="item.is_vip">VIP</span>
+                        <a :href="'/admin/subscribers/' + item.id + '/edit'">{{ item.email }}</a>
                     </td>
-
                     <td class="search-result-id">
                         {{ item.id }}
                     </td>
@@ -81,11 +62,11 @@
                 // console.log('Ищем введеные данные в наших городах (подгруженных), затем от результата меняем состояние на поиск или ошибку');
                 if (this.text.length >= 1) {
                     axios
-                        .get('/admin/clients/search/' + this.text)
+                        .get('/admin/subscribers/search/' + this.text)
                         .then(response => {
-                            this.results = response.data
-                            this.search = (this.results.length > 0)
-                            this.error = (this.results.length == 0)
+                            this.results = response.data;
+                            this.search = (this.results.length > 0);
+                            this.error = (this.results.length == 0);
                         })
                         .catch(error => {
                             console.log(error)

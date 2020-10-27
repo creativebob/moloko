@@ -16,18 +16,23 @@ class CreateSubscribersTable extends Migration
         Schema::create('subscribers', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->bigInteger('user_id')->unsigned()->nullable()->comment('Id пользователя');
-//            $table->foreign('user_id')->references('id')->on('users');
+            $table->nullableMorphs('subscriberable');
 
+            $table->bigInteger('client_id')->unsigned()->nullable()->comment('Id склиента');
+//            $table->foreign('client_id')->references('id')->on('clients');
+
+            $table->string('name')->nullable()->comment('Имя');
             $table->string('email')->nullable()->comment('Email');
 
-            $table->boolean('is_allowed')->default(1)->comment('Разрешение');
+            $table->timestamp('denied_at')->nullable()->comment('Запрет');
             $table->boolean('is_active')->default(1)->comment('Активный');
 
             $table->bigInteger('site_id')->unsigned()->nullable()->comment('Id сайта');
 //            $table->foreign('site_id')->references('id')->on('sites');
 
             $table->string('token', 30)->unique()->comment('Токен');
+
+            $table->timestamp('archived_at')->nullable()->comment('Архив');
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

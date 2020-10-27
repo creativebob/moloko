@@ -13,8 +13,8 @@ class Dispatch extends BaseModel
     use Cachable;
 
     protected $fillable = [
-        'entity_type',
-        'entity_id',
+        'dispatchable_type',
+        'edispatchable_id',
 
         'mailing_id',
 

@@ -96,6 +96,8 @@ Vue.component('search-articles-groups-component', require('./components/search/S
 Vue.component('search-estimates-component', require('./components/search/SearchEstimatesComponent'));
 Vue.component('search-client-component', require('./components/search/SearchClientComponent'));
 
+Vue.component('search-subscribers-component', require('./components/search/SearchSubscribersComponent'));
+
 Vue.component('sites-component', require('./components/promotions/SitesComponent'));
 
 // Продвижения

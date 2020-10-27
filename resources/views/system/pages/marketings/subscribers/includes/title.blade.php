@@ -10,22 +10,45 @@
                 </h2>
 
                 @can('create', App\Subscriber::class)
-                    @if($clients_count > 0)
-                        <a href="{{ route('subscribers.create') }}" class="icon-add sprite top" data-tooltip tabindex="2" title="Добавить позицию"></a>
-                    @endif
+                    <a href="{{ route('subscribers.create') }}" class="icon-add sprite top" data-tooltip tabindex="2" title="Добавить позицию"></a>
                 @endcan
 
             </div>
             <div class="top-bar-right">
-
-                @if (isset($filter))
-                    <a class="icon-filter sprite @if ($filter['status'] == 'active') filtration-active @endif"></a>
-                @endif
-
-                <input class="search-field" type="search" id="search_field" name="search_field" placeholder="Поиск" />
-                {{-- <button type="button" class="icon-search sprite button"></button> --}}
+                <a class="icon-filter sprite
+                @if(count(request()->input())) filtration-active @endif
+                    "></a>
+                <search-subscribers-component></search-subscribers-component>
 
             </div>
+        </div>
+
+        <div class="grid-x">
+            <div class="small-12 cell filters fieldset-filters" id="filters">
+                <div class="grid-padding-x">
+                    <div class="small-12 cell text-right">
+                        <a href="{{ route('subscribers.index') }}" class="small-link">Сбросить</a>
+                    </div>
+                </div>
+                <div class="grid-padding-x">
+                    <div class="small-12 cell">
+                        {{ Form::open(['route' => 'subscribers.index', 'data-abide', 'novalidate', 'method' => 'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
+
+                        @include('system.pages.marketings.subscribers.includes.filters')
+
+                        <div class="small-12 cell text-center">
+                            {{ Form::submit('Фильтрация', ['class'=>'button']) }}
+                        </div>
+                        {{ Form::close() }}
+                    </div>
+                </div>
+                <div class="grid-x">
+                    <a class="small-12 cell text-center filter-close">
+                        <button type="button" class="icon-moveup sprite"></button>
+                    </a>
+                </div>
+            </div>
+
         </div>
 
     </div>

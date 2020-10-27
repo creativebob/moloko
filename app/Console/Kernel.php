@@ -38,7 +38,7 @@ class Kernel extends ConsoleKernel
     /**
      * Define the application's command schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
+     * @param \Illuminate\Console\Scheduling\Schedule $schedule
      * @return void
      */
     protected function schedule(Schedule $schedule)
@@ -72,8 +72,8 @@ class Kernel extends ConsoleKernel
                     case 'discounts-recalculate':
                         // Перерасчет скидок
                         $schedule->command(DiscountsRecalculateCommand::class, [
-                                $company->id
-                            ])
+                            $company->id
+                        ])
                             ->everyMinute();
                         break;
 
@@ -101,8 +101,9 @@ class Kernel extends ConsoleKernel
 
         // Рассылка ВК
         if (config('app.vkusnyashka_mailing')) {
-              $schedule->command(VkusnyashkaMailingCommand::class)
-                  ->dailyAt('13:00');
+            $schedule->command(VkusnyashkaMailingCommand::class)
+                ->hourly()
+                ->between('9:00', '21:00');
         }
 
         // Ежедневный отчет
@@ -118,7 +119,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }

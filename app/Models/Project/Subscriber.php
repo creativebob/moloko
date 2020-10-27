@@ -14,8 +14,8 @@ class Subscriber extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'is_allowed',
-        'is_active',
+        'denied_at',
+        'editor_id',
     ];
 
 }

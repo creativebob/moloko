@@ -386,7 +386,7 @@ Route::resource('/raws_categories', 'RawsCategoryController');
 
 
 // ---------------------------------- Сырьё (Артикулы) -------------------------------------------
-
+// Поиск
 Route::get('/raws/search/{search}', 'RawController@search');
 
 // Просмотр архивных
@@ -1471,11 +1471,19 @@ Route::any('/clients_indicators/compute/year', 'System\Widgets\ClientsIndicatorC
 
 
 // --------------------------- Подписчики -------------------------------------
-    // Excel
-    Route::post('/subscribers/excel-import', 'SubscriberController@excelImport')
-        ->name('subscribers.excelImport');
+// Excel
+Route::post('/subscribers/excel-import', 'SubscriberController@excelImport')
+    ->name('subscribers.excelImport');
+
+Route::get('/subscribers/search/{search}', 'SubscriberController@search');
+Route::post('/subscribers/archive/{id}', 'SubscriberController@archive');
+
 // Основные методы
-Route::resource('/subscribers', 'SubscriberController');
+Route::resource('/subscribers', 'SubscriberController')
+    ->except([
+        'show',
+        'destroy'
+    ]);
 
 
 // --------------------------- Категории шаблонов -------------------------------------
@@ -1501,9 +1509,9 @@ Route::resource('/mailing_list_items', 'MailingListItemController');
 // --------------------------- Рассылки -------------------------------------
 // Основные методы
 Route::resource('/mailings', 'MailingController')
-->except([
-    'show'
-]);
+    ->except([
+        'show'
+    ]);
 
 
 // ------------------------------------- Отображение сессии -----------------------------------------

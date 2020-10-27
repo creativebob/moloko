@@ -54,10 +54,10 @@ class Email
             ])
             ->pluck('id');
 
-        $limit = 400;
+        $limit = 35;
 
         $subscribers = Subscriber::whereNotIn('id', $subscribersWithDispatchIds)
-            ->where('is_allowed', true)
+            ->whereNull('denied_at')
             ->limit($limit)
             ->get();
 
@@ -84,17 +84,19 @@ class Email
             $count++;
         }
 
-        $destinations = [
-            293282078,
-            228265675
-        ];
+        if ($count > 0) {
+            $destinations = [
+                293282078,
+                228265675
+            ];
 
-        // Отправляем на каждый telegram
-        foreach ($destinations as $destination) {
-            $response = Telegram::sendMessage([
-                'chat_id' => $destination,
-                'text' => "По рассылке ВК отправлены {$count} писем"
-            ]);
+            // Отправляем на каждый telegram
+            foreach ($destinations as $destination) {
+                $response = Telegram::sendMessage([
+                    'chat_id' => $destination,
+                    'text' => "По рассылке {$mailing->name} отправлены {$count} писем"
+                ]);
+            }
         }
     }
 }

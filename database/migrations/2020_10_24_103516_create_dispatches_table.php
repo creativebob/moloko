@@ -19,7 +19,7 @@ class CreateDispatchesTable extends Migration
             $table->bigInteger('mailing_id')->unsigned()->nullable()->comment('Id рассылки');
             $table->foreign('mailing_id')->references('id')->on('mailings');
 
-            $table->morphs('entity');
+            $table->morphs('dispatchable');
 
             $table->string('email')->comment('Email');
 
