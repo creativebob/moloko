@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Project;
 use App\Http\Controllers\Project\Traits\Commonable;
 use App\Http\Controllers\Project\Traits\Userable;
 
+use App\Http\Requests\Project\UserUpdateRequest;
 use App\Models\Project\Subscriber;
 use Carbon\Carbon;
 use App\Lead;
@@ -50,7 +51,7 @@ class AppController extends Controller
                     ->where('alias', 'main')
                     ->first();
 
-                return view($site->alias . '.pages.main.index', compact('site',  'page'));
+                return view($site->alias . '.pages.main.index', compact('site', 'page'));
             }
         }
     }
@@ -110,7 +111,7 @@ class AppController extends Controller
                 ->first();
 
             // Если не существует страницы с таким алиасом - отдаем 404
-            if(!isset($page)){
+            if (!isset($page)) {
 
                 abort(404, "Страница не найдена");
             }
@@ -119,15 +120,15 @@ class AppController extends Controller
             $path_view = $site->alias . '/pages/' . $page_alias . '/index';
 
             // Проверяем существование файла view по сформирванному пути
-            if(view()->exists($path_view)){
+            if (view()->exists($path_view)) {
 
                 // Нашли - отправляем пользователя туда
-                return view($site->alias.'.pages.' . $page_alias . '.index', compact('site', 'page'));
+                return view($site->alias . '.pages.' . $page_alias . '.index', compact('site', 'page'));
 
             } else {
 
                 // Не нашли. Но нет повода для печали, отправляем на общий шаблон
-                return view($site->alias.'.pages.common.index', compact('site', 'page'));
+                return view($site->alias . '.pages.common.index', compact('site', 'page'));
             }
         }
     }
@@ -139,7 +140,7 @@ class AppController extends Controller
         // Вытаскивает через сайт каталог и его пункт с прайсами (не архивными), товаром и артикулом
         $site->load(['catalogs_services' => function ($q) use ($catalog_slug, $catalog_item_slug) {
             $q->with([
-                'items' => function($q) use ($catalog_item_slug) {
+                'items' => function ($q) use ($catalog_item_slug) {
                     $q->with([
                         'prices_services' => function ($q) {
                             $q->with([
@@ -189,7 +190,7 @@ class AppController extends Controller
             ])
             ->first();
 
-        return view($site->alias.'.pages.prices_goods.goods_composition', compact('site', 'price_goods'));
+        return view($site->alias . '.pages.prices_goods.goods_composition', compact('site', 'price_goods'));
     }
 
     // Личный кабинет пользователя
@@ -198,7 +199,7 @@ class AppController extends Controller
 
         $user = $request->user();
         $user->load([
-           'subscriber'
+            'subscriber'
         ]);
 
         $site = $this->site;
@@ -213,7 +214,7 @@ class AppController extends Controller
         //     ->get()->sortByDesc('id');
         $estimates = null;
 
-        return view($site->alias.'.pages.cabinet.index', compact('site', 'page', 'estimates', 'user'));
+        return view($site->alias . '.pages.cabinet.index', compact('site', 'page', 'estimates', 'user'));
     }
 
     // Авторизация пользоваеля сайта через телефон и код СМС
@@ -227,25 +228,25 @@ class AppController extends Controller
         $main_phone = $request->main_phone;
 
         // Пришли необходимые данные для авторизации?
-        if((isset($main_phone))&&(isset($access_code))){
+        if ((isset($main_phone)) && (isset($access_code))) {
 
             // Делаем запрос к базе данных
             $user = checkPhoneUserForSite($main_phone, $site);
 
             // Зарегистрирован ли кто-нибудь по такому номеру?
-            if($user != null){
+            if ($user != null) {
 
                 // Есть ли аккаунт на текущем сайте?
-                if($user->site_id == $site->id){
+                if ($user->site_id == $site->id) {
 
-                    if($user->access_block == false){
+                    if ($user->access_block == false) {
 
-                        if($user->access_code == $access_code){
+                        if ($user->access_code == $access_code) {
 
-                                // Если проверка пройдена - АВТОРИЗУЕМ!
-                                Auth::loginUsingId($user->id);
-                                Log::info('Пользователь залогинился ==========================================================');
-                                return redirect('estimates');
+                            // Если проверка пройдена - АВТОРИЗУЕМ!
+                            Auth::loginUsingId($user->id);
+                            Log::info('Пользователь залогинился ==========================================================');
+                            return redirect('estimates');
 
                         } else {
                             abort(403, 'Код устарел или введен с ошибками');
@@ -284,15 +285,15 @@ class AppController extends Controller
         Log::info('Чекнули юзера в базе по номеру телефона:');
 
         // Если пользователь не найден - то создаем
-        if($user == null){
+        if ($user == null) {
 
             // Делаем дополнительный запрос к базе данных пользователей компании
             Log::info('Делаем дополнительный запрос на поиск юзера в рамках компании');
             $user = checkPhoneUserForCompany($phone, $site->company);
 
-            if($user != null){
+            if ($user != null) {
 
-                if($user->site_id == null){
+                if ($user->site_id == null) {
 
                     Log::info('Нашли пользователя без привязки к сайту: ' . $user->id . ' . Сделали привязку к текущему');
                     $user->site_id = $site->id;
@@ -307,8 +308,8 @@ class AppController extends Controller
 
             } else {
 
-                    $user = $this->createUserByPhoneFromSite($phone, $site);
-                    Log::info('Не нашли ни в каких базах. Создали полностью новый аккаунт: ' . $user->id);
+                $user = $this->createUserByPhoneFromSite($phone, $site);
+                Log::info('Не нашли ни в каких базах. Создали полностью новый аккаунт: ' . $user->id);
             }
 
         }
@@ -323,11 +324,11 @@ class AppController extends Controller
 
         Log::info('Сгенерировали код и вписали юзеру');
 
-        if(session('time_get_access_code')){
+        if (session('time_get_access_code')) {
 
             $second_blocking = 180 - session('time_get_access_code')->diffInSeconds(now());
 
-            if($second_blocking < 1){
+            if ($second_blocking < 1) {
 
                 // Пишем в сессию время отправки СМС
                 session(['time_get_access_code' => now()]);
@@ -336,7 +337,7 @@ class AppController extends Controller
                 Log::info('Просим функцию отправки СМС сообщения отправить этот код' . $access_code);
                 sendSms($company, $phone, $msg);
 
-            } else{
+            } else {
 
                 Log::info('Время еше не истекло. Оставшееся время, сек:' . $second_blocking);
                 Log::info('Код не был отправлен' . $access_code);
@@ -344,12 +345,12 @@ class AppController extends Controller
 
         } else {
 
-                // Пишем в сессию время отправки СМС
-                session(['time_get_access_code' => now()]);
-                $msg = 'Код для входа: ' . $access_code;
+            // Пишем в сессию время отправки СМС
+            session(['time_get_access_code' => now()]);
+            $msg = 'Код для входа: ' . $access_code;
 
-                Log::info('Просим функцию отправки СМС сообщения отправить этот код: ' . $access_code);
-                sendSms($company, $phone, $msg);
+            Log::info('Просим функцию отправки СМС сообщения отправить этот код: ' . $access_code);
+            sendSms($company, $phone, $msg);
         }
 
         return 'ок';
@@ -362,10 +363,10 @@ class AppController extends Controller
     }
 
     // Сохранение данных пользователя
-    public function update_profile(Request $request)
+    public function update_profile(UserUpdateRequest $request)
     {
         //Получаем авторизованного пользователя
-        $user = $request->user();
+        $user = auth()->user();
 
         $user->first_name = $request->first_name;
         $user->second_name = $request->second_name;
@@ -375,7 +376,43 @@ class AppController extends Controller
 
         $user->notifications()->sync($request->notifications);
 
-        return redirect()->route('project.cabinet');
+        // Проверка подписчика
+        $user->load([
+            'subscriber',
+        ]);
+
+        $allow = $request->allow == 1 ? true : false;
+
+        if (isset($request->email)) {
+
+            if (isset($user->subscriber)) {
+                if (isset($user->subscriber->archived_at)) {
+                    $user->subscriber()->unarchive();
+                }
+                $user->subscriber()->update([
+                    'email' => $request->email,
+                ]);
+            } else {
+                $subscriber = \App\Subscriber::firstOrCreate([
+                    'email' => $user->email,
+                    'site_id' => $user->site_id
+                ]);
+
+                $subscriber->update([
+                    'subscriberable_id' => $user->id,
+                    'subscriberable_type' => 'App\User',
+                    'name' => $user->name,
+                    'denied_at' => $allow == true ? null : now(),
+                    'is_self' => 1,
+                ]);
+            }
+        } else {
+            if (isset($user->subscriber)) {
+                $user->subscriber()->archive();
+            }
+        }
+
+        return redirect()->route('project.user.edit');
 
     }
 
@@ -391,7 +428,7 @@ class AppController extends Controller
         $company = $site->company;
         $page = $site->pages_public->firstWhere('alias', 'confirmation');
 
-        return view($site->alias.'.pages.confirmation.index', compact('site', 'page', 'company'));
+        return view($site->alias . '.pages.confirmation.index', compact('site', 'page', 'company'));
     }
 
     public function success(Request $request)
@@ -400,7 +437,7 @@ class AppController extends Controller
         $site = $this->site;
         $page = $site->pages_public->firstWhere('alias', 'success');
 
-        return view($site->alias.'.pages.success.index', compact('site', 'page'));
+        return view($site->alias . '.pages.success.index', compact('site', 'page'));
     }
 
     public function get_access_code(Request $request)
@@ -414,14 +451,16 @@ class AppController extends Controller
         $confirmation = session('confirmation');
 
         // Если сессия найдена (Сессия может закончится по времени)
-        if($confirmation){
+        if ($confirmation) {
 
             $lead = $confirmation['lead'];
 
             // Если найден лид
-            if($lead){
+            if ($lead) {
 
-                if(!isset($lead->user)){return 'Пользователь не существует';}
+                if (!isset($lead->user)) {
+                    return 'Пользователь не существует';
+                }
                 $user = $lead->user;
 
                 // Проверяем, не частит ли пользователь с запросом кода
@@ -434,7 +473,7 @@ class AppController extends Controller
                 $user->access_code = $access_code;
                 $user->save();
 
-                 // Пишем в сессию время отправки СМС
+                // Пишем в сессию время отправки СМС
                 session(['time_get_access_code' => now()]);
 
                 $phone = $lead->user->main_phone->phone;
@@ -494,7 +533,7 @@ class AppController extends Controller
             }
         }
 
-        return view($site->alias.'.pages.unsubscribe.index', compact('site', 'page'));
+        return view($site->alias . '.pages.unsubscribe.index', compact('site', 'page'));
     }
 
 }

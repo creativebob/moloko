@@ -118,10 +118,12 @@ Route::post('/shipment_update', 'AppController@shipment_update')
 Route::post('logout_siteuser', 'AppController@logout_siteuser')
     ->name('project.logout_siteuser');
 
-Route::get('/cabinet', 'AppController@cabinet')
-    ->name('project.cabinet')->middleware('auth_usersite');
-Route::post('/update_profile', 'AppController@update_profile')
-    ->name('project.update_profile');
+
+// ------------------- Профиль ---------------------------
+Route::get('/cabinet', 'Project\UserController@edit')
+    ->name('project.user.edit');
+Route::post('/user/update', 'Project\UserController@update')
+    ->name('project.user.update');
 
 
 // ---------------------- Лайки ------------------------------
