@@ -123,7 +123,7 @@ Route::get('/cabinet', 'UserController@edit')
     ->name('project.user.edit');
 Route::post('/user/update', 'UserController@update')
     ->name('project.user.update');
-Route::post('/user/logout', 'AppController@logout')
+Route::post('/user/logout', 'UserController@logout')
     ->name('project.user.logout');
 
 
