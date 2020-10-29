@@ -93,7 +93,10 @@ class ParserController extends Controller
                 'denied_at' => isset($allow) ? null : now()
             ]);
 
-            $user->subscriber()->associate($subscriber)->save();
+            $subscriber->update([
+                'subscriberable_id' => $user->id,
+                'subscriberable_type' => 'App\User'
+            ]);
         }
 
         return "Гатова";
