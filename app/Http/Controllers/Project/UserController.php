@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Project;
 
-use App\Http\Controllers\Project\Traits\Commonable;
 use App\Http\Requests\Project\UserUpdateRequest;
 
 class UserController extends BaseController
@@ -16,8 +15,6 @@ class UserController extends BaseController
 
         $this->middleware('auth_usersite');
     }
-
-    use Commonable;
 
     /**
      * Show the form for editing the specified resource.
@@ -96,5 +93,16 @@ class UserController extends BaseController
         }
 
         return redirect()->route('project.user.edit');
+    }
+
+    /**
+     * Разавторизация пользователя
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function logout()
+    {
+        auth()->logout();
+        return redirect()->route('project.start');
     }
 }

@@ -193,30 +193,6 @@ class AppController extends Controller
         return view($site->alias . '.pages.prices_goods.goods_composition', compact('site', 'price_goods'));
     }
 
-    // Личный кабинет пользователя
-    public function cabinet(Request $request)
-    {
-
-        $user = $request->user();
-        $user->load([
-            'subscriber'
-        ]);
-
-        $site = $this->site;
-        $page = $site->pages_public->firstWhere('alias', 'cabinet');
-
-        $site->load('notifications');
-
-        // $estimates = Estimate::with('goods_items')
-        //     ->whereHas('lead', function ($q) use ($user) {
-        //         $q->where('user_id', $user->id);
-        //     })
-        //     ->get()->sortByDesc('id');
-        $estimates = null;
-
-        return view($site->alias . '.pages.cabinet.index', compact('site', 'page', 'estimates', 'user'));
-    }
-
     // Авторизация пользоваеля сайта через телефон и код СМС
     public function site_user_login(Request $request)
     {
@@ -354,66 +330,6 @@ class AppController extends Controller
         }
 
         return 'ок';
-    }
-
-    public function logout_siteuser(Request $request)
-    {
-        Auth::logout();
-        return redirect()->route('project.start');
-    }
-
-    // Сохранение данных пользователя
-    public function update_profile(UserUpdateRequest $request)
-    {
-        //Получаем авторизованного пользователя
-        $user = auth()->user();
-
-        $user->first_name = $request->first_name;
-        $user->second_name = $request->second_name;
-        $user->email = $request->email;
-        $user->birthday_date = $request->birthday_date;
-        $user->saveQuietly();
-
-        $user->notifications()->sync($request->notifications);
-
-        // Проверка подписчика
-        $user->load([
-            'subscriber',
-        ]);
-
-        $allow = $request->allow == 1 ? true : false;
-
-        if (isset($request->email)) {
-
-            if (isset($user->subscriber)) {
-                if (isset($user->subscriber->archived_at)) {
-                    $user->subscriber()->unarchive();
-                }
-                $user->subscriber()->update([
-                    'email' => $request->email,
-                ]);
-            } else {
-                $subscriber = \App\Subscriber::firstOrCreate([
-                    'email' => $user->email,
-                    'site_id' => $user->site_id
-                ]);
-
-                $subscriber->update([
-                    'subscriberable_id' => $user->id,
-                    'subscriberable_type' => 'App\User',
-                    'name' => $user->name,
-                    'denied_at' => $allow == true ? null : now(),
-                    'is_self' => 1,
-                ]);
-            }
-        } else {
-            if (isset($user->subscriber)) {
-                $user->subscriber()->archive();
-            }
-        }
-
-        return redirect()->route('project.user.edit');
-
     }
 
     /**

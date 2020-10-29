@@ -115,8 +115,7 @@ Route::get('/telegram', 'AppController@telegram')
 Route::post('/shipment_update', 'AppController@shipment_update')
     ->name('project.shipment_update');
 
-Route::post('logout_siteuser', 'AppController@logout_siteuser')
-    ->name('project.logout_siteuser');
+
 
 
 // ------------------- Профиль ---------------------------
@@ -124,6 +123,8 @@ Route::get('/cabinet', 'UserController@edit')
     ->name('project.user.edit');
 Route::post('/user/update', 'UserController@update')
     ->name('project.user.update');
+Route::post('/user/logout', 'AppController@logout')
+    ->name('project.user.logout');
 
 
 // ---------------------- Лайки ------------------------------
