@@ -500,6 +500,6 @@ class User extends Authenticatable
 
     public function subscriber()
     {
-        return $this->morphOne(Subscriber::class, 'subsriberable');
+        return $this->morphOne(Subscriber::class, 'subscriberable');
     }
 }
