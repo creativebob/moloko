@@ -120,9 +120,9 @@ Route::post('logout_siteuser', 'AppController@logout_siteuser')
 
 
 // ------------------- Профиль ---------------------------
-Route::get('/cabinet', 'Project\UserController@edit')
+Route::get('/cabinet', 'UserController@edit')
     ->name('project.user.edit');
-Route::post('/user/update', 'Project\UserController@update')
+Route::post('/user/update', 'UserController@update')
     ->name('project.user.update');
 
 
