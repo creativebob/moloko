@@ -29,6 +29,11 @@ class CreateMailingsTable extends Migration
             $table->bigInteger('mailing_list_id')->unsigned()->nullable()->comment('Id списка рассылки');
 //            $table->foreign('mailing_list_id')->references('id')->on('mailing_lists');
 
+            $table->boolean('is_active')->default(0)->comment('Рассылка');
+
+            $table->timestamp('started_at')->nullable()->comment('Установленное время начала');
+            $table->timestamp('begined_at')->nullable()->comment('Время фактического начала');
+            $table->timestamp('ended_at')->nullable()->comment('Время фактического окончания');
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

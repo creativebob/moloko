@@ -287,6 +287,7 @@ class ComposerServiceProvider extends ServiceProvider
             'includes.lists.sites',
             'includes.selects.sites',
             'system.pages.marketings.users.tabs.general',
+            'system.pages.marketings.subscribers.index',
         ], SitesComposer::class);
         view()->composer('includes.lists.site_menus', SiteMenusComposer::class);
 
@@ -412,7 +413,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.processes_types', ProcessesTypesComposer::class);
 
         view()->composer('includes.selects.rooms', RoomsComposer::class);
-    
+
         view()->composer('includes.selects.templates', TemplatesComposer::class);
         view()->composer('includes.selects.mailing_lists', MailingListsComposer::class);
 
@@ -438,7 +439,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('leads.personal', UsersWithClientComposer::class);
         view()->composer('leads.personal', CompaniesWithClientComposer::class);
         view()->composer('leads.personal', LegalFormsComposer::class);
-    
+
         view()->composer('leads.tabs.events', StagesComposer::class);
         view()->composer('leads.tabs.history', LeadHistoryComposer::class);
         view()->composer('leads.tabs.estimate', DiscountsForEstimatesComposer::class);
@@ -489,6 +490,9 @@ class ComposerServiceProvider extends ServiceProvider
         // Клиентские заказы
         view()->composer('estimates.includes.filters', CitiesComposer::class);
         view()->composer('estimates.includes.filters', SourcesComposer::class);
+
+        // Рассылки
+        view()->composer('system.pages.marketings.subscribers.index', MailingListsComposer::class);
     }
 
     public function register()

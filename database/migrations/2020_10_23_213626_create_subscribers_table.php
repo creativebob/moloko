@@ -22,10 +22,13 @@ class CreateSubscribersTable extends Migration
 //            $table->foreign('client_id')->references('id')->on('clients');
 
             $table->string('name')->nullable()->comment('Имя');
-            $table->string('email')->nullable()->comment('Email');
+            $table->string('email')->comment('Email');
+
+//            $table->integer('dispatches_count')->unsigned()->default(0)->comment('Кол-во писем');
 
             $table->timestamp('denied_at')->nullable()->comment('Запрет');
             $table->boolean('is_active')->default(1)->comment('Активный');
+            $table->boolean('is_valid')->default(1)->comment('Валидный');
 
             $table->bigInteger('site_id')->unsigned()->nullable()->comment('Id сайта');
 //            $table->foreign('site_id')->references('id')->on('sites');

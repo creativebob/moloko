@@ -9,6 +9,11 @@ class UserObserver
 {
     use Commonable;
 
+    /**
+     * Handle the user "creating" event.
+     *
+     * @param User $user
+     */
     public function creating(User $user)
     {
         $this->store($user);
@@ -39,6 +44,11 @@ class UserObserver
         }
     }
 
+    /**
+     * Handle the user "updating" event.
+     *
+     * @param User $user
+     */
     public function updating(User $user)
     {
         $this->update($user);
@@ -48,11 +58,21 @@ class UserObserver
         }
     }
 
+    /**
+     * Handle the user "deleting" event.
+     *
+     * @param User $user
+     */
     public function deleting(User $user)
     {
         $this->destroy($user);
     }
 
+    /**
+     * Handle the user "saving" event.
+     *
+     * @param User $user
+     */
     public function saving(User $user)
     {
 
@@ -84,7 +104,5 @@ class UserObserver
 
             $user->login = "user_{$number}";
         }
-
-
     }
 }

@@ -20,7 +20,7 @@ class MailingController extends Controller
         $this->entityAlias = 'mailings';
         $this->entityDependence = false;
     }
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -31,10 +31,10 @@ class MailingController extends Controller
     {
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Mailing::class);
-        
+
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
-    
+
         $mailings = Mailing::with([
             'list',
             'template',
@@ -47,13 +47,13 @@ class MailingController extends Controller
 //            ->orderBy('moderation', 'desc')
             ->oldest('sort')
             ->paginate(30);
-    
+
         // Инфо о странице
         $pageInfo = pageInfo($this->entityAlias);
-    
+
         return view('system.pages.marketings.mailings.index', compact('mailings', 'pageInfo'));
     }
-    
+
     /**
      * Show the form for creating a new resource.
      *
@@ -64,14 +64,14 @@ class MailingController extends Controller
     {
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Mailing::class);
-    
+
         $mailing = Mailing::make();
-    
+
         $pageInfo = pageInfo($this->entityAlias);
-    
+
         return view('system.pages.marketings.mailings.create', compact('mailing', 'pageInfo'));
     }
-    
+
     /**
      * Store a newly created resource in storage.
      *
@@ -83,17 +83,17 @@ class MailingController extends Controller
     {
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Mailing::class);
-    
+
         $data = $request->validated();
         $mailing = Mailing::create($data);
-    
+
         if ($mailing) {
             return redirect()->route('mailings.index');
         } else {
             abort(403, __('errors.store'));
         }
     }
-    
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -105,24 +105,24 @@ class MailingController extends Controller
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
-    
+
         $mailing = Mailing::moderatorLimit($answer)
             ->find($id);
 //        dd($mailing);
-    
+
         if (empty($mailing)) {
             abort(403, __('errors.not_found'));
         }
-    
+
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $mailing);
-    
+
         // Инфо о странице
         $pageInfo = pageInfo($this->entityAlias);
-    
+
         return view('system.pages.marketings.mailings.edit', compact('mailing', 'pageInfo'));
     }
-    
+
     /**
      * Update the specified resource in storage.
      *
@@ -135,29 +135,29 @@ class MailingController extends Controller
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
-    
+
         // ГЛАВНЫЙ ЗАПРОС:
         $mailing = Mailing::moderatorLimit($answer)
             ->find($id);
         //        dd($mailing);
-    
+
         if (empty($mailing)) {
             abort(403, __('errors.not_found'));
         }
-    
+
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $mailing);
-    
+
         $data = $request->validated();
         $result = $mailing->update($data);
-    
+
         if ($result) {
             return redirect()->route('mailings.index');
         } else {
             abort(403, __('errors.update'));
         }
     }
-    
+
     /**
      * Remove the specified resource from storage.
      *
@@ -169,20 +169,20 @@ class MailingController extends Controller
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
-    
+
         $mailing = Mailing::moderatorLimit($answer)
             ->find($id);
         //        dd($mailing);
-    
+
         if (empty($mailing)) {
             abort(403, __('errors.not_found'));
         }
-    
+
         // Подключение политики
         $this->authorize(getmethod('destroy'), $mailing);
-        
+
         $res = $mailing->delete();
-    
+
         if ($res) {
             return redirect()->route('mailings.index');
         } else {

@@ -7,7 +7,6 @@ use App\Attachment;
 use App\AttachmentsCategory;
 use App\Mailing;
 use App\MailingList;
-use App\MailingListItem;
 use App\Models\System\Documents\Consignment;
 use App\Models\System\Documents\ConsignmentsItem;
 use App\Models\System\Documents\Production;
@@ -51,7 +50,6 @@ use App\Observers\System\Documents\ConsignmentObserver;
 use App\Observers\System\Documents\ConsignmentsItemObserver;
 use App\Observers\System\Documents\ProductionObserver;
 use App\Observers\System\Documents\ProductionsItemObserver;
-use App\Observers\System\MailingListItemObserver;
 use App\Observers\System\MailingListObserver;
 use App\Observers\System\MailingObserver;
 use App\Observers\System\Stocks\AttachmentsStockObserver;
@@ -357,8 +355,7 @@ class ObserverServiceProvider extends ServiceProvider
         Template::observe(TemplateObserver::class);
         Mailing::observe(MailingObserver::class);
         MailingList::observe(MailingListObserver::class);
-        MailingListItem::observe(MailingListItemObserver::class);
-        Dispatch::observe(DispatchObserver::class);
+//        Dispatch::observe(DispatchObserver::class);
     }
 
     /**

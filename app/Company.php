@@ -466,4 +466,9 @@ class Company extends Model
         return $this->belongsToMany(User::class, 'representatives', 'organization_id');
     }
 
+    public function subscriber()
+    {
+        return $this->morphOne(Subscriber::class, 'subsriberable');
+    }
+
 }

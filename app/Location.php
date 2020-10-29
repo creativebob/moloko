@@ -43,7 +43,14 @@ class Location extends Model
     use BooklistFilter;
     use DateIntervalFilter;
 
-    protected $dates = ['deleted_at'];
+    protected $with = [
+        'city',
+    ];
+
+    protected $dates = [
+        'deleted_at'
+    ];
+
     protected $fillable = [
         'country_id',
         'city_id',

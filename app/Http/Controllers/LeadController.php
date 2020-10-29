@@ -1163,7 +1163,8 @@ class LeadController extends Controller
     public function search(Request $request, $search)
     {
 
-        $results = Lead::with('main_phones', 'lead_method', 'stage')->where('case_number', $search)
+        $results = Lead::with('main_phones', 'lead_method', 'stage')
+            ->where('case_number', $search)
             ->orWhere('name', 'LIKE', '%' . $search . '%')
             ->orWhere('company_name', 'LIKE', '%' . $search . '%')
             ->orWhereHas('phones', function ($q) use ($search) {

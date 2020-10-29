@@ -237,7 +237,7 @@ class VkusnyashkaParser
         }
 
     }
-    
+
     /**
      * Добавление новых подписчиков в список рассылки
      *
@@ -245,41 +245,34 @@ class VkusnyashkaParser
      */
     public static function addSubscribersToMailing()
     {
-        
+
         set_time_limit(0);
-    
-        \Auth::loginUsingId(4);
-        
-        $mailingList = MailingList::with('items')
+
+        $mailingList = MailingList::with([
+            'subscribers'
+        ])
             ->where('company_id', auth()->user()->company_id)
             ->first();
 //        dd($mailingList);
-        
-        $subscribersIds = $mailingList->items->where('entity_type', 'App\Subscriber')->pluck('id');
+
+        $subscribersIds = $mailingList->subscribers->pluck('id');
 //        dd($subscribersIds);
-        
+
         $subscribers = Subscriber::whereNotIn('id', $subscribersIds)
+            ->valid()
+            ->where('company_id', auth()->user()->company_id)
             ->get();
         $newSubscriberIds = $subscribers->pluck('id');
 //        dd($newSubscriberIds);
-        
+
         $countSubscribers = count($newSubscriberIds);
-        
+
         if ($countSubscribers > 0) {
-            $data = [];
-            foreach ($newSubscriberIds as $id) {
-                $data[] = MailingListItem::make([
-                    'mailing_list_id' => $mailingList->id,
-                    'entity_id' => $id,
-                    'entity_type' => 'App\Subscriber'
-                ]);
-            }
-    
-            $mailingList->items()->saveMany($data);
+            $mailingList->subscribers()->attach($newSubscriberIds);
             echo "Добавлены новые подписчики: [{$countSubscribers}]";
         } else {
             echo "Новые подписчики не найдены";
         }
-        
+
     }
 }

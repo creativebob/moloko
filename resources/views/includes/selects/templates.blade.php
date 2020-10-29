@@ -1,2 +1,5 @@
-{!! Form::select('template_id', $templates->pluck('name', 'id'), null, ['id' => 'select-templates']) !!}
+{!! Form::select('template_id', $templates->pluck('name', 'id'), null, [
+    'id' => 'select-templates',
+    (isset($disabled) ? 'disabled' : ''),
+]) !!}
 

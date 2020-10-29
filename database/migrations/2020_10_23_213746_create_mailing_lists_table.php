@@ -19,6 +19,7 @@ class CreateMailingListsTable extends Migration
             $table->string('name')->index()->comment('Название');
             $table->text('description')->nullable()->comment('Описание');
 
+            $table->timestamp('archived_at')->nullable()->comment('Архив');
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

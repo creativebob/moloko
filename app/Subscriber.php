@@ -4,6 +4,7 @@ namespace App;
 
 use App\Models\System\BaseModel;
 use App\Models\System\Traits\Archivable;
+use App\Models\System\Traits\Dispatchable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
@@ -12,7 +13,12 @@ class Subscriber extends BaseModel
 {
     use Archivable,
         SoftDeletes,
-        Cachable;
+        Cachable,
+        Dispatchable;
+
+    protected $withCount = [
+        'sendedDispatches'
+    ];
 
     protected $dates = [
         'denied_at',
@@ -27,6 +33,7 @@ class Subscriber extends BaseModel
 
         'denied_at',
         'is_active',
+        'is_valid',
 
         'name',
         'email',
@@ -38,6 +45,11 @@ class Subscriber extends BaseModel
         'moderation'
     ];
 
+    public function getGetNameAttribute()
+    {
+        return isset($this->name) ? $this->name: optional($this->subscriberable)->name;
+    }
+
     public function subscriberable()
     {
         return $this->morphTo();
@@ -48,9 +60,46 @@ class Subscriber extends BaseModel
         return $this->belongsTo(Client::class);
     }
 
-    public function dispatches()
+    /**
+     * Активность
+     *
+     * @param $query
+     * @param bool $value
+     */
+    public function scopeActive($query, $value = true)
     {
-        return $this->morphMany(Dispatch::class, 'dispatchable');
+        $query->where("is_active", $value);
+    }
+
+    /**
+     * Валидность
+     *
+     * @param $query
+     * @param bool $value
+     */
+    public function scopeValid($query, $value = true)
+    {
+        $query->where("is_valid", $value);
+    }
+
+    /**
+     * Отправка разрешена
+     *
+     * @param $query
+     */
+    public function scopeAllow($query)
+    {
+        $query->whereNull('denied_at');
+    }
+
+    /**
+     * Отправка запрещена
+     *
+     * @param $query
+     */
+    public function scopeDeny($query)
+    {
+        $query->whereNotNull('denied_at');
     }
 
     /**
@@ -62,16 +111,36 @@ class Subscriber extends BaseModel
     public function scopeFilter($query)
     {
         if (!is_null(request('is_active'))) {
-            $query->where('is_active', request('is_active'));
+            $query->active(request('is_active'));
         }
 
-//        if (request('dispatches_count_min')) {
-//            $query->where('orders_count', '>=', request('dispatches_count_min'));
-//        }
-//
-//        if (request('dispatches_count_max')) {
-//            $query->where('orders_count', '<=', request('dispatches_count_max'));
-//        }
+        if (!is_null(request('deny'))) {
+            if (request('deny') == true) {
+                $query->allow();
+            } else {
+                $query->deny();
+            }
+        }
+
+        if (!is_null(request('client'))) {
+            if (request('client') == true) {
+                $query->whereNotNull('client_id');
+            } else {
+                $query->whereNull('client_id');
+            }
+        }
+
+        if (!is_null(request('is_valid'))) {
+            $query->valid(request('is_valid'));
+        }
+
+        if (request('dispatches_count_min')) {
+            $query->has('sendedDispatches', '>=', request('dispatches_count_min'));
+        }
+
+        if (request('dispatches_count_max')) {
+            $query->has('sendedDispatches', '<=', request('dispatches_count_max'));
+        }
 
         if (request('created_at_min')) {
             $query->whereDate('created_at', '>=', Carbon::createFromFormat('d.m.Y', request()->created_at_min));

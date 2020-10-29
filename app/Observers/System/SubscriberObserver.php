@@ -27,6 +27,10 @@ class SubscriberObserver extends BaseObserver
     public function updating(Subscriber $subscriber)
     {
         $this->update($subscriber);
+
+        if ($subscriber->is_valid == 0) {
+            $subscriber->is_valid = 1;
+        }
     }
 
     /**

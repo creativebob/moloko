@@ -5,11 +5,11 @@
 @section('breadcrumbs', Breadcrumbs::render('index', $pageInfo))
 
 @section('content-count')
-    {{ $mailings->isNotEmpty() ? num_format($mailings->total(), 0) : 0 }}
+    {{ $mailingLists->isNotEmpty() ? num_format($mailingLists->total(), 0) : 0 }}
 @endsection
 
 @section('title-content')
-    @include('includes.title-content', ['pageInfo' => $pageInfo, 'class' => App\Mailing::class, 'type' => 'table'])
+    @include('includes.title-content', ['pageInfo' => $pageInfo, 'class' => App\MailingList::class, 'type' => 'table'])
 @endsection
 
 @section('content')
@@ -17,7 +17,7 @@
     <div class="grid-x">
         <div class="small-12 cell">
 
-            <table class="content-table tablesorter content-mailings" id="content" data-sticky-container data-entity-alias="mailings">
+            <table class="content-table tablesorter content-mailing_lists" id="content" data-sticky-container data-entity-alias="mailing_lists">
 
                 <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
                     <tr id="thead-content">
@@ -28,10 +28,6 @@
                         </th>
                         <th class="td-name">Название</th>
                         <th class="td-description">Описание</th>
-                        <th class="td-started">Дата старта</th>
-                        <th class="td-list">Список</th>
-                        <th class="td-status">Статус</th>
-                        <th class="td-dates">Период</th>
                         <th class="td-author">Автор</th>
                         <th class="td-control"></th>
                         <th class="td-delete"></th>
@@ -40,52 +36,40 @@
 
                 <tbody data-tbodyId="1" class="tbody-width">
 
-                    @foreach($mailings as $mailing)
+                    @foreach($mailingLists as $mailingList)
 
-                        <tr class="item @if($mailing->moderation == 1)no-moderation @endif @if($mailing->is_actual == 1)is-actual @endif" id="mailings-{{ $mailing->id }}" data-name="{{ $mailing->name }}">
+                        <tr class="item @if($mailingList->moderation == 1)no-moderation @endif" id="mailing_lists-{{ $mailingList->id }}" data-name="{{ $mailingList->name }}">
                             <td class="td-drop"><div class="sprite icon-drop"></div></td>
                             <td class="td-checkbox checkbox">
 
-                                <input type="checkbox" class="table-check" name="mailing_id" id="check-{{ $mailing->id }}"
+                                <input type="checkbox" class="table-check" name="mailing_list_id" id="check-{{ $mailingList->id }}"
                                 @if(!empty($filter['booklist']['booklists']['default']))
-                                    @if (in_array($mailing->id, $filter['booklist']['booklists']['default'])) checked
+                                    @if (in_array($mailingList->id, $filter['booklist']['booklists']['default'])) checked
                                     @endif
                                 @endif
                                 >
-                                <label class="label-check" for="check-{{ $mailing->id }}"></label>
+                                <label class="label-check" for="check-{{ $mailingList->id }}"></label>
                             </td>
                             <td class="td-name">
 
-                                @can('update', $mailing)
-                                    <a href="{{ route('mailings.edit', $mailing->id) }}">{{ $mailing->name }}</a>
+                                @can('update', $mailingList)
+                                    <a href="{{ route('mailing_lists.edit', $mailingList->id) }}">{{ $mailingList->name }}</a>
                                 @else
-                                    {{ $mailing->name }}
+                                    {{ $mailingList->name }}
                                 @endcan
 
-                            </td>
-                            <td class="td-description">{{ $mailing->description }}</td>
-                            <td class="td-started">
-                                <span>{{ optional($mailing->started_at)->format('d.m.Y H:s') }}</span>
-                            </td>
-                            <td class="td-list">
-                                <span>{{ $mailing->list->name }}</span><br><span>{{ $mailing->template->name }}</span>
-                            </td>
-                            <td class="td-status">
-                                <span>{{ $mailing->status }}</span> <span>({{ $mailing->dispatches_count }})</span><br>
-                                <span>{{ $mailing->sended_dispatches_count }}</span> / <span>{{ $mailing->waiting_dispatches_count }}</span>
-                            </td>
-                            <td class="td-dates">
-                                Начало: <span>{{ optional($mailing->begined_at)->format('d.m.Y H:s') }}</span><br>
-                                Окончание: <span>{{ optional($mailing->ended_at)->format('d.m.Y H:s') }}</span>
-                            </td>
+                                <span>({{ $mailingList->items_count }})</span>
 
-                            <td class="td-author">{{ $mailing->author->name }}</td>
+                            </td>
+                            <td class="td-description">{{ $mailingList->description }}</td>
+
+                            <td class="td-author">{{ $mailingList->author->name }}</td>
 
                             {{-- Элементы управления --}}
-                            @include('includes.control.table-td', ['item' => $mailing])
+                            @include('includes.control.table-td', ['item' => $mailingList])
 
                             <td class="td-delete">
-                                @can('delete', $mailing)
+                                @can('delete', $mailingList)
                                     <a class="icon-delete sprite" data-open="item-archive"></a>
                                 @endcan
                             </td>
@@ -101,8 +85,8 @@
     {{-- Pagination --}}
     <div class="grid-x" id="pagination">
         <div class="small-6 cell pagination-head">
-          <span class="pagination-title">Кол-во записей: {{ $mailings->count() }}</span>
-          {{ $mailings->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
+          <span class="pagination-title">Кол-во записей: {{ $mailingLists->count() }}</span>
+          {{ $mailingLists->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
       </div>
     </div>
 @endsection

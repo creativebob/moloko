@@ -12,20 +12,56 @@ class Dispatch extends BaseModel
     use SoftDeletes;
     use Cachable;
 
-    protected $fillable = [
-        'dispatchable_type',
-        'edispatchable_id',
+    protected $dates = [
+        'sended_at',
 
+        'delivered_at',
+        'opened_at',
+        'spamed_at',
+    ];
+
+    protected $fillable = [
+        'subscriber_id',
         'mailing_id',
 
         'email',
 
-        'is_delivered',
-        'is_opened',
-        'is_spamed',
+        'sended_at',
 
-        'display',
-        'system',
-        'moderation'
+        'delivered_at',
+        'opened_at',
+        'spamed_at',
+
+        'company_id',
     ];
+
+    public function subscriber()
+    {
+        return $this->belongsTo(Subscriber::class);
+    }
+
+    public function mailing()
+    {
+        return $this->belongsTo(Mailing::class);
+    }
+
+    /**
+     * Отправлено
+     *
+     * @param $query
+     */
+    public function scopeSended($query)
+    {
+        $query->whereNotNull('sended_at');
+    }
+
+    /**
+     * В ожидании
+     *
+     * @param $query
+     */
+    public function scopeWaiting($query)
+    {
+        $query->whereNull('sended_at');
+    }
 }

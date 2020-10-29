@@ -240,12 +240,12 @@ class Company extends Model
     // Получаем клиентов-компании
     public function client($site)
     {
-        return $this->morphOne('APP\Client', 'clientable')
+        return $this->morphOne('App\Client', 'clientable')
             ->where([
                 'archive' => false,
                 'company_id' => $site->company_id
             ])
-            ->first();;
+            ->first();
     }
 
     public function clients()

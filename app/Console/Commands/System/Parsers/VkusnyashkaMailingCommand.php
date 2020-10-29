@@ -37,6 +37,6 @@ class VkusnyashkaMailingCommand extends Command
      */
     public function handle()
     {
-        Email::sendMailingToSubscribers();
+        Email::send();
     }
 }

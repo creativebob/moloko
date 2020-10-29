@@ -19,31 +19,23 @@ class CreateDispatchesTable extends Migration
             $table->bigInteger('mailing_id')->unsigned()->nullable()->comment('Id рассылки');
             $table->foreign('mailing_id')->references('id')->on('mailings');
 
-            $table->morphs('dispatchable');
+            $table->bigInteger('subscriber_id')->unsigned()->nullable()->comment('Id подписчика');
+            $table->foreign('subscriber_id')->references('id')->on('subscribers');
 
             $table->string('email')->comment('Email');
 
-            $table->boolean('is_delivered')->default(0)->comment('Доставлено');
-            $table->boolean('is_opened')->default(0)->comment('Открыто');
-            $table->boolean('is_spamed')->default(0)->comment('Спам');
+            $table->timestamp('sended_at')->nullable()->comment('Время отправки');
+
+            $table->timestamp('delivered_at')->nullable()->comment('Время доставки');
+            $table->timestamp('opened_at')->nullable()->comment('Время открытия');
+            $table->timestamp('spamed_at')->nullable()->comment('Время добавления в спам');
 
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
 
-            $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
-            $table->boolean('display')->default(1)->comment('Отображение на сайте');
-            $table->boolean('system')->default(0)->comment('Системная запись');
-            $table->boolean('moderation')->default(0)->comment('Модерация');
-
-            $table->bigInteger('author_id')->nullable()->unsigned()->comment('Id создателя записи');
-            $table->foreign('author_id')->references('id')->on('users');
-
-            $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
-
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

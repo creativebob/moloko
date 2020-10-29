@@ -4,21 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Action;
 use App\ActionEntity;
-use App\Article;
-use App\ArticlesGroup;
 use App\CatalogsGoods;
 use App\CatalogsGoodsItem;
 use App\Client;
-use App\ContractsClient;
+use App\Dispatch;
 use App\Models\System\Documents\Estimate;
 use App\Goods;
-use App\GoodsCategory;
 use App\Http\Controllers\System\Traits\Clientable;
 use App\Http\Controllers\Traits\UserControllerTrait;
 use App\Models\System\Documents\Consignment;
 use App\Models\System\Documents\Production;
-use App\Models\System\External\Price;
-use App\Models\System\External\PricesType;
 use App\OldLead;
 use App\OldLocation;
 use App\Lead;
@@ -33,8 +28,7 @@ use App\Position;
 use App\PricesGoods;
 use App\Right;
 use App\Role;
-use App\Staffer;
-use App\Unit;
+use App\Subscriber;
 use App\User;
 use App\Phone;
 use App\Page;
@@ -44,7 +38,6 @@ use App\Location;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
-use App\Models\System\External\User as ParseUser;
 
 class ParserController extends Controller
 {
@@ -63,6 +56,24 @@ class ParserController extends Controller
     public function test()
     {
         dd(__METHOD__);
+    }
+
+    /**
+     * Обновление даты отправки в dispatches
+     *
+     * @return string
+     */
+    public function setSendedAt()
+    {
+        $dispatches = Dispatch::whereNull('sended_at')
+            ->get();
+
+        foreach($dispatches as $dispatch) {
+            $dispatch->update([
+                'sended_at' => $dispatch->created_at
+            ]);
+        }
+        return "Гатова";
     }
 
     /**

@@ -487,8 +487,6 @@ class AppController extends Controller
             }
         }
 
-
-
         return view($site->alias.'.pages.unsubscribe.index', compact('site', 'page'));
     }
 

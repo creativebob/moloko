@@ -53,7 +53,7 @@ class User extends Authenticatable
     // use DateIntervalFilter;
 
     protected $with = [
-        'location.city',
+        'location',
         'main_phones'
     ];
 
@@ -498,6 +498,8 @@ class User extends Authenticatable
     }
 
 
-
-
+    public function subscriber()
+    {
+        return $this->morphOne(Subscriber::class, 'subsriberable');
+    }
 }

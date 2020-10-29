@@ -5,22 +5,69 @@
 @section('breadcrumbs', Breadcrumbs::render('index', $pageInfo))
 
 @section('exсel')
-    {{--    <button class="button" type="button" data-toggle="dropdown-inport_excel">Импорт</button>--}}
-    {{--    <div class="dropdown-pane" id="dropdown-inport_excel" data-dropdown data-auto-focus="true">--}}
-    <button class="button" data-open="modal-import">Импорт</button>
-    <div class="reveal" id="modal-import" data-reveal>
-        <h1>Импорт</h1>
-        {!! Form::open(['route' => 'subscribers.excelImport', 'files' => true]) !!}
-        <input name="subscribers" type="file">
-        <input type="submit" class="button tiny" value="Загрузить">
+    <button class="button tiny" data-open="modal-add_to_mailing_list">Добавление в список</button>
+    <div class="reveal" id="modal-add_to_mailing_list" data-reveal>
+        <div class="grid-x">
+            <div class="small-12 cell modal-title">
+                <h5>Добавиление в список рассылки</h5>
+            </div>
+        </div>
+
+        {!! Form::open(['route' => ['subscribers.addToMailingList', Request::all()]]) !!}
+        <div class="grid-x align-center grid-padding-x tabs-margin-top">
+            <div class="cell small-6">
+                <label>Выберите список
+                    {!! Form::select('mailing_list_id', $mailingLists->pluck('name', 'id')) !!}
+                </label>
+            </div>
+        </div>
+
+        <div class="grid-x align-center grid-padding-x">
+            <div class="cell small-6">
+                <input type="submit" class="button modal-button" value="Добавить">
+            </div>
+        </div>
         {!! Form::close() !!}
-        <button class="close-button" data-close aria-label="Close modal" type="button">
-            <span aria-hidden="true">&times;</span>
-        </button>
+
+        <div data-close class="icon-close-modal sprite close-modal remove-modal"></div>
     </div>
 
-    {{--    </div>--}}
+    <button class="button tiny" data-open="modal-import">Импорт</button>
+    <div class="reveal" id="modal-import" data-reveal>
+        <div class="grid-x">
+            <div class="small-12 cell modal-title">
+                <h5>Импорт</h5>
+            </div>
+        </div>
 
+        {!! Form::open(['route' => 'subscribers.excelImport', 'files' => true]) !!}
+        @isset($sites)
+            <div class="grid-x align-center grid-padding-x">
+                <div class="cell small-6">
+                    @if($sites->count() > 1)
+                        <label>Сайт
+                            {!! Form::select('site_id', $sites->pluck('name', 'id'), null, ['id' => 'select-sites']) !!}
+                        </label>
+                    @else
+                        {!! Form::hidden('site_id', $sites->first()->id) !!}
+                    @endif
+                </div>
+            </div>
+        @endisset
+        <div class="grid-x align-center grid-padding-x tabs-margin-top">
+            <div class="cell small-6">
+                <input name="subscribers" type="file">
+            </div>
+        </div>
+        <div class="grid-x align-center grid-padding-x">
+            <div class="cell small-6">
+                <input type="submit" class="button modal-button" value="Загрузить">
+            </div>
+        </div>
+        {!! Form::close() !!}
+
+        <div data-close class="icon-close-modal sprite close-modal remove-modal"></div>
+    </div>
 @endsection
 
 @section('content-count')
@@ -50,6 +97,7 @@
                     <th class="td-name">Имя</th>
                     <th class="td-email">Email</th>
                     <th class="td-active">Статус</th>
+                    <th class="td-deny">Запрещен</th>
                     <th class="td-dispatches">Письма</th>
                     <th class="td-author">Автор</th>
                     <th class="td-control"></th>
@@ -66,6 +114,7 @@
                         @if($subscriber->moderation == 1)no-moderation @endif
                         @if($subscriber->is_active == 0)is-not-active @endif
                         @if($subscriber->denied_at)is-denied @endif
+                        @if($subscriber->is_valid == 0)is-not-valid @endif
                             "
                         id="subscribers-{{ $subscriber->id }}"
                         data-name="{{ $subscriber->email }}"
@@ -84,7 +133,7 @@
                             >
                             <label class="label-check" for="check-{{ $subscriber->id }}"></label>
                         </td>
-                        <td class="td-name">{{ $subscriber->name }}</td>
+                        <td class="td-name">{{ $subscriber->getName }}</td>
                         <td class="td-email">
                             @can('update', $subscriber)
                                 <a href="{{ route('subscribers.edit', $subscriber->id) }}">{{ $subscriber->email }}</a>
@@ -93,7 +142,8 @@
                             @endcan
                         </td>
                         <td class="td-active">{{ $subscriber->is_active == 0 ? 'Не действителен' : '' }}</td>
-                        <td class="td-dispatches">{{ $subscriber->dispatches->count() }}</td>
+                        <td class="td-deny">{{ optional($subscriber->denied_at)->format('d.m.y H:i') }}</td>
+                        <td class="td-dispatches">{{ $subscriber->sended_dispatches_count }}</td>
 
                         <td class="td-author">{{ $subscriber->author->name }}</td>
 
@@ -118,7 +168,7 @@
     <div class="grid-x" id="pagination">
         <div class="small-6 cell pagination-head">
             <span class="pagination-title">Кол-во записей: {{ $subscribers->count() }}</span>
-            {{ $subscribers->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
+            {{ $subscribers->appends(Request::all())->links() }}
         </div>
     </div>
 @endsection

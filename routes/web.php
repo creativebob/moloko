@@ -54,6 +54,7 @@ Route::get('/parsers/set-produced-at', 'ParserController@setProducedAt');
 Route::get('/parsers/start-registering-documents-command', 'ParserController@startRegisteringDocumentsCommand');
 
 Route::get('/parsers/update-payments', 'ParserController@updatePayments');
+Route::get('/parsers/set-sended-at', 'ParserController@setSendedAt');
 
 Route::get('/parsers/test', 'ParserController@test');
 
@@ -1478,6 +1479,9 @@ Route::post('/subscribers/excel-import', 'SubscriberController@excelImport')
 Route::get('/subscribers/search/{search}', 'SubscriberController@search');
 Route::post('/subscribers/archive/{id}', 'SubscriberController@archive');
 
+Route::post('/subscribers/add-to-mailing-list', 'SubscriberController@addToMailingList')
+    ->name('subscribers.addToMailingList');
+
 // Основные методы
 Route::resource('/subscribers', 'SubscriberController')
     ->except([
@@ -1498,12 +1502,15 @@ Route::resource('/templates', 'TemplateController');
 
 
 // --------------------------- Списки рассылок -------------------------------------
-// Основные методы
-Route::resource('/mailing_lists', 'MailingListController');
 
-// --------------------------- Пункты списка рассылки -------------------------------------
+Route::post('/mailing_lists/archive/{id}', 'MailingListController@archive');
+
 // Основные методы
-Route::resource('/mailing_list_items', 'MailingListItemController');
+Route::resource('/mailing_lists', 'MailingListController')
+    ->except([
+        'show',
+        'destroy'
+    ]);
 
 
 // --------------------------- Рассылки -------------------------------------

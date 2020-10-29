@@ -1,3 +1,7 @@
+@php
+    $disabled = isset($mailing->begined_at) ? true : null;
+@endphp
+
 <div class="grid-x tabs-wrap">
     <div class="small-12 cell">
         <ul class="tabs-list" data-tabs id="tabs">
@@ -63,13 +67,33 @@
                                 </label>
                             </div>
 
-
+                            <div class="small-12 medium-6 cell">
+                                <label>Дата автоматического запуска
+                                    <pickmeup-component
+                                        name="started_at"
+                                        @isset($disabled)
+                                        :disabled="true"
+                                        @endisset
+                                        :required="true"
+                                    ></pickmeup-component>
+                                </label>
+                            </div>
 
                             <div class="small-12 medium-6 cell">
                                 <label>Описание
                                     @include('includes.inputs.textarea', ['name' => 'description'])
                                 </label>
                             </div>
+
+                            @empty($mailing->ended_at)
+                                <div class="small-12 medium-6 cell">
+                                    {!! Form::hidden('is_active', 0) !!}
+                                    <div class="cell small-12 checkbox">
+                                        {!! Form::checkbox('is_active', 1, $mailing->is_active, ['id' => 'checkbox-is_active']) !!}
+                                        <label for="checkbox-is_active"><span>Активировать</span></label>
+                                    </div>
+                                </div>
+                            @endempty
                         </div>
 
                     </div>
@@ -86,7 +110,8 @@
                 {{-- Чекбоксы управления --}}
                 @include('includes.control.checkboxes', ['item' => $mailing])
 
-                <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
+                <div
+                    class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
                     {{ Form::submit($submitText, ['class' => 'button']) }}
                 </div>
             </div>

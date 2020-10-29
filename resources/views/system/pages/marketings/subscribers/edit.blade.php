@@ -2,12 +2,12 @@
 
 @section('title', 'Редактировать подписчика')
 
-@section('breadcrumbs', Breadcrumbs::render('edit', $pageInfo, $subscriber->name))
+@section('breadcrumbs', Breadcrumbs::render('edit', $pageInfo, $subscriber->email))
 
 @section('title-content')
 <div class="top-bar head-content">
     <div class="top-bar-left">
-        <h2 class="header-content">РЕДАКТИРОВАТЬ подписчика &laquo{{ $subscriber->name }}&raquo</h2>
+        <h2 class="header-content">РЕДАКТИРОВАТЬ подписчика &laquo{{ $subscriber->email }}&raquo</h2>
     </div>
     <div class="top-bar-right">
     </div>

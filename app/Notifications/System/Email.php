@@ -12,90 +12,98 @@ class Email
 {
 
     /**
-     * Отправка почты
+     * Рассылка писем
      */
     public static function send()
     {
-        $to_name = 'Любимому клиенту';
-        $to_email = 'creativebob@yandex.ru';
-        $data = [
-            'name' => "Антон Павлович",
-            "body" => "Мы хотим продать вам интересные штучки!"
-        ];
-
-        Mail::send('system/templates/emails/offers/newyear2021/index', $data, function ($message) use ($to_name, $to_email) {
-            $message->to($to_email, $to_name)->subject('Новогодние подарки 2021');
-            $message->from(config('mail.from.address'), config('mail.from.name'));
-        });
-    }
-
-
-    /**
-     * Рассылка писем для ВК
-     */
-    public static function sendMailingToSubscribers()
-    {
-
         set_time_limit(0);
-        \Auth::loginUsingId(4);
 
         $mailing = Mailing::with([
             'template',
+            'list.subscribers' => function ($q) {
+                $q->valid()
+                    ->active()
+                    ->allow();
+            },
         ])
-            ->where('company_id', auth()->user()->company_id)
+            ->where('started_at', '<=', now())
+            ->whereNull('ended_at')
+            ->where('is_active', true)
+//            ->where('company_id', auth()->user()->company_id)
+            ->oldest('started_at')
             ->first();
+//        dd($mailing);
 
-        $subscribersWithDispatchIds = Subscriber::whereHas('dispatches', function ($q) use ($mailing) {
-            $q->where('mailing_id', $mailing->id);
-        })
-            ->where('company_id', auth()->user()->company_id)
-            ->get([
-                'id'
-            ])
-            ->pluck('id');
+        if ($mailing) {
+            \Auth::loginUsingId($mailing->author_id);
 
-        $limit = 35;
+            if (empty($mailing->begined_at)) {
+                $data = [];
+                foreach ($mailing->list->subscribers as $subscriber) {
+                    $data[] = Dispatch::make([
+                        'email' => $subscriber->email,
+                        'subscriber_id' => $subscriber->id,
+                        'company_id' => $subscriber->company_id
+                    ]);
+                }
+                $mailing->dispatches()->saveMany($data);
 
-        $subscribers = Subscriber::whereNotIn('id', $subscribersWithDispatchIds)
-            ->whereNull('denied_at')
-            ->limit($limit)
-            ->get();
-
-        $count = 0;
-        foreach ($subscribers as $subscriber) {
-
-            $data = [
-                'subscriberId' => $subscriber->id,
-                'token' => $subscriber->token
-            ];
-
-//            $path = 'vkusnyashka/templates/emails/offers/newyear2021/index';
-
-            Mail::send($mailing->template->path, $data, function ($message) use ($mailing, $subscriber) {
-                $message->to($subscriber->email, 'Любимому клиенту')->subject($mailing->subject);
-                $message->from(config('mail.from.address'), config('mail.from.name'));
-            });
-
-            $subscriber->dispatches()->save(Dispatch::make([
-                'email' => $subscriber->email,
-                'mailing_id' => $mailing->id
-            ]));
-
-            $count++;
-        }
-
-        if ($count > 0) {
-            $destinations = [
-                293282078,
-                228265675
-            ];
-
-            // Отправляем на каждый telegram
-            foreach ($destinations as $destination) {
-                $response = Telegram::sendMessage([
-                    'chat_id' => $destination,
-                    'text' => "По рассылке {$mailing->name} отправлены {$count} писем"
+                $mailing->update([
+                    'begined_at' => now()
                 ]);
+            }
+
+            $mailing->load([
+                'waitingDispatches' => function ($q) {
+                    $q->with([
+                        'subscriber'
+                    ])
+                        ->limit(35);
+                }
+            ]);
+
+            $count = 0;
+            foreach ($mailing->waitingDispatches as $dispatch) {
+
+                $subscriber = $dispatch->subscriber;
+                $data = [
+                    'subscriberId' => $subscriber->id,
+                    'token' => $subscriber->token
+                ];
+
+                Mail::send($mailing->template->path, $data, function ($message) use ($mailing, $dispatch) {
+                    $message->to($dispatch->email, 'Любимому клиенту')->subject($mailing->subject);
+                    $message->from(config('mail.from.address'), config('mail.from.name'));
+                });
+
+                $dispatch->update([
+                   'sended_at' => now()
+                ]);
+
+                $count++;
+            }
+
+            $mailing->load('waitingDispatches');
+
+            if ($mailing->waitingDispatches->count() == 0) {
+                $mailing->update([
+                    'ended_at' => now()
+                ]);
+            }
+
+            if ($count > 0) {
+                $destinations = [
+                    293282078,
+                    228265675
+                ];
+
+                // Отправляем на каждый telegram
+                foreach ($destinations as $destination) {
+                    $response = Telegram::sendMessage([
+                        'chat_id' => $destination,
+                        'text' => "По рассылке [{$mailing->name}] отправлены {$count} писем"
+                    ]);
+                }
             }
         }
     }
