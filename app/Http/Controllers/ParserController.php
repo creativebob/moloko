@@ -94,7 +94,8 @@ class ParserController extends Controller
                 'subscriberable_type' => 'App\User',
                 'name' => $user->name,
                 'is_valid' => $validator->fails() ? false : true,
-                'denied_at' => isset($allow) ? null : $user->updated_at
+                'denied_at' => isset($allow) ? null : $user->updated_at,
+                'is_self' => 1
             ]);
         }
 
