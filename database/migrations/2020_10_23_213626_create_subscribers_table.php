@@ -29,6 +29,7 @@ class CreateSubscribersTable extends Migration
             $table->timestamp('denied_at')->nullable()->comment('Запрет');
             $table->boolean('is_active')->default(1)->comment('Активный');
             $table->boolean('is_valid')->default(1)->comment('Валидный');
+            $table->boolean('is_self')->default(0)->comment('Подписка самостоятельна');
 
             $table->bigInteger('site_id')->unsigned()->nullable()->comment('Id сайта');
 //            $table->foreign('site_id')->references('id')->on('sites');

@@ -197,6 +197,9 @@ class AppController extends Controller
     {
 
         $user = $request->user();
+        $user->load([
+           'subscriber'
+        ]);
 
         $site = $this->site;
         $page = $site->pages_public->firstWhere('alias', 'cabinet');
@@ -372,20 +375,18 @@ class AppController extends Controller
 
         $user->notifications()->sync($request->notifications);
 
-
-        $site = $this->site;
-        $page = $site->pages_public->firstWhere('alias', 'cabinet');
-
-        $site->load('notifications');
-
         return redirect()->route('project.cabinet');
 
     }
 
-
+    /**
+     * Страница подтверждения заказа
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function confirmation(Request $request)
     {
-
         $site = $this->site;
         $company = $site->company;
         $page = $site->pages_public->firstWhere('alias', 'confirmation');
@@ -470,7 +471,13 @@ class AppController extends Controller
         }
     }
 
-
+    /**
+     * Отписка от рассылок
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function unsubscribe(Request $request, $id)
     {
         $site = $this->site;

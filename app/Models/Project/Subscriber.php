@@ -9,13 +9,17 @@ use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
 class Subscriber extends Model
 {
-    use Publicable;
-    use Cachable;
-    use SoftDeletes;
+    use Publicable,
+        Cachable,
+        SoftDeletes;
 
     protected $fillable = [
+        'name',
+        'email',
+
         'denied_at',
+        'is_self',
+
         'editor_id',
     ];
-
 }

@@ -34,6 +34,7 @@ class Subscriber extends BaseModel
         'denied_at',
         'is_active',
         'is_valid',
+        'is_self',
 
         'name',
         'email',
