@@ -87,15 +87,14 @@ class ParserController extends Controller
             $subscriber = Subscriber::firstOrCreate([
                 'email' => $user->email,
                 'site_id' => $user->site_id
-            ], [
-                'name' => $user->name,
-                'is_valid' => $validator->fails() ? false : true,
-                'denied_at' => isset($allow) ? null : now()
             ]);
 
             $subscriber->update([
                 'subscriberable_id' => $user->id,
-                'subscriberable_type' => 'App\User'
+                'subscriberable_type' => 'App\User',
+                'name' => $user->name,
+                'is_valid' => $validator->fails() ? false : true,
+                'denied_at' => isset($allow) ? null : now()
             ]);
         }
 
