@@ -55,6 +55,7 @@ Route::get('/parsers/start-registering-documents-command', 'ParserController@sta
 
 Route::get('/parsers/update-payments', 'ParserController@updatePayments');
 Route::get('/parsers/set-sended-at', 'ParserController@setSendedAt');
+Route::get('/parsers/create-subscribers-from-users', 'ParserController@createSubscribersFromUsers');
 
 Route::get('/parsers/test', 'ParserController@test');
 
