@@ -3,16 +3,17 @@
 namespace App\Http\Controllers\Project;
 
 use App\Http\Controllers\Project\Traits\Commonable;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Project\UserUpdateRequest;
 
-class UserController extends Controller
+class UserController extends BaseController
 {
     /**
      * UserController constructor.
      */
     public function __construct()
     {
+        parent::__construct();
+
         $this->middleware('auth_usersite');
     }
 
