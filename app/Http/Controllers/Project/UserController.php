@@ -30,12 +30,12 @@ class UserController extends BaseController
         ]);
 
         $site = $this->site;
-        $page = $site->pages_public->firstWhere('alias', 'cabinet');
+        $page = $site->pages_public->firstWhere('alias', 'profile');
 
         // TODO - 29.10.20 - Будем убирать оповещения
         $site->load('notifications');
 
-        return view($site->alias . '.pages.cabinet.index', compact('site', 'page', 'user'));
+        return view($site->alias . '.pages.profile.index', compact('site', 'page', 'user'));
     }
 
     /**
@@ -71,6 +71,7 @@ class UserController extends BaseController
                 }
                 $user->subscriber()->update([
                     'email' => $request->email,
+                    'denied_at' => $allow == true ? null : now(),
                 ]);
             } else {
                 $subscriber = \App\Subscriber::firstOrCreate([

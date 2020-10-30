@@ -1127,8 +1127,14 @@ Route::resource('/entities', 'EntityController')->middleware('auth');
 // Авторизуемся под выбранной компанией
 Route::get('/getauthcompany/{company_id}', 'UserController@getauthcompany')->middleware('auth')->name('users.getauthcompany');
 
-// Авторизуемся под выбранным пользователем
-Route::get('/getauthuser/{user_id}', 'UserController@getauthuser')->middleware('auth')->name('users.getauthuser');
+// Авторизуемся под сотрудником
+Route::get('/getauthuser/{user_id}', 'UserController@getauthuser')->middleware('auth')
+    ->name('users.getauthuser');
+// Авторизуемся под клиентом
+Route::get('/users/auth/{id}', 'UserController@authOnProject')
+    ->name('users.auth_on_project');
+
+
 
 // Сбрасываем для бога company_id
 Route::get('/getgod', 'UserController@getgod')->middleware('auth')->name('users.getgod');

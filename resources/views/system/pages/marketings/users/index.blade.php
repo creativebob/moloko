@@ -84,7 +84,8 @@
 
                             @if(extra_right('auth-under-user') && !empty($user->company_id))
                                 <td class="td-getauth">
-                                    {{ link_to_route('users.getauthuser', "Авторизоваться", ['user_id' => $user->id], ['class' => "tiny button"]) }}
+                                    <a href="{{ route('users.auth_on_project', $user->id) }}" class="tiny button">Авторизоваться</a>
+{{--                                    {{ link_to_route('users.getauthuser', "Авторизоваться", ['user_id' => $user->id], ['class' => "tiny button"]) }}--}}
                                 </td>
                             @endif
 

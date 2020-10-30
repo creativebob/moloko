@@ -38,7 +38,7 @@
                             </div>
 
                             <div class="small-12 medium-4 cell">
-                                <label>Сайт
+                                <label>Рассылка с сайта
                                     @include('includes.selects.sites')
                                 </label>
                             </div>

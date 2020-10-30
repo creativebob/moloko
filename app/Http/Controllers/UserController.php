@@ -326,6 +326,19 @@ class UserController extends Controller
         return redirect()->route('getaccess.set');
     }
 
+    /**
+     * Авторизация на проекте под клиентом
+     *
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function authOnProject($id)
+    {
+        auth()->loginUsingId($id);
+        return redirect()->route('project.profile');
+    }
+
     public function getgod()
     {
         // Только для бога

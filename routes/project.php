@@ -119,7 +119,7 @@ Route::post('/shipment_update', 'AppController@shipment_update')
 
 
 // ------------------- Профиль ---------------------------
-Route::get('/cabinet', 'UserController@edit')
+Route::get('/profile', 'UserController@edit')
     ->name('project.user.edit');
 Route::post('/user/update', 'UserController@update')
     ->name('project.user.update');

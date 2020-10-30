@@ -9,7 +9,7 @@ use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 class Dispatch extends BaseModel
 {
 
-    use SoftDeletes;
+//    use SoftDeletes;
     use Cachable;
 
     protected $dates = [

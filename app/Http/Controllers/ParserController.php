@@ -67,7 +67,8 @@ class ParserController extends Controller
     public function createSubscribersFromUsers()
     {
         $users = User::with([
-            'notifications'
+            'client'
+//            'notifications'
         ])
         ->where('site_id', '!=', 1)
             ->whereNotNull('email')
@@ -75,7 +76,7 @@ class ParserController extends Controller
 
         foreach($users as $user) {
 
-            $allow = $user->notifications->firstWhere('id', 4);
+//            $allow = $user->notifications->firstWhere('id', 4);
 
             $validator = Validator::make([
                 'email' => $user->email
@@ -92,9 +93,11 @@ class ParserController extends Controller
             $subscriber->update([
                 'subscriberable_id' => $user->id,
                 'subscriberable_type' => 'App\User',
+                'client_id' => optional($user->client)->id,
                 'name' => $user->name,
                 'is_valid' => $validator->fails() ? false : true,
-                'denied_at' => isset($allow) ? null : $user->updated_at,
+                'denied_at' => null,
+//                'denied_at' => isset($allow) ? null : $user->updated_at,
                 'is_self' => 1
             ]);
         }

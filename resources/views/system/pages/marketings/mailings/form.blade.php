@@ -63,7 +63,7 @@
 
                             <div class="small-12 medium-6 cell">
                                 <label>Список рассылки
-                                    @include('includes.selects.mailing_lists')
+                                    @include('includes.selects.mailing_lists', ['placeholder' => 'Рассылка в ручную'])
                                 </label>
                             </div>
 
