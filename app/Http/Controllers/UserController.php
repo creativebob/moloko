@@ -336,7 +336,7 @@ class UserController extends Controller
     public function authOnProject($id)
     {
         auth()->loginUsingId($id);
-        return redirect()->route('project.profile');
+        return redirect()->route('project.user.edit');
     }
 
     public function getgod()
