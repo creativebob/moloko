@@ -67,17 +67,38 @@
                     ></organization-component>
 
                     <div class="small-12 cell wrap-lead-email">
-                        <label>E-mail
-                            <string-component
+
+                            <email-component
                                 name="email"
                                 :value="email"
                                 :disabled="isDisabled"
                                 v-model="email"
                                 @change="change"
                                 ref="email"
-                            ></string-component>
+                            ></email-component>
 
-                        </label>
+                        <div class="reveal rev-small" id="modal-send_email" data-reveal>
+
+                            <div class="grid-x">
+                                <div class="cell small-12 modal-title">
+                                    <h5>Отправка email</h5>
+                                </div>
+                            </div>
+                            <div class="grid-x align-center modal-content">
+                                <div class="cell small-10 text-center">
+                                    <label>Рассылка
+<!--                                        @include('includes.selects.mailings', ['manual' => true])-->
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="grid-x align-center grid-padding-x">
+                                <div class="cell small-6 medium-4">
+                                    <button data-close class="button modal-button" type="submit">Отправить</button>
+                                </div>
+                            </div>
+                            <div data-close class="icon-close-modal sprite close-modal"></div>
+                        </div>
+
                     </div>
 
                 </div>
@@ -91,6 +112,7 @@
         components: {
             'phone-component': require('../inputs/PhoneComponent'),
             'string-component': require('../inputs/StringComponent'),
+            'email-component': require('../inputs/EmailComponent'),
             'organization-component': require('./OrganizationComponent'),
             'search-city-component': require('../search/SearchCityComponent')
         },
@@ -100,7 +122,8 @@
             legalForms: Array,
             companies: Array,
             cities: Array,
-            city: Object
+            city: Object,
+            mailings: Array,
         },
         data() {
             return {

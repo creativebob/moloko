@@ -81,7 +81,10 @@ class Mailing extends BaseModel
     }
 
     public function list() {
-        return $this->belongsTo(MailingList::class, 'mailing_list_id');
+        return $this->belongsTo(MailingList::class, 'mailing_list_id')
+            ->withDefault([
+                'name' => 'Рассылка в ручную'
+            ]);
     }
 
     public function template() {

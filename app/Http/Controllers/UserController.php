@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Client;
 use App\Http\Controllers\System\Traits\Locationable;
 use App\Http\Controllers\System\Traits\Phonable;
+use App\Http\Controllers\System\Traits\Subscriberable;
 use App\Http\Controllers\System\Traits\Userable;
 use App\Http\Controllers\Traits\Photable;
 use App\Http\Requests\System\UserRequest;
@@ -33,10 +34,11 @@ class UserController extends Controller
         $this->entityDependence = true;
     }
 
-    use Locationable;
-    use Phonable;
-    use Photable;
-    use Userable;
+    use Locationable,
+        Phonable,
+        Photable,
+        Userable,
+        Subscriberable;
 
     /**
      * Display a listing of the resource.
@@ -149,6 +151,10 @@ class UserController extends Controller
 
         $user = $this->storeUser();
 
+        if (isset($user->email)) {
+            $this->storeSubscriber($user);
+        }
+
         if ($request->is_client == 1) {
             $client = Client::create([
                 'clientable_id' => $user->id,
@@ -157,16 +163,6 @@ class UserController extends Controller
         }
 
         return redirect()->route('users.index', $siteId);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param $id
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**
@@ -247,6 +243,8 @@ class UserController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $user);
 
+        $this->updateSubscriber($user);
+
         $user = $this->updateUser($user);
 
 //        $backroute = $request->backroute;
@@ -288,6 +286,8 @@ class UserController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $user);
 
        $res = $user->delete();
+
+        $this->archiveSubscriber($user);
 
         if (!$res) {
             abort(403,__('errors.destroy'));

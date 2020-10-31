@@ -32,7 +32,7 @@ class MailingRequest extends FormRequest
               'from_email' => 'nullable|string|max:255',
 
               'template_id' => 'required|integer|exists:templates,id',
-              'mailing_list_id' => 'required|integer|exists:mailing_lists,id',
+              'mailing_list_id' => 'nullable|integer|exists:mailing_lists,id',
 
               'started_at' => 'required|date|date_format:d.m.Y|after:01.01.2018',
 

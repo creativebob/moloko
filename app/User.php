@@ -502,4 +502,10 @@ class User extends Authenticatable
     {
         return $this->morphOne(Subscriber::class, 'subscriberable');
     }
+
+    public function archiveSubscriber()
+    {
+        return $this->morphOne(Subscriber::class, 'subscriberable')
+            ->withArchived();
+    }
 }

@@ -5,6 +5,7 @@
     :users='@json($users)'
     :companies='@json($companies)'
     :legal-forms='@json($legalForms)'
+    :mailings='@json($mailings)'
 ></lead-personal-component>
 
 

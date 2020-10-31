@@ -22,6 +22,7 @@ use App\Http\View\Composers\System\ClientsCountComposer;
 use App\Http\View\Composers\System\DiscountsForEstimatesComposer;
 use App\Http\View\Composers\System\LeadHistoryComposer;
 use App\Http\View\Composers\System\MailingListsComposer;
+use App\Http\View\Composers\System\MailingsComposer;
 use App\Http\View\Composers\System\TemplatesComposer;
 use App\Http\View\Composers\System\UsersWithClientComposer;
 use App\Http\View\Composers\System\CmvArchivesCountComposer;
@@ -414,6 +415,7 @@ class ComposerServiceProvider extends ServiceProvider
 
         view()->composer('includes.selects.rooms', RoomsComposer::class);
 
+        view()->composer('includes.selects.mailings', MailingsComposer::class);
         view()->composer('includes.selects.templates', TemplatesComposer::class);
         view()->composer('includes.selects.mailing_lists', MailingListsComposer::class);
 
@@ -439,6 +441,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('leads.personal', UsersWithClientComposer::class);
         view()->composer('leads.personal', CompaniesWithClientComposer::class);
         view()->composer('leads.personal', LegalFormsComposer::class);
+        view()->composer('leads.personal', MailingsComposer::class);
 
         view()->composer('leads.tabs.events', StagesComposer::class);
         view()->composer('leads.tabs.history', LeadHistoryComposer::class);

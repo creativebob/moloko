@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Project;
 
 use App\Http\Requests\Project\UserUpdateRequest;
+use App\Subscriber;
 
 class UserController extends BaseController
 {
@@ -48,33 +49,34 @@ class UserController extends BaseController
     {
         $user = auth()->user();
 
-        $user->first_name = $request->first_name;
-        $user->second_name = $request->second_name;
-        $user->email = $request->email;
-        $user->birthday_date = $request->birthday_date;
-        $user->saveQuietly();
+        $data = $request->input();
+        $user->update($data);
 
         $user->notifications()->sync($request->notifications);
 
         // Проверка подписчика
         $user->load([
-            'subscriber',
+            'archiveSubscriber',
+            'client'
         ]);
+
+        $subscriber = $user->archiveSubscriber;
 
         $allow = $request->allow == 1 ? true : false;
 
         if (isset($request->email)) {
 
-            if (isset($user->subscriber)) {
-                if (isset($user->subscriber->archived_at)) {
-                    $user->subscriber()->unarchive();
+            if (isset($subscriber)) {
+                if (isset($subscriber->archived_at)) {
+                    $subscriber->unarchive();
                 }
-                $user->subscriber()->update([
+                $subscriber->update([
                     'email' => $request->email,
                     'denied_at' => $allow == true ? null : now(),
+                    'client_id' => optional($user->client)->id,
                 ]);
             } else {
-                $subscriber = \App\Subscriber::firstOrCreate([
+                $subscriber = Subscriber::firstOrCreate([
                     'email' => $user->email,
                     'site_id' => $user->site_id
                 ]);
@@ -85,6 +87,7 @@ class UserController extends BaseController
                     'name' => $user->name,
                     'denied_at' => $allow == true ? null : now(),
                     'is_self' => 1,
+                    'client_id' => optional($user->client)->id,
                 ]);
             }
         } else {

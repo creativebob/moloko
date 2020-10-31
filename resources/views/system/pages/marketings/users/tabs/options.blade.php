@@ -12,6 +12,14 @@
                 @endcan
             @endempty
 
+            @isset($client)
+                    <div class="cell small-12">
+                        <label>Сайт
+                            @include('includes.selects.sites')
+                        </label>
+                    </div>
+            @endisset
+
             {{-- Чекбоксы управления --}}
             @include('includes.control.checkboxes', ['item' => $user])
         </div>

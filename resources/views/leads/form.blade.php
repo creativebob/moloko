@@ -18,7 +18,7 @@
     <div class="small-12 medium-5 large-7 cell">
 
     {{--       Персональная информация--}}
-    @include('leads.personal', ['item' => $lead ?? auth()->user()])
+    @include('leads.personal', ['item' => $lead ?? auth()->user(), 'manual' => true])
 
 
     <!-- ЗАКАЗ -->

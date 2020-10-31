@@ -7,6 +7,7 @@ use App\Http\Controllers\System\Traits\Companable;
 use App\Http\Controllers\System\Traits\Directorable;
 use App\Http\Controllers\System\Traits\Locationable;
 use App\Http\Controllers\System\Traits\Phonable;
+use App\Http\Controllers\System\Traits\Subscriberable;
 use App\Http\Controllers\System\Traits\Userable;
 use App\Http\Controllers\Traits\Photable;
 use App\Imports\ClientsImport;
@@ -37,12 +38,13 @@ class ClientController extends Controller
         $this->entityDependence = false;
     }
 
-    use Locationable;
-    use Phonable;
-    use Photable;
-    use Companable;
-    use Directorable;
-    use Userable;
+    use Locationable,
+        Phonable,
+        Photable,
+        Companable,
+        Directorable,
+        Userable,
+        Subscriberable;
 
     /**
      * Display a listing of the resource.
@@ -334,6 +336,10 @@ class ClientController extends Controller
 
         $user = $this->storeUser();
 
+        if (isset($user->email)) {
+            $this->storeSubscriber($user);
+        }
+
         $data = $request->input();
         $data['clientable_id'] = $user->id;
         $data['clientable_type'] = 'App\User';
@@ -434,6 +440,8 @@ class ClientController extends Controller
 
         logs('companies')->info('============ НАЧАЛО ОБНОВЛЕНИЯ ПОЛЬЗОВАТЕЛЯ КЛИЕНТА ===============');
 
+        $this->updateSubscriber($user);
+
         $user = $this->updateUser($user);
 
         // Обновление информации по клиенту:
@@ -481,6 +489,8 @@ class ClientController extends Controller
         $client->archive = true;
         $client->editor_id = hideGod(auth()->user());
         $client->save();
+
+        $this->archiveSubscriber($client->clientable);
 
         if (!$client) {
             abort(403, __('errors.archive'));

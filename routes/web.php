@@ -724,7 +724,9 @@ Route::get('plans/{alias}', 'PlanController@show')->name('plans.show');
 
 // Печать
 Route::get('/leads/{id}/print', 'LeadController@print');
-
+// Отправка письма
+Route::post('/leads/send-email/{id}', 'LeadController@sendEmail')
+    ->name('leads.send_email');
 
 // Route::get('/lead/calls', 'LeadController@index')->middleware('auth');
 Route::post('/leads', 'LeadController@resetFilter')
@@ -1133,7 +1135,6 @@ Route::get('/getauthuser/{user_id}', 'UserController@getauthuser')->middleware('
 // Авторизуемся под клиентом
 Route::get('/users/auth/{id}', 'UserController@authOnProject')
     ->name('users.auth_on_project');
-
 
 
 // Сбрасываем для бога company_id

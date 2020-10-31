@@ -17,6 +17,7 @@ use App\Http\Controllers\Traits\Offable;
 use App\Http\Controllers\Traits\Photable;
 use App\Representative;
 use App\Stock;
+use App\Subscriber;
 use App\User;
 use App\Lead;
 use App\LeadType;
@@ -1730,4 +1731,47 @@ class LeadController extends Controller
         return Excel::download(new LeadsExport, 'Номера телефонов.xlsx');
     }
 
+    public function sendEmail(Request $request, $id)
+    {
+        $lead = Lead::with([
+            'user',
+            'organization',
+        ])
+        ->find($id);
+//        dd($lead);
+
+        if (empty($lead)) {
+            abort(403, __('errors.not_found'));
+        }
+
+        if (isset($lead->user)) {
+            $user = $lead->user;
+            $user->load([
+                'arciveSubscriber',
+                'client'
+            ]);
+
+            $subscriber = $user->arciveSubscriber;
+
+            if ($subscriber) {
+
+            } else {
+                $subscriber = Subscriber::firstOrCreate([
+                    'email' => $lead->email,
+                    'site_id' => $user->site_id
+                ]);
+
+                $subscriber->update([
+                    'subscriberable_id' => $user->id,
+                    'subscriberable_type' => 'App\User',
+                    'name' => $user->name,
+                    'denied_at' => null,
+                    'is_self' => 0,
+                    'client_id' => optional($user->client)->id,
+                ]);
+            }
+        }
+
+        dd(__METHOD__, $lead);
+    }
 }

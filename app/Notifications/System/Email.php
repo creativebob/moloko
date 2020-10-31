@@ -12,9 +12,48 @@ class Email
 {
 
     /**
+     * Отправка письма
+     */
+    public static function send($item)
+    {
+        $item->load([
+           'arciveSubscriber'
+        ]);
+        $subscriber = $item->subscriber;
+        $data = [
+            'subscriberId' => $subscriber->id,
+            'token' => $subscriber->token
+        ];
+
+        Mail::send($mailing->template->path, $data, function ($message) use ($mailing, $dispatch) {
+            $message->to($dispatch->email, 'Любимому клиенту')->subject($mailing->subject);
+            $message->from(config('mail.from.address'), config('mail.from.name'));
+        });
+
+        $dispatch->update([
+            'sended_at' => now()
+        ]);
+        if ($count > 0) {
+            $destinations = [
+                293282078,
+                228265675
+            ];
+
+            // Отправляем на каждый telegram
+            foreach ($destinations as $destination) {
+                $response = Telegram::sendMessage([
+                    'chat_id' => $destination,
+                    'text' => "По рассылке [{$mailing->name}] отправлены {$count} писем"
+                ]);
+            }
+        }
+
+    }
+
+    /**
      * Рассылка писем
      */
-    public static function send()
+    public static function mailing()
     {
         set_time_limit(0);
 
@@ -29,6 +68,7 @@ class Email
             ->where('started_at', '<=', now())
             ->whereNull('ended_at')
             ->where('is_active', true)
+            ->whereNotNull('mailing_list_id')
 //            ->where('company_id', auth()->user()->company_id)
             ->oldest('started_at')
             ->first();
