@@ -85066,7 +85066,7 @@ var render = function() {
             _c(
               "label",
               [
-                _vm._v("Наличными:\n                        "),
+                _vm._v("Сумма:\n                        "),
                 _c("digit-component", {
                   directives: [{ name: "focus", rawName: "v-focus" }],
                   ref: "electronicallyComponent",

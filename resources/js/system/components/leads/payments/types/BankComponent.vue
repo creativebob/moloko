@@ -14,7 +14,7 @@
                         </label>
                     </div>
                     <div class="cell small-12 medium-6">
-                        <label>Наличными:
+                        <label>Сумма:
                             <digit-component
                                 classes="input-payment electronically"
                                 @input="setElectronically"
