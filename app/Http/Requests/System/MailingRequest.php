@@ -31,6 +31,8 @@ class MailingRequest extends FormRequest
               'from_name' => 'nullable|string|max:255',
               'from_email' => 'nullable|string|max:255',
 
+              'is_active' => 'nullable|integer|max:1',
+
               'template_id' => 'required|integer|exists:templates,id',
               'mailing_list_id' => 'nullable|integer|exists:mailing_lists,id',
 
