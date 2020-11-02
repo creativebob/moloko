@@ -619,7 +619,7 @@ const moduleLead = {
                 return count;
             },
             GOODS_ITEM: state => id => {
-                return state.goodsItems.find(item => item.id == id);;
+                return state.goodsItems.find(item => item.id == id);
             },
 
             // Платежи

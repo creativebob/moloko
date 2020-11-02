@@ -175,8 +175,8 @@
             return {
                 isManual: this.$store.getters.GOODS_ITEM(this.id).is_manual == 1,
                 discountPercent: this.$store.getters.GOODS_ITEM(this.id).discount_percent,
-                discountCurrency: this.$store.getters.GOODS_ITEM(this.id).discount_currency,
-                curCount: this.$store.getters.GOODS_ITEM(this.id).count,
+                discountCurrency: this.$store.getters.GOODS_ITEM(this.id).discount_currency / parseFloat(this.$store.getters.GOODS_ITEM(this.id).count),
+                curCount: parseFloat(this.$store.getters.GOODS_ITEM(this.id).count),
             }
         },
         mounted() {

@@ -81706,8 +81706,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             isManual: this.$store.getters.GOODS_ITEM(this.id).is_manual == 1,
             discountPercent: this.$store.getters.GOODS_ITEM(this.id).discount_percent,
-            discountCurrency: this.$store.getters.GOODS_ITEM(this.id).discount_currency,
-            curCount: this.$store.getters.GOODS_ITEM(this.id).count
+            discountCurrency: this.$store.getters.GOODS_ITEM(this.id).discount_currency / parseFloat(this.$store.getters.GOODS_ITEM(this.id).count),
+            curCount: parseFloat(this.$store.getters.GOODS_ITEM(this.id).count)
         };
     },
     mounted: function mounted() {
@@ -92593,7 +92593,7 @@ var render = function() {
                           required: true,
                           disabled: _vm.isDisabled
                         },
-                        on: { change: _vm.change },
+                        on: { input: _vm.change },
                         model: {
                           value: _vm.name,
                           callback: function($$v) {
@@ -92623,7 +92623,7 @@ var render = function() {
                         city: _vm.city,
                         disabled: _vm.isDisabled
                       },
-                      on: { change: _vm.change }
+                      on: { input: _vm.change }
                     })
                   ],
                   1
@@ -92644,7 +92644,7 @@ var render = function() {
                             value: _vm.address,
                             disabled: _vm.isDisabled
                           },
-                          on: { change: _vm.change },
+                          on: { input: _vm.change },
                           model: {
                             value: _vm.address,
                             callback: function($$v) {
@@ -92693,7 +92693,7 @@ var render = function() {
                         value: _vm.email,
                         disabled: _vm.isDisabled
                       },
-                      on: { change: _vm.change },
+                      on: { input: _vm.change },
                       model: {
                         value: _vm.email,
                         callback: function($$v) {
@@ -125859,7 +125859,7 @@ var moduleLead = {
             return function (id) {
                 return state.goodsItems.find(function (item) {
                     return item.id == id;
-                });;
+                });
             };
         },
 

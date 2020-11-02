@@ -15,7 +15,7 @@
 
             <div class="top-bar-right">
                 <a class="icon-filter sprite
-                @if(count(request()->input())) filtration-active @endif
+                @if(count(request()->input()) > 1) filtration-active @endif
                     "></a>
                 <search-articles-groups-component></search-articles-groups-component>
             </div>

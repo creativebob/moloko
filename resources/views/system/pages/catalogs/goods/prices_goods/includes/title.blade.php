@@ -1,6 +1,7 @@
 {{-- Заголовок и фильтры --}}
 <div data-sticky-container id="head-content">
-    <div class="sticky sticky-topbar" id="head-sticky" data-sticky data-margin-top="2.4" data-sticky-on="small" data-top-anchor="head-content:top">
+    <div class="sticky sticky-topbar" id="head-sticky" data-sticky data-margin-top="2.4" data-sticky-on="small"
+         data-top-anchor="head-content:top">
         <div class="top-bar head-content">
             <div class="top-bar-left">
                 <h2 class="header-content">{{ $pageInfo->title }}
@@ -19,8 +20,12 @@
 
             </div>
             <div class="top-bar-right">
-                <a class="icon-filter sprite @if(count(request()->input())) filtration-active @endif"></a>
-                <search-prices-goods-component catalog_id="{{ request('catalog_id') }}"></search-prices-goods-component>
+                <a class="icon-filter sprite
+                    @if(count(request()->input()) > 1) filtration-active @endif
+                        "></a>
+                <search-prices-goods-component
+                    catalog_id="{{ request('catalog_id') }}"
+                ></search-prices-goods-component>
                 {{-- <button type="button" class="icon-search sprite button"></button> --}}
             </div>
         </div>
@@ -35,7 +40,8 @@
             <div class="small-12 cell filters fieldset-filters" id="filters">
                 <div class="grid-padding-x">
                     <div class="small-12 cell text-right">
-                        <a href="{{ route('prices_goods.index', ['catalog_id' => $catalogGoods->id]) }}" class="small-link">Сбросить</a>
+                        <a href="{{ route('prices_goods.index', ['catalog_id' => $catalogGoods->id]) }}"
+                           class="small-link">Сбросить</a>
                     </div>
                 </div>
                 <div class="grid-padding-x">
@@ -61,7 +67,8 @@
             <div class="black-button-group small-12 cell">
                 @if(isset($add_buttons))
                     @foreach($add_buttons as $add_button)
-                        <a class="button tiny hollow right {{ $add_button['class'] }}" href="{{ $add_button['href'] }}">{{ $add_button['text'] }}</a>
+                        <a class="button tiny hollow right {{ $add_button['class'] }}"
+                           href="{{ $add_button['href'] }}">{{ $add_button['text'] }}</a>
                     @endforeach
                 @endif
             </div>

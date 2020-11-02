@@ -22,7 +22,7 @@
                                 :required="true"
                                 :disabled="isDisabled"
                                 v-model="name"
-                                @change="change"
+                                @input="change"
                                 ref="name"
                             ></string-component>
                         </label>
@@ -35,7 +35,7 @@
                             :start-cities="cities"
                             :city="city"
                             :disabled="isDisabled"
-                            @change="change"
+                            @input="change"
                             ref="cityId"
                         ></search-city-component>
                     </div>
@@ -46,7 +46,7 @@
                                 :value="address"
                                 :disabled="isDisabled"
                                 v-model="address"
-                                @change="change"
+                                @input="change"
                                 ref="address"
                             ></string-component>
                         </label>
@@ -73,7 +73,7 @@
                                 :value="email"
                                 :disabled="isDisabled"
                                 v-model="email"
-                                @change="change"
+                                @input="change"
                                 ref="email"
                             ></email-component>
 
