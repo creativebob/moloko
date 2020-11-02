@@ -805,7 +805,8 @@ Route::resource('/estimates_services_items', 'EstimatesServicesItemController');
 // Основные методы
 Route::resource('/payments', 'PaymentController')
     ->only([
-        'store'
+        'store',
+        'destroy'
     ]);
 
 // --------------------------------------- Заказы -----------------------------------------------

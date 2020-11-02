@@ -29,8 +29,9 @@ class PaymentObserver extends BaseObserver
             $payment->type = 'mixed';
         }
 
-        $payment->registered_at = now();
-
+        if (empty($payment->registered_at)) {
+            $payment->registered_at = now();
+        }
     }
 
     /**
@@ -49,6 +50,26 @@ class PaymentObserver extends BaseObserver
         $contract->update([
            'paid' => $paid,
            'debit' => $debit
+        ]);
+    }
+
+    /**
+     * Handle the payment "deleting" event.
+     *
+     * @param Payment $payment
+     */
+    public function deleting(Payment $payment)
+    {
+        $this->destroy($payment);
+
+        $contract = $payment->contract;
+
+        $paid = $contract->paid - $payment->total;
+        $debit = $contract->debit + $payment->total;
+
+        $contract->update([
+            'paid' => $paid,
+            'debit' => $debit
         ]);
     }
 }

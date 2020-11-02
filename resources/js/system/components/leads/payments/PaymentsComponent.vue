@@ -16,14 +16,17 @@
                     <th>Дата</th>
                     <th>Тип</th>
                     <th>Сумма</th>
+                    <th></th>
                 </tr>
                 </thead>
 
                 <tbody>
                 <payment-component
-                    v-for="payment in payments"
+                    v-for="(payment, index) in payments"
                     :payment="payment"
+                    :index="index"
                     :key="payment.id"
+                    @remove="removePayment"
                 ></payment-component>
                 </tbody>
 
@@ -69,6 +72,11 @@
             paymentsAmount() {
                 return this.$store.getters.PAYMENTS_TOTAL;
             },
+        },
+        methods: {
+            removePayment(index) {
+                this.$store.dispatch('REMOVE_PAYMENT', index);
+            }
         },
         filters: {
             decimalPlaces(value) {

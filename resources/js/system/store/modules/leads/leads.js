@@ -511,7 +511,7 @@ const moduleLead = {
             },
 
 
-            // Внесение платежа
+            // Платежи
             ADD_PAYMENT({state}, data) {
                 state.loading = true;
 
@@ -527,6 +527,20 @@ const moduleLead = {
                     .post('/admin/payments', data)
                     .then(response => {
                         state.payments.push(response.data);
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+                    .finally(() => (state.loading = false));
+            },
+            REMOVE_PAYMENT({state}, index) {
+                state.loading = true;
+                const payment = state.payments[index];
+
+                axios
+                    .delete('/admin/payments/' + payment.id)
+                    .then(response => {
+                        state.payments.splice(index, 1);
                     })
                     .catch(error => {
                         console.log(error)

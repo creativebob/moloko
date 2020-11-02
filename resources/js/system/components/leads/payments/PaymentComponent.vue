@@ -3,6 +3,12 @@
         <td>{{ payment.registered_at | formatDate }}</td>
         <td>{{ type }}</td>
         <td>{{ payment.total | decimalPlaces | decimalLevel }} {{ payment.currency.abbreviation }}</td>
+        <td class="td-delete">
+            <div
+                @click="removePayment"
+                class="icon-delete sprite"
+            ></div>
+        </td>
     </tr>
 </template>
 
@@ -11,7 +17,8 @@
 
     export default {
         props: {
-            payment: Object
+            payment: Object,
+            index: Number,
         },
         computed: {
             type() {
@@ -20,12 +27,17 @@
                 }
 
                 if (this.payment.cash == 0 && this.payment.electronically > 0) {
-                    return 'Терминал';
+                    return 'Безналичный';
                 }
 
                 if (this.payment.cash > 0 && this.payment.electronically > 0) {
                     return 'Смешанный';
                 }
+            }
+        },
+        methods: {
+            removePayment() {
+                this.$emit('remove', this.index);
             }
         },
         filters: {
@@ -38,7 +50,7 @@
 
             formatDate: function (value) {
                 if (value) {
-                    return moment(String(value)).format('DD.MM.YYYY HH:mm')
+                    return moment(String(value)).format('DD.MM.YYYY')
                 }
             },
         }

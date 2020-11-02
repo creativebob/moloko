@@ -49,8 +49,8 @@ class Payment extends Model
     ];
 
     protected $dates = [
+        'registered_at',
         'deleted_at',
-        'date'
     ];
 
     protected $fillable = [

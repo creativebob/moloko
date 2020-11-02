@@ -21,13 +21,14 @@ class StagesComposer
 	public function compose(View $view)
 	{
         $answer = operator_right('stages', false, 'index');
-        
+
         $this->stages = Stage::moderatorLimit($answer)
             // ->companiesLimit($answer)
             // ->authors($answer)
             // ->template($answer)
             // ->systemItem($answer) // Фильтр по системным записям
             ->oldest('sort')
+            ->where('display', true)
             ->get();
 		return $view->with('stages', $this->stages);
 	}

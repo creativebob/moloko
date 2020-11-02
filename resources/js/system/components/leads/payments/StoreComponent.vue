@@ -28,7 +28,7 @@
                             type="button"
                             class="button hollow button-bank-type"
                             @click="setType('bank')"
-                        >Выставить счёт
+                        >Оплата через банк
                         </button>
                     </div>
                 </div>

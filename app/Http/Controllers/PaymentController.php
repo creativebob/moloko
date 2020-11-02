@@ -31,4 +31,16 @@ class PaymentController extends Controller
         ]);
         return response()->json($payment);
     }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy($id)
+    {
+        $payment = Payment::destroy($id);
+        return response()->json($payment);
+    }
 }

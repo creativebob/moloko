@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 487);
+/******/ 	return __webpack_require__(__webpack_require__.s = 490);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -56875,15 +56875,34 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 
 /***/ }),
 
-/***/ 487:
+/***/ 49:
+/***/ (function(module, exports) {
+
+// Подключаем foundation
+$(document).foundation();
+
+// Ajax ошибка
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    },
+    error: function error(date) {
+        // alert(date);
+        alert('К сожалению, произошла ошибка. Попробуйте перезагрузить страницу!');
+    }
+});
+
+/***/ }),
+
+/***/ 490:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(488);
+module.exports = __webpack_require__(491);
 
 
 /***/ }),
 
-/***/ 488:
+/***/ 491:
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -56920,25 +56939,6 @@ var app = new Vue({
 
 // Основные настройки
 __webpack_require__(49);
-
-/***/ }),
-
-/***/ 49:
-/***/ (function(module, exports) {
-
-// Подключаем foundation
-$(document).foundation();
-
-// Ajax ошибка
-$.ajaxSetup({
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    error: function error(date) {
-        // alert(date);
-        alert('К сожалению, произошла ошибка. Попробуйте перезагрузить страницу!');
-    }
-});
 
 /***/ }),
 
