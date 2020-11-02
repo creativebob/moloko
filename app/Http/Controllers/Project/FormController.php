@@ -2,23 +2,26 @@
 
 namespace App\Http\Controllers\Project;
 
-use App\Http\Controllers\Project\Traits\Commonable;
 use App\Http\Controllers\Traits\EstimateControllerTrait;
 use App\Http\Controllers\Traits\LeadControllerTrait;
 use App\Http\Controllers\Traits\UserControllerTrait;
 use App\Lead;
 use App\Models\Project\Estimate;
-use App\Stock;
 use App\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Telegram;
 use Telegram\Bot\Exceptions\TelegramResponseException;
 
-class FormController extends Controller
+class FormController extends BaseController
 {
+    /**
+     * FormController constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
-    use Commonable;
     use UserControllerTrait;
     use LeadControllerTrait;
     use EstimateControllerTrait;

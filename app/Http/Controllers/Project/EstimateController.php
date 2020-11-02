@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers\Project;
 
-use App\Http\Controllers\Project\Traits\Commonable;
 use App\Models\Project\Estimate;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 
-class EstimateController extends Controller
+class EstimateController extends BaseController
 {
+    /**
+     * EstimateController constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
 
-    use Commonable;
+        $this->middleware('auth_usersite');
+    }
 
     /**
      * Display a listing of the resource.
@@ -52,27 +55,6 @@ class EstimateController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  int  $id
@@ -83,7 +65,7 @@ class EstimateController extends Controller
 
 	    $estimate = Estimate::with('lead')
 		    ->whereHas('lead', function($q){
-			    $q->where('user_id', Auth::user()->id);
+			    $q->where('user_id', auth()->user()->id);
 		    })
 		    ->find($id);
 
@@ -94,39 +76,5 @@ class EstimateController extends Controller
             ->first();
 
         return view($site->alias.'.pages.estimates_items.index', compact('site',  'page', 'estimate'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }

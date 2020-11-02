@@ -7,9 +7,15 @@ use App\Http\Controllers\Project\Traits\Commonable;
 use App\Models\Project\CatalogsGoodsItem;
 use Illuminate\Http\Request;
 
-class CatalogsGoodsItemController extends Controller
+class CatalogsGoodsItemController extends BaseController
 {
-    use Commonable;
+    /**
+     * CatalogsGoodsItemController constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
     /**
      * Display a listing of the resource.

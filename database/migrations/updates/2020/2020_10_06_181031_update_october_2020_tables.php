@@ -65,6 +65,14 @@ class UpdateOctober2020Tables extends Migration
             $table->boolean('is_opened')->default(0)->comment('Открыто')->after('is_delivered');
             $table->boolean('is_spamed')->default(0)->comment('Спам')->after('is_opened');
         });
+
+        Schema::table('leads', function (Blueprint $table) {
+            $table->string('utm_source')->nullable()->comment('Источник')->after('campaign_id');
+            $table->string('utm_campaign')->nullable()->comment('Рекламаня кампания')->after('utm_source');
+            $table->string('utm_medium')->nullable()->comment('Тип')->after('utm_campaign');
+
+            $table->string('prom')->nullable()->comment('Продвижение')->after('utm_term');
+        });
     }
 
     /**
@@ -125,6 +133,15 @@ class UpdateOctober2020Tables extends Migration
 
             $table->bigInteger('channel_id')->unsigned()->nullable()->comment('Id канала');
 //            $table->foreign('channel_id')->references('id')->on('channels');
+        });
+
+        Schema::table('leads', function (Blueprint $table) {
+            $table->dropColumn([
+                'utm_source',
+                'utm_campaign',
+                'utm_medium',
+                'prom',
+            ]);
         });
     }
 }

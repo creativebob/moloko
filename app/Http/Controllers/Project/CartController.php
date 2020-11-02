@@ -391,6 +391,7 @@ class CartController extends Controller
             if ($request->cookie('utm_source') != null) {
                 $utm_source = "Площадка: " . $request->cookie('utm_source');
                 $lead->source_id = Source::where('utm', $request->cookie('utm_source'))->value('id');
+                $lead->utm_source = $request->cookie('utm_source');
             }
 
             $utm_term = null;
@@ -403,14 +404,32 @@ class CartController extends Controller
                 $lead->utm_content = $request->cookie('utm_content');
             }
 
+            if ($request->cookie('utm_medium') != null) {
+                $lead->utm_medium = $request->cookie('utm_medium');
+            }
+
             if ($request->cookie('utm_campaign') != null) {
                 $lead->campaign_id = Campaign::where('external', $request->cookie('utm_campaign'))->value('id');
+                $lead->utm_campaign = $request->cookie('utm_campaign');
+            }
+
+            if ($request->cookie('prom') != null) {
+                $lead->prom = $request->cookie('prom');
             }
 
             $lead->saveQuietly();
 
+            logs('leads_from_project')
+                ->info("Создан лид с сайта с id :[{$lead->id}], сайт: [{$site->id}]");
 
-            logs('leads_from_project')->info("Создан лид с сайта с id :[{$lead->id}], сайт: [{$site->id}]");
+            Cookie::queue(Cookie::forget('utm_source'));
+            Cookie::queue(Cookie::forget('utm_term'));
+            Cookie::queue(Cookie::forget('utm_content'));
+            Cookie::queue(Cookie::forget('utm_campaign'));
+            Cookie::queue(Cookie::forget('utm_medium'));
+
+            logs('leads_from_project')
+                ->info("Очищены рекламные куки");
             // ------------------------------------------- Конец создаем лида ---------------------------------------------
 
             // Если номера нет, пишем или ищем новый и создаем связь
@@ -453,11 +472,11 @@ class CartController extends Controller
                 $pricesGoodsIds = array_keys($cart['prices']);
                 $pricesGoods = PricesGoods::with('goods.article')
                     ->find($pricesGoodsIds);
-    
+
                 // TODO - 16.10.20 - Пока что берем первый склад
                 $stockId = Stock::where('filial_id', $lead->filial_id)
                     ->value('id');
-                
+
                 // Если включены настройки для складов, то проверяем сколько складов в системе, и если один, то берем его id
 //                $settings = $site->company->settings;
 //                if ($settings->isNotEmpty()) {
@@ -729,7 +748,8 @@ class CartController extends Controller
 
             // Чистим корзину у пользователя
             Cookie::queue(Cookie::forget('cart'));
-            logs('leads_from_project')->info("Очищены куки");
+            logs('leads_from_project')
+                ->info("Очищены куки");
 
             // Пишем в сессию пользователю данные нового лида
 

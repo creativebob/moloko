@@ -3,22 +3,15 @@
 namespace App\Http\Controllers\Project;
 
 use App\Models\Project\CatalogsServicesItem;
-use App\Http\Controllers\Controller;
-use App\Http\Controllers\Project\Traits\Commonable;
-use Illuminate\Http\Request;
 
-class CatalogsServicesItemController extends Controller
+class CatalogsServicesItemController extends BaseController
 {
-    use Commonable;
-
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * CatalogsServicesItemController constructor.
      */
-    public function index()
+    public function __construct()
     {
-        //
+        parent::__construct();
     }
 
     /**

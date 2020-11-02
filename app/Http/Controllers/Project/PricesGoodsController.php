@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers\Project;
 
-use App\Http\Controllers\Project\Traits\Commonable;
 use App\Models\Project\PricesGoods;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
-class PricesGoodsController extends Controller
+class PricesGoodsController extends BaseController
 {
-
-    use Commonable;
+    /**
+     * PricesGoodsController constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
     /**
      * Display a listing of the resource.

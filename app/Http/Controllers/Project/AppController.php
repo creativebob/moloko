@@ -2,26 +2,27 @@
 
 namespace App\Http\Controllers\Project;
 
-use App\Http\Controllers\Project\Traits\Commonable;
 use App\Http\Controllers\Project\Traits\Userable;
-
-use App\Http\Requests\Project\UserUpdateRequest;
 use App\Models\Project\Subscriber;
 use Carbon\Carbon;
 use App\Lead;
 use App\PricesGoods;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
-
-use App\Http\Controllers\Controller;
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 
-class AppController extends Controller
+class AppController extends BaseController
 {
 
-    use Commonable;
+    /**
+     * AppController constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     use Userable;
 
     public function start(Request $request)

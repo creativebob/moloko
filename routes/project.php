@@ -116,8 +116,6 @@ Route::post('/shipment_update', 'AppController@shipment_update')
     ->name('project.shipment_update');
 
 
-
-
 // ------------------- Профиль ---------------------------
 Route::get('/profile', 'UserController@edit')
     ->name('project.user.edit');

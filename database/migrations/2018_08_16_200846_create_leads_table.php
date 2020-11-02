@@ -53,8 +53,13 @@ class CreateLeadsTable extends Migration
             $table->bigInteger('campaign_id')->nullable()->unsigned()->comment('Рекламная кампания');
             $table->foreign('campaign_id')->references('id')->on('campaigns');
 
-            $table->string('utm_content')->nullable()->comment('Рекламное объявление, ссылка');
+            $table->string('utm_source')->nullable()->comment('Источник');
+            $table->string('utm_campaign')->nullable()->comment('Рекламаня кампания');
+            $table->string('utm_medium')->nullable()->comment('Тип');
+            $table->string('utm_content')->nullable()->comment('Рекламное объявление');
             $table->string('utm_term')->nullable()->comment('Ключевая фраза');
+
+            $table->string('prom')->nullable()->comment('Продвижение');
 
             $table->bigInteger('sector_id')->nullable()->unsigned()->comment('Сектор');
             $table->foreign('sector_id')->references('id')->on('sectors');

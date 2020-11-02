@@ -8,10 +8,15 @@ use App\Models\Project\PricesService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class CatalogsServiceController extends Controller
+class CatalogsServiceController extends BaseController
 {
-
-    use Commonable;
+    /**
+     * CatalogsServiceController constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
     /**
      * Display a listing of the resource.
