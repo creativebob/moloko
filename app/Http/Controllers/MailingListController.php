@@ -38,7 +38,7 @@ class MailingListController extends Controller
             'author',
         ])
             ->withCount([
-                'items'
+                'subscribers'
             ])
             ->moderatorLimit($answer)
             ->companiesLimit($answer)

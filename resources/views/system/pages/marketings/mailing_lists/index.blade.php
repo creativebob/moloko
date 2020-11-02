@@ -58,7 +58,7 @@
                                     {{ $mailingList->name }}
                                 @endcan
 
-                                <span>({{ $mailingList->items_count }})</span>
+                                <span>({{ $mailingList->subscribers_count }})</span>
 
                             </td>
                             <td class="td-description">{{ $mailingList->description }}</td>

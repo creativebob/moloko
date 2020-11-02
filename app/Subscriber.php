@@ -135,12 +135,21 @@ class Subscriber extends BaseModel
             $query->valid(request('is_valid'));
         }
 
-        if (request('dispatches_count_min')) {
-            $query->has('sendedDispatches', '>=', request('dispatches_count_min'));
+        if (request()->has('dispatches_count_min')) {
+
+            if (request('dispatches_count_min') > 0) {
+                $query->has('sendedDispatches', '>=', request('dispatches_count_min'));
+            } else {
+                $query->doesnthave('sendedDispatches');
+            }
         }
 
-        if (request('dispatches_count_max')) {
-            $query->has('sendedDispatches', '<=', request('dispatches_count_max'));
+        if (request()->has('dispatches_count_max')) {
+            if (request('dispatches_count_max') > 0) {
+                $query->has('sendedDispatches', '<=', request('dispatches_count_max'));
+            } else {
+                $query->doesnthave('sendedDispatches');
+            }
         }
 
         if (request('created_at_min')) {

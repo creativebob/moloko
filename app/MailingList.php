@@ -30,6 +30,6 @@ class MailingList extends BaseModel
 
     public function subscribers()
     {
-        return $this->belongsToMany(Subscriber::class, 'mailing_list_subscriber');
+        return $this->belongsToMany(Subscriber::class);
     }
 }
