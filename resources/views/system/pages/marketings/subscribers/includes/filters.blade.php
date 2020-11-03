@@ -25,7 +25,7 @@
 
         <div class="cell small-12 medium-6">
             <label>Ошибки
-                {!! Form::select('is_valid', [1 => 'Есть', 0 => 'Нет'], request()->is_valid, ['placeholder' => 'Все']) !!}
+                {!! Form::select('is_valid', [0 => 'Есть', 1 => 'Нет'], request()->is_valid, ['placeholder' => 'Все']) !!}
             </label>
         </div>
 
