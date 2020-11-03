@@ -116,7 +116,7 @@ class Subscriber extends BaseModel
         }
 
         if (!is_null(request('deny'))) {
-            if (request('deny') == true) {
+            if (request('deny') == 1) {
                 $query->allow();
             } else {
                 $query->deny();
@@ -124,7 +124,7 @@ class Subscriber extends BaseModel
         }
 
         if (!is_null(request('client'))) {
-            if (request('client') == true) {
+            if (request('client') == 1) {
                 $query->whereNotNull('client_id');
             } else {
                 $query->whereNull('client_id');
@@ -135,8 +135,7 @@ class Subscriber extends BaseModel
             $query->valid(request('is_valid'));
         }
 
-        if (request()->has('dispatches_count_min')) {
-
+        if (!is_null(request('dispatches_count_min'))) {
             if (request('dispatches_count_min') > 0) {
                 $query->has('sendedDispatches', '>=', request('dispatches_count_min'));
             } else {
@@ -144,7 +143,7 @@ class Subscriber extends BaseModel
             }
         }
 
-        if (request()->has('dispatches_count_max')) {
+        if (!is_null(request('dispatches_count_max'))) {
             if (request('dispatches_count_max') > 0) {
                 $query->has('sendedDispatches', '<=', request('dispatches_count_max'));
             } else {
