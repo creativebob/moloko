@@ -1,17 +1,5 @@
 @charset "UTF-8";
 
-//@import "compass/reset";
-//@import "compass/css3";
-//@import "compass/layout";
-//@import "compass/typography";
-//@import "compass/utilities";
-//@import "compass";
-//@import "compass/functions";
-//@import "compass-mixins";
-
-// Fonts
-//@import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
-
 // ------------------------- Foundation -------------------------------------
 // Variables
 @import "./foundation/settings";
@@ -50,7 +38,6 @@
 // ------------------------------ Медиа ширины -------------------------------
 $small: 640px;
 $medium: 1024px;
-// $fence-sm: $small $medium;
 
 // ----------------------------------- Переменные --------------------------------------
 
@@ -218,7 +205,8 @@ fieldset {
     // border-top: none;
 
     legend {
-        font-family: $PFDDPM;
+        font-family: PFDinDisplayPro;
+        font-weight: 500;
         padding: 0 1rem 0.2rem 1rem;
         margin-left: -1rem;
     }
@@ -228,7 +216,8 @@ fieldset {
     padding: 0.4rem 0rem 1rem;
 
     legend {
-        font-family: $PFDDPM;
+        font-family: PFDinDisplayPro;
+        font-weight: 500;
         padding: 0 1rem 0.6rem 0;
         margin-left: 0rem;
         font-weight: normal;
@@ -387,7 +376,7 @@ fieldset {
 .tab-challanges-count{
     color: #fff;
     font-size: 2rem;
-    font-family: $PFDTCPR;
+    font-family: PFDinTextCondPro;
     padding-bottom: 0.4rem;
 }
 
@@ -427,7 +416,8 @@ fieldset {
 
 // Общие настройки шрифта
 html {
-    font-family: $SUISL;
+    font-family: SegoeUI;
+    font-weight: 400;
     font-size: 16px;
 }
 body {
@@ -1000,7 +990,7 @@ span.wrap-label-checkboxer {
 .inputs {
 
     label {
-        font-family: $calibri;
+        font-family: Calibri;
         font-size: 0.8rem;
         color: $label-color;
         position: relative;
@@ -1120,7 +1110,8 @@ span.wrap-label-checkboxer {
 .enter {
     max-width: 15rem;
     margin: 10rem auto 0 auto;
-    font-family: $SUISL;
+    font-family: SegoeUI;
+    font-weight: 300;
     font-size: 0.75rem;
 
     .logo {
@@ -1161,7 +1152,8 @@ span.wrap-label-checkboxer {
     .button {
         width: 100%;
         text-transform: uppercase;
-        font-family: $SUISB;
+        font-family: SegoeUI;
+        font-weight: 500;
         font-size: 0.75rem;
         background-color: $sidebar-bg-color;
         margin-top: 1rem;
@@ -1241,9 +1233,9 @@ span.wrap-label-checkboxer {
         h1 {
             text-transform: uppercase;
             color: $white;
-            font-weight: bold;
             font-size: 1rem;
-            font-family: $SUISB;
+            font-family: SegoeUI;
+            font-weight: 500;
             display: inline-block;
             vertical-align: middle;
 
@@ -1348,7 +1340,7 @@ span.wrap-label-checkboxer {
 }
 
 .bold{
-    font-weight: 600;
+    font-weight: 500;
 }
 
 // СТРАНИЦА СОТРУДНИКИ
@@ -1502,9 +1494,9 @@ $multilevel-accordion-separator: #41444a;
         tr th{
             background-color: #eee;
             border-bottom: 1px solid #000 !important;
-            font-weight: 400;
             font-size: 0.8rem;
-            font-family: $SUIR;
+            font-family: SegoeUI;
+            font-weight: 400;
         }
 
     }
@@ -1952,7 +1944,8 @@ a#task-toggle{
 
     // Tabs в менеджере задач
     .tabs-wrap {
-        font-family: $SUISL;
+        font-family: SegoeUI;
+        font-weight: 300;
         padding-top: 13px;
 
         // Обнуляем фонду, в активном состоянии
@@ -2044,7 +2037,8 @@ a#task-toggle{
                     }
 
                     .task-date {
-                        font-family: $SUISB;
+                        font-family: SegoeUI;
+                        font-weight: 500;
                         font-size: 0.7rem;
                         color: $task-manager-tabs-content-color;
                         padding-right: 6px;
@@ -2066,7 +2060,8 @@ a#task-toggle{
 
                     }
                     .task-count{
-                        font-family: $SUISL;
+                        font-family: SegoeUI;
+                        font-weight: 300;
                         font-size: 0.7rem;
                         color: $white;
                         float: right;
@@ -2075,23 +2070,27 @@ a#task-toggle{
                 }
                 .task-content {
                     margin-top: 0.4rem;
-                    font-family: $SUISL;
+                    font-family: SegoeUI;
+                    font-weight: 300;
                     color: $task-manager-tabs-content-color;
                     font-size: 0.8rem;
                     line-height: 1.4;
 
                     .task-content-head {
-                        font-family: $SUISB;
+                        font-family: SegoeUI;
+                        font-weight: 500;
                         font-size: 1rem;
                         margin-bottom: 0.4rem;
                     }
                     .task-time {
-                        font-family: $PFDDPL;
+                        font-family: PFDinDisplayPro;
+                        font-weight: 300;
                         color: #fff;
                         margin-right: 0.4rem;
                     }
                     .task-set {
-                        font-family: $PFDDPL;
+                        font-family: PFDinDisplayPro;
+                        font-weight: 300;
                         color: #fff;
                     }
 
@@ -2110,7 +2109,8 @@ a#task-toggle{
                         }
                     }
                     .task-button {
-                        font-family: $SUIR;
+                        font-family: SegoeUI;
+                        font-weight: 400;
                         font-size: 0.8rem;
                         text-transform: uppercase;
                         margin-top: 1rem;
@@ -2138,7 +2138,7 @@ a#task-toggle{
     li {
         text-transform: none; // Обнуляем класс фонды
         color: $breadcrumbs-color;
-        font-family: $PFDTPR;
+        font-family: PFDinTextPro;
         font-size: 0.8rem;
         line-height: 1;
         padding-top: 8px;
@@ -2211,9 +2211,9 @@ a#task-toggle{
 .content-table-search {
 
     caption {
-        font-family: $PFDDPL;
+        font-family: PFDinDisplayPro;
+        font-weight: 300;
         font-size: 0.875rem;
-        font-weight: normal;
         color: $input-color;
         padding: 0;
         margin-bottom: 1rem;
@@ -2227,7 +2227,8 @@ a#task-toggle{
         background: none;
 
         td {
-            font-family: $SUISL;
+            font-family: SegoeUI;
+            font-weight: 300;
             font-size: 0.8rem;
             border-bottom: 1px solid $table-search-td-border-color;
             line-height: 1;
@@ -2288,10 +2289,10 @@ a#task-toggle{
 }
 
 .tabs-wrap {
+
     padding: 0 10px;
-    font-family: $PFDDPL;
-
-
+    font-family: PFDinDisplayPro;
+    font-weight: 300;
 
     //Обнуляем фонду, в активном состоянии
     .tabs-title > a:focus, .tabs-title > a[aria-selected='true'] {
@@ -2370,7 +2371,8 @@ a#task-toggle{
         padding: 1rem 2rem 2rem;
 
         legend {
-            font-family: $PFDDPM;
+            font-family: PFDinDisplayPro;
+            font-weight: 500;
             padding: 0 1rem;
         }
     }
@@ -2433,7 +2435,7 @@ a#task-toggle{
         // Левая сторона
         .header-content {
             text-transform: uppercase;
-            font-family: $PFDTCPR;
+            font-family: PFDinTextCondPro;
             font-size: 1.8rem;
             float: left;
         }
@@ -2445,11 +2447,12 @@ a#task-toggle{
             margin: 0;
         }
         .search-field {
+            font-family: PFDinDisplayPro;
+            font-weight: 200;
             border-radius: 0.2rem;
             width: 9rem;
             height: 2rem;
             float: left;
-            font-family: $PFDDPT;
             padding: 0 0.8rem;
             box-shadow: none;
         }
@@ -2484,7 +2487,8 @@ a#task-toggle{
         padding-top: 1rem;
 
         legend {
-            font-family: $PFDDPM;
+            font-family: PFDinDisplayPro;
+            font-weight: 500;
             padding: 0 1rem;
             margin-bottom: 1rem;
         }
@@ -2616,18 +2620,13 @@ a#task-toggle{
             margin-bottom: 2px;
             position: relative;
 
-            // &:hover {
-            //     background-color: yellow;
-            //     transition: ease opacity 0.3s ;
-            // }
-
             // Ссылка в первом элементе списка
             .first-link {
-                font-family: $PFDDPL;
+                font-family: PFDinDisplayPro;
+                font-weight: 300;
                 font-size: 1rem;
                 color: $list-item-color;
                 padding: 8px 150px 8px 68px;
-                // padding-left: 68px;
 
                 .icon-open {
                     background-position: -96px -704px;
@@ -2727,7 +2726,8 @@ a#task-toggle{
                     background-position: 0px -832px;
                 }
                 .medium-link {
-                    font-family: $SUISL;
+                    font-family: SegoeUI;
+                    font-weight: 300;
                     font-size: 0.8rem;
                     color: $list-item-li-color;
                     padding: 0 0 0 8px;
@@ -2829,8 +2829,8 @@ a#task-toggle{
                     position: relative;
                     margin: 0 1.8rem 0 2rem;
                     display: block;
-                    // border-bottom: 1px solid $list-item-nested-border-bottom-color;
-                    font-family: $SUISB;
+                    font-family: SegoeUI;
+                    font-weight: 500;
                     font-size: 0.8rem;
                     color: $list-item-li-color;
                     padding: 10px 6.5rem 10px 3rem;
@@ -2887,23 +2887,16 @@ a#task-toggle{
                 background-color: $list-item-li-bg-color;
 
                 .last-link {
-                    // position: relative;
                     margin: 0 1.8rem 0 2.5rem;
                     border-bottom: 1px solid $list-item-nested-border-bottom-color;
-                    font-family: $SUISB;
+                    font-family: SegoeUI;
+                    font-weight: 500;
                     font-size: 0.8rem;
                     padding: 10px 1.4rem 10px 3.9rem;
                     color: $list-item-li-color;
                     cursor: default;
-
-                    // .icon-list {
-                    //   right: 0.1rem;
-                    //   // opacity: 0;
-                    //   div {
-                    //     padding: 0;
-                    //   }
-                    // }
                 }
+
                 .last-link:hover {
 
                     // .icon-list {
@@ -3003,11 +2996,10 @@ a#task-toggle{
         }
 
         caption {
-            font-family: $PFDDPM;
+            font-family: PFDinDisplayPro;
+            font-weight: 500;
             text-align: center;
             font-size: 0.875rem;
-            font-weight: normal;
-            // color: $input-color;
         }
 
         td.details-control {
@@ -3047,15 +3039,13 @@ a#task-toggle{
 
 
             th {
-                font-family: $PFDDPM;
+                font-family: PFDinDisplayPro;
+                font-weight: 500;
                 font-size: 0.8rem;
                 font-weight: normal;
                 background-color: $content-bg-color;
                 line-height: 0.8;
-
-                // Ставим картинку градиент = 10пх вниз, и делаем под нее отступ
                 padding-bottom: 5px;
-                // background-image: url(img/table-th-border-gradient.jpg);
                 border-bottom: 1px solid #666;
                 background-repeat: repeat-x;
                 background-position: bottom;
@@ -3088,16 +3078,13 @@ a#task-toggle{
                     margin-bottom: 0;
                 }
 
+                border-bottom: 0;
+                background-color: $table-bg-color;
             }
             .no-moderation {
                 td {
                     background-color: $table-no-moderation;
                 }
-            }
-            // Убираем выделение каждой четной строки
-            tr:nth-child(even) {
-                border-bottom: 0;
-                background-color: $table-bg-color;
             }
             tr:hover {
                 .icon-drop {
@@ -3114,10 +3101,9 @@ a#task-toggle{
                 padding: 0;
             }
             td {
-                font-family: $SUISL;
+                font-family: SegoeUI;
+                font-weight: 300;
                 font-size: 0.8rem;
-                // border-top: 1px solid $table-td-border;
-                // border-bottom: 1px solid $table-td-border;
                 border-bottom: 1px solid #e5e5e5;
                 line-height: 1.4;
             }
@@ -3293,7 +3279,8 @@ a#task-toggle{
 
         li {
             display: inline;
-            font-family: $SUISB;
+            font-family: SegoeUI;
+            font-weight: 500;
             font-size: 0.6rem;
             color: $footer-color;
             text-transform: uppercase;
@@ -3301,7 +3288,8 @@ a#task-toggle{
             margin-right: 2rem;
 
             span {
-                font-family: $SUIB;
+                font-family: SegoeUI;
+                font-weight: 600;
                 color: $footer-num-color;
             }
         }
@@ -3327,7 +3315,8 @@ a#task-toggle{
         border: none;
 
         span {
-            font-family: $SUIR;
+            font-family: SegoeUI;
+            font-weight: 400;
             font-size: 0.7rem;
             color: $footer-num-color;
         }
@@ -3652,8 +3641,8 @@ a#task-toggle{
             background-color: transparent !important;
             border-bottom: 1px solid #000;
             font-size: 0.9rem;
-            font-family: $SUISB;
-            font-weight: 400;
+            font-family: SegoeUI;
+            font-weight: 500;
         }
     }
 
@@ -3715,8 +3704,8 @@ a#task-toggle{
             background-color: transparent !important;
             border-bottom: 1px solid #000;
             font-size: 0.9rem;
-            font-family: $SUISB;
-            font-weight: 400;
+            font-family: SegoeUI;
+            font-weight: 500;
         }
     }
 
@@ -3832,14 +3821,13 @@ $responsive-card-table-stack-point: 640px;
 $responsive-card-table-label-bg: #ffffff;
 
 .responsive-card-table {
-    border-collapse: collapse;
 
-    &.unstriped tbody {
-        background-color: transparent;
-    }
+    border-collapse: collapse;
 
     th {
         background-color: $responsive-card-table-label-bg;
+        font-family: Calibry;
+        font-weight: 500;
     }
 
     tr,
@@ -4005,9 +3993,10 @@ em.raw-portion-item{
 
     }
     .indicators_total{
+        font-family: PFDinDisplayPro;
+        font-weight: 500;
         padding: 0px 3px;
         font-size: 1.3rem;
-        font-family: $PFDDPM;
     }
 }
 
@@ -4021,7 +4010,8 @@ em.raw-portion-item{
 }
 
 .text-green{
-    color: #1ac11a;
+    color: #039803;
+    font-weight: 500;
 }
 
 .text-grey {
@@ -4126,7 +4116,7 @@ tr:hover .button-to-reserve{
 .lister {
 
     .title {
-        font-family: "calibri";
+        font-family: Calibri;
         font-size: 0.8rem;
         color: #666666;
     }
@@ -4157,7 +4147,7 @@ tr:hover .button-to-reserve{
     }
 
     .reset {
-        font-family: "calibri";
+        font-family: Calibri;
         font-size: 0.8rem;
         color: #666666;
         cursor: pointer;
@@ -4169,6 +4159,71 @@ tr:hover .button-to-reserve{
 }
 
 .font-accent{
-    font-family: $PFDDPM;
+    font-family: PFDinDisplayPro;
+    font-weight: 500;
     font-size: 1.2rem;
+}
+
+.table-payments{
+
+    font-family: Calibri;    
+    font-size: 0.9rem;
+
+    thead{
+
+        tr{
+
+            background-color: transparent;
+
+            th{
+                font-family: PFDinDisplayPro;
+                font-weight: 500;
+                font-size: 0.8rem;
+                background-color: transparent;
+                border-bottom: 1px solid #000;
+
+                &.item-payment-date{
+                    width: 90px;
+                }
+
+                &.item-payment-delete{
+                    width: 50px;
+                }
+
+                &.item-payment-type{
+                    width: 160px;
+                }
+
+            }
+
+        }
+    }
+
+    tbody{
+        tr{
+            td{
+                padding-top: 5px;
+                padding-bottom: 5px;
+            }
+
+            &:hover td{
+                background-color: #fafafa;
+            }          
+        }
+
+
+    }
+
+
+    tfoot{
+        tr {
+            td{
+                padding-top: 8px;
+                padding-bottom: 8px;
+                font-weight: 500;
+                background-color: #fefefe;
+            }
+        }
+    }
+
 }

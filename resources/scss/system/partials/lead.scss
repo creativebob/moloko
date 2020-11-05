@@ -26,9 +26,10 @@
 
             td {
 
+                font-family: SegoeUI;
                 background-color: $table-bg-color !important;
                 padding: 0.15rem 0.6rem 0.15rem !important;
-                font-size: 0.9rem;
+                font-size: 0.8rem;
                 line-height: 1.2rem;
 
                 .points {
@@ -273,7 +274,8 @@ span.item-currency{
      }
 
     .invert-show{
-        font-family: $PFDDPM;
+        font-family: PFDinDisplayPro;
+        font-weight: 500;
         font-size: 1.5rem;
     }
 }
@@ -419,7 +421,7 @@ span.item-currency{
 .view-block.products-list{
 
     a {
-        font-family: SegoeUIRegular;
+        font-family: SegoeUI;
         transition: background-color 0.3s ease;
         position: relative;
         font-size: 0.8rem;
@@ -582,7 +584,7 @@ span.item-currency{
             }
 
             .points{
-                font-family: SegoeUIRegular;
+                font-family: SegoeUI;
                 color: #aaa;
             }
         }
@@ -607,7 +609,9 @@ span.item-currency{
 
 tfoot{
 
-    font-family: $SUISB;
+    font-family: SegoeUI;
+    font-weight: 500;
+
     td {
         padding-top: 2px;
         padding-bottom: 2px;
@@ -676,7 +680,8 @@ tfoot{
     padding-bottom: 1rem;
 
     input.input-payment{
-        font-family: $PFDDPM;
+        font-family: PFDinDisplayPro;
+        font-weight: 500;
         font-size: 1.4rem;
         height: auto;
         padding: 0 1rem;
@@ -702,11 +707,27 @@ tfoot{
 }
 
 .change-value{
-    font-family: $PFDDPM;
+    font-family: PFDinDisplayPro;
+    font-weight: 500;
     font-size: 1rem;
     color: $gray-dark;
 }
 
 .button-cash-type, .button-electronically-type, .button-bank-type{
     background-color: $green;
+}
+
+// Обращение
+// .stage-2 {
+//     background-color: #dceef3;
+// }
+
+// Оплачено
+.content .content-table tbody tr.stage-6 {
+    background-color: #e5f3eb;
+    border-top: 1px solid white;
+
+    td{
+        border-bottom: 1px solid white;
+    }
 }

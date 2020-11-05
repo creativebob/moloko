@@ -96,7 +96,7 @@
 
                 </td>
 
-                <td class="td-payment">{{ num_format($estimate->payments->sum('amount'), 0) }}</td>
+                <td class="td-payment">{{ num_format($estimate->payments->sum('total'), 0) }}</td>
                 <td class="td-debt">{{ num_format($estimate->total - $estimate->payments->sum('amount'), 0) }}</td>
 
                 @if(extra_right('margin-show'))

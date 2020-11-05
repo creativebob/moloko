@@ -1,190 +1,186 @@
-// PFDinDisplayPro
-//@include font-face("PFDinDisplayPro-Light", font-files(
-//    "./fonts/DinDisplayPro/PFDinDisplayPro-Light.ttf"
-//    )
-//);
+
+// ==========   Семейство SegoeUI   ===========
+
 @font-face{
-  font-family: 'PFDinDisplayPro-Light';
-  src: url('./fonts/DinDisplayPro/PFDinDisplayPro-Light.ttf') format('truetype');
-
-  //font-style: normal;
-  //font-weight: 500;
-};
-
-//@include font-face("PFDinDisplayPro-Med", font-files(
-//  "./fonts/DinDisplayPro/PFDinDisplayPro-Med.ttf"
-//  )
-//);
-@font-face{
-  font-family: 'PFDinDisplayPro-Med';
-  src: url('./fonts/DinDisplayPro/PFDinDisplayPro-Med.ttf') format('truetype');
-
-  //font-style: normal;
-  //font-weight: 500;
-};
-
-//@include font-face("PFDinDisplayPro-Reg", font-files(
-//  "./fonts/DinDisplayPro/PFDinDisplayPro-Reg.ttf"
-//  )
-//);
-@font-face{
-  font-family: 'PFDinDisplayPro-Reg';
-  src: url('./fonts/DinDisplayPro/PFDinDisplayPro-Reg.ttf') format('truetype');
-
-  //font-style: normal;
-  //font-weight: 500;
-};
-
-//@include font-face("PFDinDisplayPro-Thin", font-files(
-//  "./fonts/DinDisplayPro/PFDinDisplayPro-Thin.ttf"
-//  )
-//);
-@font-face{
-  font-family: 'PFDinDisplayPro-Thin';
-  src: url('./fonts/DinDisplayPro/PFDinDisplayPro-Thin.ttf') format('truetype');
-
-  //font-style: normal;
-  //font-weight: 500;
-};
-
-
-$PFDDPL: "PFDinDisplayPro-Light";
-$PFDDPM: "PFDinDisplayPro-Med";
-$PFDDPR: "PFDinDisplayPro-Reg";
-$PFDDPT: "PFDinDisplayPro-Thin";
-
-// PFDinTextPro
-//@include font-face("PFDinTextPro-Regular", font-files(
-//  "./fonts/DinTextPro/PFDinTextPro-Regular.ttf"
-//  )
-//);
-@font-face{
-  font-family: 'PFDinTextPro-Regular';
-  src: url('./fonts/DinTextPro/PFDinTextPro-Regular.ttf') format('truetype');
-
-  //font-style: normal;
-  //font-weight: 500;
-};
-
-$PFDTPR: "PFDinTextPro-Regular";
-
-// DinTextCondensedPro
-//@include font-face("PFDinTextCondPro-Regular", font-files(
-//  "./fonts/DinTextCondensedPro/PFDinTextCondPro-Regular.ttf"
-//  )
-//);
-@font-face{
-  font-family: 'PFDinTextCondPro-Regular';
-  src: url('./fonts/DinTextCondensedPro/PFDinTextCondPro-Regular.ttf') format('truetype');
-
-  //font-style: normal;
-  //font-weight: 500;
-};
-
-$PFDTCPR: "PFDinTextCondPro-Regular";
-
-// SegoeUI
-//@include font-face("SegoeUILight", font-files(
-//                "./fonts/SegoeUI/SegoeUILight/SegoeUILight.woff",
-//                "./fonts/SegoeUI/SegoeUILight/SegoeUILight.ttf"
-//),
-//        "./fonts/SegoeUI/SegoeUILight//SegoeUILight.eot" /* относительный путь к .eot файлу для IE */
-//);
-@font-face{
-  font-family: 'SegoeUILight';
+  font-family: SegoeUI;
   src: url('./fonts/SegoeUI/SegoeUILight/SegoeUILight.eot');
   src: url('./fonts/SegoeUI/SegoeUILight/SegoeUILight.eot?#iefix') format('embedded-opentype'),
   url('./fonts/SegoeUI/SegoeUILight/SegoeUILight.woff') format('woff'),
   url('./fonts/SegoeUI/SegoeUILight/SegoeUILight.ttf') format('truetype');
 
-  //font-style: normal;
-  //font-weight: 200;
+  font-style: normal;
+  font-weight: 200;
 };
 
-//@include font-face("SegoeUIRegular", font-files(
-//                "./fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.woff",
-//                "./fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.ttf"
-//),
-//        "./fonts/SegoeUI/SegoeUIRegular//SegoeUIRegular.eot" /* относительный путь к .eot файлу для IE */
-//);
 @font-face{
-  font-family: 'SegoeUIRegular';
+  font-family: SegoeUI;
+  src: url('./fonts/SegoeUI/SegoeUISemiLight/SegoeUISemiLight.eot');
+  src: url('./fonts/SegoeUI/SegoeUISemiLight/SegoeUISemiLight.eot?#iefix') format('embedded-opentype'),
+  url('./fonts/SegoeUI/SegoeUISemiLight/SegoeUISemiLight.woff') format('woff'),
+  url('./fonts/SegoeUI/SegoeUISemiLight/SegoeUISemiLight.ttf') format('truetype');
+
+  font-style: normal;
+  font-weight: 300;
+};
+
+@font-face{
+  font-family: SegoeUI;
   src: url('./fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.eot');
   src: url('./fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.eot?#iefix') format('embedded-opentype'),
   url('./fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.woff') format('woff'),
   url('./fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.ttf') format('truetype');
 
-  //font-style: normal;
-  //font-weight: 400;
+  font-style: normal;
+  font-weight: 400;
 };
 
-//@include font-face("SegoeUISemiBold", font-files(
-//                "./fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.woff",
-//                "./fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.ttf"
-//),
-//        "./fonts/SegoeUI/SegoeUISemiBold//SegoeUISemiBold.eot" /* относительный путь к .eot файлу для IE */
-//);
 @font-face{
-  font-family: 'SegoeUISemiBold';
+  font-family: SegoeUI;
   src: url('./fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.eot?#iefix') format('embedded-opentype'),
   url('./fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.woff') format('woff'),
   url('./fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.ttf') format('truetype');
 
-  //font-style: normal;
-  //font-weight: 500;
+  font-style: normal;
+  font-weight: 500;
 };
 
-//@include font-face("SegoeUIBold", font-files(
-//  "./fonts/SegoeUI/SegoeUIBold/SegoeUIBold.woff",
-//  "./fonts/SegoeUI/SegoeUIBold/SegoeUIBold.ttf"
-//  ),
-//"./fonts/SegoeUI/SegoeUIBold//SegoeUIBold.eot" /* относительный путь к .eot файлу для IE */
-//);
 @font-face{
-  font-family: 'SegoeUIBold';
+  font-family: SegoeUI;
   src: url('./fonts/SegoeUI/SegoeUIBold/SegoeUIBold.eot?#iefix') format('embedded-opentype'),
   url('./fonts/SegoeUI/SegoeUIBold/SegoeUIBold.woff') format('woff'),
   url('./fonts/SegoeUI/SegoeUIBold/SegoeUIBold.ttf') format('truetype');
 
-  //font-style: normal;
-  //font-weight: 500;
+  font-style: normal;
+  font-weight: 600;
 };
 
-//@include font-face("SegoeUIItalic", font-files(
-//  "./fonts/SegoeUI/SegoeUIItalic/SegoeUIItalic.woff",
-//  "./fonts/SegoeUI/SegoeUIItalic/SegoeUIItalic.ttf"
-//  ),
-//"./fonts/SegoeUI/SegoeUIItalic//SegoeUIItalic.eot" /* относительный путь к .eot файлу для IE */
-//);
+
+
+
+
+// ==========   Семейство PFDinDisplayPro   ===========
+
 @font-face{
-  font-family: 'SegoeUIItalic';
-  src: url('./fonts/SegoeUI/SegoeUIItalic/SegoeUIItalic.eot?#iefix') format('embedded-opentype'),
-  url('./fonts/SegoeUI/SegoeUIItalic/SegoeUIItalic.woff') format('woff'),
-  url('./fonts/SegoeUI/SegoeUIItalic/SegoeUIItalic.ttf') format('truetype');
-
-  //font-style: normal;
-  //font-weight: 500;
+  font-family: PFDinDisplayPro;
+  src: url('./fonts/DinDisplayPro/PFDinDisplayPro-Light.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 300;
 };
 
-//@include font-face("SegoeUISemiLight", font-files(
-//  "./fonts/SegoeUI/SegoeUISemiLight/SegoeUISemiLight.ttf"
-//  )
-//);
 @font-face{
-  font-family: 'SegoeUISemiLight';
-  src: url('./fonts/SegoeUI/SegoeUISemiLight/SegoeUISemiLight.ttf') format('truetype');
+  font-family: PFDinDisplayPro;
+  src: url('./fonts/DinDisplayPro/PFDinDisplayPro-Thin.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 200;
+};
 
-  //font-style: normal;
-  //font-weight: 500;
+
+@font-face{
+  font-family: PFDinDisplayPro;
+  src: url('./fonts/DinDisplayPro/PFDinDisplayPro-Reg.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+};
+
+@font-face{
+  font-family: PFDinDisplayPro;
+  src: url('./fonts/DinDisplayPro/PFDinDisplayPro-Med.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 500;
 };
 
 
 
-$SUIB: "SegoeUIBold";
-$SUII: "SegoeUIItalic";
-$SUIL: "SegoeUILight";
-$SUISL: "SegoeUISemiLight";
-$SUIR: "SegoeUIRegular";
-$SUISB: "SegoeUISemiBold";
 
-$calibri: "calibri";
+// ==========   Семейство PFDinTextPro   ===========
+
+@font-face{
+  font-family: PFDinTextPro;
+  src: url('./fonts/DinTextPro/PFDinTextPro-Regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+};
+
+@font-face{
+  font-family: PFDinTextCondPro;
+  src: url('./fonts/DinTextCondensedPro/PFDinTextCondPro-Regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+};
+
+
+
+
+// ==========   Семейство Calibri   ===========
+
+@font-face {
+    font-family: Calibri;
+    src: url('./fonts/Calibri/Calibri-LightItalic.eot');
+    src: local('Calibri Light Italic'), local('Calibri-LightItalic'),
+        url('./fonts/Calibri/Calibri-LightItalic.eot?#iefix') format('embedded-opentype'),
+        url('./fonts/Calibri/Calibri-LightItalic.woff2') format('woff2'),
+        url('./fonts/Calibri/Calibri-LightItalic.woff') format('woff'),
+        url('./fonts/Calibri/Calibri-LightItalic.ttf') format('truetype');
+    font-weight: 300;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: Calibri;
+    src: url('./fonts/Calibri/Calibri-Italic.eot');
+    src: local('Calibri Italic'), local('Calibri-Italic'),
+        url('./fonts/Calibri/Calibri-Italic.eot?#iefix') format('embedded-opentype'),
+        url('./fonts/Calibri/Calibri-Italic.woff2') format('woff2'),
+        url('./fonts/Calibri/Calibri-Italic.woff') format('woff'),
+        url('./fonts/Calibri/Calibri-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: Calibri;
+    src: url('./fonts/Calibri/Calibri-Light.eot');
+    src: local('Calibri Light'), local('Calibri-Light'),
+        url('./fonts/Calibri/Calibri-Light.eot?#iefix') format('embedded-opentype'),
+        url('./fonts/Calibri/Calibri-Light.woff2') format('woff2'),
+        url('./fonts/Calibri/Calibri-Light.woff') format('woff'),
+        url('./fonts/Calibri/Calibri-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: Calibri;
+    src: url('./fonts/Calibri/Calibri-Bold.eot');
+    src: local('Calibri Bold'), local('Calibri-Bold'),
+        url('./fonts/Calibri/Calibri-Bold.eot?#iefix') format('embedded-opentype'),
+        url('./fonts/Calibri/Calibri-Bold.woff2') format('woff2'),
+        url('./fonts/Calibri/Calibri-Bold.woff') format('woff'),
+        url('./fonts/Calibri/Calibri-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: Calibri;
+    src: url('./fonts/Calibri/Calibri.eot');
+    src: local('Calibri'),
+        url('./fonts/Calibri/Calibri.eot?#iefix') format('embedded-opentype'),
+        url('./fonts/Calibri/Calibri.woff2') format('woff2'),
+        url('./fonts/Calibri/Calibri.woff') format('woff'),
+        url('./fonts/Calibri/Calibri.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: Calibri;
+    src: url('./fonts/Calibri/Calibri-BoldItalic.eot');
+    src: local('Calibri Bold Italic'), local('Calibri-BoldItalic'),
+        url('./fonts/Calibri/Calibri-BoldItalic.eot?#iefix') format('embedded-opentype'),
+        url('./fonts/Calibri/Calibri-BoldItalic.woff2') format('woff2'),
+        url('./fonts/Calibri/Calibri-BoldItalic.woff') format('woff'),
+        url('./fonts/Calibri/Calibri-BoldItalic.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+}

@@ -10,30 +10,31 @@
             class="cell small-12"
             v-if="payments.length"
         >
-            <table class="unstriped">
+            <table class="table-payments">
                 <thead>
-                <tr>
-                    <th>Дата</th>
-                    <th>Тип</th>
-                    <th>Сумма</th>
-                    <th></th>
-                </tr>
+                    <tr>
+                        <th class="item-payment-date">Дата</th>
+                        <th class="item-payment-type">Тип</th>
+                        <th class="item-payment-amount">Сумма</th>
+                        <th class="item-payment-delete"></th>
+                    </tr>
                 </thead>
 
                 <tbody>
-                <payment-component
-                    v-for="(payment, index) in payments"
-                    :payment="payment"
-                    :index="index"
-                    :key="payment.id"
-                    @remove="removePayment"
-                ></payment-component>
+                    <payment-component
+                        v-for="(payment, index) in payments"
+                        :payment="payment"
+                        :index="index"
+                        :key="payment.id"
+                        @remove="removePayment"
+                    ></payment-component>
                 </tbody>
 
                 <tfoot>
                 <tr>
-                    <td colspan="2" class="text-right">Итого</td>
+                    <td colspan="2" class="text-left">Итого</td>
                     <td>{{ paymentsAmount | decimalPlaces | decimalLevel }}</td>
+                    <td></td>
                 </tr>
                 </tfoot>
             </table>

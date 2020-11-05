@@ -362,6 +362,10 @@ input[type='search'] {
   color: #cacaca;
 }
 
+::-moz-placeholder {
+  color: #cacaca;
+}
+
 ::-ms-input-placeholder {
   color: #cacaca;
 }
@@ -593,6 +597,10 @@ select[multiple] {
 }
 
 .is-invalid-input:not(:focus)::-webkit-input-placeholder {
+  color: #cc4b37;
+}
+
+.is-invalid-input:not(:focus)::-moz-placeholder {
   color: #cc4b37;
 }
 
@@ -4275,19 +4283,15 @@ tbody td {
   padding: 0.5rem 0.625rem 0.625rem;
 }
 
-tbody tr:nth-child(even) {
-  border-bottom: 0;
-  background-color: #f1f1f1;
-}
-
-table.unstriped tbody {
-  background-color: #fefefe;
-}
-
-table.unstriped tbody tr {
+tbody tr {
   border-bottom: 0;
   border-bottom: 1px solid #f1f1f1;
   background-color: #fefefe;
+}
+
+table.striped tbody tr:nth-child(even) {
+  border-bottom: 0;
+  background-color: #f1f1f1;
 }
 
 @media screen and (max-width: 63.99875em) {
@@ -4325,7 +4329,7 @@ table.hover tbody tr:hover {
   background-color: #f9f9f9;
 }
 
-table.hover:not(.unstriped) tr:nth-of-type(even):hover {
+table.hover.striped tr:nth-of-type(even):hover {
   background-color: #ececec;
 }
 
@@ -8506,65 +8510,131 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 }
 
 @font-face {
-  font-family: 'PFDinDisplayPro-Light';
-  src: url("./fonts/DinDisplayPro/PFDinDisplayPro-Light.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: 'PFDinDisplayPro-Med';
-  src: url("./fonts/DinDisplayPro/PFDinDisplayPro-Med.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: 'PFDinDisplayPro-Reg';
-  src: url("./fonts/DinDisplayPro/PFDinDisplayPro-Reg.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: 'PFDinDisplayPro-Thin';
-  src: url("./fonts/DinDisplayPro/PFDinDisplayPro-Thin.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: 'PFDinTextPro-Regular';
-  src: url("./fonts/DinTextPro/PFDinTextPro-Regular.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: 'PFDinTextCondPro-Regular';
-  src: url("./fonts/DinTextCondensedPro/PFDinTextCondPro-Regular.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: 'SegoeUILight';
+  font-family: SegoeUI;
   src: url("./fonts/SegoeUI/SegoeUILight/SegoeUILight.eot");
   src: url("./fonts/SegoeUI/SegoeUILight/SegoeUILight.eot?#iefix") format("embedded-opentype"), url("./fonts/SegoeUI/SegoeUILight/SegoeUILight.woff") format("woff"), url("./fonts/SegoeUI/SegoeUILight/SegoeUILight.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 200;
 }
 
 @font-face {
-  font-family: 'SegoeUIRegular';
+  font-family: SegoeUI;
+  src: url("./fonts/SegoeUI/SegoeUISemiLight/SegoeUISemiLight.eot");
+  src: url("./fonts/SegoeUI/SegoeUISemiLight/SegoeUISemiLight.eot?#iefix") format("embedded-opentype"), url("./fonts/SegoeUI/SegoeUISemiLight/SegoeUISemiLight.woff") format("woff"), url("./fonts/SegoeUI/SegoeUISemiLight/SegoeUISemiLight.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: SegoeUI;
   src: url("./fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.eot");
   src: url("./fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.eot?#iefix") format("embedded-opentype"), url("./fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.woff") format("woff"), url("./fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
 }
 
 @font-face {
-  font-family: 'SegoeUISemiBold';
+  font-family: SegoeUI;
   src: url("./fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.eot?#iefix") format("embedded-opentype"), url("./fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.woff") format("woff"), url("./fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 500;
 }
 
 @font-face {
-  font-family: 'SegoeUIBold';
+  font-family: SegoeUI;
   src: url("./fonts/SegoeUI/SegoeUIBold/SegoeUIBold.eot?#iefix") format("embedded-opentype"), url("./fonts/SegoeUI/SegoeUIBold/SegoeUIBold.woff") format("woff"), url("./fonts/SegoeUI/SegoeUIBold/SegoeUIBold.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 600;
 }
 
 @font-face {
-  font-family: 'SegoeUIItalic';
-  src: url("./fonts/SegoeUI/SegoeUIItalic/SegoeUIItalic.eot?#iefix") format("embedded-opentype"), url("./fonts/SegoeUI/SegoeUIItalic/SegoeUIItalic.woff") format("woff"), url("./fonts/SegoeUI/SegoeUIItalic/SegoeUIItalic.ttf") format("truetype");
+  font-family: PFDinDisplayPro;
+  src: url("./fonts/DinDisplayPro/PFDinDisplayPro-Light.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 300;
 }
 
 @font-face {
-  font-family: 'SegoeUISemiLight';
-  src: url("./fonts/SegoeUI/SegoeUISemiLight/SegoeUISemiLight.ttf") format("truetype");
+  font-family: PFDinDisplayPro;
+  src: url("./fonts/DinDisplayPro/PFDinDisplayPro-Thin.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 200;
+}
+
+@font-face {
+  font-family: PFDinDisplayPro;
+  src: url("./fonts/DinDisplayPro/PFDinDisplayPro-Reg.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: PFDinDisplayPro;
+  src: url("./fonts/DinDisplayPro/PFDinDisplayPro-Med.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: PFDinTextPro;
+  src: url("./fonts/DinTextPro/PFDinTextPro-Regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: PFDinTextCondPro;
+  src: url("./fonts/DinTextCondensedPro/PFDinTextCondPro-Regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: Calibri;
+  src: url("./fonts/Calibri/Calibri-LightItalic.eot");
+  src: local("Calibri Light Italic"), local("Calibri-LightItalic"), url("./fonts/Calibri/Calibri-LightItalic.eot?#iefix") format("embedded-opentype"), url("./fonts/Calibri/Calibri-LightItalic.woff2") format("woff2"), url("./fonts/Calibri/Calibri-LightItalic.woff") format("woff"), url("./fonts/Calibri/Calibri-LightItalic.ttf") format("truetype");
+  font-weight: 300;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: Calibri;
+  src: url("./fonts/Calibri/Calibri-Italic.eot");
+  src: local("Calibri Italic"), local("Calibri-Italic"), url("./fonts/Calibri/Calibri-Italic.eot?#iefix") format("embedded-opentype"), url("./fonts/Calibri/Calibri-Italic.woff2") format("woff2"), url("./fonts/Calibri/Calibri-Italic.woff") format("woff"), url("./fonts/Calibri/Calibri-Italic.ttf") format("truetype");
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: Calibri;
+  src: url("./fonts/Calibri/Calibri-Light.eot");
+  src: local("Calibri Light"), local("Calibri-Light"), url("./fonts/Calibri/Calibri-Light.eot?#iefix") format("embedded-opentype"), url("./fonts/Calibri/Calibri-Light.woff2") format("woff2"), url("./fonts/Calibri/Calibri-Light.woff") format("woff"), url("./fonts/Calibri/Calibri-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Calibri;
+  src: url("./fonts/Calibri/Calibri-Bold.eot");
+  src: local("Calibri Bold"), local("Calibri-Bold"), url("./fonts/Calibri/Calibri-Bold.eot?#iefix") format("embedded-opentype"), url("./fonts/Calibri/Calibri-Bold.woff2") format("woff2"), url("./fonts/Calibri/Calibri-Bold.woff") format("woff"), url("./fonts/Calibri/Calibri-Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Calibri;
+  src: url("./fonts/Calibri/Calibri.eot");
+  src: local("Calibri"), url("./fonts/Calibri/Calibri.eot?#iefix") format("embedded-opentype"), url("./fonts/Calibri/Calibri.woff2") format("woff2"), url("./fonts/Calibri/Calibri.woff") format("woff"), url("./fonts/Calibri/Calibri.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Calibri;
+  src: url("./fonts/Calibri/Calibri-BoldItalic.eot");
+  src: local("Calibri Bold Italic"), local("Calibri-BoldItalic"), url("./fonts/Calibri/Calibri-BoldItalic.eot?#iefix") format("embedded-opentype"), url("./fonts/Calibri/Calibri-BoldItalic.woff2") format("woff2"), url("./fonts/Calibri/Calibri-BoldItalic.woff") format("woff"), url("./fonts/Calibri/Calibri-BoldItalic.ttf") format("truetype");
+  font-weight: bold;
+  font-style: italic;
 }
 
 .check-order {
@@ -8596,7 +8666,8 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 }
 
 .check-order .order-info {
-  font-family: "SegoeUIRegular";
+  font-family: SegoeUI;
+  font-weight: 400;
   line-height: 1.4;
   font-size: 0.8rem;
   margin-bottom: 1rem;
@@ -8621,7 +8692,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 }
 
 .check-order .print_table {
-  font-family: "SegoeUIRegular";
+  font-family: SegoeUI;
 }
 
 .check-order .print_table tbody {
@@ -9424,7 +9495,8 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
 }
 
 .sidebar {
-  font-family: "PFDinDisplayPro-Reg";
+  font-family: PFDinDisplayPro;
+  font-weight: 400;
   text-align: left;
   background-color: #333333;
   position: fixed;
@@ -9503,7 +9575,8 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
 .sidebar .nav > ul > li > ul li {
   border-bottom: none;
   text-transform: none;
-  font-family: "SegoeUILight";
+  font-family: SegoeUI;
+  font-weight: 300;
 }
 
 .sidebar .nav > ul > li > ul li a {
@@ -9849,7 +9922,8 @@ fieldset {
 }
 
 fieldset legend {
-  font-family: "PFDinDisplayPro-Med";
+  font-family: PFDinDisplayPro;
+  font-weight: 500;
   padding: 0 1rem 0.2rem 1rem;
   margin-left: -1rem;
 }
@@ -9859,7 +9933,8 @@ fieldset legend {
 }
 
 .minimal-fieldset legend {
-  font-family: "PFDinDisplayPro-Med";
+  font-family: PFDinDisplayPro;
+  font-weight: 500;
   padding: 0 1rem 0.6rem 0;
   margin-left: 0rem;
   font-weight: normal;
@@ -10072,7 +10147,7 @@ fieldset legend {
 .tab-challanges-count {
   color: #fff;
   font-size: 2rem;
-  font-family: "PFDinTextCondPro-Regular";
+  font-family: PFDinTextCondPro;
   padding-bottom: 0.4rem;
 }
 
@@ -10104,7 +10179,8 @@ fieldset legend {
 }
 
 html {
-  font-family: "SegoeUISemiLight";
+  font-family: SegoeUI;
+  font-weight: 400;
   font-size: 16px;
 }
 
@@ -10667,7 +10743,7 @@ span.wrap-label-checkboxer {
 }
 
 .inputs label {
-  font-family: "calibri";
+  font-family: Calibri;
   font-size: 0.8rem;
   color: #666666;
   position: relative;
@@ -10773,7 +10849,8 @@ span.wrap-label-checkboxer {
 .enter {
   max-width: 15rem;
   margin: 10rem auto 0 auto;
-  font-family: "SegoeUISemiLight";
+  font-family: SegoeUI;
+  font-weight: 300;
   font-size: 0.75rem;
 }
 
@@ -10822,7 +10899,8 @@ span.wrap-label-checkboxer {
 .enter .button {
   width: 100%;
   text-transform: uppercase;
-  font-family: "SegoeUISemiBold";
+  font-family: SegoeUI;
+  font-weight: 500;
   font-size: 0.75rem;
   background-color: #333333;
   margin-top: 1rem;
@@ -10903,9 +10981,9 @@ span.wrap-label-checkboxer {
 .header .left-head h1 {
   text-transform: uppercase;
   color: #ffffff;
-  font-weight: bold;
   font-size: 1rem;
-  font-family: "SegoeUISemiBold";
+  font-family: SegoeUI;
+  font-weight: 500;
   display: inline-block;
   vertical-align: middle;
 }
@@ -11009,7 +11087,7 @@ span.wrap-label-checkboxer {
 }
 
 .bold {
-  font-weight: 600;
+  font-weight: 500;
 }
 
 table.list-employees {
@@ -11114,9 +11192,10 @@ table.list-employees {
 }
 
 #table-estimate tbody tr td, .table-estimate tbody tr td {
+  font-family: SegoeUI;
   background-color: #f9f9f9 !important;
   padding: 0.15rem 0.6rem 0.15rem !important;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   line-height: 1.2rem;
 }
 
@@ -11333,7 +11412,8 @@ span.item-currency {
 }
 
 .modal-item-estimate-total .invert-show {
-  font-family: "PFDinDisplayPro-Med";
+  font-family: PFDinDisplayPro;
+  font-weight: 500;
   font-size: 1.5rem;
 }
 
@@ -11456,7 +11536,7 @@ span.item-currency {
 }
 
 .view-block.products-list a {
-  font-family: SegoeUIRegular;
+  font-family: SegoeUI;
   -webkit-transition: background-color 0.3s ease;
   transition: background-color 0.3s ease;
   position: relative;
@@ -11602,7 +11682,7 @@ span.item-currency {
 }
 
 .view-card.products-list li a .points {
-  font-family: SegoeUIRegular;
+  font-family: SegoeUI;
   color: #aaa;
 }
 
@@ -11620,7 +11700,8 @@ span.item-currency {
 }
 
 tfoot {
-  font-family: "SegoeUISemiBold";
+  font-family: SegoeUI;
+  font-weight: 500;
 }
 
 tfoot td {
@@ -11678,7 +11759,8 @@ tfoot tr.tfoot-estimate-amount td {
 }
 
 .fields-payment-wrap input.input-payment {
-  font-family: "PFDinDisplayPro-Med";
+  font-family: PFDinDisplayPro;
+  font-weight: 500;
   font-size: 1.4rem;
   height: auto;
   padding: 0 1rem;
@@ -11703,13 +11785,23 @@ tfoot tr.tfoot-estimate-amount td {
 }
 
 .change-value {
-  font-family: "PFDinDisplayPro-Med";
+  font-family: PFDinDisplayPro;
+  font-weight: 500;
   font-size: 1rem;
   color: #333333;
 }
 
 .button-cash-type, .button-electronically-type, .button-bank-type {
   background-color: #7e9a06;
+}
+
+.content .content-table tbody tr.stage-6 {
+  background-color: #e5f3eb;
+  border-top: 1px solid white;
+}
+
+.content .content-table tbody tr.stage-6 td {
+  border-bottom: 1px solid white;
 }
 
 .green-button {
@@ -11738,9 +11830,9 @@ tfoot tr.tfoot-estimate-amount td {
 .table-notes thead tr th, .table-challenges thead tr th, .table-attributions thead tr th {
   background-color: #eee;
   border-bottom: 1px solid #000 !important;
-  font-weight: 400;
   font-size: 0.8rem;
-  font-family: "SegoeUIRegular";
+  font-family: SegoeUI;
+  font-weight: 400;
 }
 
 .table-notes tbody tr:first-child td, .table-challenges tbody tr:first-child td, .table-attributions tbody tr:first-child td {
@@ -12094,7 +12186,8 @@ a#task-toggle {
 }
 
 .task-manager .tabs-wrap {
-  font-family: "SegoeUISemiLight";
+  font-family: SegoeUI;
+  font-weight: 300;
   padding-top: 13px;
 }
 
@@ -12179,7 +12272,8 @@ a#task-toggle {
 }
 
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-head .task-date {
-  font-family: "SegoeUISemiBold";
+  font-family: SegoeUI;
+  font-weight: 500;
   font-size: 0.7rem;
   color: #cccccc;
   padding-right: 6px;
@@ -12194,7 +12288,8 @@ a#task-toggle {
 }
 
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-head .task-count {
-  font-family: "SegoeUISemiLight";
+  font-family: SegoeUI;
+  font-weight: 300;
   font-size: 0.7rem;
   color: #ffffff;
   float: right;
@@ -12203,26 +12298,30 @@ a#task-toggle {
 
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-content {
   margin-top: 0.4rem;
-  font-family: "SegoeUISemiLight";
+  font-family: SegoeUI;
+  font-weight: 300;
   color: #cccccc;
   font-size: 0.8rem;
   line-height: 1.4;
 }
 
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-content .task-content-head {
-  font-family: "SegoeUISemiBold";
+  font-family: SegoeUI;
+  font-weight: 500;
   font-size: 1rem;
   margin-bottom: 0.4rem;
 }
 
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-content .task-time {
-  font-family: "PFDinDisplayPro-Light";
+  font-family: PFDinDisplayPro;
+  font-weight: 300;
   color: #fff;
   margin-right: 0.4rem;
 }
 
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-content .task-set {
-  font-family: "PFDinDisplayPro-Light";
+  font-family: PFDinDisplayPro;
+  font-weight: 300;
   color: #fff;
 }
 
@@ -12243,7 +12342,8 @@ a#task-toggle {
 }
 
 .task-manager .tabs-wrap .tabs-content .tabs-panel .task-content .task-button {
-  font-family: "SegoeUIRegular";
+  font-family: SegoeUI;
+  font-weight: 400;
   font-size: 0.8rem;
   text-transform: uppercase;
   margin-top: 1rem;
@@ -12267,7 +12367,7 @@ a#task-toggle {
 .breadcrumbs li {
   text-transform: none;
   color: #888888;
-  font-family: "PFDinTextPro-Regular";
+  font-family: PFDinTextPro;
   font-size: 0.8rem;
   line-height: 1;
   padding-top: 8px;
@@ -12333,9 +12433,9 @@ a#task-toggle {
 }
 
 .content-table-search caption {
-  font-family: "PFDinDisplayPro-Light";
+  font-family: PFDinDisplayPro;
+  font-weight: 300;
   font-size: 0.875rem;
-  font-weight: normal;
   color: #000000;
   padding: 0;
   margin-bottom: 1rem;
@@ -12347,7 +12447,8 @@ a#task-toggle {
 }
 
 .content-table-search tbody td {
-  font-family: "SegoeUISemiLight";
+  font-family: SegoeUI;
+  font-weight: 300;
   font-size: 0.8rem;
   border-bottom: 1px solid #dadada;
   line-height: 1;
@@ -12402,7 +12503,8 @@ a#task-toggle {
 
 .tabs-wrap {
   padding: 0 10px;
-  font-family: "PFDinDisplayPro-Light";
+  font-family: PFDinDisplayPro;
+  font-weight: 300;
 }
 
 .tabs-wrap .tabs-title > a:focus, .tabs-wrap .tabs-title > a[aria-selected='true'] {
@@ -12469,7 +12571,8 @@ a#task-toggle {
 }
 
 .tabs-wrap .fieldset-access legend {
-  font-family: "PFDinDisplayPro-Med";
+  font-family: PFDinDisplayPro;
+  font-weight: 500;
   padding: 0 1rem;
 }
 
@@ -12523,7 +12626,7 @@ a#task-toggle {
 
 .content .head-content .header-content {
   text-transform: uppercase;
-  font-family: "PFDinTextCondPro-Regular";
+  font-family: PFDinTextCondPro;
   font-size: 1.8rem;
   float: left;
 }
@@ -12533,11 +12636,12 @@ a#task-toggle {
 }
 
 .content .head-content .search-field {
+  font-family: PFDinDisplayPro;
+  font-weight: 200;
   border-radius: 0.2rem;
   width: 9rem;
   height: 2rem;
   float: left;
-  font-family: "PFDinDisplayPro-Thin";
   padding: 0 0.8rem;
   -webkit-box-shadow: none;
           box-shadow: none;
@@ -12569,7 +12673,8 @@ a#task-toggle {
 }
 
 .content .fieldset-filters legend {
-  font-family: "PFDinDisplayPro-Med";
+  font-family: PFDinDisplayPro;
+  font-weight: 500;
   padding: 0 1rem;
   margin-bottom: 1rem;
 }
@@ -12687,7 +12792,8 @@ a#task-toggle {
 }
 
 .content .content-list .first-item .first-link {
-  font-family: "PFDinDisplayPro-Light";
+  font-family: PFDinDisplayPro;
+  font-weight: 300;
   font-size: 1rem;
   color: #ffffff;
   padding: 8px 150px 8px 68px;
@@ -12786,7 +12892,8 @@ a#task-toggle {
 }
 
 .content .content-list .medium-list .medium-item .medium-link {
-  font-family: "SegoeUISemiLight";
+  font-family: SegoeUI;
+  font-weight: 300;
   font-size: 0.8rem;
   color: #000000;
   padding: 0 0 0 8px;
@@ -12876,7 +12983,8 @@ a#task-toggle {
   position: relative;
   margin: 0 1.8rem 0 2rem;
   display: block;
-  font-family: "SegoeUISemiBold";
+  font-family: SegoeUI;
+  font-weight: 500;
   font-size: 0.8rem;
   color: #000000;
   padding: 10px 6.5rem 10px 3rem;
@@ -12930,7 +13038,8 @@ a#task-toggle {
 .content .content-list .last-list .last-item .last-link {
   margin: 0 1.8rem 0 2.5rem;
   border-bottom: 1px solid #dddddd;
-  font-family: "SegoeUISemiBold";
+  font-family: SegoeUI;
+  font-weight: 500;
   font-size: 0.8rem;
   padding: 10px 1.4rem 10px 3.9rem;
   color: #000000;
@@ -12985,10 +13094,10 @@ a#task-toggle {
 }
 
 .content .content-table caption {
-  font-family: "PFDinDisplayPro-Med";
+  font-family: PFDinDisplayPro;
+  font-weight: 500;
   text-align: center;
   font-size: 0.875rem;
-  font-weight: normal;
 }
 
 .content .content-table td.details-control {
@@ -13023,7 +13132,8 @@ a#task-toggle {
 }
 
 .content .content-table thead th {
-  font-family: "PFDinDisplayPro-Med";
+  font-family: PFDinDisplayPro;
+  font-weight: 500;
   font-size: 0.8rem;
   font-weight: normal;
   background-color: #eeeeee;
@@ -13055,6 +13165,11 @@ a#task-toggle {
   overflow-x: hidden;
 }
 
+.content .content-table tbody tr {
+  border-bottom: 0;
+  background-color: #f9f9f9;
+}
+
 .content .content-table tbody tr .icon-drop {
   opacity: 0;
 }
@@ -13065,11 +13180,6 @@ a#task-toggle {
 
 .content .content-table tbody .no-moderation td {
   background-color: #ffcccc;
-}
-
-.content .content-table tbody tr:nth-child(even) {
-  border-bottom: 0;
-  background-color: #f9f9f9;
 }
 
 .content .content-table tbody tr:hover .icon-drop {
@@ -13088,7 +13198,8 @@ a#task-toggle {
 }
 
 .content .content-table tbody td {
-  font-family: "SegoeUISemiLight";
+  font-family: SegoeUI;
+  font-weight: 300;
   font-size: 0.8rem;
   border-bottom: 1px solid #e5e5e5;
   line-height: 1.4;
@@ -13224,7 +13335,8 @@ a#task-toggle {
 
 .footer .right li {
   display: inline;
-  font-family: "SegoeUISemiBold";
+  font-family: SegoeUI;
+  font-weight: 500;
   font-size: 0.6rem;
   color: #bdbdbd;
   text-transform: uppercase;
@@ -13233,7 +13345,8 @@ a#task-toggle {
 }
 
 .footer .right li span {
-  font-family: "SegoeUIBold";
+  font-family: SegoeUI;
+  font-weight: 600;
   color: #ffffff;
 }
 
@@ -13259,7 +13372,8 @@ a#task-toggle {
 }
 
 .footer .foot-options span {
-  font-family: "SegoeUIRegular";
+  font-family: SegoeUI;
+  font-weight: 400;
   font-size: 0.7rem;
   color: #ffffff;
 }
@@ -13463,8 +13577,8 @@ a#task-toggle {
   background-color: transparent !important;
   border-bottom: 1px solid #000;
   font-size: 0.9rem;
-  font-family: "SegoeUISemiBold";
-  font-weight: 400;
+  font-family: SegoeUI;
+  font-weight: 500;
 }
 
 .table-compositions tr td {
@@ -13515,8 +13629,8 @@ a#task-toggle {
   background-color: transparent !important;
   border-bottom: 1px solid #000;
   font-size: 0.9rem;
-  font-family: "SegoeUISemiBold";
-  font-weight: 400;
+  font-family: SegoeUI;
+  font-weight: 500;
 }
 
 .table-invoice tr td {
@@ -13578,12 +13692,10 @@ a#task-toggle {
   border-collapse: collapse;
 }
 
-.responsive-card-table.unstriped tbody {
-  background-color: transparent;
-}
-
 .responsive-card-table th {
   background-color: #ffffff;
+  font-family: Calibry;
+  font-weight: 500;
 }
 
 @media screen and (max-width: 640px) {
@@ -13713,9 +13825,10 @@ em.raw-portion-item {
 }
 
 .cmv-indicators .indicators_total {
+  font-family: PFDinDisplayPro;
+  font-weight: 500;
   padding: 0px 3px;
   font-size: 1.3rem;
-  font-family: "PFDinDisplayPro-Med";
 }
 
 .td-attachments-photo img {
@@ -13728,7 +13841,8 @@ em.raw-portion-item {
 }
 
 .text-green {
-  color: #1ac11a;
+  color: #039803;
+  font-weight: 500;
 }
 
 .text-grey {
@@ -13821,7 +13935,7 @@ tr:hover .button-to-reserve {
 }
 
 .lister .title {
-  font-family: "calibri";
+  font-family: Calibri;
   font-size: 0.8rem;
   color: #666666;
 }
@@ -13849,7 +13963,7 @@ tr:hover .button-to-reserve {
 }
 
 .lister .reset {
-  font-family: "calibri";
+  font-family: Calibri;
   font-size: 0.8rem;
   color: #666666;
   cursor: pointer;
@@ -13860,6 +13974,52 @@ tr:hover .button-to-reserve {
 }
 
 .font-accent {
-  font-family: "PFDinDisplayPro-Med";
+  font-family: PFDinDisplayPro;
+  font-weight: 500;
   font-size: 1.2rem;
+}
+
+.table-payments {
+  font-family: Calibri;
+  font-size: 0.9rem;
+}
+
+.table-payments thead tr {
+  background-color: transparent;
+}
+
+.table-payments thead tr th {
+  font-family: PFDinDisplayPro;
+  font-weight: 500;
+  font-size: 0.8rem;
+  background-color: transparent;
+  border-bottom: 1px solid #000;
+}
+
+.table-payments thead tr th.item-payment-date {
+  width: 90px;
+}
+
+.table-payments thead tr th.item-payment-delete {
+  width: 50px;
+}
+
+.table-payments thead tr th.item-payment-type {
+  width: 160px;
+}
+
+.table-payments tbody tr td {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.table-payments tbody tr:hover td {
+  background-color: #fafafa;
+}
+
+.table-payments tfoot tr td {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  font-weight: 500;
+  background-color: #fefefe;
 }

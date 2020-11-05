@@ -23,7 +23,8 @@ $sidebar-li-border-bot: #3f3f3f;
 
 // ------------------------------------------- Сайдбар ----------------------------------------
 .sidebar {
-  font-family: $PFDDPR;
+  font-family: PFDinDisplayPro;
+  font-weight: 400;
   text-align: left;
   background-color: $sidebar-bg-color;
   position: fixed;
@@ -97,7 +98,8 @@ $sidebar-li-border-bot: #3f3f3f;
         li {
           border-bottom: none;
           text-transform: none;
-          font-family: $SUIL;
+          font-family: SegoeUI;
+          font-weight: 300;
 
           a {
             padding: 0.4rem 1rem 0.4rem 0;
