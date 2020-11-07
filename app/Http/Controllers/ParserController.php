@@ -183,8 +183,8 @@ class ParserController extends Controller
             'production'
         ])
             ->whereHas('production', function ($q) {
-                $q->whereNotNull('produced_at')->
-                whereDate('produced_at', '>', '2020-09-01');
+                $q->whereNotNull('produced_at')
+                    ->whereDate('produced_at', '>', '2020-08-01');
             })
             ->get();
 
@@ -252,8 +252,8 @@ class ParserController extends Controller
             'consignment'
         ])
             ->whereHas('consignment', function ($q) {
-                $q->whereNotNull('receipted_at')->
-                whereDate('receipted_at', '>', '2020-09-01');
+                $q->whereNotNull('receipted_at')
+                    ->whereDate('receipted_at', '>', '2020-08-01');
             })
             ->get();
 //        dd($items);

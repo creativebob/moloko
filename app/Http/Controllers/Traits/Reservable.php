@@ -20,11 +20,8 @@ trait Reservable
         $documentModel = Entity::where('alias', $item->document->getTable())
             ->value('model');
 
-        if ($item->document->getTable() == 'estimates') {
-            $documentItemModel = $documentModel.'sGoodsItem';
-        } else {
-            $documentItemModel = $documentModel.'sItem';
-        }
+        $documentItemModel = Entity::where('alias', $item->getTable())
+        ->value('model');
 
         logs('documents')
             ->info('=== РЕЗЕРВИРОВАНИЕ ' . $item->getTable() . ' ' . $item->id . ' ===');
@@ -34,7 +31,7 @@ trait Reservable
 
         // Списываем позицию состава
         $product = $item->product;
-        
+
         $productModel = Entity::where('alias', $product->getTable())
             ->value('model');
 
@@ -67,7 +64,7 @@ trait Reservable
                     $storage->reserve += $itemCount;
                     $storage->free -= $itemCount;
                 }
-    
+
                 logs('documents')
                     ->info('Существует склад ' . $storage->getTable() . ' c id: ' . $storage->id);
 
@@ -80,7 +77,7 @@ trait Reservable
                     $reserve = $item->reserve;
                     $reserve->count += $itemCount;
                     $reserve->save();
-                    
+
                     $reserve->history()->save(
                         ReservesHistory::make([
                             'count' => $itemCount
@@ -99,7 +96,7 @@ trait Reservable
                         'cmv_id' => $product->id,
                         'cmv_type' => $productModel,
                         'count' => $itemCount,
-                        'stock_id' => $item->document->stock_id,
+                        'stock_id' => $item->stock_id,
                         'filial_id' => $item->document->filial_id,
                     ]);
 
@@ -124,7 +121,7 @@ trait Reservable
                 ->info('Склада нет, негде ставить в резерв');
             $result = "По позиции \"{$item->product->article->name}\" не существует склада, невозможно поставить в резерв";
         }
-        
+
         return $result;
     }
 
@@ -158,10 +155,10 @@ trait Reservable
                     ->info('Значения count: ' . $storage->count . ', reserve: ' . $storage->reserve . ', free: ' . $storage->free);
 
                 $reserveCount = $item->reserve->count;
-    
+
                 $storage->reserve -= $reserveCount;
                 $storage->free += $reserveCount;
-                
+
                 $storage->save();
 
 
@@ -174,7 +171,7 @@ trait Reservable
 
                 logs('documents')
                     ->info('Ставим количество 0 в атуальынй резерв с id: ' . $item->reserve->id . ', результат ' . $result);
-                
+
                 $result = ReservesHistory::where([
                     'reserve_id' => $item->reserve->id,
                     'archive' => false
