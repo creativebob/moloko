@@ -424,6 +424,20 @@ Menu::insert([
         'display' => true,
         'sort' => 3,
     ],
+    [
+        'name' => 'Торговые точки',
+        'icon' => null,
+        'alias' => 'admin/outlets',
+        'tag' => 'outlets',
+        'parent_id' => $menus->where('tag', 'sales')->first()->id,
+        'page_id' => $pages->where('alias', 'outlets')->first()->id,
+        'navigation_id' => 1,
+        'company_id' => null,
+        'system' => true,
+        'author_id' => 1,
+        'display' => true,
+        'sort' => 6,
+    ],
 
     // Товары
     [

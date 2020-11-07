@@ -1,7 +1,5 @@
 <?php
 
-use Unisharp\Ckeditor\ServiceProvider;
-
 return [
 
     /*
@@ -189,15 +187,15 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-        App\Providers\ComposerServiceProvider::class,
+        App\Providers\System\ComposerServiceProvider::class,
+        App\Providers\System\ObserverServiceProvider::class,
         App\Providers\WidgetServiceProvider::class,
-        App\Providers\ObserverServiceProvider::class,
 
         App\Providers\MorphsServiceProvider::class,
         App\Providers\MorphsProjectServiceProvider::class,
 
-        App\Providers\ComposerProjectServiceProvider::class,
-        App\Providers\ObserverProjectServiceProvider::class,
+        App\Providers\Project\ComposerServiceProvider::class,
+        App\Providers\Project\ObserverServiceProvider::class,
 
     ],
 
@@ -251,11 +249,11 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         // Те, что подключаем сами, ручками )))
-        'Form' => Collective\Html\FormFacade::class,
-        'Html' => Collective\Html\HtmlFacade::class,
-        'Image' => Intervention\Image\Facades\Image::class,
-        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-        'Telegram'  => Telegram\Bot\Laravel\Facades\Telegram::class,
+//        'Form' => Collective\Html\FormFacade::class,
+//        'Html' => Collective\Html\HtmlFacade::class,
+//        'Image' => Intervention\Image\Facades\Image::class,
+//        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+//        'Telegram'  => Telegram\Bot\Laravel\Facades\Telegram::class,
 
     ],
 

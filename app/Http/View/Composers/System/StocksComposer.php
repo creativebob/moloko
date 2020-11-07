@@ -22,7 +22,7 @@ class StocksComposer
         // ->authors($answer)
         ->systemItem($answer)
         // ->template($answer)
-        ->orderBy('sort', 'asc')
+        ->oldest('sort')
         ->get();
         // dd($stocks);
 

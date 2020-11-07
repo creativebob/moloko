@@ -10,7 +10,11 @@ const moduleLead = {
             goodsItems: [],
             servicesItems: [],
 
+            stock: null,
+
             payments: [],
+
+            outletSettings: [],
 
             change: false,
             loading: false,
@@ -72,6 +76,14 @@ const moduleLead = {
                 this.commit('UPDATE_GOODS_ITEMS');
             },
 
+            SET_OUTLET_SETTINGS(state, settings) {
+                state.outletSettings = settings;
+            },
+
+            SET_STOCK(state, stock) {
+                state.stock = stock;
+            },
+
             // Смета
             SET_ESTIMATE(state, estimate) {
                 state.estimate = estimate;
@@ -84,6 +96,7 @@ const moduleLead = {
 
             ADD_GOODS_ITEM_TO_ESTIMATE(state, price) {
                 if (!state.estimate.registered_at) {
+                    this.commit('SET_CHANGE');
 
                     // TODO - 25.09.20 - Нужна будет проверка на серийность
                     let index = state.goodsItems.findIndex(obj => obj.price_id == price.id);
@@ -127,6 +140,8 @@ const moduleLead = {
                             manual_discount_percent: 0,
 
                             is_manual: 0,
+
+                            stock_id: state.stock.id,
 
                             company_id: null,
                         };
@@ -631,7 +646,13 @@ const moduleLead = {
                     });
                 }
                 return total;
-            }
+            },
+
+            // Настройки
+            OUTLET_SETTING: state => alias => {
+                const res = state.outletSettings.find(obj => obj.alias == alias);
+                return !!res;
+            },
         }
     };
 

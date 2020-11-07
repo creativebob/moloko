@@ -6,7 +6,6 @@
             :index="index"
             :key="item.id"
             :settings="settings"
-            :stocks="stocks"
             @open-modal-remove="openModal(item, index)"
         ></estimates-goods-item-component>
         <div
@@ -65,7 +64,6 @@
         props: {
             items: Array,
             settings: Array,
-            stocks: Array,
         },
         data() {
             return {

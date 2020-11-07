@@ -1,6 +1,6 @@
-{{--<lead-init-component--}}
-{{--    :lead="{{ $lead }}"--}}
-{{--></lead-init-component>--}}
+<lead-init-component
+    :outlet="{{ $outlet }}"
+></lead-init-component>
 
 <div class="top-bar head-content">
     <div class="top-bar-left">
@@ -171,7 +171,7 @@
 
                     {{-- КАТАЛОГ ТОВАРОВ --}}
                     <div class="tabs-panel" id="tab-catalog_goods">
-                        @include('leads.tabs.catalogs_goods')
+                        @include('leads.tabs.catalogs_goods', ['catalogsIds' => optional($outlet->catalogs_goods)->pluck('id')])
                     </div>
 
                     {{-- КАТАЛОГ УСЛУГ --}}

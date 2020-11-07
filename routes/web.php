@@ -34,6 +34,8 @@ Route::get('/updates/vkusnyashka', 'System\UpdateController@update_vkusnyashka')
 Route::get('/updates/add_discounts_entity', 'System\UpdateController@addDiscountsEntity');
 Route::get('/updates/add_discounts_recalculate_notification', 'System\UpdateController@addDiscountsRecalculateNotification');
 Route::get('/updates/add-mailings-entities', 'System\UpdateController@addMailingsEntities');
+Route::get('/updates/add-outlets-entity', 'System\UpdateController@addOutletsEntity');
+Route::get('/updates/add-cancel-charges', 'System\UpdateController@addCancelCharges');
 
 // Парсеры
 Route::get('/update_parser', 'ParserController@parser');
@@ -56,6 +58,12 @@ Route::get('/parsers/start-registering-documents-command', 'ParserController@sta
 Route::get('/parsers/update-payments', 'ParserController@updatePayments');
 Route::get('/parsers/set-sended-at', 'ParserController@setSendedAt');
 Route::get('/parsers/create-subscribers-from-users', 'ParserController@createSubscribersFromUsers');
+
+Route::get('/parsers/set-storage-for-consignments-items', 'ParserController@setStorageForConsignmentsItems');
+Route::get('/parsers/set-storage-for-productions-items', 'ParserController@setStorageForProductionsItems');
+
+Route::get('/parsers/set-documents-items-entities', 'ParserController@setDocumentsItemsEntities');
+Route::get('/parsers/clear-documents-tables', 'ParserController@clearDocumentsTables');
 
 Route::get('/parsers/test', 'ParserController@test');
 
@@ -941,8 +949,8 @@ Route::any('/consignments/categories', 'ConsignmentController@categories')
 Route::patch('/consignments/{id}/receipting', 'ConsignmentController@receipting')
     ->name('consignments.receipting');
 // Отмена оприходования
-Route::get('/consignments/{id}/unreceipting', 'ConsignmentController@unreceipting')
-    ->name('consignments.unreceipting');
+Route::get('/consignments/{id}/cancel', 'ConsignmentController@cancel')
+    ->name('consignments.cancel');
 // Переоприходование
 Route::get('/consignments/reposting', 'ConsignmentController@reposting')
     ->name('consignments.reposting');
@@ -970,13 +978,13 @@ Route::any('/productions/categories', 'ProductionController@categories')
 // Производство
 Route::patch('/productions/{id}/producing', 'ProductionController@producing')
     ->name('productions.producing');
-// Отмена производства
-Route::get('/productions/{id}/unproducing', 'ProductionController@unproducing')
-    ->name('productions.unproducing');
+// Отмена
+Route::get('/productions/{id}/cancel', 'ProductionController@cancel')
+    ->name('productions.cancel');
 // Перепроизводство
 Route::get('/productions/reproduced/{num}', 'ProductionController@reproducing')
     ->name('productions.reproducing');
-// Основные методы
+// Основные
 Route::resource('/productions', 'ProductionController')
     ->except([
         'store',
@@ -984,7 +992,9 @@ Route::resource('/productions', 'ProductionController')
     ]);
 
 // -------------------------------Пункты нарядов на производство ---------------------------------------------
-//Route::get('/productions_items', 'ProductionsItemController@store');
+// Отмена
+Route::post('/productions_items/cancel/{id}', 'ProductionsItemController@cancel');
+// Основные
 Route::resource('/productions_items', 'ProductionsItemController')
     ->except([
         'index',
@@ -1525,6 +1535,14 @@ Route::resource('/mailing_lists', 'MailingListController')
 // --------------------------- Рассылки -------------------------------------
 // Основные методы
 Route::resource('/mailings', 'MailingController')
+    ->except([
+        'show'
+    ]);
+
+
+// --------------------------- Торговые точки -------------------------------------
+// Основные методы
+Route::resource('/outlets', 'OutletController')
     ->except([
         'show'
     ]);

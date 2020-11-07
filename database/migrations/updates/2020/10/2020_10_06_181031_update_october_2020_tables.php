@@ -73,6 +73,19 @@ class UpdateOctober2020Tables extends Migration
 
             $table->string('prom')->nullable()->comment('Продвижение')->after('utm_term');
         });
+
+        Schema::table('companies', function (Blueprint $table) {
+            $table->bigInteger('taxation_type_id')->nullable()->unsigned()->comment('Тип системы налогообложения')->after('foundation_date');
+//            $table->foreign('taxation_type_id')->references('id')->on('taxation_types');
+        });
+
+        Schema::table('receipts', function (Blueprint $table) {
+            $table->morphs('storage');
+        });
+
+        Schema::table('offs', function (Blueprint $table) {
+            $table->morphs('storage');
+        });
     }
 
     /**
@@ -141,6 +154,26 @@ class UpdateOctober2020Tables extends Migration
                 'utm_campaign',
                 'utm_medium',
                 'prom',
+            ]);
+        });
+
+        Schema::table('companies', function (Blueprint $table) {
+            $table->dropColumn([
+                'taxation_type_id',
+            ]);
+        });
+
+        Schema::table('receipts', function (Blueprint $table) {
+            $table->dropColumn([
+                'storage_id',
+                'storage_type',
+            ]);
+        });
+
+        Schema::table('offs', function (Blueprint $table) {
+            $table->dropColumn([
+                'storage_id',
+                'storage_type',
             ]);
         });
     }

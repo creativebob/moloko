@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\System\Traits\Cancelable;
 use App\Http\Controllers\Traits\Receiptable;
 use App\Models\System\Documents\Consignment;
-use App\Models\System\Documents\ConsignmentsItem;
 use App\Entity;
 use App\Http\Requests\System\ConsignmentUpdateRequest;
 use Illuminate\Http\Request;
@@ -25,7 +25,8 @@ class ConsignmentController extends Controller
         $this->entityDependence = true;
     }
 
-    use Receiptable;
+    use Receiptable,
+        Cancelable;
 
     /**
      * Display a listing of the resource.
@@ -285,7 +286,7 @@ class ConsignmentController extends Controller
     }
 
     /**
-     * Оприходование
+     * Приходование
      *
      * @param ConsignmentUpdateRequest $request
      * @param $id
@@ -314,6 +315,10 @@ class ConsignmentController extends Controller
         if (empty($consignment->receipted_at)) {
             $data = $request->input();
             $consignment->update($data);
+
+            $consignment->items()->update([
+                'stock_id' => $consignment->stock_id
+            ]);
 
             $consignment->load([
                 'items' => function ($q) {
@@ -373,7 +378,14 @@ class ConsignmentController extends Controller
         return redirect()->route('consignments.index');
     }
 
-    public function unreceipting($id)
+    /**
+     * Отмена приходования
+     *
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function cancel($id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -388,127 +400,57 @@ class ConsignmentController extends Controller
         // Подключение политики
         $this->authorize(getmethod('update'), $consignment);
 
-        $consignment->load([
-            'items' => function ($q) {
-                $q->with([
-                    'cmv' => function ($q) {
-                        $q->with([
-                            'article'
-                        ]);
-                    },
-                    'entity'
-                ]);
-            },
-        ]);
+        if (isset($consignment->receipted_at)) {
+            $consignment->load([
+                'items' => function ($q) {
+                    $q->with([
+                        'cmv' => function ($q) {
+                            $q->with([
+                                'article',
+                                'cost'
+                            ]);
+                        },
+                        'receipt.storage',
+                        'document'
+                    ]);
+                },
+                'receipts.storage'
+            ]);
 //		dd($consignment);
 
-        if ($consignment->items->isNotEmpty()) {
+            if ($consignment->items->isNotEmpty()) {
 
-            logs('documents')
-                ->info('========================================== НАЧАЛО ОТМЕНЫ ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ ==============================================');
+                foreach ($consignment->receipts as $receipt) {
 
-            $grouped_items = $consignment->items->groupBy('entity.alias');
-//			dd($grouped_items);
-
-            foreach ($grouped_items as $alias => $items) {
-                $entity = Entity::where('alias', $alias . '_stocks')->first();
-                $model = $entity->model;
-
-                foreach ($items as $item) {
-                    logs('documents')
-                        ->info('=== ПЕРЕБИРАЕМ ПУНКТ ' . $item->getTable() . ' ' . $item->id . ' ===');
-
-                    // Склад
-                    $stock = $item->cmv->stock;
-
-                    logs('documents')
-                        ->info('Существует склад ' . $stock->getTable() . ' c id: ' . $stock->id);
-
-                    $stock_count = $stock->count;
-
-                    logs('documents')
-                        ->info('Значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
-
-                    $stock->count -= $item->count;
-                    $stock->weight -= ($item->cmv->article->weight * $item->count);
-                    $stock->volume -= ($item->cmv->article->volume * $item->count);
-                    $stock->save();
-
-                    logs('documents')
-                        ->info('Обновлены значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
-
-                    // Себестоимость
-                    $cost = $item->cmv->cost;
-
-                    logs('documents')
-                        ->info('Существует себестоимость c id: ' . $cost->id);
-                    logs('documents')
-                        ->info('Значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
-
-                    // Получаем из сессии необходимые данные
-                    $answer = operator_right('consignments_items', true, 'index');
-
-                    $min = ConsignmentsItem::moderatorLimit($answer)
-                        ->companiesLimit($answer)
-                        ->where([
-                            'cmv_id' => $item->cmv_id,
-                            'cmv_type' => $item->cmv_type,
-                        ])
-                        ->whereHas('consignment', function ($q) use ($consignment) {
-                            $q->where('is_posted', true)
-                                ->where('id', '!=', $consignment->id);
-                        })
-                        ->min('price');
-//					dd($min);
-
-                    $max = ConsignmentsItem::moderatorLimit($answer)
-                        ->companiesLimit($answer)
-                        ->where([
-                            'cmv_id' => $item->cmv_id,
-                            'cmv_type' => $item->cmv_type,
-                        ])
-                        ->whereHas('consignment', function ($q) use ($consignment) {
-                            $q->where('is_posted', true)
-                                ->where('id', '!=', $consignment->id);
-                        })
-                        ->min('price');
-//					dd($max);
-
-                    if (is_null($min) || is_null($max)) {
-                        $average = 0;
-                    } else {
-                        $average = (($stock_count * $cost->average) - ($item->count * $item->price)) / $stock->count;
+                    if ($receipt->storage->free < $receipt->count) {
+                        return back()
+                            ->withErrors(['msg' => 'Накладная содержит позиции, в которых на остатках нет нужного количества для возврата!']);
                     }
-                    $cost->min = $min;
-                    $cost->max = $max;
-                    $cost->average = $average;
-                    $cost->save();
-//					dd($cost);
-
-                    logs('documents')
-                        ->info('Обновлены значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
-
-                    logs('documents')
-                        ->info('=== КОНЕЦ ПЕРЕБОРА ПУНКТА ===
-                        ');
-
                 }
-            }
 
-            $consignment->update([
-                'receipted_at' => null,
-            ]);
+                logs('documents')
+                    ->info('========================================== НАЧАЛО ОТМЕНЫ ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ ==============================================');
 
-            logs('documents')
-                ->info('Откат оприходования накладной c id: ' . $consignment->id);
-            logs('documents')
-                ->info('========================================== КОНЕЦ ОТМЕНЫ ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ ==============================================
+                foreach ($consignment->items as $item) {
+//                    dd($item);
+                        $this->cancelReceipt($item);
+                }
+
+                $consignment->update([
+                    'receipted_at' => null,
+                ]);
+
+                logs('documents')
+                    ->info('Отменена накладная c id: ' . $consignment->id);
+                logs('documents')
+                    ->info('========================================== КОНЕЦ ОТМЕНЫ ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ ==============================================
 				
 				');
 
-            return redirect()->route('consignments.index');
-        } else {
-            abort(403, 'Накладная пуста');
+                return redirect()->route('consignments.index');
+            } else {
+                abort(403, 'Накладная пуста');
+            }
         }
     }
 

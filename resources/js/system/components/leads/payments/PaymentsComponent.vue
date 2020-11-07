@@ -34,6 +34,7 @@
                 <tr>
                     <td colspan="2" class="text-right">Итого</td>
                     <td>{{ paymentsAmount | decimalPlaces | decimalLevel }}</td>
+                    <td></td>
                 </tr>
                 </tfoot>
             </table>

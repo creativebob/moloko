@@ -7,7 +7,6 @@ use App\Mailing;
 
 class MailingController extends Controller
 {
-
     protected $entityAlias;
     protected $entityDependence;
 

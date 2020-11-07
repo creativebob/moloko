@@ -65,7 +65,7 @@
             <div class="small-12 cell">
                 <div class="tabs-content" data-tabs-content="tabs">
 
-                    <!-- Роли -->
+                    {{-- Роли --}}
                     @can('index', App\Role::class)
                     <div class="tabs-panel" id="tab-roles">
                         <fieldset class="fieldset-access">
@@ -79,43 +79,37 @@
                     </div>
                     @endcan
 
-                    <!-- Оповещения -->
+                    {{-- Оповещения --}}
                     <div class="tabs-panel is-active" id="tab-notifications">
                         <fieldset class="fieldset-access">
                             <legend>Настройка оповещений</legend>
                             <div class="grid-x grid-padding-x">
                                 <div class="small-12 cell">
-
                                     @include('includes.lists.notifications', ['site_id' => 1])
-
                                 </div>
                             </div>
                         </fieldset>
                     </div>
 
-                    <!-- Оповещения -->
+                    {{-- Обязанности --}}
                     <div class="tabs-panel" id="tab-charges">
                         <fieldset class="fieldset-access">
                             <legend>Настройка обязанностей</legend>
                             <div class="grid-x grid-padding-x">
                                 <div class="small-12 cell">
-
                                     @include('includes.lists.charges')
-
                                 </div>
                             </div>
                         </fieldset>
                     </div>
 
-                    <!-- Виджеты -->
+                    {{-- Виджеты --}}
                     <div class="tabs-panel" id="tab-widgets">
                         <fieldset class="fieldset-access">
                             <legend>Настройка виджетов</legend>
                             <div class="grid-x grid-padding-x">
                                 <div class="small-12 cell">
-
                                     @include('includes.lists.widgets')
-
                                 </div>
                             </div>
                         </fieldset>

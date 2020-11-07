@@ -26,6 +26,8 @@ class ConsignmentsItem extends BaseModel
         'cost',
         'amount',
 
+        'stock_id',
+
         'currency_id',
 
         'entity_id',

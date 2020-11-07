@@ -8,9 +8,7 @@
             <th>Наименование позиции:</th>
             <th>Кол-во:</th>
             <th>Ед. изм.:</th>
-            <th
-                v-if="!isProduced"
-            ></th>
+            <th></th>
         </tr>
         </thead>
 
@@ -24,6 +22,7 @@
             :is-produced="isProduced"
             @update="updateItem"
             @remove="deleteItem(index)"
+            @open-modal-cancel="openModal"
         ></productions-item-component>
 
         <tr
@@ -85,6 +84,41 @@
 
         </tr>
         </tfoot>
+
+        <div
+            class="reveal rev-small"
+            id="modal-cancel"
+            data-reveal
+        >
+            <div class="grid-x">
+                <div class="small-12 cell modal-title">
+                    <h5>Отмена производства</h5>
+                </div>
+            </div>
+            <div class="grid-x align-center modal-content">
+                <div class="small-10 cell text-center">
+                    <p>Отменяем "{{ cancelingItemName }}", вы уверены?</p>
+                </div>
+            </div>
+            <div class="grid-x align-center grid-padding-x">
+                <div class="small-6 medium-4 cell">
+                    <form
+                        method="POST"
+                        :action="'/admin/productions_items/cancel/' + cancelingItemId"
+                    >
+                        <slot></slot>
+                        <button
+                             class="button modal-button"
+                            type="submit"
+                        >Откатить
+                        </button>
+                    </form>
+                </div>
+                <div class="small-6 medium-4 cell">
+                    <button data-close class="button modal-button" type="submit">Отменить</button>
+                </div>
+            </div>
+        </div>
     </table>
 
 </template>
@@ -119,7 +153,10 @@
                 itemUnit: null,
 
                 // Производитель
-                manufacturer_id: null
+                manufacturer_id: null,
+
+                cancelingItemId: null,
+                cancelingItemName: null,
             }
         },
         computed: {
@@ -230,10 +267,14 @@
             updateItem: function (item, index) {
                 Vue.set(this.items, index, item);
             },
-
             deleteItem: function (index) {
                 this.items.splice(index, 1);
-            }
+            },
+
+            openModal(item) {
+                this.cancelingItemId = item.id;
+                this.cancelingItemName = item.cmv.article.name;
+            },
         },
 
         filters: {

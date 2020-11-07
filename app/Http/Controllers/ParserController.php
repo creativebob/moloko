@@ -8,12 +8,14 @@ use App\CatalogsGoods;
 use App\CatalogsGoodsItem;
 use App\Client;
 use App\Dispatch;
+use App\Models\System\Documents\ConsignmentsItem;
 use App\Models\System\Documents\Estimate;
 use App\Goods;
 use App\Http\Controllers\System\Traits\Clientable;
 use App\Http\Controllers\Traits\UserControllerTrait;
 use App\Models\System\Documents\Consignment;
 use App\Models\System\Documents\Production;
+use App\Models\System\Documents\ProductionsItem;
 use App\OldLead;
 use App\OldLocation;
 use App\Lead;
@@ -60,6 +62,230 @@ class ParserController extends Controller
     }
 
     /**
+     * Очистка сущностей докуметов для проверок
+     *
+     * @return array|string|null
+     */
+    public function clearDocumentsTables ()
+    {
+        \DB::statement("SET foreign_key_checks=0");
+        $names = [
+            'consignments',
+            'consignments_items',
+
+            'productions',
+            'productions_items',
+
+            'goods_stocks',
+            'raws_stocks',
+            'attachments_stocks',
+            'containers_stocks',
+            'tools_stocks',
+
+             'costs',
+             'costs_histories',
+
+            'receipts',
+            'offs',
+
+            'reserves',
+            'reserves_histories',
+        ];
+        foreach ($names as $name) {
+            \DB::table($name)->truncate();
+        }
+        \DB::statement("SET foreign_key_checks=1");
+
+        return __('msg.ok');
+    }
+
+    /**
+     * Добавление сущностей пунктов документов
+     *
+     * @return array|string|null
+     */
+    public function setDocumentsItemsEntities()
+    {
+        Entity::firstOrCreate([
+            'name' => 'Товары сметы',
+            'alias' => 'estimates_goods_items',
+            'model' => 'App\Models\System\Documents\EstimatesGoodsItem',
+            'rights' => false,
+            'system' => true,
+            'author_id' => 1,
+            'ancestor_id' => Entity::whereAlias('estimates')->value('id'),
+            'view_path' => 'estimates',
+        ]);
+
+        Entity::firstOrCreate([
+            'name' => 'Услуги сметы',
+            'alias' => 'estimates_services_items',
+            'model' => 'App\Models\System\Documents\EstimatesServicesItem',
+            'rights' => false,
+            'system' => true,
+            'author_id' => 1,
+            'ancestor_id' => Entity::whereAlias('estimates')->value('id'),
+            'view_path' => 'estimates',
+        ]);
+
+        Entity::firstOrCreate([
+            'name' => 'Пункты накладной',
+            'alias' => 'consignments_items',
+            'model' => 'App\Models\System\Documents\ConsignmentsItem',
+            'rights' => false,
+            'system' => true,
+            'author_id' => 1,
+            'ancestor_id' => Entity::whereAlias('consignments')->value('id'),
+            'view_path' => 'consignments',
+        ]);
+
+        Entity::firstOrCreate([
+            'name' => 'Пункты наряда',
+            'alias' => 'productions_items',
+            'model' => 'App\Models\System\Documents\ProductionsItem',
+            'rights' => false,
+            'system' => true,
+            'author_id' => 1,
+            'ancestor_id' => Entity::whereAlias('productions')->value('id'),
+            'view_path' => 'productions',
+        ]);
+
+        return __('msg.ok');
+    }
+
+    /**
+     * Проставление хранилища в receipts и offs
+     *
+     * @return string
+     */
+    public function setStorageForProductionsItems()
+    {
+
+        $items = ProductionsItem::with([
+            'cmv.stocks',
+            'entity',
+            'receipt' => function ($q) {
+                $q->where('storage_id', 0)
+                    ->orWhereNull('storage_id');
+            },
+            'offs' => function ($q) {
+                $q->with([
+                    'cmv' => function ($q) {
+                        $q->with([
+                            'stocks',
+                            'article'
+                        ]);
+                    }
+                ])
+                    ->where('storage_id', 0)
+                    ->orWhereNull('storage_id');
+            },
+            'production'
+        ])
+            ->whereHas('production', function ($q) {
+                $q->whereNotNull('produced_at')->
+                whereDate('produced_at', '>', '2020-09-01');
+            })
+            ->get();
+
+        foreach ($items as $item) {
+
+            $item->update([
+                'stock_id' => $item->production->stock_id
+            ]);
+
+            $storageType = Entity::where('alias', $item->entity->alias . '_stocks')
+                ->value('model');
+//            dd($storageType);
+
+            $storageId = $item->cmv->stocks
+                ->where('stock_id', $item->stock_id)
+                ->where('manufacturer_id', $item->manufacturer_id)
+                ->first()
+                ->id;
+//            dd($storageId);
+
+            $item->receipt()->update([
+                'storage_id' => $storageId,
+                'storage_type' => $storageType,
+            ]);
+
+            foreach ($item->offs as $off) {
+//                dd($off);
+
+                $storageType = Entity::where('alias', $off->cmv->getTable() . '_stocks')
+                    ->value('model');
+//            dd($storageType);
+
+                $storageId = $off->cmv->stocks
+                    ->where('stock_id', $item->stock_id)
+                    ->where('manufacturer_id', $off->cmv->article->manufacturer_id)
+                    ->first()
+                    ->id;
+//            dd($storageId);
+
+                $off->update([
+                    'storage_id' => $storageId,
+                    'storage_type' => $storageType,
+                ]);
+            }
+
+        }
+        return "Гатова!";
+    }
+
+    /**
+     * Проставление хранилища в receipts
+     *
+     * @return string
+     */
+    public function setStorageForConsignmentsItems()
+    {
+
+        $items = ConsignmentsItem::with([
+            'cmv.stocks',
+            'entity',
+            'receipt' => function ($q) {
+                $q->where('storage_id', 0)
+                    ->orWhereNull('storage_id');
+            },
+            'consignment'
+        ])
+            ->whereHas('consignment', function ($q) {
+                $q->whereNotNull('receipted_at')->
+                whereDate('receipted_at', '>', '2020-09-01');
+            })
+            ->get();
+//        dd($items);
+
+        foreach ($items as $item) {
+//            dd($item);
+
+            $item->update([
+                'stock_id' => $item->consignment->stock_id
+            ]);
+
+            $storageType = Entity::where('alias', $item->entity->alias . '_stocks')
+                ->value('model');
+//            dd($storageType);
+
+            $storageId = $item->cmv->stocks
+                ->where('stock_id', $item->stock_id)
+                ->where('manufacturer_id', $item->manufacturer_id)
+                ->first()
+                ->id;
+//            dd($storageId);
+
+            $item->receipt()->update([
+                'storage_id' => $storageId,
+                'storage_type' => $storageType,
+            ]);
+
+        }
+        return "Гатова!";
+    }
+
+    /**
      * Создание подписчиков из пользователей (не сотрудников)
      *
      * @return string
@@ -70,11 +296,11 @@ class ParserController extends Controller
             'client'
 //            'notifications'
         ])
-        ->where('site_id', '!=', 1)
+            ->where('site_id', '!=', 1)
             ->whereNotNull('email')
             ->get();
 
-        foreach($users as $user) {
+        foreach ($users as $user) {
 
 //            $allow = $user->notifications->firstWhere('id', 4);
 
@@ -115,7 +341,7 @@ class ParserController extends Controller
         $dispatches = Dispatch::whereNull('sended_at')
             ->get();
 
-        foreach($dispatches as $dispatch) {
+        foreach ($dispatches as $dispatch) {
             $dispatch->update([
                 'sended_at' => $dispatch->created_at
             ]);
@@ -132,7 +358,7 @@ class ParserController extends Controller
     {
         $payments = Payment::get();
 
-        foreach($payments as $payment) {
+        foreach ($payments as $payment) {
             $data = [
                 'registered_at' => $payment->created_at,
                 'payments_method_id' => 4,
@@ -172,7 +398,7 @@ class ParserController extends Controller
         foreach ($entities as $entity) {
             if ($entity->model == "Production" || $entity->model == "Consignment" || $entity->model == "Estimate") {
                 $entity->update([
-                   'model' => "App\Models\System\Documents\\{$entity->model}"
+                    'model' => "App\Models\System\Documents\\{$entity->model}"
                 ]);
             } else if ($entity->model == "GoodsStock" || $entity->model == "RawsStock" || $entity->model == "ContainersStock" || $entity->model == "AttachmentsStock" || $entity->model == "ToolsStock") {
                 $entity->update([

@@ -15,6 +15,7 @@ use App\Http\Controllers\System\Traits\Timestampable;
 use App\Http\Controllers\System\Traits\Userable;
 use App\Http\Controllers\Traits\Offable;
 use App\Http\Controllers\Traits\Photable;
+use App\Outlet;
 use App\Representative;
 use App\Stock;
 use App\Subscriber;
@@ -369,13 +370,28 @@ class LeadController extends Controller
             'Сырье' => $raws_categories_list,
         ];
 
+        // TODO - 04.11.20 - Заглушка торговой точкой
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answerOutlets = operator_right('outlets', true, getmethod('index'));
+
+        $outlet = Outlet::with([
+            'catalogs_goods',
+            'stock',
+            'settings'
+        ])
+        ->moderatorLimit($answerOutlets)
+            ->companiesLimit($answerOutlets)
+            ->authors($answerOutlets)
+            ->where('filial_id', auth()->user()->stafferFilialId)
+            ->first();
+
         // Настройки компании
         $settings = auth()->user()->company->settings;
 
         // Инфо о странице
         $pageInfo = pageInfo($this->entityAlias);
 
-        return view('leads.edit', compact('lead', 'pageInfo', 'choices', 'settings'));
+        return view('leads.edit', compact('lead', 'pageInfo', 'choices', 'settings', 'outlet'));
     }
 
     public function updateClientDiscount($lead)

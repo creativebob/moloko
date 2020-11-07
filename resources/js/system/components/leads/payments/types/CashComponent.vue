@@ -43,7 +43,7 @@
                             ></digit-component>
                         </label>
                         <button
-                            v-if="isElectronically && !mixed && showMixed"
+                            v-if="!mixed && showMixed && showTerminal"
                             type="button"
                             class="button-add-electronically"
                             @click="setMixed"
@@ -98,7 +98,6 @@
         },
         props: {
             currencies: Array,
-            isElectronically: Boolean
         },
         data() {
             return {
@@ -117,6 +116,9 @@
             },
             showMixed() {
                 return this.cash < this.estimateTotal;
+            },
+            showTerminal() {
+                return this.$store.getters.OUTLET_SETTING('payment-terminal');
             },
             showButton() {
                 if (this.cash > 0 && this.electronically == 0) {

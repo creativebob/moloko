@@ -14,8 +14,8 @@
             <h2 class="header-content">РЕДАКТИРОВАТЬ товарную накладную</h2>
         </div>
         <div class="top-bar-right">
-            @if(Auth::user()->god && $consignment->receipted_at)
-                <a href="{{ route('consignments.unreceipting', $consignment->id) }}" class="button">Отменить проводку</a>
+            @if($consignment->receipted_at && extra_right('consignment-cancel'))
+                <a href="{{ route('consignments.cancel', $consignment->id) }}" class="button">Отменить оприходование</a>
             @endif
         </div>
     </div>

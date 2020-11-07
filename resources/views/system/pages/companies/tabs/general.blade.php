@@ -38,7 +38,7 @@
                     @include('includes.inputs.email', ['value' => $company->email, 'name' => 'email'])
                 </label>
                 {{-- Город --}}
-                @include('system.common.includes.city_search', ['item' => $company, 'required' => true])
+
 
             </div>
             <div class="small-12 medium-6 cell">
@@ -56,6 +56,7 @@
                     </label>
                 </div>
             @endif
+
             <div class="small-12 medium-3 cell">
                 <label>Почтовый индекс
                     @include('includes.inputs.zip_code', ['value'=>isset($company->location->zip_code) ? $company->location->zip_code : null, 'name'=>'zip_code'])

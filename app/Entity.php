@@ -52,8 +52,12 @@ class Entity extends Model
         'name',
         'alias',
         'model',
+        'view_path',
 
         'rights',
+
+        'ancestor_id',
+        'author_id',
 
         'display',
         'system',

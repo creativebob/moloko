@@ -22,10 +22,15 @@
         </td>
         <td>{{ unitAbbreviation }}</td>
 
-        <td
-            v-if="!this.isProduced"
-        >
+        <td>
+            <div
+                v-if="isProduced"
+                @click="openModalCancel"
+                class="icon-delete sprite"
+                data-open="modal-cancel"
+            ></div>
             <a
+                v-else
                 class="icon-delete sprite"
                 @click="deleteItem"
             ></a>
@@ -90,13 +95,16 @@
                     .delete('/admin/productions_items/' + this.item.id)
                     .then(response => {
                         if(response.data > 0) {
-                            console.log('Удаляем - ' + this.item.id);
+                            // console.log('Удаляем - ' + this.item.id);
                             this.$emit('remove');
                         }
                     })
                     .catch(error => {
                         console.log(error)
                     });
+            },
+            openModalCancel() {
+                this.$emit('open-modal-cancel', this.item);
             },
         },
         directives: {

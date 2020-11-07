@@ -5,6 +5,7 @@
         <td>{{ payment.total | decimalPlaces | decimalLevel }} {{ payment.currency.abbreviation }}</td>
         <td class="td-delete">
             <div
+                v-if="canRemove"
                 @click="removePayment"
                 class="icon-delete sprite"
             ></div>
@@ -33,6 +34,9 @@
                 if (this.payment.cash > 0 && this.payment.electronically > 0) {
                     return 'Смешанный';
                 }
+            },
+            canRemove() {
+                return !this.$store.getters.OUTLET_SETTING('use-cash-register') && this.$store.getters.OUTLET_SETTING('edit-payment');
             }
         },
         methods: {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\System;
 use App\Action;
 use App\ActionEntity;
 use App\Channel;
+use App\Charge;
 use App\Entity;
 use App\Models\System\Documents\EstimatesGoodsItem;
 use App\Http\Controllers\Controller;
@@ -29,6 +30,141 @@ class UpdateController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+    }
+
+    /**
+     * Обновление спецправ на отмену товарок / нарядов
+     *
+     * @return array|string|null
+     */
+    public function addCancelCharges()
+    {
+        Charge::insert([
+            [
+                'name' => 'Отмена товарной накладной',
+                'alias' => 'consignment-cancel',
+                'author_id' => 1,
+            ],
+            [
+                'name' => 'Отмена наряда на производство',
+                'alias' => 'production-cancel',
+                'author_id' => 1,
+            ],
+        ]);
+        return __('msg.ok');
+    }
+
+    /**
+     * Добавление в развернутую систему сущности торговых точек с правами
+     *
+     * @return string
+     */
+    public function addOutletsEntity()
+    {
+        Page::insert([
+            [
+                'name' => 'Торговые точки',
+                'site_id' => 1,
+                'title' => 'Торговые точки',
+                'description' => 'Торговые точки',
+                'alias' => 'outlets',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+        ]);
+        echo "Добавлена страница<br><br>";
+
+        $pages = Page::get();
+        $menus = Menu::get();
+
+        Menu::insert([
+            [
+                'name' => 'Торговые точки',
+                'icon' => null,
+                'alias' => 'admin/outlets',
+                'tag' => 'outlets',
+                'parent_id' => $menus->firstWhere('tag', 'sales')->id,
+                'page_id' => $pages->firstWhere('alias', 'outlets')->id,
+                'navigation_id' => 1,
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+                'sort' => 6,
+            ],
+        ]);
+        echo "Добавлен пункт меню<br><br>";
+
+        $entities = Entity::get([
+            'id',
+            'alias',
+        ]);
+        Entity::insert([
+            [
+                'name' => 'Торговые точки',
+                'alias' => 'outlets',
+                'model' => 'App\Outlet',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'metric' => 0,
+                'view_path' => 'system.pages.outlets',
+                'page_id' => $pages->firstWhere('alias', 'outlets')->id,
+            ],
+
+        ]);
+        echo 'Добавлена сущность<br><br>';
+
+        // Наваливание прав
+        $entities = Entity::where('alias', 'outlets')
+            ->get();
+
+        foreach ($entities as $entity) {
+            // Генерируем права
+            $actions = Action::get();
+            $mass = [];
+
+            foreach ($actions as $action) {
+                $mass[] = ['action_id' => $action->id, 'entity_id' => $entity->id, 'alias_action_entity' => $action->method . '-' . $entity->alias];
+            };
+            DB::table('action_entity')->insert($mass);
+
+            $actionentities = ActionEntity::where('entity_id', $entity->id)->get();
+            $mass = [];
+
+            foreach ($actionentities as $actionentity) {
+
+                $mass[] = ['name' => "Разрешение на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'allow', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-allow'];
+
+                $mass[] = ['name' => "Запрет на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'deny', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-deny'];
+            };
+
+            DB::table('rights')->insert($mass);
+
+            $actionentities = $actionentities->pluck('id')->toArray();
+
+            // Получаем все существующие разрешения (allow)
+            $rights = Right::whereIn('object_entity', $actionentities)->where('directive', 'allow')->get();
+
+            $mass = [];
+            // Генерируем права на полный доступ
+            foreach ($rights as $right) {
+                $mass[] = [
+                    'right_id' => $right->id,
+                    'role_id' => 1,
+                    'system' => 1
+                ];
+            };
+
+            DB::table('right_role')->insert($mass);
+        }
+
+        echo "Добавлены права на сущность<br><br>";
+
+        return "<strong>Добавление сущности торговых точек завершено</strong>";
     }
 
     /**

@@ -147,17 +147,12 @@
                     return [];
                 }
             },
-            stocks: {
-                type: Array,
-                default: () => {
-                    return [];
-                }
-            },
+            // stock: Object,
         },
         data() {
             return {
                 // count: parseFloat(this.item.count),
-                stockId: null,
+                // stockId: null,
 
             }
         },
@@ -168,13 +163,13 @@
         //         }
         //     })
         // },
-        mounted() {
-            if (this.settings.length && this.stocks.length && this.item.stock_id === null) {
-                this.stockId = this.stocks[0].id;
-            } else {
-                this.stockId = this.item.stock_id;
-            }
-        },
+        // mounted() {
+        //     if (this.settings.length && this.stock.id && this.item.stock_id === null) {
+        //         this.stockId = this.stock.id;
+        //     } else {
+        //         this.stockId = this.item.stock_id;
+        //     }
+        // },
         computed: {
             item() {
                 return this.$store.getters.GOODS_ITEM(this.id);

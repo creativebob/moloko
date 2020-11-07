@@ -10,10 +10,7 @@ try {
     // window.Popper = require('popper.js').default;
     window.$ = window.jQuery = require('jquery');
 
-    require('jquery-ui');
-    require('jquery-ui/ui/widgets/sortable');
-
-    require('foundation-sites/dist/js/foundation'); // 'foundation.min' can also be used if you like
+    require('foundation-sites');
 
 } catch (e) {}
 
@@ -40,6 +37,17 @@ if (token) {
 } else {
     console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
+
+// Ajax ошибка
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    },
+    error: function(date) {
+        // alert(date);
+        alert('К сожалению, произошла ошибка. Попробуйте перезагрузить страницу!');
+    },
+});
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
