@@ -23,6 +23,14 @@
                 </label>
             </div>
 
+            @if ($company->external_control == 0)
+                <div class="small-12 medium-6 cell">
+                    <label>Система налогообложения
+                        @include('includes.selects.taxation_types', ['placeholder' => 'Не указана'])
+                    </label>
+                </div>
+            @endif
+
             <div class="small-12 cell" id="bank-accounts-list">
 
                 {{-- Подключаем банковские аккаунты --}}

@@ -3,6 +3,7 @@
 namespace App\Models\System\Documents;
 
 use App\Models\System\BaseModel;
+use App\Receipt;
 use App\Stock;
 use App\Supplier;
 use Carbon\Carbon;
@@ -17,7 +18,7 @@ class Consignment extends BaseModel
 
     protected $dates = [
         'date',
-        'receipted_at',
+        'conducted_at',
         'deleted_at',
     ];
 
@@ -33,7 +34,7 @@ class Consignment extends BaseModel
 
         'amount',
 
-	    'receipted_at',
+	    'conducted_at',
 
         'draft',
 
@@ -60,5 +61,10 @@ class Consignment extends BaseModel
     public function items()
     {
         return $this->hasMany(ConsignmentsItem::class);
+    }
+
+    public function receipts()
+    {
+        return $this->morphMany(Receipt::class, 'document');
     }
 }

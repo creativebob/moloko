@@ -26,14 +26,11 @@ trait Offable
             'attachments'
         ];
 
-        $documentModel = Entity::where('alias', $item->document->getTable())
+        $modelDocument = Entity::where('alias', $item->document->getTable())
             ->value('model');
 
-        if ($item->document->getTable() == 'estimates') {
-            $modelDocumentItem = $documentModel . 'sGoodsItem';
-        } else {
-            $modelDocumentItem = $documentModel . 'sItem';
-        }
+        $modelDocumentItem = Entity::where('alias', $item->getTable())
+            ->value('model');
 
         foreach ($relationsNames as $relationName) {
             if ($item->cmv->article->$relationName->isNotEmpty()) {
@@ -53,13 +50,13 @@ trait Offable
                     $composition->load([
                         'stocks'
                     ]);
-                    $stockComposition = $composition->stocks->where('stock_id', $stockGeneral->id)
+                    $storage = $composition->stocks->where('stock_id', $stockGeneral->id)
                         ->where('filial_id', $stockGeneral->filial_id)
                         ->where('manufacturer_id', $composition->article->manufacturer_id)
                         ->first();
-                    if ($stockComposition) {
+                    if ($storage) {
                         logs('documents')
-                            ->info('Существует склад ' . $stockComposition->getTable() . ' c id: ' . $stockComposition->id);
+                            ->info('Существует склад ' . $storage->getTable() . ' c id: ' . $storage->id);
                     } else {
                         $dataStock = [
                             'cmv_id' => $composition->id,
@@ -67,35 +64,35 @@ trait Offable
                             'stock_id' => $item->document->stock_id,
                             'filial_id' => $item->document->filial_id,
                         ];
-                        $compositionStockModel = Entity::where('alias', $relationName . '_stocks')
+                        $modelStorage = Entity::where('alias', $storage->getTable())
                             ->value('model');
 
-                        $stockComposition = $compositionStockModel::create($dataStock);
+                        $storage = $modelStorage::create($dataStock);
 
                         logs('documents')
-                            ->info('Создан склад ' . $stockComposition->getTable() . ' c id: ' . $stockComposition->id);
+                            ->info('Создан склад ' . $storage->getTable() . ' c id: ' . $storage->id);
 
                         $isWrong = 1;
                     }
 
                     logs('documents')
-                        ->info('Значения count: ' . $stockComposition->count . ', weight: ' . $stockComposition->weight . ', volume: ' . $stockComposition->volume);
+                        ->info('Значения count: ' . $storage->count . ', weight: ' . $storage->weight . ', volume: ' . $storage->volume);
 
                     // Получаем себестоимость
                     $count = $composition->pivot->value;
 
-                    $newCount = $stockComposition->count -= ($composition->portion * $count * $item->count);
+                    $newCount = $storage->count -= ($composition->portion * $count * $item->count);
 
                     $data = [
                         'count' => $newCount,
                         'free' => $newCount > 0 ? $newCount : 0,
-                        'weight' => $stockComposition->weight -= ($composition->weight * $count * $item->count),
-                        'volume' => $stockComposition->volume -= ($composition->volume * $count * $item->count)
+                        'weight' => $storage->weight -= ($composition->weight * $count * $item->count),
+                        'volume' => $storage->volume -= ($composition->volume * $count * $item->count)
                     ];
-                    $stockComposition->update($data);
+                    $storage->update($data);
 
                     logs('documents')
-                        ->info('Обновлены значения count: ' . $stockComposition->count . ', weight: ' . $stockComposition->weight . ', volume: ' . $stockComposition->volume);
+                        ->info('Обновлены значения count: ' . $storage->count . ', weight: ' . $storage->weight . ', volume: ' . $storage->volume);
 
                     if ($composition->cost) {
                         $averageComposition = $composition->cost->average * $composition->portion;
@@ -120,15 +117,25 @@ trait Offable
                         ->info('Высчитываем себстоимость: ' . $count . ' * ' . $averageComposition . ' = ' . $cost);
 //                                dd($composition);
 
+                    $modelStorage = Entity::where('alias', $storage->getTable())
+                        ->value('model');
+
                     $off = Off::create([
                         'document_id' => $item->document->id,
-                        'document_type' => $documentModel,
+                        'document_type' => $modelDocument,
+
                         'documents_item_id' => $item->id,
                         'documents_item_type' => $modelDocumentItem,
+
                         'cmv_id' => $composition->id,
                         'cmv_type' => $compositionModel,
+
+                        'storage_id' => $storage->id,
+                        'storage_type' => $modelStorage,
+
                         'count' => $composition->portion * $count * $item->count,
                         'cost' => $costComposition,
+
                         'amount' => $amountComposition,
                         'stock_id' => $item->document->stock_id,
                     ]);
@@ -137,7 +144,8 @@ trait Offable
                         ->info('Записали списание с id: ' . $off->id . ', count: ' . $off->count . ', cost: ' . $off->cost . ', amount: ' . $off->amount);
 
                     logs('documents')
-                        ->info('=== КОНЕЦ СПИСАНИЯ ===');
+                        ->info('=== КОНЕЦ СПИСАНИЯ ===
+                        ');
                 }
             }
         }
@@ -152,83 +160,67 @@ trait Offable
     }
 
     /**
-     * Списание со склада
+     * Списание с хранилица
      *
      * @param $item
      */
     public function off($item)
     {
-        $documentModel = Entity::where('alias', $item->document->getTable())
-            ->value('model');
-
-        if ($item->document->getTable() == 'estimates') {
-            $modelDocumentItem = $documentModel . 'sGoodsItem';
-        } else {
-            $modelDocumentItem = $documentModel . 'sItem';
-        }
 
         logs('documents')
             ->info('=== СПИСАНИЕ ' . $item->getTable() . ' ' . $item->id . ' ===');
 
-        // Списываем позицию состава
-        $stockGeneral = Stock::find($item->document->stock_id);
-
-        // Списываем позицию состава
-        $product = $item->product;
-
-        $productModel = Entity::where('alias', $product->getTable())
-            ->value('model');
-
-//      dd($stock_goods);
-        $product->load([
+        $stockGeneral = Stock::find($item->stock_id);
+        $cmv = $item->cmv;
+        $cmv->load([
            'stocks'
         ]);
-        $stock = $product->stocks->where('stock_id', $stockGeneral->id)
+
+        $storage = $cmv->stocks->where('stock_id', $stockGeneral->id)
             ->where('filial_id', $stockGeneral->filial_id)
-            ->where('manufacturer_id', $product->article->manufacturer_id)
+            ->where('manufacturer_id', $cmv->article->manufacturer_id)
             ->first();
-        if ($stock) {
+        if ($storage) {
             logs('documents')
-                ->info('Существует склад ' . $stock->getTable() . ' c id: ' . $stock->id);
+                ->info('Существует хранилище ' . $storage->getTable() . ' c id: ' . $storage->id);
 
         } else {
-            $user = auth()->user();
-
             // TODO - 15.10.19 - Какой ставить склад если при продаже нет склада товаров?
-
             $dataStock = [
-                'cmv_id' => $product->id,
-                'manufacturer_id' => $product->article->manufacturer_id,
+                'cmv_id' => $cmv->id,
+                'manufacturer_id' => $cmv->article->manufacturer_id,
                 'stock_id' => $item->stock_id,
                 'filial_id' => $item->document->filial_id,
             ];
-            $entity_stock = Entity::where('alias', $product->getTable() . '_stocks')->first();
-            $model_stock = $entity_stock->model;
 
-            $stock = $model_stock::create($dataStock);
+            $modelStorage = Entity::where('alias', $cmv->getTable() . '_stocks')
+                ->value('model');
+
+            $storage = $modelStorage::create($dataStock);
 
             logs('documents')
-                ->info('Создан склад ' . $stock->getTable() . ' c id: ' . $stock->id);
-
+                ->info('Создано хранилище ' . $storage->getTable() . ' c id: ' . $storage->id);
         }
 
         logs('documents')
-            ->info('Значения count: ' . $stock->count . ', reserve: ' . $stock->reserve . ', free: ' . $stock->free . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
+            ->info("Значения count: {$storage->count}, reserve: {$storage->reserve}, free: {$storage->free}, weight: {$storage->weight}, volume: {$storage->volume}");
 
-        $item_count = $item->count;
+        $itemCount = $item->count;
 
-        $stock->count -= $item_count;
+        $newCount = $storage->count - $itemCount;
+        $reserve = $storage->reserve;
+        $free = $storage->free;
 
         $item->load('reserve');
         if (optional($item->reserve)->count > 0) {
             if ($item->count == $item->reserve->count) {
-                $stock->reserve -= $item->reserve->count;
+                $reserve = $storage->reserve - $item->reserve->count;
                 logs('documents')
                     ->info('Есть резерв с id: ' . $item->reserve->id . ', и количеством: ' . $item->reserve->count . ', списываем с резерва');
             } else {
                 $dif = $item->count - $item->reserve->count;
-                $stock->reserve -= $item->reserve->count;
-                $stock->free -= $dif;
+                $reserve = $storage->reserve - $item->reserve->count;
+                $free = $storage->free - $dif;
                 logs('documents')
                     ->info('В пункте количество больше чем в резерве с id: ' . $item->reserve->id . ', списываем с резерва: ' . $item->reserve->count . ', и со свободных: ' . $dif . ', всего должно быть ' . $item->count);
             }
@@ -239,47 +231,52 @@ trait Offable
                 'count' => 0
             ]);
             logs('documents')
-                ->info("Ставим резерву с id: $reserve->id значение количества 0");
+                ->info("Ставим резерву с id: {$reserve->id} значение количества 0");
 
         } else {
-            $stock->free -= $item_count;
+            $free = $storage->free - $itemCount;
             logs('documents')
                 ->info('Нет резерва, списываем со свободных');
         }
 
-        if ($stock->count < 0 || $stock->free < 0) {
+        if ($newCount < 0 || $free < 0) {
             logs('documents')
-                ->info('Количество на складе < 0, ставим свободным 0');
-            $stock->free = 0;
+                ->info('Количество на хранилище < 0, ставим свободным 0');
+            $free = 0;
         }
 
         // TODO - 16.11.19 - Вес и обьем некорректно списываются если значение было 0
 
-//        if ($stock->weight > 0) {
-//            $stock->weight -= $product->weight * $item->count;
+//        if ($storage->weight > 0) {
+//            $storage->weight -= $cmv->weight * $item->count;
 //        }
-//        if ($stock->volume > 0) {
-//            $stock->volume -= $product->volume * $item->count;
+//        if ($storage->volume > 0) {
+//            $storage->volume -= $cmv->volume * $item->count;
 //        }
-        $stock->weight -= $product->weight * $item->count;
-        $stock->volume -= $product->volume * $item->count;
 
-        $stock->save();
+        $data = [
+            'count' => $newCount,
+            'reserve' => $reserve,
+            'free' => $free,
+            'weight' => $storage->weight -= ($cmv->weight * $item->count),
+            'volume' => $storage->volume -= ($cmv->volume * $item->count),
+        ];
+        $storage->update($data);
 
         logs('documents')
-            ->info('Обновлены значения count: ' . $stock->count . ', reserve: ' . $stock->reserve . ', free: ' . $stock->free . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
+            ->info("Обновлены значения count: {$storage->count}, reserve: {$storage->reserve}, free: {$storage->free}, weight: {$storage->weight}, volume: {$storage->volume}");
 
-        if ($product->cost) {
-            $average_product = $product->cost->average * $product->portion;
-            $cost_product = $average_product;
-            $amount_product = $cost_product * $item->count;
+        if ($cmv->cost) {
+            $average_cmv = $cmv->cost->average * $cmv->portion;
+            $cost_cmv = $average_cmv;
+            $amount_cmv = $cost_cmv * $item->count;
 
             logs('documents')
-                ->info('Существует себестоимость c id: ' . $product->cost->id);
+                ->info('Существует себестоимость c id: ' . $cmv->cost->id);
         } else {
-            $average_product = 0;
-            $cost_product = 0;
-            $amount_product = 0;
+            $average_cmv = 0;
+            $cost_cmv = 0;
+            $amount_cmv = 0;
 
             logs('documents')
                 ->info('Себестоисмости нет, пишем нулевые значения');
@@ -287,17 +284,36 @@ trait Offable
             $isWrong = 1;
         }
 
+        $modelDocument = Entity::where('alias', $item->document->getTable())
+            ->value('model');
+
+        $modelDocumentItem = Entity::where('alias', $item->getTable())
+            ->value('model');
+
+        $modelCmv = Entity::where('alias', $cmv->getTable())
+            ->value('model');
+
+        $modelStorage = Entity::where('alias', $storage->getTable())
+            ->value('model');
+
         $off = Off::create([
             'document_id' => $item->document->id,
-            'document_type' => $documentModel,
+            'document_type' => $modelDocument,
+
             'documents_item_id' => $item->id,
             'documents_item_type' => $modelDocumentItem,
-            'cmv_id' => $product->id,
-            'cmv_type' => $productModel,
+
+            'cmv_id' => $cmv->id,
+            'cmv_type' => $modelCmv,
+
+            'storage_id' => $storage->id,
+            'storage_type' => $modelStorage,
+
             'count' => $item->count,
-            'cost' => $cost_product,
-            'amount' => $amount_product,
-            'stock_id' => $item->document->stock_id,
+            'cost' => $cost_cmv,
+            'amount' => $amount_cmv,
+
+            'stock_id' => $item->stock_id,
         ]);
 
         logs('documents')

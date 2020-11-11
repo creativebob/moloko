@@ -22,10 +22,20 @@
         </td>
         <td>{{ unitAbbreviation }}</td>
 
-        <td
-            v-if="!this.isProduced"
-        >
+        <td>
+            <template
+                v-if="isConducted"
+            >
+                <div
+                    v-if="itemsCount > 1"
+                    @click="openModalCancel"
+                    class="icon-delete sprite"
+                    data-open="modal-cancel"
+                ></div>
+            </template>
+
             <a
+                v-else
                 class="icon-delete sprite"
                 @click="deleteItem"
             ></a>
@@ -39,7 +49,8 @@
         props: {
             item: Object,
             index: Number,
-            isProduced: String,
+            isConducted: String,
+            itemsCount: Number,
         },
         data() {
             return {
@@ -67,7 +78,7 @@
         },
         methods: {
             checkChangeCount() {
-                if (!this.isProduced) {
+                if (!this.isConducted) {
                     this.changeCount = !this.changeCount
                 }
             },
@@ -90,13 +101,16 @@
                     .delete('/admin/productions_items/' + this.item.id)
                     .then(response => {
                         if(response.data > 0) {
-                            console.log('Удаляем - ' + this.item.id);
+                            // console.log('Удаляем - ' + this.item.id);
                             this.$emit('remove');
                         }
                     })
                     .catch(error => {
                         console.log(error)
                     });
+            },
+            openModalCancel() {
+                this.$emit('open-modal-cancel', this.item);
             },
         },
         directives: {

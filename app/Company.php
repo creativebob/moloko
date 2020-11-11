@@ -90,6 +90,8 @@ class Company extends Model
 
         'external_control',
 
+        'taxation_type_id',
+
         'location_id',
         'sector_id',
         'legal_form_id',

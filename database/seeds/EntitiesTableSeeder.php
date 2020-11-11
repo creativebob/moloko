@@ -676,6 +676,20 @@ class EntitiesTableSeeder extends Seeder
                 'view_path' => 'mailings',
                 'page_id' => $pages->firstWhere('alias', 'mailings')->id,
             ],
+
+            [
+                'name' => 'Торговые точки',
+                'alias' => 'outlets',
+                'model' => 'App\Outlet',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'metric' => 0,
+                'view_path' => 'system.pages.outlets',
+                'page_id' => $pages->firstWhere('alias', 'outlets')->id,
+            ],
+
             // TODO - 04.06.19 - Чистка сущностей
             // [
             //     'name' => 'Правила',

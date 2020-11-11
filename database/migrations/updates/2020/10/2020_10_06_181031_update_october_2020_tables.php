@@ -73,6 +73,38 @@ class UpdateOctober2020Tables extends Migration
 
             $table->string('prom')->nullable()->comment('Продвижение')->after('utm_term');
         });
+
+        Schema::table('companies', function (Blueprint $table) {
+            $table->bigInteger('taxation_type_id')->nullable()->unsigned()->comment('Тип системы налогообложения')->after('foundation_date');
+//            $table->foreign('taxation_type_id')->references('id')->on('taxation_types');
+        });
+
+        Schema::table('receipts', function (Blueprint $table) {
+            $table->morphs('storage');
+        });
+
+        Schema::table('offs', function (Blueprint $table) {
+            $table->morphs('storage');
+        });
+
+        Schema::table('reserves', function (Blueprint $table) {
+            $table->morphs('storage');
+        });
+
+        Schema::table('consignments', function (Blueprint $table) {
+            $table->dropColumn('receipted_at');
+            $table->timestamp('conducted_at')->nullable()->comment('Время проведения')->after('amount');
+        });
+
+        Schema::table('productions', function (Blueprint $table) {
+            $table->dropColumn('produced_at');
+            $table->timestamp('conducted_at')->nullable()->comment('Время проведения')->after('amount');
+        });
+
+        Schema::table('estimates', function (Blueprint $table) {
+            $table->dropColumn('saled_at');
+            $table->timestamp('conducted_at')->nullable()->comment('Время проведения')->after('registered_at');
+        });
     }
 
     /**
@@ -142,6 +174,48 @@ class UpdateOctober2020Tables extends Migration
                 'utm_medium',
                 'prom',
             ]);
+        });
+
+        Schema::table('companies', function (Blueprint $table) {
+            $table->dropColumn([
+                'taxation_type_id',
+            ]);
+        });
+
+        Schema::table('receipts', function (Blueprint $table) {
+            $table->dropColumn([
+                'storage_id',
+                'storage_type',
+            ]);
+        });
+
+        Schema::table('offs', function (Blueprint $table) {
+            $table->dropColumn([
+                'storage_id',
+                'storage_type',
+            ]);
+        });
+
+        Schema::table('reserves', function (Blueprint $table) {
+            $table->dropColumn([
+                'storage_id',
+                'storage_type',
+            ]);
+        });
+
+        Schema::table('consignments', function (Blueprint $table) {
+            $table->dropColumn('conducted_at');
+            $table->timestamp('receipted_at')->nullable()->comment('Время проведения')->after('amount');
+        });
+
+        Schema::table('productions', function (Blueprint $table) {
+            $table->dropColumn('conducted_at');
+            $table->timestamp('produced_at')->nullable()->comment('Время проведения')->after('amount');
+        });
+
+        Schema::table('estimates', function (Blueprint $table) {
+            $table->dropColumn('conducted_at');
+            $table->timestamp('saled_at')->nullable()->comment('Время проведения')->after('registered_at');
         });
     }
 }

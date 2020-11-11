@@ -4,7 +4,7 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-require('../common/bootstrap');
+require('../common/foundation');
 
 // window.Vue = require('vue');
 // window.Vuex = require('vuex');
@@ -36,7 +36,8 @@ Vue.component('consignment-component', require('./components/documents/consignme
 Vue.component('production-component', require('./components/documents/productions/ProductionComponent.vue'));
 
 // Смета на лиде
-// Vue.component('lead-init-component', require('./components/leads/LeadInitComponent'));
+Vue.component('lead-init-component', require('./components/leads/InitComponent'));
+Vue.component('lead-errors-component', require('./components/leads/ErrorsComponent'));
 Vue.component('estimate-component', require('./components/leads/estimates/EstimateComponent'));
 Vue.component('tab-payments-component', require('./components/leads/payments/TabPaymentsComponent'));
 Vue.component('payments-component', require('./components/leads/payments/PaymentsComponent'));
@@ -151,7 +152,10 @@ const app = new Vue({
 });
 
 // Основные настройки
-require('../common/main');
+require('jquery-ui');
+require('jquery-ui/ui/widgets/sortable');
+
+
 
 // Наши скрипты
 require('./partials/main');
@@ -160,3 +164,5 @@ require('./partials/filter');
 
 // window.CKEDITOR_BASEPATH = 'node_modules/ckeditor/';
 // require('ckeditor');
+
+$(document).foundation();

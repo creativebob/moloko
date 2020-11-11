@@ -17,14 +17,11 @@ trait Reservable
      */
     public function reserve($item)
     {
-        $documentModel = Entity::where('alias', $item->document->getTable())
+        $modelDocument = Entity::where('alias', $item->document->getTable())
             ->value('model');
 
-        if ($item->document->getTable() == 'estimates') {
-            $documentItemModel = $documentModel.'sGoodsItem';
-        } else {
-            $documentItemModel = $documentModel.'sItem';
-        }
+        $modelDocumentItem = Entity::where('alias', $item->getTable())
+        ->value('model');
 
         logs('documents')
             ->info('=== РЕЗЕРВИРОВАНИЕ ' . $item->getTable() . ' ' . $item->id . ' ===');
@@ -33,16 +30,16 @@ trait Reservable
         $stockGeneral = Stock::find($item->stock_id);
 
         // Списываем позицию состава
-        $product = $item->product;
-        
-        $productModel = Entity::where('alias', $product->getTable())
+        $cmv = $item->product;
+
+        $modelCmv = Entity::where('alias', $cmv->getTable())
             ->value('model');
 
 //      dd($stock_goods);
 
-        $storage = $product->stocks->where('stock_id', $stockGeneral->id)
+        $storage = $cmv->stocks->where('stock_id', $stockGeneral->id)
             ->where('filial_id', $stockGeneral->filial_id)
-            ->where('manufacturer_id', $product->article->manufacturer_id)
+            ->where('manufacturer_id', $cmv->article->manufacturer_id)
             ->first();
         if ($storage) {
 
@@ -67,7 +64,7 @@ trait Reservable
                     $storage->reserve += $itemCount;
                     $storage->free -= $itemCount;
                 }
-    
+
                 logs('documents')
                     ->info('Существует склад ' . $storage->getTable() . ' c id: ' . $storage->id);
 
@@ -80,7 +77,7 @@ trait Reservable
                     $reserve = $item->reserve;
                     $reserve->count += $itemCount;
                     $reserve->save();
-                    
+
                     $reserve->history()->save(
                         ReservesHistory::make([
                             'count' => $itemCount
@@ -91,15 +88,25 @@ trait Reservable
                         ->info('Обновили актуальный резерв с id: ' . $reserve->id .  ', count: ' . $reserve->count);
 
                 } else {
+
+                    $modelStorage = Entity::where('alias', $item->getTable() . '_stocks')
+                        ->value('model');
+
                     $reserve = Reserve::create([
                         'document_id' => $item->document->id,
-                        'document_type' => $documentModel,
+                        'document_type' => $modelDocument,
+
                         'documents_item_id' => $item->id,
-                        'documents_item_type' => $documentItemModel,
-                        'cmv_id' => $product->id,
-                        'cmv_type' => $productModel,
+                        'documents_item_type' => $modelDocumentItem,
+
+                        'cmv_id' => $cmv->id,
+                        'cmv_type' => $modelCmv,
+
+                        'storage_id' => $storage->id,
+                        'storage_type' => $modelStorage,
+
                         'count' => $itemCount,
-                        'stock_id' => $item->document->stock_id,
+                        'stock_id' => $item->stock_id,
                         'filial_id' => $item->document->filial_id,
                     ]);
 
@@ -124,7 +131,7 @@ trait Reservable
                 ->info('Склада нет, негде ставить в резерв');
             $result = "По позиции \"{$item->product->article->name}\" не существует склада, невозможно поставить в резерв";
         }
-        
+
         return $result;
     }
 
@@ -134,21 +141,14 @@ trait Reservable
      * @param $item
      * @return string|null
      */
-    public function unreserve($item)
+    public function cancelReserve($item)
     {
         if (optional($item->reserve)->count > 0) {
             logs('documents')
                 ->info('=== ОТМЕНА РЕЗЕРВИРОВАНИЯ ' . $item->getTable() . ' ' . $item->id . ' ===');
 
-            $stockGeneral = Stock::find($item->stock_id);
-
-            $product = $item->product;
-
             // Ищем хранилище
-            $storage = $product->stocks->where('stock_id', $stockGeneral->id)
-                ->where('filial_id', $stockGeneral->filial_id)
-                ->where('manufacturer_id', $product->article->manufacturer_id)
-                ->first();
+            $storage = $item->reserve->storage;
             if ($storage) {
 
                 logs('documents')
@@ -158,10 +158,10 @@ trait Reservable
                     ->info('Значения count: ' . $storage->count . ', reserve: ' . $storage->reserve . ', free: ' . $storage->free);
 
                 $reserveCount = $item->reserve->count;
-    
+
                 $storage->reserve -= $reserveCount;
                 $storage->free += $reserveCount;
-                
+
                 $storage->save();
 
 
@@ -174,7 +174,7 @@ trait Reservable
 
                 logs('documents')
                     ->info('Ставим количество 0 в атуальынй резерв с id: ' . $item->reserve->id . ', результат ' . $result);
-                
+
                 $result = ReservesHistory::where([
                     'reserve_id' => $item->reserve->id,
                     'archive' => false

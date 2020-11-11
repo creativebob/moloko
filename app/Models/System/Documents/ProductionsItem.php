@@ -9,20 +9,29 @@ use App\Off;
 use App\Receipt;
 use App\Stock;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProductionsItem extends BaseModel
 {
 
+    use SoftDeletes;
 //    use Cachable;
 
-    protected $dates = ['deleted_at'];
+    protected $dates = [
+        'dismissed_at',
+        'deleted_at'
+    ];
+
     protected $fillable = [
         'production_id',
+
         'cmv_id',
         'cmv_type',
+
         'cost',
         'count',
 	    'amount',
+
         'entity_id',
         'manufacturer_id',
 

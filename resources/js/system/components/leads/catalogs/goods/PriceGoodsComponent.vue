@@ -32,8 +32,10 @@
                                 class="items-product-price"
                                 :class="[{'with-discount' : price.price != price.total_catalogs_item_discount }]"
                             >{{ price.total_catalogs_item_discount | roundToTwo | level }}</span>
-                            <span v-if="price.points"
-                                  class="points">({{ price.points | roundToTwo | level }})</span>
+                            <span
+                                v-if="showPoints"
+                                  class="points"
+                            >({{ price.points | roundToTwo | level }})</span>
                         </div>
                     </div>
                 </div>
@@ -75,6 +77,10 @@
             }
         },
         computed: {
+            showPoints() {
+                const canPaymentPoints = this.$store.getters.OUTLET_SETTING('payment-point');
+                return this.price.points > 0 && canPaymentPoints;
+            },
             countInStocks() {
                 let count = 0,
                     reserve = 0,

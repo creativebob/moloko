@@ -25,7 +25,7 @@ class EstimateController extends Controller
 {
     protected $entityAlias;
     protected $entityDependence;
-    
+
     /**
      * EstimateController constructor.
      */
@@ -36,17 +36,18 @@ class EstimateController extends Controller
         $this->entityDependence = false;
     }
 
-    use UserControllerTrait;
-    use LeadControllerTrait;
-    use Estimatable;
-    use Locationable;
-    use Phonable;
-    use Photable;
-    use Clientable;
-    use Companable;
-    use Reservable;
-    use Offable;
-    
+    use UserControllerTrait,
+        LeadControllerTrait,
+        Estimatable,
+        Locationable,
+        Phonable,
+        Photable,
+        Clientable,
+        Companable,
+        Reservable,
+        Offable,
+        Estimatable;
+
     public function index(Request $request)
     {
         // Подключение политики
@@ -98,7 +99,7 @@ class EstimateController extends Controller
 
         return view('estimates.index', compact('estimates', 'pageInfo'));
     }
-    
+
     public function search(Request $request, $search)
     {
 
@@ -259,7 +260,7 @@ class EstimateController extends Controller
                 ->withInput();
         }
     }
-    
+
     /**
      * Отмена регистраии сметы
      *
@@ -270,44 +271,134 @@ class EstimateController extends Controller
     {
         // ГЛАВНЫЙ ЗАПРОС:
         $estimate = Estimate::find($id);
-        
+
         if ($estimate->registered_at && $estimate->payments->isEmpty()) {
-            
+
             $estimate->update([
                 'registered_at' => null,
             ]);
         }
-        
+
         return response()->json($estimate);
     }
-    
+
     /**
      * Продажа сметы
      *
-     * @param Request $request
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function saling($id)
+    public function conducting($id)
     {
         // ГЛАВНЫЙ ЗАПРОС:
         $estimate = Estimate::with([
-            'client'
+            'client',
+            'goods_items' => function ($q) {
+                $q->with([
+                    'document',
+                    'cmv' => function ($q) {
+                        $q->with([
+                            'article',
+                            'stocks',
+                        ]);
+                    },
+                ]);
+            },
         ])
             ->find($id);
-        
-        if (! $estimate->saled_at) {
-            
+
+        if (empty($estimate->conducted_at)) {
+
+            // TODO - 09.11.20 - Пока вшиваем проверку остатка на хранилище
+            $leftover = 1;
+
+            // Если нужна проверка остатка на складах
+            if ($leftover) {
+                $errors = [];
+
+                $number = 1;
+
+                foreach ($estimate->goods_items as $item) {
+
+                    // Проверяем позицию сметы
+                    $stock = $item->stock;
+                    $storage = $item->product->stocks
+                        ->where('stock_id', $stock->id)
+                        ->where('filial_id', $stock->filial_id)
+                        ->where('manufacturer_id', $item->product->article->manufacturer_id)
+                        ->first();
+//                          dd($storage);
+
+                    if ($storage) {
+
+                        // проверяем наличие резерва по позиции
+                        if (optional($item->reserve)->count > 0) {
+                            if ($storage->reserve < $item->reserve->count) {
+                                $dif = $storage->reserve - $item->reserve->count;
+                                $errors[]['msg'] = "Для зарезервированной позиции \"{$item->product->article->name}\" не хватает в резерве склада {$dif} для продажи";
+                            }
+                            $total = $storage->free - ($item->count - $item->reserve->count);
+                        } else {
+                            $total = $storage->free - $item->count;
+                        }
+
+                        if ($total < 0) {
+                            $errors[]['msg'] = "Для позиции \"{$item->product->article->name}\" не хватает {$total} {$item->product->article->unit->abbreviation} для продажи";
+                        }
+                    } else {
+                        $errors[]['msg'] = "Для позиции {$number} не существует склада для {$item->product->article->name}";
+                    }
+
+                    $number++;
+                }
+//	        dd($result);
+
+                if ($errors) {
+//                dd($errors);
+                    return response()->json([
+                        'success' => false,
+                        'errors' => $errors
+                    ]);
+                };
+            }
+
+            logs('documents')
+                ->info('========================================== НАЧАЛО ПРОДАЖИ СМЕТЫ, ID: ' . $estimate->id . ' ==============================================
+                ');
+
+            if ($estimate->goods_items->isNotEmpty()) {
+                foreach ($estimate->goods_items as $item) {
+                    $this->off($item);
+                }
+            }
+
+            // Аггрегируем значеняи сметы
+            $this->aggregateEstimate($estimate);
+
             // Обновляем показатели клиента
             $this->setIndicators($estimate);
-            
+
             $estimate->update([
-                'saled_at' => now(),
+                'conducted_at' => now(),
             ]);
-            
+
+            logs('documents')
+                ->info('Продана смета c id: ' . $estimate->id);
+            logs('documents')
+                ->info('========================================== КОНЕЦ ПРОДАЖИ СМЕТЫ ==============================================
+
+                ');
+
+//            return redirect()
+//                ->route('leads.edit', $estimate->lead_id)
+//                ->with(['success' => 'Успешно проведено']);
         }
-        
-        return response()->json($estimate);
+
+//        return redirect()->route('leads.index');
+        return response()->json([
+            'success' => true,
+            'estimate' => $estimate
+        ]);
     }
 
     /**
@@ -333,7 +424,7 @@ class EstimateController extends Controller
         ])
             ->find($id);
 
-        if (!$estimate->saled_at) {
+        if (!$estimate->conducted_at) {
             // Подключение политики
 //        $this->authorize(getmethod('update'), $lead);
 
@@ -459,7 +550,7 @@ class EstimateController extends Controller
                     ->info('Произведена смета c id: ' . $estimate->id);
                 logs('documents')
                     ->info('========================================== КОНЕЦ ПРОИЗВОДТСВА СМЕТЫ ==============================================
-                
+
                 ');
 
                 // TODO - 06.02.20 - Временная запись клиента и договора
@@ -498,7 +589,7 @@ class EstimateController extends Controller
 
 //        return redirect()->route('leads.index');
     }
-    
+
     public function reserving($id)
     {
 
@@ -515,7 +606,7 @@ class EstimateController extends Controller
             ->find($id);
 //        dd($estimate);
 
-        if (!$estimate->saled_at) {
+        if (!$estimate->conducted_at) {
 
             if ($estimate->goods_items->isNotEmpty()) {
                 logs('documents')
@@ -528,7 +619,7 @@ class EstimateController extends Controller
 
                 logs('documents')
                     ->info('========================================== КОНЕЦ РЕЗЕРВИРОВАНИЯ СМЕТЫ ==============================================
-                
+
                 ');
 
                 $estimate->load([
@@ -574,7 +665,7 @@ class EstimateController extends Controller
             ->find($id);
 //        dd($estimate);
 
-        if (!$estimate->saled_at) {
+        if (!$estimate->conducted_at) {
             // Подключение политики
 //        $this->authorize(getmethod('update'), $lead);
 
@@ -595,12 +686,12 @@ class EstimateController extends Controller
                 $result = [];
                 foreach ($estimate->goods_items as $item) {
 //                    $item->load('document');
-                    $result[] = $this->unreserve($item);
+                    $result[] = $this->cancelReserve($item);
                 }
 
                 logs('documents')
                     ->info('========================================== КОНЕЦ ОТМЕНЫ РЕЗЕРВИРОВАНИЯ СМЕТЫ ==============================================
-                
+
                 ');
 
                 $estimate->load([

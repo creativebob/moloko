@@ -24,7 +24,7 @@ class Estimate extends Model
         'deleted_at',
         'date',
         'registered_at',
-        'saled_at'
+        'conducted_at'
     ];
     protected $fillable = [
         'lead_id',
@@ -42,7 +42,7 @@ class Estimate extends Model
 
         'draft',
 
-        'saled_at',
+        'conducted_at',
         'registered_at',
         'is_main',
 

@@ -46,6 +46,7 @@ trait Cmvable
     }
 
     // Себестоимость
+    // TODO - 04.11.20 - Затычка в виде филиала пользователя
     public function cost()
     {
         return $this->morphOne(Cost::class, 'cmv')

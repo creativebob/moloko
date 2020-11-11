@@ -8,14 +8,14 @@
                 <div class="grid-x grid-padding-x selector-type-payment">
                     <div class="cell auto">
                         <button
-                            v-if="is_cash_payment"
+                            v-if="showCash"
                             type="button"
                             class="button hollow button-cash-type"
                             @click="setType('cash')"
                         >Наличные
                         </button>
                         <button
-                            v-if="is_electronically_payment"
+                            v-if="showTerminal"
                             type="button"
                             class="button hollow button-electronically-type"
                             @click="setType('electronically')"
@@ -24,7 +24,7 @@
                     </div>
                     <div class="cell shrink">
                         <button
-                            v-if="is_bank_payment"
+                            v-if="showBank"
                             type="button"
                             class="button hollow button-bank-type"
                             @click="setType('bank')"
@@ -35,7 +35,6 @@
             </div>
             <cash-component
                 v-else-if="type == 'cash'"
-                :is-electronically="is_electronically_payment"
                 @reset="setType"
             ></cash-component>
             <electronically-component
@@ -63,10 +62,18 @@
         data() {
             return {
                 type: null,
-                is_cash_payment: true,
-                is_electronically_payment: true,
-                is_bank_payment: true
             }
+        },
+        computed: {
+            showCash() {
+                return this.$store.getters.OUTLET_SETTING('payment-cash');
+            },
+            showTerminal() {
+                return this.$store.getters.OUTLET_SETTING('payment-terminal');
+            },
+            showBank() {
+                return this.$store.getters.OUTLET_SETTING('bank-account');
+            },
         },
         methods: {
             setType(type = null) {

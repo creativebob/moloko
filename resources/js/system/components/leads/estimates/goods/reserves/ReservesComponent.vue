@@ -1,11 +1,11 @@
 <template>
     <th
-        v-if="isRegistered"
+        v-if="isRegistered && !isConducted"
         class="th-reserves"
     >
         <span
             v-if="isReserved"
-            @click="unreserve"
+            @click="cancelReserve"
             class="button-to-reserve"
             title="Снять все с резерва!"
         ></span>
@@ -28,6 +28,9 @@
             isRegistered() {
                 return this.$store.state.lead.estimate.registered_at;
             },
+            isConducted() {
+                return this.$store.state.lead.estimate.conducted_at;
+            },
             isReserved() {
                 let result = [];
                 result = this.$store.state.lead.goodsItems.filter(item => {
@@ -49,9 +52,9 @@
                     this.$store.dispatch('RESERVE_ESTIMATE');
                 }
             },
-            unreserve() {
+            cancelReserve() {
                 if (! this.isLoading) {
-                    this.$store.dispatch('UNRESERVE_ESTIMATE');
+                    this.$store.dispatch('CANCEL_RESERVE_ESTIMATE');
                 }
             },
         }

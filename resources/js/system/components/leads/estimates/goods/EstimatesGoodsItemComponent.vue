@@ -108,13 +108,13 @@
         </td>
 
         <td
-            v-if="isRegistered"
+            v-if="isRegistered && !isConducted"
             class="td-reserve"
         >
             <reserve-component
                 :reserve="item.reserve"
                 @reserve="reserve"
-                @unreserve="unreserve"
+                @cancel="cancelReserve"
             ></reserve-component>
         </td>
 
@@ -147,17 +147,12 @@
                     return [];
                 }
             },
-            stocks: {
-                type: Array,
-                default: () => {
-                    return [];
-                }
-            },
+            // stock: Object,
         },
         data() {
             return {
                 // count: parseFloat(this.item.count),
-                stockId: null,
+                // stockId: null,
 
             }
         },
@@ -168,19 +163,22 @@
         //         }
         //     })
         // },
-        mounted() {
-            if (this.settings.length && this.stocks.length && this.item.stock_id === null) {
-                this.stockId = this.stocks[0].id;
-            } else {
-                this.stockId = this.item.stock_id;
-            }
-        },
+        // mounted() {
+        //     if (this.settings.length && this.stock.id && this.item.stock_id === null) {
+        //         this.stockId = this.stock.id;
+        //     } else {
+        //         this.stockId = this.item.stock_id;
+        //     }
+        // },
         computed: {
             item() {
                 return this.$store.getters.GOODS_ITEM(this.id);
             },
             isRegistered() {
                 return this.$store.state.lead.estimate.registered_at;
+            },
+            isConducted() {
+                return this.$store.state.lead.estimate.conducted_at;
             },
             isArchive() {
                 return this.item.goods.archive == 1;
@@ -231,8 +229,8 @@
             reserve() {
                 this.$store.dispatch('RESERVE_GOODS_ITEM', this.item.id);
             },
-            unreserve() {
-                this.$store.dispatch('UNRESERVE_GOODS_ITEM', this.item.id);
+            cancelReserve() {
+                this.$store.dispatch('CANCEL_RESERVE_GOODS_ITEM', this.item.id);
             }
         },
         directives: {

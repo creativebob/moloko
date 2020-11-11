@@ -64,7 +64,7 @@
             },
             unreserving() {
                 if (! this.isLoading) {
-                    this.$emit('unreserve');
+                    this.$emit('cancel');
                 }
             },
         },

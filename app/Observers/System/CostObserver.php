@@ -13,7 +13,11 @@ class CostObserver
     public function creating(Cost $cost)
     {
         $this->store($cost);
-	    $this->setCostHistory($cost);
+    }
+
+    public function created(Cost $cost)
+    {
+        $this->setCostHistory($cost);
     }
 
     public function updating(Cost $cost)

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Providers;
+namespace App\Providers\Project;
 
 use App\Http\View\Composers\Project\CatalogsServiceComposer;
 use App\Http\View\Composers\Project\CatalogsGoodsComposer;
@@ -23,7 +23,7 @@ use App\Http\View\Composers\Project\PluginsComposer;
 use App\Http\View\Composers\Project\WorktimeTodayComposer;
 use Illuminate\Support\ServiceProvider;
 
-class ComposerProjectServiceProvider extends ServiceProvider
+class ComposerServiceProvider extends ServiceProvider
 {
 
     public function boot()

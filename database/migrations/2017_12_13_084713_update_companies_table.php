@@ -39,6 +39,9 @@ class UpdateCompaniesTable extends Migration
 
             $table->bigInteger('color_id')->nullable()->unsigned()->comment('color');
             $table->foreign('color_id')->references('id')->on('vectors');
+
+            $table->bigInteger('taxation_type_id')->nullable()->unsigned()->comment('Тип системы налогообложения');
+            $table->foreign('taxation_type_id')->references('id')->on('taxation_types');
         });
     }
 

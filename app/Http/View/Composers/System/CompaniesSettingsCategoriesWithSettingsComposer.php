@@ -6,7 +6,7 @@ use App\CompaniesSettingsCategory;
 
 use Illuminate\View\View;
 
-class CompaniesSettingsCategoriesComposer
+class CompaniesSettingsCategoriesWithSettingsComposer
 {
 	public function compose(View $view)
 	{

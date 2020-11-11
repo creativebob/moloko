@@ -103,7 +103,7 @@
                   <td class="td-margin_currency">{{ num_format($estimate->margin_currency, 0) }} <sup>{{ num_format($estimate->margin_percent, 0) }}%</sup></td>
                 @endif
 
-              <td class="td-saled">{{ ($estimate->saled_at) ? 'Чек закрыт' : '' }}</td>
+              <td class="td-saled">{{ ($estimate->conducted_at) ? 'Чек закрыт' : '' }}</td>
               <td class="td-dissmissed">{{ ($estimate->is_dissmissed == 1) ? 'Списан' : '' }}</td>
 
               <td class="td-delete">

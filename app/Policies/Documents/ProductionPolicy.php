@@ -58,7 +58,7 @@ class ProductionPolicy
 
     public function system(User $user, Model $model)
     {
-	    if ($model->produced_at) {
+	    if ($model->conducted_at) {
 		    return false;
 	    }
 

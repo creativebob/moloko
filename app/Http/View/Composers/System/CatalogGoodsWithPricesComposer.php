@@ -11,6 +11,8 @@ class CatalogGoodsWithPricesComposer
 	{
 	    $settings = $view->settings;
 
+	    $catalogsIds = $view->catalogsIds;
+
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_cg = operator_right('catalogs_goods', true, getmethod('index'));
 
@@ -87,9 +89,10 @@ class CatalogGoodsWithPricesComposer
         ->companiesLimit($answer_cg)
         ->authors($answer_cg)
         ->filials($answer_cg)
-        ->whereHas('filials', function ($q) {
-            $q->where('id', auth()->user()->stafferFilialId);
-        })
+//        ->whereHas('filials', function ($q) {
+//            $q->where('id', auth()->user()->stafferFilialId);
+//        })
+                ->whereIn('id', $catalogsIds)
         ->get();
 //         dd($сatalogs_goods);
 

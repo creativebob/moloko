@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Providers;
+namespace App\Providers\Project;
 
 use App\Models\Project\EstimatesGoodsItem;
 use App\Observers\Project\EstimatesGoodsItemObserver;
 use Illuminate\Support\ServiceProvider;
 
-class ObserverProjectServiceProvider extends ServiceProvider
+class ObserverServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.

@@ -217,4 +217,19 @@ class AppController extends Controller
 
         return response()->json($result_count);
     }
+
+    /**
+     * Сброс фильтра
+     *
+     * @param $alias
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function resetFilter($alias)
+    {
+        $filter = auth()->user()->filters->firstWhere('alias', $alias);
+        if ($filter) {
+            $filter->delete();
+        }
+        return redirect()->route($alias . '.index');
+    }
 }

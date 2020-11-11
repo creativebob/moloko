@@ -2,15 +2,12 @@
     <div class="small-12 medium-12 large-12 cell">
         <estimate-component
             :estimate='@json($lead->estimate)'
-            :settings='@json(getSettings())'
+            :settings='@json(auth()->user()->company->settings)'
+            :outlet-settings='@json($outlet->settings)'
 
             @isset($discount)
-                :discount="{{ $discount }}"
-                @endisset
-
-            @if($stocks->isNotEmpty())
-            :stocks='@json($stocks)'
-            @endif
+            :discount="{{ $discount }}"
+            @endisset
         ></estimate-component>
     </div>
 </div>
