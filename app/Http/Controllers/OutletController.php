@@ -166,6 +166,7 @@ class OutletController extends Controller
         $outlet->catalogs_goods()->sync($request->catalogs_goods);
         $outlet->staff()->sync($request->staff);
         $outlet->settings()->sync($request->settings);
+        $outlet->payments_methods()->sync($request->payments_methods);
 
         if ($result) {
             return redirect()->route('outlets.index');

@@ -26,6 +26,7 @@ use App\Http\View\Composers\System\LeadHistoryComposer;
 use App\Http\View\Composers\System\MailingListsComposer;
 use App\Http\View\Composers\System\MailingsComposer;
 use App\Http\View\Composers\System\OutletsSettingsCategoriesWithSettingsComposer;
+use App\Http\View\Composers\System\PaymentsMethodsComposer;
 use App\Http\View\Composers\System\TaxationTypesComposer;
 use App\Http\View\Composers\System\TemplatesComposer;
 use App\Http\View\Composers\System\UsersWithClientComposer;
@@ -377,6 +378,8 @@ class ComposerServiceProvider extends ServiceProvider
 
         view()->composer('system.pages.outlets.tabs.catalogs_goods', FilialCatalogsGoodsComposer::class);
         view()->composer('system.pages.outlets.tabs.staff', FilialStaffComposer::class);
+
+        view()->composer('system.pages.outlets.tabs.settings', PaymentsMethodsComposer::class);
 
         view()->composer('leads.tabs.catalogs_goods', CatalogGoodsWithPricesComposer::class);
         view()->composer('leads.tabs.catalogs_services', CatalogServicesWithPricesComposer::class);

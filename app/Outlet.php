@@ -59,4 +59,9 @@ class Outlet extends BaseModel
     {
         return $this->belongsToMany(OutletsSetting::class, 'outlet_setting', 'outlet_id', 'setting_id');
     }
+
+    public function payments_methods()
+    {
+        return $this->belongsToMany(PaymentsMethod::class);
+    }
 }
