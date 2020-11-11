@@ -2,64 +2,26 @@
 
 namespace App;
 
+use App\Models\System\BaseModel;
 use App\Models\System\Documents\Estimate;
 use App\Models\System\Traits\Quietlable;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
-// Scopes для главного запроса
-use App\Scopes\Traits\CompaniesLimitTraitScopes;
-use App\Scopes\Traits\AuthorsTraitScopes;
-use App\Scopes\Traits\SystemItemTraitScopes;
-use App\Scopes\Traits\FilialsTraitScopes;
-use App\Scopes\Traits\TemplateTraitScopes;
-use App\Scopes\Traits\ModeratorLimitTraitScopes;
-use App\Scopes\Traits\SuppliersTraitScopes;
-use App\Scopes\Traits\ManufacturersTraitScopes;
-
 use App\Scopes\Traits\ManagerTraitScopes;
-
 use Carbon\Carbon;
-
-// Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
-// Фильтры
-use App\Scopes\Filters\Filter;
-use App\Scopes\Filters\BooklistFilter;
-use App\Scopes\Filters\DateIntervalFilter;
-use App\Scopes\Filters\ValueFilter;
-use App\Scopes\Filters\BooleanArrayFilter;
 
-class Lead extends Model
+class Lead extends BaseModel
 {
+    use SoftDeletes,
+        Cachable,
+        Notifiable,
+        Quietlable,
+        ManagerTraitScopes;
 
-    // Включаем кеш
-    use Cachable;
-
-    use Notifiable;
-    use SoftDeletes;
-    use Quietlable;
-
-    // Включаем Scopes
-    use CompaniesLimitTraitScopes;
-    use AuthorsTraitScopes;
-    use SystemItemTraitScopes;
-    use FilialsTraitScopes;
-    use TemplateTraitScopes;
-    use ModeratorLimitTraitScopes;
-    use SuppliersTraitScopes;
-    use ManufacturersTraitScopes;
-
-    use ManagerTraitScopes;
-
-    // Фильтры
-    use Filter;
-    use BooklistFilter;
-    use DateIntervalFilter;
-    use ValueFilter;
-    use BooleanArrayFilter;
+    const ALIAS = 'leads';
+    const DEPENDENCE = true;
 
     // public $timestamps = false;
 
@@ -272,7 +234,7 @@ class Lead extends Model
 
     public function expired_challenge()
     {
-        // return $this->morphMany('App\Challenge', 'challenges')->where('challenges_type_id', 2)->whereNull('status')->whereDate('deadline_date', '<=', Carbon::now()->format('Y-m-d'));
+        // return $this->morphMany('App\Challenge', 'challenges')->where('challenges_type_id', 2)->whereNull('status')->whereDate('deadline_date', '<=', Carbon::now()->format('Y-m-d']);
 
         return $this->morphOne('App\Challenge', 'subject')->where('challenges_type_id', 2)->whereNull('status')->oldest('deadline_date');
     }
@@ -353,74 +315,91 @@ class Lead extends Model
     // Фильтры
     public function scopeFilter($query)
     {
+        $fields = [
+            'period_date_min',
+            'period_date_max',
+            'shipment_date_min',
+            'shipment_date_max',
+            'status',
+            'goods',
+            'challenges',
+            'cities',
+            'managers',
+            'lead_methods',
+            'lead_types',
+            'sources',
+            'stages',
+        ];
 
-        if (request('period_date_min')) {
-            $query->whereDate('created_at', '>=', Carbon::createFromFormat('d.m.Y', request()->period_date_min));
+        $filters = $this->getFilters($fields, Lead::ALIAS);
+
+
+        if (isset($filters['period_date_min'])) {
+            $query->whereDate('created_at', '>=', Carbon::createFromFormat('d.m.Y', $filters['period_date_min']));
         }
-
-        if (request('period_date_max')) {
+        if (isset($filters['period_date_max'])) {
             $query->whereDate('created_at', '<=', Carbon::createFromFormat('d.m.Y', request()->period_date_max));
         }
 
-        if (request('shipment_date_min')) {
+        if (isset($filters['shipment_date_min'])) {
             $query->whereDate('shipment_at', '>=', Carbon::createFromFormat('d.m.Y', request()->shipment_date_min));
         }
-        if (request('shipment_date_max')) {
+        if (isset($filters['shipment_date_max'])) {
             $query->whereDate('shipment_at', '<=', Carbon::createFromFormat('d.m.Y', request()->shipment_date_max));
         }
 
-        if (!is_null(request('status'))) {
-            if (request('status') == 'fiz') {
+        if (isset($filters['status'])) {
+            if ($filters['status'] == 'fiz') {
                 $query->whereNull('company_name');
             }
-            if (request('status') == 'ur') {
+            if ($filters['status'] == 'ur') {
                 $query->whereNotNull('company_name');
             }
         }
 
-        if (request('goods')) {
-            $query->whereHas('estimate', function ($q) {
-                foreach (request('goods') as $id) {
+        if (isset($filters['goods'])) {
+            $query->whereHas('estimate', function ($q) use ($filters) {
+                foreach ($filters['goods'] as $id) {
                     $q->whereHas('goods_items', function ($q) use ($id) {
                         $q->where('goods_id', $id);
-//                    $q->whereIn('goods_id', request('goods'));
+//                    $q->whereIn('goods_id', $filters['goods']);
                     });
                 }
             });
         }
 
-        if (!is_null(request('challenges'))) {
-            if (request('challenges') == true) {
+        if (isset($filters['challenges'])) {
+            if ($filters['challenges'] == true) {
                 $query->where('challenges_active_count', '>', 0);
             } else {
                 $query->where('challenges_active_count', 0);
             }
         }
 
-        if (request('cities')) {
-            $query->whereHas('location', function($q) {
-                $q->whereIn('city_id', request('cities'));
+        if (isset($filters['cities'])) {
+            $query->whereHas('location', function ($q) use ($filters) {
+                $q->whereIn('city_id', $filters['cities']);
             });
         }
 
-        if (request('managers')) {
-            $query->whereIn('manager_id', request('managers'));
+        if (isset($filters['managers'])) {
+            $query->whereIn('manager_id', $filters['managers']);
         }
 
-        if (request('lead_methods')) {
-            $query->whereIn('lead_method_id', request('lead_methods'));
+        if (isset($filters['lead_methods'])) {
+            $query->whereIn('lead_method_id', $filters['lead_methods']);
         }
 
-        if (request('lead_types')) {
-            $query->whereIn('lead_type_id', request('lead_types'));
+        if (isset($filters['lead_types'])) {
+            $query->whereIn('lead_type_id', $filters['lead_types']);
         }
 
-        if (request('sources')) {
-            $query->whereIn('source_id', request('sources'));
+        if (isset($filters['sources'])) {
+            $query->whereIn('source_id', $filters['sources']);
         }
 
-        if (request('stages')) {
-            $query->whereIn('stage_id', request('stages'));
+        if (isset($filters['stages'])) {
+            $query->whereIn('stage_id', $filters['stages']);
         }
 
         return $query;

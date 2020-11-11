@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 
 class EstimatesGoodsItemController extends Controller
 {
+    protected $entityAlias;
+    protected $entityDependence;
 
     /**
      * EstimatesGoodsItemController constructor.
@@ -20,14 +22,12 @@ class EstimatesGoodsItemController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->class = EstimatesGoodsItem::class;
-        $this->model = 'App\Models\System\Documents\EstimatesGoodsItem';
-        $this->entity_alias = with(new $this->class)->getTable();
-        $this->entity_dependence = false;
+        $this->entityAlias = 'estimates_goods_items';
+        $this->entityDependence = false;
     }
-    
-    use Estimatable;
-    use Reservable;
+
+    use Estimatable,
+        Reservable;
 
     /**
      * Store a newly created resource in storage.
@@ -38,13 +38,12 @@ class EstimatesGoodsItemController extends Controller
     public function store(Request $request)
     {
         $success = true;
-        $stockId = null;
-    
+
+        // TODO - 16.10.20 - Возня со складом (Пока что берем первый склад) - видимо устарело с внедрением торговых точек
+//        $stockId = null;
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right('stocks', true, getmethod('index'));
-        
-        // TODO - 16.10.20 - Пока что берем первый склад
-        $stockId = Stock::
+//        $answer = operator_right('stocks', true, getmethod('index'));
+//        $stockId = Stock::
 //        where('filial_id', auth()->user()->stafferFilialId)
 //            ->moderatorLimit($answer)
 //            ->companiesLimit($answer)
@@ -52,8 +51,8 @@ class EstimatesGoodsItemController extends Controller
 //            ->authors($answer)
 //            ->systemItem($answer)
 //            ->
-            value('id');
-        
+//            value('id');
+
         // Если включены настройки для складов, то проверяем сколько складов в системе, и если один, то берем его id
 //        $settings = getSettings();
 //        if ($settings->isNotEmpty()) {
@@ -97,7 +96,7 @@ class EstimatesGoodsItemController extends Controller
                 'goods_id' => $priceGoods->product->id,
                 'price_id' => $priceGoods->id,
                 'currency_id' => $priceGoods->currency_id,
-                'stock_id' => $stockId,
+                'stock_id' => $request->stock_id,
                 'price' => $priceGoods->price,
 //                'discount_percent' => $discountPercent,
 //                'discount_currency' => $discountCurrency,
@@ -121,7 +120,7 @@ class EstimatesGoodsItemController extends Controller
             ], [
                 'goods_id' => $priceGoods->product->id,
                 'currency_id' => $priceGoods->currency_id,
-                'stock_id' => $stockId,
+                'stock_id' => $request->stock_id,
                 'sale_mode' => 1,
 
                 'cost_unit' => $priceGoods->product->article->cost_default,
@@ -181,7 +180,7 @@ class EstimatesGoodsItemController extends Controller
 
         return response()->json($result);
     }
-    
+
     /**
      * Update the specified resource in storage.
      *
@@ -273,7 +272,7 @@ class EstimatesGoodsItemController extends Controller
         if (isset($estimatesGoodsItem->reserve)) {
             logs('documents')
                 ->info('========================================== УДАЛЯЕМ ПУНКТ СМЕТЫ, ИМЕЮЩИЙ РЕЗЕРВ, ID: ' . $estimatesGoodsItem->id . ' ==============================================');
-            $this->unreserve($estimatesGoodsItem);
+            $this->cancelReserve($estimatesGoodsItem);
             $result = $estimatesGoodsItem->delete();
             logs('documents')
                 ->info('========================================== КОНЕЦ УДАЛЕНИЯ ПУНКТА СМЕТЫ, ИМЕЮЩЕГО РЕЗЕРВ ==============================================
@@ -286,7 +285,7 @@ class EstimatesGoodsItemController extends Controller
         $this->aggregateEstimate($estimatesGoodsItem->estimate);
         return response()->json($result);
     }
-    
+
     /**
      * Резерв пункта сметы
      *
@@ -301,7 +300,7 @@ class EstimatesGoodsItemController extends Controller
             'reserve'
         ])
             ->find($id);
-        
+
         logs('documents')
             ->info('========================================== НАЧАЛО РЕЗЕРВИРОВАНИЯ ПУНКТА СМЕТЫ, ID: ' . $estimatesGoodsItem->id . ' ==============================================');
         // Еслои количество пришедшее количество не равно количеству в бд
@@ -312,14 +311,14 @@ class EstimatesGoodsItemController extends Controller
 //            $estimatesGoodsItem->count = $request->count;
 //            $this->aggregateEstimate($estimatesGoodsItem->estimate);
 //        }
-        
+
         $result = $this->reserve($estimatesGoodsItem);
-        
+
         logs('documents')
             ->info('========================================== КОНЕЦ РЕЗЕРВИРОВАНИЯ ПУНКТА СМЕТЫ ==============================================
-                
+
                 ');
-        
+
         $estimatesGoodsItem->load([
             'stock:id,name',
             'price_goods',
@@ -327,13 +326,13 @@ class EstimatesGoodsItemController extends Controller
             'currency',
             'reserve'
         ]);
-        
+
         return response()->json([
             'item' => $estimatesGoodsItem,
             'msg' => $result
         ]);
     }
-    
+
     /**
      * Отмена резерва пункта сметы
      *
@@ -342,29 +341,29 @@ class EstimatesGoodsItemController extends Controller
      */
     public function unreserving($id)
     {
-        
+
         $estimatesGoodsItem = EstimatesGoodsItem::with([
             'product.article',
             'document',
             'reserve'
         ])
             ->find($id);
-        
+
         logs('documents')
             ->info('========================================== НАЧАЛО СНЯТИЯ РЕЗЕРВИРОВАНИЯ ПУНКТА СМЕТЫ, ID: ' . $estimatesGoodsItem->id . ' ==============================================');
-        
-        $result = $this->unreserve($estimatesGoodsItem);
-        
+
+        $result = $this->cancelReserve($estimatesGoodsItem);
+
         logs('documents')
             ->info('========================================== КОНЕЦ СНЯТИЯ РЕЗЕРВИРОВАНИЯ ПУНКТА СМЕТЫ ==============================================
-                
+
                 ');
-    
+
         $estimatesGoodsItem->load([
             'stock:id,name',
             'price_goods',
         ]);
-        
+
         return response()->json([
             'item' => $estimatesGoodsItem,
             'msg' => $result

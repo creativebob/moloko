@@ -23,6 +23,7 @@ use App\Metric;
 use App\Order;
 use App\Outcome;
 use App\OutcomesCategory;
+use App\Outlet;
 use App\Policies\ArticlesGroupPolicy;
 use App\Policies\AttachmentPolicy;
 use App\Policies\AttachmentsCategoryPolicy;
@@ -41,6 +42,7 @@ use App\Policies\MetricPolicy;
 use App\Policies\OrderPolicy;
 use App\Policies\OutcomePolicy;
 use App\Policies\OutcomesCategoryPolicy;
+use App\Policies\OutletPolicy;
 use App\Policies\PortfolioPolicy;
 use App\Policies\PortfoliosItemPolicy;
 use App\Policies\PricesGoodsPolicy;
@@ -346,6 +348,8 @@ class AuthServiceProvider extends ServiceProvider
         Production::class => ProductionPolicy::class,
 
         Stock::class => StockPolicy::class,
+
+        Outlet::class => OutletPolicy::class,
 
         Lead::class => LeadPolicy::class,
         Note::class => NotePolicy::class,

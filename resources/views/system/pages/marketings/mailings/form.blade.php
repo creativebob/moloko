@@ -57,7 +57,7 @@
 
                             <div class="small-12 medium-6 cell">
                                 <label>Шаблон
-                                    @include('includes.selects.templates')
+                                    @include('includes.selects.templates', ['categoryId' => 1])
                                 </label>
                             </div>
 
@@ -72,7 +72,7 @@
                                     <pickmeup-component
                                         name="started_at"
                                         @isset($disabled)
-                                        :disabled="true"
+                                        :readonly="true"
                                         @endisset
                                         :required="true"
                                     ></pickmeup-component>

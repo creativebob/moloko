@@ -4,7 +4,7 @@
 
 @section('breadcrumbs', Breadcrumbs::render('index', $pageInfo))
 
-@section('exel')
+@section('exсel')
     <!-- <a href="/admin/leads?calls=yes" class="button tiny">Перезвоны</a> -->
 @endsection
 
@@ -166,7 +166,7 @@
                             </td>
 
                             <td class="td-status">
-                                @if($lead->estimate->saled_at) Чек закрыт @else Открыт @endif
+                                @if($lead->estimate->conducted_at) Чек закрыт @else Открыт @endif
                             </td>
 
                             <td class="td-shipment_at">

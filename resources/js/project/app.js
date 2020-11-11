@@ -4,7 +4,7 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-require('../common/bootstrap');
+require('../common/foundation');
 
 window.Vue = require('vue');
 
@@ -19,8 +19,6 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
-
-
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -31,5 +29,4 @@ const app = new Vue({
     el: '#app',
 });
 
-// Основные настройки
-require('../common/main');
+$(document).foundation();

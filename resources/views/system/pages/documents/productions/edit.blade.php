@@ -14,8 +14,8 @@
             <h2 class="header-content">РЕДАКТИРОВАТЬ наряд на производство</h2>
         </div>
         <div class="top-bar-right">
-            @if(Auth::user()->god && $production->is_produced)
-                <a href="{{ route('productions.unproduced', $production->id) }}" class="button">Отменить
+            @if($production->conducted_at && extra_right('production-cancel'))
+                <a href="{{ route('productions.cancel', $production->id) }}" class="button">Отменить
                     производство</a>
             @endif
         </div>
@@ -99,15 +99,17 @@
         <production-component
             :production='@json($production)'
             :select-data='@json($articles_categories_with_items_data)'
-        ></production-component>
+        >
+            @csrf
+        </production-component>
 
-        @empty($production->produced_at)
+        @empty($production->conducted_at)
             <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
                 {{ Form::submit('Редактировать', ['class' => 'button']) }}
             </div>
 
             <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
-                {{ Form::submit('Произвести', ['class' => 'button', 'id' => 'button-producing']) }}
+                {{ Form::submit('Произвести', ['class' => 'button', 'id' => 'button-conducting']) }}
             </div>
         @endempty
 
@@ -121,9 +123,9 @@
     @include('includes.scripts.inputs-mask')
 
     <script>
-        $(document).on('click', '#button-producing', function () {
+        $(document).on('click', '#button-conducting', function () {
             let id = '{{ $production->id }}';
-            $(this).closest('form').attr('action', '/admin/productions/' + id + '/producing');
+            $(this).closest('form').attr('action', '/admin/productions/' + id + '/conducting');
         })
 
     </script>

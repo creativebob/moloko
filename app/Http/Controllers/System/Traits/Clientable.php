@@ -77,7 +77,7 @@ trait Clientable
         $total = Estimate::where([
             'client_id' => $client->id,
         ])
-            ->whereNotNull('saled_at')
+            ->whereNotNull('conducted_at')
             ->sum('total');
         $data['customer_equity'] = $total + $estimate->total;
 

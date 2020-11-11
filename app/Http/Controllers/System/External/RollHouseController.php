@@ -800,7 +800,6 @@ class RollHouseController extends Controller
 
                                     'number' => $lead->case_number,
                                     'date' => $check->created->format('d.m.Y'),
-                                    'registered_at' => $check->created,
 
                                     'company_id' => $companyId,
                                     'author_id' => hideGod($authUser),
@@ -808,7 +807,7 @@ class RollHouseController extends Controller
                                     'is_main' => 1,
                                     'is_dismissed' => ($check->progress == 2) ? 0 : 1,
                                     'registered_at' => $check->created,
-                                    'saled_at' => $check->created,
+                                    'conducted_at' => $check->created,
 
                                     'created_at' => $check->created,
                                     'timestamps' => false,
@@ -1199,13 +1198,13 @@ class RollHouseController extends Controller
 
                 logs('documents')->info("========================================== КОНЕЦ РЕГИСТРАЦИИ СМЕТЫ, ID: {$estimate->id} =============================================== ");
 
-                if (! $estimate->saled_at) {
+                if (! $estimate->conducted_at) {
 
                     // Обновляем показатели клиента
                     $this->setIndicators($estimate);
 
                     $estimate->update([
-                        'saled_at' => now(),
+                        'conducted_at' => now(),
                     ]);
 
                 }

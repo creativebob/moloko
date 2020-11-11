@@ -399,7 +399,7 @@ class RollHouseParser
 
                                     'registered_at' => $check->created,
 
-                                    'saled_at' => $check->created,
+                                    'conducted_at' => $check->created,
 
                                     'created_at' => $check->created,
                                     'timestamps' => false,
@@ -605,7 +605,7 @@ class RollHouseParser
                                     $total = Estimate::where([
                                         'client_id' => $client->id,
                                     ])
-                                        ->whereNotNull('saled_at')
+                                        ->whereNotNull('conducted_at')
                                         ->sum('total');
                                     $data['customer_equity'] = $total + $estimate->total;
 
@@ -1222,8 +1222,8 @@ class RollHouseParser
                         'is_dismissed' => ($check->progress == 2) ? 0 : 1,
 
                         'registered_at' => $check->created,
-                        
-                        'saled_at' => $check->created,
+
+                        'conducted_at' => $check->created,
 
                         'created_at' => $check->created,
                         'timestamps' => false,
@@ -1431,7 +1431,7 @@ class RollHouseParser
                         $total = Estimate::where([
                             'client_id' => $client->id,
                         ])
-                            ->whereNotNull('saled_at')
+                            ->whereNotNull('conducted_at')
                             ->sum('total');
                         $data['customer_equity'] = $total + $estimate->total;
 

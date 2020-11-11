@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Providers;
+namespace App\Providers\System;
 
 use App\Http\View\Composers\System\AccountsComposer;
 use App\Http\View\Composers\System\ArticlesCategoriesWithGroupsComposer;
@@ -20,9 +20,13 @@ use App\Http\View\Composers\System\CitySearchComposer;
 use App\Http\View\Composers\System\ClientsCitiesComposer;
 use App\Http\View\Composers\System\ClientsCountComposer;
 use App\Http\View\Composers\System\DiscountsForEstimatesComposer;
+use App\Http\View\Composers\System\FilialCatalogsGoodsComposer;
+use App\Http\View\Composers\System\FilialStaffComposer;
 use App\Http\View\Composers\System\LeadHistoryComposer;
 use App\Http\View\Composers\System\MailingListsComposer;
 use App\Http\View\Composers\System\MailingsComposer;
+use App\Http\View\Composers\System\OutletsSettingsCategoriesWithSettingsComposer;
+use App\Http\View\Composers\System\TaxationTypesComposer;
 use App\Http\View\Composers\System\TemplatesComposer;
 use App\Http\View\Composers\System\UsersWithClientComposer;
 use App\Http\View\Composers\System\CmvArchivesCountComposer;
@@ -49,7 +53,7 @@ use App\Http\View\Composers\System\NotificationsComposer;
 use App\Http\View\Composers\System\PaymentsTypesComposer;
 use App\Http\View\Composers\System\ProcessesCategoriesWithGroupsComposer;
 use App\Http\View\Composers\System\RelatedComposer;
-use App\Http\View\Composers\System\CompaniesSettingsCategoriesComposer;
+use App\Http\View\Composers\System\CompaniesSettingsCategoriesWithSettingsComposer;
 use App\Http\View\Composers\System\SitesWIthFilialsAndCatalogsComposer;
 use App\Http\View\Composers\System\SourcesComposer;
 use App\Http\View\Composers\System\StagesComposer;
@@ -181,7 +185,10 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.countries', CountriesComposer::class);
         view()->composer('includes.selects.stages', StagesListComposer::class);
 
-        view()->composer('includes.selects.filials_for_user', FilialsForUserComposer::class);
+        view()->composer([
+            'includes.selects.filials_for_user',
+            'includes.selects.user_filials',
+        ], FilialsForUserComposer::class);
         view()->composer('includes.selects.departments_for_user', DepartmentsForUserComposer::class);
 
         view()->composer([
@@ -255,7 +262,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.suppliers', SupplierSelectComposer::class);
         view()->composer([
             'includes.selects.stocks',
-            'leads.tabs.estimate'
+//            'leads.tabs.estimate'
         ], StocksComposer::class);
 
         view()->composer('leads.tabs.payments', PaymentsTypesComposer::class);
@@ -361,12 +368,15 @@ class ComposerServiceProvider extends ServiceProvider
 
         view()->composer([
             'products.articles.goods.prices.catalogs',
-            'leads.catalogs.modal_catalogs_goods'
+//            'leads.catalogs.modal_catalogs_goods'
         ], CatalogsGoodsComposer::class);
         view()->composer('products.articles.goods.prices.prices', CatalogsGoodsWithFilialsComposer::class);
 
         view()->composer('products.articles.goods.prices.catalogs_items', CatalogsGoodsItemsSelectComposer::class);
         view()->composer('products.articles.goods.prices.filials', FilialsForCatalogsGoodsComposer::class);
+
+        view()->composer('system.pages.outlets.tabs.catalogs_goods', FilialCatalogsGoodsComposer::class);
+        view()->composer('system.pages.outlets.tabs.staff', FilialStaffComposer::class);
 
         view()->composer('leads.tabs.catalogs_goods', CatalogGoodsWithPricesComposer::class);
         view()->composer('leads.tabs.catalogs_services', CatalogServicesWithPricesComposer::class);
@@ -427,6 +437,10 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.lead_methods', LeadMethodsListComposer::class);
 
         view()->composer('includes.selects.channels', ChannelsComposer::class);
+        view()->composer([
+            'includes.selects.taxation_types',
+            'includes.lists.taxation_types',
+        ], TaxationTypesComposer::class);
 
         view()->composer('includes.selects.display_modes', DisplayModesComposer::class);
         view()->composer('includes.selects.directive_categories', DirectiveCategoriesComposer::class);
@@ -435,7 +449,8 @@ class ComposerServiceProvider extends ServiceProvider
 
         view()->composer('includes.lists.currencies', CurrenciesComposer::class);
 
-        view()->composer('system.pages.companies.tabs.settings', CompaniesSettingsCategoriesComposer::class);
+        view()->composer('system.pages.companies.tabs.settings', CompaniesSettingsCategoriesWithSettingsComposer::class);
+        view()->composer('system.pages.outlets.tabs.settings', OutletsSettingsCategoriesWithSettingsComposer::class);
 
         // Лиды
         view()->composer('leads.personal', UsersWithClientComposer::class);

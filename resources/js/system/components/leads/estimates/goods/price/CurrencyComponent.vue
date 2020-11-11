@@ -2,7 +2,7 @@
     <td>
         {{ item.price | roundToTwo | level }} <span class="item-currency">{{ item.currency.abbreviation}}</span>
         <template
-            v-if="havePoints"
+            v-if="showPoints"
         >
             <span
                 v-if="isRegistered"
@@ -27,8 +27,9 @@
             isRegistered() {
                 return this.$store.state.lead.estimate.registered_at;
             },
-            havePoints() {
-                return this.item.points > 0;
+            showPoints() {
+                const canPaymentPoints = this.$store.getters.OUTLET_SETTING('payment-point');
+                return this.item.points > 0 && canPaymentPoints;
             }
         },
         methods: {

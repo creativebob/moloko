@@ -25,7 +25,6 @@
             <estimates-goods-items-component
                 :items="goodsItems"
                 :settings="settings"
-                :stocks="stocks"
             ></estimates-goods-items-component>
         </template>
 
@@ -83,18 +82,21 @@
                     return [];
                 }
             },
-            stocks: {
-                type: Array,
-                default: () => {
-                    return [];
-                }
-            },
+            // stocks: {
+            //     type: Array,
+            //     default: () => {
+            //         return [];
+            //     }
+            // },
             discount: {
                 type: Object,
                 default: () => {
                     return {};
                 }
             },
+        },
+        mounted() {
+
         },
         // created() {
             // this.$store.commit('SET_ESTIMATE', this.estimate);

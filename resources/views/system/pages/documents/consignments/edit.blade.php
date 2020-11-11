@@ -14,8 +14,8 @@
             <h2 class="header-content">РЕДАКТИРОВАТЬ товарную накладную</h2>
         </div>
         <div class="top-bar-right">
-            @if(Auth::user()->god && $consignment->receipted_at)
-                <a href="{{ route('consignments.unreceipting', $consignment->id) }}" class="button">Отменить проводку</a>
+            @if($consignment->conducted_at && extra_right('consignment-cancel'))
+                <a href="{{ route('consignments.cancel', $consignment->id) }}" class="button">Отменить оприходование</a>
             @endif
         </div>
     </div>
@@ -111,13 +111,13 @@
 
         ></consignment-component>
 
-        @empty($consignment->receipted_at)
+        @empty($consignment->conducted_at)
             <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
                 {{ Form::submit('Редактировать', ['class' => 'button']) }}
             </div>
 
             <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
-                {{ Form::submit('Оприходовать', ['class' => 'button', 'id' => 'button-receipting']) }}
+                {{ Form::submit('Оприходовать', ['class' => 'button', 'id' => 'button-conducting']) }}
             </div>
         @endempty
 
@@ -131,9 +131,9 @@
     @include('includes.scripts.inputs-mask')
 
     <script>
-        $(document).on('click', '#button-receipting', function () {
+        $(document).on('click', '#button-conducting', function () {
             let id = '{{ $consignment->id }}';
-            $(this).closest('form').attr('action', '/admin/consignments/' + id + '/receipting');
+            $(this).closest('form').attr('action', '/admin/consignments/' + id + '/conducting');
         })
 
     </script>

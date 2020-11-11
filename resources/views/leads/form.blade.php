@@ -1,6 +1,6 @@
-{{--<lead-init-component--}}
-{{--    :lead="{{ $lead }}"--}}
-{{--></lead-init-component>--}}
+<lead-init-component
+    :outlet="{{ $outlet }}"
+></lead-init-component>
 
 <div class="top-bar head-content">
     <div class="top-bar-left">
@@ -8,6 +8,8 @@
                                                 class="case_number_field" value="{{ $lead->case_number }}"></h2>
     </div>
     <div class="top-bar-right wrap_lead_badget">
+
+        <lead-errors-component></lead-errors-component>
         {{-- @include('includes.inputs.digit', ['name' => 'badget', 'value' => $lead->badget, 'decimal_place'=>2]) --}}
     </div>
 </div>
@@ -171,7 +173,7 @@
 
                     {{-- КАТАЛОГ ТОВАРОВ --}}
                     <div class="tabs-panel" id="tab-catalog_goods">
-                        @include('leads.tabs.catalogs_goods')
+                        @include('leads.tabs.catalogs_goods', ['catalogsIds' => optional($outlet->catalogs_goods)->pluck('id')])
                     </div>
 
                     {{-- КАТАЛОГ УСЛУГ --}}

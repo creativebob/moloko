@@ -48,17 +48,18 @@ class Cost extends Model
     // use DateIntervalFilter;
 
     // public $timestamps = false;
-    
+
     protected $dates = [
         'created_at',
         'updated_at',
         'deleted_at'
     ];
-    
+
     protected $fillable = [
         'min',
         'max',
         'average',
+
         'serial',
         'author_id',
         'created_at',
@@ -66,7 +67,7 @@ class Cost extends Model
         'filial_id',
 
         'is_wrong',
-	    
+
         'cmv_id',
         'cmv_type',
         'manufacturer_id'
@@ -82,5 +83,5 @@ class Cost extends Model
     {
         return $this->hasMany(CostsHistory::class, 'cost_id');
     }
-    
+
 }

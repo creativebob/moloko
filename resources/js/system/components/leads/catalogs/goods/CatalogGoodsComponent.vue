@@ -56,7 +56,7 @@
                 <div class="small-2 cell global-settings-panel">
                     <div
                         class="one-icon-16 icon-view-setting icon-button"
-                        data-open="modal-catalogs-goods">
+                        data-open="modal-catalogs_goods">
                     </div>
                 </div>
             </div>
@@ -76,7 +76,7 @@
             </div>
         </div>
 
-        <div class="reveal rev-small" id="modal-catalogs-goods" data-reveal>
+        <div class="reveal rev-small" id="modal-catalogs_goods" data-reveal>
             <div class="grid-x">
                 <div class="small-12 cell modal-title">
                     <h5>Настройка каталога товаров</h5>
@@ -89,8 +89,8 @@
                         v-model="changeCatalogId"
                     >
                         <option
+                            v-for="catalog in outlet.catalogs_goods"
                             :value="catalog.id"
-                            v-for="catalog in catalogs"
                             :selected="catalogId"
                         >{{ catalog.name}}
                         </option>
@@ -146,6 +146,7 @@
         },
         props: {
             catalogsGoodsData: Object,
+            outlet: Object
             // isPosted: Boolean,
         },
         data() {
@@ -180,11 +181,11 @@
             changeCatalog() {
                 if (this.catalogId !== this.changeCatalogId) {
                     this.catalogId = this.changeCatalogId;
-                    const item = this.catalogsItems.find(obj => obj.catalogs_goods_item_id == this.catalogId);
+                    const item = this.catalogsItems.find(obj => obj.catalogs_goods_id == this.catalogId);
                     this.changeCatalogsItem(item.id);
                 }
 
-                $('#modal-catalogs-goods').foundation('close');
+                $('#modal-catalogs_goods').foundation('close');
             },
             addPriceToEstimate(price) {
                 this.$store.commit('ADD_GOODS_ITEM_TO_ESTIMATE', price);

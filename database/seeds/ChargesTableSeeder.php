@@ -81,9 +81,18 @@ class ChargesTableSeeder extends Seeder
                 'alias' => 'margin-show',
                 'author_id' => 1,
             ],
-
-
-
+            [
+                'name' => 'Отмена товарной накладной',
+                'description' => null,
+                'alias' => 'consignment-cancel',
+                'author_id' => 1,
+            ],
+            [
+                'name' => 'Отмена наряда на производство',
+                'description' => null,
+                'alias' => 'production-cancel',
+                'author_id' => 1,
+            ],
         ]);
 
 

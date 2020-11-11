@@ -55,7 +55,7 @@
                 <td>
                     @php
                         $disabled = null;
-                            if ($lead->estimate->saled_at || $lead->estimate->is_reserved == 1) {
+                            if ($lead->estimate->conducted_at || $lead->estimate->is_reserved == 1) {
                             $disabled = true;
                         }
                     @endphp

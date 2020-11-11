@@ -32,7 +32,7 @@ class CreateConsignmentsTable extends Migration
             $table->foreign('stock_id')->references('id')->on('stocks');
 
             $table->decimal('amount', 12, 4)->default(0)->comment('Сумма');
-            $table->timestamp('receipted_at')->nullable()->comment('Оприходовано');
+            $table->timestamp('conducted_at')->nullable()->comment('Время проведения');
             $table->boolean('draft')->default(1)->comment('Черновик');
 
 

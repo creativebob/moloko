@@ -161,6 +161,7 @@ class PagesTableSeeder extends Seeder
                 'display' => true,
             ],
 
+
             // Контрагенты
             [
                 'name' => 'Поставщики',
@@ -903,6 +904,17 @@ class PagesTableSeeder extends Seeder
                 'title' => 'Новости',
                 'description' => 'Новости',
                 'alias' => 'news',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+            [
+                'name' => 'Торговые точки',
+                'site_id' => 1,
+                'title' => 'Торговые точки',
+                'description' => 'Торговые точки',
+                'alias' => 'outlets',
                 'company_id' => null,
                 'system' => true,
                 'author_id' => 1,

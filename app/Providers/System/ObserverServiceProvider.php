@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Providers;
+namespace App\Providers\System;
 
 use App\ArticlesGroup;
 use App\Attachment;
@@ -53,6 +53,7 @@ use App\Observers\System\Documents\ProductionObserver;
 use App\Observers\System\Documents\ProductionsItemObserver;
 use App\Observers\System\MailingListObserver;
 use App\Observers\System\MailingObserver;
+use App\Observers\System\OutletObserver;
 use App\Observers\System\Stocks\AttachmentsStockObserver;
 use App\Observers\System\BusinessCaseObserver;
 use App\Observers\System\CatalogsGoodsItemObserver;
@@ -120,6 +121,7 @@ use App\Observers\System\WorkflowsCategoryObserver;
 use App\Off;
 use App\Outcome;
 use App\OutcomesCategory;
+use App\Outlet;
 use App\Page;
 use App\Payment;
 use App\Photo;
@@ -208,6 +210,7 @@ class ObserverServiceProvider extends ServiceProvider
         // Представитель
         Representative::observe(RepresentativeObserver::class);
 
+        Outlet::observe(OutletObserver::class);
         Lead::observe(LeadObserver::class);
 
         // HR
@@ -359,6 +362,9 @@ class ObserverServiceProvider extends ServiceProvider
         Mailing::observe(MailingObserver::class);
         MailingList::observe(MailingListObserver::class);
 //        Dispatch::observe(DispatchObserver::class);
+
+
+
     }
 
     /**

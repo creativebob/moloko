@@ -1,6 +1,7 @@
 {{-- Заголовок и фильтры --}}
 <div data-sticky-container id="head-content">
-    <div class="sticky sticky-topbar" id="head-sticky" data-sticky data-margin-top="2.4" data-sticky-on="small" data-top-anchor="head-content:top">
+    <div class="sticky sticky-topbar" id="head-sticky" data-sticky data-margin-top="2.4" data-sticky-on="small"
+         data-top-anchor="head-content:top">
         <div class="top-bar head-content">
             <div class="top-bar-left">
                 <h2 class="header-content">{{ $pageInfo->title }}
@@ -30,26 +31,44 @@
             </div>
             <div class="top-bar-right">
 
-                <a class="icon-filter sprite
+                <div class="grid-x">
+                    <div class="cell small-12">
+                        <a
+                            href="{{ route('leads.index', ['period_date_min' => today()->format('d.m.Y'), 'period_date_max' => today()->format('d.m.Y')]) }}"
+                            class="button tiny hollow"
+                        >День</a>
+                        <a
+                            href="{{ route('leads.index', ['period_date_min' => \Carbon\Carbon::create('first day of this month')->format('d.m.Y'), 'period_date_max' => \Carbon\Carbon::create('last day of this month')->format('d.m.Y')]) }}"
+                            class="button tiny hollow"
+                        >Месяц</a>
+                        <a
+                            href="{{ route('leads.index', ['period_date_min' => \Carbon\Carbon::create('first day of January ' . now()->format('Y'))->format('d.m.Y'), 'period_date_max' => \Carbon\Carbon::create('last day of December ' . now()->format('Y'))->format('d.m.Y')]) }}"
+                            class="button tiny hollow"
+                        >Год</a>
+                    </div>
+
+                </div>
+
+                <div class="cell small-12">
+                    <a class="icon-filter sprite
                 @if(count(request()->input()) > 1) filtration-active @endif
-                    "></a>
+                        "></a>
 
                     <search-leads-component></search-leads-component>
-                {{-- <button type="button" class="icon-search sprite button"></button> --}}
-
+                </div>
             </div>
-
-
         </div>
 
         <div class="grid-x">
             <div class="small-12 cell filters fieldset-filters" id="filters">
                 <div class="grid-padding-x">
                     <div class="small-12 cell text-right">
-                        <a href="{{ route('leads.index') }}" class="small-link">Сбросить</a>
-{{--                        {{ Form::open(['route' => 'leads.resetFilter']) }}--}}
-{{--                        <button class="small-link">Сбросить</button>--}}
-{{--                        {{ Form::close() }}--}}
+                        {!! Form::open(['route' => ['reset_filter', 'leads']]) !!}
+                        {!! Form::submit('Сбросить', ['class'=>'small-link']) !!}
+                        {!! Form::close() !!}
+                        {{--                        {{ Form::open(['route' => 'leads.resetFilter']) }}--}}
+                        {{--                        <button class="small-link">Сбросить</button>--}}
+                        {{--                        {{ Form::close() }}--}}
                     </div>
                 </div>
                 <div class="grid-padding-x">
