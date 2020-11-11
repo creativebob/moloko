@@ -276,6 +276,7 @@ class MenusTableSeeder extends Seeder
 $menus = Menu::where('navigation_id', 1)->get(['id', 'tag']);
 $pages = Page::where('site_id', 1)->get(['id', 'alias']);
 
+
 // Первый уровень вложенности
 Menu::insert([
 
@@ -375,6 +376,20 @@ Menu::insert([
         'tag' => 'dealers',
         'parent_id' => $menus->where('tag', 'sales')->first()->id,
         'page_id' => $pages->where('alias', 'dealers')->first()->id,
+        'navigation_id' => 1,
+        'company_id' => null,
+        'system' => true,
+        'author_id' => 1,
+        'display' => true,
+        'sort' => 4,
+    ],
+    [
+        'name' => 'Агенты',
+        'icon' => null,
+        'alias' => 'admin/agents',
+        'tag' => 'agents',
+        'parent_id' => $menus->where('tag', 'sales')->first()->id,
+        'page_id' => $pages->where('alias', 'agents')->first()->id,
         'navigation_id' => 1,
         'company_id' => null,
         'system' => true,
@@ -1058,7 +1073,6 @@ Menu::insert([
         'display' => true,
         'sort' => 3,
     ],
-
     [
         'name' => 'Продвижения',
         'icon' => null,
@@ -1073,7 +1087,6 @@ Menu::insert([
         'display' => true,
         'sort' => 5,
     ],
-
     [
         'name' => 'Портфолио',
         'icon' => null,
@@ -1088,7 +1101,6 @@ Menu::insert([
         'display' => true,
         'sort' => 5,
     ],
-
     [
         'name' => 'Скидки',
         'icon' => null,
@@ -1103,14 +1115,13 @@ Menu::insert([
         'display' => true,
         'sort' => 5,
     ],
-
     [
-        'name' => 'Подписчики',
+        'name' => 'E-mail рассылки',
         'icon' => null,
-        'alias' => 'admin/subscribers',
-        'tag' => 'subscribers',
-        'parent_id' => $menus->firstWhere('tag', 'marketings')->id,
-        'page_id' => $pages->firstWhere('alias', 'subscribers')->id,
+        'alias' => null,
+        'tag' => 'direct_mail',
+        'parent_id' => $menus->where('tag', 'marketings')->first()->id,
+        'page_id' => null,
         'navigation_id' => 1,
         'company_id' => null,
         'system' => true,
@@ -1123,7 +1134,7 @@ Menu::insert([
         'icon' => null,
         'alias' => 'admin/templates_categories',
         'tag' => 'templates_categories',
-        'parent_id' => $menus->firstWhere('tag', 'marketings')->id,
+        'parent_id' => $menus->firstWhere('tag', 'guides')->id,
         'page_id' => $pages->firstWhere('alias', 'templates_categories')->id,
         'navigation_id' => 1,
         'company_id' => null,
@@ -1137,7 +1148,7 @@ Menu::insert([
         'icon' => null,
         'alias' => 'admin/templates',
         'tag' => 'templates',
-        'parent_id' => $menus->firstWhere('tag', 'marketings')->id,
+        'parent_id' => $menus->firstWhere('tag', 'guides')->id,
         'page_id' => $pages->firstWhere('alias', 'templates')->id,
         'navigation_id' => 1,
         'company_id' => null,
@@ -1146,35 +1157,6 @@ Menu::insert([
         'display' => true,
         'sort' => 5,
     ],
-    [
-        'name' => 'Списки рассылок',
-        'icon' => null,
-        'alias' => 'admin/mailing_lists',
-        'tag' => 'mailing_lists',
-        'parent_id' => $menus->firstWhere('tag', 'marketings')->id,
-        'page_id' => $pages->firstWhere('alias', 'mailing_lists')->id,
-        'navigation_id' => 1,
-        'company_id' => null,
-        'system' => true,
-        'author_id' => 1,
-        'display' => true,
-        'sort' => 5,
-    ],
-    [
-        'name' => 'Рассылки',
-        'icon' => null,
-        'alias' => 'admin/mailings',
-        'tag' => 'mailings',
-        'parent_id' => $menus->firstWhere('tag', 'marketings')->id,
-        'page_id' => $pages->firstWhere('alias', 'mailings')->id,
-        'navigation_id' => 1,
-        'company_id' => null,
-        'system' => true,
-        'author_id' => 1,
-        'display' => true,
-        'sort' => 5,
-    ],
-
 
     // Справочники
     [
@@ -1447,7 +1429,48 @@ Menu::insert([
         'display' => true,
         'sort' => null,
     ],
-
+    [
+        'name' => 'Подписчики',
+        'icon' => null,
+        'alias' => 'admin/subscribers',
+        'tag' => 'subscribers',
+        'parent_id' => $menus->firstWhere('tag', 'direct_mail')->id,
+        'page_id' => $pages->firstWhere('alias', 'subscribers')->id,
+        'navigation_id' => 1,
+        'company_id' => null,
+        'system' => true,
+        'author_id' => 1,
+        'display' => true,
+        'sort' => 1,
+    ],
+    [
+        'name' => 'Группы подписчиков',
+        'icon' => null,
+        'alias' => 'admin/mailing_lists',
+        'tag' => 'mailing_lists',
+        'parent_id' => $menus->firstWhere('tag', 'direct_mail')->id,
+        'page_id' => $pages->firstWhere('alias', 'mailing_lists')->id,
+        'navigation_id' => 1,
+        'company_id' => null,
+        'system' => true,
+        'author_id' => 1,
+        'display' => true,
+        'sort' => 3,
+    ],
+    [
+        'name' => 'Рассылки',
+        'icon' => null,
+        'alias' => 'admin/mailings',
+        'tag' => 'mailings',
+        'parent_id' => $menus->firstWhere('tag', 'direct_mail')->id,
+        'page_id' => $pages->firstWhere('alias', 'mailings')->id,
+        'navigation_id' => 1,
+        'company_id' => null,
+        'system' => true,
+        'author_id' => 1,
+        'display' => true,
+        'sort' => 2,
+    ],
 
 ]);
 

@@ -1004,6 +1004,18 @@ Route::resource('/manufacturers', 'ManufacturerController')
     ]);
 
 
+
+// ------------------------------------ Агента ----------------------------------------------------
+// Архив
+Route::post('/agents/archive/{id}', 'AgentController@archive');
+// Основные методы
+Route::resource('/agents', 'AgentController')
+    ->except([
+        'show',
+        'destroy'
+    ]);
+
+
 // ------------------------------------ Продавцы ----------------------------------------------------
 // Архив
 Route::post('/vendors/archive/{id}', 'VendorController@archive');

@@ -41,6 +41,7 @@ use App\GoodsCategory;
 use App\Models\System\Stocks\GoodsStock;
 use App\Lead;
 use App\Manufacturer;
+use App\Agent;
 use App\Menu;
 use App\Metric;
 use App\Observers\System\ArticlesGroupObserver;
@@ -82,6 +83,7 @@ use App\Observers\System\GoodsCategoryObserver;
 use App\Observers\System\Stocks\GoodsStockObserver;
 use App\Observers\System\LeadObserver;
 use App\Observers\System\ManufacturerObserver;
+use App\Observers\System\AgentObserver;
 use App\Observers\System\MenuObserver;
 use App\Observers\System\MetricObserver;
 use App\Observers\System\OffObserver;
@@ -334,6 +336,7 @@ class ObserverServiceProvider extends ServiceProvider
         Supplier::observe(SupplierObserver::class);
         Vendor::observe(VendorObserver::class);
         Manufacturer::observe(ManufacturerObserver::class);
+        Agent::observe(AgentObserver::class);
 
         // Внутренние
         Client::observe(ClientObserver::class);

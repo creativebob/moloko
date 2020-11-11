@@ -676,6 +676,18 @@ class EntitiesTableSeeder extends Seeder
                 'view_path' => 'mailings',
                 'page_id' => $pages->firstWhere('alias', 'mailings')->id,
             ],
+            [
+                'name' => 'Рекламные кампании',
+                'alias' => 'campaigns',
+                'model' => 'App\Campaign',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'view_path' => 'campaigns',
+                'page_id' => $pages->firstWhere('alias', 'campaigns')->id,
+            ],
+
             // TODO - 04.06.19 - Чистка сущностей
             // [
             //     'name' => 'Правила',
@@ -789,17 +801,6 @@ class EntitiesTableSeeder extends Seeder
             //     'page_id' => $pages->firstWhere('alias', 'salaries')->id,
             // ],
             // [
-            //     'name' => 'Рекламные кампании',
-            //     'alias' => 'campaigns',
-            //     'model' => 'Campaign',
-            //     'rights' => true,
-            //     'system' => true,
-            //     'author_id' => 1,
-            //     'site' => 0,
-            //     'view_path' => 'campaigns',
-            //     'page_id' => $pages->firstWhere('alias', 'campaigns')->id,
-            // ],
-            // [
             //     'name' => 'Социальные сети',
             //     'alias' => 'social_networks',
             //     'model' => 'SocialNetwork',
@@ -871,6 +872,18 @@ class EntitiesTableSeeder extends Seeder
                 'ancestor_id' => Entity::whereAlias('companies')->first(['id'])->id,
                 'view_path' => 'dealers',
                 'page_id' => $pages->firstWhere('alias', 'dealers')->id,
+            ],
+            [
+                'name' => 'Агенты',
+                'alias' => 'agents',
+                'model' => 'App\Agent',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('companies')->first(['id'])->id,
+                'view_path' => 'system.pages.agents',
+                'page_id' => $pages->firstWhere('alias', 'agents')->id,
             ],
             [
                 'name' => 'Производители',

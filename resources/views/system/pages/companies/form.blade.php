@@ -26,6 +26,11 @@
                     <a data-tabs-target="tab-vendor" href="#tab-vendor">Информация о вендоре</a>
                 </li>
             @endisset
+            @isset($agent)
+                <li class="tabs-title">
+                    <a data-tabs-target="tab-agent" href="#tab-agent">Информация об агенте</a>
+                </li>
+            @endisset            
             @isset($client)
                 <li class="tabs-title">
                     <a data-tabs-target="tab-client" href="#tab-client">О клиенте</a>
@@ -140,6 +145,13 @@
         @isset($vendor)
             <div class="tabs-panel" id="tab-vendor">
                 @include('system.pages.erp.vendors.form')
+            </div>
+        @endisset
+
+        {{-- Блок агента --}}
+        @isset($agent)
+            <div class="tabs-panel" id="tab-agent">
+                @include('system.pages.sales.agents.form')
             </div>
         @endisset
 

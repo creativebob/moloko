@@ -16,7 +16,7 @@
 
                     <td v-if="item.clientable.alias" class="search-result-name">
                         <span><a
-                            :href="'/admin/clients/' + item.id + '/edit'">{{ item.clientable.name }}</a></span><span
+                            :href="'/admin/clients/edit-company/' + item.id">{{ item.clientable.name }}</a></span><span
                         class="text-small"> (Представитель)</span><br>
                         <span class="text-small">{{ item.clientable.location.city.name }}</span><span
                         v-if="item.clientable.location.address" class="text-small">, {{ item.clientable.location.address }}</span><br>
@@ -24,7 +24,7 @@
                     </td>
 
                     <td v-if="!item.clientable.alias" class="search-result-name">
-                        <span><a :href="'/admin/clients/' + item.id + '/edit'">{{ item.clientable.name }}</a></span><br>
+                        <span><a :href="'/admin/clients/edit-user/' + item.id">{{ item.clientable.name }}</a></span><br>
                         <span class="text-small">{{ item.clientable.location.city.name }}</span><span
                         v-if="item.clientable.location.address" class="text-small">, {{ item.clientable.location.address }}</span><br>
                         <span class="text-small">{{ item.clientable.main_phones[0].phone }}</span>

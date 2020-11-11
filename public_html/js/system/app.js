@@ -110684,7 +110684,7 @@ var render = function() {
                           "a",
                           {
                             attrs: {
-                              href: "/admin/clients/" + item.id + "/edit"
+                              href: "/admin/clients/edit-company/" + item.id
                             }
                           },
                           [_vm._v(_vm._s(item.clientable.name))]
@@ -110720,7 +110720,7 @@ var render = function() {
                           "a",
                           {
                             attrs: {
-                              href: "/admin/clients/" + item.id + "/edit"
+                              href: "/admin/clients/edit-user/" + item.id
                             }
                           },
                           [_vm._v(_vm._s(item.clientable.name))]

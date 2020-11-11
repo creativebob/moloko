@@ -28,7 +28,7 @@
                         <input type="checkbox" class="table-check-all" name="" id="check-all">
                         <label class="label-check" for="check-all"></label>
                     </th>
-                    <th class="td-photo tiny">Фото</th>
+                    <th class="td-photo">Фото</th>
                     <th class="td-name" data-serversort="name">Название поставщика</th>
                     <th class="td-address">Адрес</th>
                     <th class="td-phone">Телефон</th>

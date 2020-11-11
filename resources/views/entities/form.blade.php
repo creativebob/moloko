@@ -14,22 +14,27 @@
 
         {{-- Настройки сущности --}}
         <div class="tabs-panel is-active" id="settings">
-            <div class="small-12 medium-7 large-5 cell tabs-margin-top">
+            <div class="small-12 medium-8 large-8 cell tabs-margin-top">
 
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 medium-6 cell">
                         <label>Название сущности
-                            @include('includes.inputs.text-ru', ['value'=>$entity->name, 'name'=>'name', 'required' => true])
+                            @include('includes.inputs.name', ['value'=>$entity->name, 'name'=>'name', 'required' => true])
                         </label>
                     </div>
                     <div class="small-12 medium-6 cell">
-                        <label>Название сущности в BD
+                        <label>Название сущности в BD (Алиас)
                             @include('includes.inputs.text-en', ['value'=>$entity->alias, 'name'=>'alias', 'required' => true])
                         </label>
                     </div>
                     <div class="small-12 medium-6 cell">
                         <label>Имя модели во фреймворке
-                            @include('includes.inputs.text-en', ['value'=>$entity->model, 'name'=>'model', 'required' => true])
+                            @include('includes.inputs.name', ['value'=>$entity->model, 'name'=>'model', 'required' => true])
+                        </label>
+                    </div>
+                    <div class="small-12 medium-6 cell">
+                        <label>Путь до шаблона:
+                            @include('includes.inputs.name', ['value'=>$entity->view_path, 'name'=>'view_path', 'required' => true])
                         </label>
                     </div>
                     <div class="small-6 cell radiobutton">Генерировать права?<br>

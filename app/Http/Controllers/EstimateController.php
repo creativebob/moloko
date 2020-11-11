@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Client;
 use App\Company;
 use App\ContractsClient;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\System\Traits\Clientable;
 use App\Http\Controllers\System\Traits\Companable;
 use App\Http\Controllers\System\Traits\Locationable;
@@ -79,6 +80,26 @@ class EstimateController extends Controller
             ->filter()
             ->orderByDesc('created_at')
             ->paginate(30);
+
+
+            $estimatesAll = Estimate::with([
+            'client.clientable.location',
+            'goods_items',
+            'author',
+            'payments',
+            'lead'
+            ])
+            ->moderatorLimit($answer)
+            ->companiesLimit($answer)
+            // ->filials($answer)
+            ->authors($answer)
+            ->systemItem($answer)
+            ->where('draft', false)
+            ->whereNotNull('registered_at')
+            ->filter()            
+            ->get();
+
+
 //         dd($estimates);
 
         // -----------------------------------------------------------------------------------------------------------
@@ -96,7 +117,7 @@ class EstimateController extends Controller
         // Инфо о странице
         $pageInfo = pageInfo($this->entityAlias);
 
-        return view('estimates.index', compact('estimates', 'pageInfo'));
+        return view('estimates.index', compact('estimates', 'pageInfo', 'estimatesAll'));
     }
     
     public function search(Request $request, $search)

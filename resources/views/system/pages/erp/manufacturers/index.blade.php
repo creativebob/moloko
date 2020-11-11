@@ -34,7 +34,7 @@
                     <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name=""
                                                                id="check-all"><label class="label-check"
                                                                                      for="check-all"></label></th>
-                    <th class="td-photo tiny">Фото</th>
+                    <th class="td-photo">Фото</th>
                     <th class="td-name" data-serversort="name">Название производителя</th>
                     <th class="td-sector">Направление</th>
                     <th class="td-phone">Контактный телефон</th>

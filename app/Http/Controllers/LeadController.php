@@ -1172,7 +1172,7 @@ class LeadController extends Controller
                 $q->where('phone', $search)
                     ->orWhere('crop', $search);
             })
-            ->orderBy('created_at')
+            ->orderBy('created_at', 'desc')
             ->get();
 
         return response()->json($results);

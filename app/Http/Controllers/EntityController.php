@@ -114,6 +114,16 @@ class EntityController extends Controller
         // Наполняем сущность данными
         $user = Auth::user();
 
+        $entity = Entity::where('alias', $request->alias)
+        ->orWhere('model', $request->model)
+        ->orWhere('view_path', $request->view_path)
+        ->orWhere('name', $request->name)
+        ->first();
+
+        if(!empty($entity)){
+            abort(403, 'Такая сущность существует в системе!');
+        }
+
         // Вносим сущность в список сущностей, если такой сущности там не зарегистрировано
         $entity = Entity::firstOrCreate(
             [
@@ -124,53 +134,52 @@ class EntityController extends Controller
                 'rights' => $request->rights,
                 'author_id' => 1,
                 'system' => 1,
-                'moderation' => $answer['automoderate'] ? 1:0,
+                'moderation' => 0,
                 'statistic' => $request->has('statistic'),
                 'dependence' => $request->has('dependence')
             ]
         );
 
-        dd($entity);
-
         // Настройки фотографий
-        // setSettings($request, $entity);
+        setSettings($request, $entity);
 
-        // if($request->rights_minus == 0){
+        if($request->rights_minus == 0){
 
-        //     // Генерируем права
-        //     $actions = Action::get();
-        //     $mass = [];
+            // Генерируем права
+            $actions = Action::get();
+            $mass = [];
 
-        //     foreach($actions as $action){
-        //         $mass[] = ['action_id' => $action->id, 'entity_id' => $entity->id, 'alias_action_entity' => $action->method . '-' . $entity->alias];
-        //     };
-        //     DB::table('action_entity')->insert($mass);
-        // }
+            foreach($actions as $action){
+                $mass[] = ['action_id' => $action->id, 'entity_id' => $entity->id, 'alias_action_entity' => $action->method . '-' . $entity->alias];
+            };
+            DB::table('action_entity')->insert($mass);
+        }
 
-        // $actionentities = Actionentity::where('entity_id', $entity->id)->get();
-        // $mass = [];
+        $actionentities = Actionentity::where('entity_id', $entity->id)->get();
+        $mass = [];
 
-        // foreach($actionentities as $actionentity){
+        foreach($actionentities as $actionentity){
 
-        //     $mass[] = ['name' => "Разрешение на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'allow', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-allow'];
+            $mass[] = ['name' => "Разрешение на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'allow', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-allow'];
 
-        //     $mass[] = ['name' => "Запрет на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'deny', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-deny'];
-        // };
+            $mass[] = ['name' => "Запрет на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'deny', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-deny'];
+        };
 
-        // DB::table('rights')->insert($mass);
+        DB::table('rights')->insert($mass);
 
-        // $actionentities = $actionentities->pluck('id')->toArray();
+        $actionentities = $actionentities->pluck('id')->toArray();
 
-        // // Получаем все существующие разрешения (allow)
-        // $rights = Right::whereIn('object_entity', $actionentities)->where('directive', 'allow')->get();
+        // Получаем все существующие разрешения (allow)
+        $rights = Right::whereIn('object_entity', $actionentities)->where('directive', 'allow')->get();
 
-        // $mass = [];
-        // // Генерируем права на полный доступ
-        // foreach($rights as $right){
-        //     $mass[] = ['right_id' => $right->id, 'role_id' => 1, 'system' => 1];
-        // };
+        $mass = [];
 
-        // DB::table('right_role')->insert($mass);
+        // Генерируем права на полный доступ
+        foreach($rights as $right){
+            $mass[] = ['right_id' => $right->id, 'role_id' => 1, 'system' => 1];
+        };
+
+        DB::table('right_role')->insert($mass);
 
         return redirect()->route('entities.index');
     }
@@ -238,8 +247,10 @@ class EntityController extends Controller
         // Внесение изменений:
         $entity->name = $request->name;
         $entity->alias = $request->alias;
+        $entity->view_path = $request->view_path;
+        $entity->model = $request->model;
 
-        $entity->rights = $request->has('rights');
+        // $entity->rights = $request->has('rights');
 
         $entity->statistic = $request->has('statistic');
         $entity->dependence = $request->has('dependence');

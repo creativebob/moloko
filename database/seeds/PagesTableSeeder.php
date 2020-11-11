@@ -1085,6 +1085,17 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => true,
             ],
+            [
+                'name' => 'Агенты',
+                'site_id' => 1,
+                'title' => 'Агенты',
+                'description' => 'Агенты',
+                'alias' => 'agents',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
         ]);
     }
 }
