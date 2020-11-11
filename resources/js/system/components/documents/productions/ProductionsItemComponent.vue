@@ -23,12 +23,17 @@
         <td>{{ unitAbbreviation }}</td>
 
         <td>
-            <div
-                v-if="isProduced"
-                @click="openModalCancel"
-                class="icon-delete sprite"
-                data-open="modal-cancel"
-            ></div>
+            <template
+                v-if="isConducted"
+            >
+                <div
+                    v-if="itemsCount > 1"
+                    @click="openModalCancel"
+                    class="icon-delete sprite"
+                    data-open="modal-cancel"
+                ></div>
+            </template>
+
             <a
                 v-else
                 class="icon-delete sprite"
@@ -44,7 +49,8 @@
         props: {
             item: Object,
             index: Number,
-            isProduced: String,
+            isConducted: String,
+            itemsCount: Number,
         },
         data() {
             return {
@@ -72,7 +78,7 @@
         },
         methods: {
             checkChangeCount() {
-                if (!this.isProduced) {
+                if (!this.isConducted) {
                     this.changeCount = !this.changeCount
                 }
             },

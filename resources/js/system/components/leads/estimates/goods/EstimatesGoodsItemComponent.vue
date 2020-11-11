@@ -108,13 +108,13 @@
         </td>
 
         <td
-            v-if="isRegistered"
+            v-if="isRegistered && !isConducted"
             class="td-reserve"
         >
             <reserve-component
                 :reserve="item.reserve"
                 @reserve="reserve"
-                @unreserve="unreserve"
+                @cancel="cancelReserve"
             ></reserve-component>
         </td>
 
@@ -177,6 +177,9 @@
             isRegistered() {
                 return this.$store.state.lead.estimate.registered_at;
             },
+            isConducted() {
+                return this.$store.state.lead.estimate.conducted_at;
+            },
             isArchive() {
                 return this.item.goods.archive == 1;
             },
@@ -226,8 +229,8 @@
             reserve() {
                 this.$store.dispatch('RESERVE_GOODS_ITEM', this.item.id);
             },
-            unreserve() {
-                this.$store.dispatch('UNRESERVE_GOODS_ITEM', this.item.id);
+            cancelReserve() {
+                this.$store.dispatch('CANCEL_RESERVE_GOODS_ITEM', this.item.id);
             }
         },
         directives: {

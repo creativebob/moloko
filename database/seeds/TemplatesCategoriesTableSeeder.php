@@ -22,6 +22,14 @@ class TemplatesCategoriesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => true,
             ],
+            [
+                'name' => 'Чеки',
+                'slug' => \Str::slug('Чеки'),
+                'level' => 1,
+                'company_id' => null,
+                'author_id' => 1,
+                'display' => true,
+            ],
         ]);
     }
 }

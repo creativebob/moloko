@@ -18,6 +18,8 @@ const moduleLead = {
 
             change: false,
             loading: false,
+
+            errors: [],
         },
         mutations: {
             SET_USERS(state, users) {
@@ -435,7 +437,7 @@ const moduleLead = {
                     })
                     .finally(() => (state.loading = false));
             },
-            UNRESERVE_ESTIMATE({state}) {
+            CANCEL_RESERVE_ESTIMATE({state}) {
                 state.loading = true;
                 axios
                     .post('/admin/estimates/' + state.estimate.id + '/unreserving')
@@ -479,7 +481,7 @@ const moduleLead = {
                     })
                     .finally(() => (state.loading = false));
             },
-            UNRESERVE_GOODS_ITEM({state}, id) {
+            CANCEL_RESERVE_GOODS_ITEM({state}, id) {
                 state.loading = true;
                 const index = state.goodsItems.findIndex(obj => obj.id === id);
                 axios
@@ -511,13 +513,17 @@ const moduleLead = {
             },
 
             // Продажа сметы
-            SALE_ESTIMATE({state}) {
+            CONDUCTED_ESTIMATE({state}) {
                 state.loading = true;
                 axios
-                    .patch('/admin/estimates/' + state.estimate.id + '/saling/')
+                    .patch('/admin/estimates/' + state.estimate.id + '/conducting/')
                     .then(response => {
-                        // console.log(response.data);
-                        this.commit('SET_ESTIMATE', response.data);
+                        if (response.data.success) {
+                            this.commit('SET_ESTIMATE', response.data.estimate);
+                        } else {
+                            console.log(response.data.errors);
+                            state.errors = response.data.errors;
+                        }
                     })
                     .catch(error => {
                         console.log(error)

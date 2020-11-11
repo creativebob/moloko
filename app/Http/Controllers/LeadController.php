@@ -69,35 +69,19 @@ class LeadController extends Controller
     public function index(Request $request)
     {
 
-        // Включение контроля активного фильтра
-        $filter_url = autoFilter($request, $this->entityAlias);
-        if (($filter_url != null) && ($request->filter != 'active')) {
-            return Redirect($filter_url);
-        };
+//        dd($request);
 
-        $user = $request->user();
+        // Включение контроля активного фильтра
+//        $filter_url = autoFilter($request, $this->entityAlias);
+//        if (($filter_url != null) && ($request->filter != 'active')) {
+//            return Redirect($filter_url);
+//        };
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Lead::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
-
-//        $cookie = Cookie::get('filters');
-//        if (isset($cookie)) {
-//            $filters = json_decode($cookie, true);
-//            if (count($request->input())) {
-//                $filters[$this->entityAlias] = $request->input();
-//            } else {
-//                if (isset($filters[$this->entityAlias])) {
-//                    $request->request->add($filters[$this->entityAlias]);
-//                }
-//            }
-//            Cookie::queue(Cookie::forever('filters', json_encode($filters)));
-//        } else {
-//            $data[$this->entityAlias] = $request->input();
-//            Cookie::queue(Cookie::forever('filters', json_encode($data)));
-//        }
 
         // -----------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
@@ -138,7 +122,7 @@ class LeadController extends Controller
             ->withCount(['challenges' => function ($query) {
                 $query->whereNull('status');
             }])
-            ->manager($user)
+            ->manager(auth()->user())
             ->moderatorLimit($answer)
             ->companiesLimit($answer)
             ->filials($answer)
@@ -1324,20 +1308,6 @@ class LeadController extends Controller
         } else {
             abort(403, 'Что-то пошло не так!');
         };
-    }
-
-    public function resetFilter()
-    {
-        $cookie = Cookie::get('filters');
-        if (isset($cookie)) {
-            $filters = json_decode($cookie, true);
-            if (isset($filters[$this->entityAlias])) {
-                unset($filters[$this->entityAlias]);
-                Cookie::queue(Cookie::forever('filters', json_encode($filters)));
-            }
-        }
-
-        return redirect()->route('leads.index');
     }
 
     /**

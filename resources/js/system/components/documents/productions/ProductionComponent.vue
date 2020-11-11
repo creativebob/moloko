@@ -19,14 +19,15 @@
             :item="item"
             :index="index"
             :key="item.id"
-            :is-produced="isProduced"
+            :is-conducted="isConducted"
+            :items-count="itemsList.length"
             @update="updateItem"
             @remove="deleteItem(index)"
             @open-modal-cancel="openModal"
         ></productions-item-component>
 
         <tr
-            v-if="!isProduced"
+            v-if="!isConducted"
             class="tr-add"
         >
             <td>{{ items.length + 1}}</td>
@@ -78,7 +79,7 @@
             <td colspan="3">Итого:</td>
             <td></td>
             <td
-                v-if="!isProduced"
+                v-if="!isConducted"
             ></td>
             <td></td>
 
@@ -181,8 +182,8 @@
                     return item.entity_id === this.entity_id
                 })
             },
-            isProduced() {
-                return this.production.produced_at;
+            isConducted() {
+                return this.production.conducted_at;
             },
         },
 

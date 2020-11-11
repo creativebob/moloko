@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\System\Traits;
 
-
 use App\Entity;
 
 trait Cancelable
@@ -65,10 +64,10 @@ trait Cancelable
 
                     // TODO - 07.11.20 - Из за разных дат регистрации (названий полей) приходится проверять на имя таблицы
                     ->when($item->document->getTable() == 'consignments', function ($q) {
-                        $q->whereNotNull('receipted_at');
+                        $q->whereNotNull('conducted_at');
                     })
                     ->when($item->document->getTable() == 'productions', function ($q) {
-                        $q->whereNotNull('produced_at');
+                        $q->whereNotNull('conducted_at');
                     });
             })
             ->min('cost');
@@ -84,10 +83,10 @@ trait Cancelable
                 $q->where('id', '!=', $item->document->id)
 
                     ->when($item->document->getTable() == 'consignments', function ($q) {
-                        $q->whereNotNull('receipted_at');
+                        $q->whereNotNull('conducted_at');
                     })
                     ->when($item->document->getTable() == 'productions', function ($q) {
-                        $q->whereNotNull('produced_at');
+                        $q->whereNotNull('conducted_at');
                     });
             })
             ->max('cost');

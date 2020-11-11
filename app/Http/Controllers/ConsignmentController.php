@@ -293,7 +293,7 @@ class ConsignmentController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function receipting(ConsignmentUpdateRequest $request, $id)
+    public function conducting(ConsignmentUpdateRequest $request, $id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('update'));
@@ -312,7 +312,7 @@ class ConsignmentController extends Controller
         // Подключение политики
         $this->authorize(getmethod('update'), $consignment);
 
-        if (empty($consignment->receipted_at)) {
+        if (empty($consignment->conducted_at)) {
             $data = $request->input();
             $consignment->update($data);
 
@@ -360,14 +360,14 @@ class ConsignmentController extends Controller
                 }
 
                 $consignment->update([
-                    'receipted_at' => now(),
+                    'conducted_at' => now(),
                 ]);
 
                 logs('documents')
                     ->info("Оприходована накладная c id: {$consignment->id}");
                 logs('documents')
                     ->info('======================================== КОНЕЦ ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ ==============================================
-				
+
 				');
 
             } else {
@@ -400,7 +400,7 @@ class ConsignmentController extends Controller
         // Подключение политики
         $this->authorize(getmethod('update'), $consignment);
 
-        if (isset($consignment->receipted_at)) {
+        if (isset($consignment->conducted_at)) {
             $consignment->load([
                 'items' => function ($q) {
                     $q->with([
@@ -437,14 +437,14 @@ class ConsignmentController extends Controller
                 }
 
                 $consignment->update([
-                    'receipted_at' => null,
+                    'conducted_at' => null,
                 ]);
 
                 logs('documents')
                     ->info('Отменена накладная c id: ' . $consignment->id);
                 logs('documents')
                     ->info('========================================== КОНЕЦ ОТМЕНЫ ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ ==============================================
-				
+
 				');
 
                 return redirect()->route('consignments.index');
@@ -480,7 +480,7 @@ class ConsignmentController extends Controller
             },
         ])
             ->companiesLimit($answer)
-            ->whereNotNull('receipted_at')
+            ->whereNotNull('conducted_at')
             ->chunk(5, function ($consignments) {
                 foreach ($consignments as $consignment) {
                     if ($consignment->is_posted == 1) {
@@ -506,7 +506,7 @@ class ConsignmentController extends Controller
                                 ->info('Оприходована накладная c id: ' . $consignment->id);
                             logs('documents')
                                 ->info('========================================== КОНЕЦ ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ ==============================================
-				
+
 				            ');
                         }
                     }

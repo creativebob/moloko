@@ -19,7 +19,7 @@ class Production extends BaseModel
 
     protected $dates = [
         'date',
-        'produced_at',
+        'conducted_at',
         'deleted_at',
     ];
 
@@ -35,7 +35,7 @@ class Production extends BaseModel
 
         'amount',
 
-        'produced_at',
+        'conducted_at',
 
         'draft',
 

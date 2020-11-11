@@ -25,6 +25,9 @@ class CreateOutletsTable extends Migration
             $table->bigInteger('stock_id')->nullable()->unsigned()->comment('Id склада');
 //            $table->foreign('stock_id')->references('id')->on('stocks');
 
+            $table->bigInteger('template_id')->nullable()->unsigned()->comment('Id шаблона чека');
+//            $table->foreign('template_id')->references('id')->on('templates');
+
             $table->bigInteger('filial_id')->nullable()->unsigned()->comment('Id филиала');
 //            $table->foreign('filial_id')->references('id')->on('departments');
 

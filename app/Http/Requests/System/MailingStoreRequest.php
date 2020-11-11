@@ -4,7 +4,7 @@ namespace App\Http\Requests\System;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class MailingRequest extends FormRequest
+class MailingStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,8 +28,8 @@ class MailingRequest extends FormRequest
               'description' => 'nullable|string',
 
               'subject' => 'nullable|string|max:255',
-              'from_name' => 'nullable|string|max:255',
-              'from_email' => 'nullable|string|max:255',
+              'from_name' => 'required|string|max:255',
+              'from_email' => 'required|string|max:255',
 
               'is_active' => 'nullable|integer|max:1',
 

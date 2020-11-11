@@ -183,8 +183,8 @@ class ParserController extends Controller
             'production'
         ])
             ->whereHas('production', function ($q) {
-                $q->whereNotNull('produced_at')
-                    ->whereDate('produced_at', '>', '2020-08-01');
+                $q->whereNotNull('conducted_at')
+                    ->whereDate('conducted_at', '>', '2020-08-01');
             })
             ->get();
 
@@ -252,8 +252,8 @@ class ParserController extends Controller
             'consignment'
         ])
             ->whereHas('consignment', function ($q) {
-                $q->whereNotNull('receipted_at')
-                    ->whereDate('receipted_at', '>', '2020-08-01');
+                $q->whereNotNull('conducted_at')
+                    ->whereDate('conducted_at', '>', '2020-08-01');
             })
             ->get();
 //        dd($items);
@@ -428,12 +428,12 @@ class ParserController extends Controller
                 $data['registered_at'] = $estimate->updated_at;
             }
             if ($estimate->is_saled == 1) {
-                $data['saled_at'] = $estimate->updated_at;
+                $data['conducted_at'] = $estimate->updated_at;
             }
             $estimate->update($data);
         }
 
-        return "Сметам проставлено registered_at и saled_at";
+        return "Сметам проставлено registered_at и conducted_at";
     }
 
     /**
@@ -447,11 +447,11 @@ class ParserController extends Controller
             ->get();
         foreach ($consignments as $consignment) {
             $consignment->update([
-                'receipted_at' => $consignment->updated_at
+                'conducted_at' => $consignment->updated_at
             ]);
         }
 
-        return "Накладным проставлено receipted_at";
+        return "Накладным проставлено conducted_at";
     }
 
     /**
@@ -465,11 +465,11 @@ class ParserController extends Controller
             ->get();
         foreach ($productions as $production) {
             $production->update([
-                'produced_at' => $production->updated_at
+                'conducted_at' => $production->updated_at
             ]);
         }
 
-        return "Нарядам проставлено produced_at";
+        return "Нарядам проставлено conducted_at";
     }
 
     /**

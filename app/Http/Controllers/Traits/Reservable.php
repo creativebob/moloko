@@ -17,10 +17,10 @@ trait Reservable
      */
     public function reserve($item)
     {
-        $documentModel = Entity::where('alias', $item->document->getTable())
+        $modelDocument = Entity::where('alias', $item->document->getTable())
             ->value('model');
 
-        $documentItemModel = Entity::where('alias', $item->getTable())
+        $modelDocumentItem = Entity::where('alias', $item->getTable())
         ->value('model');
 
         logs('documents')
@@ -30,16 +30,16 @@ trait Reservable
         $stockGeneral = Stock::find($item->stock_id);
 
         // Списываем позицию состава
-        $product = $item->product;
+        $cmv = $item->product;
 
-        $productModel = Entity::where('alias', $product->getTable())
+        $modelCmv = Entity::where('alias', $cmv->getTable())
             ->value('model');
 
 //      dd($stock_goods);
 
-        $storage = $product->stocks->where('stock_id', $stockGeneral->id)
+        $storage = $cmv->stocks->where('stock_id', $stockGeneral->id)
             ->where('filial_id', $stockGeneral->filial_id)
-            ->where('manufacturer_id', $product->article->manufacturer_id)
+            ->where('manufacturer_id', $cmv->article->manufacturer_id)
             ->first();
         if ($storage) {
 
@@ -88,13 +88,23 @@ trait Reservable
                         ->info('Обновили актуальный резерв с id: ' . $reserve->id .  ', count: ' . $reserve->count);
 
                 } else {
+
+                    $modelStorage = Entity::where('alias', $item->getTable() . '_stocks')
+                        ->value('model');
+
                     $reserve = Reserve::create([
                         'document_id' => $item->document->id,
-                        'document_type' => $documentModel,
+                        'document_type' => $modelDocument,
+
                         'documents_item_id' => $item->id,
-                        'documents_item_type' => $documentItemModel,
-                        'cmv_id' => $product->id,
-                        'cmv_type' => $productModel,
+                        'documents_item_type' => $modelDocumentItem,
+
+                        'cmv_id' => $cmv->id,
+                        'cmv_type' => $modelCmv,
+
+                        'storage_id' => $storage->id,
+                        'storage_type' => $modelStorage,
+
                         'count' => $itemCount,
                         'stock_id' => $item->stock_id,
                         'filial_id' => $item->document->filial_id,
@@ -131,21 +141,14 @@ trait Reservable
      * @param $item
      * @return string|null
      */
-    public function unreserve($item)
+    public function cancelReserve($item)
     {
         if (optional($item->reserve)->count > 0) {
             logs('documents')
                 ->info('=== ОТМЕНА РЕЗЕРВИРОВАНИЯ ' . $item->getTable() . ' ' . $item->id . ' ===');
 
-            $stockGeneral = Stock::find($item->stock_id);
-
-            $product = $item->product;
-
             // Ищем хранилище
-            $storage = $product->stocks->where('stock_id', $stockGeneral->id)
-                ->where('filial_id', $stockGeneral->filial_id)
-                ->where('manufacturer_id', $product->article->manufacturer_id)
-                ->first();
+            $storage = $item->reserve->storage;
             if ($storage) {
 
                 logs('documents')

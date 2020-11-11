@@ -20,7 +20,7 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 use App\Scopes\Filters\BooleanArrayFilter;
 
 // Фильтры
-use App\Scopes\Filters\Filter;
+//use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
 // use App\Scopes\Filters\DateIntervalFilter;
 
@@ -48,7 +48,7 @@ class User extends Authenticatable
     use BooleanArrayFilter;
 
     // Фильтры
-    use Filter;
+//    use Filter;
     use BooklistFilter;
     // use DateIntervalFilter;
 
@@ -507,5 +507,10 @@ class User extends Authenticatable
     {
         return $this->morphOne(Subscriber::class, 'subscriberable')
             ->withArchived();
+    }
+
+    public function filters()
+    {
+        return $this->hasMany(Filter::class);
     }
 }

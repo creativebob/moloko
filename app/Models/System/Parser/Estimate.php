@@ -44,7 +44,7 @@ class Estimate extends Model
 
         'is_produced',
 
-        'saled_at',
+        'conducted_at',
 
         'is_dismissed',
         'is_main',

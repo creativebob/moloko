@@ -200,13 +200,13 @@ class VkusnyashkaParser
                         $payment = Payment::create($paymentData);
                     }
 
-                    if (!$estimate->saled_at) {
+                    if (!$estimate->conducted_at) {
 
                         // Обновляем показатели клиента
                         $this->setIndicators($estimate);
 
                         $estimate->update([
-                            'saled_at' => $lead->created_at,
+                            'conducted_at' => $lead->created_at,
                         ]);
 
                     }

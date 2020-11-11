@@ -32,7 +32,7 @@ class CreateProductionsTable extends Migration
             $table->foreign('stock_id')->references('id')->on('stocks');
 
             $table->decimal('amount', 12, 4)->default(0)->comment('Сумма');
-            $table->timestamp('produced_at')->nullable()->comment('Произведено');
+            $table->timestamp('conducted_at')->nullable()->comment('Время проведения');
             $table->boolean('draft')->default(1)->comment('Черновик');
 
 

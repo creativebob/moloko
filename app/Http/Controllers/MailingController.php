@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\System\MailingRequest;
+use App\Http\Requests\System\MailingStoreRequest;
+use App\Http\Requests\System\MailingUpdateRequest;
 use App\Mailing;
 
 class MailingController extends Controller
@@ -78,7 +79,7 @@ class MailingController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function store(MailingRequest $request)
+    public function store(MailingStoreRequest $request)
     {
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Mailing::class);
@@ -130,7 +131,7 @@ class MailingController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function update(MailingRequest $request, $id)
+    public function update(MailingUpdateRequest $request, $id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));

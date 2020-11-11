@@ -8,6 +8,8 @@
                                                 class="case_number_field" value="{{ $lead->case_number }}"></h2>
     </div>
     <div class="top-bar-right wrap_lead_badget">
+
+        <lead-errors-component></lead-errors-component>
         {{-- @include('includes.inputs.digit', ['name' => 'badget', 'value' => $lead->badget, 'decimal_place'=>2]) --}}
     </div>
 </div>

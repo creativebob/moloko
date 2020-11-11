@@ -59,7 +59,7 @@ class ConsignmentPolicy
     public function system(User $user, Model $model)
     {
 
-	    if ($model->receipted_at) {
+	    if ($model->conducted_at) {
 		    return false;
 	    }
 

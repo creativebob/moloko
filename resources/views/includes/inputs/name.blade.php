@@ -11,6 +11,7 @@
 		(isset($required) ? 'required' : ''),
 		(isset($autofocus) ? 'autofocus' : ''),
 		(isset($disabled) ? 'disabled' : ''),
+		(isset($readonly) ? 'readonly' : ''),
 	]) }}
 <div class="sprite-input-right find-status" id="name-check"></div>
 <span class="form-error">Минимум 3 символа</span>

@@ -8,6 +8,7 @@
         pattern="[0-9]{2}.[0-9]{2}.[0-9]{4}"
         :required="required"
         :disabled="disabled"
+        :readonly="readonly"
         v-model="date"
         :name="name"
         :id="'pickmeup-' + name"
@@ -44,6 +45,10 @@
                 default: false
             },
             disabled: {
+                type: [Boolean, Number],
+                default: false
+            },
+            readonly: {
                 type: [Boolean, Number],
                 default: false
             },

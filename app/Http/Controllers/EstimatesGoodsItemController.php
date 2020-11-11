@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 
 class EstimatesGoodsItemController extends Controller
 {
+    protected $entityAlias;
+    protected $entityDependence;
 
     /**
      * EstimatesGoodsItemController constructor.
@@ -20,14 +22,12 @@ class EstimatesGoodsItemController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->class = EstimatesGoodsItem::class;
-        $this->model = 'App\Models\System\Documents\EstimatesGoodsItem';
-        $this->entity_alias = with(new $this->class)->getTable();
-        $this->entity_dependence = false;
+        $this->entityAlias = 'estimates_goods_items';
+        $this->entityDependence = false;
     }
 
-    use Estimatable;
-    use Reservable;
+    use Estimatable,
+        Reservable;
 
     /**
      * Store a newly created resource in storage.
@@ -38,12 +38,11 @@ class EstimatesGoodsItemController extends Controller
     public function store(Request $request)
     {
         $success = true;
-        $stockId = null;
 
+        // TODO - 16.10.20 - Возня со складом (Пока что берем первый склад) - видимо устарело с внедрением торговых точек
+//        $stockId = null;
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right('stocks', true, getmethod('index'));
-
-//        // TODO - 16.10.20 - Пока что берем первый склад
+//        $answer = operator_right('stocks', true, getmethod('index'));
 //        $stockId = Stock::
 //        where('filial_id', auth()->user()->stafferFilialId)
 //            ->moderatorLimit($answer)
@@ -273,7 +272,7 @@ class EstimatesGoodsItemController extends Controller
         if (isset($estimatesGoodsItem->reserve)) {
             logs('documents')
                 ->info('========================================== УДАЛЯЕМ ПУНКТ СМЕТЫ, ИМЕЮЩИЙ РЕЗЕРВ, ID: ' . $estimatesGoodsItem->id . ' ==============================================');
-            $this->unreserve($estimatesGoodsItem);
+            $this->cancelReserve($estimatesGoodsItem);
             $result = $estimatesGoodsItem->delete();
             logs('documents')
                 ->info('========================================== КОНЕЦ УДАЛЕНИЯ ПУНКТА СМЕТЫ, ИМЕЮЩЕГО РЕЗЕРВ ==============================================
@@ -317,7 +316,7 @@ class EstimatesGoodsItemController extends Controller
 
         logs('documents')
             ->info('========================================== КОНЕЦ РЕЗЕРВИРОВАНИЯ ПУНКТА СМЕТЫ ==============================================
-                
+
                 ');
 
         $estimatesGoodsItem->load([
@@ -353,11 +352,11 @@ class EstimatesGoodsItemController extends Controller
         logs('documents')
             ->info('========================================== НАЧАЛО СНЯТИЯ РЕЗЕРВИРОВАНИЯ ПУНКТА СМЕТЫ, ID: ' . $estimatesGoodsItem->id . ' ==============================================');
 
-        $result = $this->unreserve($estimatesGoodsItem);
+        $result = $this->cancelReserve($estimatesGoodsItem);
 
         logs('documents')
             ->info('========================================== КОНЕЦ СНЯТИЯ РЕЗЕРВИРОВАНИЯ ПУНКТА СМЕТЫ ==============================================
-                
+
                 ');
 
         $estimatesGoodsItem->load([

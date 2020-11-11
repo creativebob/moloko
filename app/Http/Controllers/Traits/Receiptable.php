@@ -165,7 +165,8 @@ trait Receiptable
 
         $modelDocument = Entity::where('alias', $item->document->getTable())
             ->value('model');
-        $modelDocumentItem = "{$modelDocument}sItem";
+        $modelDocumentItem = Entity::where('alias', $item->getTable())
+            ->value('model');
 
         $modelItem = $item->entity->model;
 
@@ -249,7 +250,7 @@ trait Receiptable
                 'cmv_type' => $receipt->cmv_type,
             ])
             ->whereHas('consignment', function ($q) use ($receipt) {
-                $q->whereNotNull('receipted_at')
+                $q->whereNotNull('conducted_at')
                     ->where('id', '!=', $receipt->document_id);
             })
             ->min('cost');
@@ -262,7 +263,7 @@ trait Receiptable
                 'cmv_type' => $item->cmv_type,
             ])
             ->whereHas('consignment', function ($q) use ($item) {
-                $q->whereNotNull('receipted_at')
+                $q->whereNotNull('conducted_at')
                     ->where('id', '!=', $item->document->id);
             })
             ->max('cost');

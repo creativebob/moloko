@@ -16,6 +16,7 @@ use App\PhotoSetting;
 use App\Position;
 use App\Right;
 use App\Role;
+use App\TemplatesCategory;
 use App\Trigger;
 use App\User;
 use App\Widget;
@@ -30,6 +31,27 @@ class UpdateController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+    }
+
+    /**
+     * Добавление категории шаблонов - чеки
+     *
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
+    public function setChecksTemplatesCategory()
+    {
+        TemplatesCategory::insert([
+            [
+                'name' => 'Чеки',
+                'slug' => \Str::slug('Чеки'),
+                'level' => 1,
+                'company_id' => null,
+                'author_id' => 1,
+                'display' => true,
+            ],
+        ]);
+
+        return __('msg.ok');
     }
 
     /**

@@ -36,7 +36,7 @@
                 }
             },
             canRemove() {
-                return !this.$store.getters.OUTLET_SETTING('use-cash-register') && this.$store.getters.OUTLET_SETTING('edit-payment');
+                return !this.$store.getters.OUTLET_SETTING('use-cash-register') && this.$store.getters.OUTLET_SETTING('edit-payment') && this.$store.state.lead.estimate.conducted_at === null;
             }
         },
         methods: {

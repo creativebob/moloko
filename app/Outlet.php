@@ -21,6 +21,7 @@ class Outlet extends BaseModel
 
         'location_id',
         'stock_id',
+        'template_id',
 
         'filial_id',
 

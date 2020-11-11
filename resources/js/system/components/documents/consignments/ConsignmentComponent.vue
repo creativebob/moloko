@@ -239,7 +239,7 @@
                 })
             },
             isReceipted() {
-                return this.consignment.receipted_at;
+                return this.consignment.conducted_at;
             },
             manufacturer() {
                 return this.manufacturers.filter(item => {

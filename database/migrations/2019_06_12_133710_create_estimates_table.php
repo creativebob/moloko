@@ -62,9 +62,9 @@ class CreateEstimatesTable extends Migration
             $table->integer('points')->default(0)->comment('Внутренняя валюта');
 
             $table->boolean('draft')->default(0)->unsigned()->comment('Черновик');
-    
+
             $table->timestamp('registered_at')->nullable()->comment('Оформлено');
-            $table->timestamp('saled_at')->nullable()->comment('Продано');
+            $table->timestamp('conducted_at')->nullable()->comment('Время проведения');
 
             $table->boolean('is_produced')->default(0)->comment('Произведено');
 

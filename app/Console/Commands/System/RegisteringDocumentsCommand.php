@@ -84,7 +84,7 @@ class RegisteringDocumentsCommand extends Command
                 ]);
             },
         ])
-            ->whereNotNull('receipted_at')
+            ->whereNotNull('conducted_at')
             ->whereYear('created_at', 2020)
             ->get();
 
@@ -100,7 +100,7 @@ class RegisteringDocumentsCommand extends Command
                 ->info("Оприходована накладная c id: {$consignment->id}");
             logs('documents')
                 ->info('======================================== КОНЕЦ ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ ==============================================
-				
+
 				');
             echo "Накладная {$consignment->id} переприходована\r\n";
         }
@@ -135,7 +135,7 @@ class RegisteringDocumentsCommand extends Command
                 ]);
             },
         ])
-            ->whereNotNull('produced_at')
+            ->whereNotNull('conducted_at')
             ->whereYear('created_at', 2020)
             ->get();
 

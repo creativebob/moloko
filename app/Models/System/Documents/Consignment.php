@@ -18,7 +18,7 @@ class Consignment extends BaseModel
 
     protected $dates = [
         'date',
-        'receipted_at',
+        'conducted_at',
         'deleted_at',
     ];
 
@@ -34,7 +34,7 @@ class Consignment extends BaseModel
 
         'amount',
 
-	    'receipted_at',
+	    'conducted_at',
 
         'draft',
 

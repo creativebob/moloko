@@ -11,18 +11,18 @@ class Estimate extends BaseModel
 {
     use SoftDeletes;
     // use Cachable;
-    
+
     protected $with = [
         'client',
         'payments',
         'discounts'
     ];
-    
+
     protected $dates = [
         'deleted_at',
         'date',
         'registered_at',
-        'saled_at',
+        'conducted_at',
     ];
 
     protected $casts = [
@@ -45,9 +45,9 @@ class Estimate extends BaseModel
         'draft',
 
         'registered_at',
-        'saled_at',
+        'conducted_at',
         'is_produced',
-        
+
         'is_dismissed',
         'is_main',
         'is_create_parse',
@@ -200,7 +200,7 @@ class Estimate extends BaseModel
         }
 
         if (! is_null(request('saled'))) {
-            $query->where('saled_at', request('saled'));
+            $query->where('conducted_at', request('saled'));
         }
 
         if (request('total_min')) {

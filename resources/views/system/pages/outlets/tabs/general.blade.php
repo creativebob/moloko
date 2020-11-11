@@ -20,15 +20,7 @@
                 <label>Название
                     @include('includes.inputs.name', ['required' => true])
                 </label>
-            </div>
 
-            <div class="cell small-12 medium-6">
-                <label>Склад
-                    @include('includes.selects.stocks')
-                </label>
-            </div>
-
-            <div class="cell small-12 medium-6">
                 @include('system.common.includes.city_search', ['item' => $outlet, 'required' => true])
 
                 <label>Адрес
@@ -45,11 +37,18 @@
             </div>
 
             <div class="cell small-12 medium-6">
+                <label>Склад
+                    @include('includes.selects.stocks')
+                </label>
+
+                <label>Шаблон чека
+                    @include('includes.selects.templates', ['categoryId' => 2, 'placeholder' => 'Стандартный чек'])
+                </label>
+
                 <label>Описание
                     @include('includes.inputs.textarea', ['name' => 'description'])
                 </label>
             </div>
-
         </div>
 
     </div>

@@ -301,7 +301,7 @@ class ProductionController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function producing(ProductionUpdateRequest $request, $id)
+    public function conducting(ProductionUpdateRequest $request, $id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('update'));
@@ -320,7 +320,7 @@ class ProductionController extends Controller
         // Подключение политики
         $this->authorize(getmethod('update'), $production);
 
-        if (empty($production->produced_at)) {
+        if (empty($production->conducted_at)) {
 
             $production->items()->update([
                 'stock_id' => $production->stock_id
@@ -538,14 +538,14 @@ class ProductionController extends Controller
                 }
 
                 $production->update([
-                    'produced_at' => now(),
+                    'conducted_at' => now(),
                 ]);
 
                 logs('documents')
                     ->info('Произведен наряд c id: ' . $production->id);
                 logs('documents')
                     ->info('========================================== КОНЕЦ ПРОИЗВОДСТВА НАРЯДА ==============================================
-				
+
 				');
 
             } else {
@@ -578,7 +578,7 @@ class ProductionController extends Controller
         // Подключение политики
         $this->authorize(getmethod('update'), $production);
 
-        if (isset($production->produced_at)) {
+        if (isset($production->conducted_at)) {
             $production->load([
                 'items' => function ($q) {
                     $q->with([
@@ -638,14 +638,14 @@ class ProductionController extends Controller
                 }
 
                 $production->update([
-                    'produced_at' => null
+                    'conducted_at' => null
                 ]);
 
                 logs('documents')
                     ->info('Отменен наряд c id: ' . $production->id);
                 logs('documents')
                     ->info('========================================== КОНЕЦ ОТМЕНЫ НАРЯДА ПРОИЗВОДСТВА ==============================================
-				
+
 				');
 
                 return redirect()->route('productions.index');
@@ -880,14 +880,14 @@ class ProductionController extends Controller
                             }
 
                             $production->update([
-                                'produced_at' => now(),
+                                'conducted_at' => now(),
                             ]);
 
                             logs('documents')
                                 ->info('Произведен наряд c id: ' . $production->id);
                             logs('documents')
                                 ->info('========================================== КОНЕЦ ПРОИЗВОДСТВА НАРЯДА ==============================================
-				
+
 				');
 
                         }
