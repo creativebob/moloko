@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\System\Traits\Locationable;
 use App\Http\Controllers\System\Traits\Phonable;
-use App\Http\Requests\System\OutletRequest;
+use App\Http\Requests\System\OutletStoreRequest;
+use App\Http\Requests\System\OutletUpdateRequest;
 use App\Outlet;
 
 class OutletController extends Controller
@@ -80,11 +81,11 @@ class OutletController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param OutletRequest $request
+     * @param OutletStoreRequest $request
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function store(OutletRequest $request)
+    public function store(OutletStoreRequest $request)
     {
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Outlet::class);
@@ -131,12 +132,12 @@ class OutletController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param OutletRequest $request
+     * @param OutletUpdateRequest $request
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function update(OutletRequest $request, $id)
+    public function update(OutletUpdateRequest $request, $id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));

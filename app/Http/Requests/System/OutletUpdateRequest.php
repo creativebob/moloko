@@ -4,7 +4,7 @@ namespace App\Http\Requests\System;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class OutletRequest extends FormRequest
+class OutletUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,9 +27,7 @@ class OutletRequest extends FormRequest
               'name' => 'required|string|max:255',
               'description' => 'nullable|string',
 
-              'stock_id' => 'nullable|integer|exists:stocks,id',
-              'filial_id' => 'nullable|integer|exists:departments,id',
-
+              'stock_id' => 'required|integer|exists:stocks,id',
 
               'display' => 'nullable|integer|max:1',
               'system' => 'nullable|integer|max:1',

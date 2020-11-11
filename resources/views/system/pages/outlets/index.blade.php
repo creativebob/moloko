@@ -66,11 +66,11 @@
                         </td>
                         <td class="td-description">{{ $outlet->description }}</td>
 
-                        <td class="td-stock">{{ $outlet->stock->name }}</td>
+                        <td class="td-stock">{{ optional($outlet->stock)->name }}</td>
                         <td class="td-filial">{{ $outlet->filial->name }}</td>
                         <td class="td-company">{{ $outlet->company->name }}</td>
 
-                        <td class="td-author">@if(isset($outlet->author->first_name)) {{ $outlet->author->first_name . ' ' . $outlet->author->second_name }} @endif</td>
+                        <td class="td-author">{{ $outlet->author->name }}</td>
 
                         {{-- Элементы управления --}}
                         @include('includes.control.table-td', ['item' => $outlet])

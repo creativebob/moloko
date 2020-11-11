@@ -51,7 +51,7 @@
 
                 <div class="cell small-12">
                     <a class="icon-filter sprite
-                @if(count(request()->input()) > 1) filtration-active @endif
+                @if(!(count(request()->input()) == 1 && request()->input(['page'])) && count(request()->input())) filtration-active @endif
                         "></a>
 
                     <search-leads-component></search-leads-component>
@@ -63,12 +63,9 @@
             <div class="small-12 cell filters fieldset-filters" id="filters">
                 <div class="grid-padding-x">
                     <div class="small-12 cell text-right">
-                        {!! Form::open(['route' => ['reset_filter', 'leads']]) !!}
+                        {!! Form::open(['route' => ['reset_filter', $pageInfo->alias]]) !!}
                         {!! Form::submit('Сбросить', ['class'=>'small-link']) !!}
                         {!! Form::close() !!}
-                        {{--                        {{ Form::open(['route' => 'leads.resetFilter']) }}--}}
-                        {{--                        <button class="small-link">Сбросить</button>--}}
-                        {{--                        {{ Form::close() }}--}}
                     </div>
                 </div>
                 <div class="grid-padding-x">

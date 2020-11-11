@@ -21,7 +21,7 @@
             </div>
             <div class="top-bar-right">
                 <a class="icon-filter sprite
-                    @if(count(request()->input()) > 1) filtration-active @endif
+                    @if(!(count(request()->input()) == 1 && request()->input(['page'])) && count(request()->input())) filtration-active @endif
                         "></a>
                 <search-prices-goods-component
                     catalog_id="{{ request('catalog_id') }}"

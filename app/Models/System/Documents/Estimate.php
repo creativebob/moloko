@@ -5,12 +5,17 @@ namespace App\Models\System\Documents;
 use App\Models\System\BaseModel;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 // use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
 class Estimate extends BaseModel
 {
     use SoftDeletes;
+
     // use Cachable;
+
+    const ALIAS = 'estimates';
+    const DEPENDENCE = true;
 
     protected $with = [
         'client',
@@ -32,7 +37,7 @@ class Estimate extends BaseModel
     protected $fillable = [
         'lead_id',
         'client_id',
-	    'filial_id',
+        'filial_id',
         'currency_id',
 
         'number',
@@ -77,7 +82,6 @@ class Estimate extends BaseModel
 
         'margin_percent',
         'margin_currency',
-
 
 
         'display',
@@ -137,116 +141,105 @@ class Estimate extends BaseModel
         return $this->belongsToMany('App\Discount');
     }
 
-    // Фильтр
+    /**
+     * Фильтр
+     *
+     * @param $query
+     * @return mixed
+     */
     public function scopeFilter($query)
     {
 
-        // if (request('cities')) {
-        //     $query->where(
-        //         'client',
-        //         function ($q) {
-        //             $query->whereHasMorph(
-        //                 'clientable',
-        //                 [
-        //                     Company::class,
-        //                     User::class
-        //                 ],
-        //                 function ($q) {
-        //                 $q->whereHas('location', function ($q) {
-        //                     $q->whereHas('city', function ($q) {
-        //                         $q->whereIn('id', request('cities'));
-        //                     });
-        //                 });
-        //             });
-        //         }
-        //     );
-        // }
+        $fields = [
+            'cities',
+            'status',
+            'sources',
+            'dismissed',
+            'saled',
+            'total_min',
+            'total_max',
+            'total_points_min',
+            'total_points_max',
+            'margin_currency_min',
+            'margin_currency_max',
+            'discount_currency_min',
+            'discount_currency_max',
+            'registered_at_min',
+            'registered_at_max',
+        ];
 
-        // if (request('cities')) {
-        //     $query->whereHas('location', function($q) {
-        //         $q->whereIn('city_id', request('cities'));
-        //     });
-        // }
+        $filters = $this->getFilters($fields, Estimate::ALIAS);
 
-        if (request('cities')) {
-            $query->whereHas('lead', function($q){
-                $q->whereHas('location', function($q) {
-                    $q->whereIn('city_id', request('cities'));
+        if (isset($filters['cities'])) {
+            $query->whereHas('lead', function ($q) use ($filters) {
+                $q->whereHas('location', function ($q) use ($filters) {
+                    $q->whereIn('city_id', $filters['cities']);
                 });
             });
         }
 
-        if (!is_null(request('status'))) {
-            if (request('status') == 'fiz') {
-                $query->whereHas('lead', function($q){
+        if (isset($filters['status'])) {
+            if ($filters['status'] == 'fiz') {
+                $query->whereHas('lead', function ($q) {
                     $q->whereNull('company_name');
                 });
             }
-            if (request('status') == 'ur') {
-                $query->whereHas('lead', function($q){
+            if ($filters['status'] == 'ur') {
+                $query->whereHas('lead', function ($q) {
                     $q->whereNotNull('company_name');
                 });
             }
         }
 
-        if (request('sources')) {
-            $query->whereHas('lead', function($q){
-                $q->whereIn('source_id', request('sources'));
+        if (isset($filters['sources'])) {
+            $query->whereHas('lead', function ($q) use ($filters) {
+                $q->whereIn('source_id', $filters['sources']);
             });
         }
 
-        if (! is_null(request('dismissed'))) {
-            $query->where('is_dismissed', request('dismissed'));
+        if (isset($filters['dismissed'])) {
+            $query->where('is_dismissed', $filters['dismissed']);
         }
 
-        if (! is_null(request('saled'))) {
-            $query->where('conducted_at', request('saled'));
+        if (isset($filters['saled'])) {
+            $query->where('conducted_at', $filters['saled']);
         }
 
-        if (request('total_min')) {
-            $query->where('total', '>=', request()->total_min);
+        if (isset($filters['total_min'])) {
+            $query->where('total', '>=', $filters['total_min']);
+        }
+        if (isset($filters['total_max'])) {
+            $query->where('total', ' <= ', $filters['total_max']);
         }
 
-        if (request('total_max')) {
-            $query->where('total', '<=', request()->total_max);
+        if (isset($filters['total_points_min'])) {
+            $query->where('total_points', '>=', $filters['total_points_min']);
+        }
+        if (isset($filters['total_points_max'])) {
+            $query->where('total_points', ' <= ', $filters['total_points_max']);
         }
 
-        if (request('total_points_min')) {
-            $query->where('total_points', '>=', request()->total_points_min);
+        if (isset($filters['margin_currency_min'])) {
+            $query->where('margin_currency', '>=', $filters['margin_currency_min']);
+        }
+        if (isset($filters['margin_currency_max'])) {
+            $query->where('margin_currency', ' <= ', $filters['margin_currency_max']);
         }
 
-        if (request('total_points_max')) {
-            $query->where('total_points', '<=', request()->total_points_max);
+        if (isset($filters['discount_currency_min'])) {
+            $query->where('discount_currency', '>=', $filters['discount_currency_min']);
         }
-
-        if (request('margin_currency_min')) {
-            $query->where('margin_currency', '>=', request()->margin_currency_min);
+        if (isset($filters['discount_currency_max'])) {
+            $query->where('discount_currency', ' <= ', $filters['discount_currency_max']);
         }
-
-        if (request('margin_currency_max')) {
-            $query->where('margin_currency', '<=', request()->margin_currency_max);
-        }
-
-        if (request('discount_currency_min')) {
-            $query->where('discount_currency', '>=', request()->discount_currency_min);
-        }
-
-        if (request('discount_currency_max')) {
-            $query->where('discount_currency', '<=', request()->discount_currency_max);
-        }
-
 
         // TODO - 01.07.20 - Фильтруем по дате регистрации, нужно фильтровать по дате продажи
-        if (request('registered_at_min')) {
-            $query->whereDate('registered_at', '>=', Carbon::createFromFormat('d.m.Y', request()->registered_at_min));
+        if (isset($filters['registered_at_min'])) {
+            $query->whereDate('registered_at', '>=', Carbon::createFromFormat('d.m.Y', $filters['registered_at_min']));
         }
-
-        if (request('registered_at_max')) {
-            $query->whereDate('registered_at', '<=', Carbon::createFromFormat('d.m.Y', request()->registered_at_max));
+        if (isset($filters['registered_at_max'])) {
+            $query->whereDate('registered_at', ' <= ', Carbon::createFromFormat('d . m . Y', $filters['registered_at_max']));
         }
-
-
-
 
         return $query;
     }

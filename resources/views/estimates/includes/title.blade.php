@@ -13,7 +13,7 @@
 
             <div class="top-bar-right">
                 <a class="icon-filter sprite
-                @if(count(request()->input()) > 1) filtration-active @endif
+                @if(!(count(request()->input()) == 1 && request()->input(['page'])) && count(request()->input())) filtration-active @endif
                     "></a>
                 <search-estimates-component></search-estimates-component>
             </div>
@@ -23,7 +23,9 @@
             <div class="small-12 cell filters fieldset-filters" id="filters">
                 <div class="grid-padding-x">
                     <div class="small-12 cell text-right">
-                        <a href="{{ route('estimates.index') }}" class="small-link">Сбросить</a>
+                        {!! Form::open(['route' => ['reset_filter', $pageInfo->alias]]) !!}
+                        {!! Form::submit('Сбросить', ['class'=>'small-link']) !!}
+                        {!! Form::close() !!}
                     </div>
                 </div>
                 <div class="grid-padding-x">

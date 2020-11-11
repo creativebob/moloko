@@ -312,7 +312,12 @@ class Lead extends BaseModel
     //     return $value;
     // }
 
-    // Фильтры
+    /**
+     * Фильтр
+     *
+     * @param $query
+     * @return mixed
+     */
     public function scopeFilter($query)
     {
         $fields = [
@@ -332,7 +337,6 @@ class Lead extends BaseModel
         ];
 
         $filters = $this->getFilters($fields, Lead::ALIAS);
-
 
         if (isset($filters['period_date_min'])) {
             $query->whereDate('created_at', '>=', Carbon::createFromFormat('d.m.Y', $filters['period_date_min']));
@@ -403,9 +407,7 @@ class Lead extends BaseModel
         }
 
         return $query;
-
     }
-
 
     // this is a recommended way to declare event handlers
     public static function boot()

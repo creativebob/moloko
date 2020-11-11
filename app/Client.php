@@ -2,60 +2,31 @@
 
 namespace App;
 
+use App\Models\System\BaseModel;
 use App\Models\System\Documents\Estimate;
-use App\Models\System\Traits\Archiveable;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
-// Scopes для главного запроса
-use App\Scopes\Traits\CompaniesLimitTraitScopes;
-use App\Scopes\Traits\AuthorsTraitScopes;
-use App\Scopes\Traits\SystemItemTraitScopes;
-use App\Scopes\Traits\FilialsTraitScopes;
-use App\Scopes\Traits\TemplateTraitScopes;
-use App\Scopes\Traits\ModeratorLimitTraitScopes;
-use App\Scopes\Traits\ClientsTraitScopes;
-
-// Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
-// Фильтры
-use App\Scopes\Filters\Filter;
-use App\Scopes\Filters\BooklistFilter;
-// use App\Scopes\Filters\DateIntervalFilter;
 
-class Client extends Model
+class Client extends BaseModel
 {
 
-    // Включаем кеш
-//    use Cachable;
+    use Notifiable,
+        SoftDeletes;
 
-    use Notifiable;
-    use SoftDeletes;
+    //    use Cachable;
 
-    // Включаем Scopes
-    use CompaniesLimitTraitScopes;
-    use AuthorsTraitScopes;
-    use SystemItemTraitScopes;
-    use FilialsTraitScopes;
-    use TemplateTraitScopes;
-    use ModeratorLimitTraitScopes;
-    use ClientsTraitScopes;
+    const ALIAS = 'clients';
+    const DEPENDENCE = false;
 
-    // Фильтры
-    use Filter;
-    use BooklistFilter;
-    // use DateIntervalFilter;
-
-     protected $dates = [
-         'created_at',
-         'first_order_date',
-         'last_order_date',
-         'deleted_at'
-     ];
+    protected $dates = [
+        'created_at',
+        'first_order_date',
+        'last_order_date',
+        'deleted_at'
+    ];
 
     protected $fillable = [
         'clientable_id',
@@ -177,6 +148,7 @@ class Client extends Model
     {
         return $this->hasMany(ClientsLoyaltiesScore::class);
     }
+
     public function loyalty_score()
     {
         return $this->hasOne(ClientsLoyaltiesScore::class)
@@ -188,6 +160,7 @@ class Client extends Model
     {
         return $this->hasMany(ClientsBlacklist::class);
     }
+
     public function actual_blacklist()
     {
         return $this->hasOne(ClientsBlacklist::class)
@@ -203,16 +176,54 @@ class Client extends Model
      */
     public function scopeFilter($query)
     {
-        if (! is_null(request('lost'))) {
-            $query->where('is_lost', request('lost'));
+
+        $fields = [
+            'lost',
+            'vip',
+            'blacklist',
+            'sources',
+            'loyalties_scores',
+            'abc',
+            'activities',
+            'rfm',
+            'orders_count_min',
+            'orders_count_max',
+            'purchase_frequency_min',
+            'purchase_frequency_max',
+            'customer_equity_min',
+            'customer_equity_max',
+            'average_order_value_min',
+            'average_order_value_max',
+            'customer_value_min',
+            'customer_value_max',
+            'discount_min',
+            'discount_max',
+            'points_min',
+            'points_max',
+            'first_order_date_min',
+            'first_order_date_max',
+            'last_order_date_min',
+            'last_order_date_max',
+            'birthday_date_min',
+            'birthday_date_max',
+            'estimate_date_min',
+            'estimate_date_max',
+            'gender',
+            'cities',
+        ];
+
+        $filters = $this->getFilters($fields, Client::ALIAS);
+
+        if (isset($filters['lost'])) {
+            $query->where('is_lost', $filters['lost']);
         }
 
-        if (! is_null(request('vip'))) {
-            $query->where('is_vip', request('vip'));
+        if (isset($filters['vip'])) {
+            $query->where('is_vip', $filters['vip']);
         }
 
-        if (! is_null(request('blacklist'))) {
-            $blacklist = request('blacklist');
+        if (isset($filters['blacklist'])) {
+            $blacklist = $filters['blacklist'];
             if ($blacklist) {
                 $query->has('actual_blacklist');
             }
@@ -221,166 +232,152 @@ class Client extends Model
             }
         }
 
-        if (request('sources')) {
-            $query->whereIn('source_id', request('sources'));
+        if (isset($filters['sources'])) {
+            $query->whereIn('source_id', $filters['sources']);
         }
 
-        if (request('loyalties_scores')) {
-            $query->whereHas('loyalty_score', function ($q) {
-                $q->whereIn('loyalty_score', request('loyalties_scores'));
+        if (isset($filters['loyalties_scores'])) {
+            $query->whereHas('loyalty_score', function ($q) use ($filters) {
+                $q->whereIn('loyalty_score', $filters['loyalties_scores']);
             });
         }
 
-        if (request('abc')) {
-            $query->whereIn('abc', request('abc'));
+        if (isset($filters['abc'])) {
+            $query->whereIn('abc', $filters['abc']);
         }
 
-        if (request('activities')) {
-            $query->whereIn('activity', request('activities'));
+        if (isset($filters['activities'])) {
+            $query->whereIn('activity', $filters['activities']);
         }
 
-        if (request('rfm')) {
-            $query->whereIn('rfm', request('rfm'));
+        if (isset($filters['rfm'])) {
+            $query->whereIn('rfm', $filters['rfm']);
         }
 
-        if (request('orders_count_min')) {
-            $query->where('orders_count', '>=', request('orders_count_min'));
+        if (isset($filters['orders_count_min'])) {
+            $query->where('orders_count', '>=', $filters['orders_count_min']);
+        }
+        if (isset($filters['orders_count_max'])) {
+            $query->where('orders_count', '<=', $filters['orders_count_max']);
         }
 
-        if (request('orders_count_max')) {
-            $query->where('orders_count', '<=', request('orders_count_max'));
+        if (isset($filters['purchase_frequency_min'])) {
+            $query->where('purchase_frequency', '>=', $filters['purchase_frequency_min']);
+        }
+        if (isset($filters['purchase_frequency_max'])) {
+            $query->where('purchase_frequency', '<=', $filters['purchase_frequency_max']);
         }
 
-        if (request('purchase_frequency_min')) {
-            $query->where('purchase_frequency', '>=', request('purchase_frequency_min'));
+        if (isset($filters['customer_equity_min'])) {
+            $query->where('customer_equity', '>=', $filters['customer_equity_min']);
+        }
+        if (isset($filters['customer_equity_max'])) {
+            $query->where('customer_equity', '<=', $filters['customer_equity_max']);
         }
 
-        if (request('purchase_frequency_max')) {
-            $query->where('purchase_frequency', '<=', request('purchase_frequency_max'));
+        if (isset($filters['average_order_value_min'])) {
+            $query->where('average_order_value', '>=', $filters['average_order_value_min']);
+        }
+        if (isset($filters['average_order_value_max'])) {
+            $query->where('average_order_value', '<=', $filters['average_order_value_max']);
         }
 
-        if (request('customer_equity_min')) {
-            $query->where('customer_equity', '>=', request('customer_equity_min'));
+        if (isset($filters['customer_value_min'])) {
+            $query->where('customer_value', '>=', $filters['customer_value_min']);
+        }
+        if (isset($filters['customer_value_max'])) {
+            $query->where('customer_value', '<=', $filters['customer_value_max']);
         }
 
-        if (request('customer_equity_max')) {
-            $query->where('customer_equity', '<=', request('customer_equity_max'));
+        if (isset($filters['discount_min'])) {
+            $query->where('discount', '>=', $filters['discount_min']);
+        }
+        if (isset($filters['discount_max'])) {
+            $query->where('discount', '<=', $filters['discount_max']);
         }
 
-        if (request('average_order_value_min')) {
-            $query->where('average_order_value', '>=', request('average_order_value_min'));
+        if (isset($filters['points_min'])) {
+            $query->where('points', '>=', $filters['points_min']);
+        }
+        if (isset($filters['points_max'])) {
+            $query->where('points', '<=', $filters['points_max']);
         }
 
-        if (request('average_order_value_max')) {
-            $query->where('average_order_value', '<=', request('average_order_value_max'));
-        }
-
-        if (request('customer_value_min')) {
-            $query->where('customer_value', '>=', request('customer_value_min'));
-        }
-
-        if (request('customer_value_max')) {
-            $query->where('customer_value', '<=', request('customer_value_max'));
-        }
-
-        if (request('discount_min')) {
-            $query->where('discount', '>=', request('discount_min'));
-        }
-
-        if (request('discount_max')) {
-            $query->where('discount', '<=', request('discount_max'));
-        }
-
-        if (request('points_min')) {
-            $query->where('points', '>=', request('points_min'));
-        }
-
-        if (request('points_max')) {
-            $query->where('points', '<=', request('points_max'));
-        }
-
-//        if (request('ltv_min')) {
-//            $query->where('ltv', '>=', request('ltv_min'));
+//        if ($filters['ltv_min']) {
+//            $query->where('ltv', '>=', $filters['ltv_min']);
 //        }
-//        if (request('ltv_max')) {
-//            $query->where('ltv', '<=', request('ltv_max'));
+//        if ($filters['ltv_max']) {
+//            $query->where('ltv', '<=', $filters['ltv_max']);
 //        }
 
-        if (request('first_order_date_min')) {
-            $query->whereDate('first_order_date', '>=', Carbon::createFromFormat('d.m.Y', request()->first_order_date_min));
+        if (isset($filters['first_order_date_min'])) {
+            $query->whereDate('first_order_date', '>=', Carbon::createFromFormat('d.m.Y', $filters['first_order_date_min']));
+        }
+        if (isset($filters['first_order_date_max'])) {
+            $query->whereDate('first_order_date', '<=', Carbon::createFromFormat('d.m.Y', $filters['first_order_date_max']));
         }
 
-        if (request('first_order_date_max')) {
-            $query->whereDate('first_order_date', '<=', Carbon::createFromFormat('d.m.Y', request()->first_order_date_max));
+        if (isset($filters['last_order_date_min'])) {
+            $query->whereDate('last_order_date', '>=', Carbon::createFromFormat('d.m.Y', $filters['last_order_date_min']));
+        }
+        if (isset($filters['last_order_date_max'])) {
+            $query->whereDate('last_order_date', '<=', Carbon::createFromFormat('d.m.Y', $filters['last_order_date_max']));
         }
 
-        if (request('last_order_date_min')) {
-            $query->whereDate('last_order_date', '>=', Carbon::createFromFormat('d.m.Y', request()->last_order_date_min));
-        }
-
-        if (request('last_order_date_max')) {
-            $query->whereDate('last_order_date', '<=', Carbon::createFromFormat('d.m.Y', request()->last_order_date_max));
-        }
-
-        if (request('birthday_date_min')) {
+        if (isset($filters['birthday_date_min'])) {
             $query->whereHasMorph(
                 'clientable',
                 [User::class],
-                function ($q) {
-               $q->whereDate('birthday_date', '>=', Carbon::createFromFormat('d.m.Y', request()->birthday_date_min));
-            });
+                function ($q) use ($filters) {
+                    $q->whereDate('birthday_date', '>=', Carbon::createFromFormat('d.m.Y', $filters['birthday_date_min']));
+                });
         }
-
-        if (request('birthday_date_max')) {
+        if (isset($filters['birthday_date_max'])) {
             $query->whereHasMorph(
                 'clientable',
                 [User::class],
-                function ($q) {
-                $q->whereDate('birthday_date', '<=', Carbon::createFromFormat('d.m.Y', request()->birthday_date_max));
+                function ($q) use ($filters) {
+                    $q->whereDate('birthday_date', '<=', Carbon::createFromFormat('d.m.Y', $filters['birthday_date_max']));
+                });
+        }
+
+        if (isset($filters['estimate_date_min'])) {
+            $query->whereHas('estimates', function ($q) use ($filters) {
+                $q->whereDate('conducted_at', '>=', Carbon::createFromFormat('d.m.Y', $filters['estimate_date_min']));
+            });
+        }
+        if (isset($filters['estimate_date_max'])) {
+            $query->whereHas('estimates', function ($q) use ($filters) {
+                $q->whereDate('conducted_at', '<=', Carbon::createFromFormat('d.m.Y', $filters['estimate_date_max']));
             });
         }
 
-        // TODO - 01.07.20 - Фильтруем по дате регистрации, нужно фильтровать по дате продажи
-        if (request('estimate_date_min')) {
-            $query->whereHas('estimates', function ($q) {
-                $q->whereDate('registered_at', '>=', Carbon::createFromFormat('d.m.Y', request()->estimate_date_min));
-            });
-        }
-
-        if (request('estimate_date_max')) {
-            $query->whereHas('estimates', function ($q) {
-                $q->whereDate('registered_at', '<=', Carbon::createFromFormat('d.m.Y', request()->estimate_date_max));
-            });
-        }
-
-        if (! is_null(request('gender'))) {
+        if (isset($filters['gender'])) {
             $query->whereHasMorph(
                 'clientable',
                 [
                     User::class
                 ],
-                function ($q) {
-                $q->where('gender', request()->gender);
-            });
+                function ($q) use ($filters) {
+                    $q->where('gender', $filters['gender']);
+                });
         }
 
-        if (request('cities')) {
+        if (isset($filters['cities'])) {
             $query->whereHasMorph(
                 'clientable',
                 [
                     Company::class,
                     User::class
                 ],
-                function ($q) {
-                $q->whereHas('location', function ($q) {
-                    $q->whereHas('city', function ($q) {
-                        $q->whereIn('id', request('cities'));
+                function ($q) use ($filters) {
+                    $q->whereHas('location', function ($q) use ($filters) {
+                        $q->whereHas('city', function ($q) use ($filters) {
+                            $q->whereIn('id', $filters['cities']);
+                        });
                     });
                 });
-            });
         }
-
-//        dd($query->toSql());
 
         return $query;
     }
