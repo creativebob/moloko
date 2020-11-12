@@ -89,7 +89,7 @@ trait Reservable
 
                 } else {
 
-                    $modelStorage = Entity::where('alias', $item->getTable() . '_stocks')
+                    $modelStorage = Entity::where('alias', $cmv->getTable() . '_stocks')
                         ->value('model');
 
                     $reserve = Reserve::create([
