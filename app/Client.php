@@ -176,43 +176,7 @@ class Client extends BaseModel
      */
     public function scopeFilter($query)
     {
-
-        $fields = [
-            'lost',
-            'vip',
-            'blacklist',
-            'sources',
-            'loyalties_scores',
-            'abc',
-            'activities',
-            'rfm',
-            'orders_count_min',
-            'orders_count_max',
-            'purchase_frequency_min',
-            'purchase_frequency_max',
-            'customer_equity_min',
-            'customer_equity_max',
-            'average_order_value_min',
-            'average_order_value_max',
-            'customer_value_min',
-            'customer_value_max',
-            'discount_min',
-            'discount_max',
-            'points_min',
-            'points_max',
-            'first_order_date_min',
-            'first_order_date_max',
-            'last_order_date_min',
-            'last_order_date_max',
-            'birthday_date_min',
-            'birthday_date_max',
-            'estimate_date_min',
-            'estimate_date_max',
-            'gender',
-            'cities',
-        ];
-
-        $filters = $this->getFilters($fields, Client::ALIAS);
+        $filters = $this->getFilters(Client::ALIAS);
 
         if (isset($filters['lost'])) {
             $query->where('is_lost', $filters['lost']);

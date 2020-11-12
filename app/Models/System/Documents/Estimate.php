@@ -149,26 +149,7 @@ class Estimate extends BaseModel
      */
     public function scopeFilter($query)
     {
-
-        $fields = [
-            'cities',
-            'status',
-            'sources',
-            'dismissed',
-            'saled',
-            'total_min',
-            'total_max',
-            'total_points_min',
-            'total_points_max',
-            'margin_currency_min',
-            'margin_currency_max',
-            'discount_currency_min',
-            'discount_currency_max',
-            'registered_at_min',
-            'registered_at_max',
-        ];
-
-        $filters = $this->getFilters($fields, Estimate::ALIAS);
+        $filters = $this->getFilters(Estimate::ALIAS);
 
         if (isset($filters['cities'])) {
             $query->whereHas('lead', function ($q) use ($filters) {

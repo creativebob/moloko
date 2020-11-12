@@ -10,7 +10,7 @@ class Reserve extends BaseModel
 {
 
     use SoftDeletes;
-    use Cachable;
+//    use Cachable;
 
     protected $fillable = [
         'stock_id',
