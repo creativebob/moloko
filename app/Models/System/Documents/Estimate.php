@@ -209,28 +209,28 @@ class Estimate extends BaseModel
             $query->where('total', '>=', $filters['total_min']);
         }
         if (isset($filters['total_max'])) {
-            $query->where('total', ' <= ', $filters['total_max']);
+            $query->where('total', '<=', $filters['total_max']);
         }
 
         if (isset($filters['total_points_min'])) {
             $query->where('total_points', '>=', $filters['total_points_min']);
         }
         if (isset($filters['total_points_max'])) {
-            $query->where('total_points', ' <= ', $filters['total_points_max']);
+            $query->where('total_points', '<=', $filters['total_points_max']);
         }
 
         if (isset($filters['margin_currency_min'])) {
             $query->where('margin_currency', '>=', $filters['margin_currency_min']);
         }
         if (isset($filters['margin_currency_max'])) {
-            $query->where('margin_currency', ' <= ', $filters['margin_currency_max']);
+            $query->where('margin_currency', '<=', $filters['margin_currency_max']);
         }
 
         if (isset($filters['discount_currency_min'])) {
             $query->where('discount_currency', '>=', $filters['discount_currency_min']);
         }
         if (isset($filters['discount_currency_max'])) {
-            $query->where('discount_currency', ' <= ', $filters['discount_currency_max']);
+            $query->where('discount_currency', '<=', $filters['discount_currency_max']);
         }
 
         // TODO - 01.07.20 - Фильтруем по дате регистрации, нужно фильтровать по дате продажи
@@ -238,7 +238,7 @@ class Estimate extends BaseModel
             $query->whereDate('registered_at', '>=', Carbon::createFromFormat('d.m.Y', $filters['registered_at_min']));
         }
         if (isset($filters['registered_at_max'])) {
-            $query->whereDate('registered_at', ' <= ', Carbon::createFromFormat('d . m . Y', $filters['registered_at_max']));
+            $query->whereDate('registered_at', '<=', Carbon::createFromFormat('d . m . Y', $filters['registered_at_max']));
         }
 
         return $query;
