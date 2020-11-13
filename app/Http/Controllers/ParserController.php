@@ -16,6 +16,7 @@ use App\Http\Controllers\Traits\UserControllerTrait;
 use App\Models\System\Documents\Consignment;
 use App\Models\System\Documents\Production;
 use App\Models\System\Documents\ProductionsItem;
+use App\Models\System\Stocks\GoodsStock;
 use App\OldLead;
 use App\OldLocation;
 use App\Lead;
@@ -28,6 +29,7 @@ use App\Department;
 use App\Payment;
 use App\Position;
 use App\PricesGoods;
+use App\Reserve;
 use App\Right;
 use App\Role;
 use App\Subscriber;
@@ -59,6 +61,70 @@ class ParserController extends Controller
     public function test()
     {
         dd(__METHOD__);
+    }
+
+    /**
+     * Перерезервирование (если в системе нет продаж)
+     *
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
+    public function reReserving()
+    {
+
+        $storages = GoodsStock::get();
+        $groupedReserves = Reserve::get()
+        ->groupBy('storage_id');
+//        dd(isset($groupedReserves[155]));
+
+        foreach ($storages as $storage) {
+
+            if (isset($groupedReserves[$storage->id])) {
+
+                $count = 0;
+                foreach ($groupedReserves[$storage->id] as $reserve) {
+                    $count += $reserve->count;
+                }
+
+                $storage->update([
+                    'free' => $storage->count - $count,
+                    'reserve' => $count,
+                ]);
+
+            }
+        }
+        return __('msg.ok');
+    }
+
+    /**
+     * Проставление хранилища в reserves
+     *
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
+    public function setStorageForReserves()
+    {
+
+        $reserves = Reserve::with([
+            'cmv.stocks',
+        ])
+            ->get();
+
+        foreach ($reserves as $reserve) {
+
+            $storageModel = Entity::where('alias', 'goods_stocks')->value('model');
+//            dd($storageModel);
+
+            $storageId = $reserve->cmv->stocks
+                ->where('stock_id', $reserve->stock_id)
+                ->first()
+                ->id;
+//            dd($storageId);
+
+            $reserve->update([
+                'storage_id' => $storageId,
+                'storage_type' => $storageModel,
+            ]);
+        }
+        return __('msg.ok');
     }
 
     /**

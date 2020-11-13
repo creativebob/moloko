@@ -40,11 +40,10 @@ class BaseModel extends Model
     /**
      * Получение фильтров для сущности
      *
-     * @param $fields
      * @param $alias
      * @return array
      */
-    public function getFilters($fields, $alias)
+    public function getFilters($alias)
     {
         $request = request();
         $requestInput = $request->input();
@@ -54,12 +53,8 @@ class BaseModel extends Model
 
         $filters = [];
         // TODO - 10.11.20 - Костыль с пагинацией
-        if (count($requestInput) > 1) {
-            foreach ($fields as $field) {
-                if (isset($requestInput[$field])) {
-                    $filters[$field] = $requestInput[$field];
-                }
-            }
+        if (count($requestInput)) {
+            $filters = $requestInput;
 
             $data = [
                 'alias' => $alias,

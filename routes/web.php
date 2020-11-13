@@ -66,6 +66,9 @@ Route::get('/parsers/set-storage-for-productions-items', 'ParserController@setSt
 Route::get('/parsers/set-documents-items-entities', 'ParserController@setDocumentsItemsEntities');
 Route::get('/parsers/clear-documents-tables', 'ParserController@clearDocumentsTables');
 
+Route::get('/parsers/set-storage-for-reserves', 'ParserController@setStorageForReserves');
+Route::get('/parsers/re-reserving', 'ParserController@reReserving');
+
 Route::get('/parsers/test', 'ParserController@test');
 
 
