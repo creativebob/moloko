@@ -32,13 +32,13 @@
                 </label>
 
                 <label>Телефон
-                    @include('includes.inputs.phone', ['value' => isset($outlet->main_phone->phone) ? $outlet->main_phone->phone : null, 'name'=>'main_phone', 'required' => true])
+                    @include('includes.inputs.phone', ['value' => isset($outlet->main_phone->phone) ? $outlet->main_phone->phone : null, 'name'=>'main_phone'])
                 </label>
             </div>
 
             <div class="cell small-12 medium-6">
                 <label>Склад
-                    @include('includes.selects.stocks')
+                    @include('includes.selects.stocks', ['placeholder' => 'Нет склада'])
                 </label>
 
                 <label>Шаблон чека

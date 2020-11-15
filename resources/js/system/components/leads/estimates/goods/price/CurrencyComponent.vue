@@ -28,7 +28,7 @@
                 return this.$store.state.lead.estimate.registered_at;
             },
             showPoints() {
-                const canPaymentPoints = this.$store.getters.OUTLET_SETTING('payment-point');
+                const canPaymentPoints = this.$store.getters.HAS_OUTLET_SETTING('payment-point');
                 return this.item.points > 0 && canPaymentPoints;
             }
         },

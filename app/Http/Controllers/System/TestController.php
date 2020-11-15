@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\System;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Crypt;
 
 class TestController extends Controller
 {
@@ -20,6 +21,7 @@ class TestController extends Controller
      */
     public function test()
     {
+        dd(Crypt::encrypt($value_to_be_encrypted));
         dd(__METHOD__);
     }
 }

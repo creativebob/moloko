@@ -69,6 +69,8 @@ Route::get('/parsers/clear-documents-tables', 'ParserController@clearDocumentsTa
 Route::get('/parsers/set-storage-for-reserves', 'ParserController@setStorageForReserves');
 Route::get('/parsers/re-reserving', 'ParserController@reReserving');
 
+Route::get('/parsers/set-discounts-for-estimates', 'ParserController@setDiscountsForEstimates');
+
 Route::get('/parsers/test', 'ParserController@test');
 
 

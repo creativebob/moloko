@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 class DiscountController extends Controller
 {
-    
+
     protected $entityAlias;
     protected $entityDependence;
 
@@ -139,7 +139,7 @@ class DiscountController extends Controller
         $discount = Discount::moderatorLimit($answer)
             ->find($id);
 //        dd($discount);
-    
+
         if (empty($discount)) {
             abort(403, __('errors.not_found'));
         }
@@ -221,7 +221,8 @@ class DiscountController extends Controller
         $this->authorize(getmethod('destroy'), $discount);
 
         $discount->update([
-            'archive' => true
+            'archive' => true,
+            'is_actual' => false
         ]);
 
         switch($discount->entity->alias) {

@@ -50,6 +50,11 @@ class Outlet extends BaseModel
         return $this->belongsToMany(CatalogsGoods::class, 'outlet_catalog_goods', 'outlet_id', 'catalog_goods_id');
     }
 
+    public function catalogs_services()
+    {
+        return $this->belongsToMany(CatalogsService::class, 'outlet_catalog_services', 'outlet_id', 'catalog_services_id');
+    }
+
     public function staff()
     {
         return $this->belongsToMany(Staffer::class, 'outlet_staffer');

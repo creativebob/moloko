@@ -320,7 +320,7 @@ class Lead extends BaseModel
      */
     public function scopeFilter($query)
     {
-        $filters = $this->getFilters(Lead::ALIAS);
+        $filters = $this->getFilters(self::ALIAS);
 
         if (isset($filters['period_date_min'])) {
             $query->whereDate('created_at', '>=', Carbon::createFromFormat('d.m.Y', $filters['period_date_min']));

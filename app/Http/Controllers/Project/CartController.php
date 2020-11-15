@@ -458,6 +458,21 @@ class CartController extends Controller
             logs('leads_from_project')->info("Создана смета с id: [{$estimate->id}]");
 
 
+            $discounts = Discount::where('archive', false)
+                ->whereHas('entity', function ($q) {
+                    $q->where('alias', 'estimates');
+                })
+                ->where('begined_at', '<=', now())
+                ->where(function ($q) {
+                    $q->where('ended_at', '>=', now())
+                        ->orWhereNull('ended_at');
+                })
+                ->where('company_id', $site->company_id)
+                ->get();
+
+            $estimate->discounts()->attach($discounts->pluck('id'));
+
+
             // Содержится ли в куках данные корзины
             if (Cookie::get('cart') !== null) {
                 $cart = json_decode(Cookie::get('cart'), true);

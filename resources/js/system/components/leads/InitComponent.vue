@@ -7,13 +7,15 @@
         props: {
             outlet: Object,
         },
-        mounted() {
+        created() {
             let stock = this.outlet.stock;
             if (! stock.id) {
                 stock.id = null;
             }
             this.$store.commit('SET_STOCK', stock);
+            this.$store.commit('SET_OUTLET', this.outlet);
             this.$store.commit('SET_OUTLET_SETTINGS', this.outlet.settings);
+            this.$store.commit('SET_PAYMENTS_METHODS', this.outlet.payments_methods);
             // this.$store.commit('SET_USERS', this.users);
             // this.$store.commit('SET_COMPANIES', this.companies);
             //

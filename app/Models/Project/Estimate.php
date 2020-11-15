@@ -73,4 +73,9 @@ class Estimate extends Model
     {
         return $this->hasMany('App\Models\System\Documents\EstimatesServicesItem');
     }
+
+    public function discounts()
+    {
+        return $this->belongsToMany('App\Discount');
+    }
 }

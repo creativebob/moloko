@@ -174,8 +174,10 @@ trait Directorable
         $checkUser = $this->getUserByPhone($user);
 
         if ($checkUser) {
-            return back()
-                ->withErrors(['msg' => 'Пользователь уже существует']);
+            if ($checkUser->main_phone->phone != cleanPhone(request()->user_main_phone)) {
+                return back()
+                    ->withErrors(['msg' => 'Пользователь уже существует']);
+            }
         }
 
         $request = request();

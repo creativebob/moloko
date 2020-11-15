@@ -14,7 +14,9 @@ const moduleLead = {
 
             payments: [],
 
+            outlet: null,
             outletSettings: [],
+            paymentsMethods: [],
 
             change: false,
             loading: false,
@@ -78,8 +80,14 @@ const moduleLead = {
                 this.commit('UPDATE_GOODS_ITEMS');
             },
 
+            SET_OUTLET(state, outlet) {
+                state.outlet = outlet;
+            },
             SET_OUTLET_SETTINGS(state, settings) {
                 state.outletSettings = settings;
+            },
+            SET_PAYMENTS_METHODS(state, paymentsMethods) {
+                state.paymentsMethods = paymentsMethods;
             },
 
             SET_STOCK(state, stock) {
@@ -363,11 +371,34 @@ const moduleLead = {
             SET_PAYMENTS(state, payments) {
                 state.payments = payments;
             },
+
+            // Скидки
+            REMOVE_DISCOUNT(state, id) {
+                this.commit('SET_CHANGE');
+
+                const index = state.estimate.discounts.findIndex(obj => obj.id === id);
+                state.estimate.discounts.splice(index, 1);
+
+                state.goodsItems.forEach(item => {
+                    if (item.estimate_discount_id == id) {
+
+                        item.estimate_discount_id = null;
+                        item.estimate_discount_unit = 0;
+
+                        const index = state.goodsItems.findIndex(obj => obj.id == item.id);
+
+                        Vue.set(state.goodsItems, index, item);
+
+                        this.commit('SET_AGGREGATIONS', index);
+                    }
+                })
+            }
         },
         actions: {
             // Обновление лида и сметы
             UPDATE({state}, data) {
                 state.loading = true;
+
                 axios
                     .patch('/admin/leads/axios_update/' + state.lead.id, data)
                     .then(response => {
@@ -531,18 +562,27 @@ const moduleLead = {
                     .finally(() => (state.loading = false));
             },
 
-
             // Платежи
-            ADD_PAYMENT({state}, data) {
+            ADD_PAYMENT({state, getters}, data) {
                 state.loading = true;
 
                 // TODO - 16.10.20 - Избавиться от харкода
-                data.payments_method_id = 4;
                 data.currency_id = 1;
                 data.contract_id = state.client.contract.id;
                 data.contract_type = 'App\\ContractsClient';
                 data.document_id = state.lead.estimate.id;
                 data.document_type = 'App\\Models\\System\\Documents\\Estimate';
+
+                // Проверка на полный платеж
+
+                let total = data.cash + data.electronically + getters.PAYMENTS_TOTAL;
+                if (total >= state.estimate.total) {
+                    const paymentsMethod = state.paymentsMethods.find(obj => obj.alias === 'full_payment')
+                    if (paymentsMethod) {
+                        data.payments_method_id = paymentsMethod.id;
+                    }
+                }
+                // console.log(data);
 
                 axios
                     .post('/admin/payments', data)
@@ -568,6 +608,8 @@ const moduleLead = {
                     })
                     .finally(() => (state.loading = false));
             },
+
+
         },
         getters: {
             // Смета
@@ -654,8 +696,15 @@ const moduleLead = {
                 return total;
             },
 
-            // Настройки
-            OUTLET_SETTING: state => alias => {
+            GET_PAYMENTS_METHOD_ALIAS: state => id => {
+                const found = state.paymentsMethods.find(obj => obj.id == id);
+                if (found) {
+                    return found.alias;
+                } else {
+                    return null;
+                }
+            },
+            HAS_OUTLET_SETTING: state => alias => {
                 const res = state.outletSettings.find(obj => obj.alias == alias);
                 return !!res;
             },

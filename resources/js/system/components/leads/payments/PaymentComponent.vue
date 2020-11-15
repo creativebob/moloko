@@ -2,6 +2,7 @@
     <tr>
         <td>{{ payment.registered_at | formatDate }}</td>
         <td>{{ type }}</td>
+        <td>{{ payment.method.name }}</td>
         <td>{{ payment.total | decimalPlaces | decimalLevel }} {{ payment.currency.abbreviation }}</td>
         <td class="td-delete">
             <div
@@ -36,7 +37,7 @@
                 }
             },
             canRemove() {
-                return !this.$store.getters.OUTLET_SETTING('use-cash-register') && this.$store.getters.OUTLET_SETTING('edit-payment') && this.$store.state.lead.estimate.conducted_at === null;
+                return !this.$store.getters.HAS_OUTLET_SETTING('use-cash-register') && this.$store.getters.HAS_OUTLET_SETTING('edit-payment') && this.$store.state.lead.estimate.conducted_at === null;
             }
         },
         methods: {

@@ -98,9 +98,12 @@
             >{{ item.total_points | level }} поинтов</a>
         </td>
 
-        <td class="td-delete">
+        <td
+            v-if="!isRegistered"
+            class="td-delete"
+        >
             <div
-                v-if="!isRegistered"
+
                 @click="openModalRemove"
                 class="icon-delete sprite"
                 data-open="delete-estimates_goods_item"

@@ -78,7 +78,7 @@
         },
         computed: {
             showPoints() {
-                const canPaymentPoints = this.$store.getters.OUTLET_SETTING('payment-point');
+                const canPaymentPoints = this.$store.getters.HAS_OUTLET_SETTING('payment-point');
                 return this.price.points > 0 && canPaymentPoints;
             },
             countInStocks() {

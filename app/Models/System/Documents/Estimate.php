@@ -20,7 +20,8 @@ class Estimate extends BaseModel
     protected $with = [
         'client',
         'payments',
-        'discounts'
+        'discounts',
+        'goods_items'
     ];
 
     protected $dates = [
@@ -93,6 +94,21 @@ class Estimate extends BaseModel
         'author_id',
     ];
 
+    public function getGoodsItemsReservesAttribute()
+    {
+        if ($this->goods_items->isNotEmpty()) {
+            $count = 0;
+            foreach ($this->goods_items as $goodsItem) {
+                if (isset($goodsItem->reserve)) {
+                    $count += $goodsItem->reserve->count;
+                }
+            }
+            return $count;
+        } else {
+            return 0;
+        }
+    }
+
     public function setDateAttribute($value)
     {
         $this->attributes['date'] = Carbon::createFromFormat('d.m.Y', $value);
@@ -149,7 +165,7 @@ class Estimate extends BaseModel
      */
     public function scopeFilter($query)
     {
-        $filters = $this->getFilters(Estimate::ALIAS);
+        $filters = $this->getFilters(self::ALIAS);
 
         if (isset($filters['cities'])) {
             $query->whereHas('lead', function ($q) use ($filters) {

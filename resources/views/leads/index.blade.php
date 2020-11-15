@@ -58,6 +58,7 @@
                     <th class="td-phone">Телефон</th>
                     <th class="td-choice">Спрос</th>
                     <th class="td-badget">Сумма сделки</th>
+                    <th class="td-reserves">Резервы</th>
                     <th class="td-stage">Этап</th>
                     <th class="td-challenge">Задачи</th>
                     <th class="td-status">Статус</th>
@@ -78,8 +79,8 @@
                         <tr
                             class="item
                             @if($lead->moderation == 1)no-moderation @endif
-                            stage-{{$lead->stage->id }}
-                            "
+                                stage-{{$lead->stage->id }}
+                                "
                             id="leads-{{ $lead->id }}"
                             data-name="{{ $lead->name }}"
                             data-entity="leads"
@@ -156,6 +157,8 @@
                                 {{--              <br><span class="tiny-text">{{ num_format($lead->payment, 0) }}</span>--}}
                                 {{--            @endif--}}
                             </td>
+
+                            <td class="td-reserves">{{ num_format($lead->estimate->goods_items->sum('count'), 0) }} / {{ num_format($lead->estimate->goodsItemsReserves, 0) }}</td>
 
                             <td class="td-stage">{{ $lead->stage->name }}</td>
                             <td class="td-challenge">

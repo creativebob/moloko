@@ -97,7 +97,7 @@ class EstimateController extends Controller
             ->systemItem($answer)
             ->where('draft', false)
             ->whereNotNull('registered_at')
-            ->filter()            
+            ->filter()
             ->get();
 
 
@@ -291,9 +291,17 @@ class EstimateController extends Controller
     public function unregistering($id)
     {
         // ГЛАВНЫЙ ЗАПРОС:
-        $estimate = Estimate::find($id);
+        $estimate = Estimate::with([
+            'goods_items'
+        ])
+        ->find($id);
 
         if ($estimate->registered_at && $estimate->payments->isEmpty()) {
+            foreach ($estimate->goods_items as $goodsItem) {
+                if (isset($goodsItem->reserve)) {
+                    $result = $this->cancelReserve($goodsItem);
+                }
+            }
 
             $estimate->update([
                 'registered_at' => null,
