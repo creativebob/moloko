@@ -9,7 +9,6 @@ class SuppliersComposer
 {
 	public function compose(View $view)
 	{
-		dd('Тут');
         $suppliers = Supplier::get();
         return $view->with(compact('suppliers'));
     }
