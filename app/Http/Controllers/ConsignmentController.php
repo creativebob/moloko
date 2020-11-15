@@ -46,7 +46,10 @@ class ConsignmentController extends Controller
 
         $consignments = Consignment::with([
             'author',
-            'items'
+            'items.entity',
+            'items.cmv.article',
+            'stock',
+            'supplier'
         ])
             ->moderatorLimit($answer)
             ->companiesLimit($answer)
@@ -54,7 +57,7 @@ class ConsignmentController extends Controller
             ->authors($answer)
             ->systemItem($answer)
             // ->whereNull('draft')
-            ->booklistFilter($request)
+            ->filter()
 //            ->filter($request, 'supplier_id')
             ->orderBy('moderation', 'desc')
             ->latest('created_at')

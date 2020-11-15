@@ -85,4 +85,10 @@ class Supplier extends Model
             ->where('archive', false);
     }
 
+    // Товарные накладные поставщика
+    public function consignments()
+    {
+        return $this->belongsToMany('App\Consignment');
+    }
+
 }

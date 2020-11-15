@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Http\View\Composers\System\SuppliersComposer;
 use App\Http\View\Composers\System\AccountsComposer;
 use App\Http\View\Composers\System\ArticlesCategoriesWithGroupsComposer;
 use App\Http\View\Composers\System\ArticlesCategoriesWithItemsComposer;
@@ -173,6 +174,7 @@ use App\Http\View\Composers\System\RubricatorsItemsComposer;
 
 use App\Http\View\Composers\System\ListChallengesComposer;
 use App\Http\View\Composers\System\LeadMethodsListComposer;
+
 
 class ComposerServiceProvider extends ServiceProvider
 {
@@ -511,6 +513,9 @@ class ComposerServiceProvider extends ServiceProvider
         // Клиентские заказы
         view()->composer('estimates.includes.filters', CitiesComposer::class);
         view()->composer('estimates.includes.filters', SourcesComposer::class);
+
+        // Товарные накладные
+        view()->composer('system.pages.documents.consignments.includes.filters', SuppliersComposer::class);
 
         // Рассылки
         view()->composer('system.pages.marketings.subscribers.index', MailingListsComposer::class);

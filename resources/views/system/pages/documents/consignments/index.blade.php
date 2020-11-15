@@ -14,8 +14,8 @@
 @endsection
 
 @section('title-content')
-{{-- Таблица --}}
-@include('system.documents.includes.index.title', ['class' => \App\Models\System\Documents\Consignment::class])
+    {{-- Таблица --}}
+    @include('system.pages.documents.consignments.includes.title', ['class' => \App\Models\System\Documents\Consignment::class])
 @endsection
 
 @section('content')
@@ -33,12 +33,14 @@
                     <th class="td-date">Дата</th>
                     <th class="td-number">Номер</th>
                     <th class="td-supplier-name">Поставщик</th>
-                    <th class="td-phone">Телефон</th>
+                    {{-- <th class="td-phone">Телефон</th> --}}
+                    <th class="td-cmv-type">Тип ТМЦ</th>
                     <th class="td-amount">Сумма</th>
-                    <th class="td-description">Коментарий</th>
                     <th class="td-payment">Оплачено</th>
                     <th class="td-status">Статус</th>
+                    <th class="td-stock">Склады</th>
                     <th class="td-created_at">Создана</th>
+                    <th class="td-description">Коментарий</th>
                     <th class="td-author">Автор</th>
                     <th class="td-delete"></th>
                 </tr>
@@ -71,7 +73,7 @@
                     </td>
 
 
-                    <td class="td-number">
+                    <td class="td-number" title="ID: {{ $consignment->id }}">
                         {{ $consignment->number ?? '' }}
                         <br><span class="tiny-text"></span>
                     </td>
@@ -79,41 +81,54 @@
                       <td class="td-supplier-name">
 
                           <a href="/admin/consignments?supplier_id%5B%5D={{ $consignment->supplier->id ?? '' }}" class="filter_link" title="Фильтровать">
-                            {{ $consignment->supplier->company->name ?? '' }}
+                            {{ $consignment->supplier->company->name ?? '' }} ({{ $consignment->supplier->company->legal_form->name ?? '' }})
                         </a>
                         <br>
-                        <span class="tiny-text">
+                        {{-- <span class="tiny-text">
                             {{ $consignment->supplier->company->location->city->name ?? '' }}, {{ $consignment->supplier->company->location->address ?? '' }}
-                        </span>
-                        <td class="td-phone">
+                        </span> --}}
+                        {{-- <td class="td-phone">
                             {{ isset($consignment->supplier->company->main_phone->phone) ? decorPhone($consignment->supplier->company->main_phone->phone) : 'Номер не указан' }}
                             @if($consignment->supplier->email ?? '' )<br><span class="tiny-text">{{ $consignment->supplier->company->email ?? '' }}</span>@endif
+                        </td> --}}
+                        <td class="td-cmv-type">
+                          <span data-tooltip data-allow-html="true" class="right" title="{{ $consignment->items->unique('cmv')->implode('cmv.article.name', '<br><br>') }}">
+                            {{ $consignment->items->unique('entity')->implode('entity.name', ', ') }}
+                          </span>
                         </td>
-
                         <td class="td-amount">{{ num_format($consignment->amount, 0) }}</td>
-
-                    <td class="td-description">
-
-                        @can('view', $consignment)
-
-                            <span data-toggle="dropdown-{{ $consignment->id }}">{{ $consignment->name ?? '' }}</span>
-                            <div class="dropdown-pane bottom right" id="dropdown-{{ $consignment->id }}" data-dropdown data-hover="true" data-hover-pane="true">
-                              {!! $consignment->description ?? '' !!}
-                          </div>
-                          @else
-                          {{ $consignment->name ?? '' }}
-                          @endcan
-
-                    </td>
-
                         <td class="td-payment">{{ num_format($consignment->payment, 0) }}
                           <br><span class="tiny-text">{{ num_format($consignment->amount - $consignment->payment, 0) }}</span>
                       </td>
-                      <td class="td-stage">@if($consignment->is_posted)Проведена @endif</td>
+                      <td class="td-stage">@if($consignment->conducted_at)
+                        Проведена:<br>
+                        <span class="tiny-text">
+                            {{ $consignment->conducted_at->format('d.m.Y') }}
+                        </span>
+                      @endif</td>
+                        <td class="td-stocks">
+                          {{ $consignment->items->unique('stock_id')->implode('stock.name', ', ') }}
+                        </td>
                       <td class="td-created_at">
                         <span>{{ $consignment->created_at->format('d.m.Y') }}</span><br>
                         <span class="tiny-text">{{ $consignment->created_at->format('H:i') }}</span>
-                    </td>
+                      </td>
+                      <td class="td-description">
+
+                          @can('view', $consignment)
+
+                              <span data-toggle="dropdown-{{ $consignment->id }}">{{ $consignment->name ?? '' }}</span>
+                              <div class="dropdown-pane bottom right" id="dropdown-{{ $consignment->id }}" data-dropdown data-hover="true" data-hover-pane="true">
+                                {!! $consignment->description ?? '' !!}
+                            </div>
+                            @else
+                            {{ $consignment->name ?? '' }}
+                          @endcan
+
+                      </td>
+
+
+
                     <td class="td-author">{{ $consignment->author->name ?? '' }}</td>
                     {{-- Элементы управления --}}
                     @include('includes.control.table_td', ['item' => $consignment])
