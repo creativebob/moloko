@@ -470,8 +470,9 @@ class CartController extends Controller
                 ->where('company_id', $site->company_id)
                 ->get();
 
-            $estimate->discounts()->attach($discounts->pluck('id'));
-
+            if ($discounts) {
+                $estimate->discounts()->attach($discounts->pluck('id'));
+            }
 
             // Содержится ли в куках данные корзины
             if (Cookie::get('cart') !== null) {

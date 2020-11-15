@@ -213,9 +213,11 @@ class LeadController extends Controller
             ->companiesLimit($answer)
             ->get();
 
-        $estimate = $lead->estimate;
-        $estimate->discounts()->attach($discounts->pluck('id'));
-
+        if ($discounts) {
+            $estimate = $lead->estimate;
+            $estimate->discounts()->attach($discounts->pluck('id'));
+        }
+        
         return redirect()->route('leads.edit', $lead->id);
     }
 
