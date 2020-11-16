@@ -176,7 +176,7 @@ class Client extends BaseModel
      */
     public function scopeFilter($query)
     {
-        $filters = $this->getFilters(Client::ALIAS);
+        $filters = $this->getFilters(self::ALIAS);
 
         if (isset($filters['lost'])) {
             $query->where('is_lost', $filters['lost']);

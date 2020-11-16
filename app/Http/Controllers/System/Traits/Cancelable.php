@@ -61,14 +61,7 @@ trait Cancelable
             ])
             ->whereHas('document', function ($q) use ($item) {
                 $q->where('id', '!=', $item->document->id)
-
-                    // TODO - 07.11.20 - Из за разных дат регистрации (названий полей) приходится проверять на имя таблицы
-                    ->when($item->document->getTable() == 'consignments', function ($q) {
-                        $q->whereNotNull('conducted_at');
-                    })
-                    ->when($item->document->getTable() == 'productions', function ($q) {
-                        $q->whereNotNull('conducted_at');
-                    });
+                    ->whereNotNull('conducted_at');
             })
             ->min('cost');
 //					dd($min);

@@ -1,5 +1,5 @@
 <template>
-	<div>
+    <div>
         <table
             v-if="goodsItems.length > 0 || servicesItems.length > 0"
             class="table-estimate lead-estimate"
@@ -13,7 +13,10 @@
                 <th>Кол-во</th>
                 <th class="td-discount">Скидка</th>
                 <th class="th-amount">Сумма</th>
-                <th class="th-delete"></th>
+                <th
+                    v-if="!isRegistered"
+                    class="th-delete"
+                ></th>
 
                 <reserves-component
                     :settings="settings"
@@ -21,115 +24,150 @@
 
             </tr>
             </thead>
-        <template v-if="goodsItems.length > 0">
-            <estimates-goods-items-component
-                :items="goodsItems"
-                :settings="settings"
-            ></estimates-goods-items-component>
-        </template>
+            <template v-if="goodsItems.length > 0">
+                <estimates-goods-items-component
+                    :items="goodsItems"
+                    :settings="settings"
+                ></estimates-goods-items-component>
+            </template>
 
-        <template v-if="servicesItems.length > 0">
-            <estimates-services-items-component
-                :items="servicesItems"
-                :settings="settings"
-            ></estimates-services-items-component>
-        </template>
+            <template v-if="servicesItems.length > 0">
+                <estimates-services-items-component
+                    :items="servicesItems"
+                    :settings="settings"
+                ></estimates-services-items-component>
+            </template>
             <tfoot>
 
             <tr v-if="discount" class="tfoot-discount-info">
-                <td colspan="3" class="tfoot-discount-name">{{ discount.name }}</td>
+                <td colspan="3" class="tfoot-discount-name">{{ discount.name }} <span v-if="!isActual">(Архивная)</span></td>
                 <td class="tfoot-discount-value">{{ discount.percent | decimalPlaces }}</td>
-                <td class="tfoot-discount-currency"><span>{{ estimateAggregations.estimate.discount | decimalPlaces | decimalLevel }} руб.</span></td>
-                <td colspan="3" class="tfoot-discount-currency"></td>
+                <td class="tfoot-discount-currency"><span>{{ estimateAggregations.estimate.discount | decimalPlaces | decimalLevel }} руб.</span>
+                </td>
+<!--                <td class="tfoot-discount-currency"></td>-->
+                <td class="td-delete">
+                    <div
+                        v-if="!isRegistered && !isActual"
+                        class="icon-delete sprite"
+                        @click="removeDiscount(discount.id)"
+                    ></div>
+                </td>
             </tr>
-            <tr v-if="discount" class="tfoot-estimate-amount">
-                <td colspan="4" class="">Сумма без скидок:</td>
-                <td><span>{{ estimateAggregations.estimate.amount | decimalPlaces | decimalLevel }}</span></td>
-                <td colspan="2"></td>
-            </tr>
-            <tr v-if="discount">
-                <td colspan="4" class="tfoot-estimate-discount">Скидки:</td>
-                <td><span>{{ estimateAggregations.estimate.itemsDiscount | decimalPlaces | decimalLevel }}</span></td>
-                <td colspan="2"></td>
-            </tr>
+
+            <template
+                v-if="estimateAggregations.estimate.itemsDiscount > 0"
+            >
+                <tr class="tfoot-estimate-amount">
+                    <td colspan="4" class="">Сумма без скидок:</td>
+                    <td><span>{{ estimateAggregations.estimate.amount | decimalPlaces | decimalLevel }}</span></td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="tfoot-estimate-discount">Скидки:</td>
+                    <td><span>{{ estimateAggregations.estimate.itemsDiscount | decimalPlaces | decimalLevel }}</span>
+                    </td>
+                    <td colspan="2"></td>
+                </tr>
+            </template>
 
             <tr>
                 <td colspan="3" class="tfoot-estimate-total">Итого к оплате:</td>
                 <td></td>
-                <td class="invert-show"><span>{{ estimateAggregations.estimate.total | decimalPlaces | decimalLevel }}</span> руб.</td>
+                <td class="invert-show">
+                    <span>{{ estimateAggregations.estimate.total | decimalPlaces | decimalLevel }}</span> руб.
+                </td>
                 <td colspan="3"></td>
             </tr>
             </tfoot>
         </table>
 
         <buttons-component></buttons-component>
-	</div>
+    </div>
 </template>
 
 <script>
-    export default {
-		components: {
-            'reserves-component': require('./goods/reserves/ReservesComponent'),
-			'estimates-goods-items-component': require('./goods/EstimatesGoodsItemsComponent'),
-            'estimates-services-items-component': require('./services/EstimatesServicesItemsComponent'),
-            'buttons-component': require('./buttons/ButtonsComponent'),
-		},
-        props: {
-            estimate: Object,
-            settings: {
-                type: Array,
-                default: () => {
-                    return [];
-                }
-            },
-            // stocks: {
-            //     type: Array,
-            //     default: () => {
-            //         return [];
-            //     }
-            // },
-            discount: {
-                type: Object,
-                default: () => {
-                    return {};
-                }
-            },
+export default {
+    components: {
+        'reserves-component': require('./goods/reserves/ReservesComponent'),
+        'estimates-goods-items-component': require('./goods/EstimatesGoodsItemsComponent'),
+        'estimates-services-items-component': require('./services/EstimatesServicesItemsComponent'),
+        'buttons-component': require('./buttons/ButtonsComponent'),
+    },
+    props: {
+        estimate: Object,
+        settings: {
+            type: Array,
+            default: () => {
+                return [];
+            }
         },
-        mounted() {
-
-        },
-        // created() {
-            // this.$store.commit('SET_ESTIMATE', this.estimate);
-            // this.$store.commit('SET_GOODS_ITEMS', this.estimate.goods_items);
-            // this.$store.commit('SET_SERVICES_ITEMS', this.estimate.services_items);
-            // this.$store.commit('SET_DISCOUNTS', this.estimate.discounts);
+        // stocks: {
+        //     type: Array,
+        //     default: () => {
+        //         return [];
+        //     }
         // },
-		computed: {
-            // Смета
-		    estimateAggregations() {
-		        return this.$store.getters.ESTIMATE_AGGREGATIONS;
-            },
+    },
+    mounted() {
 
-		    // Товары
-			goodsItems() {
-				return this.$store.state.lead.goodsItems;
-			},
-
-            // Услуги
-            servicesItems() {
-                return this.$store.state.lead.servicesItems;
-            },
-		},
-        filters: {
-            decimalPlaces(value) {
-                return parseFloat(value).toFixed(2);
-            },
-            decimalLevel: function (value) {
-                return parseFloat(value).toLocaleString();
-            },
-            onlyInteger(value) {
-                return Math.floor(value);
-            },
+    },
+    // created() {
+    // this.$store.commit('SET_ESTIMATE', this.estimate);
+    // this.$store.commit('SET_GOODS_ITEMS', this.estimate.goods_items);
+    // this.$store.commit('SET_SERVICES_ITEMS', this.estimate.services_items);
+    // this.$store.commit('SET_DISCOUNTS', this.estimate.discounts);
+    // },
+    computed: {
+        // Смета
+        isRegistered() {
+            return this.$store.state.lead.estimate.registered_at != null;
         },
-	}
+        estimateAggregations() {
+            return this.$store.getters.ESTIMATE_AGGREGATIONS;
+        },
+
+        // Скидка
+        discount() {
+            if (this.$store.state.lead.estimate.discounts.length) {
+                return this.$store.state.lead.estimate.discounts[0];
+            } else {
+                return null;
+            }
+        },
+        isActual() {
+            if (this.$store.state.lead.estimate.discounts.length) {
+                return this.$store.state.lead.estimate.discounts[0].is_actual == 1;
+            } else {
+                return false;
+            }
+        },
+
+        // Товары
+        goodsItems() {
+            return this.$store.state.lead.goodsItems;
+        },
+
+        // Услуги
+        servicesItems() {
+            return this.$store.state.lead.servicesItems;
+        },
+    },
+    methods: {
+        removeDiscount(id) {
+            this.$store.commit('REMOVE_DISCOUNT', id);
+        },
+
+    },
+    filters: {
+        decimalPlaces(value) {
+            return parseFloat(value).toFixed(2);
+        },
+        decimalLevel: function (value) {
+            return parseFloat(value).toLocaleString();
+        },
+        onlyInteger(value) {
+            return Math.floor(value);
+        },
+    },
+}
 </script>

@@ -1,6 +1,6 @@
 <template>
     <li
-        v-show="isShow"
+        v-show="isRegistered && hasPaymentsMethods"
         class="tabs-title">
         <a data-tabs-target="tab-payments" href="#tab-payments">Оплата</a>
     </li>
@@ -9,8 +9,11 @@
 <script>
     export default {
         computed: {
-            isShow() {
+            isRegistered() {
                 return this.$store.state.lead.estimate.registered_at !== null;
+            },
+            hasPaymentsMethods() {
+                return this.$store.state.lead.paymentsMethods.length > 0
             }
         }
     }

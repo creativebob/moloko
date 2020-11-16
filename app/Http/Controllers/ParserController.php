@@ -64,6 +64,33 @@ class ParserController extends Controller
     }
 
     /**
+     * Связь смет со скидками
+     *
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
+    public function setDiscountsForEstimates()
+    {
+
+        $estimates = Estimate::with([
+            'goods_items'
+        ])
+            ->whereHas('goods_items', function ($q) {
+                $q->whereNotNull('estimate_discount_id');
+            })
+            ->get();
+
+        foreach ($estimates as $estimate) {
+            $item = $estimate->goods_items->first();
+
+            if ($item->estimate_discount_id) {
+                $estimate->discounts()->attach($item->estimate_discount_id);
+            }
+        }
+
+        return __('msg.ok');
+    }
+
+    /**
      * Перерезервирование (если в системе нет продаж)
      *
      * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null

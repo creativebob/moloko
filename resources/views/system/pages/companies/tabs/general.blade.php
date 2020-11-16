@@ -37,10 +37,11 @@
                 <label>Почта
                     @include('includes.inputs.email', ['value' => $company->email, 'name' => 'email'])
                 </label>
+
                 {{-- Город --}}
-
-
+                @include('system.common.includes.city_search', ['item' => $company, 'required' => true])
             </div>
+
             <div class="small-12 medium-6 cell">
                 @include('includes.selects.countries', ['value'=>$company->location ? $company->location->country_id : null])
 

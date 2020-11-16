@@ -27,6 +27,7 @@ use App\Http\View\Composers\System\MailingListsComposer;
 use App\Http\View\Composers\System\MailingsComposer;
 use App\Http\View\Composers\System\OutletsSettingsCategoriesWithSettingsComposer;
 use App\Http\View\Composers\System\PaymentsMethodsComposer;
+use App\Http\View\Composers\System\SuppliersComposer;
 use App\Http\View\Composers\System\TaxationTypesComposer;
 use App\Http\View\Composers\System\TemplatesComposer;
 use App\Http\View\Composers\System\UsersWithClientComposer;
@@ -514,6 +515,9 @@ class ComposerServiceProvider extends ServiceProvider
 
         // Рассылки
         view()->composer('system.pages.marketings.subscribers.index', MailingListsComposer::class);
+
+        // Товарные накладные
+        view()->composer('system.pages.documents.consignments.includes.filters', SuppliersComposer::class);
     }
 
     public function register()

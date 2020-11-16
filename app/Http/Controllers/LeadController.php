@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Client;
 use App\Company;
 use App\ContractsClient;
+use App\Discount;
 use App\Http\Controllers\Traits\Estimatable;
 use App\Models\System\Documents\Estimate;
 use App\Models\System\Documents\EstimatesGoodsItem;
@@ -19,6 +20,7 @@ use App\Outlet;
 use App\Representative;
 use App\Stock;
 use App\Subscriber;
+use App\Template;
 use App\User;
 use App\Lead;
 use App\LeadType;
@@ -50,14 +52,14 @@ class LeadController extends Controller
         $this->entityDependence = true;
     }
 
-    use Leadable;
-    use Userable;
-    use Offable;
-    use Photable;
-    use Phonable;
-    use Locationable;
-    use Timestampable;
-    use Estimatable;
+    use Leadable,
+        Userable,
+        Offable,
+        Photable,
+        Phonable,
+        Locationable,
+        Timestampable,
+        Estimatable;
 
     /**
      * Display a listing of the resource.
@@ -193,6 +195,29 @@ class LeadController extends Controller
 
         $result = $lead->estimate()->save($estimate);
 
+        $lead->load('estimate');
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right('discounts', true, 'index');
+
+        $discounts = Discount::where('archive', false)
+            ->whereHas('entity', function ($q) {
+                $q->where('alias', 'estimates');
+            })
+            ->where('begined_at', '<=', now())
+            ->where(function ($q) {
+                $q->where('ended_at', '>=', now())
+                    ->orWhereNull('ended_at');
+            })
+            ->moderatorLimit($answer)
+            ->companiesLimit($answer)
+            ->get();
+
+        if ($discounts) {
+            $estimate = $lead->estimate;
+            $estimate->discounts()->attach($discounts->pluck('id'));
+        }
+        
         return redirect()->route('leads.edit', $lead->id);
     }
 
@@ -360,10 +385,12 @@ class LeadController extends Controller
 
         $outlet = Outlet::with([
             'catalogs_goods',
+            'catalogs_services',
             'stock',
-            'settings'
+            'settings',
+            'payments_methods'
         ])
-        ->moderatorLimit($answerOutlets)
+            ->moderatorLimit($answerOutlets)
             ->companiesLimit($answerOutlets)
             ->authors($answerOutlets)
             ->where('filial_id', auth()->user()->stafferFilialId)
@@ -493,7 +520,7 @@ class LeadController extends Controller
 
         // TODO - 16.10.20 - Пока что берем первый склад
         $stock = Stock::companiesLimit($answer)
-        ->first();
+            ->first();
         $stockId = optional($stock)->id;
         return $stockId;
 
@@ -770,6 +797,7 @@ class LeadController extends Controller
                             'currency'
                         ]);
                     },
+                    'discounts'
                 ]);
             },
         ])
@@ -857,20 +885,12 @@ class LeadController extends Controller
         $newGoodsItemsIds = [];
         $sort = 1;
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right('stocks', true, getmethod('index'));
-
-        // TODO - 16.10.20 - Пока что берем первый склад
-        $stock = Stock::companiesLimit($answer)
-            ->first();
-        $stockId = optional($stock)->id;
-
         foreach ($newGoodsItems as $newGoodsItem) {
 
             $data = [
                 'estimate_id' => $newGoodsItem['estimate_id'],
                 'price_id' => $newGoodsItem['price_id'],
-                'stock_id' => $stockId,
+                'stock_id' => $newGoodsItem['stock_id'],
 
                 'goods_id' => $newGoodsItem['goods_id'],
                 'currency_id' => $newGoodsItem['currency_id'],
@@ -948,6 +968,17 @@ class LeadController extends Controller
 
         // Аггрегация сметы
         $this->aggregateEstimate($lead->estimate);
+
+
+        // Проверяем скидки
+        if ($request->has('estimate')) {
+            $discountsIds = [];
+            foreach ($request->estimate['discounts'] as $discount) {
+                $discountsIds[] = $discount['id'];
+            }
+            $lead->estimate->discounts()->sync($discountsIds);
+        }
+
         $lead->load([
             'estimate'
         ]);
@@ -1323,10 +1354,22 @@ class LeadController extends Controller
             'estimate.goods_items.goods.article',
         ])
             ->find($id);
-
         // dd($lead);
 
-        return view('system.prints.check_order', compact('lead'));
+        // TODO - 13.11.20 - Если подключен чек (при печати чека)  то ссылаемся на него, если не подключен, тогда на стандартный системный
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right('templates', false, getmethod('index'));
+
+        $checkOrder = Template::companiesLimit($answer)
+            ->moderatorLimit($answer)
+            ->where('category_id', 2)
+            ->first();
+
+        if ($checkOrder) {
+            return view($checkOrder->path, compact('lead'));
+        } else {
+            return view('system.prints.check_order', compact('lead'));
+        }
     }
 
     // --------------------------------------- Ajax ----------------------------------------------------------
@@ -1723,7 +1766,7 @@ class LeadController extends Controller
             'user',
             'organization',
         ])
-        ->find($id);
+            ->find($id);
 //        dd($lead);
 
         if (empty($lead)) {

@@ -137,22 +137,7 @@
         {!! Form::hidden('previous_url', url()->previous()) !!}
         <div class="grid-x tabs-right">
             <div class="cell small-12">
-                <ul class="tabs-list" data-tabs id="tabs-leads">
-                    <li class="tabs-title is-active">
-                        <a href="#tab-events" aria-selected="true">События</a>
-                    </li>
 
-                    @can('create', App\Models\System\Documents\Estimate::class)
-                        <li class="tabs-title">
-                            <a data-tabs-target="tab-catalog_goods" href="#tab-catalog_goods">Товары</a>
-                        </li>
-                    @endcan
-
-                    @can('create', App\Models\System\Documents\Estimate::class)
-                        <li class="tabs-title">
-                            <a data-tabs-target="tab-catalog_services" href="#tab-catalog_services">Услуги</a>
-                        </li>
-                    @endcan
 
                     {{-- <li class="tabs-title"><a href="#content-panel-documents" aria-selected="true">Документы</a></li> --}}
 
@@ -161,13 +146,10 @@
                         <a data-tabs-target="content-panel-claims" href="#content-panel-claims">Рекламации</a>
                     </li>
                     @endcan --}}
-                    <tab-payments-component></tab-payments-component>
+                    <lead-tabs-component></lead-tabs-component>
 
                     {{-- <li class="tabs-title"><a href="#content-panel-measurements" aria-selected="true">Замеры</a></li> --}}
-                    <li class="tabs-title">
-                        <a data-tabs-target="tab-attribution" href="#tab-attribution">Аттрибуция</a>
-                    </li>
-                </ul>
+
             </div>
 
             <div class="small-12 cell">

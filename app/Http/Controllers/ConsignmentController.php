@@ -426,8 +426,8 @@ class ConsignmentController extends Controller
                 foreach ($consignment->receipts as $receipt) {
 
                     if ($receipt->storage->free < $receipt->count) {
-                        return back()
-                            ->withErrors(['msg' => 'Накладная содержит позиции, в которых на остатках нет нужного количества для возврата!']);
+//                        return back()
+//                            ->withErrors(['msg' => 'Накладная содержит позиции, в которых на остатках нет нужного количества для возврата!']);
                     }
                 }
 

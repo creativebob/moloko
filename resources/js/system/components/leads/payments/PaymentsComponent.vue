@@ -15,6 +15,7 @@
                     <tr>
                         <th class="item-payment-date">Дата</th>
                         <th class="item-payment-type">Тип</th>
+                        <th class="item-payment-method">Способ</th>
                         <th class="item-payment-amount">Сумма</th>
                         <th class="item-payment-delete"></th>
                     </tr>
@@ -32,7 +33,7 @@
 
                 <tfoot>
                 <tr>
-                    <td colspan="2" class="text-left">Итого</td>
+                    <td colspan="3" class="text-left">Итого</td>
                     <td>{{ paymentsAmount | decimalPlaces | decimalLevel }}</td>
                     <td></td>
                 </tr>

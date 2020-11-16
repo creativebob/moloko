@@ -4,10 +4,6 @@
             :estimate='@json($lead->estimate)'
             :settings='@json(auth()->user()->company->settings)'
             :outlet-settings='@json($outlet->settings)'
-
-            @isset($discount)
-            :discount="{{ $discount }}"
-            @endisset
         ></estimate-component>
     </div>
 </div>
