@@ -16,7 +16,7 @@ class Consignment extends BaseModel
     use SoftDeletes;
 //    use Cachable;
 
-    const ALIAS = 'consignment';
+    const ALIAS = 'consignments';
     const DEPENDENCE = true;
 
     protected $dates = [

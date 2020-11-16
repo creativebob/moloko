@@ -50,6 +50,13 @@
 
                     {{-- Смета --}}
                     <div class="tabs-panel is-active" id="tab-estimate">
+
+                        <div class="grid-x grid-padding-x">
+                            <div class="small-12 medium-12 large-12 cell">
+                                <p>Клиентский заказ №822</p>
+                            </div>
+                        </div>
+
                         @include('leads.tabs.estimate')
                     </div>
 
