@@ -89,12 +89,12 @@
         <td class="td-total">
             <a
                 v-if="item.sale_mode == 1"
-                class="button green-button"
+                class="button green-button open-modal-estimate-item"
                 :data-open="'modal-estimates_goods_item-' + item.id"
             >{{ item.total | decimalPlaces | decimalLevel }}</a>
             <a
                 v-else
-                class="button green-button"
+                class="button green-button open-modal-estimate-item"
             >{{ item.total_points | level }} поинтов</a>
         </td>
 

@@ -1,55 +1,58 @@
 <template>
     <div class="grid-x grid-margin-x tabs-margin-top">
-        <div
-            v-if="change"
-            class="cell small-12 medium-2 small-text-center medium-text-left"
-        >
-            <a
-                class="button"
-                @click="save"
-            >Сохранить</a>
+        <div class="cell small-12 medium-auto">
+
+            <template
+                v-if="change"
+            >
+                <a
+                    class="button"
+                    @click="save"
+                >Сохранить</a>
+            </template>
+
+            <template
+                v-if="! isRegistered && showRegisterButton"
+            >
+                <a
+                    class="button"
+                    @click="registerEstimate"
+                >Оформить</a>
+            </template>
+
+            <!--            <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">-->
+            <!--                <production-button-component></estimate-production-button-component>-->
+            <!--            </div>-->
+
+            <template
+                v-if="showSaleButton"
+            >
+                <button
+                    class="button"
+                    @click.prevent="conductedEstimate"
+                >Закрыть чек
+                </button>
+            </template>
         </div>
 
-        <div
-            v-if="! isRegistered && showRegisterButton"
-            class="cell small-12 medium-2 small-text-center medium-text-left"
-        >
-            <a
-                class="button"
-                @click="registerEstimate"
-            >Оформить</a>
-        </div>
+        <div class="cell small-12 medium-shrink medium-text-right">
+            <template
+                v-if="isRegistered"
+            >
+                <a
+                    :href="'/admin/leads/' + lead.id + '/print'"
+                    target="_blank"
+                    class="button button-print"
+                ><span class="icon-print-order"></span>
+            Печать заказа</a>
+            </template>
 
-        <!--            <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">-->
-        <!--                <production-button-component></estimate-production-button-component>-->
-        <!--            </div>-->
+            <div
+                v-if="loading"
+                class="cell small-12 medium-2 small-text-center medium-text-left"
+            >Идет обновление...
+            </div>
 
-        <div
-            v-if="showSaleButton"
-            class="cell small-12 medium-3 small-text-center medium-text-left "
-        >
-            <button
-                class="button"
-                @click.prevent="conductedEstimate"
-            >Закрыть чек
-            </button>
-        </div>
-
-        <div
-            v-if="isRegistered"
-            class="cell small-12 medium-2 small-text-center medium-text-left"
-        >
-            <a
-                :href="'/admin/leads/' + lead.id + '/print'"
-                target="_blank"
-                class="button"
-            >Печать</a>
-        </div>
-
-        <div
-            v-if="loading"
-            class="cell small-12 medium-2 small-text-center medium-text-left"
-        >Идет обновление...
         </div>
 
     </div>

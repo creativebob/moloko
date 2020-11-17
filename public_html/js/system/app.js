@@ -81596,10 +81596,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
@@ -81843,19 +81839,6 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -83978,7 +83961,7 @@ var render = function() {
           ? _c(
               "a",
               {
-                staticClass: "button green-button",
+                staticClass: "button green-button open-modal-estimate-item",
                 attrs: {
                   "data-open": "modal-estimates_goods_item-" + _vm.item.id
                 }
@@ -83993,11 +83976,15 @@ var render = function() {
                 )
               ]
             )
-          : _c("a", { staticClass: "button green-button" }, [
-              _vm._v(
-                _vm._s(_vm._f("level")(_vm.item.total_points)) + " поинтов"
-              )
-            ])
+          : _c(
+              "a",
+              { staticClass: "button green-button open-modal-estimate-item" },
+              [
+                _vm._v(
+                  _vm._s(_vm._f("level")(_vm.item.total_points)) + " поинтов"
+                )
+              ]
+            )
       ]),
       _vm._v(" "),
       !_vm.isRegistered
@@ -84938,6 +84925,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     // data() {
@@ -85022,96 +85012,85 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "grid-x grid-margin-x tabs-margin-top" }, [
-    _vm.change
-      ? _c(
-          "div",
-          {
-            staticClass:
-              "cell small-12 medium-2 small-text-center medium-text-left"
-          },
-          [
-            _c("a", { staticClass: "button", on: { click: _vm.save } }, [
-              _vm._v("Сохранить")
-            ])
-          ]
-        )
-      : _vm._e(),
-    _vm._v(" "),
-    !_vm.isRegistered && _vm.showRegisterButton
-      ? _c(
-          "div",
-          {
-            staticClass:
-              "cell small-12 medium-2 small-text-center medium-text-left"
-          },
-          [
-            _c(
-              "a",
-              { staticClass: "button", on: { click: _vm.registerEstimate } },
-              [_vm._v("Оформить")]
-            )
-          ]
-        )
-      : _vm._e(),
-    _vm._v(" "),
-    _vm.showSaleButton
-      ? _c(
-          "div",
-          {
-            staticClass:
-              "cell small-12 medium-3 small-text-center medium-text-left "
-          },
-          [
-            _c(
-              "button",
-              {
-                staticClass: "button",
-                on: {
-                  click: function($event) {
-                    $event.preventDefault()
-                    return _vm.conductedEstimate($event)
+    _c(
+      "div",
+      { staticClass: "cell small-12 medium-auto" },
+      [
+        _vm.change
+          ? [
+              _c("a", { staticClass: "button", on: { click: _vm.save } }, [
+                _vm._v("Сохранить")
+              ])
+            ]
+          : _vm._e(),
+        _vm._v(" "),
+        !_vm.isRegistered && _vm.showRegisterButton
+          ? [
+              _c(
+                "a",
+                { staticClass: "button", on: { click: _vm.registerEstimate } },
+                [_vm._v("Оформить")]
+              )
+            ]
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.showSaleButton
+          ? [
+              _c(
+                "button",
+                {
+                  staticClass: "button",
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.conductedEstimate($event)
+                    }
                   }
-                }
-              },
-              [_vm._v("Закрыть чек\n        ")]
-            )
-          ]
-        )
-      : _vm._e(),
+                },
+                [_vm._v("Закрыть чек\n            ")]
+              )
+            ]
+          : _vm._e()
+      ],
+      2
+    ),
     _vm._v(" "),
-    _vm.isRegistered
-      ? _c(
-          "div",
-          {
-            staticClass:
-              "cell small-12 medium-2 small-text-center medium-text-left"
-          },
-          [
-            _c(
-              "a",
+    _c(
+      "div",
+      { staticClass: "cell small-12 medium-shrink medium-text-right" },
+      [
+        _vm.isRegistered
+          ? [
+              _c(
+                "a",
+                {
+                  staticClass: "button button-print",
+                  attrs: {
+                    href: "/admin/leads/" + _vm.lead.id + "/print",
+                    target: "_blank"
+                  }
+                },
+                [
+                  _c("span", { staticClass: "icon-print-order" }),
+                  _vm._v("\n        Печать заказа")
+                ]
+              )
+            ]
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.loading
+          ? _c(
+              "div",
               {
-                staticClass: "button",
-                attrs: {
-                  href: "/admin/leads/" + _vm.lead.id + "/print",
-                  target: "_blank"
-                }
+                staticClass:
+                  "cell small-12 medium-2 small-text-center medium-text-left"
               },
-              [_vm._v("Печать")]
+              [_vm._v("Идет обновление...\n        ")]
             )
-          ]
-        )
-      : _vm._e(),
-    _vm._v(" "),
-    _vm.loading
-      ? _c(
-          "div",
-          {
-            staticClass:
-              "cell small-12 medium-2 small-text-center medium-text-left"
-          },
-          [_vm._v("Идет обновление...\n    ")]
-        )
-      : _vm._e()
+          : _vm._e()
+      ],
+      2
+    )
   ])
 }
 var staticRenderFns = []
@@ -85217,19 +85196,26 @@ var render = function() {
                           )
                         ]),
                         _vm._v(" "),
-                        _c("td", { staticClass: "tfoot-discount-currency" }, [
-                          _c("span", [
-                            _vm._v(
-                              _vm._s(
-                                _vm._f("decimalLevel")(
-                                  _vm._f("decimalPlaces")(
-                                    _vm.estimateAggregations.estimate.discount
+                        _c(
+                          "td",
+                          {
+                            staticClass:
+                              "tfoot-discount-currency total-estimate-tfoot"
+                          },
+                          [
+                            _c("span", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("decimalLevel")(
+                                    _vm._f("decimalPlaces")(
+                                      _vm.estimateAggregations.estimate.discount
+                                    )
                                   )
-                                )
-                              ) + " руб."
-                            )
-                          ])
-                        ]),
+                                ) + " руб."
+                              )
+                            ])
+                          ]
+                        ),
                         _vm._v(" "),
                         _c("td", { staticClass: "td-delete" }, [
                           !_vm.isRegistered && !_vm.isActual
@@ -85253,24 +85239,29 @@ var render = function() {
                             _vm._v("Сумма без скидок:")
                           ]),
                           _vm._v(" "),
-                          _c("td", [
-                            _c("span", [
-                              _vm._v(
-                                _vm._s(
-                                  _vm._f("decimalLevel")(
-                                    _vm._f("decimalPlaces")(
-                                      _vm.estimateAggregations.estimate.amount
+                          _c(
+                            "td",
+                            {
+                              staticClass: "total-estimate-tfoot",
+                              attrs: { colspan: "2" }
+                            },
+                            [
+                              _c("span", [
+                                _vm._v(
+                                  _vm._s(
+                                    _vm._f("decimalLevel")(
+                                      _vm._f("decimalPlaces")(
+                                        _vm.estimateAggregations.estimate.amount
+                                      )
                                     )
                                   )
                                 )
-                              )
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _c("td", { attrs: { colspan: "2" } })
+                              ])
+                            ]
+                          )
                         ]),
                         _vm._v(" "),
-                        _c("tr", [
+                        _c("tr", { staticClass: "tfoot-estimate-discount" }, [
                           _c(
                             "td",
                             {
@@ -85280,54 +85271,57 @@ var render = function() {
                             [_vm._v("Скидки:")]
                           ),
                           _vm._v(" "),
-                          _c("td", [
-                            _c("span", [
-                              _vm._v(
-                                _vm._s(
-                                  _vm._f("decimalLevel")(
-                                    _vm._f("decimalPlaces")(
-                                      _vm.estimateAggregations.estimate
-                                        .itemsDiscount
+                          _c(
+                            "td",
+                            {
+                              staticClass: "total-estimate-tfoot",
+                              attrs: { colspan: "2" }
+                            },
+                            [
+                              _c("span", [
+                                _vm._v(
+                                  _vm._s(
+                                    _vm._f("decimalLevel")(
+                                      _vm._f("decimalPlaces")(
+                                        _vm.estimateAggregations.estimate
+                                          .itemsDiscount
+                                      )
                                     )
                                   )
                                 )
-                              )
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _c("td", { attrs: { colspan: "2" } })
+                              ])
+                            ]
+                          )
                         ])
                       ]
                     : _vm._e(),
                   _vm._v(" "),
-                  _c("tr", [
+                  _c("tr", { staticClass: "tfoot-estimate-total" }, [
+                    _c("td", { attrs: { colspan: "4" } }, [
+                      _vm._v("Итого к оплате:")
+                    ]),
+                    _vm._v(" "),
                     _c(
                       "td",
                       {
-                        staticClass: "tfoot-estimate-total",
-                        attrs: { colspan: "3" }
+                        staticClass: "total-estimate-tfoot",
+                        attrs: { colspan: "2" }
                       },
-                      [_vm._v("Итого к оплате:")]
-                    ),
-                    _vm._v(" "),
-                    _c("td"),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "invert-show" }, [
-                      _c("span", [
-                        _vm._v(
-                          _vm._s(
-                            _vm._f("decimalLevel")(
-                              _vm._f("decimalPlaces")(
-                                _vm.estimateAggregations.estimate.total
+                      [
+                        _c("span", [
+                          _vm._v(
+                            _vm._s(
+                              _vm._f("decimalLevel")(
+                                _vm._f("decimalPlaces")(
+                                  _vm.estimateAggregations.estimate.total
+                                )
                               )
                             )
                           )
-                        )
-                      ]),
-                      _vm._v(" руб.\n                ")
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { attrs: { colspan: "3" } })
+                        ]),
+                        _vm._v(" руб.\n                ")
+                      ]
+                    )
                   ])
                 ],
                 2
