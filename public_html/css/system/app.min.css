@@ -9854,6 +9854,10 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
   transition: 0.5s ease opacity;
 }
 
+.canceled {
+  background-color: yellow;
+}
+
 a.has-tip {
   position: relative;
   display: inline-block;

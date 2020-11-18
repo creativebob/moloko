@@ -27,6 +27,8 @@ use App\Menu;
 use App\Company;
 use App\Department;
 use App\Payment;
+use App\PaymentsSign;
+use App\PaymentsType;
 use App\Position;
 use App\PricesGoods;
 use App\Reserve;
@@ -61,6 +63,22 @@ class ParserController extends Controller
     public function test()
     {
         dd(__METHOD__);
+    }
+
+    /**
+     * Обновлени типа платежам
+     *
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
+    public function updatePaymentsSign()
+    {
+        $paymentsSignId = PaymentsSign::where('alias', 'sell')
+            ->value('id');
+        $payments = Payment::whereNull('payments_sign_id')
+            ->update([
+                'payments_sign_id' => $paymentsSignId
+            ]);
+        return __('msg.ok');
     }
 
     /**

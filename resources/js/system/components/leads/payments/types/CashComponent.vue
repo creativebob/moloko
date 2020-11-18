@@ -1,6 +1,9 @@
 <template>
     <div class="cell small-12">
-        <div class="grid-x grid-padding-x">
+        <div
+            v-if="showDenominations"
+            class="grid-x grid-padding-x"
+        >
             <div class="cell shrink">
                 <button
                     @click="setTotal"
@@ -33,6 +36,8 @@
                                 classes="input-payment cash"
                                 v-model="cash"
                                 ref="cashComponent"
+                                :limit-max="1000000"
+                                @input="denomination = false"
                                 v-focus
                             ></digit-component>
                         </label>
@@ -98,11 +103,21 @@ export default {
             electronically: 0,
 
             mixed: false,
+            isDenomination: false
         }
     },
+    mounted() {
+        this.checkAutofill();
+    },
     computed: {
+        paymentsMethodId() {
+            return this.$store.state.lead.paymentsMethodId;
+        },
         showTerminal() {
             return this.$store.getters.HAS_OUTLET_SETTING('payment-terminal');
+        },
+        showDenominations() {
+            return this.$store.getters.HAS_OUTLET_SETTING('denominations-show');
         },
         estimateTotal() {
             return this.$store.getters.ESTIMATE_AGGREGATIONS.estimate.total;
@@ -138,15 +153,33 @@ export default {
         },
         electronically() {
             this.$emit('change', this.data);
+        },
+        paymentsMethodId() {
+            this.resetCash();
+            this.resetElectronically();
+            this.checkAutofill();
         }
     },
     methods: {
         setTotal() {
+            this.resetCash();
+            this.resetElectronically();
+
+            this.isDenomination = false;
+
+            this.$store.commit('SET_PAYMENTS_METHOD_ID');
+
             this.cash = this.estimateTotal - this.paymentsTotal;
             this.$refs.cashComponent.update(this.cash);
             this.mixed = false;
         },
         addDenomination(denomination) {
+            if (!this.isDenomination) {
+                this.resetCash();
+                this.resetElectronically();
+
+                this.isDenomination = true;
+            }
             this.cash = parseFloat(this.cash) + denomination;
             this.$refs.cashComponent.update(this.cash);
         },
@@ -194,17 +227,39 @@ export default {
             this.mixed = false;
         },
         reset() {
+            this.resetCash();
+            this.resetElectronically();
+        },
+        resetCash() {
             this.cash = 0;
             this.$refs.cashComponent.update(this.cash);
             this.cashTaken = 0;
             this.cashChange = 0;
 
+            this.isDenomination = false;
+        },
+        resetElectronically() {
             if (this.electronically > 0) {
                 this.electronically = 0;
                 this.$refs.electronicallyComponent.update(this.electronically);
             }
 
             this.mixed = false;
+        },
+        checkAutofill() {
+            if (this.$store.getters.HAS_OUTLET_SETTING('amount-autofill')) {
+                const alias = this.$store.getters.GET_PAYMENTS_METHOD_ALIAS(this.paymentsMethodId);
+                if (alias === 'full_payment' || alias === 'full_prepayment') {
+                    this.cash = this.debitTotal;
+                    this.$refs.cashComponent.update(this.cash);
+                } else {
+                    this.cash = 0;
+                    this.$refs.cashComponent.update(this.cash);
+                }
+            } else {
+                this.cash = 0;
+                this.$refs.cashComponent.update(this.cash);
+            }
         }
     },
     filters: {

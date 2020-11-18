@@ -1,32 +1,34 @@
 <template>
-    <div class="cell shrink">
-        <label>Сумма:
-            <digit-component
-                classes="input-payment electronically"
-                v-model="electronically"
-                ref="electronicallyComponent"
-                v-focus
-            ></digit-component>
-        </label>
-    </div>
+    <electronically-component
+        @change="changeElectronically"
+        ref="electronicallyComponent"
+    >
+    </electronically-component>
 </template>
 
 <script>
 export default {
     components: {
-        'digit-component': require('../../../inputs/DigitComponent'),
+        'electronically-component': require('./ElectronicallyComponent'),
     },
     data() {
         return {
             electronically: 0,
         }
     },
-    directives: {
-        focus: {
-            inserted: function (el) {
-                el.focus()
-            }
-        }
+    watch: {
+        electronically(val) {
+            this.$emit('change', val);
+        },
     },
+    methods: {
+        reset() {
+            this.electronically = 0;
+            this.$refs.electronicallyComponent.reset(this.electronically);
+        },
+        changeElectronically(val) {
+            this.electronically = val;
+        }
+    }
 }
 </script>

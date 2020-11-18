@@ -217,7 +217,7 @@ class LeadController extends Controller
             $estimate = $lead->estimate;
             $estimate->discounts()->attach($discounts->pluck('id'));
         }
-        
+
         return redirect()->route('leads.edit', $lead->id);
     }
 
@@ -240,7 +240,12 @@ class LeadController extends Controller
             'location.city',
             'user.client',
             'organization.client',
-            'client.contract',
+            'client' => function ($q) {
+                $q->with([
+                    'clientable',
+                    'contract'
+                ]);
+            },
             'main_phones',
             'extra_phones',
             'medium',
@@ -263,12 +268,7 @@ class LeadController extends Controller
                             'product.process',
                         ]);
                     },
-                    'payments' => function ($q) {
-                        $q->with([
-                            'type',
-                            'currency'
-                        ]);
-                    },
+                    'payments',
                     'lead.client.contract',
                     'discounts'
                 ]);

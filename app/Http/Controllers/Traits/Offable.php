@@ -208,18 +208,18 @@ trait Offable
         $itemCount = $item->count;
 
         $newCount = $storage->count - $itemCount;
-        $reserve = $storage->reserve;
+        $reserveCount = $storage->reserve;
         $free = $storage->free;
 
         $item->load('reserve');
         if (optional($item->reserve)->count > 0) {
             if ($item->count == $item->reserve->count) {
-                $reserve = $storage->reserve - $item->reserve->count;
+                $reserveCount = $storage->reserve - $item->reserve->count;
                 logs('documents')
                     ->info('Есть резерв с id: ' . $item->reserve->id . ', и количеством: ' . $item->reserve->count . ', списываем с резерва');
             } else {
                 $dif = $item->count - $item->reserve->count;
-                $reserve = $storage->reserve - $item->reserve->count;
+                $reserveCount = $storage->reserve - $item->reserve->count;
                 $free = $storage->free - $dif;
                 logs('documents')
                     ->info('В пункте количество больше чем в резерве с id: ' . $item->reserve->id . ', списываем с резерва: ' . $item->reserve->count . ', и со свободных: ' . $dif . ', всего должно быть ' . $item->count);
@@ -256,7 +256,7 @@ trait Offable
 
         $data = [
             'count' => $newCount,
-            'reserve' => $reserve,
+            'reserve' => $reserveCount,
             'free' => $free,
             'weight' => $storage->weight -= ($cmv->weight * $item->count),
             'volume' => $storage->volume -= ($cmv->volume * $item->count),

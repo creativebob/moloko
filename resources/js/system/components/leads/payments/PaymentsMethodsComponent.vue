@@ -14,28 +14,31 @@
 
 <script>
 export default {
-    mounted() {
-        if (this.$store.state.lead.paymentsMethods.length) {
-            this.$emit('change', this.$store.state.lead.paymentsMethods[0].id);
-        }
-    },
     data() {
         return {
-            paymentsMethodId: this.$store.state.lead.paymentsMethods.length > 0 ? this.$store.state.lead.paymentsMethods[0].id : null,
+            paymentsMethodId: this.$store.state.lead.paymentsMethodId,
         }
     },
     computed: {
         paymentsMethods() {
-            if (this.$store.state.lead.payments.length) {
+            if (this.$store.getters.ACTUAL_PAYMENTS.length) {
                 return this.$store.state.lead.paymentsMethods.filter(paymentsMethod => paymentsMethod.alias != 'full_prepayment')
             } else {
                 return this.$store.state.lead.paymentsMethods;
             }
+        },
+        storePaymentsMethodId() {
+            return this.$store.state.lead.paymentsMethodId;
+        }
+    },
+    watch: {
+        storePaymentsMethodId(val) {
+            this.paymentsMethodId = val;
         }
     },
     methods: {
         change() {
-            this.$emit('change', this.paymentsMethodId);
+            this.$store.commit('SET_PAYMENTS_METHOD_ID', this.paymentsMethodId)
         }
     }
 }

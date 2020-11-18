@@ -29,7 +29,7 @@ class UpdateOctober2020Tables extends Migration
 
         Schema::table('payments', function (Blueprint $table) {
             $table->dropColumn([
-                'payments_type_id',
+                'payments_sign_id',
                 'amount',
                 'date',
             ]);
@@ -145,7 +145,7 @@ class UpdateOctober2020Tables extends Migration
                 'payments_method_id',
             ]);
 
-            $table->bigInteger('payments_type_id')->unsigned()->nullable()->comment('Id типа платежа');
+            $table->bigInteger('payments_sign_id')->unsigned()->nullable()->comment('Id признака платежа');
             $table->decimal('amount', 12, 4)->default(0)->comment('Сумма');
             $table->date('date')->nullable()->comment('Дата');
         });

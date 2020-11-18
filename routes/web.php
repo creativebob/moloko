@@ -29,14 +29,23 @@ Route::get('/clear_cache', 'System\CacheController@clearCache');
 Route::get('/recache', 'System\CacheController@reCache');
 
 // Обновления системы
-Route::get('/update', 'System\UpdateController@update');
-Route::get('/updates/vkusnyashka', 'System\UpdateController@update_vkusnyashka');
-Route::get('/updates/add_discounts_entity', 'System\UpdateController@addDiscountsEntity');
-Route::get('/updates/add_discounts_recalculate_notification', 'System\UpdateController@addDiscountsRecalculateNotification');
-Route::get('/updates/add-mailings-entities', 'System\UpdateController@addMailingsEntities');
-Route::get('/updates/add-outlets-entity', 'System\UpdateController@addOutletsEntity');
-Route::get('/updates/add-cancel-charges', 'System\UpdateController@addCancelCharges');
-Route::get('/updates/set-checks-templates-category', 'System\UpdateController@setChecksTemplatesCategory');
+Route::name('updates.')
+    ->prefix('/updates')
+    ->namespace('System')
+    ->group(function () {
+
+        Route::get('/', 'UpdateController@update');
+        Route::get('/vkusnyashka', 'UpdateController@update_vkusnyashka');
+        Route::get('/add_discounts_entity', 'UpdateController@addDiscountsEntity');
+        Route::get('/add_discounts_recalculate_notification', 'UpdateController@addDiscountsRecalculateNotification');
+        Route::get('/add-mailings-entities', 'UpdateController@addMailingsEntities');
+        Route::get('/add-outlets-entity', 'UpdateController@addOutletsEntity');
+        Route::get('/add-cancel-charges', 'UpdateController@addCancelCharges');
+        Route::get('/set-checks-templates-category', 'UpdateController@setChecksTemplatesCategory');
+        Route::get('/add-outlet-settings', 'UpdateController@addOutletSettings');
+
+    });
+
 
 // Парсеры
 Route::get('/update_parser', 'ParserController@parser');
@@ -59,17 +68,15 @@ Route::get('/parsers/start-registering-documents-command', 'ParserController@sta
 Route::get('/parsers/update-payments', 'ParserController@updatePayments');
 Route::get('/parsers/set-sended-at', 'ParserController@setSendedAt');
 Route::get('/parsers/create-subscribers-from-users', 'ParserController@createSubscribersFromUsers');
-
 Route::get('/parsers/set-storage-for-consignments-items', 'ParserController@setStorageForConsignmentsItems');
 Route::get('/parsers/set-storage-for-productions-items', 'ParserController@setStorageForProductionsItems');
-
 Route::get('/parsers/set-documents-items-entities', 'ParserController@setDocumentsItemsEntities');
 Route::get('/parsers/clear-documents-tables', 'ParserController@clearDocumentsTables');
-
 Route::get('/parsers/set-storage-for-reserves', 'ParserController@setStorageForReserves');
 Route::get('/parsers/re-reserving', 'ParserController@reReserving');
-
 Route::get('/parsers/set-discounts-for-estimates', 'ParserController@setDiscountsForEstimates');
+
+Route::get('/parsers/update-payments-sign', 'ParserController@updatePaymentsSign');
 
 Route::get('/parsers/test', 'ParserController@test');
 
@@ -274,7 +281,7 @@ Route::get('/recalculate_categories/{entity}', 'AppController@recalculate_catego
 Route::get('/resave_categories_groups', 'AppController@resaveCategoriesGroups');
 // Сбросить фильтр
 Route::post('/reset/filter/{alias}', 'AppController@resetFilter')
-->name('reset_filter');
+    ->name('reset_filter');
 
 
 Route::get('/draft_article/{entity}/{id}', 'AppController@draft_article');
@@ -817,6 +824,8 @@ Route::resource('/estimates_services_items', 'EstimatesServicesItemController');
 // Route::any('/estimates_items/add', 'EstimateController@ajax_add')->middleware('auth');
 
 // --------------------------------------- Платежи -----------------------------------------------
+// Отмена
+Route::any('/payments/cancel/{id}', 'PaymentController@cancel');
 // Основные методы
 Route::resource('/payments', 'PaymentController')
     ->only([
@@ -1019,7 +1028,6 @@ Route::resource('/manufacturers', 'ManufacturerController')
         'show',
         'destroy'
     ]);
-
 
 
 // ------------------------------------ Агента ----------------------------------------------------

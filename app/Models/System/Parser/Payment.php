@@ -79,7 +79,7 @@ class Payment extends Model
     // Тип
     public function type()
     {
-        return $this->belongsTo(PaymentsType::class, 'payments_type_id');
+        return $this->belongsTo('App\PaymentsType', 'payments_type_id');
     }
 
     // Договор
@@ -91,6 +91,6 @@ class Payment extends Model
     // Валюта
     public function currency()
     {
-        return $this->belongsTo(Currency::class);
+        return $this->belongsTo('App\Currency');
     }
 }

@@ -34,8 +34,19 @@ class CreatePaymentsTable extends Migration
             $table->bigInteger('payments_method_id')->unsigned()->nullable()->comment('Id метода платежа');
             $table->foreign('payments_method_id')->references('id')->on('payments_methods');
 
+            $table->bigInteger('payments_sign_id')->unsigned()->nullable()->comment('Id признака платежа');
+            $table->foreign('payments_sign_id')->references('id')->on('payments_signs');
+
+//            $table->bigInteger('payments_type_id')->unsigned()->nullable()->comment('Id типа платежа');
+//            $table->foreign('payments_type_id')->references('id')->on('payments_types');
+
             $table->bigInteger('currency_id')->unsigned()->nullable()->comment('Id валюты');
             $table->foreign('currency_id')->references('id')->on('currencies');
+
+            $table->bigInteger('canceled_payment_id')->unsigned()->nullable()->comment('Id отмененного платежа');
+            $table->foreign('canceled_payment_id')->references('id')->on('payments');
+
+            $table->timestamp('canceled_at')->nullable()->comment('Время отмены');
 
 
             // Общие настройки

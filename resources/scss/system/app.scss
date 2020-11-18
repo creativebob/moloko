@@ -35,6 +35,9 @@
 // ------------------------ Виджеты -------------------------------------
 @import "./partials/widgets";
 
+// ----------------------- Платежи ----------------------------------------
+@import "./components/payments/payments";
+
 // ------------------------------ Медиа ширины -------------------------------
 $small: 640px;
 $medium: 1024px;
@@ -4166,7 +4169,7 @@ tr:hover .button-to-reserve{
 
 .table-payments{
 
-    font-family: Calibri;    
+    font-family: Calibri;
     font-size: 0.9rem;
 
     thead{
@@ -4208,7 +4211,7 @@ tr:hover .button-to-reserve{
 
             &:hover td{
                 background-color: #fafafa;
-            }          
+            }
         }
 
 

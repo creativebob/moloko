@@ -149,7 +149,8 @@ class Estimate extends BaseModel
     // Платежи
     public function payments()
     {
-        return $this->morphMany('App\Payment', 'document');
+        return $this->morphMany('App\Payment', 'document')
+            ->whereNull('canceled_payment_id');
     }
 
     public function discounts()
