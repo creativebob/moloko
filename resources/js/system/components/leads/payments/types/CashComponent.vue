@@ -97,8 +97,6 @@ export default {
             denominations: [50, 100, 200, 500, 1000, 2000, 5000],
 
             cash: 0,
-            cashTaken: 0,
-            cashChange: 0,
 
             electronically: 0,
 
@@ -139,9 +137,9 @@ export default {
         },
         data() {
             return {
-                cash: this.cash,
-                cash_taken: this.cashTaken,
-                cash_change: this.cashChange,
+                cash: this.cash - this.change,
+                cashTaken: this.cash,
+                cashChange: this.change,
 
                 electronically: this.electronically,
             };

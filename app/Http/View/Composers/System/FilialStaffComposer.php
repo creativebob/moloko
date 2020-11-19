@@ -14,12 +14,16 @@ class FilialStaffComposer
         // Список пользователей
         $answer = operator_right('staff', true, 'index');
 
-            $staff = Staffer::moderatorLimit($answer)
+            $staff = Staffer::with([
+                'user'
+            ])
+            ->moderatorLimit($answer)
             ->companiesLimit($answer)
 //            ->filials($answer)
             ->authors($answer)
             ->systemItem($answer)
             ->where('filial_id', $filialId)
+                ->whereNotNull('user_id')
             ->get();
 
         return $view->with(compact('staff'));
