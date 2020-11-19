@@ -98805,6 +98805,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     computed: {
@@ -98826,15 +98836,7 @@ var render = function() {
     ? _c("div", { staticClass: "grid-x grid-padding-x" }, [
         _c("div", { staticClass: "cell small-12" }, [
           _vm.client.clientable_type === "App\\User"
-            ? _c("div", { staticClass: "grid-x" }, [
-                _c("div", { staticClass: "cell small-12" }, [
-                  _vm._v(
-                    "\n                " +
-                      _vm._s(_vm.client.clientable.name) +
-                      "\n            "
-                  )
-                ])
-              ])
+            ? _c("div", { staticClass: "grid-x" }, [_vm._m(0)])
             : _vm._e(),
           _vm._v(" "),
           _vm.client.clientable_type === "App\\Company"
@@ -98862,7 +98864,35 @@ var render = function() {
       ])
     : _vm._e()
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "cell small-12" }, [
+      _c("label", [
+        _vm._v("Фамилия\n                    "),
+        _c("input", {
+          attrs: { type: "text", value: "client.clientable.second_name" }
+        })
+      ]),
+      _vm._v(" "),
+      _c("label", [
+        _vm._v("Имя\n                    "),
+        _c("input", {
+          attrs: { type: "text", value: "client.clientable.first_name" }
+        })
+      ]),
+      _vm._v(" "),
+      _c("label", [
+        _vm._v("Отчество\n                    "),
+        _c("input", {
+          attrs: { type: "text", value: "client.clientable.patronymic" }
+        })
+      ])
+    ])
+  }
+]
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {

@@ -10,7 +10,17 @@
                 class="grid-x"
             >
                 <div class="cell small-12">
-                    {{ client.clientable.name }}
+
+                    <label>Фамилия
+                        <input type="text" value="client.clientable.second_name">
+                    </label>
+                    <label>Имя
+                        <input type="text" value="client.clientable.first_name">
+                    </label>
+                    <label>Отчество
+                        <input type="text" value="client.clientable.patronymic">
+                    </label>
+
                 </div>
             </div>
 
