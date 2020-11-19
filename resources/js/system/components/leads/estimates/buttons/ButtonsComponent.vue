@@ -45,13 +45,17 @@
                     class="button button-print"
                 ><span class="icon-print-order"></span>
             Печать заказа</a><br>
-            <a
+
+
+            <!-- <a
                 :href="'/admin/leads/' + lead.id + '/print_sticker_stock'"
                 target="_blank"
                 class=""
             ><span class="icon-print-sticker"></span>
                 Стикер
-            </a>
+            </a> -->
+
+
             </template>
 
             <div

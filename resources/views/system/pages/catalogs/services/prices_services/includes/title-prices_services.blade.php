@@ -47,7 +47,7 @@
             <div class="small-12 cell filters fieldset-filters" id="filters">
                 <div class="grid-padding-x">
                     <div class="small-12 cell text-right">
-                        {{ link_to(Request::url() . '?filter=disable', 'Сбросить', ['class' => 'small-link']) }}
+                        {{ link_to(Request::url() . '?filter=disable', 'Сбросить', ['class' => 'small-link filter-reset']) }}
                     </div>
                 </div>
                 <div class="grid-padding-x">
