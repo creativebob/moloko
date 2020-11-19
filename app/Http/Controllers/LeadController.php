@@ -1363,13 +1363,13 @@ class LeadController extends Controller
         $checkOrder = Template::companiesLimit($answer)
             ->moderatorLimit($answer)
             ->where('category_id', 2)
-            ->where('tag', 'check')
+            ->where('tag', 'check-order')
             ->first();
 
         if ($checkOrder) {
             return view($checkOrder->path, compact('lead'));
         } else {
-            return view('system.prints.check_order', compact('lead'));
+            return view('system.templates.prints.check_order', compact('lead'));
         }
     }
 
@@ -1401,7 +1401,7 @@ class LeadController extends Controller
         if ($checkOrder) {
             return view($checkOrder->path, compact('lead'));
         } else {
-            return view('system.prints.sticker_stock', compact('lead'));
+            return view('system.templates.prints.sticker_stock', compact('lead'));
         }
     }
 
