@@ -128352,11 +128352,11 @@ var moduleLead = {
                     if (lead.client) {
                         _this3.commit('SET_CLIENT', lead.client);
                     }
-
-                    _this3.commit('SET_ESTIMATE', response.data.estimate);
-
-                    _this3.commit('SET_GOODS_ITEMS', response.data.goods_items);
                 }
+
+                _this3.commit('SET_ESTIMATE', response.data.estimate);
+
+                _this3.commit('SET_GOODS_ITEMS', response.data.goods_items);
 
                 state.change = false;
             }).catch(function (error) {
