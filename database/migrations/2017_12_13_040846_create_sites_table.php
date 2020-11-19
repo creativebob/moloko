@@ -28,7 +28,7 @@ class CreateSitesTable extends Migration
             $table->foreign('company_id')->references('id')->on('companies');
 
             $table->boolean('is_autochange')->default(0)->comment('Авто-смена слайдов');
-            $table->integer('delay')->nullable()->comment('Время задержки');
+            $table->integer('delay')->default(5000)->comment('Время задержки');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
             $table->boolean('display')->default(1)->comment('Отображение на сайте');
