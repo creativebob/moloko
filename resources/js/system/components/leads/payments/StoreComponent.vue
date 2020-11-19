@@ -199,6 +199,8 @@ export default {
         },
         changeCash(data) {
             this.cash = data.cash;
+            this.cashTaken = data.cashTaken;
+            this.cashChange = data.cashChange;
 
             this.electronically = data.electronically;
 
