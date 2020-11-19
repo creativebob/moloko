@@ -1,6 +1,11 @@
 /* Welcome to Compass. Use this file to define print styles.
  * Import this file using the following HTML or equivalent:
  * <link href="/stylesheets/print.css" media="print" rel="stylesheet" type="text/css" /> */
+
+
+
+// ВЫКЛЮЧАЕМ ЭЛЕМЕНТЫ ИНТЕРФЕЙСА
+
 .sidebar, .task-manager, .header, .breadcrumbs, .top-bar-right, .button-group, #pagination{
 	display: none;
 }
@@ -41,4 +46,29 @@ a{
 
 .head-content{
 	padding: 0;
+}
+
+
+// СТИЛИ ДЛЯ СКЛАДСКОГО СТИКЕРА
+
+.check-order {
+
+	.client-name, .client-phone{
+		width: auto;
+		font-size: 1rem;
+	}
+
+	.name, .phone{
+		font-size: 1rem;
+	}	
+
+	.print_table{
+
+		caption{
+			.check-number{
+				font-family: PFDinDisplayPro;
+				font-size: 4rem;
+			}
+		}
+	}
 }

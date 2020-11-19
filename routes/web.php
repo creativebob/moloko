@@ -739,8 +739,13 @@ Route::get('plans/{alias}', 'PlanController@show')->name('plans.show');
 
 // ---------------------------------------------- Лиды -----------------------------------------------
 
-// Печать
+// Печать чека заказа
 Route::get('/leads/{id}/print', 'LeadController@print');
+
+// Печать складского стикера
+Route::get('/leads/{id}/print_sticker_stock', 'LeadController@print_sticker_stock');
+
+
 // Отправка письма
 Route::post('/leads/send-email/{id}', 'LeadController@sendEmail')
     ->name('leads.send_email');

@@ -23,7 +23,7 @@
                             <span class="text-small">{{ item.main_phones[0].phone }}</span><br>
                         </td>
                         <td  class="search-result-summa">
-                            <span>{{ item.badget | decimalPlaces | decimalLevel }} руб.</span><br>
+                            <span>{{ item.estimate.total | decimalPlaces | decimalLevel }} руб.</span><br>
                             <span class="text-small">{{ item.stage.name }}</span>
                         </td>
                         <td class="search-result-id">

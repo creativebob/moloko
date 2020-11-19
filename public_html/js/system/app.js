@@ -84928,6 +84928,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     // data() {
@@ -85073,6 +85080,22 @@ var render = function() {
                 [
                   _c("span", { staticClass: "icon-print-order" }),
                   _vm._v("\n        Печать заказа")
+                ]
+              ),
+              _c("br"),
+              _vm._v(" "),
+              _c(
+                "a",
+                {
+                  attrs: {
+                    href:
+                      "/admin/leads/" + _vm.lead.id + "/print_sticker_stock",
+                    target: "_blank"
+                  }
+                },
+                [
+                  _c("span", { staticClass: "icon-print-sticker" }),
+                  _vm._v("\n            Стикер\n        ")
                 ]
               )
             ]
@@ -108041,7 +108064,7 @@ var render = function() {
                     _vm._v(
                       _vm._s(
                         _vm._f("decimalLevel")(
-                          _vm._f("decimalPlaces")(item.badget)
+                          _vm._f("decimalPlaces")(item.estimate.total)
                         )
                       ) + " руб."
                     )

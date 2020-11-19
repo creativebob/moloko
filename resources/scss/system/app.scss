@@ -4088,6 +4088,20 @@ tr:hover .td-price-status .price_goods-status.hide{
     margin-right: 3px;
 }
 
+.icon-print-sticker{
+    top: 5px;
+    position: relative;
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    background: url('img/sticker.svg') 4px 4px no-repeat;
+    background-size: 16px;
+    transition: opacity 0.2s ease;
+    cursor: pointer;
+    opacity: 1;
+    margin-right: 3px;
+}
+
 .button.button-print{
     padding-top: 2px;
     background-color: #f9f9f9;

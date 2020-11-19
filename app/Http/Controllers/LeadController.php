@@ -1195,7 +1195,7 @@ class LeadController extends Controller
     public function search(Request $request, $search)
     {
 
-        $results = Lead::with('main_phones', 'lead_method', 'stage')
+        $results = Lead::with('main_phones', 'lead_method', 'stage', 'estimate')
             ->where('case_number', $search)
             ->orWhere('name', 'LIKE', '%' . $search . '%')
             ->orWhere('company_name', 'LIKE', '%' . $search . '%')
@@ -1363,6 +1363,7 @@ class LeadController extends Controller
         $checkOrder = Template::companiesLimit($answer)
             ->moderatorLimit($answer)
             ->where('category_id', 2)
+            ->where('tag', 'check')
             ->first();
 
         if ($checkOrder) {
@@ -1371,6 +1372,40 @@ class LeadController extends Controller
             return view('system.prints.check_order', compact('lead'));
         }
     }
+
+    /**
+     * Печать складского стикера
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function print_sticker_stock($id)
+    {
+        // ГЛАВНЫЙ ЗАПРОС:
+        $lead = Lead::with([
+            'estimate.goods_items.goods.article',
+        ])
+            ->find($id);
+        // dd($lead);
+
+        // TODO - 13.11.20 - Если подключен чек (при печати чека)  то ссылаемся на него, если не подключен, тогда на стандартный системный
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right('templates', false, getmethod('index'));
+
+        $checkOrder = Template::companiesLimit($answer)
+            ->moderatorLimit($answer)
+            ->where('category_id', 2)
+            ->where('tag', 'sticker-stock')
+            ->first();
+
+        if ($checkOrder) {
+            return view($checkOrder->path, compact('lead'));
+        } else {
+            return view('system.prints.sticker_stock', compact('lead'));
+        }
+    }
+
+
 
     // --------------------------------------- Ajax ----------------------------------------------------------
 
