@@ -4058,23 +4058,60 @@ tr:hover .td-price-status .price_goods-status.hide{
 
 }
 
-
-// Оформлением сметы на ЛИДе
-.button-to-reserve{
+// Кнопки печати складского стикера
+.button-print-stock-sticker{
+    top: -2px;
     position: relative;
-    top: 3px;
     display: inline-block;
-    width: 20px;
-    height: 20px;
-    background: url('img/pushpin.svg') 4px 4px no-repeat;
+    width: 22px;
+    height: 22px;
+    background: url('img/note-two.svg') 4px 4px no-repeat;
     background-size: 16px;
-    opacity: 0;
     transition: opacity 0.3s ease;
     cursor: pointer;
+    opacity: 0.5;
+
+    &:hover{
+        opacity: 1;
+    }
 }
 
-tr:hover .button-to-reserve{
-    opacity: 0.3;
+
+.icon-print-order{
+    top: 5px;
+    position: relative;
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    background: url('img/printer.svg') 4px 4px no-repeat;
+    background-size: 16px;
+    transition: opacity 0.2s ease;
+    cursor: pointer;
+    opacity: 1;
+    margin-right: 3px;
+}
+
+.button.button-print{
+    padding-top: 2px;
+    background-color: #f9f9f9;
+    color: #000;
+    border: 1px solid #666;
+    font-family: SegoeUI;
+
+    &:hover{
+        border: 1px solid #000;
+        background-color: #ffffff;
+    }
+}
+
+
+.wrap-estimate-title{
+    padding: 0 22px 0.5rem 9px;
+}
+
+.estimate-control{
+    padding-left: 1rem;
+    text-align: right;
 }
 
 .icon-comment{

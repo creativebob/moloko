@@ -619,24 +619,25 @@ tfoot{
         font-size: 0.9rem;
     }
 
+    tr:first-child td{
+        border-top: 3px black solid;
+        padding-top: 10px;
+    }
+
+
     .tfoot-discount-info{
 
         background-color: #fff797;
         td{
-            padding-top: 6px;
-            padding-bottom: 6px;
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        &:first-child td{
             margin-top: 5px;
-            border-top: 1px black solid;
+            padding-bottom: 8px;
+            padding-top: 3px;
+            border-bottom: 1px black solid;
+            margin-bottom: 4px;
         }
 
         .tfoot-discount-currency{
             span{
-                padding: 0.3em 1em;
                 min-width: 70px;
             }
         }
@@ -648,17 +649,43 @@ tfoot{
     }
 
 
-    tr.tfoot-estimate-amount{
-        td{
-            border-top: 3px black solid;
-            padding-top: 10px;
+    // tr.tfoot-estimate-amount{
+    //     td{
+    //         border-top: 3px black solid;
+    //         padding-top: 10px;
+    //     }
+    // }
+
+    tr{
+        &.tfoot-estimate-amount td, &.tfoot-estimate-discount td{
+            padding-top: 5px;
+            padding-bottom: 5px;
+            font-size: 0.7rem;  
         }
     }
 
-    .tfoot-estimate-amount, .tfoot-estimate-discount, .tfoot-estimate-total{
-
+    tr.tfoot-estimate-total td{
+        font-weight: 500;
+        font-size: 1rem;
+        padding-top: 8px;
+        padding-bottom: 10px;
     }
 }
+
+.wrap-reserved-info{
+    width: 50px;
+}
+
+.open-modal-estimate-item{
+    text-align: left;
+}
+
+.total-estimate-tfoot{
+    padding-left: 27px;
+    font-weight: 500;
+}
+
+
 
 
 // PAYMENTS / КОМПОНЕНТ ОПЛАТЫ

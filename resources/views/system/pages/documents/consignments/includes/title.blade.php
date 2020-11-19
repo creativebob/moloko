@@ -9,6 +9,9 @@
                         @yield('content-count')
                     </span>
                 </h2>
+                @can('create', $class)
+                    <a href="/admin/{{ $pageInfo->alias}}/create" class="icon-add sprite " data-tooltip tabindex="2" title="Добавить позицию"></a>
+                @endcan
             </div>
 
             <div class="top-bar-right">

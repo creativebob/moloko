@@ -42,7 +42,7 @@
             <tr v-if="discount" class="tfoot-discount-info">
                 <td colspan="3" class="tfoot-discount-name">{{ discount.name }} <span v-if="!isActual">(Архивная)</span></td>
                 <td class="tfoot-discount-value">{{ discount.percent | decimalPlaces }}</td>
-                <td class="tfoot-discount-currency"><span>{{ estimateAggregations.estimate.discount | decimalPlaces | decimalLevel }} руб.</span>
+                <td class="tfoot-discount-currency total-estimate-tfoot"><span>{{ estimateAggregations.estimate.discount | decimalPlaces | decimalLevel }} руб.</span>
                 </td>
 <!--                <td class="tfoot-discount-currency"></td>-->
                 <td class="td-delete">
@@ -59,24 +59,20 @@
             >
                 <tr class="tfoot-estimate-amount">
                     <td colspan="4" class="">Сумма без скидок:</td>
-                    <td><span>{{ estimateAggregations.estimate.amount | decimalPlaces | decimalLevel }}</span></td>
-                    <td colspan="2"></td>
+                    <td class="total-estimate-tfoot" colspan="2"><span>{{ estimateAggregations.estimate.amount | decimalPlaces | decimalLevel }}</span></td>
                 </tr>
-                <tr>
+                <tr class="tfoot-estimate-discount">
                     <td colspan="4" class="tfoot-estimate-discount">Скидки:</td>
-                    <td><span>{{ estimateAggregations.estimate.itemsDiscount | decimalPlaces | decimalLevel }}</span>
+                    <td class="total-estimate-tfoot" colspan="2"><span>{{ estimateAggregations.estimate.itemsDiscount | decimalPlaces | decimalLevel }}</span>
                     </td>
-                    <td colspan="2"></td>
                 </tr>
             </template>
 
-            <tr>
-                <td colspan="3" class="tfoot-estimate-total">Итого к оплате:</td>
-                <td></td>
-                <td class="invert-show">
+            <tr class="tfoot-estimate-total">
+                <td colspan="4">Итого к оплате:</td>
+                <td class="total-estimate-tfoot" colspan="2">
                     <span>{{ estimateAggregations.estimate.total | decimalPlaces | decimalLevel }}</span> руб.
                 </td>
-                <td colspan="3"></td>
             </tr>
             </tfoot>
         </table>

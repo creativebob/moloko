@@ -40,19 +40,6 @@
             </div>
         </div>
     </tbody>
-
-    <!--            <tfoot>-->
-    <!--                <tr>-->
-    <!--                    <td colspan="4" class="text-right">Итого:</td>-->
-    <!--                    <td>{{ itemsAmount | roundToTwo | level }}</td>-->
-    <!--                    <td colspan="1"></td>-->
-    <!--                </tr>-->
-    <!--                <tr>-->
-    <!--                    <td colspan="4" class="text-right">Итого со скидкой ({{ discountPercent }}%):</td>-->
-    <!--                    <td>{{ itemsTotal | roundToTwo | level }}</td>-->
-    <!--                    <td colspan="1"></td>-->
-    <!--                </tr>-->
-    <!--            </tfoot>-->
 </template>
 
 <script>
