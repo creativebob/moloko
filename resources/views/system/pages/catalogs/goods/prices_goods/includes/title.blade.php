@@ -41,7 +41,7 @@
                 <div class="grid-padding-x">
                     <div class="small-12 cell text-right">
                         <a href="{{ route('prices_goods.index', ['catalog_id' => $catalogGoods->id]) }}"
-                           class="small-link">Сбросить</a>
+                           class="small-link filter-reset">Сбросить</a>
                     </div>
                 </div>
                 <div class="grid-padding-x">

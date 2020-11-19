@@ -24,7 +24,7 @@
                 <div class="grid-padding-x">
                     <div class="small-12 cell text-right">
                         {!! Form::open(['route' => ['reset_filter', $pageInfo->alias]]) !!}
-                        {!! Form::submit('Сбросить', ['class'=>'small-link']) !!}
+                        {!! Form::submit('Сбросить', ['class'=>'small-link filter-reset']) !!}
                         {!! Form::close() !!}
                     </div>
                 </div>

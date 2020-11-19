@@ -53,14 +53,16 @@
 
                         <div class="grid-x grid-padding-x wrap-estimate-title">
                             <div class="small-12 medium-shrink cell estimate-title">
-                                <p>Клиентский заказ 
+                                <p>Клиентский заказ
                                     @if($lead->estimate->registered_at)
                                         № {{ $lead->estimate->number ?? '' }} от {{ $lead->estimate->registered_at->format('d.m.Y') }} <span class="tiny-text">({{ $lead->estimate->registered_at->getTranslatedShortDayName('dd') }})</span>
                                     @endif
                                 </p>
                             </div>
                             <div class="small-12 medium-auto cell estimate-control">
-                                <span class="button-print-stock-sticker" title="Маркер для склада"></span>
+                                <a href="/admin/leads/{{ $lead->id }}/print_sticker_stock" target="_blank">
+                                    <span class="button-print-stock-sticker" title="Маркер для склада"></span>
+                                </a>
                             </div>
                         </div>
 
@@ -69,8 +71,43 @@
 
                     {{-- КЛИЕНТ --}}
                     <div class="tabs-panel" id="content-panel-client">
-                        @include('leads.tabs.client')
+                        <div class="grid-x grid-padding-x">
 
+
+                            {{-- <div class="small-12 medium-12 large-12 cell">
+                                <label>Страна
+                                    @php
+                                    $country_id = null;
+                                    if (isset($lead->location->country_id)) {
+                                    $country_id = $lead->location->country_id;
+                                }
+                                @endphp
+                                {{ Form::select('country_id', $countries_list, $country_id)}}
+                                </label>
+                            </div> --}}
+
+                            <div class="small-12 medium-12 cell">
+                                <div class="grid-x grid-padding-x">
+
+
+                                </div>
+
+                                @if($lead->client)
+                                    {{--                                    @if ($lead->client->orders_count > 0)--}}
+                                    {{--                                        <span>Клиент: <a href="{{ route('clients.edit', $lead->client_id) }}">{{ $lead->client->clientable->name ?? '' }}</a></span><br>--}}
+                                    {{--                                    @endif--}}
+
+                                    <span>Лояльность: {{ $lead->client->loyalty->name ?? '' }}</span>
+                                @else
+
+                                    {{-- Подключаем клиентов --}}
+                                    @include('includes.contragents.fieldset', ['item' => $lead])
+
+                                @endif
+
+
+                            </div>
+                        </div>
                     </div>
                     {{-- КОНЕЦ КЛИЕНТ --}}
 
