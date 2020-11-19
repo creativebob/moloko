@@ -42,7 +42,7 @@ class CreateEstimatesTable extends Migration
             $table->decimal('catalogs_item_discount', 10, 2)->default(0)->comment('Скидкки по разделу каталога');
             $table->decimal('estimate_discount', 10, 2)->default(0)->comment('Скидкки по смете');
             $table->decimal('client_discount', 10, 2)->default(0)->comment('Скидки клиента');
-            $table->decimal('manual_discount', 10, 2)->default(0)->comment('Скидки ручная');
+            $table->decimal('manual_discount', 10, 2)->default(0)->comment('Скидки ручные');
 
             $table->decimal('discount_currency', 10, 2)->default(0)->comment('Сумма скидок');
             $table->decimal('discount_percent', 5, 2)->default(0)->comment('Процент скидки');

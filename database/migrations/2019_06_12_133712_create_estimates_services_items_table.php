@@ -31,8 +31,8 @@ class CreateEstimatesServicesItemsTable extends Migration
             $table->tinyInteger('sale_mode')->default(1)->comment('Режим продажи: 1 - валюта, 2 - поинты');
 
             $table->integer('cost_mode')->nullable()->unsigned()->comment('Режим себестоимости');
-            $table->integer('cost_unit')->default(0)->comment('Себестоимость за единицу');
-            $table->integer('cost')->default(0)->comment('Себестоимость');
+            $table->decimal('cost_unit', 10,2)->default(0)->comment('Себестоимость за единицу');
+            $table->decimal('cost', 10,2)->default(0)->comment('Себестоимость');
 
             $table->decimal('price', 10,2)->default(0)->comment('Цена');
             $table->integer('points')->default(0)->comment('Внутренняя валюта');
@@ -62,8 +62,8 @@ class CreateEstimatesServicesItemsTable extends Migration
             $table->decimal('client_discount_currency', 10, 2)->default(0)->comment('Скидка клиента (валюта)');
             $table->decimal('total_client_discount', 10, 2)->default(0)->comment('Сумма со скидкой клиента');
 
-            $table->decimal('computed_discount_percent', 10, 2)->default(0)->comment('высчитанная скидка (%)');
-            $table->decimal('computed_discount_currency', 10, 2)->default(0)->comment('высчитанная скидка (валюта)');
+            $table->decimal('computed_discount_percent', 10, 2)->default(0)->comment('Высчитанная скидка (%)');
+            $table->decimal('computed_discount_currency', 10, 2)->default(0)->comment('Высчитанная скидка (валюта)');
             $table->decimal('total_computed_discount', 10, 2)->default(0)->comment('Сумма с высчитанной скидкой');
 
             $table->boolean('is_manual')->default(0)->comment('Ручной режим скидки');

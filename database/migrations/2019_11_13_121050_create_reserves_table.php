@@ -27,6 +27,8 @@ class CreateReservesTable extends Migration
 
             $table->morphs('cmv');
 
+            $table->morphs('storage');
+
             $table->decimal('count', 12,4)->default(0)->comment('Количество');
 //            $table->decimal('cost', 16, 8)->default(0)->comment('Стоимость');
 //            $table->decimal('amount', 16, 8)->default(0)->comment('Сумма');

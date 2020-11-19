@@ -16,9 +16,6 @@ class CreateReceiptsTable extends Migration
         Schema::create('receipts', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
-            $table->foreign('company_id')->references('id')->on('companies');
-
             $table->bigInteger('stock_id')->unsigned()->nullable()->comment('Id склада');
             $table->foreign('stock_id')->references('id')->on('stocks');
 
@@ -35,6 +32,9 @@ class CreateReceiptsTable extends Migration
 
 
             // Общие настройки
+            $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
+            $table->foreign('company_id')->references('id')->on('companies');
+
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
             $table->boolean('display')->default(1)->comment('Отображение на сайте');
             $table->boolean('system')->default(0)->comment('Системная запись');
