@@ -14,9 +14,11 @@ class DatabaseSeeder extends Seeder
         $this->call(UsersTableSeeder::class);
 
         // Наполнение локализаций
-        $this->call(CountriesTableSeeder::class);
-        $this->call(RegionsTableSeeder::class);
-        $this->call(CitiesTableSeeder::class);
+        $this->call([
+            CountriesTableSeeder::class,
+            RegionsTableSeeder::class,
+            CitiesTableSeeder::class
+        ]);
 
         // Единицы измерения
         $this->call(UnitsTableSeeder::class);
@@ -103,7 +105,13 @@ class DatabaseSeeder extends Seeder
         $this->call(NotificationSiteTableSeeder::class);
 
         $this->call(LeftoverOperationsTableSeeder::class);
-        $this->call(PaymentsTypesTableSeeder::class);
+
+        // Платежи
+        $this->call([
+            PaymentsMethodsTableSeeder::class,
+            PaymentsSignsTableSeeder::class,
+            PaymentsTypesTableSeeder::class
+        ]);
 
         // Справочные сиды: фамилии и имена
         $this->call(FirstNamesTableSeeder::class);
@@ -118,8 +126,7 @@ class DatabaseSeeder extends Seeder
 //         $this->call(StartTableSeeder::class);
 
 
+        // Шаблоны
         $this->call(TemplatesCategoriesTableSeeder::class);
-
-
     }
 }

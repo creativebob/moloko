@@ -35,6 +35,9 @@
 // ------------------------ Виджеты -------------------------------------
 @import "./partials/widgets";
 
+// ----------------------- Платежи ----------------------------------------
+@import "./components/payments/payments";
+
 // ------------------------------ Медиа ширины -------------------------------
 $small: 640px;
 $medium: 1024px;
@@ -4217,7 +4220,7 @@ tr:hover .td-price-status .price_goods-status.hide{
 
 .table-payments{
 
-    font-family: Calibri;    
+    font-family: Calibri;
     font-size: 0.9rem;
 
     thead{
@@ -4259,7 +4262,7 @@ tr:hover .td-price-status .price_goods-status.hide{
 
             &:hover td{
                 background-color: #fafafa;
-            }          
+            }
         }
 
 

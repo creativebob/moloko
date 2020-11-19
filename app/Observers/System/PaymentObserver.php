@@ -41,11 +41,25 @@ class PaymentObserver extends BaseObserver
      */
     public function created(Payment $payment)
     {
+        $payment->load([
+           'contract',
+            'sign'
+        ]);
         $contract = $payment->contract;
 
         // TODO - 06.02.20 - Нужна проверка на отрицательные значения, обновление договора в обсервере возможно
-        $paid = $contract->paid + $payment->total;
-        $debit = $contract->debit - $payment->total;
+        switch($payment->sign->alias) {
+            case ('sell'):
+
+                $paid = $contract->paid + $payment->total;
+                $debit = $contract->debit - $payment->total;
+                break;
+
+            case ('sellReturn'):
+                $paid = $contract->paid - $payment->total;
+                $debit = $contract->debit + $payment->total;
+                break;
+        }
 
         $contract->update([
            'paid' => $paid,
@@ -54,22 +68,12 @@ class PaymentObserver extends BaseObserver
     }
 
     /**
-     * Handle the payment "deleting" event.
+     * Handle the payment "updating" event.
      *
      * @param Payment $payment
      */
-    public function deleting(Payment $payment)
+    public function updating(Payment $payment)
     {
-        $this->destroy($payment);
-
-        $contract = $payment->contract;
-
-        $paid = $contract->paid - $payment->total;
-        $debit = $contract->debit + $payment->total;
-
-        $contract->update([
-            'paid' => $paid,
-            'debit' => $debit
-        ]);
+        $this->update($payment);
     }
 }

@@ -16,7 +16,9 @@ const moduleLead = {
 
             outlet: null,
             outletSettings: [],
+
             paymentsMethods: [],
+            paymentsMethodId: null,
 
             change: false,
             loading: false,
@@ -80,14 +82,33 @@ const moduleLead = {
                 this.commit('UPDATE_GOODS_ITEMS');
             },
 
+            // Торговая точка
             SET_OUTLET(state, outlet) {
                 state.outlet = outlet;
             },
             SET_OUTLET_SETTINGS(state, settings) {
                 state.outletSettings = settings;
             },
+
+            // Способы платежа
             SET_PAYMENTS_METHODS(state, paymentsMethods) {
                 state.paymentsMethods = paymentsMethods;
+
+                this.commit('SET_PAYMENTS_METHOD_ID');
+            },
+            SET_PAYMENTS_METHOD_ID(state, id = null) {
+                if (id) {
+                    state.paymentsMethodId = id;
+                } else {
+                    if (state.paymentsMethods.length) {
+                        const fullPayment = state.paymentsMethods.find(obj => obj.alias === 'full_payment');
+                        if (fullPayment) {
+                            state.paymentsMethodId = fullPayment.id
+                        } else {
+                            state.paymentsMethodId = state.paymentsMethods[0].id
+                        }
+                    }
+                }
             },
 
             SET_STOCK(state, stock) {
@@ -573,13 +594,29 @@ const moduleLead = {
                 data.document_id = state.lead.estimate.id;
                 data.document_type = 'App\\Models\\System\\Documents\\Estimate';
 
-                // Проверка на полный платеж
+                const fullPayment = state.paymentsMethods.find(obj => obj.alias === 'full_payment');
 
-                let total = data.cash + data.electronically + getters.PAYMENTS_TOTAL;
-                if (total >= state.estimate.total) {
-                    const paymentsMethod = state.paymentsMethods.find(obj => obj.alias === 'full_payment')
-                    if (paymentsMethod) {
-                        data.payments_method_id = paymentsMethod.id;
+                if (data.payments_method_id != fullPayment.id) {
+                    // Проверка на полную предоплату
+                    const prepayment = state.paymentsMethods.find(obj => obj.alias === 'partial_prepayment');
+                    if (prepayment) {
+                        let total = data.cash + data.electronically;
+                        if (total >= state.estimate.total) {
+                            const fullPrepayment = state.paymentsMethods.find(obj => obj.alias === 'full_prepayment');
+                            if (fullPrepayment) {
+                                data.payments_method_id = fullPrepayment.id;
+                            }
+                        }
+                    }
+
+                    // Проверка на полный платеж
+                    if (getters.PAYMENTS_TOTAL > 0) {
+                        let total = data.cash + data.electronically + getters.PAYMENTS_TOTAL;
+                        if (total >= state.estimate.total) {
+                            if (fullPayment) {
+                                data.payments_method_id = fullPayment.id;
+                            }
+                        }
                     }
                 }
                 // console.log(data);
@@ -594,8 +631,9 @@ const moduleLead = {
                     })
                     .finally(() => (state.loading = false));
             },
-            REMOVE_PAYMENT({state}, index) {
+            REMOVE_PAYMENT({state}, id) {
                 state.loading = true;
+                const index = state.payments.findIndex(obj => obj.id === id);
                 const payment = state.payments[index];
 
                 axios
@@ -608,8 +646,21 @@ const moduleLead = {
                     })
                     .finally(() => (state.loading = false));
             },
+            CANCEL_PAYMENT({state}, id) {
+                state.loading = true;
+                const index = state.payments.findIndex(obj => obj.id === id);
+                const payment = state.payments[index];
 
-
+                axios
+                    .post('/admin/payments/cancel/' + payment.id)
+                    .then(response => {
+                        Vue.set(state.payments, index, response.data);
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+                    .finally(() => (state.loading = false));
+            },
         },
         getters: {
             // Смета
@@ -686,11 +737,23 @@ const moduleLead = {
             },
 
             // Платежи
+            PAYMENTS: (state, getters) => {
+                if (getters.HAS_OUTLET_SETTING('canceled-payments-show')) {
+                    return state.payments;
+                } else {
+                    return state.payments.filter(payment => payment.canceled_at === null);
+                }
+            },
+            ACTUAL_PAYMENTS: state => {
+                return state.payments.filter(payment => payment.canceled_at === null);
+            },
             PAYMENTS_TOTAL: state => {
                 let total = 0;
                 if (state.payments.length) {
-                    state.payments.forEach(item => {
-                        return total += parseFloat(item.total)
+                    state.payments.forEach(payment => {
+                        if (payment.canceled_at == null) {
+                            return total += parseFloat(payment.total);
+                        }
                     });
                 }
                 return total;

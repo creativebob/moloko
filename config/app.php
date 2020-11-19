@@ -187,16 +187,18 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-        App\Providers\System\ComposerServiceProvider::class,
+        // Система
         App\Providers\System\ObserverServiceProvider::class,
-        App\Providers\WidgetServiceProvider::class,
+        App\Providers\System\View\ViewServiceProvider::class,
+        App\Providers\System\View\WidgetServiceProvider::class,
 
+        // Проект
+        App\Providers\Project\ObserverServiceProvider::class,
+        App\Providers\Project\View\ViewServiceProvider::class,
+
+        // Morph
         App\Providers\MorphsServiceProvider::class,
         App\Providers\MorphsProjectServiceProvider::class,
-
-        App\Providers\Project\ComposerServiceProvider::class,
-        App\Providers\Project\ObserverServiceProvider::class,
-
     ],
 
     /*

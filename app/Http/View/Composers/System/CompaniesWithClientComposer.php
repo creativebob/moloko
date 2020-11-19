@@ -22,7 +22,7 @@ class CompaniesWithClientComposer
         $company->load([
             'organizations' => function ($q) {
                 $q->with([
-                    'client',
+                    'client.clientable',
                     'representatives' => function ($q) {
                         $q->with([
                             'client'

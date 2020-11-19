@@ -48,18 +48,23 @@
                 <div class="cell small-12 medium-4">
                     <label>Дата платежа:
                         <pickmeup-component
+                            v-if="canChangeDate"
                             :name="type"
                             :required="true"
                             @change="changeDate"
                         ></pickmeup-component>
+                        <input
+                            v-else
+                            type="text"
+                            :value="paymentDate"
+                            disabled
+                        >
                     </label>
                 </div>
 
                 <div class="cell small-12 medium-8">
                     <label>Способ расчета:
-                        <payments-methods-component
-                            @change="changePaymentsMethodId"
-                        ></payments-methods-component>
+                        <payments-methods-component></payments-methods-component>
                     </label>
                 </div>
             </div>
@@ -68,22 +73,19 @@
         <div class="grid-x grid-padding-x">
             <cash-component
                 v-if="type == 'cash'"
-                @change="changeFromCash"
+                @change="changeCash"
                 ref="cashComponent"
             ></cash-component>
-            <div
-                v-else-if="type == 'electronically' || type == 'bank'"
-                class="cell shrink"
-            >
-                <label>Сумма:
-                    <digit-component
-                        classes="input-payment electronically"
-                        v-model="electronically"
-                        ref="electronicallyComponent"
-                        v-focus
-                    ></digit-component>
-                </label>
-            </div>
+            <electronically-component
+                v-if="type == 'electronically'"
+                @change="changeElectronically"
+                ref="electronicallyComponent"
+            ></electronically-component>
+            <bank-component
+                v-if="type == 'bank'"
+                @change="changeElectronically"
+                ref="bankComponent"
+            ></bank-component>
         </div>
 
         <div class="grid-x grid-padding-x">
@@ -116,7 +118,6 @@ export default {
             type: null,
 
             paymentDate: moment(String(new Date())).format('DD.MM.YYYY'),
-            paymentsMethodId: null,
 
             cash: 0,
             cashTaken: 0,
@@ -137,16 +138,57 @@ export default {
         showBank() {
             return this.$store.getters.HAS_OUTLET_SETTING('bank-account');
         },
+
+        canChangeDate() {
+            let res = false;
+            if (this.type) {
+                if (this.type === 'bank') {
+                    res = true
+                } else {
+                    const useCashRegister = this.$store.getters.HAS_OUTLET_SETTING('use-cash-register');
+                    const paymentDateChange = this.$store.getters.HAS_OUTLET_SETTING('payment-date-change');
+
+                    if (useCashRegister) {
+                        res = false;
+                    } else {
+                        res = paymentDateChange;
+                    }
+                }
+            }
+            return res;
+        },
+        paymentsMethodId() {
+            return this.$store.state.lead.paymentsMethodId;
+        },
+
+        autofill() {
+            return this.$store.getters.HAS_OUTLET_SETTING('amount-autofill');
+        },
+
+        estimateTotal() {
+            return this.$store.getters.ESTIMATE_AGGREGATIONS.estimate.total;
+        },
+        paymentsTotal() {
+            return this.$store.getters.PAYMENTS_TOTAL;
+        },
+        debitTotal() {
+            return this.estimateTotal - this.paymentsTotal;
+        },
     },
     watch: {
+        paymentsMethodId() {
+            this.setShowButton();
+        },
         electronically(val) {
             this.setShowButton();
-        }
+        },
     },
     methods: {
         setType(type = null) {
             this.type = type;
+
             this.reset();
+            this.setShowButton();
         },
         changeDate(date) {
             if (date !== "") {
@@ -155,14 +197,15 @@ export default {
                 this.paymentDate = null;
             }
         },
-        changePaymentsMethodId(id) {
-            this.paymentsMethodId = id;
-            this.setShowButton();
-        },
-        changeFromCash(data) {
+        changeCash(data) {
             this.cash = data.cash;
 
             this.electronically = data.electronically;
+
+            this.setShowButton();
+        },
+        changeElectronically(val) {
+            this.electronically = val;
 
             this.setShowButton();
         },
@@ -176,7 +219,7 @@ export default {
 
                 switch (alias) {
                     case 'full_payment':
-                            res = this.cash + this.electronically + paymentsTotal >= estimateTotal;
+                        res = this.cash + this.electronically + paymentsTotal >= estimateTotal;
                         break;
 
                     case 'full_prepayment':
@@ -185,7 +228,7 @@ export default {
                         break;
 
                     case 'partial_prepayment':
-                            res = this.cash + this.electronically > 0;
+                        res = this.cash + this.electronically > 0;
                         break;
                 }
             }
@@ -194,8 +237,9 @@ export default {
         },
         addPayment() {
             if (this.cash > 0 || this.electronically > 0) {
-                const dateArray = this.paymentDate.split(".");
-                const date = dateArray[2] + '-' + dateArray[1] + '-' + dateArray[0] + ' 00:00:00';
+                const dateArray = this.paymentDate.split("."),
+                    time = moment(String(new Date())).format('HH:mm:ss');
+                const date = dateArray[2] + '-' + dateArray[1] + '-' + dateArray[0] + ' ' + time;
 
                 const data = {
                     cash: this.cash,
@@ -211,10 +255,18 @@ export default {
 
                 this.reset();
 
-                if (this.type === 'cash') {
-                    this.$refs.cashComponent.reset();
-                } else {
-                    this.$refs.electronicallyComponent.update(this.electronically);
+                switch (this.type) {
+                    case 'cash':
+                        this.$refs.cashComponent.reset();
+                        break;
+
+                    case 'electronically':
+                        this.$refs.electronicallyComponent.reset();
+                        break;
+
+                    case 'bank':
+                        this.$refs.bankComponent.reset();
+                        break;
                 }
             }
         },
@@ -224,7 +276,7 @@ export default {
             this.cashChange = 0;
 
             this.electronically = 0;
-        }
+        },
     },
     directives: {
         focus: {

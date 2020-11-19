@@ -22,7 +22,7 @@ class UsersWithClientComposer
         $answer = operator_right('users', true, 'index');
 
         $this->users = User::with([
-            'client',
+            'client.clientable',
             'organizations.client',
         ])
             ->where('site_id', '!=', 1)

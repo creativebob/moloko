@@ -60,9 +60,15 @@ class OutletsSettingsTableSeeder extends Seeder
             ],
             [
                 'name' => 'Вносить изменения в проведенные платежи',
-                'alias' => 'edit-payment',
+                'alias' => 'payment-edit',
                 'category_id' => $settingsCategories->firstWhere('alias', 'cash-register')->id
             ],
+            [
+                'name' => 'Выбор даты платежа',
+                'alias' => 'payment-date-change',
+                'category_id' => $settingsCategories->firstWhere('alias', 'others')->id
+            ],
+
 
             [
                 'name' => 'Списание с убытком',
@@ -73,6 +79,22 @@ class OutletsSettingsTableSeeder extends Seeder
                 'name' => 'Списание без убытка',
                 'alias' => 'dismiss-without-loss',
                 'category_id' => $settingsCategories->firstWhere('alias', 'dismiss')->id
+            ],
+
+            [
+                'name' => 'Отображать номиналы',
+                'alias' => 'denominations-show',
+                'category_id' => $settingsCategories->firstWhere('alias', 'others')->id
+            ],
+            [
+                'name' => 'Автозаполнение суммы',
+                'alias' => 'amount-autofill',
+                'category_id' => $settingsCategories->firstWhere('alias', 'others')->id
+            ],
+            [
+                'name' => 'Отображение отмененных платежей',
+                'alias' => 'canceled-payments-show',
+                'category_id' => $settingsCategories->firstWhere('alias', 'others')->id
             ],
         ]);
     }

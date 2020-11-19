@@ -315,7 +315,7 @@ class EstimateController extends Controller
      * Продажа сметы
      *
      * @param $id
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\JsonResponse
      */
     public function conducting($id)
     {

@@ -3,21 +3,25 @@
 namespace App;
 
 use App\Models\System\BaseModel;
+use App\Models\System\Traits\Quietlable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
 class Payment extends BaseModel
 {
-    use SoftDeletes;
+    use SoftDeletes,
+        Quietlable;
 //    use Cachable;
 
     protected $with = [
         'method',
+        'sign',
         'currency'
     ];
 
     protected $dates = [
         'registered_at',
+        'canceled_at',
         'deleted_at',
     ];
 
@@ -34,7 +38,12 @@ class Payment extends BaseModel
         'type',
 
         'payments_method_id',
+        'payments_sign_id',
+
         'currency_id',
+
+        'canceled_payment_id',
+        'canceled_at',
 
         'contract_id',
         'contract_type',
@@ -52,15 +61,20 @@ class Payment extends BaseModel
 //        $this->attributes['date'] = Carbon::createFromFormat('d.m.Y', $value);
 //    }
 
-    public function type()
-    {
-        return $this->belongsTo(PaymentsType::class, 'payments_type_id');
-    }
-
     public function method()
     {
         return $this->belongsTo(PaymentsMethod::class, 'payments_method_id');
     }
+
+    public function sign()
+    {
+        return $this->belongsTo(PaymentsSign::class, 'payments_sign_id');
+    }
+
+//    public function payments_type()
+//    {
+//        return $this->belongsTo(PaymentsType::class, 'payments_type_id');
+//    }
 
     public function contract()
     {

@@ -1,5 +1,7 @@
 <template>
-    <tr>
+    <tr
+        :class="[{ 'canceled' : canceled}]"
+    >
         <td>{{ payment.registered_at | formatDate }}</td>
         <td>{{ type }}</td>
         <td>{{ payment.method.name }}</td>
@@ -7,8 +9,14 @@
         <td class="td-delete">
             <div
                 v-if="canRemove"
-                @click="removePayment"
                 class="icon-delete sprite"
+                @click="removePayment"
+            ></div>
+            <div
+                v-if="canCancel"
+                @click="openModalCancel"
+                class="icon-delete sprite"
+                data-open="modal-payment-cancel"
             ></div>
         </td>
     </tr>
@@ -37,12 +45,25 @@
                 }
             },
             canRemove() {
-                return !this.$store.getters.HAS_OUTLET_SETTING('use-cash-register') && this.$store.getters.HAS_OUTLET_SETTING('edit-payment') && this.$store.state.lead.estimate.conducted_at === null;
+                return !this.$store.getters.HAS_OUTLET_SETTING('use-cash-register') && this.$store.getters.HAS_OUTLET_SETTING('payment-edit') && this.$store.state.lead.estimate.conducted_at === null && this.payment.canceled_at == null;
+            },
+            canCancel() {
+                return this.$store.getters.HAS_OUTLET_SETTING('use-cash-register') && this.$store.getters.HAS_OUTLET_SETTING('payment-edit') && this.$store.state.lead.estimate.conducted_at === null && this.payment.canceled_at == null;
+            },
+            canceled() {
+                return this.payment.canceled_at !== null;
             }
         },
         methods: {
+            openModalCancel() {
+                const data = {
+                    id: this.payment.id,
+                    total: this.payment.total
+                };
+                this.$emit('open-modal-cancel', data);
+            },
             removePayment() {
-                this.$emit('remove', this.index);
+                this.$store.dispatch('REMOVE_PAYMENT', this.payment.id);
             }
         },
         filters: {

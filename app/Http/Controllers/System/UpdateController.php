@@ -11,6 +11,8 @@ use App\Models\System\Documents\EstimatesGoodsItem;
 use App\Http\Controllers\Controller;
 use App\Menu;
 use App\Notification;
+use App\OutletsSetting;
+use App\OutletsSettingsCategory;
 use App\Page;
 use App\PhotoSetting;
 use App\Position;
@@ -31,6 +33,66 @@ class UpdateController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+    }
+
+    /**
+     * Добавление катеории и настроек на торговую точку
+     *
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
+    public function addOutletSettings()
+    {
+        OutletsSettingsCategory::insert([
+            [
+                'name' => 'Прочие',
+                'slug' => \Str::slug('Прочие'),
+                'level' => 1,
+                'alias' => 'others',
+            ],
+        ]);
+
+        $categoryId = OutletsSettingsCategory::where('alias', 'others')
+            ->value('id');
+
+        OutletsSetting::insert([
+            [
+                'name' => 'Отображать номиналы',
+                'alias' => 'denominations-show',
+                'category_id' => $categoryId
+            ],
+            [
+                'name' => 'Автозаполнение суммы',
+                'alias' => 'amount-autofill',
+                'category_id' => $categoryId
+            ],
+            [
+                'name' => 'Отображение отмененных платежей',
+                'alias' => 'canceled-payments-show',
+                'category_id' => $categoryId
+            ],
+        ]);
+
+        $categoryId = OutletsSettingsCategory::where('alias', 'cash-register')
+            ->value('id');
+
+        OutletsSetting::insert([
+            [
+                'name' => 'Выбор даты платежа',
+                'alias' => 'payment-date-change',
+                'category_id' => $categoryId
+            ],
+        ]);
+
+        $setting = OutletsSetting::where('alias', 'edit-payment')
+            ->first();
+
+        $setting->alias = 'payment-edit';
+        $setting->save();
+
+
+
+
+        return __('msg.ok');
     }
 
     /**

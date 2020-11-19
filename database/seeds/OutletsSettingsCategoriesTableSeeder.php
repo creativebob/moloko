@@ -32,6 +32,12 @@ class OutletsSettingsCategoriesTableSeeder extends Seeder
                 'level' => 1,
                 'alias' => 'dismiss',
             ],
+            [
+                'name' => 'Прочие',
+                'slug' => \Str::slug('Прочие'),
+                'level' => 1,
+                'alias' => 'others',
+            ],
         ]);
     }
 }
