@@ -24,7 +24,7 @@ class CreateTemplatesTable extends Migration
 
             $table->string('path')->nullable()->comment('Путь');
             $table->string('html')->nullable()->comment('Html');
-
+            $table->string('tag')->nullable()->comment('Тег');
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
