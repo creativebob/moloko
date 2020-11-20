@@ -71,7 +71,8 @@ class CatalogsGoodsItemController extends BaseController
                         ]);
                     },
                     'currency',
-                    'catalog'
+                    'catalog',
+                    'catalogs_item.directive_category'
                 ]);
             },
 
@@ -103,7 +104,8 @@ class CatalogsGoodsItemController extends BaseController
                         ]);
                     },
                     'currency',
-                    'catalog'
+                    'catalog',
+                    'catalogs_item.directive_category'
                 ]);
             },
 
