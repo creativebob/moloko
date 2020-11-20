@@ -43,47 +43,68 @@ class CatalogsGoodsItemController extends BaseController
         $catalogs_goods_item = CatalogsGoodsItem::with([
 
             // TODO - 02.07.20 - Используется на РХ
-            'prices.goods.related' => function ($q) use ($catalog_slug) {
+            'prices' => function ($q) use ($catalog_slug) {
                 $q->with([
-                    'prices' => function ($q) use ($catalog_slug) {
+                    'goods' => function ($q) use ($catalog_slug) {
                         $q->with([
-                            'catalogs_item.parent'
-                        ])
-                            ->where('display', true)
-                            ->where('archive', false)
-                            ->whereHas('catalog', function ($q) use ($catalog_slug) {
-                                $q->where('slug', $catalog_slug);
-                            });
-                    }
-                ])
-                    ->whereHas('prices', function ($q) use ($catalog_slug) {
-                        $q->where('display', true)
-                            ->where('archive', false)
-                            ->whereHas('catalog', function ($q) use ($catalog_slug) {
-                                $q->where('slug', $catalog_slug);
-                            });
-                    });
+                            'related' => function ($q) use ($catalog_slug) {
+                                $q->with([
+                                    'prices' => function ($q) use ($catalog_slug) {
+                                        $q->with([
+                                            'catalogs_item.parent'
+                                        ])
+                                            ->where('display', true)
+                                            ->where('archive', false)
+                                            ->whereHas('catalog', function ($q) use ($catalog_slug) {
+                                                $q->where('slug', $catalog_slug);
+                                            });
+                                    }
+                                ])
+                                    ->whereHas('prices', function ($q) use ($catalog_slug) {
+                                        $q->where('display', true)
+                                            ->where('archive', false)
+                                            ->whereHas('catalog', function ($q) use ($catalog_slug) {
+                                                $q->where('slug', $catalog_slug);
+                                            });
+                                    });
+                            },
+                        ]);
+                    },
+                    'currency',
+                    'catalog'
+                ]);
             },
-            'childs_prices.goods.related' => function ($q) use ($catalog_slug) {
+
+            'childs_prices'  => function ($q) use ($catalog_slug) {
                 $q->with([
-                    'prices' => function ($q) use ($catalog_slug) {
+                    'goods' => function ($q) use ($catalog_slug) {
                         $q->with([
-                            'catalogs_item.parent'
-                        ])
-                            ->where('display', true)
-                            ->where('archive', false)
-                            ->whereHas('catalog', function ($q) use ($catalog_slug) {
-                                $q->where('slug', $catalog_slug);
-                            });
-                    }
-                ])
-                    ->whereHas('prices', function ($q) use ($catalog_slug) {
-                        $q->where('display', true)
-                            ->where('archive', false)
-                            ->whereHas('catalog', function ($q) use ($catalog_slug) {
-                                $q->where('slug', $catalog_slug);
-                            });
-                    });
+                            'related' => function ($q) use ($catalog_slug) {
+                                $q->with([
+                                    'prices' => function ($q) use ($catalog_slug) {
+                                        $q->with([
+                                            'catalogs_item.parent'
+                                        ])
+                                            ->where('display', true)
+                                            ->where('archive', false)
+                                            ->whereHas('catalog', function ($q) use ($catalog_slug) {
+                                                $q->where('slug', $catalog_slug);
+                                            });
+                                    }
+                                ])
+                                    ->whereHas('prices', function ($q) use ($catalog_slug) {
+                                        $q->where('display', true)
+                                            ->where('archive', false)
+                                            ->whereHas('catalog', function ($q) use ($catalog_slug) {
+                                                $q->where('slug', $catalog_slug);
+                                            });
+                                    });
+                            },
+                        ]);
+                    },
+                    'currency',
+                    'catalog'
+                ]);
             },
 
             'directive_category:id,alias',
