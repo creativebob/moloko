@@ -448,10 +448,10 @@ const moduleLead = {
                                 state.companies.push(organization);
                             }
                         }
+                    }
 
-                        if (lead.client) {
-                            this.commit('SET_CLIENT', lead.client);
-                        }
+                    if (lead.client) {
+                        this.commit('SET_CLIENT', lead.client);
                     }
 
                     this.commit('SET_ESTIMATE', response.data.estimate);

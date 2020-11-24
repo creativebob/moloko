@@ -1079,7 +1079,6 @@ class LeadController extends Controller
                     'discounts'
                 ]);
             },
-            'client.contract',
             'lead_method',
             'choice' => function ($query) {
                 $query->orderBy('created_at', 'asc');

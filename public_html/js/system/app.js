@@ -87266,10 +87266,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return this.cash < this.debitTotal;
         },
         data: function data() {
+            var change = this.change > 0 ? this.change : 0;
+            var cash = change > 0 ? this.cash - change : this.cash;
             return {
-                cash: this.cash - this.change,
+                cash: cash,
                 cashTaken: this.cash,
-                cashChange: this.change,
+                cashChange: change,
 
                 electronically: this.electronically
             };
@@ -128348,10 +128350,10 @@ var moduleLead = {
                             state.companies.push(organization);
                         }
                     }
+                }
 
-                    if (lead.client) {
-                        _this3.commit('SET_CLIENT', lead.client);
-                    }
+                if (lead.client) {
+                    _this3.commit('SET_CLIENT', lead.client);
                 }
 
                 _this3.commit('SET_ESTIMATE', response.data.estimate);
