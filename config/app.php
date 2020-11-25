@@ -192,6 +192,9 @@ return [
         App\Providers\System\View\ViewServiceProvider::class,
         App\Providers\System\View\WidgetServiceProvider::class,
 
+        // Парсеры
+        App\Providers\System\Parser\ObserverServiceProvider::class,
+
         // Проект
         App\Providers\Project\ObserverServiceProvider::class,
         App\Providers\Project\View\ViewServiceProvider::class,

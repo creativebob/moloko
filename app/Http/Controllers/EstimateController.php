@@ -404,12 +404,14 @@ class EstimateController extends Controller
             // Аггрегируем значеняи сметы
             $this->aggregateEstimate($estimate);
 
-            // Обновляем показатели клиента
-            $this->setIndicators($estimate);
-
             $estimate->update([
                 'conducted_at' => now(),
             ]);
+
+            // Обновляем показатели клиента
+            $this->setClientIndicators($estimate);
+
+
 
             logs('documents')
                 ->info('Продана смета c id: ' . $estimate->id);

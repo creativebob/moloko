@@ -24,16 +24,20 @@ Route::any('getaccess', 'GetAccessController@set')
     ->name('getaccess.set');
 
 // Кеширование
-Route::get('/set_cache', 'System\CacheController@setCache');
-Route::get('/clear_cache', 'System\CacheController@clearCache');
-Route::get('/recache', 'System\CacheController@reCache');
+Route::prefix('/caches')
+    ->namespace('System')
+    ->name('caches.')
+    ->group(function () {
+        Route::get('/set', 'CacheController@set');
+        Route::get('/clear', 'CacheController@clear');
+        Route::get('/re-cache', 'CacheController@reCache');
+    });
 
 // Обновления системы
-Route::name('updates.')
-    ->prefix('/updates')
+Route::prefix('/updates')
     ->namespace('System')
+    ->name('updates.')
     ->group(function () {
-
         Route::get('/', 'UpdateController@update');
         Route::get('/vkusnyashka', 'UpdateController@update_vkusnyashka');
         Route::get('/add_discounts_entity', 'UpdateController@addDiscountsEntity');
@@ -43,42 +47,48 @@ Route::name('updates.')
         Route::get('/add-cancel-charges', 'UpdateController@addCancelCharges');
         Route::get('/set-checks-templates-category', 'UpdateController@setChecksTemplatesCategory');
         Route::get('/add-outlet-settings', 'UpdateController@addOutletSettings');
-
     });
 
-
 // Парсеры
-Route::get('/update_parser', 'ParserController@parser');
-Route::get('/roll_house_parser', 'ParserController@roll_house_parser');
-Route::get('/parser_rh_goods_metrics', 'ParserController@parserRhGoodsMetrics');
-Route::get('/parsers/130420', 'ParserController@parser_130420');
-Route::get('/parsers/archive_goods', 'ParserController@parserArchiveGoods');
-Route::get('/parsers/prices_goods_total', 'ParserController@parserPricesGoodsTotal');
-Route::get('/parsers/add_role', 'ParserController@addRole');
-Route::get('/parsers/set-morphs-aliases', 'ParserController@setMorphsAliases');
-Route::get('/parsers/set-organizations', 'ParserController@setOrganizations');
+Route::prefix('/parsers')
+    ->namespace('System')
+    ->name('parsers.')
+    ->group(function () {
+        Route::get('/update_parser', 'ParserController@parser');
+        Route::get('/roll_house_parser', 'ParserController@roll_house_parser');
+        Route::get('/parser_rh_goods_metrics', 'ParserController@parserRhGoodsMetrics');
+        Route::get('/130420', 'ParserController@parser_130420');
+        Route::get('/archive_goods', 'ParserController@parserArchiveGoods');
+        Route::get('/prices_goods_total', 'ParserController@parserPricesGoodsTotal');
+        Route::get('/add_role', 'ParserController@addRole');
+        Route::get('/set-morphs-aliases', 'ParserController@setMorphsAliases');
+        Route::get('/set-organizations', 'ParserController@setOrganizations');
 
-Route::get('/parsers/update-productions-entities-models', 'ParserController@updateProductionsEntitiesModel');
-Route::get('/parsers/set-registered-at', 'ParserController@setRegisteredAt');
-Route::get('/parsers/set-receipted-at', 'ParserController@setReceiptedAt');
-Route::get('/parsers/set-produced-at', 'ParserController@setProducedAt');
+        Route::get('/update-productions-entities-models', 'ParserController@updateProductionsEntitiesModel');
+        Route::get('/set-registered-at', 'ParserController@setRegisteredAt');
+        Route::get('/set-receipted-at', 'ParserController@setReceiptedAt');
+        Route::get('/set-produced-at', 'ParserController@setProducedAt');
 
-Route::get('/parsers/start-registering-documents-command', 'ParserController@startRegisteringDocumentsCommand');
+        Route::get('/start-registering-documents-command', 'ParserController@startRegisteringDocumentsCommand');
 
-Route::get('/parsers/update-payments', 'ParserController@updatePayments');
-Route::get('/parsers/set-sended-at', 'ParserController@setSendedAt');
-Route::get('/parsers/create-subscribers-from-users', 'ParserController@createSubscribersFromUsers');
-Route::get('/parsers/set-storage-for-consignments-items', 'ParserController@setStorageForConsignmentsItems');
-Route::get('/parsers/set-storage-for-productions-items', 'ParserController@setStorageForProductionsItems');
-Route::get('/parsers/set-documents-items-entities', 'ParserController@setDocumentsItemsEntities');
-Route::get('/parsers/clear-documents-tables', 'ParserController@clearDocumentsTables');
-Route::get('/parsers/set-storage-for-reserves', 'ParserController@setStorageForReserves');
-Route::get('/parsers/re-reserving', 'ParserController@reReserving');
-Route::get('/parsers/set-discounts-for-estimates', 'ParserController@setDiscountsForEstimates');
+        Route::get('/update-payments', 'ParserController@updatePayments');
+        Route::get('/set-sended-at', 'ParserController@setSendedAt');
+        Route::get('/create-subscribers-from-users', 'ParserController@createSubscribersFromUsers');
+        Route::get('/set-storage-for-consignments-items', 'ParserController@setStorageForConsignmentsItems');
+        Route::get('/set-storage-for-productions-items', 'ParserController@setStorageForProductionsItems');
+        Route::get('/set-documents-items-entities', 'ParserController@setDocumentsItemsEntities');
 
-Route::get('/parsers/update-payments-sign', 'ParserController@updatePaymentsSign');
+        Route::get('/clear-documents-tables', 'ParserController@clearDocumentsTables');
+        Route::get('/clear-sales-tables', 'ParserController@clearSalesTables');
 
-Route::get('/parsers/test', 'ParserController@test');
+        Route::get('/set-storage-for-reserves', 'ParserController@setStorageForReserves');
+        Route::get('/re-reserving', 'ParserController@reReserving');
+        Route::get('/set-discounts-for-estimates', 'ParserController@setDiscountsForEstimates');
+
+        Route::get('/update-payments-sign', 'ParserController@updatePaymentsSign');
+
+        Route::get('/test', 'ParserController@test');
+    });
 
 
 // Ролл Хаус (парсинг старой базы)

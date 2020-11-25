@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\System;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 
 class CacheController extends Controller
 {
@@ -16,48 +16,48 @@ class CacheController extends Controller
     }
 
     /**
-     * Перекеширование
-     *
-     * @return string
-     */
-    public function reCache()
-    {
-        \Artisan::call('cache:clear');
-        \Artisan::call('modelCache:clear');
-        \Artisan::call('config:clear');
-        \Artisan::call('view:clear');
-        \Artisan::call('route:clear');
-
-        \Artisan::call('optimize');
-        \Artisan::call('view:cache');
-
-        return "Кэш очищен и установлен";
-    }
-
-    /**
      * Очистка кеша
      *
-     * @return string
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
      */
-    public function clearCache()
+    public function clear()
     {
-        \Artisan::call('cache:clear');
-        \Artisan::call('modelCache:clear');
-        \Artisan::call('config:clear');
-        \Artisan::call('view:clear');
-        \Artisan::call('route:clear');
-        return "Очищен кэш";
+        Artisan::call('cache:clear');
+        Artisan::call('modelCache:clear');
+        Artisan::call('config:clear');
+        Artisan::call('view:clear');
+        Artisan::call('route:clear');
+        return __('cache.clear');
     }
 
     /**
      * Установка кеша
      *
-     * @return string
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
      */
-    public function setCache()
+    public function set()
     {
-        \Artisan::call('optimize');
-        \Artisan::call('view:cache');
-        return "Кэш установлен";
+        Artisan::call('optimize');
+        Artisan::call('view:cache');
+        return __('cache.set');
+    }
+
+    /**
+     * Перекеширование
+     *
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
+    public function reCache()
+    {
+        Artisan::call('cache:clear');
+        Artisan::call('modelCache:clear');
+        Artisan::call('config:clear');
+        Artisan::call('view:clear');
+        Artisan::call('route:clear');
+
+        Artisan::call('optimize');
+        Artisan::call('view:cache');
+
+        return __('cache.recache');
     }
 }

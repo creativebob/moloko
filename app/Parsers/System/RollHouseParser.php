@@ -2,6 +2,7 @@
 
 namespace App\Parsers\System;
 
+use App\Http\Controllers\Traits\Estimatable;
 use App\Models\System\Parser\Client;
 use App\Models\System\Parser\ContractsClient;
 use App\Models\System\Parser\Estimate;
@@ -14,9 +15,11 @@ use App\Models\System\Parser\EstimatesGoodsItem;
 use App\Models\System\RollHouse\Check;
 use App\Models\System\RollHouse\Client as ParseClient;
 use App\Models\System\Parser\Payment;
-use App\Models\System\Parser\Phone as ParsePhone;
 use App\Models\System\Parser\PricesGoods;
 
+use App\Outlet;
+use App\PaymentsMethod;
+use App\PaymentsSign;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -29,8 +32,9 @@ use Telegram\Bot\Exceptions\TelegramResponseException;
 class RollHouseParser
 {
 
-    use Clientable;
-    use UserControllerTrait;
+    use Clientable,
+        Estimatable,
+        UserControllerTrait;
 
     /**
      * Полный перенос старой базы РХ в систему
@@ -38,7 +42,7 @@ class RollHouseParser
      * @param Request $request
      * @return string
      */
-    public static function fullParser()
+    public function fullParser()
     {
         set_time_limit(0);
 
@@ -92,12 +96,12 @@ class RollHouseParser
 //                ->where('discont', '>', 0)
             ->limit(1000)
 //            ->get();
-            ->chunk(100, function($oldClients) use ($pricesGoods) {
+            ->chunk(100, function ($oldClients) use ($pricesGoods) {
                 $request = request();
                 define("COMPANY", 1);
                 define("AUTHOR", 1);
 
-                foreach($oldClients as $oldClient) {
+                foreach ($oldClients as $oldClient) {
                     // Смотрим телефон в нашей БД
                     $phone = Phone::where('phone', $oldClient->phone)
                         ->with([
@@ -174,7 +178,7 @@ class RollHouseParser
                         $user->access_block = 0;
                         $user->user_type = 0;
 
-                        if ($oldClient->birthday){
+                        if ($oldClient->birthday) {
                             $user->birthday_date = Carbon::parse($oldClient->birthday)->format('d.m.Y');
                         }
 
@@ -239,7 +243,7 @@ class RollHouseParser
 
                     } else {
                         // Если у пользователя есть заказы или есть скидка - заводим его как клиента
-                        if (($oldClient->discont > 0 && (! is_null($oldClient->discont))) || $oldClient->checks->isNotEmpty()) {
+                        if (($oldClient->discont > 0 && (!is_null($oldClient->discont))) || $oldClient->checks->isNotEmpty()) {
                             // Сохраняем пользователя как клиента
                             $client = Client::create([
                                 'clientable_id' => $user->id,
@@ -273,7 +277,7 @@ class RollHouseParser
                     }
 
                     if ($oldClient->checks->isNotEmpty()) {
-                        foreach($oldClient->checks as $check) {
+                        foreach ($oldClient->checks as $check) {
 
                             $city_id = 2;
                             $filial_id = 1;
@@ -305,7 +309,7 @@ class RollHouseParser
 
                             if ($lead) {
 //                                    dd($lead);
-                                foreach($lead->estimates as $estimate) {
+                                foreach ($lead->estimates as $estimate) {
                                     $estimate->update([
                                         'is_main' => false
                                     ]);
@@ -322,7 +326,7 @@ class RollHouseParser
                                 $lead->name = ($user->name == '' || $user->name == ' ' || is_null($user->name)) ? null : $user->name;
                                 $lead->company_name = NULL;
 
-                                $lead->draft = null;
+                                $lead->draft = false;
                                 $lead->author_id = 1;
 
                                 // TODO - 10.06.20 - Менеджер пока Серебро
@@ -427,7 +431,7 @@ class RollHouseParser
                                 $consistCount = 0;
                                 foreach ($check->consists as $consist) {
 
-                                    $prices = $pricesGoods->filter(function ($price) use ($consist, $lead){
+                                    $prices = $pricesGoods->filter(function ($price) use ($consist, $lead) {
                                         if ($price->filial_id == $lead->filial_id) {
                                             if ($price->goods->article->external == $consist->price_id) {
                                                 return $price;
@@ -583,7 +587,7 @@ class RollHouseParser
                                 }
 
                                 if ($estimate->is_dismissed == 0) {
-//                                    $this->setIndicators($estimate);
+//                                    $this->setClientIndicators($estimate);
                                     $estimate->load('client');
                                     $client = $estimate->client;
                                     $data = [];
@@ -692,7 +696,6 @@ class RollHouseParser
 //        dd($oldClients);
 
 
-
 //        return 'Гатова';
         echo 'Гатова';
 
@@ -713,9 +716,11 @@ class RollHouseParser
     /**
      * Парсер смет из базы РХ
      */
-    public static function parser()
+    public function parser()
     {
         set_time_limit(0);
+
+        \Auth::loginUsingId(4);
 
         $start = now();
 
@@ -727,16 +732,10 @@ class RollHouseParser
         $authUser = auth()->user();
         $request = request();
 
-        $pricesGoods = PricesGoods::with([
-            'goods.article'
-        ])
-            ->where('archive', false)
-            ->get();
-
         $checks = Check::with([
-                'client',
-                'consists',
-            ])
+            'client',
+            'consists',
+        ])
             ->whereDate('created', '>=', '2019-12-17')
             ->whereNull('employer_id')
             ->where(function ($q) {
@@ -745,14 +744,20 @@ class RollHouseParser
             })
             ->where('progress', '!=', 1)
             ->where('is_parse', false)
-            ->limit(3000)
+            ->limit(3)
             ->get();
 
         if ($checks->isNotEmpty()) {
 
             $msg = "Найдены новые обращения, парсим.\r\nId лидов:\r\n";
 
-            foreach($checks as $check) {
+            $paymentsSignId = PaymentsSign::where('alias', 'sell')
+                ->value('id');
+
+            $paymentsMethodId = PaymentsMethod::where('alias', 'full_payment')
+                ->value('id');
+
+            foreach ($checks as $check) {
                 $oldClient = $check->client;
                 // Смотрим телефон в нашей БД
                 $phone = Phone::where('phone', $oldClient->phone)
@@ -799,7 +804,6 @@ class RollHouseParser
 //                    dd($user);
 //                    $user->save();
                     }
-
 
 
                 } else {
@@ -943,7 +947,7 @@ class RollHouseParser
 
                 $estimate = Estimate::where('external', $check->id)
                     ->first();
-                if (! $estimate) {
+                if (!$estimate) {
                     $city_id = 2;
                     $filial_id = 1;
                     switch ($check->branch_id) {
@@ -975,7 +979,7 @@ class RollHouseParser
                         $lead->name = ($user->name == '' || $user->name == ' ' || is_null($user->name)) ? null : $user->name;
                         $lead->company_name = NULL;
 
-                        $lead->draft = null;
+                        $lead->draft = false;
                         $lead->author_id = 1;
 
                         // TODO - 10.06.20 - Менеджер пока Серебро
@@ -1089,7 +1093,7 @@ class RollHouseParser
                             $lead->name = ($user->name == '' || $user->name == ' ' || is_null($user->name)) ? null : $user->name;
                             $lead->company_name = null;
 
-                            $lead->draft = null;
+                            $lead->draft = false;
                             $lead->author_id = 1;
 
                             // TODO - 10.06.20 - Менеджер пока Серебро
@@ -1195,7 +1199,7 @@ class RollHouseParser
                 // Если создали клиента, то вписываем ему source_id, если он есть у лида (если сращивали)
                 if ($createClient) {
                     $client->update([
-                       'source_id' => $lead->source_id
+                        'source_id' => $lead->source_id
                     ]);
                 }
 
@@ -1205,7 +1209,7 @@ class RollHouseParser
                         'client_id' => $lead->client_id,
                         'filial_id' => $lead->filial_id,
 
-                        'discount' => 0,
+                        'discount_currency' => 0,
                         'discount_percent' => 0,
 
                         'margin_currency' => 0,
@@ -1216,7 +1220,6 @@ class RollHouseParser
 
                         'number' => $lead->case_number,
                         'date' => $check->created->format('d.m.Y'),
-
 
                         'is_main' => 1,
                         'is_dismissed' => ($check->progress == 2) ? 0 : 1,
@@ -1256,12 +1259,29 @@ class RollHouseParser
 
                     $estimatesGoodsItemsInsert = [];
                     $consistCount = 0;
-                    foreach ($check->consists as $consist) {
 
-                        $prices = $pricesGoods->filter(function ($price) use ($consist, $lead){
-                            if ($price->filial_id == $lead->filial_id) {
-                                if ($price->goods->article->external == $consist->price_id) {
-                                    return $price;
+                    $pricesGoods = PricesGoods::with([
+                        'goods.article'
+                    ])
+                        ->where([
+                            'archive' => false,
+                            'filial_id' => $lead->filial_id
+                        ])
+                        ->get();
+
+                    // TODO - 24.11.20 - Пока берем первую торговую точку по филиалу
+                    $outlet = Outlet::where('filial_id', $lead->filial_id)
+                        ->first();
+
+                    foreach ($check->consists as $consist) {
+                        $prices = $pricesGoods->filter(function ($priceGoods) use ($consist) {
+                            if (isset($priceGoods->external)) {
+                                if ($priceGoods->external == $consist->price_id) {
+                                    return $priceGoods;
+                                }
+                            } else {
+                                if ($priceGoods->goods->article->external == $consist->price_id) {
+                                    return $priceGoods;
                                 }
                             }
                         });
@@ -1272,41 +1292,49 @@ class RollHouseParser
                             }
                             $priceGoods = $prices->first();
                             $count = $consist->count;
+
                             $data = [
-                                'currency_id' => 1,
-                                'goods_id' => $priceGoods->goods->id,
                                 'price_id' => $priceGoods->id,
-                                'price' => $consist->summa ?? 0,
-                                'count' => $count ?? 0,
+                                'goods_id' => $priceGoods->goods->id,
+                                'currency_id' => $priceGoods->currency_id,
+
+                                'stock_id' => $outlet->stock_id,
+
+                                'cost_unit' => $priceGoods->goods->article->cost_default,
                                 'cost' => $priceGoods->goods->article->cost_default * $count,
-                                'amount' => $count * $consist->summa,
+
+                                'price' => $consist->summa ?? 0,
                                 'points' => $priceGoods->points,
+
+                                'count' => $count ?? 0,
+                                'amount' => $count * $consist->summa,
+
+                                'price_discount_id' => $priceGoods->price_discount_id,
+                                'price_discount_unit' => $priceGoods->price_discount,
+
+                                'catalogs_item_discount_id' => $priceGoods->catalogs_item_discount_id,
+                                'catalogs_item_discount_unit' => $priceGoods->catalogs_item_discount,
+
+                                'estimate_discount_id' => $priceGoods->estimate_discount_id,
+                                'estimate_discount_unit' => $priceGoods->estimate_discount,
+
+                                'client_discount_percent' => $client ? $client->discount : 0,
 
                                 'created_at' => $consist->created,
                                 'timestamps' => false,
 
+                                'sale_mode' => isset($consist->rh) ? 2 : 1,
                                 'total_points' => $consist->rh ?? 0,
 
-                                'company_id' => COMPANY,
-                                'author_id' => AUTHOR,
                                 'display' => true
                             ];
 
-                            $data['discount_percent'] = is_null($consist->discont) ? 0 : $consist->discont;
-                            $data['discount_currency'] = ($data['amount'] / 100) * $data['discount_percent'];
+                            if ($consist->discont > 0) {
+                                $data['is_manual'] = 1;
 
-                            if ($data['points'] > 0) {
-                                $data['total'] = 0;
-                            } else {
-                                $data['total'] = $data['amount'] - $data['discount_currency'];
-                            }
-
-
-                            $data['margin_currency'] = $data['total'] - $data['cost'];
-                            if ($data['total'] > 0) {
-                                $data['margin_percent'] = ($data['margin_currency'] / $data['total']) * 100;
-                            } else {
-                                $data['margin_percent'] = 0;
+                                $percent = $consist->summa / 100;
+                                $data['manual_discount_currency'] = $consist->discont;
+                                $data['manual_discount_percent'] = $consist->discont / $percent;
                             }
 
                             $estimatesGoodsItemsInsert[] = EstimatesGoodsItem::make($data);
@@ -1324,56 +1352,8 @@ class RollHouseParser
                         echo "У сметы [{$estimate->id}] сходится состав\r\n";
                     }
 
-
-
-                    // Обновляем смету
-                    $estimate->load([
-                        'goods_items',
-                    ]);
-
-                    $cost = 0;
-                    $amount = 0;
-                    $total = 0;
-                    $points = 0;
-                    $discountItemsCurrency = 0;
-                    $totalPoints = 0;
-                    $totalBonuses = 0;
-
-                    if ($estimate->goods_items->isNotEmpty()) {
-                        $cost += $estimate->goods_items->sum('cost');
-                        $amount += $estimate->goods_items->sum('amount');
-                        $total += $estimate->goods_items->sum('total');
-                        $points += $estimate->goods_items->sum('points');
-                        $discountItemsCurrency += $estimate->goods_items->sum('discount_currency');
-                        $totalPoints += $estimate->goods_items->sum('total_points');
-                        $totalBonuses += $estimate->goods_items->sum('total_bonuses');
-                    }
-
-                    $marginCurrency = 0;
-                    $marginPercent = 0;
-                    $discount = 0;
-
-                    if ($amount > 0) {
-                        $discount = (($amount * $estimate->discount_percent) / 100);
-                        $marginCurrency = $total - $cost;
-                        $marginPercent = ($marginCurrency / $total * 100);
-                    }
-
-                    $data = [
-                        'cost' => $cost,
-                        'amount' => $amount,
-                        'discount' => $discount,
-                        'total' => $total,
-                        'margin_currency' => $marginCurrency,
-                        'margin_percent' => $marginPercent,
-                        'points' => $points,
-                        'discount_items_currency' => $discountItemsCurrency,
-                        'total_points' => $totalPoints,
-                        'total_bonuses' => $totalBonuses,
-                        'timestamps' => false
-                    ];
-
-                    $estimate->update($data);
+                    // Аггрегируем значеняи сметы
+                    $this->aggregateEstimate($estimate);
 
                     $estimate->save([
                         'created_at' => $check->created,
@@ -1409,43 +1389,9 @@ class RollHouseParser
                     }
 
                     if ($estimate->is_dismissed == 0) {
-//                                    $this->setIndicators($estimate);
-                        $estimate->load('client');
-                        $client = $estimate->client;
-                        $data = [];
-
-                        $data['first_order_date'] = isset($client->first_order_date) ? Carbon::parse($client->first_order_date) : Carbon::parse($estimate->created_at);
-                        $data['last_order_date'] = Carbon::parse($estimate->created_at);
-                        $data['orders_count'] = $client->orders_count + 1;
-
-                        // TODO - 23.04.20 - Если разница меньше 1 месяца, то вписываем 1 месяц в секундах
-                        $diffInMonths = $data['first_order_date']->diffInMonths($data['last_order_date']);
-                        if ($diffInMonths == 0) {
-                            $diffInMonths = 1;
-                        }
-                        $data['lifetime'] = $diffInMonths;
-
-                        $data['purchase_frequency'] = $data['orders_count'] / $data['lifetime'];
-                        $data['ait'] = 1 / $data['purchase_frequency'];
-
-                        $total = Estimate::where([
-                            'client_id' => $client->id,
-                        ])
-                            ->whereNotNull('conducted_at')
-                            ->sum('total');
-                        $data['customer_equity'] = $total + $estimate->total;
-
-                        $data['average_order_value'] = $data['customer_equity'] / $data['orders_count'];
-                        $data['customer_value'] = $data['average_order_value'] * $data['purchase_frequency'];
-
-                        // TODO - 22.04.20 - Lifetime перевести в месяца
-                        $data['ltv'] = $data['lifetime'] * $data['average_order_value'] * $data['purchase_frequency'];
-
-                        // TODO - 22.04.20 - Пока нет промоакций
-                        $data['use_promo_count'] = 0;
-                        $data['promo_rate'] = $data['use_promo_count'] / $data['orders_count'];
-
-                        $client->update($data);
+//                                    $this->setClientIndicators($estimate);
+                        // Обновляем показатели клиента
+                        $this->setClientIndicators($estimate);
 
                         // Создаем договор
                         $contracts_client = ContractsClient::create([
@@ -1458,50 +1404,51 @@ class RollHouseParser
                         ]);
                     }
 
+                    // Фиксируем платежи
                     if ($check->progress == 2) {
-                        // Фиксируем платежи
-                        if ($check->cash) {
-                            if ($check->cash > 0) {
-                                $payment = Payment::create([
-                                    'contract_id' => $contracts_client->id,
-                                    'contract_type' => 'App\ContractsClient',
-                                    'document_id' => $estimate->id,
-                                    'document_type' => 'App\Models\System\Documents\Estimate',
-                                    'payments_type_id' => 1,
-                                    'amount' => $check->cash,
-                                    'date' => $check->created->format('d.m.Y'),
-                                    'currency_id' => 1,
-                                    'created_at' => $check->created,
-                                    'timestamps' => false,
+                        $data = [
+                            'contract_id' => $contracts_client->id,
+                            'contract_type' => 'App\ContractsClient',
+                            'document_id' => $estimate->id,
+                            'document_type' => 'App\Models\System\Documents\Estimate',
 
-                                    'company_id' => COMPANY,
-                                    'author_id' => AUTHOR,
-                                    'display' => true
-                                ]);
-                            }
+                            'currency_id' => 1,
+
+                            'cash' => isset($check->cash) ? $check->cash : 0,
+                            'electronically' => isset($check->cashless) ? $check->cashless : 0,
+
+                            'payments_sign_id' => $paymentsSignId,
+                            'payments_method_id' => $paymentsMethodId,
+
+                            'registered_at' => $check->created,
+
+                            'created_at' => $check->created,
+                            'timestamps' => false,
+
+                            'company_id' => COMPANY,
+                            'author_id' => AUTHOR,
+                            'display' => true
+                        ];
+
+                        $data['total'] = $data['cash'] + $data['electronically'];
+
+                        if ($data['cash'] > 0 && $data['electronically'] == 0) {
+                            $data['type'] = 'cash';
+                            $data['cash_taken'] = $data['cash'];
                         }
 
-                        if ($check->cashless) {
-                            if ($check->cashless > 0) {
-                                $payment = Payment::create([
-                                    'contract_id' => $contracts_client->id,
-                                    'contract_type' => 'App\ContractsClient',
-                                    'document_id' => $estimate->id,
-                                    'document_type' => 'App\Models\System\Documents\Estimate',
-                                    'payments_type_id' => 2,
-                                    'amount' => $check->cashless,
-                                    'date' => Carbon::parse($check->created)->format('d.m.Y'),
-                                    'currency_id' => 1,
-                                    'created_at' => $check->created,
-                                    'timestamps' => false,
-
-                                    'company_id' => COMPANY,
-                                    'author_id' => AUTHOR,
-                                    'display' => true
-                                ]);
-                            }
+                        if ($data['cash'] == 0 && $data['electronically'] > 0) {
+                            $data['type'] = 'electronically';
                         }
+
+                        if ($data['cash'] > 0 && $data['electronically'] > 0) {
+                            $data['type'] = 'mixed';
+                            $data['cash_taken'] = $data['cash'];
+                        }
+
+                        $payment = Payment::create($data);
                     }
+
                 }
 
                 $check->is_parse = true;

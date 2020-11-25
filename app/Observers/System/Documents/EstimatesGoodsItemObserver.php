@@ -1,13 +1,13 @@
 <?php
-    
-    namespace App\Observers\System\Documents;
+
+namespace App\Observers\System\Documents;
 
 use App\Models\System\Documents\EstimatesGoodsItem;
 use App\Observers\System\BaseObserver;
 
 class EstimatesGoodsItemObserver extends BaseObserver
 {
-   
+
     /**
      * Handle the estimate goods item "creating" event.
      *
@@ -17,7 +17,7 @@ class EstimatesGoodsItemObserver extends BaseObserver
     {
         $this->store($estimatesGoodsItem);
     }
-    
+
     /**
      * Handle the estimate goods item "updating" event.
      *
@@ -27,7 +27,7 @@ class EstimatesGoodsItemObserver extends BaseObserver
     {
         $this->update($estimatesGoodsItem);
     }
-    
+
     /**
      * Handle the estimate goods item "deleting" event.
      *
@@ -40,7 +40,6 @@ class EstimatesGoodsItemObserver extends BaseObserver
 
     public function setAggregations($item)
     {
-        $item->load('product.article');
         $saleMode = $item->sale_mode;
 
         switch ($saleMode) {
@@ -84,7 +83,7 @@ class EstimatesGoodsItemObserver extends BaseObserver
 
                         $item->discount_currency = $item->amount - $item->total;
                         if ($item->discount_currency > 0) {
-                            $item->discount_percent = $item->discount_currency* 100 / $item->amount;
+                            $item->discount_percent = $item->discount_currency * 100 / $item->amount;
                         } else {
                             $item->discount_percent = 0;
                         }
@@ -115,7 +114,7 @@ class EstimatesGoodsItemObserver extends BaseObserver
                         $item->total_computed_discount = $item->computed_discount_currency * $item->count;
 
                         $item->discount_currency = $item->manual_discount_currency;
-                        $item->discount_percent =  $item->manual_discount_percent;
+                        $item->discount_percent = $item->manual_discount_percent;
                     }
                 } else {
                     // Иначе рассчитываем
@@ -142,7 +141,7 @@ class EstimatesGoodsItemObserver extends BaseObserver
 
                     $item->discount_currency = $item->amount - $item->total;
                     if ($item->discount_currency > 0) {
-                        $item->discount_percent = $item->discount_currency* 100 / $item->amount;
+                        $item->discount_percent = $item->discount_currency * 100 / $item->amount;
                     } else {
                         $item->discount_percent = 0;
                     }
@@ -204,10 +203,9 @@ class EstimatesGoodsItemObserver extends BaseObserver
         $item->total = $item->total_client_discount;
 
 
-
         $item->discount_currency = $item->amount - $item->total;
         if ($item->discount_currency > 0) {
-            $item->discount_percent = $item->discount_currency* 100 / $item->amount;
+            $item->discount_percent = $item->discount_currency * 100 / $item->amount;
         } else {
             $item->discount_percent = 0;
         }
