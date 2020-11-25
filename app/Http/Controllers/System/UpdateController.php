@@ -83,15 +83,6 @@ class UpdateController extends Controller
             ],
         ]);
 
-        $setting = OutletsSetting::where('alias', 'edit-payment')
-            ->first();
-
-        $setting->alias = 'payment-edit';
-        $setting->save();
-
-
-
-
         return __('msg.ok');
     }
 
