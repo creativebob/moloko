@@ -168,11 +168,9 @@ return [
         Illuminate\View\ViewServiceProvider::class,
 
         // Те, что подключаем сами, ручками )))
-        Collective\Html\HtmlServiceProvider::class,
-        Intervention\Image\ImageServiceProvider::class,
-        morphos\MorphosBladeProvider::class,
-
-        // ElForastero\Transliterate\TransliterationServiceProvider::class,
+//        Collective\Html\HtmlServiceProvider::class,
+//        Intervention\Image\ImageServiceProvider::class,
+//        morphos\MorphosBladeProvider::class,
 
         /*
          * Package Service Providers...
@@ -181,23 +179,26 @@ return [
         /*
          * Application Service Providers...
          */
-        App\Providers\AppServiceProvider::class,
+
         App\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
 
         // Система
+        App\Providers\System\AppServiceProvider::class,
+        App\Providers\System\RouteServiceProvider::class,
         App\Providers\System\ObserverServiceProvider::class,
         App\Providers\System\View\ViewServiceProvider::class,
         App\Providers\System\View\WidgetServiceProvider::class,
 
-        // Парсеры
-        App\Providers\System\Parser\ObserverServiceProvider::class,
-
         // Проект
+        App\Providers\Project\AppServiceProvider::class,
+        App\Providers\Project\RouteServiceProvider::class,
         App\Providers\Project\ObserverServiceProvider::class,
         App\Providers\Project\View\ViewServiceProvider::class,
+
+        // Парсеры
+        App\Providers\System\Parser\ObserverServiceProvider::class,
 
         // Morph
         App\Providers\MorphsServiceProvider::class,
