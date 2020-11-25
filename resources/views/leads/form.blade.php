@@ -89,8 +89,9 @@
                             <div class="small-12 medium-12 cell">
                                 <div class="grid-x grid-padding-x">
 
-
                                 </div>
+
+
 
                                 @if($lead->client)
                                     {{--                                    @if ($lead->client->orders_count > 0)--}}
