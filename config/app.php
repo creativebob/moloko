@@ -187,22 +187,22 @@ return [
         // Система
         App\Providers\System\AppServiceProvider::class,
         App\Providers\System\RouteServiceProvider::class,
+        App\Providers\System\AuthServiceProvider::class,
         App\Providers\System\ObserverServiceProvider::class,
         App\Providers\System\View\ViewServiceProvider::class,
         App\Providers\System\View\WidgetServiceProvider::class,
+        App\Providers\System\MorphsServiceProvider::class,
 
         // Проект
         App\Providers\Project\AppServiceProvider::class,
         App\Providers\Project\RouteServiceProvider::class,
+        App\Providers\System\AuthServiceProvider::class,
         App\Providers\Project\ObserverServiceProvider::class,
         App\Providers\Project\View\ViewServiceProvider::class,
+        App\Providers\Project\MorphsServiceProvider::class,
 
         // Парсеры
         App\Providers\System\Parser\ObserverServiceProvider::class,
-
-        // Morph
-        App\Providers\MorphsServiceProvider::class,
-        App\Providers\MorphsProjectServiceProvider::class,
     ],
 
     /*
