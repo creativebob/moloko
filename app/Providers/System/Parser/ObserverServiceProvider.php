@@ -3,7 +3,7 @@
 namespace App\Providers\System\Parser;
 
 use App\Models\System\Parser\EstimatesGoodsItem;
-use App\Observers\Project\EstimatesGoodsItemObserver;
+use App\Observers\System\Parser\EstimatesGoodsItemObserver;
 use Illuminate\Support\ServiceProvider;
 
 class ObserverServiceProvider extends ServiceProvider

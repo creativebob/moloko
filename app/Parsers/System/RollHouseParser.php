@@ -744,7 +744,6 @@ class RollHouseParser
             })
             ->where('progress', '!=', 1)
             ->where('is_parse', false)
-            ->limit(3)
             ->get();
 
         if ($checks->isNotEmpty()) {
@@ -1333,8 +1332,8 @@ class RollHouseParser
                                 $data['is_manual'] = 1;
 
                                 $percent = $consist->summa / 100;
-                                $data['manual_discount_currency'] = $consist->discont;
-                                $data['manual_discount_percent'] = $consist->discont / $percent;
+                                $data['manual_discount_percent'] = $consist->discont;
+                                $data['manual_discount_currency'] = $consist->discont * $percent;
                             }
 
                             $estimatesGoodsItemsInsert[] = EstimatesGoodsItem::make($data);
