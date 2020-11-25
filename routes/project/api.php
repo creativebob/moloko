@@ -18,10 +18,7 @@ Route::group(['prefix' => '/v1',
     'namespace' => 'Api\v1',
     'as' => 'project.api.'
 ], function () {
-    Route::apiResource('/catalogs_goods_items', 'CatalogsGoodsItemController')
-    ->only([
-        'show'
-    ]);
+    Route::post('/catalogs_goods_items', 'CatalogsGoodsItemController@show');
 
     Route::apiResource('/display_modes', 'DisplayModesController')
         ->only([

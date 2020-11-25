@@ -13,37 +13,40 @@ class CatalogsGoodsItemController extends Controller
     /**
      * Display the specified resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(Request $request)
     {
+
+        $catalogId = $request->catalog_id;
         // Получаем полный раздел со всеми прайсами
         // TODO - 09.06.20 - Нужно какое то условие или настройка какие прайсы грузить (самого раздела, или вложенных в него)
-        $catalogs_goods_item = CatalogsGoodsItem::with([
-
-            // TODO - 02.07.20 - Используется на РХ
-            'prices' => function ($q) use ($catalog_slug) {
+        $catalogsGoodsItem = CatalogsGoodsItem::with([
+//
+//            // TODO - 02.07.20 - Используется на РХ
+            'prices' => function ($q) use ($catalogId) {
                 $q->with([
-                    'goods' => function ($q) use ($catalog_slug) {
+                    'goods' => function ($q) use ($catalogId) {
                         $q->with([
-                            'related' => function ($q) use ($catalog_slug) {
+                            'related' => function ($q) use ($catalogId) {
                                 $q->with([
-                                    'prices' => function ($q) use ($catalog_slug) {
+                                    'prices' => function ($q) use ($catalogId) {
                                         $q->with([
                                             'catalogs_item.parent'
                                         ])
                                             ->where('display', true)
                                             ->where('archive', false)
-                                            ->whereHas('catalog', function ($q) use ($catalog_slug) {
-                                                $q->where('slug', $catalog_slug);
+                                            ->whereHas('catalog', function ($q) use ($catalogId) {
+                                                $q->where('id', $catalogId);
                                             });
                                     }
                                 ])
-                                    ->whereHas('prices', function ($q) use ($catalog_slug) {
+                                    ->whereHas('prices', function ($q) use ($catalogId) {
                                         $q->where('display', true)
                                             ->where('archive', false)
-                                            ->whereHas('catalog', function ($q) use ($catalog_slug) {
-                                                $q->where('slug', $catalog_slug);
+                                            ->whereHas('catalog', function ($q) use ($catalogId) {
+                                                $q->where('id', $catalogId);
                                             });
                                     });
                             },
@@ -54,29 +57,29 @@ class CatalogsGoodsItemController extends Controller
                     'catalogs_item.directive_category'
                 ]);
             },
-
-            'childs_prices'  => function ($q) use ($catalog_slug) {
+//
+            'childs_prices'  => function ($q) use ($catalogId) {
                 $q->with([
-                    'goods' => function ($q) use ($catalog_slug) {
+                    'goods' => function ($q) use ($catalogId) {
                         $q->with([
-                            'related' => function ($q) use ($catalog_slug) {
+                            'related' => function ($q) use ($catalogId) {
                                 $q->with([
-                                    'prices' => function ($q) use ($catalog_slug) {
+                                    'prices' => function ($q) use ($catalogId) {
                                         $q->with([
                                             'catalogs_item.parent'
                                         ])
                                             ->where('display', true)
                                             ->where('archive', false)
-                                            ->whereHas('catalog', function ($q) use ($catalog_slug) {
-                                                $q->where('slug', $catalog_slug);
+                                            ->whereHas('catalog', function ($q) use ($catalogId) {
+                                                $q->where('id', $catalogId);
                                             });
                                     }
                                 ])
-                                    ->whereHas('prices', function ($q) use ($catalog_slug) {
+                                    ->whereHas('prices', function ($q) use ($catalogId) {
                                         $q->where('display', true)
                                             ->where('archive', false)
-                                            ->whereHas('catalog', function ($q) use ($catalog_slug) {
-                                                $q->where('slug', $catalog_slug);
+                                            ->whereHas('catalog', function ($q) use ($catalogId) {
+                                                $q->where('id', $catalogId);
                                             });
                                     });
                             },
@@ -87,20 +90,25 @@ class CatalogsGoodsItemController extends Controller
                     'catalogs_item.directive_category'
                 ]);
             },
-
-            'directive_category:id,alias',
-            'filters.values',
-            'catalog'
+//
+//            'directive_category:id,alias',
+//            'filters.values',
+//            'catalog'
         ])
-            ->where('slug', $slug)
-            ->whereHas('catalog', function ($q) use ($site, $catalog_slug) {
-                $q->where('slug', $catalog_slug)
-                    ->whereHas('filials', function ($q) use ($site) {
-                        $q->where('id', $site->filial->id);
-                    });
-            })
             ->display()
-            ->first();
-//        dd($catalogs_goods_item);
+            ->find($request->catalogs_item_id);
+//        dd($catalogsGoodsItem);
+
+        $pricesGoods = [];
+
+        if ($catalogsGoodsItem->prices->isNotEmpty()) {
+            $pricesGoods = $catalogsGoodsItem->prices;
+        }
+
+        if ($catalogsGoodsItem->childs_prices->isNotEmpty()) {
+            $pricesGoods = $catalogsGoodsItem->childs_prices;
+        }
+
+        return response()->json($pricesGoods);
     }
 }

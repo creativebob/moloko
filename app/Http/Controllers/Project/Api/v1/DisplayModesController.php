@@ -15,6 +15,7 @@ class DisplayModesController extends Controller
      */
     public function index()
     {
-        return response()->json(DisplayMode::get());
+        $displayModes = DisplayMode::get();
+        return response()->json($displayModes);
     }
 }
