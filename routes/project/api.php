@@ -22,5 +22,10 @@ Route::group(['prefix' => '/v1',
     ->only([
         'show'
     ]);
+
+    Route::apiResource('/display_modes', 'DisplayModesController')
+        ->only([
+            'index'
+        ]);
 });
 
