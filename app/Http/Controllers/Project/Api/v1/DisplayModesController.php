@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Project;
+namespace App\Http\Controllers\Project\Api\v1;
 
 use App\DisplayMode;
 use App\Http\Controllers\Controller;
