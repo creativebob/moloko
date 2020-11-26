@@ -158,23 +158,30 @@ trait Cancelable
         // Себестоимость
         $cost = $cmv->cost;
 
-        logs('documents')
-            ->info('Существует себестоимость c id: ' . $cost->id);
-        logs('documents')
-            ->info("Значения min: {$cost->min}, max: {$cost->max} , average: {$cost->average}");
+        if ($cost) {
+            logs('documents')
+                ->info('Существует себестоимость c id: ' . $cost->id);
+            logs('documents')
+                ->info("Значения min: {$cost->min}, max: {$cost->max} , average: {$cost->average}");
 
-        $costAverage = $cost->average;
-        if ($storage->count > 0) {
-            $average = (($storageCount * $costAverage) + ($off->count * $off->average)) / $storage->count;
+            $costAverage = $cost->average;
+            if ($storage->count > 0) {
+                $average = (($storageCount * $costAverage) + ($off->count * $off->average)) / $storage->count;
+            } else {
+                $average = (($storageCount * $costAverage) + ($off->count * $off->average));
+            };
+            $cost->update([
+                'average' => $average
+            ]);
+
+            logs('documents')
+                ->info("Обновлены значения min: {$cost->min}, max: {$cost->max} , average: {$cost->average}");
         } else {
-            $average = (($storageCount * $costAverage) + ($off->count * $off->average));
-        };
-        $cost->update([
-            'average' => $average
-        ]);
+            logs('documents')
+                ->info('Не существует себестоимость');
+        }
 
-        logs('documents')
-            ->info("Обновлены значения min: {$cost->min}, max: {$cost->max} , average: {$cost->average}");
+
 
         $off->forceDelete();
 

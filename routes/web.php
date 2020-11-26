@@ -78,9 +78,6 @@ Route::prefix('/parsers')
         Route::get('/set-storage-for-productions-items', 'ParserController@setStorageForProductionsItems');
         Route::get('/set-documents-items-entities', 'ParserController@setDocumentsItemsEntities');
 
-        Route::get('/clear-documents-tables', 'ParserController@clearDocumentsTables');
-        Route::get('/clear-sales-tables', 'ParserController@clearSalesTables');
-
         Route::get('/set-storage-for-reserves', 'ParserController@setStorageForReserves');
         Route::get('/re-reserving', 'ParserController@reReserving');
         Route::get('/set-discounts-for-estimates', 'ParserController@setDiscountsForEstimates');
