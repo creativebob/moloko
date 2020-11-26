@@ -30,7 +30,8 @@ class EstimateController extends BaseController
                     'price_goods' => function ($q) {
                         $q->with([
                             'currency',
-                            'catalogs_item.directive_category:id,alias'
+                            'catalogs_item.directive_category:id,alias',
+                            'catalog',
                         ]);
                     }
                 ]);
