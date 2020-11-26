@@ -64,7 +64,7 @@ trait Offable
                             'stock_id' => $item->document->stock_id,
                             'filial_id' => $item->document->filial_id,
                         ];
-                        $modelStorage = Entity::where('alias', $storage->getTable())
+                        $modelStorage = Entity::where('alias', $composition->getTable() . '_stocks')
                             ->value('model');
 
                         $storage = $modelStorage::create($dataStock);
