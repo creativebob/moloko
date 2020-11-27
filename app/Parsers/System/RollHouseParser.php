@@ -1299,7 +1299,7 @@ class RollHouseParser
 
                                 'stock_id' => $outlet->stock_id,
 
-                                'cost_unit' => $priceGoods->goods->article->cost_default,
+                                'cost_unit' => $priceGoods->goods->article->cost_default ?? 0,
                                 'cost' => $priceGoods->goods->article->cost_default * $count,
 
                                 'price' => $consist->summa ?? 0,
