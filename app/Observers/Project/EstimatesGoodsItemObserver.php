@@ -112,10 +112,10 @@ class EstimatesGoodsItemObserver
         $item->total_price_discount = $item->amount - $item->price_discount;
 
         $item->catalogs_item_discount = $item->catalogs_item_discount_unit * $item->count;
-        $item->total_catalogs_item_discount = $item->amount - $item->catalogs_item_discount;
+        $item->total_catalogs_item_discount = $item->total_price_discount - $item->catalogs_item_discount;
 
         $item->estimate_discount = $item->estimate_discount_unit * $item->count;
-        $item->total_estimate_discount = $item->amount - $item->estimate_discount;
+        $item->total_estimate_discount = $item->total_catalogs_item_discount - $item->estimate_discount;
 
         if ($item->client_discount_percent > 0) {
             $item->client_discount_unit_currency = $item->total_estimate_discount / 100 * $item->client_discount_percent / $item->count;
@@ -141,7 +141,7 @@ class EstimatesGoodsItemObserver
 
         $item->manual_discount_currency = 0;
         $item->manual_discount_percent = 0;
-        $item->total_manual_discount_percent;
+        $item->total_manual_discount = 0;
 
         return $item;
     }
