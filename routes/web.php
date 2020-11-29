@@ -78,9 +78,6 @@ Route::prefix('/parsers')
         Route::get('/set-storage-for-productions-items', 'ParserController@setStorageForProductionsItems');
         Route::get('/set-documents-items-entities', 'ParserController@setDocumentsItemsEntities');
 
-        Route::get('/clear-documents-tables', 'ParserController@clearDocumentsTables');
-        Route::get('/clear-sales-tables', 'ParserController@clearSalesTables');
-
         Route::get('/set-storage-for-reserves', 'ParserController@setStorageForReserves');
         Route::get('/re-reserving', 'ParserController@reReserving');
         Route::get('/set-discounts-for-estimates', 'ParserController@setDiscountsForEstimates');
@@ -458,7 +455,9 @@ Route::any('/raws_create_mode', 'RawController@ajax_change_create_mode');
 // Основные методы
 Route::resource('/raws_stocks', 'RawsStockController')
     ->only([
-        'index'
+        'index',
+        'edit',
+        'update'
     ]);
 
 
@@ -496,7 +495,9 @@ Route::any('/containers_create_mode', 'ContainerController@ajax_change_create_mo
 // Основные методы
 Route::resource('/containers_stocks', 'ContainersStockController')
     ->only([
-        'index'
+        'index',
+        'edit',
+        'update'
     ]);
 
 
@@ -534,7 +535,9 @@ Route::any('/attachments_create_mode', 'ContainerController@ajax_change_create_m
 // Основные методы
 Route::resource('/attachments_stocks', 'AttachmentsStockController')
     ->only([
-        'index'
+        'index',
+        'edit',
+        'update'
     ]);
 
 
@@ -567,7 +570,9 @@ Route::any('/tools_create_mode', 'ToolController@ajax_change_create_mode')->midd
 // Основные методы
 Route::resource('/tools_stocks', 'ToolsStockController')
     ->only([
-        'index'
+        'index',
+        'edit',
+        'update'
     ]);
 
 
@@ -661,7 +666,9 @@ Route::any('/processes_groups_list', 'ProcessesGroupController@ajax_processes_gr
 // Основные методы
 Route::resource('/goods_stocks', 'GoodsStockController')
     ->only([
-        'index'
+        'index',
+        'edit',
+        'update'
     ]);
 
 

@@ -60,7 +60,7 @@ class RawsStockController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param $id
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function edit($id)
@@ -69,7 +69,10 @@ class RawsStockController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
-        $stock = RawsStock::moderatorLimit($answer)
+        $stock = RawsStock::with([
+            'cmv.article'
+        ])
+        ->moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
         ->find($id);
@@ -79,9 +82,9 @@ class RawsStockController extends Controller
 
         // Инфо о странице
         $pageInfo = pageInfo($this->entityAlias);
-        // dd($pageInfo);
+//         dd($pageInfo);
 
-        return view('system.common.stocks.edit', compact('stock', 'pageInfo', 'filter'));
+        return view('system.common.stocks.edit', compact('stock', 'pageInfo'));
     }
 
 }

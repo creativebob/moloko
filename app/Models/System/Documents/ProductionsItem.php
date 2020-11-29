@@ -74,6 +74,11 @@ class ProductionsItem extends BaseModel
         return $this->morphOne(Receipt::class, 'documents_item');
     }
 
+    public function receipts()
+    {
+        return $this->morphMany(Receipt::class, 'documents_item');
+    }
+
     public function manufacturer()
     {
         return $this->belongsTo(Manufacturer::class);
