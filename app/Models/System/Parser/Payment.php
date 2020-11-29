@@ -45,16 +45,28 @@ class Payment extends Model
 
     protected $dates = [
         'deleted_at',
-        'date'
+        'registered_at'
     ];
 
     protected $fillable = [
-        'payments_type_id',
-        'amount',
+        'registered_at',
+
+        'cash',
+        'electronically',
+        'total',
+
+        'cash_taken',
+        'cash_change',
+
+        'type',
+
+        'payments_method_id',
+        'payments_sign_id',
 
         'currency_id',
 
-        'date',
+        'canceled_payment_id',
+        'canceled_at',
 
         'contract_id',
         'contract_type',
@@ -70,11 +82,11 @@ class Payment extends Model
         'company_id',
         'author_id'
     ];
-
-    public function setDateAttribute($value)
-    {
-        $this->attributes['date'] = Carbon::createFromFormat('d.m.Y', $value);
-    }
+//
+//    public function setDateAttribute($value)
+//    {
+//        $this->attributes['date'] = Carbon::createFromFormat('d.m.Y', $value);
+//    }
 
     // Тип
     public function type()

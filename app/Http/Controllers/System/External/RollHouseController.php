@@ -982,7 +982,7 @@ class RollHouseController extends Controller
                                 }
 
                                 if ($estimate->is_dismissed == 0) {
-                                    $this->setIndicators($estimate);
+                                    $this->setClientIndicators($estimate);
 
                                     // Создаем договор
                                     $contracts_client = ContractsClient::create([
@@ -1201,7 +1201,7 @@ class RollHouseController extends Controller
                 if (! $estimate->conducted_at) {
 
                     // Обновляем показатели клиента
-                    $this->setIndicators($estimate);
+                    $this->setClientIndicators($estimate);
 
                     $estimate->update([
                         'conducted_at' => now(),

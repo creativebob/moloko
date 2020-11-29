@@ -203,7 +203,7 @@ class VkusnyashkaParser
                     if (!$estimate->conducted_at) {
 
                         // Обновляем показатели клиента
-                        $this->setIndicators($estimate);
+                        $this->setClientIndicators($estimate);
 
                         $estimate->update([
                             'conducted_at' => $lead->created_at,

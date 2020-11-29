@@ -136,10 +136,12 @@ export default {
             return this.cash < this.debitTotal;
         },
         data() {
+            let change = this.change > 0 ? this.change : 0;
+            let cash = change > 0 ? this.cash - change : this.cash;
             return {
-                cash: this.cash - this.change,
+                cash: cash,
                 cashTaken: this.cash,
-                cashChange: this.change,
+                cashChange: change,
 
                 electronically: this.electronically,
             };

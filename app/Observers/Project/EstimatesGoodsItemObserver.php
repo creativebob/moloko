@@ -16,7 +16,6 @@ class EstimatesGoodsItemObserver
 
     public function setAggregations($item)
     {
-        $item->load('product.article');
         $saleMode = $item->sale_mode;
 
         switch ($saleMode) {
@@ -73,13 +72,36 @@ class EstimatesGoodsItemObserver
 
             case (2):
                 $item->amount = 0;
-                $item->discount_currency = 0;
-                $item->discount_percent = 0;
-                $item->margin_currency = 0;
-                $item->margin_percent = 0;
+
+                $item->price_discount = 0;
+                $item->total_price_discount = 0;
+
+                $item->catalogs_item_discount = 0;
+                $item->total_catalogs_item_discount = 0;
+
+                $item->estimate_discount = 0;
+                $item->total_estimate_discount = 0;
+
+                $item->manual_discount_currency = 0;
+                $item->manual_discount_percent = 0;
+                $item->total_manual_discount = 0;
+
+                $item->client_discount_currency = 0;
+                $item->total_client_discount = 0;
+
+                $item->computed_discount_percent = 0;
+                $item->computed_discount_currency = 0;
+                $item->total_computed_discount = 0;
+
                 $item->total = 0;
                 $item->total_bonuses = 0;
                 $item->total_points = $item->count * $item->points;
+
+                $item->discount_currency = 0;
+                $item->discount_percent = 0;
+
+                $item->margin_currency = 0;
+                $item->margin_percent = 0;
                 break;
         }
     }
@@ -123,5 +145,4 @@ class EstimatesGoodsItemObserver
 
         return $item;
     }
-
 }

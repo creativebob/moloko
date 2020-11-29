@@ -47,6 +47,7 @@ class Agent extends Model
 
     protected $fillable = [
         'agent_id',
+        'agent_type_id',
         'description',
 
         'display',
@@ -64,6 +65,12 @@ class Agent extends Model
     public function author()
     {
         return $this->belongsTo('App\User', 'author_id');
+    }
+
+    // Получаем признак агента
+    public function agent_type()
+    {
+        return $this->belongsTo(AgentType::class);
     }
 
 }

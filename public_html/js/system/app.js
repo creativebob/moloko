@@ -87222,10 +87222,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return this.cash < this.debitTotal;
         },
         data: function data() {
+            var change = this.change > 0 ? this.change : 0;
+            var cash = change > 0 ? this.cash - change : this.cash;
             return {
-                cash: this.cash - this.change,
+                cash: cash,
                 cashTaken: this.cash,
-                cashChange: this.change,
+                cashChange: change,
 
                 electronically: this.electronically
             };
@@ -98815,6 +98817,30 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     computed: {
@@ -98836,7 +98862,89 @@ var render = function() {
     ? _c("div", { staticClass: "grid-x grid-padding-x" }, [
         _c("div", { staticClass: "cell small-12" }, [
           _vm.client.clientable_type === "App\\User"
-            ? _c("div", { staticClass: "grid-x" }, [_vm._m(0)])
+            ? _c("div", { staticClass: "grid-x grid-padding-x" }, [
+                _c("div", { staticClass: "cell small-12 medium-6 large-4" }, [
+                  _c("label", [
+                    _vm._v("Фамилия\n                    "),
+                    _c("input", {
+                      attrs: { type: "text" },
+                      domProps: { value: _vm.client.clientable.second_name }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("label", [
+                    _vm._v("Имя\n                    "),
+                    _c("input", {
+                      attrs: { type: "text" },
+                      domProps: { value: _vm.client.clientable.first_name }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("label", [
+                    _vm._v("Отчество\n                    "),
+                    _c("input", {
+                      attrs: { type: "text" },
+                      domProps: { value: _vm.client.clientable.patronymic }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "label",
+                    [
+                      _vm._v("Дата рождения\n                    "),
+                      _c("pickmeup-component", {
+                        attrs: { value: _vm.client.clientable.birthday_date }
+                      })
+                    ],
+                    1
+                  )
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "cell small-12 medium-6 large-4" },
+                  [
+                    _c("search-city-component", {
+                      ref: "cityId",
+                      attrs: {
+                        "start-cities": _vm.cities,
+                        city: _vm.client.clientable.location.city,
+                        disabled: _vm.isDisabled
+                      },
+                      on: { input: _vm.change }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "label",
+                      [
+                        _vm._v("Адрес\n                    "),
+                        _c("string-component", {
+                          ref: "address",
+                          attrs: {
+                            name: "address",
+                            value: _vm.client.clientable.location.address,
+                            disabled: _vm.isDisabled
+                          },
+                          on: { input: _vm.change },
+                          model: {
+                            value: _vm.client.clientable.location.address,
+                            callback: function($$v) {
+                              _vm.$set(
+                                _vm.client.clientable.location,
+                                "address",
+                                $$v
+                              )
+                            },
+                            expression: "client.clientable.location.address"
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  ],
+                  1
+                )
+              ])
             : _vm._e(),
           _vm._v(" "),
           _vm.client.clientable_type === "App\\Company"
@@ -98854,8 +98962,12 @@ var render = function() {
           _c("div", { staticClass: "grid-x" }, [
             _c("div", { staticClass: "cell small-12" }, [
               _vm._v(
-                "\n                Скидка: " +
-                  _vm._s(_vm.client.discount) +
+                "\n                Скидка: " + _vm._s(_vm.client.discount)
+              ),
+              _c("br"),
+              _vm._v(
+                "\n                Поинты: " +
+                  _vm._s(_vm.client.points) +
                   "\n            "
               )
             ])
@@ -98864,35 +98976,7 @@ var render = function() {
       ])
     : _vm._e()
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "cell small-12" }, [
-      _c("label", [
-        _vm._v("Фамилия\n                    "),
-        _c("input", {
-          attrs: { type: "text", value: "client.clientable.second_name" }
-        })
-      ]),
-      _vm._v(" "),
-      _c("label", [
-        _vm._v("Имя\n                    "),
-        _c("input", {
-          attrs: { type: "text", value: "client.clientable.first_name" }
-        })
-      ]),
-      _vm._v(" "),
-      _c("label", [
-        _vm._v("Отчество\n                    "),
-        _c("input", {
-          attrs: { type: "text", value: "client.clientable.patronymic" }
-        })
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -124605,10 +124689,10 @@ var moduleLead = {
                             state.companies.push(organization);
                         }
                     }
+                }
 
-                    if (lead.client) {
-                        _this3.commit('SET_CLIENT', lead.client);
-                    }
+                if (lead.client) {
+                    _this3.commit('SET_CLIENT', lead.client);
                 }
 
                 _this3.commit('SET_ESTIMATE', response.data.estimate);

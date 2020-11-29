@@ -36,6 +36,7 @@ class RollHouseCommand extends Command
      */
     public function handle()
     {
-        RollHouseParser::parser();
+        $parser = new RollHouseParser();
+        $parser->parser();
     }
 }

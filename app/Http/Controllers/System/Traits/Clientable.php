@@ -34,7 +34,7 @@ trait Clientable
      * @param $estimate
      * @return mixed
      */
-    public function setIndicators($estimate)
+    public function setClientIndicators($estimate)
     {
 
         $client = $estimate->client;
@@ -79,7 +79,7 @@ trait Clientable
         ])
             ->whereNotNull('conducted_at')
             ->sum('total');
-        $data['customer_equity'] = $total + $estimate->total;
+        $data['customer_equity'] = $total;
 
         $data['average_order_value'] = $data['customer_equity'] / $data['orders_count'];
         $data['customer_value'] = $data['average_order_value'] * $data['purchase_frequency'];
@@ -97,7 +97,7 @@ trait Clientable
 
         $client->update($data);
 
-        return $client;
+        return $data;
     }
 
 }

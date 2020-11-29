@@ -43,52 +43,75 @@ class CatalogsGoodsItemController extends BaseController
         $catalogs_goods_item = CatalogsGoodsItem::with([
 
             // TODO - 02.07.20 - Используется на РХ
-            'prices.goods.related' => function ($q) use ($catalog_slug) {
-                $q->with([
-                    'prices' => function ($q) use ($catalog_slug) {
-                        $q->with([
-                            'catalogs_item.parent'
-                        ])
-                            ->where('display', true)
-                            ->where('archive', false)
-                            ->whereHas('catalog', function ($q) use ($catalog_slug) {
-                                $q->where('slug', $catalog_slug);
-                            });
-                    }
-                ])
-                    ->whereHas('prices', function ($q) use ($catalog_slug) {
-                        $q->where('display', true)
-                            ->where('archive', false)
-                            ->whereHas('catalog', function ($q) use ($catalog_slug) {
-                                $q->where('slug', $catalog_slug);
-                            });
-                    });
-            },
-            'childs_prices.goods.related' => function ($q) use ($catalog_slug) {
-                $q->with([
-                    'prices' => function ($q) use ($catalog_slug) {
-                        $q->with([
-                            'catalogs_item.parent'
-                        ])
-                            ->where('display', true)
-                            ->where('archive', false)
-                            ->whereHas('catalog', function ($q) use ($catalog_slug) {
-                                $q->where('slug', $catalog_slug);
-                            });
-                    }
-                ])
-                    ->whereHas('prices', function ($q) use ($catalog_slug) {
-                        $q->where('display', true)
-                            ->where('archive', false)
-                            ->whereHas('catalog', function ($q) use ($catalog_slug) {
-                                $q->where('slug', $catalog_slug);
-                            });
-                    });
-            },
+//            'prices' => function ($q) use ($catalog_slug) {
+//                $q->with([
+//                    'goods' => function ($q) use ($catalog_slug) {
+//                        $q->with([
+//                            'related' => function ($q) use ($catalog_slug) {
+//                                $q->with([
+//                                    'prices' => function ($q) use ($catalog_slug) {
+//                                        $q->with([
+//                                            'catalogs_item.parent'
+//                                        ])
+//                                            ->where('display', true)
+//                                            ->where('archive', false)
+//                                            ->whereHas('catalog', function ($q) use ($catalog_slug) {
+//                                                $q->where('slug', $catalog_slug);
+//                                            });
+//                                    }
+//                                ])
+//                                    ->whereHas('prices', function ($q) use ($catalog_slug) {
+//                                        $q->where('display', true)
+//                                            ->where('archive', false)
+//                                            ->whereHas('catalog', function ($q) use ($catalog_slug) {
+//                                                $q->where('slug', $catalog_slug);
+//                                            });
+//                                    });
+//                            },
+//                        ]);
+//                    },
+//                    'currency',
+//                    'catalog',
+//                    'catalogs_item.directive_category'
+//                ]);
+//            },
+//
+//            'childs_prices'  => function ($q) use ($catalog_slug) {
+//                $q->with([
+//                    'goods' => function ($q) use ($catalog_slug) {
+//                        $q->with([
+//                            'related' => function ($q) use ($catalog_slug) {
+//                                $q->with([
+//                                    'prices' => function ($q) use ($catalog_slug) {
+//                                        $q->with([
+//                                            'catalogs_item.parent'
+//                                        ])
+//                                            ->where('display', true)
+//                                            ->where('archive', false)
+//                                            ->whereHas('catalog', function ($q) use ($catalog_slug) {
+//                                                $q->where('slug', $catalog_slug);
+//                                            });
+//                                    }
+//                                ])
+//                                    ->whereHas('prices', function ($q) use ($catalog_slug) {
+//                                        $q->where('display', true)
+//                                            ->where('archive', false)
+//                                            ->whereHas('catalog', function ($q) use ($catalog_slug) {
+//                                                $q->where('slug', $catalog_slug);
+//                                            });
+//                                    });
+//                            },
+//                        ]);
+//                    },
+//                    'currency',
+//                    'catalog',
+//                    'catalogs_item.directive_category'
+//                ]);
+//            },
 
             'directive_category:id,alias',
             'filters.values',
-            'catalog'
+//            'catalog'
         ])
             ->where('slug', $slug)
             ->whereHas('catalog', function ($q) use ($site, $catalog_slug) {

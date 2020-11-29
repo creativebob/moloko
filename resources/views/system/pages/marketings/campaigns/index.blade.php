@@ -28,7 +28,7 @@
                         </th>
                         <th class="td-name">Название</th>
                         <th class="td-description">Описание</th>
-                        <th class="td-utm-source">UTM-метка</th>
+                        <th class="td-utm">UTM-метка</th>
 
                         <th class="td-author">Автор</th>
                         <th class="td-control"></th>
@@ -62,6 +62,7 @@
 
                             </td>
                             <td class="td-description">{{ $campaign->description }}</td>
+                            <td class="td-utm">{{ $campaign->utm }}</td>
                             <td class="td-author">{{ $campaign->author->name }}</td>
 
                             {{-- Элементы управления --}}

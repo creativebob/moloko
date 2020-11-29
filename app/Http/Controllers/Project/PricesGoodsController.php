@@ -95,7 +95,8 @@ class PricesGoodsController extends BaseController
                     'directive_category:id,alias',
                     'parent'
                 ]);
-            }
+            },
+            'catalog'
         ])
             ->where([
                 'archive' => false,

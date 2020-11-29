@@ -17,6 +17,12 @@ class Campaign extends Model
     protected $dates = ['deleted_at'];
     protected $fillable = [
         'name',
+        'description',
+        'filial_id',
+        'begined_at',
+        'ended_at',
+        'sources_id',
+        'utm',
 
         'display',
         'system',

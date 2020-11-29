@@ -13,7 +13,7 @@
                     <div class="cell small-6">
                         <ul class="order-info-list">
                             <li><span class="client-name">Имя: </span><span class="name">{{ $lead->name }}</span></li>
-                            <li><span class="client-phone">Телефон: </span><span class="phone">{{ decorPhone($lead->main_phone->phone) }}</span></li>
+                            <li><span class="client-phone">Телефон: </span><span class="phone">{{ isset($lead->main_phone) ? decorPhone($lead->main_phone->phone) : 'Номер не указан' }}</span></li>
                             {{-- <li><span class="order-date">Дата: </span><span>{{ $lead->created_at->format('d.m.Y') }}</span></li>
                             <li><span class="order-time">Время заказа: </span><span>{{ $lead->created_at->format('H:i') }}</span></li> --}}
                         </ul>

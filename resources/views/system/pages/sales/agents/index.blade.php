@@ -31,13 +31,16 @@
                        data-sticky-on="medium" data-top-anchor="head-content:bottom">
                 <tr id="thead-content">
                     <th class="td-drop"></th>
-                    <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name=""
-                                                               id="check-all"><label class="label-check"
-                                                                                     for="check-all"></label></th>
+                    <th class="td-checkbox checkbox-th">
+                        <input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label>
+                    </th>
                     <th class="td-photo">Фото</th>
                     <th class="td-name" data-serversort="name">Название агента</th>
-                    <th class="td-sector">Направление</th>
                     <th class="td-phone">Контактный телефон</th>
+                    <th class="td-agent-type">Признак</th>
+                    <th class="td-description">Коментарий</th>
+                    <th class="td-sector">Направление</th>
+
                     <th class="td-control"></th>
                     <th class="td-archive"></th>
                 </tr>
@@ -82,12 +85,13 @@
                                         @if($edit == 1)
                                     </a>
                                 @endif
-                                <br><span class="tiny-text">{{ $agent->company->location->country->name }}</span>
+                                <br><span class="tiny-text">{{ $agent->company->location->short_address ?? '' }}</span>
                             </td>
-                            <td class="td-sector">{{ $agent->company->sector->name ?? ' ... ' }} </td>
-
                             {{-- Если пользователь бог, то показываем для него переключатель на компанию --}}
                             <td class="td-phone">{{ isset($agent->company->main_phone->phone) ? decorPhone($agent->company->main_phone->phone) : 'Номер не указан' }}</td>
+                            <td class="td-agent-type">{{ $agent->agent_type->name ?? '' }} </td>
+                            <td class="td-description">{{ $agent->description ?? '' }} </td>
+                            <td class="td-sector">{{ $agent->company->sector->name ?? ' ... ' }} </td>
 
                             {{-- Элементы управления --}}
                             @include('includes.control.table-td', ['item' => $agent])

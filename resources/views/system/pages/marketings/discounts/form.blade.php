@@ -1,5 +1,5 @@
 @php
-    $disabled = $discount->id ? 'true' : 'false';
+    $disabled = $discount->id ? 'true' : null;
 @endphp
 
 <div class="grid-x tabs-wrap">

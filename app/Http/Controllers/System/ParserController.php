@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\System;
 
 use App\Action;
 use App\ActionEntity;
@@ -8,6 +8,7 @@ use App\CatalogsGoods;
 use App\CatalogsGoodsItem;
 use App\Client;
 use App\Dispatch;
+use App\Http\Controllers\Controller;
 use App\Models\System\Documents\ConsignmentsItem;
 use App\Models\System\Documents\Estimate;
 use App\Goods;
@@ -169,6 +170,35 @@ class ParserController extends Controller
                 'storage_type' => $storageModel,
             ]);
         }
+        return __('msg.ok');
+    }
+
+    /**
+     * Очистка сущностей продаж для проверок
+     *
+     * @return array|string|null
+     */
+    public function clearSalesTables ()
+    {
+        \DB::statement("SET foreign_key_checks=0");
+        $names = [
+            'leads',
+            'clients',
+
+            'estimates',
+            'estimates_goods_items',
+            'estimates_services_items',
+
+            'payments',
+
+            'reserves',
+            'reserves_histories',
+        ];
+        foreach ($names as $name) {
+            \DB::table($name)->truncate();
+        }
+        \DB::statement("SET foreign_key_checks=1");
+
         return __('msg.ok');
     }
 

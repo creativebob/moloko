@@ -16,6 +16,9 @@ class CreateCampaignsTable extends Migration
         Schema::create('campaigns', function (Blueprint $table) {
             $table->bigIncrements('id');
 
+            $table->bigInteger('filial_id')->unsigned()->nullable()->comment('Id отдела');
+            $table->foreign('filial_id')->references('id')->on('departments');
+            
             $table->string('name')->index()->comment('Название типа трафика (среды)');
             $table->text('description')->nullable()->comment('Description для типа трафика');
             $table->string('utm')->index()->comment('UTM метка: source_utm');
@@ -23,14 +26,18 @@ class CreateCampaignsTable extends Migration
             $table->bigInteger('sources_id')->nullable()->unsigned()->comment('ID источника трафика');
             $table->foreign('sources_id')->references('id')->on('sources');
 
-            $table->integer('archive')->nullable()->unsigned()->comment('Перенесен в архив');
+            $table->timestamp('begined_at')->nullable()->comment('Время начала');
+            $table->timestamp('ended_at')->nullable()->comment('Время окончания');
 
+            $table->integer('archive')->nullable()->unsigned()->comment('Перенесен в архив');
             $table->integer('external')->nullable()->unsigned()->comment('Внешний ID источника');
 
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
+
+
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
             $table->boolean('display')->default(1)->comment('Отображение на сайте');
