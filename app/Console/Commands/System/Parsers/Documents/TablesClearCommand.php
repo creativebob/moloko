@@ -4,14 +4,14 @@ namespace App\Console\Commands\System\Parsers\Documents;
 
 use Illuminate\Console\Command;
 
-class ClearCommand extends Command
+class TablesClearCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'documents:clear';
+    protected $signature = 'documents:tables-clear';
 
     /**
      * The console command description.

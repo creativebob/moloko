@@ -59,4 +59,35 @@ class AttachmentsStockController extends Controller
 
         return view('system.common.stocks.index', compact('stocks', 'pageInfo', 'filter'));
     }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function edit($id)
+    {
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
+
+        $stock = AttachmentsStock::with([
+            'cmv.article'
+        ])
+            ->moderatorLimit($answer)
+            ->authors($answer)
+            ->systemItem($answer)
+            ->find($id);
+//        dd($raws_stock);
+
+        $this->authorize(getmethod(__FUNCTION__), $stock);
+
+        // Инфо о странице
+        $pageInfo = pageInfo($this->entityAlias);
+//         dd($pageInfo);
+
+        return view('system.common.stocks.edit', compact('stock', 'pageInfo'));
+    }
 }
