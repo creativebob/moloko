@@ -846,13 +846,13 @@ class CartController extends BaseController
                 foreach ($prices_goods as $price_goods) {
                     // Проверка на различие цены
                     if ($price_goods->price != $prices[$price_goods->id]['price']) {
-                        $result['changePrice'][$price_goods->id] = $price_goods;
+                        $result['changePrice'][] = $price_goods;
                     }
 
                     if ($this->site->filial->outlets->first()->settings->firstWhere('alias', 'stock-check-free')) {
                         // Проверка на свободные остатки
                         if ($price_goods->goods->rest < $prices[$price_goods->id]['count']) {
-                            $result['notEnough'][$price_goods->id] = $price_goods;
+                            $result['notEnough'][] = $price_goods;
                         }
                     }
                 }
