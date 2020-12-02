@@ -44,7 +44,9 @@ class Department extends Model
     use BooklistFilter;
     // use DateIntervalFilter;
 
-    protected $dates = ['deleted_at'];
+    protected $dates = [
+        'deleted_at'
+    ];
 
     protected $fillable = [
         'name',
@@ -243,6 +245,11 @@ class Department extends Model
     public function cities()
     {
         return $this->belongsToMany(City::class, 'city_filial', 'filial_id');
+    }
+
+    public function outlets()
+    {
+        return $this->hasMany(Outlet::class);
     }
 
 }

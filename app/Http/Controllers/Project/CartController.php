@@ -14,20 +14,19 @@ use App\Lead;
 use App\LegalForm;
 use App\Models\Project\Estimate;
 use App\Models\Project\EstimatesGoodsItem;
+use App\Models\Project\PricesGoods;
 use App\Models\Project\Promotion;
 use App\Phone;
-use App\PricesGoods;
+
 use App\Source;
 use App\Stock;
 use App\User;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Log;
 use Telegram;
 use Telegram\Bot\Exceptions\TelegramResponseException;
 
-class CartController extends Controller
+class CartController extends BaseController
 {
 
     use Commonable;
@@ -821,7 +820,7 @@ class CartController extends Controller
         }
     }
 
-    public function check_prices(Request $request)
+    public function check_prices()
     {
         $result['success'] = true;
 
@@ -830,18 +829,34 @@ class CartController extends Controller
             $cart = json_decode(Cookie::get('cart'), true);
 
             if (count($cart['prices']) > 0) {
-                // Проверка на различие цены
+
                 $prices = $cart['prices'];
                 $prices_ids = array_keys($cart['prices']);
-                $prices_goods = PricesGoods::with('goods.article.photo', 'currency')
+                $prices_goods = PricesGoods::with([
+                    'goods' => function ($q) {
+                        $q->with([
+                            'article.photo'
+                        ]);
+                    },
+                    'currency',
+                    'catalog'
+                ])
                     ->find($prices_ids);
 
                 foreach ($prices_goods as $price_goods) {
+                    // Проверка на различие цены
                     if ($price_goods->price != $prices[$price_goods->id]['price']) {
-                        $result['changes'][] = $price_goods;
+                        $result['changePrice'][$price_goods->id] = $price_goods;
+                    }
+
+                    if ($this->site->filial->outlets->first()->settings->firstWhere('stock-check-free')) {
+                        // Проверка на свободные остатки
+                        if ($price_goods->goods->rest < $prices[$price_goods->id]['count']) {
+                            $result['notEnough'][$price_goods->id] = $price_goods;
+                        }
                     }
                 }
-                if (isset($result['changes'])) {
+                if (isset($result['changePrice']) || isset($result['notEnough'])) {
                     $result['success'] = false;
                 }
             }
