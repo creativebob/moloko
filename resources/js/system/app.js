@@ -121,6 +121,9 @@ Vue.component('prices-goods-discount-component', require('./components/prices_go
 
 Vue.component('filial-cities-component', require('./components/filials/CitiesComponent'));
 
+// Роли пользователя
+Vue.component('employee-roles-component', require('./components/employees/roles/RolesComponent'));
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

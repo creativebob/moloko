@@ -114,7 +114,9 @@
                 @endisset
 
                 @isset($employee)
-                    @include('system.pages.hr.employees.includes.access.roles')
+                    @can('index', App\Role::class)
+                        @include('system.pages.hr.employees.includes.access.roles')
+                    @endcan
                 @endisset
             </div>
             @isset($site)
