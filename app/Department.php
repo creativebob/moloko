@@ -249,7 +249,7 @@ class Department extends Model
 
     public function outlets()
     {
-        return $this->hasMany(Outlet::class);
+        return $this->hasMany(Outlet::class, 'filial_id');
     }
 
 }
