@@ -14,7 +14,9 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    protected $namespace = 'App\Http\Controllers';
+    protected $namespace = 'App\Http\Controllers\System';
+
+    protected $oldNamespace = 'App\Http\Controllers';
 
     /**
      * Define your route model bindings, pattern filters, etc.
@@ -38,6 +40,8 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapApiRoutes();
 
         $this->mapWebRoutes();
+        $this->mapUpdateRoutes();
+        $this->mapParsersRoutes();
     }
 
     /**
@@ -51,7 +55,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::prefix('admin')
             ->middleware('web')
-            ->namespace($this->namespace)
+            ->namespace($this->oldNamespace)
             ->group(base_path('routes/web.php'));
     }
 
@@ -66,7 +70,35 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::prefix('api')
             ->middleware('api')
-            ->namespace($this->namespace)
+            ->namespace($this->oldNamespace)
             ->group(base_path('routes/api.php'));
+    }
+
+    /**
+     * Роуты обновлений системы
+     *
+     * @return void
+     */
+    protected function mapUpdateRoutes()
+    {
+        Route::prefix('admin/updates')
+            ->middleware('web')
+            ->namespace($this->namespace)
+            ->name('updates.')
+            ->group(base_path('routes/system/updates.php'));
+    }
+
+    /**
+     * Роуты парсеров системы
+     *
+     * @return void
+     */
+    protected function mapParsersRoutes()
+    {
+        Route::prefix('admin/parsers')
+            ->middleware('web')
+            ->namespace($this->namespace)
+            ->name('parsers.')
+            ->group(base_path('routes/system/parsers.php'));
     }
 }

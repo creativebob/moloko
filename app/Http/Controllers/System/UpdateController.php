@@ -36,6 +36,27 @@ class UpdateController extends Controller
     }
 
     /**
+     * Настройка проверки остатков на складе при продаже на торговой точке
+     *
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
+    public function addStockOutletSetting()
+    {
+        $categoryId = OutletsSettingsCategory::where('alias', 'others')
+            ->value('id');
+
+        OutletsSetting::insert([
+            [
+                'name' => 'Проверка остатка на складе при продаже',
+                'alias' => 'stock-check-free',
+                'category_id' => $categoryId
+            ],
+        ]);
+
+        return __('msg.ok');
+    }
+
+    /**
      * Добавление катеории и настроек на торговую точку
      *
      * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
