@@ -849,7 +849,7 @@ class CartController extends BaseController
                         $result['changePrice'][$price_goods->id] = $price_goods;
                     }
 
-                    if ($this->site->filial->outlets->first()->settings->firstWhere('stock-check-free')) {
+                    if ($this->site->filial->outlets->first()->settings->firstWhere('alias', 'stock-check-free')) {
                         // Проверка на свободные остатки
                         if ($price_goods->goods->rest < $prices[$price_goods->id]['count']) {
                             $result['notEnough'][$price_goods->id] = $price_goods;
