@@ -36,7 +36,7 @@ class UpdatePaymentsCommand extends Command
      */
     public function handle()
     {
-        $this->info(__('Начинаем обновление платежей'));
+        $this->info(__($this->description));
 
         $payments = Payment::whereNull('registered_at')
             ->get();

@@ -36,7 +36,7 @@ class SetConductedAtCommand extends Command
      */
     public function handle()
     {
-        $this->info(__('Начинаем отмену непроведенных нарядов'));
+        $this->info(__($this->description));
 
 
         $estimates = Estimate::whereNull('registered_at')

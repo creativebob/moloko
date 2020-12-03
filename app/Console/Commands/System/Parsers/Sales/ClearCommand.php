@@ -35,25 +35,27 @@ class ClearCommand extends Command
      */
     public function handle()
     {
-        \DB::statement("SET foreign_key_checks=0");
-        $names = [
-            'leads',
-            'clients',
+        if ($this->confirm("{$this->description}?")) {
+            \DB::statement("SET foreign_key_checks=0");
+            $names = [
+                'leads',
+                'clients',
 
-            'estimates',
-            'estimates_goods_items',
-            'estimates_services_items',
+                'estimates',
+                'estimates_goods_items',
+                'estimates_services_items',
 
-            'payments',
+                'payments',
 
-            'reserves',
-            'reserves_histories',
-        ];
-        foreach ($names as $name) {
-            \DB::table($name)->truncate();
+                'reserves',
+                'reserves_histories',
+            ];
+            foreach ($names as $name) {
+                \DB::table($name)->truncate();
+            }
+            \DB::statement("SET foreign_key_checks=1");
+
+            $this->info(__('msg.ok'));
         }
-        \DB::statement("SET foreign_key_checks=1");
-
-        $this->info(__('msg.ok'));
     }
 }

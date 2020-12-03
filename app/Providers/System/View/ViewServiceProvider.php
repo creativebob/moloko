@@ -21,6 +21,7 @@ use App\Http\View\Composers\System\ClientsCitiesComposer;
 use App\Http\View\Composers\System\ClientsCountComposer;
 use App\Http\View\Composers\System\DepartmentsForUserComposer;
 use App\Http\View\Composers\System\DiscountsForEstimatesComposer;
+use App\Http\View\Composers\System\EstimatesTotalsComposer;
 use App\Http\View\Composers\System\FilialCatalogsGoodsComposer;
 use App\Http\View\Composers\System\FilialStaffComposer;
 use App\Http\View\Composers\System\LeadHistoryComposer;
@@ -548,6 +549,9 @@ class ViewServiceProvider extends ServiceProvider
 
         // Товарные накладные
         view()->composer('system.pages.documents.consignments.includes.filters', SuppliersComposer::class);
+
+
+        view()->composer('estimates.includes.totals', EstimatesTotalsComposer::class);
     }
 
     /**
