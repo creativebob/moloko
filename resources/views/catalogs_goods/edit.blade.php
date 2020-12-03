@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Редактировать каталог')
+@section('title', 'Настройка каталога')
 
 @section('breadcrumbs', Breadcrumbs::render('edit', $pageInfo, $catalogs_goods->name))
 
 @section('title-content')
 <div class="top-bar head-content">
     <div class="top-bar-left">
-        <h2 class="header-content">РЕДАКТИРОВАТЬ каталог "{{ $catalogs_goods->name }}"</h2>
+        <h2 class="header-content">Настройка каталога: "{{ $catalogs_goods->name }}"</h2>
     </div>
     <div class="top-bar-right">
     </div>

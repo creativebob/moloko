@@ -10,6 +10,7 @@
     "require": {
         "php": "^7.2",
         "appstract/laravel-opcache": "^3.0",
+        "bmatovu/laravel-xml": "v1.0.9",
         "ckeditor/ckeditor": "4.*",
         "davejamesmiller/laravel-breadcrumbs": "5.x",
         "doctrine/dbal": "^2.10",
@@ -26,6 +27,7 @@
         "laravel/ui": "^1.0",
         "laravelcollective/html": "^6.0",
         "maatwebsite/excel": "^3.1",
+        "spatie/array-to-xml": "^2.15",
         "wapmorgan/morphos-blade": "^1.6"
     },
     "require-dev": {

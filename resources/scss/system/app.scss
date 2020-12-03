@@ -44,6 +44,11 @@ $medium: 1024px;
 
 // ----------------------------------- Переменные --------------------------------------
 
+// Подсветка
+$flash-green: #e5f3eb;
+$flash-yellow: #fffcc5;
+
+
 // Цвета
 $mars-red: #ff0000;
 $mars-black: #333333;
@@ -86,6 +91,12 @@ $task-manager-tabs-hr-color: #4a4a4a;
 $task-manager-tabs-set-color: #888888;
 $task-manager_tabs-name-lead-color: #74b1f5;
 $task-manager-tabs-button-bg-color: #ae4747;
+
+
+.text-mini{
+    font-size: 0.7rem;
+    color: #cccccc;
+}
 
 // Костомизация has-tip
 a.has-tip {
@@ -1330,7 +1341,7 @@ span.wrap-label-checkboxer {
 
 // --------------------- Склад index -----------
 .content .content-table tbody td.td-stock-count{
-    font-family: "PFDinTextCondPro-Regular";
+    font-family: PFDinTextCondPro;
     font-size: 2rem;
 }
 
@@ -1350,6 +1361,37 @@ span.wrap-label-checkboxer {
 .bold{
     font-weight: 500;
 }
+
+// Компонент поиска на хранилищах
+.search-stock-component table {
+    tr.warning{
+        td{
+            background-color: $flash-yellow;
+        }
+    }
+}
+
+.wrap-group-indicator {
+
+    margin-top: 0.3rem;
+    .wrap-indicator{
+        margin-right: 1rem;
+
+        .attribute-indicator{
+            font-size: 0.8rem;    
+        }
+
+        .value-indicator{
+            color: $black;
+            font-weight: 500;      
+        }
+    } 
+}
+
+
+
+
+
 
 // СТРАНИЦА СОТРУДНИКИ
 
@@ -1773,7 +1815,7 @@ $multilevel-accordion-separator: #41444a;
         margin-right: 0;
         margin-bottom: 0;
         text-transform: uppercase;
-        font-family: "PFDinTextCondPro-Regular";
+        font-family: PFDinTextCondPro;
         font-size: 1.8rem;
         float: right;
 
@@ -1781,6 +1823,10 @@ $multilevel-accordion-separator: #41444a;
 }
 
 
+.digit-indicator{
+    font-family: PFDinDisplayPro;
+    font-size: 1.8rem;  
+}
 
 // ОКОНЧАНИЕ СТРАНИЦЫ ЛИДЫ ============================================================
 
@@ -4282,6 +4328,37 @@ tr:hover .td-price-status .price_goods-status.hide{
                 font-weight: 500;
                 background-color: #fefefe;
             }
+        }
+    }
+
+}
+
+.table-invoice{
+    caption{
+        padding-bottom: 1rem;
+        font-family: PFDinDisplayPro;
+        font-size: 1.4rem;        
+    }
+}
+
+.list-indicator{
+    margin: 1rem 1.2rem;
+
+    li{
+
+        margin-right: 3rem;
+
+        .attribute-indicator{
+            vertical-align: middle;
+            color: $gray;
+            font-family: Calibri;
+        }
+
+        .value-indicator{
+            vertical-align: middle;
+            font-family: PFDinTextCondPro;
+            font-size: 1.6rem;
+            font-weight: 500;
         }
     }
 

@@ -1,44 +1,66 @@
 <template>
 
-        <div id="search" class="search-estimates-component">
-                <input
-                    class="search-field"
-                    type="search"
-                    id="field-search"
-                    name="search"
-                    placeholder="Поиск"
-                    v-model="text"
-                    @input="dedounceSearch"
-                />
-            <div id="search-result-wrap" v-if=search>
-                <table class="search-result-list">
-                    <tr v-for="(item, index) in results">
+    <div id="search" class="search-stock-component">
+        <input
+            class="search-field"
+            type="search"
+            id="field-search"
+            name="search"
+            placeholder="Поиск"
+            v-model="text"
+            @input="dedounceSearch"
+        />
+        <div id="search-result-wrap" v-if=search>
+
+            <table class="search-result-list">
+                <template v-for="(item, index) in results">
+                    <tr v-bind:class="{ warning: (item.free <= 0) }">
                         <td class="search-result-name">
-                            <a :href="'/admin/leads/' + item.number + '/edit'"><span>{{ item.number }}</span> от {{ getFormatDate(item.date) }}</a><br>
-                            <span class="text-small">Продано</span>
-                        </td>
-                        <td  class="search-result-summa">
-                            <span>{{ item.total | decimalPlaces | decimalLevel }} руб.</span>
+                            <a :href="'/admin/' + alias + '/' + item.id + '/edit'"><span>{{ item.cmv.article.name }}</span></a><br>
+                            <span class="text-mini">{{ item.cmv.article.manufacturer.company.name }}</span><br>
+
+                            <div class="wrap-group-indicator">
+                                <span class="wrap-indicator">
+                                    <span class="attribute-indicator">Кол-во: </span>
+                                    <span class="value-indicator">{{ item.count | decimalPlaces | decimalLevel }}</span>
+                                </span>
+
+                                <span v-if="item.reserve > 0">
+                                    <span class="wrap-indicator">
+                                        <span class="attribute-indicator">Резерв: </span>
+                                        <span class="value-indicator">{{ item.reserve | decimalPlaces | decimalLevel }}</span>
+                                    </span>
+
+                                    <span class="wrap-indicator">
+                                        <span class="attribute-indicator">Доступно: </span>
+                                        <span class="value-indicator">{{ item.free | decimalPlaces | decimalLevel }}</span>
+                                    </span>
+                                </span>
+                            </div>
+
                         </td>
                         <td class="search-result-info">
-                            <span>{{ item.lead.name }}</span><br>
-                            <span class="text-small">{{ item.lead.company_name }}</span>
+
                         </td>
                         <td class="search-result-id">
                             {{ item.id }}
                         </td>
                     </tr>
-                </table>
-            </div>
+                </template>
+            </table>
+
         </div>
+    </div>
 
 </template>
 
 <script>
     import _ from 'lodash'
-    import moment from 'moment'
 
     export default {
+        props: {
+            alias: String
+        },
         data() {
             return {
                 text: '',
@@ -60,48 +82,28 @@
                 }
                 return result;
             },
-            dedounceSearch: function() {
-                let delay = 150;
+            dedounceSearch: function () {
+                let delay = 300;
                 return _.debounce(this.check, delay);
             }
         },
         methods: {
-            check () {
+            check() {
 
-                    // Если пользователь ввел более одного знака - начинам поиск
-                    if (this.text.length >= 1) {
-
-                        // Общий запрос поиска
-                        var search_query = '/admin/estimates/search/';
-
-                        // ПЕРЕОПРЕДЕЛЕНЕ запроса в определенных случаях (Для ускорения)
-
-                        // СЛУЧАЙ 1: Пользователь ввел только 4 символа и все они числа
-                        // Будем искать по crop телефону и в номерах сметы с 4 знаками.
-
-                        // if((this.text.match(/^\d+$/))&&(this.text.length == 4)){
-                        //     search_query = '/admin/estimates/search_crop_phone/';
-                        // }
-
-                        // Делаем запрос:
-                        axios
-                        .get(search_query + this.text)
+                // console.log('Ищем введеные данные в наших городах (подгруженных), затем от результата меняем состояние на поиск или ошибку');
+                if (this.text.length >= 2) {
+                    axios.get('/admin/' + this.alias + '/search/' + this.text)
                         .then(response => {
                             this.results = response.data
                             this.search = (this.results.length > 0)
                             this.error = (this.results.length == 0)
                         })
                         .catch(error => {
-                                console.log(error)
+                            console.log(error)
                         });
-
-                    } else {
-                        this.reset();
-                    }
-
-            },
-            getFormatDate (value) {
-                return moment(String(value)).format('DD.MM.YYYY');
+                } else {
+                    this.reset();
+                }
             },
 
             clear() {
@@ -130,6 +132,7 @@
                     this.add(0);
                 }
             }
+
         },
         filters: {
             decimalPlaces(value) {

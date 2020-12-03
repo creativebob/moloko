@@ -266,6 +266,7 @@ class ViewServiceProvider extends ServiceProvider
             'includes.lists.manufacturers',
             'products.articles.common.edit.manufacturers',
             'system.pages.erp.suppliers.form',
+            'system.common.stocks.includes.filters',
         ], ManufacturersComposer::class);
 
         view()->composer('includes.selects.suppliers', SupplierSelectComposer::class);

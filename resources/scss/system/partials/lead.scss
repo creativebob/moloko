@@ -744,14 +744,9 @@ tfoot{
     background-color: $green;
 }
 
-// Обращение
-// .stage-2 {
-//     background-color: #dceef3;
-// }
-
 // Оплачено
 .content .content-table tbody tr.stage-6 {
-    background-color: #e5f3eb;
+    background-color: $flash-green;
     border-top: 1px solid white;
 
     td{
