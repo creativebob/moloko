@@ -48,7 +48,7 @@ class CatalogsGoods extends Model
 
         'is_access_page',
         'is_check_stock',
-        'is_export_yml',
+        'is_exported_yml',
 
         'description',
         'seo_description',
