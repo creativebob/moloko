@@ -52,6 +52,7 @@ use App\Http\View\Composers\System\GoodsCategoriesTreeComposer;
 use App\Http\View\Composers\System\LeadMethodsComposer;
 use App\Http\View\Composers\System\LeadTypesComposer;
 use App\Http\View\Composers\System\LegalFormsComposer;
+use App\Http\View\Composers\System\AgentTypesComposer;
 use App\Http\View\Composers\System\ManagersComposer;
 use App\Http\View\Composers\System\NotificationsComposer;
 use App\Http\View\Composers\System\PaymentsTypesComposer;
@@ -240,6 +241,7 @@ class ViewServiceProvider extends ServiceProvider
         view()->composer('includes.lists.notifications', NotificationsComposer::class);
 
         view()->composer('includes.selects.legal_forms', LegalFormsSelectComposer::class);
+        view()->composer('includes.selects.agent_types', AgentTypesComposer::class);
         view()->composer('includes.inputs.checker', CheckerComposer::class);
 
         view()->composer('includes.selects.loyalties', LoyaltiesComposer::class);
@@ -290,6 +292,7 @@ class ViewServiceProvider extends ServiceProvider
             'includes.lists.manufacturers',
             'products.articles.common.edit.manufacturers',
             'system.pages.erp.suppliers.form',
+            'system.common.stocks.includes.filters',
         ], ManufacturersComposer::class);
 
         view()->composer('includes.selects.suppliers', SupplierSelectComposer::class);

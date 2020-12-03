@@ -1,6 +1,6 @@
 <template>
 
-        <div id="search">
+        <div id="search" class="search-estimates-component">
                 <input
                     class="search-field"
                     type="search"

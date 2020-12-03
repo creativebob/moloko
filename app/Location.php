@@ -77,9 +77,15 @@ class Location extends Model
         return $this->belongsTo('App\Country');
     }
 
-    // Получаем компании.
-    // public function companies()
-    // {
-    //     return $this->hasMany('App\Company');
-    // }
+    // Получаем адрес: город, улицу и дом
+    public function getShortAddressAttribute()
+    {
+        if(($this->city_id != null)&&($this->address != null)){
+            return "{$this->city->name}, {$this->address}";
+        } elseif ($this->address == null) {
+            return "{$this->city->name}";
+        } else {
+            return "{$this->address}";
+        }
+    }
 }

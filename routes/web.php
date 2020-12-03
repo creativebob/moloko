@@ -46,6 +46,17 @@ Route::get('/roll_house/set_company_id', 'System\External\RollHouseController@se
 
 // Тесты
 Route::get('/test', 'System\TestController@test');
+Route::get('/xml_test', 'System\TestController@xml_test');
+
+// Диагностика базы данных
+Route::prefix('/diagnostics')
+    ->group(function () {
+
+        // Проверка на наличие дубликатов клиентов по пользователю
+        Route::get('/clients/duplication', 'System\DiagnosticsController@client_duplication');
+
+    });
+
 
 //Route::get('sendmail', function () {
 //
@@ -597,7 +608,7 @@ Route::any('/ajax_processes_groups_set_status', 'ProcessesGroupController@ajax_s
 Route::any('/processes_groups_list', 'ProcessesGroupController@ajax_processes_groups_list');
 
 
-// ---------------------------------- Склады упаковок -------------------------------------------
+// ---------------------------------- Склады товара -------------------------------------------
 // Основные методы
 Route::resource('/goods_stocks', 'GoodsStockController')
     ->only([
@@ -606,6 +617,11 @@ Route::resource('/goods_stocks', 'GoodsStockController')
         'update'
     ]);
 
+// Поиск на складах
+Route::get('/goods_stocks/search/{search}', 'GoodsStockController@search');
+Route::get('/raws_stocks/search/{search}', 'RawsStockController@search');
+Route::get('/containers_stocks/search/{search}', 'ContainersStockController@search');
+Route::get('/attachments_stocks/search/{search}', 'AttachmentsStockController@search');
 
 // -------------------------------- Категории услуг -------------------------------------------
 
@@ -880,8 +896,10 @@ Route::resource('/sources', 'SourceController')->middleware('auth');
 
 // --------------------------------------- Рекламные кампании -----------------------------------------------
 
+// Архив
+Route::post('/campaigns/archive/{id}', 'CampaignController@archive');
 // Основные методы
-// Route::resource('/campaigns', 'CampaignController')->middleware('auth');
+Route::resource('campaigns', 'CampaignController');
 
 
 // --------------------------------------- Отзывы -----------------------------------------------

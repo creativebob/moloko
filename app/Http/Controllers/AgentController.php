@@ -56,7 +56,7 @@ class AgentController extends Controller
         // -------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------------------------
-        $agents = Agent::with('author', 'company.location.country', 'company.sector', 'company.legal_form')
+        $agents = Agent::with('author', 'company.location.city', 'company.sector', 'company.legal_form')
             ->companiesLimit($answer)
             ->moderatorLimit($answer)
             ->authors($answer)

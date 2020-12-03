@@ -54,6 +54,8 @@ class PricesGoods extends Model
         'price',
         'name_alt',
 
+        'is_exported_to_market',
+
         'discount_mode',
         'discount_percent',
         'discount_currency',

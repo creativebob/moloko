@@ -14,7 +14,7 @@ class CampaignPolicy
     use PoliticTrait;
 
     protected $entity_name = 'campaigns';
-    protected $entity_dependence = false;
+    protected $entity_dependence = true;
 
     public function index(User $user)
     {

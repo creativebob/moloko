@@ -151,6 +151,13 @@
                             {!! Form::text('external', $priceGoods->external) !!}
                         </label>
                     </div>
+
+                    <div class="small-12 cell checkbox">
+                        {!! Form::hidden('is_exported_to_market', 0) !!}
+                        {!! Form::checkbox('is_exported_to_market', 1, $priceGoods->is_exported_to_market, ['id' => 'checkbox-is_exported_to_market']) !!}
+                        <label for="checkbox-is_exported_to_market"><span>Разрешить экспорт товара на Яндекс Маркет</span></label>
+                    </div>
+
                 </div>
             </div>            
 

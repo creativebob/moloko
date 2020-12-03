@@ -38,15 +38,14 @@ class ToolsStockController extends Controller
 
         $stocks = ToolsStock::with([
             'cmv.article.unit',
-            'author',
+            'cmv.category',
             'company',
         ])
             ->moderatorLimit($answer)
             ->companiesLimit($answer)
             ->filials($answer)
             ->systemItem($answer)
-            // ->orderBy('moderation', 'desc')
-//            ->orderBy('sort', 'asc')
+            ->filter()
             ->paginate(30);
 //         dd($stocks);
 
@@ -54,6 +53,29 @@ class ToolsStockController extends Controller
         $pageInfo = pageInfo($this->entityAlias);
 
         return view('system.common.stocks.index', compact('stocks', 'pageInfo', 'filter'));
+    }
+
+    public function search($search)
+    {
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('index'));
+
+        $items = ToolsStock::with([
+            'cmv.article.manufacturer.company'
+        ])
+            ->moderatorLimit($answer)
+            ->companiesLimit($answer)
+            ->authors($answer)
+            ->systemItem($answer) // Фильтр по системным записям
+            ->whereHas('cmv', function ($q) use ($search) {
+                $q->whereHas('article', function ($q) use ($search) {
+                    $q->where('name', 'LIKE', '%' . $search . '%');
+                });
+            })
+            ->get();
+
+        return response()->json($items);
     }
 
     /**

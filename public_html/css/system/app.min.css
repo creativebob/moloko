@@ -362,6 +362,10 @@ input[type='search'] {
   color: #cacaca;
 }
 
+::-moz-placeholder {
+  color: #cacaca;
+}
+
 ::-ms-input-placeholder {
   color: #cacaca;
 }
@@ -593,6 +597,10 @@ select[multiple] {
 }
 
 .is-invalid-input:not(:focus)::-webkit-input-placeholder {
+  color: #cc4b37;
+}
+
+.is-invalid-input:not(:focus)::-moz-placeholder {
   color: #cc4b37;
 }
 
@@ -9858,6 +9866,11 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
   background-color: yellow;
 }
 
+.text-mini {
+  font-size: 0.7rem;
+  color: #cccccc;
+}
+
 a.has-tip {
   position: relative;
   display: inline-block;
@@ -11070,7 +11083,7 @@ span.wrap-label-checkboxer {
 }
 
 .content .content-table tbody td.td-stock-count {
-  font-family: "PFDinTextCondPro-Regular";
+  font-family: PFDinTextCondPro;
   font-size: 2rem;
 }
 
@@ -11088,6 +11101,27 @@ span.wrap-label-checkboxer {
 }
 
 .bold {
+  font-weight: 500;
+}
+
+.search-stock-component table tr.warning td {
+  background-color: #fffcc5;
+}
+
+.wrap-group-indicator {
+  margin-top: 0.3rem;
+}
+
+.wrap-group-indicator .wrap-indicator {
+  margin-right: 1rem;
+}
+
+.wrap-group-indicator .wrap-indicator .attribute-indicator {
+  font-size: 0.8rem;
+}
+
+.wrap-group-indicator .wrap-indicator .value-indicator {
+  color: #000000;
   font-weight: 500;
 }
 
@@ -12064,9 +12098,14 @@ tfoot tr.tfoot-estimate-total td {
   margin-right: 0;
   margin-bottom: 0;
   text-transform: uppercase;
-  font-family: "PFDinTextCondPro-Regular";
+  font-family: PFDinTextCondPro;
   font-size: 1.8rem;
   float: right;
+}
+
+.digit-indicator {
+  font-family: PFDinDisplayPro;
+  font-size: 1.8rem;
 }
 
 #extra-panel .button.tiny {
@@ -14096,4 +14135,31 @@ tr:hover .td-price-status .price_goods-status.hide {
   padding-bottom: 8px;
   font-weight: 500;
   background-color: #fefefe;
+}
+
+.table-invoice caption {
+  padding-bottom: 1rem;
+  font-family: PFDinDisplayPro;
+  font-size: 1.4rem;
+}
+
+.list-indicator {
+  margin: 1rem 1.2rem;
+}
+
+.list-indicator li {
+  margin-right: 3rem;
+}
+
+.list-indicator li .attribute-indicator {
+  vertical-align: middle;
+  color: #666666;
+  font-family: Calibri;
+}
+
+.list-indicator li .value-indicator {
+  vertical-align: middle;
+  font-family: PFDinTextCondPro;
+  font-size: 1.6rem;
+  font-weight: 500;
 }

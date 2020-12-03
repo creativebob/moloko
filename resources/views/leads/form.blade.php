@@ -71,7 +71,9 @@
 
                     {{-- КЛИЕНТ --}}
                     <div class="tabs-panel" id="content-panel-client">
+
                         @include('leads.tabs.client')
+
                     </div>
                     {{-- КОНЕЦ КЛИЕНТ --}}
 

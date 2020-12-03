@@ -14,8 +14,8 @@
 @endsection
 
 @section('title-content')
-{{-- Таблица --}}
-@include('includes.title-content', ['pageInfo' => $pageInfo, 'class' => null, 'type' => 'table'])
+    {{-- Таблица --}}
+    @include('system.common.stocks.includes.title')
 @endsection
 
 @section('content')
@@ -51,7 +51,7 @@
                     <th class="td-volume">Объем</th>
                     <th class="td-cost">Стоимость</th>
                     <th class="td-stock">Склад</th>
-                    <th class="td-status">Стутус</th>
+                    <th class="td-status">Статус</th>
                     <th class="td-company">Компания</th>
                 </tr>
 
