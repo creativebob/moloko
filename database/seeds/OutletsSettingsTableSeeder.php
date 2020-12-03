@@ -96,6 +96,11 @@ class OutletsSettingsTableSeeder extends Seeder
                 'alias' => 'canceled-payments-show',
                 'category_id' => $settingsCategories->firstWhere('alias', 'others')->id
             ],
+            [
+                'name' => 'Проверка остатка на складе при продаже',
+                'alias' => 'stock-check-free',
+                'category_id' => $settingsCategories->firstWhere('alias', 'others')->id
+            ],
         ]);
     }
 }

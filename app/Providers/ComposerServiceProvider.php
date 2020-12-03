@@ -72,7 +72,7 @@ use App\Http\View\Composers\System\StagesListComposer;
 use App\Http\View\Composers\System\CountriesComposer;
 
 use App\Http\View\Composers\System\FilialsForUserComposer;
-use App\Http\View\Composers\System\DepartmentsForUserComposer;
+use App\Http\View\Composers\System\DepartmentsListForUserComposer;
 
 use App\Http\View\Composers\System\UserFilialsComposer;
 use App\Http\View\Composers\System\CatalogsServicesItemsForFilialComposer;
@@ -192,7 +192,7 @@ class ComposerServiceProvider extends ServiceProvider
             'includes.selects.filials_for_user',
             'includes.selects.user_filials',
         ], FilialsForUserComposer::class);
-        view()->composer('includes.selects.departments_for_user', DepartmentsForUserComposer::class);
+        view()->composer('includes.selects.departments_for_user', DepartmentsListForUserComposer::class);
 
         view()->composer([
             'prices_services.select_user_filials',

@@ -19,6 +19,7 @@ use App\Http\View\Composers\System\CitiesWithAreaRegionCountryComposer;
 use App\Http\View\Composers\System\CitySearchComposer;
 use App\Http\View\Composers\System\ClientsCitiesComposer;
 use App\Http\View\Composers\System\ClientsCountComposer;
+use App\Http\View\Composers\System\DepartmentsForUserComposer;
 use App\Http\View\Composers\System\DiscountsForEstimatesComposer;
 use App\Http\View\Composers\System\FilialCatalogsGoodsComposer;
 use App\Http\View\Composers\System\FilialStaffComposer;
@@ -62,6 +63,7 @@ use App\Http\View\Composers\System\SourcesComposer;
 use App\Http\View\Composers\System\StagesComposer;
 use App\Http\View\Composers\System\StocksComposer;
 use App\Http\View\Composers\System\WidgetsComposer;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -73,7 +75,7 @@ use App\Http\View\Composers\System\StagesListComposer;
 use App\Http\View\Composers\System\CountriesComposer;
 
 use App\Http\View\Composers\System\FilialsForUserComposer;
-use App\Http\View\Composers\System\DepartmentsForUserComposer;
+use App\Http\View\Composers\System\DepartmentsListForUserComposer;
 
 use App\Http\View\Composers\System\UserFilialsComposer;
 use App\Http\View\Composers\System\CatalogsServicesItemsForFilialComposer;
@@ -187,6 +189,26 @@ class ViewServiceProvider extends ServiceProvider
     public function boot()
     {
 
+        // Проверки If Else на шаблонах
+
+        // Display
+        Blade::if('display', function ($item) {
+            $result = $item->display == 1;
+            return $result;
+        });
+
+        // Moderation
+        Blade::if('moderation', function ($item) {
+            $result = $item->moderation == 1;
+            return $result;
+        });
+
+        // Шаблон
+        Blade::if('template', function ($item) {
+            $result = is_null($item->company_id) && is_null($item->system);
+            return $result;
+        });
+
         view()->composer('layouts.sidebar', SidebarComposer::class);
         view()->composer('includes.selects.sectors_select', SectorsSelectComposer::class);
 
@@ -197,7 +219,9 @@ class ViewServiceProvider extends ServiceProvider
             'includes.selects.filials_for_user',
             'includes.selects.user_filials',
         ], FilialsForUserComposer::class);
-        view()->composer('includes.selects.departments_for_user', DepartmentsForUserComposer::class);
+
+        view()->composer('includes.selects.departments_for_user', DepartmentsListForUserComposer::class);
+        view()->composer('system.pages.hr.employees.includes.access.roles', DepartmentsForUserComposer::class);
 
         view()->composer([
             'prices_services.select_user_filials',
@@ -208,6 +232,7 @@ class ViewServiceProvider extends ServiceProvider
         view()->composer([
             'includes.selects.roles',
             'includes.lists.roles',
+            'system.pages.hr.employees.includes.access.roles'
         ], RolesComposer::class);
 
         view()->composer('includes.lists.charges', ChargesComposer::class);

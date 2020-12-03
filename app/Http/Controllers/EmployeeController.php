@@ -263,8 +263,10 @@ class EmployeeController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function update(UserUpdateRequest $request, $id)
+    public function update(Request $request, $id)
     {
+
+//        dd($request);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
@@ -288,11 +290,10 @@ class EmployeeController extends Controller
         logs('hr')->info('Будем редактировать сотрудника: все необходимые права есть');
 
         // Отдаем работу по редактированию нового юзера трейту
-        $user = $this->updateUser($request, $user);
+        $user = $this->updateUser($user);
 
         // Cохраняем или обновляем роли
         $result_setroles = setRoles($request, $user);
-
 
         $photo_id = $this->getPhotoId($user);
         $user->photo_id = $photo_id;

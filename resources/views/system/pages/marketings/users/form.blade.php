@@ -41,7 +41,6 @@
 
 <div class="tabs-wrap tabs-margin-top inputs">
     <div class="tabs-content" data-tabs-content="tabs">
-
         {{-- Учетные данные --}}
         <div class="tabs-panel is-active" id="tab-general">
             @include('system.pages.marketings.users.tabs.general')
@@ -103,7 +102,3 @@
 
     </div>
 </div>
-
-
-
-

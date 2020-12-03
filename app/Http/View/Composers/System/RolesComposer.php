@@ -14,10 +14,10 @@ class RolesComposer
 
         $roles = Role::moderatorLimit($answer)
         ->companiesLimit($answer)
-        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->filials($answer)
         ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->template($answer) // Выводим шаблоны в список
+        ->systemItem($answer)
+        ->template($answer)
         ->get();
 
 		return $view->with(compact('roles'));
