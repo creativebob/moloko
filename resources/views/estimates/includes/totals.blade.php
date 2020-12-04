@@ -6,9 +6,9 @@
     <th class="td-number"></th>
     <th class="td-name"></th>
     <th class="td-phone"></th>
-    <th class="td-amount">{{ num_format($estimatesTotals['amount'], 0) }}</th>
-    <th class="td-discount-currency">{{ num_format($estimatesTotals['discount_currency'], 0) }}</th>
-    <th class="td-total">{{ num_format($estimatesTotals['total'], 0) }}</th>
+    <th class="td-amount">{{ num_format($estimatesTotals->amount, 0) }}</th>
+    <th class="td-discount-currency">{{ num_format($estimatesTotals->discount_currency, 0) }}</th>
+    <th class="td-total">{{ num_format($estimatesTotals->total, 0) }}</th>
     <th class="td-payment"></th>
     <th class="td-debt"></th>
     @if(extra_right('margin-show'))

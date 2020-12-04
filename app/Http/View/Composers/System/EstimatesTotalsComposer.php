@@ -18,34 +18,20 @@ class EstimatesTotalsComposer
      * @param View $view
      * @return View
      */
-	public function compose(View $view)
-	{
+    public function compose(View $view)
+    {
         $answer = operator_right('estimates', false, 'index');
 
-        $this->estimatesTotals['amount'] = Estimate::moderatorLimit($answer)
-             ->companiesLimit($answer)
-             ->authors($answer)
-             ->template($answer)
-             ->systemItem($answer)
-            ->filter()
-            ->sum('amount');
-
-        $this->estimatesTotals['discount_currency'] = Estimate::moderatorLimit($answer)
+        $this->estimatesTotals = Estimate::moderatorLimit($answer)
             ->companiesLimit($answer)
             ->authors($answer)
             ->template($answer)
             ->systemItem($answer)
             ->filter()
-            ->sum('discount_currency');
+            ->select(\DB::raw('SUM(amount) AS amount, SUM(discount_currency) AS discount_currency, SUM(total) AS total'))
+            ->first();
+//        dd($this->estimatesTotals);
 
-        $this->estimatesTotals['total'] = Estimate::moderatorLimit($answer)
-            ->companiesLimit($answer)
-            ->authors($answer)
-            ->template($answer)
-            ->systemItem($answer)
-            ->filter()
-            ->sum('total');
-
-		return $view->with('estimatesTotals', $this->estimatesTotals);
-	}
+        return $view->with('estimatesTotals', $this->estimatesTotals);
+    }
 }
