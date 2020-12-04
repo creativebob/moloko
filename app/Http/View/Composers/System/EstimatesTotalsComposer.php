@@ -27,6 +27,7 @@ class EstimatesTotalsComposer
              ->authors($answer)
              ->template($answer)
              ->systemItem($answer)
+            ->filter()
             ->sum('amount');
 
         $this->estimatesTotals['discount_currency'] = Estimate::moderatorLimit($answer)
@@ -34,6 +35,7 @@ class EstimatesTotalsComposer
             ->authors($answer)
             ->template($answer)
             ->systemItem($answer)
+            ->filter()
             ->sum('discount_currency');
 
         $this->estimatesTotals['total'] = Estimate::moderatorLimit($answer)
@@ -41,6 +43,7 @@ class EstimatesTotalsComposer
             ->authors($answer)
             ->template($answer)
             ->systemItem($answer)
+            ->filter()
             ->sum('total');
 
 		return $view->with('estimatesTotals', $this->estimatesTotals);
