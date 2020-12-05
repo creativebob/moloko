@@ -110,11 +110,11 @@
 <script>
     export default {
         components: {
-            'phone-component': require('../inputs/PhoneComponent'),
-            'string-component': require('../inputs/StringComponent'),
-            'email-component': require('../inputs/EmailComponent'),
+            'phone-component': require('../../../inputs/PhoneComponent'),
+            'string-component': require('../../../inputs/StringComponent'),
+            'email-component': require('../../../inputs/EmailComponent'),
             'organization-component': require('./OrganizationComponent'),
-            'search-city-component': require('../search/SearchCityComponent')
+            'search-city-component': require('../../../search/SearchCityComponent')
         },
         props: {
             lead: Object,

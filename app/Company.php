@@ -463,6 +463,11 @@ class Company extends Model
         return $this->belongsToMany(Company::class, 'organizations', 'company_id', 'organization_id');
     }
 
+    public function companies()
+    {
+        return $this->belongsToMany(Company::class, 'organizations', 'organization_id', 'company_id');
+    }
+
     public function representatives()
     {
         return $this->belongsToMany(User::class, 'representatives', 'organization_id');

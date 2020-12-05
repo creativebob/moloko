@@ -749,6 +749,10 @@ Route::resource('/leads', 'LeadController')
 Route::get('/leads_export', 'LeadController@export');
 // Route::resource('/leads_calls', 'LeadController@leads_calls')->middleware('auth');
 
+// Поиск клиентов для автозаполнения
+Route::get('/leads/search-user-by-phone/{number}', 'LeadController@searchUserByPhone');
+Route::get('/leads/search-companies-by-name/{name}', 'LeadController@searchCompaniesByName');
+
 
 // Поиск
 Route::get('/leads/search/{text}', 'LeadController@search');

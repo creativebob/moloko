@@ -75,12 +75,13 @@ class ClientsIndicatorsReport
                     $q->whereNotNull('conducted_at')
                         ->where('conducted_at', '<', $endDate)
                         ->orderBy('created_at')
-                        ->select([
-                            'id',
-                            'client_id',
-                            'conducted_at',
-                            'created_at'
-                        ]);
+//                        ->select([
+//                            'id',
+//                            'client_id',
+//                            'conducted_at',
+//                            'created_at'
+//                        ])
+                    ;
                 },
                 'actual_blacklist:id,client_id',
                 'loyalty_score:id,client_id,loyalty_score'
@@ -144,7 +145,7 @@ class ClientsIndicatorsReport
 
             // Находим активных клиентов в предыдущем периоде
             $activeClientsPrevious = $clients->filter(function ($client) use ($startDate, $endDatePreviousPeriodActive) {
-                if ($client->estimates->last() != null) {
+                if ($client->estimates->where('conducted_at', '<', $startDate)->last() != null) {
                     return $client->first_order_date < $startDate && $client->estimates->where('conducted_at', '<', $startDate)->last()->conducted_at > $endDatePreviousPeriodActive;
                 }
             });
