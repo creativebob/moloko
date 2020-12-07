@@ -101,12 +101,7 @@ class ClientsIndicatorsReport
             ->when($companyId, function ($q) use ($companyId) {
                 $q->where('company_id', $companyId);
             })
-            ->get([
-                'id',
-                'first_order_date',
-                'last_order_date',
-                'company_id'
-            ])
+            ->get()
             ->groupBy('company_id');
 //        dd($groupedClients);
 
