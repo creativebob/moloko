@@ -51,25 +51,25 @@ mix
 // mix.browserSync('crmsystem.local/admin/test');
 
 // Project
-mix.js('resources/js/project/app.js', 'public_html/js/project');
+// mix.js('resources/js/project/app.js', 'public_html/js/project');
 
 // mix.copyDirectory('resources/scss/project/fonts', 'public_html/css/project/fonts');
 // mix.copyDirectory('resources/scss/project/img', 'public_html/css/project/img');
 // mix.copyDirectory('resources/scss/project/sprites', 'public_html/css/project/sprites');
 
-mix
-	.sass('resources/scss/project/app.scss', 'public_html/css/project', {
-
-	})
-	.options({
-		processCssUrls: false,
-		// postCss: [
-		// 	require('postcss-css-variables')()
-		// ]
-	})
-	.minify('public_html/css/project/app.css')
+// mix
+// 	.sass('resources/scss/project/app.scss', 'public_html/css/project', {
+//
+// 	})
+// 	.options({
+// 		processCssUrls: false,
+// 		// postCss: [
+// 		// 	require('postcss-css-variables')()
+// 		// ]
+// 	})
+// 	.minify('public_html/css/project/app.css')
 // .sourceMaps()
-;
+// ;
 // mix.browserSync('crmsystem.local/admin/test');
 
 if (mix.inProduction()) {
