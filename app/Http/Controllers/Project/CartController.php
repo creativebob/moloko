@@ -58,7 +58,8 @@ class CartController extends BaseController
                             'directive_category:id,alias',
                             'parent'
                         ]);
-                    }
+                    },
+                    'catalog'
                 ])
                     ->where('filial_id', $filialId);
             },
