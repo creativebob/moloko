@@ -288,6 +288,27 @@ class EstimateController extends Controller
             ]);
         }
 
+        $estimate = Estimate::with([
+            'goods_items' => function ($q) {
+                $q->with([
+                    'goods.article',
+                    'reserve',
+                    'stock:id,name',
+                    'price_goods',
+                    'currency'
+                ]);
+            },
+            'services_items' => function ($q) {
+                $q->with([
+                    'product.process',
+                ]);
+            },
+            'payments',
+            'lead.client.contract',
+            'discounts'
+        ])
+        ->find($id);
+
         return response()->json($estimate);
     }
 
