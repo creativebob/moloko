@@ -53,8 +53,12 @@ class CartController extends BaseController
                 $q->with([
                     'goods',
                     'currency',
-                    'catalogs_item.directive_category:id,alias',
-                    'catalogs_item.parent'
+                    'catalogs_item' => function ($q) {
+                        $q->with([
+                            'directive_category:id,alias',
+                            'parent'
+                        ]);
+                    }
                 ])
                     ->where('filial_id', $filialId);
             },
