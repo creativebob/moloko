@@ -5,8 +5,8 @@
 @section('breadcrumbs', Breadcrumbs::render('index', $pageInfo))
 
 @section('content')
-    <div class="container">
-        <div class="row">
+{{--    <div class="container">--}}
+{{--        <div class="row">--}}
 
             <div class="grid-x grid-padding-x">
 
@@ -35,8 +35,8 @@
 
             </div>
 
-        </div>
-    </div>
+{{--        </div>--}}
+{{--    </div>--}}
 @endsection
 
 @push('scripts')
