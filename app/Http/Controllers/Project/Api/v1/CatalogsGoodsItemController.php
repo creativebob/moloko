@@ -33,7 +33,8 @@ class CatalogsGoodsItemController extends Controller
                                 $q->with([
                                     'prices' => function ($q) use ($catalogId) {
                                         $q->with([
-                                            'catalogs_item.parent'
+                                            'catalogs_item.parent',
+                                            'catalog'
                                         ])
                                             ->where('display', true)
                                             ->where('archive', false)
@@ -66,7 +67,8 @@ class CatalogsGoodsItemController extends Controller
                                 $q->with([
                                     'prices' => function ($q) use ($catalogId) {
                                         $q->with([
-                                            'catalogs_item.parent'
+                                            'catalogs_item.parent',
+                                            'catalog'
                                         ])
                                             ->where('display', true)
                                             ->where('archive', false)
