@@ -201,11 +201,7 @@ class ClientsIndicatorsReport
             ])
                 ->whereNotNull('conducted_at')
                 ->where('conducted_at', '<', $endDate)
-                ->get([
-                    'id',
-                    'client_id',
-                    'conducted_at',
-                ]);
+                ->get();
 
 //                dd($startDate);
             $registeredEstimatesPeriod = $estimates->where('conducted_at', '>=', $startDate)
