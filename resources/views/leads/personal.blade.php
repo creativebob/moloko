@@ -3,8 +3,8 @@
         :lead="{{ $lead }}"
         :cities='@json($cities)'
         :city='@json($city)'
-        :users='@json($clientsData->users)'
-        :companies='@json($clientsData->companies)'
+        :users='@json($clientsData['users'])'
+        :companies='@json($clientsData['companies'])'
         :legal-forms='@json($legalForms)'
         :mailings='@json($mailings)'
     ></lead-search-in-data-component>
