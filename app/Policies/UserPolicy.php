@@ -10,7 +10,7 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 
 class UserPolicy
 {
-    
+
     use HandlesAuthorization;
     use PoliticTrait;
 
@@ -24,7 +24,7 @@ class UserPolicy
 
     protected $entity_name = 'users';
     protected $entity_dependence = true;
-    
+
     public function before($user)
     {
         // if (Auth::user()->god == 1) {$result = true;} else {$result = null;};
@@ -50,7 +50,7 @@ class UserPolicy
     }
 
     public function update(User $user, User $model)
-    { 
+    {
 
         $result = $this->getstatus($this->entity_name, $model, 'update', $this->entity_dependence);
         return $result;
@@ -58,6 +58,10 @@ class UserPolicy
 
     public function delete(User $user, User $model)
     {
+        if ($user->client) {
+            return false;
+        }
+
         $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
         return $result;
     }

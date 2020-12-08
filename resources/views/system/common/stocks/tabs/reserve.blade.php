@@ -18,43 +18,32 @@
             			<th>Объем</th>
             			<th>Автор</th>
             		</thead>
-            		{{-- <tbody>
-            			<tr>
-	            			<td>1</td>
-	            			<td>Резерв под производство</td>
-	            			<td>12.11.2020</td>
-	            			<td>56</td>
-	            			<td>250</td>
-	            			<td>3000 руб.</td>
-	            			<td></td>
-	            			<td>1680</td>
-	            			<td>0</td>
-	            			<td>Травникова М. Е.</td>
-            			</tr>
-            			<tr>
-	            			<td>2</td>
-	            			<td>Клиентский заказ</td>
-	            			<td>14.11.2020</td>
-	            			<td>1206</td>
-	            			<td>10</td>
-	            			<td>2500 руб.</td>
-	            			<td>Иванов Николай</td>
-	            			<td>5600</td>
-	            			<td>0</td>
-	            			<td>Травникова М. Е.</td>
-            			</tr>
-            		</tbody>
-            		<tfoot>
-            			<tr>
-            				<td colspan="4"></td>
-            				<td>260</td>
-            				<td>5500 руб.</td>
-            				<td></td>
-            				<td>7280</td>
-            				<td>0</td>
-            				<td></td>
-            			</tr>
-            		</tfoot> --}}
+                    <tbody>
+                    @foreach($stock->reserves as $reserve)
+                        <tr>
+                            <td>{{ $reserve->document_id }}</td>
+                            <td>{{ getDocumentNameByModel($reserve->document_type) }}</td>
+                            <td>{{ $reserve->document->registered_at->format('d.m.Y') }}</td>
+                            <td>{{ $reserve->document->number }}</td>
+                            <td>{{ num_format($reserve->count, 0) }}</td>
+                            <td>{{ num_format($reserve->amount, 0) }} руб.</td>
+                            <td></td>
+                            <td>1680</td>
+                            <td>0</td>
+                            <td>{{ $reserve->author->name }}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="4"></td>
+                        <td>{{ num_format($stock->reserves->sum('count'), 0) }}</td>
+                        <td>{{ num_format($stock->reserves->sum('amount'), 0) }} руб.</td>
+                        <td></td>
+                        <td>7280</td>
+                        <td>0</td>
+                        <td></td>
+                    </tr>
             	</table>
             </div>
         </div>

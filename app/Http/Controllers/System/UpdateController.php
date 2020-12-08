@@ -6,6 +6,8 @@ use App\Action;
 use App\ActionEntity;
 use App\Channel;
 use App\Charge;
+use App\CompaniesSetting;
+use App\CompaniesSettingsCategory;
 use App\Entity;
 use App\Models\System\Documents\EstimatesGoodsItem;
 use App\Http\Controllers\Controller;
@@ -33,6 +35,44 @@ class UpdateController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+    }
+
+    /**
+     * Настройки авторасчета даты отгрузки и начисления поинтов
+     *
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
+    public function addLoyaltySettings()
+    {
+
+        OutletsSetting::insert([
+            [
+                'name' => 'Авторасчет времени отгрузки',
+                'alias' => 'shipment_at-calculate',
+                'category_id' => OutletsSettingsCategory::where('alias', 'others')
+                    ->value('id')
+            ],
+        ]);
+
+        CompaniesSettingsCategory::insert([
+            [
+                'name' => 'Система лояльности',
+                'slug' => \Str::slug('Система лояльности'),
+                'level' => 1,
+                'alias' => 'loyalty-system',
+            ],
+        ]);
+
+        CompaniesSetting::insert([
+            [
+                'name' => 'Начисление поинтов',
+                'alias' => 'points-calculate',
+                'category_id' => CompaniesSettingsCategory::where('alias', 'loyalty-system')
+                    ->value('id')
+            ],
+        ]);
+
+        return __('msg.ok');
     }
 
     /**

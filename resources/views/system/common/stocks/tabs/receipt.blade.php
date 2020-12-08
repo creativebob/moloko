@@ -18,43 +18,33 @@
             			<th>Объем</th>
             			<th>Автор</th>
             		</thead>
-            		{{-- <tbody>
-            			<tr>
-	            			<td>1</td>
-	            			<td>Наряд на производство</td>
-	            			<td>12.11.2020</td>
-	            			<td>56</td>
-	            			<td>250</td>
-	            			<td>3000 руб.</td>
-	            			<td></td>
-	            			<td>1680</td>
-	            			<td>0</td>
-	            			<td>Травникова М. Е.</td>
-            			</tr>
-            			<tr>
-	            			<td>2</td>
-	            			<td>Производство под заказ</td>
-	            			<td>14.11.2020</td>
-	            			<td>1206</td>
-	            			<td>10</td>
-	            			<td>2500 руб.</td>
-	            			<td>Иванов Николай</td>
-	            			<td>5600</td>
-	            			<td>0</td>
-	            			<td>Травникова М. Е.</td>
-            			</tr>
-            		</tbody> 
-            		<tfoot>
-            			<tr>
-            				<td colspan="4"></td>
-            				<td>260</td>
-            				<td>5500 руб.</td>
-            				<td></td>
-            				<td>7280</td>
-            				<td>0</td>
-            				<td></td>
-            			</tr>
-            		</tfoot>--}}
+                    <tbody>
+                    @foreach($stock->receipts as $receipt)
+                        <tr>
+                            <td>{{ $receipt->document_id }}</td>
+                            <td>{{ getDocumentNameByModel($receipt->document_type) }}</td>
+                            <td>{{ $receipt->document->conducted_at->format('d.m.Y') }}</td>
+                            <td>{{ $receipt->document->number }}</td>
+                            <td>{{ num_format($receipt->count, 0) }}</td>
+                            <td>{{ num_format($receipt->amount, 0) }} руб.</td>
+                            <td></td>
+                            <td>1680</td>
+                            <td>0</td>
+                            <td>{{ $receipt->author->name }}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="4"></td>
+                        <td>{{ num_format($stock->receipts->sum('count'), 0) }}</td>
+                        <td>{{ num_format($stock->receipts->sum('amount'), 0) }} руб.</td>
+                        <td></td>
+                        <td>7280</td>
+                        <td>0</td>
+                        <td></td>
+                    </tr>
+                    </tfoot>
             	</table>
             </div>
         </div>

@@ -24,6 +24,11 @@ class LeadObserver
         $lead->lead_method_id = 1;
 
         $lead->draft = true;
+
+        // TODO - 08.12.20 - Долгий путь с затычками
+        if ($user->staff->first()->filial->outlets->first()->settings->firstWhere('alias', 'shipment_at-calculate')) {
+            $lead->shipment_at = now()->addSeconds($user->staff->first()->filial->outlets->first()->extra_time);
+        }
     }
 
     public function created(Lead $lead)

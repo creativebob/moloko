@@ -514,3 +514,30 @@ function getSettings()
 {
     return auth()->user()->company->settings;
 }
+
+/**
+ * Получаем название документа через модель сущности
+ *
+ * @param $model
+ * @return string|null
+ */
+function getDocumentNameByModel($model)
+{
+    $name = null;
+
+    switch ($model) {
+        case('App\Models\System\Documents\Production'):
+            $name = 'Наряд на производство';
+            break;
+
+        case('App\Models\System\Documents\Consignment'):
+            $name = 'Товарная накладная';
+            break;
+
+        case('App\Models\System\Documents\Estimate'):
+            $name = 'Смета';
+            break;
+    }
+
+    return $name;
+}

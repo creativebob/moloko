@@ -31,6 +31,15 @@
                 </label>
             </div>
 
+            <div class="cell small-12 large-4">
+                <label>Сумма для начисления поинтов
+                    <digit-component
+                        name="points_rate"
+                        :value="{{ $company->points_rate }}"
+                    ></digit-component>
+                </label>
+            </div>
+
             {{ Form::hidden('external_control', 0) }}
             <div class="small-12 cell checkbox">
                 {{ Form::checkbox('external_control', 1, null, ['id' => 'external_control']) }}

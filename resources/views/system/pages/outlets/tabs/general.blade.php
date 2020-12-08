@@ -45,6 +45,14 @@
                     @include('includes.selects.templates', ['categoryId' => 2, 'placeholder' => 'Стандартный чек'])
                 </label>
 
+                <label>Время доставки (мин.)
+                    <digit-component
+                        name="extra_time"
+                        :value="{{ $outlet->extraTimeMinutes }}"
+                        :decimal-place="0"
+                    ></digit-component>
+                </label>
+
                 <label>Описание
                     @include('includes.inputs.textarea', ['name' => 'description'])
                 </label>

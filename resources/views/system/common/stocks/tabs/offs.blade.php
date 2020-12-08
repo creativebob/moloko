@@ -18,43 +18,33 @@
             			<th>Объем</th>
             			<th>Автор</th>
             		</thead>
-            		{{-- <tbody>
+            		<tbody>
+                    @foreach($stock->offs as $off)
             			<tr>
-	            			<td>1</td>
-	            			<td>Наряд на производство</td>
-	            			<td>12.11.2020</td>
-	            			<td>56</td>
-	            			<td>250</td>
-	            			<td>3000 руб.</td>
+	            			<td>{{ $off->document_id }}</td>
+	            			<td>{{ getDocumentNameByModel($off->document_type) }}</td>
+	            			<td>{{ $off->document->conducted_at->format('d.m.Y') }}</td>
+	            			<td>{{ $off->document->number }}</td>
+	            			<td>{{ num_format($off->count, 0) }}</td>
+	            			<td>{{ num_format($off->amount, 0) }} руб.</td>
 	            			<td></td>
 	            			<td>1680</td>
 	            			<td>0</td>
-	            			<td>Травникова М. Е.</td>
+	            			<td>{{ $off->author->name }}</td>
             			</tr>
-            			<tr>
-	            			<td>2</td>
-	            			<td>Производство под заказ</td>
-	            			<td>14.11.2020</td>
-	            			<td>1206</td>
-	            			<td>10</td>
-	            			<td>2500 руб.</td>
-	            			<td>Иванов Николай</td>
-	            			<td>5600</td>
-	            			<td>0</td>
-	            			<td>Травникова М. Е.</td>
-            			</tr>
-            		</tbody> 
-            		<tfoot>
-            			<tr>
-            				<td colspan="4"></td>
-            				<td>260</td>
-            				<td>5500 руб.</td>
-            				<td></td>
-            				<td>7280</td>
-            				<td>0</td>
-            				<td></td>
-            			</tr>
-            		</tfoot> --}}
+                        @endforeach
+            		</tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="4"></td>
+                            <td>{{ num_format($stock->offs->sum('count'), 0) }}</td>
+                            <td>{{ num_format($stock->offs->sum('amount'), 0) }} руб.</td>
+                            <td></td>
+                            <td>7280</td>
+                            <td>0</td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
             	</table>
             </div>
         </div>

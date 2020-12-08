@@ -421,6 +421,11 @@ class CartController extends BaseController
                 $lead->prom = $request->cookie('prom');
             }
 
+            // Авторасчет времени отгрузки
+            if ($this->site->filial->outlets->first()->settings->firstWhere('alias', 'shipment_at-calculate')) {
+                $lead->shipment_at = now()->addSeconds($this->site->filial->outlets->first()->extra_time);
+            }
+
             $lead->saveQuietly();
 
             logs('leads_from_project')

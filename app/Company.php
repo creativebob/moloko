@@ -97,6 +97,8 @@ class Company extends Model
         'legal_form_id',
         'photo_id',
 
+        'points_rate',
+
         'display',
         'system',
         'moderation'

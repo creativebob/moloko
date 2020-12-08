@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Database\Seeder;
-    
+
     use App\CompaniesSetting;
     use App\CompaniesSettingsCategory;
-    
+
     class CompaniesSettingsTableSeeder extends Seeder
 {
     /**
@@ -15,7 +15,7 @@ use Illuminate\Database\Seeder;
     public function run()
     {
         $settingsCategories = CompaniesSettingsCategory::get();
-    
+
         CompaniesSetting::insert([
         	[
                 'name' => 'Продажа со склада',
@@ -46,6 +46,11 @@ use Illuminate\Database\Seeder;
                 'name' => 'Приоритет компании',
                 'alias' => 'search-company-priority',
                 'category_id' => $settingsCategories->firstWhere('alias', 'leads')->id
+            ],
+            [
+                'name' => 'Начисление поинтов',
+                'alias' => 'points-calculate',
+                'category_id' => $settingsCategories->firstWhere('alias', 'loyalty-system')->id
             ],
         ]);
     }

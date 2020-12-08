@@ -2,9 +2,10 @@
 
 namespace App;
 
+use App\Models\System\BaseModel;
 use Illuminate\Database\Eloquent\Model;
 
-class Off extends Model
+class Off extends BaseModel
 {
     protected $fillable = [
         'stock_id',

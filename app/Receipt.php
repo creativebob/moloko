@@ -2,9 +2,10 @@
 
 namespace App;
 
+use App\Models\System\BaseModel;
 use Illuminate\Database\Eloquent\Model;
 
-class Receipt extends Model
+class Receipt extends BaseModel
 {
     protected $fillable = [
         'stock_id',
