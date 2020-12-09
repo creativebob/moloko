@@ -22,7 +22,6 @@ use App\Http\View\Composers\System\ClientsCountComposer;
 use App\Http\View\Composers\System\DiscountsForEstimatesComposer;
 use App\Http\View\Composers\System\FilialCatalogsGoodsComposer;
 use App\Http\View\Composers\System\FilialStaffComposer;
-use App\Http\View\Composers\System\LeadHistoryComposer;
 use App\Http\View\Composers\System\MailingListsComposer;
 use App\Http\View\Composers\System\MailingsComposer;
 use App\Http\View\Composers\System\OutletsSettingsCategoriesWithSettingsComposer;
@@ -463,7 +462,6 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('leads.personal', MailingsComposer::class);
 
         view()->composer('leads.tabs.events', StagesComposer::class);
-        view()->composer('leads.tabs.history', LeadHistoryComposer::class);
         view()->composer('leads.tabs.estimate', DiscountsForEstimatesComposer::class);
 
         // Сотрудники

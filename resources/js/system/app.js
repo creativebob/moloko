@@ -41,6 +41,7 @@ Vue.component('lead-errors-component', require('./components/leads/ErrorsCompone
 Vue.component('estimate-component', require('./components/leads/estimates/EstimateComponent'));
 Vue.component('lead-tabs-component', require('./components/leads/tabs/TabsComponent'));
 Vue.component('payments-component', require('./components/leads/payments/PaymentsComponent'));
+Vue.component('lead-history-component', require('./components/leads/history/HistoriesComponent'));
 
 Vue.component('checkboxer-component', require('./components/common/CheckboxerComponent'));
 Vue.component('lister-component', require('./components/common/ListerComponent'));

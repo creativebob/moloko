@@ -738,6 +738,7 @@ Route::post('/leads/send-email/{id}', 'LeadController@sendEmail')
 // Route::get('/lead/calls', 'LeadController@index')->middleware('auth');
 
 Route::patch('/leads/axios_update/{id}', 'LeadController@axiosUpdate');
+Route::post('/leads/history', 'LeadController@getLeadHistory');
 
 // Основные методы
 Route::resource('/leads', 'LeadController')

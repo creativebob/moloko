@@ -1899,4 +1899,41 @@ class LeadController extends Controller
 
         return response()->json($companies);
     }
+
+    /**
+     * ПОлучаем историю лида по неомеру телефона
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getLeadHistory(Request $request)
+    {
+        $phone = $request->phone;
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right('leads', true, getmethod('edit'));
+
+        // История лида
+        $leadHistory = Lead::with([
+            'location.city',
+            'choice',
+            'manager',
+            'stage',
+            'user',
+            'challenges.challenge_type',
+            'phones',
+        ])
+            ->companiesLimit($answer)
+            ->systemItem($answer)
+            ->where('draft', false)
+            ->whereHas('phones', function ($query) use ($phone) {
+                $query->where('phone', cleanPhone($phone));
+            })
+            ->where('id', '!=', $request->id)
+            ->oldest('sort')
+            ->get();
+
+        return response()->json($leadHistory);
+
+    }
 }
