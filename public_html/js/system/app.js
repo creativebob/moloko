@@ -89281,7 +89281,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             type: String,
             default: null
         },
-        tree: Array,
+        tree: [Array, Object],
         checkeds: Array
     },
     data: function data() {
@@ -91703,7 +91703,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             totalCost = 0;
 
         this.curItems.forEach(function (item) {
-            var weight = parseFloat(item.weight * 1000 * item.pivot.useful).toFixed(2);
+            var weight = 0;
+            if (_this.name == 'goods') {
+                weight = parseFloat(item.article.weight * 1000 * item.pivot.useful).toFixed(2);
+            } else {
+                weight = parseFloat(item.weight * 1000 * item.pivot.useful).toFixed(2);
+            }
             totalWeight = parseFloat(totalWeight) + parseFloat(weight);
             item.totalWeight = weight;
 
@@ -91712,8 +91717,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 cost = parseFloat(item.cost_unit * item.pivot.useful).toFixed(2);
             } else if (_this.name == 'raws') {
                 cost = parseFloat(item.cost_portion * item.pivot.useful).toFixed(2);
+            } else if (_this.name == 'goods') {
+                cost = parseFloat(item.article.cost_default * item.pivot.useful).toFixed(2);
             }
-
             totalCost = parseFloat(totalCost) + parseFloat(cost);
             item.totalCost = cost;
         });
@@ -91943,13 +91949,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         },
         weight: function weight() {
-            return parseFloat(this.item.weight * 1000 * this.useful).toFixed(2);
+            if (this.name == 'goods') {
+                return parseFloat(this.item.article.weight * 1000 * this.useful).toFixed(2);
+            } else {
+                return parseFloat(this.item.weight * 1000 * this.useful).toFixed(2);
+            }
         },
         cost: function cost() {
             if (this.name == 'attachments' || this.name == 'containers') {
                 return parseFloat(this.item.cost_unit * this.useful).toFixed(2);
             } else if (this.name == 'raws') {
                 return parseFloat(this.item.cost_portion * this.useful).toFixed(2);
+            } else if (this.name == 'goods') {
+                return parseFloat(this.item.article.cost_default * this.useful).toFixed(2);
             }
         }
     },

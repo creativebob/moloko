@@ -200,7 +200,11 @@ class Estimate extends BaseModel
         }
 
         if (isset($filters['saled'])) {
-            $query->where('conducted_at', $filters['saled']);
+            if ($filters['saled'] == 1) {
+                $query->whereNotNull('conducted_at');
+            } else {
+                $query->whereNull('conducted_at');
+            }
         }
 
         if (isset($filters['total_min'])) {

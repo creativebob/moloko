@@ -27,6 +27,8 @@ class EstimatesTotalsComposer
             ->authors($answer)
             ->template($answer)
             ->systemItem($answer)
+            ->where('draft', false)
+            ->whereNotNull('registered_at')
             ->filter()
             ->select(\DB::raw('SUM(amount) AS amount, SUM(discount_currency) AS discount_currency, SUM(total) AS total'))
             ->first();

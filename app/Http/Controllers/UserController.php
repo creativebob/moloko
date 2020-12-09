@@ -78,7 +78,7 @@ class UserController extends Controller
         ->systemItem($answer) // Фильтр по системным записям
         // ->where('id', '!=', $request->user()->id) // Только для сущности USERS
         // ->orWhere('id', $request->user()->id) // Только для сущности USERS
-        ->filter($request, 'city_id', 'location')
+//        ->filter($request, 'city_id', 'location')
         ->booleanArrayFilter($request, 'user_type')
         ->booleanArrayFilter($request, 'access_block')
         ->booklistFilter($request)

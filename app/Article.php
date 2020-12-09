@@ -167,7 +167,11 @@ class Article extends Model
     {
         return $this->belongsToMany(Goods::class, 'article_goods')
             ->withPivot([
-                'value'
+                'value',
+                'useful',
+                'waste',
+                'leftover',
+                'leftover_operation_id'
             ]);
     }
 
