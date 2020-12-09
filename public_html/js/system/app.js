@@ -88546,6 +88546,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }).finally(function () {
                     return _this.loading = false;
                 });
+            } else {
+                this.histories = [];
             }
         }
     }

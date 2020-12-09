@@ -71,6 +71,8 @@ export default {
                         alert('Произошла ошибка зарузки истории, перезагрузите страницу!')
                     })
                     .finally(() => (this.loading = false));
+            } else {
+                this.histories = [];
             }
         }
     }
