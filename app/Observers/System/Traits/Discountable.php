@@ -60,14 +60,16 @@ trait Discountable
                 $priceGoods->price_discount = 0;
                 $priceGoods->total_price_discount = $priceGoods->price;
             }
-
-
 //            dd($break);
 
             if ($break) {
                 $priceGoods->catalogs_item_discount_id = null;
                 $priceGoods->catalogs_item_discount = 0;
                 $priceGoods->total_catalogs_item_discount = $priceGoods->total_price_discount;
+
+                $priceGoods->estimate_discount_id = null;
+                $priceGoods->estimate_discount = 0;
+                $priceGoods->total_estimate_discount = $priceGoods->total_catalogs_item_discount;
             } else {
                 if ($priceGoods->id) {
                     $catalogsItem = $priceGoods->catalogs_item;
