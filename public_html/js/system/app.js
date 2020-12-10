@@ -131493,6 +131493,8 @@ var moduleGoods = {
                                     cost = parseFloat(cost) + parseFloat(item.cost_unit) * parseFloat(item.pivot.useful);
                                 } else if (composition.name == 'raws') {
                                     cost = parseFloat(cost) + parseFloat(item.cost_portion) * parseFloat(item.pivot.useful);
+                                } else if (composition.name == 'goods') {
+                                    cost = parseFloat(cost) + parseFloat(item.article.cost_default) * parseFloat(item.pivot.useful);
                                 }
                             }
                         });

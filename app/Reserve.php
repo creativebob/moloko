@@ -31,6 +31,11 @@ class Reserve extends BaseModel
         'count',
     ];
 
+    public function getPriceTotalAttribute()
+    {
+        return $this->documents_item->price * $this->count;
+    }
+
     public function document()
     {
         return $this->morphTo();

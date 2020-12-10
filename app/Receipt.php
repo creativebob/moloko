@@ -27,6 +27,11 @@ class Receipt extends BaseModel
 	    'amount',
     ];
 
+    public function getCostTotalAttribute()
+    {
+        return $this->cost * $this->count;
+    }
+
     public function document()
     {
         return $this->morphTo();

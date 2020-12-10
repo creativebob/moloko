@@ -199,6 +199,18 @@ class CartController extends BaseController
 
                 if ($user) {
                     logs('leads_from_project')->info("Пользователь найден по номеру телефона, id: [{$user->id}]");
+
+                    // Обновляем имя пользователя если его нет
+                    if (($user->first_name == '' || empty($user->first_name)) && isset($request->first_name)) {
+                        $user->first_name = $request->first_name;
+                        $user->second_name = isset($request->second_name) ? $request->second_name : null;
+                        if ($user->second_name) {
+                            $user->name = $user->first_name . ' ' . $user->second_name;
+                        } else {
+                            $user->name = $user->first_name;
+                        }
+                        $user->saveQuietly();
+                    }
                 } else {
                     $usersCount = User::withoutTrashed()
                         ->count();
@@ -421,7 +433,7 @@ class CartController extends BaseController
                 $lead->prom = $request->cookie('prom');
             }
 
-            // Авторасчет времени отгрузки
+            // TODO - 10.12.20 - Авторасчет времени отгрузки (Доработка)
             if ($this->site->filial->outlets->first()->settings->firstWhere('alias', 'shipment_at-calculate')) {
                 $lead->shipment_at = now()->addSeconds($this->site->filial->outlets->first()->extra_time);
             }

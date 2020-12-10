@@ -326,14 +326,14 @@ class Lead extends BaseModel
             $query->whereDate('created_at', '>=', Carbon::createFromFormat('d.m.Y', $filters['period_date_min']));
         }
         if (isset($filters['period_date_max'])) {
-            $query->whereDate('created_at', '<=', Carbon::createFromFormat('d.m.Y', request()->period_date_max));
+            $query->whereDate('created_at', '<=', Carbon::createFromFormat('d.m.Y', $filters['period_date_max']));
         }
 
         if (isset($filters['shipment_date_min'])) {
-            $query->whereDate('shipment_at', '>=', Carbon::createFromFormat('d.m.Y', request()->shipment_date_min));
+            $query->whereDate('shipment_at', '>=', Carbon::createFromFormat('d.m.Y', $filters['shipment_date_min']));
         }
         if (isset($filters['shipment_date_max'])) {
-            $query->whereDate('shipment_at', '<=', Carbon::createFromFormat('d.m.Y', request()->shipment_date_max));
+            $query->whereDate('shipment_at', '<=', Carbon::createFromFormat('d.m.Y', $filters['shipment_date_max']));
         }
 
         if (isset($filters['status'])) {

@@ -24,6 +24,9 @@ class EmployeeRequest extends FormRequest
     public function rules()
     {
         return [
+            // TODO - 10.12.20 - Валидация инн
+            'inn' => 'nullable|integer|min:12',
+
             'staffer_id' => 'required|integer|exists:staff,id',
 
             'employment_date' => 'required|date|after:01.01.1940',

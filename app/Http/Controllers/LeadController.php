@@ -842,6 +842,11 @@ class LeadController extends Controller
 
 
                 if ($user) {
+                    // Обновляем имя пользователя если его нет
+                    if (($user->first_name == '' || empty($user->first_name)) && isset($newLead['name'])) {
+                        $user->name = $newLead['name'];
+                        $user->saveQuietly();
+                    }
                     $dataLead['user_id'] = $user->id;
                 } else {
                     $dataUser = [

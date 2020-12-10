@@ -19,6 +19,7 @@
             			<th>Автор</th>
             		</thead>
                     <tbody>
+
                     @foreach($stock->receipts as $receipt)
                         <tr>
                             <td>{{ $receipt->document_id }}</td>
@@ -26,10 +27,10 @@
                             <td>{{ $receipt->document->conducted_at->format('d.m.Y') }}</td>
                             <td>{{ $receipt->document->number }}</td>
                             <td>{{ num_format($receipt->count, 0) }}</td>
-                            <td>{{ num_format($receipt->amount, 0) }} руб.</td>
+                            <td>{{ num_format($receipt->costTotal, 0) }} руб.</td>
                             <td></td>
-                            <td>1680</td>
-                            <td>0</td>
+                            <td>{{ $receipt->cmv->article->weight * $receipt->count }}</td>
+                            <td>{{ $receipt->cmv->article->volume * $receipt->count }}</td>
                             <td>{{ $receipt->author->name }}</td>
                         </tr>
                     @endforeach
@@ -38,7 +39,7 @@
                     <tr>
                         <td colspan="4"></td>
                         <td>{{ num_format($stock->receipts->sum('count'), 0) }}</td>
-                        <td>{{ num_format($stock->receipts->sum('amount'), 0) }} руб.</td>
+                        <td>{{ num_format($stock->receipts->sum('costTotal'), 0) }} руб.</td>
                         <td></td>
                         <td>7280</td>
                         <td>0</td>

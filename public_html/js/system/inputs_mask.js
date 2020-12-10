@@ -58,7 +58,8 @@ jQuery(function($) {
     $('.telegram-id-field').mask('999999999?999');
 
     // ИНН
-    $('.inn-field').mask('9999999999?99');
+    $('.inn_user-field').mask('999999999999');
+    $('.inn_company-field').mask('9999999999');
 
     // КПП
     $('.kpp-field').mask('999999999');

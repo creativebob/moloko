@@ -61,7 +61,7 @@
 
                             <div class="small-12 cell">
                                 <label>ИНН
-                                    @include('includes.inputs.inn', ['value'=>$new_user->inn, 'name'=>'inn'])
+                                    @include('includes.inputs.inn_user', ['value'=>$new_user->inn, 'name'=>'inn'])
                                 </label>
                             </div>
                             <div class="small-12 cell">

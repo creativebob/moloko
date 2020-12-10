@@ -7,7 +7,7 @@ const moduleGoods = {
     mutations: {
         SET_COMPOSITION(state, composition) {
             if (state.compositions.length) {
-                var index = state.compositions.findIndex(obj => obj.name == composition.name);
+                const index = state.compositions.findIndex(obj => obj.name == composition.name);
                 if (state.compositions[index]) {
                     state.compositions[index] = composition
                 } else {
@@ -21,7 +21,7 @@ const moduleGoods = {
             this.commit('SET_TOTAL_COST');
         },
         SET_TOTAL_WEIGHT(state) {
-            var weight = 0;
+            let weight = 0;
             if (state.compositions.length) {
                 state.compositions.forEach(composition => {
                     if (composition.items.length) {
@@ -37,7 +37,7 @@ const moduleGoods = {
             state.totalWeight = weight.toFixed(2);
         },
         SET_TOTAL_COST(state) {
-            var cost = 0;
+            let cost = 0;
             if (state.compositions.length) {
                 state.compositions.forEach(composition => {
                     if (composition.items.length) {
@@ -48,6 +48,8 @@ const moduleGoods = {
                                     cost = parseFloat(cost) + (parseFloat(item.cost_unit) * parseFloat(item.pivot.useful));
                                 } else if (composition.name == 'raws') {
                                     cost = parseFloat(cost) + (parseFloat(item.cost_portion) * parseFloat(item.pivot.useful));
+                                } else if (composition.name == 'goods') {
+                                    cost = parseFloat(cost) + (parseFloat(item.article.cost_default) * parseFloat(item.pivot.useful));
                                 }
                             }
                         });
