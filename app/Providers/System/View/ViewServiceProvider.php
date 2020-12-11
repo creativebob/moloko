@@ -225,7 +225,7 @@ class ViewServiceProvider extends ServiceProvider
 
         view()->composer([
             'prices_services.select_user_filials',
-            'prices_goods.select_user_filials',
+            'system.pages.catalogs.goods.prices_goods.select_user_filials',
         ], UserFilialsComposer::class);
         view()->composer('prices_services.sync.modal', CatalogsServicesItemsForFilialComposer::class);
 

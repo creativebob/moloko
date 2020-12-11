@@ -31,7 +31,7 @@
 		        <div class="small-12 medium-4 large-4 cell">
 		        </div>
 		        <div class="small-12 medium-4 large-2 cell text-right">
-		            @include('system.pages.catalogs.goods.prices_goods.select_user_filials')
+		            @include('system.pages.catalogs.goods.prices_goods.select_user_filials', ['catalog' => $catalogGoods])
 		        </div>
 			</div>
         </div>
