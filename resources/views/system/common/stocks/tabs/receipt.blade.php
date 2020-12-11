@@ -23,14 +23,20 @@
                     @foreach($stock->receipts as $receipt)
                         <tr>
                             <td>{{ $receipt->document_id }}</td>
-                            <td>{{ getDocumentNameByModel($receipt->document_type) }}</td>
+                            <td>
+                                <a href="{{ route(getDocumentRouteByModel($receipt->document_type), isset($receipt->document->lead_id) ? $receipt->document->lead_id : $receipt->document_id) }}">{{ getDocumentNameByModel($receipt->document_type) }}</a>
+                            </td>
                             <td>{{ $receipt->document->conducted_at->format('d.m.Y') }}</td>
                             <td>{{ $receipt->document->number }}</td>
-                            <td>{{ num_format($receipt->count, 0) }}</td>
-                            <td>{{ num_format($receipt->costTotal, 0) }} руб.</td>
-                            <td></td>
-                            <td>{{ $receipt->cmv->article->weight * $receipt->count }}</td>
-                            <td>{{ $receipt->cmv->article->volume * $receipt->count }}</td>
+                            <td>{{ num_format($receipt->count, 2) }}</td>
+                            <td>{{ num_format($receipt->costTotal, 2) }} руб.</td>
+                            <td>
+                                @isset($receipt->document->client_id)
+                                    <a href="{{ route($receipt->document->client->clientable_type == 'App\User' ? 'clients.editClientUser' : 'clients.editClientCompany', $receipt->document->client->id) }}">{{ $reserve->document->client->clientable->name }}</a>
+                                @endif
+                            </td>
+                            <td>{{ num_format($receipt->weightTotal, 2) }}</td>
+                            <td>{{ num_format($receipt->volumeTotal, 2) }}</td>
                             <td>{{ $receipt->author->name }}</td>
                         </tr>
                     @endforeach
@@ -38,11 +44,11 @@
                     <tfoot>
                     <tr>
                         <td colspan="4"></td>
-                        <td>{{ num_format($stock->receipts->sum('count'), 0) }}</td>
-                        <td>{{ num_format($stock->receipts->sum('costTotal'), 0) }} руб.</td>
+                        <td>{{ num_format($stock->receipts->sum('count'), 2) }}</td>
+                        <td>{{ num_format($stock->receipts->sum('costTotal'), 2) }} руб.</td>
                         <td></td>
-                        <td>7280</td>
-                        <td>0</td>
+                        <td>{{ num_format($stock->receipts->sum('weightTotal'), 2) }}</td>
+                        <td>{{ num_format($stock->receipts->sum('volumeTotal'), 2) }}</td>
                         <td></td>
                     </tr>
                     </tfoot>

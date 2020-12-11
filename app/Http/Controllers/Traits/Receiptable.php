@@ -184,8 +184,12 @@ trait Receiptable
             'storage_type' => $modelStorage,
 
             'count' => $count,
-            'cost' => $cost,
-            'amount' => $count * $cost,
+
+            'weight_unit' => $item->cmv->article->weight,
+            'volume_unit' => $item->cmv->article->volume,
+
+            'cost_unit' => $cost,
+            'total' => $count * $cost,
 
             'stock_id' => $item->document->stock_id,
         ]);

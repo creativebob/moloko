@@ -134,9 +134,13 @@ trait Offable
                         'storage_type' => $modelStorage,
 
                         'count' => $composition->portion * $count * $item->count,
-                        'cost' => $costComposition,
 
-                        'amount' => $amountComposition,
+                        'weight_unit' => $composition->weight,
+                        'volume_unit' => $composition->volume,
+
+                        'cost_unit' => $costComposition,
+                        'total' => $amountComposition,
+
                         'stock_id' => $item->document->stock_id,
                     ]);
 
@@ -309,9 +313,11 @@ trait Offable
             'storage_id' => $storage->id,
             'storage_type' => $modelStorage,
 
-            'count' => $item->count,
-            'cost' => $cost_cmv,
-            'amount' => $amount_cmv,
+            'weight_unit' => $item->weight,
+            'volume_unit' => $item->volume,
+
+            'cost_unit' => $cost_cmv,
+            'total' => $amount_cmv,
 
             'stock_id' => $item->stock_id,
         ]);

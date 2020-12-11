@@ -27,8 +27,12 @@ class CreateReceiptsTable extends Migration
             $table->morphs('storage');
 
 	        $table->decimal('count', 12,4)->default(0)->comment('Количество');
-	        $table->decimal('cost', 16, 8)->default(0)->comment('Стоимость');
-	        $table->decimal('amount', 16, 8)->default(0)->comment('Сумма');
+
+            $table->decimal('weight_unit', 9, 4)->default(0)->comment('Вес за единицу (кг)');
+            $table->decimal('volume_unit', 15, 8)->default(0)->comment('Обьем за единицу (м3)');
+
+            $table->decimal('cost_unit', 16, 8)->default(0)->comment('Стоимость за единицу');
+            $table->decimal('total', 16, 8)->default(0)->comment('Сумма');
 
 
             // Общие настройки

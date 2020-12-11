@@ -541,3 +541,30 @@ function getDocumentNameByModel($model)
 
     return $name;
 }
+
+/**
+ * Получаем роут на редактирование документа через модель сущности
+ *
+ * @param $model
+ * @return string|null
+ */
+function getDocumentRouteByModel($model)
+{
+    $route = null;
+
+    switch ($model) {
+        case('App\Models\System\Documents\Production'):
+            $route = 'productions.edit';
+            break;
+
+        case('App\Models\System\Documents\Consignment'):
+            $route = 'consignments.edit';
+            break;
+
+        case('App\Models\System\Documents\Estimate'):
+            $route = 'leads.edit';
+            break;
+    }
+
+    return $route;
+}

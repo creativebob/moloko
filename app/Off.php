@@ -23,9 +23,28 @@ class Off extends BaseModel
         'storage_type',
 
         'count',
-        'cost',
-	    'amount',
+
+        'weight_unit',
+        'volume_unit',
+
+        'cost_unit',
+        'total',
     ];
+
+    public function getCostTotalAttribute()
+    {
+        return $this->cost_unit * $this->count;
+    }
+
+    public function getWeightTotalAttribute()
+    {
+        return $this->weight_unit * $this->count;
+    }
+
+    public function getVolumeTotalAttribute()
+    {
+        return $this->volume_unit * $this->count;
+    }
 
     public function document()
     {
