@@ -4,58 +4,53 @@
         {{-- Основная инфа --}}
         <div class="grid-x grid-margin-x">
             <div class="cell small-12">
-            	<table class="table-invoice">
-            		<caption>История резервирования:</caption>
-            		<thead>
-            			<th>ID</th>
-            			<th>Документ</th>
-            			<th>Дата</th>
-            			<th>Номер</th>
-            			<th>Кол-во</th>
-            			<th>Себестоимость</th>
-            			<th>Клиент</th>
-            			<th>Вес</th>
-            			<th>Объем</th>
-            			<th>Автор</th>
-            		</thead>
-            		{{-- <tbody>
-            			<tr>
-	            			<td>1</td>
-	            			<td>Резерв под производство</td>
-	            			<td>12.11.2020</td>
-	            			<td>56</td>
-	            			<td>250</td>
-	            			<td>3000 руб.</td>
-	            			<td></td>
-	            			<td>1680</td>
-	            			<td>0</td>
-	            			<td>Травникова М. Е.</td>
-            			</tr>
-            			<tr>
-	            			<td>2</td>
-	            			<td>Клиентский заказ</td>
-	            			<td>14.11.2020</td>
-	            			<td>1206</td>
-	            			<td>10</td>
-	            			<td>2500 руб.</td>
-	            			<td>Иванов Николай</td>
-	            			<td>5600</td>
-	            			<td>0</td>
-	            			<td>Травникова М. Е.</td>
-            			</tr>
-            		</tbody>
-            		<tfoot>
-            			<tr>
-            				<td colspan="4"></td>
-            				<td>260</td>
-            				<td>5500 руб.</td>
-            				<td></td>
-            				<td>7280</td>
-            				<td>0</td>
-            				<td></td>
-            			</tr>
-            		</tfoot> --}}
-            	</table>
+                <table class="table-invoice">
+                    <caption>История резервирования:</caption>
+                    <thead>
+                    <th>ID</th>
+                    <th>Документ</th>
+                    <th>Дата</th>
+                    <th>Номер</th>
+                    <th>Кол-во</th>
+                    <th>Стоимость по прайсу</th>
+                    <th>Клиент</th>
+                    <th>Вес</th>
+                    <th>Объем</th>
+                    <th>Автор</th>
+                    </thead>
+                    <tbody>
+                    @foreach($stock->reserves as $reserve)
+                        <tr>
+                            <td>{{ $reserve->document_id }}</td>
+                            <td>
+                                <a href="{{ route(getDocumentRouteByModel($reserve->document_type), isset($reserve->document->lead_id) ? $reserve->document->lead_id : $reserve->document_id) }}">{{ getDocumentNameByModel($reserve->document_type) }}</a>
+                            </td>
+                            <td>{{ $reserve->document->registered_at->format('d.m.Y') }}</td>
+                            <td>{{ $reserve->document->number }}</td>
+                            <td>{{ num_format($reserve->count, 0) }}</td>
+                            <td>{{ num_format($reserve->priceTotal, 2) }} руб.</td>
+                            <td>
+                                @isset($reserve->document->client_id)
+                                    <a href="{{ route($reserve->document->client->clientable_type == 'App\User' ? 'clients.editClientUser' : 'clients.editClientCompany', $reserve->document->client->id) }}">{{ $reserve->document->client->clientable->name }}</a>
+                                @endif
+                            </td>
+                            <td>{{ num_format($reserve->weightTotal, 2) }}</td>
+                            <td>{{ num_format($reserve->volumeTotal, 2) }}</td>
+                            <td>{{ $reserve->author->name }}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="4"></td>
+                        <td>{{ num_format($stock->reserves->sum('count'), 0) }}</td>
+                        <td>{{ num_format($stock->reserves->sum('priceTotal'), 2) }} руб.</td>
+                        <td></td>
+                        <td>{{ num_format($stock->reserves->sum('weightTotal'), 2) }}</td>
+                        <td>{{ num_format($stock->reserves->sum('volumeTotal'), 2) }}</td>
+                        <td></td>
+                    </tr>
+                </table>
             </div>
         </div>
 

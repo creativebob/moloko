@@ -28,6 +28,9 @@ class OutletUpdateRequest extends FormRequest
               'description' => 'nullable|string',
 
               'stock_id' => 'nullable|integer|exists:stocks,id',
+              'template_id' => 'nullable|integer|exists:templates,id',
+
+              'extra_time' => 'nullable|integer',
 
               'display' => 'nullable|integer|max:1',
               'system' => 'nullable|integer|max:1',

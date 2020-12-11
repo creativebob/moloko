@@ -81,26 +81,6 @@ class EstimateController extends Controller
             ->filter()
             ->orderByDesc('created_at')
             ->paginate(30);
-
-
-            $estimatesAll = Estimate::with([
-            'client.clientable.location',
-            'goods_items',
-            'author',
-            'payments',
-            'lead'
-            ])
-            ->moderatorLimit($answer)
-            ->companiesLimit($answer)
-            // ->filials($answer)
-            ->authors($answer)
-            ->systemItem($answer)
-            ->where('draft', false)
-            ->whereNotNull('registered_at')
-            ->filter()
-            ->get();
-
-
 //         dd($estimates);
 
         // -----------------------------------------------------------------------------------------------------------
@@ -118,7 +98,7 @@ class EstimateController extends Controller
         // Инфо о странице
         $pageInfo = pageInfo($this->entityAlias);
 
-        return view('estimates.index', compact('estimates', 'pageInfo', 'estimatesAll'));
+        return view('estimates.index', compact('estimates', 'pageInfo'));
     }
 
     public function search(Request $request, $search)
@@ -307,6 +287,27 @@ class EstimateController extends Controller
                 'registered_at' => null,
             ]);
         }
+
+        $estimate = Estimate::with([
+            'goods_items' => function ($q) {
+                $q->with([
+                    'goods.article',
+                    'reserve',
+                    'stock:id,name',
+                    'price_goods',
+                    'currency'
+                ]);
+            },
+            'services_items' => function ($q) {
+                $q->with([
+                    'product.process',
+                ]);
+            },
+            'payments',
+            'lead.client.contract',
+            'discounts'
+        ])
+        ->find($id);
 
         return response()->json($estimate);
     }

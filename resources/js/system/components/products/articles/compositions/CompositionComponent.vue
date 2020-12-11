@@ -96,13 +96,19 @@
                 }
             },
             weight() {
-                return parseFloat(this.item.weight * 1000 * this.useful).toFixed(2);
+                if (this.name == 'goods') {
+                    return parseFloat(this.item.article.weight * 1000 * this.useful).toFixed(2);
+                } else {
+                    return parseFloat(this.item.weight * 1000 * this.useful).toFixed(2);
+                }
             },
             cost() {
                 if (this.name == 'attachments' || this.name == 'containers') {
                     return parseFloat(this.item.cost_unit * this.useful).toFixed(2);
                 } else if (this.name == 'raws') {
                     return parseFloat(this.item.cost_portion * this.useful).toFixed(2);
+                } else if (this.name == 'goods') {
+                    return parseFloat(this.item.article.cost_default * this.useful).toFixed(2);
                 }
             },
         },

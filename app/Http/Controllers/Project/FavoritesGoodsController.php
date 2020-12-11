@@ -38,7 +38,18 @@ class FavoritesGoodsController extends BaseController
                 })
                 ->with([
                     'prices' => function($q) use ($filialId) {
-                        $q->where('filial_id', $filialId);
+                        $q->with([
+                            'goods',
+                            'currency',
+                            'catalogs_item' => function ($q) {
+                                $q->with([
+                                    'directive_category:id,alias',
+                                    'parent'
+                                ]);
+                            },
+                            'catalog'
+                        ])
+                        ->where('filial_id', $filialId);
                     }
                 ]);
            }

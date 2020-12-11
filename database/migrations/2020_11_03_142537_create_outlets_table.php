@@ -31,6 +31,8 @@ class CreateOutletsTable extends Migration
             $table->bigInteger('filial_id')->nullable()->unsigned()->comment('Id филиала');
 //            $table->foreign('filial_id')->references('id')->on('departments');
 
+            $table->integer('extra_time')->unsigned()->default(0)->comment('Время доставки (для автовычисления), сек');
+
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

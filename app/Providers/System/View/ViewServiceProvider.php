@@ -19,8 +19,10 @@ use App\Http\View\Composers\System\CitiesWithAreaRegionCountryComposer;
 use App\Http\View\Composers\System\CitySearchComposer;
 use App\Http\View\Composers\System\ClientsCitiesComposer;
 use App\Http\View\Composers\System\ClientsCountComposer;
+use App\Http\View\Composers\System\ClientsForSearchComposer;
 use App\Http\View\Composers\System\DepartmentsForUserComposer;
 use App\Http\View\Composers\System\DiscountsForEstimatesComposer;
+use App\Http\View\Composers\System\EstimatesTotalsComposer;
 use App\Http\View\Composers\System\FilialCatalogsGoodsComposer;
 use App\Http\View\Composers\System\FilialStaffComposer;
 use App\Http\View\Composers\System\LeadHistoryComposer;
@@ -490,8 +492,7 @@ class ViewServiceProvider extends ServiceProvider
         view()->composer('system.pages.outlets.tabs.settings', OutletsSettingsCategoriesWithSettingsComposer::class);
 
         // Лиды
-        view()->composer('leads.personal', UsersWithClientComposer::class);
-        view()->composer('leads.personal', CompaniesWithClientComposer::class);
+        view()->composer('leads.personal', ClientsForSearchComposer::class);
         view()->composer('leads.personal', LegalFormsComposer::class);
         view()->composer('leads.personal', MailingsComposer::class);
 
@@ -551,6 +552,9 @@ class ViewServiceProvider extends ServiceProvider
 
         // Товарные накладные
         view()->composer('system.pages.documents.consignments.includes.filters', SuppliersComposer::class);
+
+
+        view()->composer('estimates.includes.totals', EstimatesTotalsComposer::class);
     }
 
     /**

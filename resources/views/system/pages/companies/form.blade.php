@@ -30,7 +30,7 @@
                 <li class="tabs-title">
                     <a data-tabs-target="tab-agent" href="#tab-agent">Информация об агенте</a>
                 </li>
-            @endisset            
+            @endisset
             @isset($client)
                 <li class="tabs-title">
                     <a data-tabs-target="tab-client" href="#tab-client">О клиенте</a>
@@ -105,7 +105,6 @@
         {{-- Настройки --}}
         <div class="tabs-panel" id="tab-options">
             @include('system.pages.companies.tabs.options')
-
         </div>
 
         {{-- Блок производителя --}}
@@ -171,5 +170,4 @@
             </div>
         </div>
     </div>
-</div>
 </div>

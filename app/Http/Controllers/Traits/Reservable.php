@@ -106,6 +106,10 @@ trait Reservable
                         'storage_type' => $modelStorage,
 
                         'count' => $itemCount,
+
+                        'weight_unit' => $cmv->article->weight,
+                        'volume_unit' => $cmv->article->volume,
+
                         'stock_id' => $item->stock_id,
                         'filial_id' => $item->document->filial_id,
                     ]);

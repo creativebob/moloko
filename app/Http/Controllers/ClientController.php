@@ -170,7 +170,7 @@ class ClientController extends Controller
 
         logs('companies')->info("Создана компания клиент. Id: [{$client->id}]");
         logs('companies')->info('============ КОНЕЦ СОЗДАНИЯ КОМПАНИИ КЛИЕНТА ===============
-        
+
         ');
 
         return redirect()->route('clients.index');
@@ -282,7 +282,7 @@ class ClientController extends Controller
 
         logs('companies')->info("Обновлена компания клиент. Id: [{$client->id}]");
         logs('companies')->info('============ КОНЕЦ ОБНОВЛЕНИЯ КОМПАНИИ КЛИЕНТА ===============
-        
+
             ');
 
         return redirect()->route('clients.index');
@@ -351,7 +351,7 @@ class ClientController extends Controller
 
         logs('users')->info("Создан пользователь клиент. Id: [{$client->id}]");
         logs('users')->info('============ КОНЕЦ СОЗДАНИЯ ПОЛЬЗОВАТЕЛЯ КЛИЕНТА ===============
-        
+
         ');
 
         return redirect()->route('clients.index');
@@ -407,12 +407,12 @@ class ClientController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param ClientRequest $request
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function updateClientUser(Request $request, $id)
+    public function updateClientUser(ClientRequest $request, $id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('update'));
@@ -457,7 +457,7 @@ class ClientController extends Controller
 
         logs('companies')->info("Обновлен пользователь клиент. Id: [{$client->id}]");
         logs('companies')->info('============ КОНЕЦ ОБНОВЛЕНИЯ ПОЛЬЗОВАТЕЛЯ КЛИЕНТА ===============
-        
+
         ');
 
         return redirect()->route('clients.index');

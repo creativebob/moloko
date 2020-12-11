@@ -42,6 +42,8 @@ class CreateCompaniesTable extends Migration
 
             $table->bigInteger('external_id')->nullable()->unsigned()->comment('Внешний id компании');
 
+            $table->decimal('points_rate', 10, 2)->default(0)->comment('Величина для начисления поинтов');
+
 
             // Общие настройки
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');

@@ -53,8 +53,13 @@ class CartController extends BaseController
                 $q->with([
                     'goods',
                     'currency',
-                    'catalogs_item.directive_category:id,alias',
-                    'catalogs_item.parent'
+                    'catalogs_item' => function ($q) {
+                        $q->with([
+                            'directive_category:id,alias',
+                            'parent'
+                        ]);
+                    },
+                    'catalog'
                 ])
                     ->where('filial_id', $filialId);
             },
@@ -194,6 +199,18 @@ class CartController extends BaseController
 
                 if ($user) {
                     logs('leads_from_project')->info("Пользователь найден по номеру телефона, id: [{$user->id}]");
+
+                    // Обновляем имя пользователя если его нет
+                    if (($user->first_name == '' || empty($user->first_name)) && isset($request->first_name)) {
+                        $user->first_name = $request->first_name;
+                        $user->second_name = isset($request->second_name) ? $request->second_name : null;
+                        if ($user->second_name) {
+                            $user->name = $user->first_name . ' ' . $user->second_name;
+                        } else {
+                            $user->name = $user->first_name;
+                        }
+                        $user->saveQuietly();
+                    }
                 } else {
                     $usersCount = User::withoutTrashed()
                         ->count();
@@ -414,6 +431,11 @@ class CartController extends BaseController
 
             if ($request->cookie('prom') != null) {
                 $lead->prom = $request->cookie('prom');
+            }
+
+            // TODO - 10.12.20 - Авторасчет времени отгрузки (Доработка)
+            if ($this->site->filial->outlets->first()->settings->firstWhere('alias', 'shipment_at-calculate')) {
+                $lead->shipment_at = now()->addSeconds($this->site->filial->outlets->first()->extra_time);
             }
 
             $lead->saveQuietly();
@@ -801,7 +823,7 @@ class CartController extends BaseController
 
                     $cart['prices'][$goodsItem['id']] = [
                         'count' => $goodsItem['quantity'],
-                        'price' => $goodsItem['price'],
+                        'total_catalogs_item_discount' => $goodsItem['total_catalogs_item_discount'],
                     ];
                 }
 
@@ -845,7 +867,7 @@ class CartController extends BaseController
 
                 foreach ($prices_goods as $price_goods) {
                     // Проверка на различие цены
-                    if ($price_goods->price != $prices[$price_goods->id]['price']) {
+                    if ($price_goods->total_catalogs_item_discount != $prices[$price_goods->id]['total_catalogs_item_discount']) {
                         $result['changePrice'][] = $price_goods;
                     }
 

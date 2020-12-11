@@ -122,7 +122,7 @@
         <div class="grid-x grid-padding-x">
           <div class="small-12 medium-6 cell">
             <label>ИНН
-              @include('includes.inputs.inn', ['value'=>$self_company->inn, 'name'=>'inn'])
+              @include('includes.inputs.inn_user', ['value'=>$self_company->inn, 'name'=>'inn'])
             </label>
           </div>
           <div class="small-12 medium-6 cell">

@@ -97,6 +97,8 @@ class Company extends Model
         'legal_form_id',
         'photo_id',
 
+        'points_rate',
+
         'display',
         'system',
         'moderation'
@@ -461,6 +463,11 @@ class Company extends Model
     public function organizations()
     {
         return $this->belongsToMany(Company::class, 'organizations', 'company_id', 'organization_id');
+    }
+
+    public function companies()
+    {
+        return $this->belongsToMany(Company::class, 'organizations', 'organization_id', 'company_id');
     }
 
     public function representatives()

@@ -20,3 +20,4 @@ Route::get('/set-checks-templates-category', 'UpdateController@setChecksTemplate
 Route::get('/add-outlets-entity', 'UpdateController@addOutletsEntity');
 Route::get('/add-outlet-settings', 'UpdateController@addOutletSettings');
 Route::get('/add-stock-outlet-setting', 'UpdateController@addStockOutletSetting');
+Route::get('/add-loyalty-settings', 'UpdateController@addLoyaltySettings');

@@ -35,34 +35,36 @@ class TablesClearCommand extends Command
      */
     public function handle()
     {
-        \DB::statement("SET foreign_key_checks=0");
-        $names = [
-            'consignments',
-            'consignments_items',
+        if ($this->confirm("{$this->description}?")) {
+            \DB::statement("SET foreign_key_checks=0");
+            $names = [
+                'consignments',
+                'consignments_items',
 
-            'productions',
-            'productions_items',
+                'productions',
+                'productions_items',
 
-            'goods_stocks',
-            'raws_stocks',
-            'attachments_stocks',
-            'containers_stocks',
-            'tools_stocks',
+                'goods_stocks',
+                'raws_stocks',
+                'attachments_stocks',
+                'containers_stocks',
+                'tools_stocks',
 
-            'costs',
-            'costs_histories',
+                'costs',
+                'costs_histories',
 
-            'receipts',
-            'offs',
+                'receipts',
+                'offs',
 
-            'reserves',
-            'reserves_histories',
-        ];
-        foreach ($names as $name) {
-            \DB::table($name)->truncate();
+                'reserves',
+                'reserves_histories',
+            ];
+            foreach ($names as $name) {
+                \DB::table($name)->truncate();
+            }
+            \DB::statement("SET foreign_key_checks=1");
+
+            $this->info(__('msg.ok'));
         }
-        \DB::statement("SET foreign_key_checks=1");
-
-        $this->info(__('msg.ok'));
     }
 }

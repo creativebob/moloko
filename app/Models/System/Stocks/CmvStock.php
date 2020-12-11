@@ -5,6 +5,9 @@ namespace App\Models\System\Stocks;
 use App\Department;
 use App\Manufacturer;
 use App\Models\System\BaseModel;
+use App\Off;
+use App\Receipt;
+use App\Reserve;
 use App\Stock;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -51,12 +54,27 @@ class CmvStock extends BaseModel
         return $this->belongsTo(Manufacturer::class);
     }
 
+    public function receipts()
+    {
+        return $this->morphMany(Receipt::class, 'storage');
+    }
+
+    public function offs()
+    {
+        return $this->morphMany(Off::class, 'storage');
+    }
+
+    public function reserves()
+    {
+        return $this->morphMany(Reserve::class, 'storage');
+    }
+
     // Получаем себестоимость остатков по позиции на складе
     public function getStockCostAttribute()
     {
         return $this->cmv->cost_unit * $this->count;
     }
-    
+
     public function scopeFilter($query)
     {
         $filters = $this->getFilters($this::ALIAS);

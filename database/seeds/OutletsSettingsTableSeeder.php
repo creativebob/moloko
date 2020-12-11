@@ -66,7 +66,7 @@ class OutletsSettingsTableSeeder extends Seeder
             [
                 'name' => 'Выбор даты платежа',
                 'alias' => 'payment-date-change',
-                'category_id' => $settingsCategories->firstWhere('alias', 'others')->id
+                'category_id' => $settingsCategories->firstWhere('alias', 'cash-register')->id
             ],
 
 
@@ -99,6 +99,11 @@ class OutletsSettingsTableSeeder extends Seeder
             [
                 'name' => 'Проверка остатка на складе при продаже',
                 'alias' => 'stock-check-free',
+                'category_id' => $settingsCategories->firstWhere('alias', 'others')->id
+            ],
+            [
+                'name' => 'Авторасчет времени отгрузки',
+                'alias' => 'shipment_at-calculate',
                 'category_id' => $settingsCategories->firstWhere('alias', 'others')->id
             ],
         ]);

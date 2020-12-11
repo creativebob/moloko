@@ -4,7 +4,7 @@
 
             <div class="small-12 medium-6 cell">
                 <label>ИНН
-                    @include('includes.inputs.inn', ['value' => $company->inn])
+                    @include('includes.inputs.inn_company', ['value' => $company->inn])
                 </label>
             </div>
             <div class="small-12 medium-6 cell">

@@ -41,6 +41,7 @@ Vue.component('lead-errors-component', require('./components/leads/ErrorsCompone
 Vue.component('estimate-component', require('./components/leads/estimates/EstimateComponent'));
 Vue.component('lead-tabs-component', require('./components/leads/tabs/TabsComponent'));
 Vue.component('payments-component', require('./components/leads/payments/PaymentsComponent'));
+Vue.component('lead-history-component', require('./components/leads/history/HistoriesComponent'));
 
 Vue.component('checkboxer-component', require('./components/common/CheckboxerComponent'));
 Vue.component('lister-component', require('./components/common/ListerComponent'));
@@ -64,7 +65,8 @@ Vue.component('processes-categories-with-groups-component', require('./component
 
 // Лиды
 // Vue.component('lead-init-component', require('./components/leads/InitComponent'));
-Vue.component('lead-personal-component', require('./components/leads/PersonalComponent'));
+Vue.component('lead-search-in-data-component', require('./components/leads/personals/data/SearchInDataComponent'));
+Vue.component('lead-search-in-db-component', require('./components/leads/personals/db/SearchInDbComponent'));
 Vue.component('lead-events-component', require('./components/leads/EventsComponent'));
 Vue.component('lead-client-component', require('./components/leads/clients/ClientComponent'));
 Vue.component('catalog-goods-component', require('./components/leads/catalogs/goods/CatalogGoodsComponent.vue'));

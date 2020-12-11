@@ -33,7 +33,7 @@ class CatalogsGoodsItemController extends BaseController
      * @param  string  $url
      * @return \Illuminate\Http\Response
      */
-    public function show($catalog_slug, $slug)
+    public function show($catalogSlug, $slug)
     {
         $site = $this->site;
         $page = $site->pages_public->where('alias', 'catalogs-goods-items')->first();
@@ -43,28 +43,28 @@ class CatalogsGoodsItemController extends BaseController
         $catalogs_goods_item = CatalogsGoodsItem::with([
 
             // TODO - 02.07.20 - Используется на РХ
-//            'prices' => function ($q) use ($catalog_slug) {
+//            'prices' => function ($q) use ($catalogSlug) {
 //                $q->with([
-//                    'goods' => function ($q) use ($catalog_slug) {
+//                    'goods' => function ($q) use ($catalogSlug) {
 //                        $q->with([
-//                            'related' => function ($q) use ($catalog_slug) {
+//                            'related' => function ($q) use ($catalogSlug) {
 //                                $q->with([
-//                                    'prices' => function ($q) use ($catalog_slug) {
+//                                    'prices' => function ($q) use ($catalogSlug) {
 //                                        $q->with([
 //                                            'catalogs_item.parent'
 //                                        ])
 //                                            ->where('display', true)
 //                                            ->where('archive', false)
-//                                            ->whereHas('catalog', function ($q) use ($catalog_slug) {
-//                                                $q->where('slug', $catalog_slug);
+//                                            ->whereHas('catalog', function ($q) use ($catalogSlug) {
+//                                                $q->where('slug', $catalogSlug);
 //                                            });
 //                                    }
 //                                ])
-//                                    ->whereHas('prices', function ($q) use ($catalog_slug) {
+//                                    ->whereHas('prices', function ($q) use ($catalogSlug) {
 //                                        $q->where('display', true)
 //                                            ->where('archive', false)
-//                                            ->whereHas('catalog', function ($q) use ($catalog_slug) {
-//                                                $q->where('slug', $catalog_slug);
+//                                            ->whereHas('catalog', function ($q) use ($catalogSlug) {
+//                                                $q->where('slug', $catalogSlug);
 //                                            });
 //                                    });
 //                            },
@@ -76,28 +76,28 @@ class CatalogsGoodsItemController extends BaseController
 //                ]);
 //            },
 //
-//            'childs_prices'  => function ($q) use ($catalog_slug) {
+//            'childs_prices'  => function ($q) use ($catalogSlug) {
 //                $q->with([
-//                    'goods' => function ($q) use ($catalog_slug) {
+//                    'goods' => function ($q) use ($catalogSlug) {
 //                        $q->with([
-//                            'related' => function ($q) use ($catalog_slug) {
+//                            'related' => function ($q) use ($catalogSlug) {
 //                                $q->with([
-//                                    'prices' => function ($q) use ($catalog_slug) {
+//                                    'prices' => function ($q) use ($catalogSlug) {
 //                                        $q->with([
 //                                            'catalogs_item.parent'
 //                                        ])
 //                                            ->where('display', true)
 //                                            ->where('archive', false)
-//                                            ->whereHas('catalog', function ($q) use ($catalog_slug) {
-//                                                $q->where('slug', $catalog_slug);
+//                                            ->whereHas('catalog', function ($q) use ($catalogSlug) {
+//                                                $q->where('slug', $catalogSlug);
 //                                            });
 //                                    }
 //                                ])
-//                                    ->whereHas('prices', function ($q) use ($catalog_slug) {
+//                                    ->whereHas('prices', function ($q) use ($catalogSlug) {
 //                                        $q->where('display', true)
 //                                            ->where('archive', false)
-//                                            ->whereHas('catalog', function ($q) use ($catalog_slug) {
-//                                                $q->where('slug', $catalog_slug);
+//                                            ->whereHas('catalog', function ($q) use ($catalogSlug) {
+//                                                $q->where('slug', $catalogSlug);
 //                                            });
 //                                    });
 //                            },
@@ -111,11 +111,11 @@ class CatalogsGoodsItemController extends BaseController
 
             'directive_category:id,alias',
             'filters.values',
-//            'catalog'
+            'catalog'
         ])
             ->where('slug', $slug)
-            ->whereHas('catalog', function ($q) use ($site, $catalog_slug) {
-                $q->where('slug', $catalog_slug)
+            ->whereHas('catalog', function ($q) use ($site, $catalogSlug) {
+                $q->where('slug', $catalogSlug)
                     ->whereHas('filials', function ($q) use ($site) {
                         $q->where('id', $site->filial->id);
                     });
@@ -143,7 +143,7 @@ class CatalogsGoodsItemController extends BaseController
 //            ->whereHas('filials', function ($q) use ($site) {
 //                $q->where('id', $site->filial->id);
 //            })
-//            ->where('slug', $catalog_slug)
+//            ->where('slug', $catalogSlug)
 //            ->where(['display' => true])
 //            ->first();
 //

@@ -26,6 +26,8 @@ class UserUpdateRequest extends FormRequest
     {
         return [
 
+            'lol' => 'required',
+
             'login' => 'sometimes|required|string|max:255',
             'login' => 'required_without:access_block',
 

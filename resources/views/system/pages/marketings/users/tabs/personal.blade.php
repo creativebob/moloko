@@ -49,7 +49,7 @@
             </div>
             <div class="small-12 medium-6 cell">
                 <label>ИНН
-                    @include('includes.inputs.inn', ['value' => $user->inn])
+                    @include('includes.inputs.inn_user', ['value' => $user->inn])
                 </label>
             </div>
         </div>

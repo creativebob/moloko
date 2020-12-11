@@ -738,6 +738,7 @@ Route::post('/leads/send-email/{id}', 'LeadController@sendEmail')
 // Route::get('/lead/calls', 'LeadController@index')->middleware('auth');
 
 Route::patch('/leads/axios_update/{id}', 'LeadController@axiosUpdate');
+Route::post('/leads/history', 'LeadController@getLeadHistory');
 
 // Основные методы
 Route::resource('/leads', 'LeadController')
@@ -748,6 +749,10 @@ Route::resource('/leads', 'LeadController')
 
 Route::get('/leads_export', 'LeadController@export');
 // Route::resource('/leads_calls', 'LeadController@leads_calls')->middleware('auth');
+
+// Поиск клиентов для автозаполнения
+Route::get('/leads/search-user-by-phone/{number}', 'LeadController@searchUserByPhone');
+Route::get('/leads/search-companies-by-name/{name}', 'LeadController@searchCompaniesByName');
 
 
 // Поиск

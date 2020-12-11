@@ -48,8 +48,17 @@ class Kernel extends ConsoleKernel
 //            ->everyMinute();
 
         $companies = Company::with([
-            'settings'
+            'settings' => function ($q) {
+                $q->whereHas('category', function ($q) {
+                    $q->where('alias', 'cron');
+                });
+            }
         ])
+            ->whereHas('settings', function ($q) {
+                $q->whereHas('category', function ($q) {
+                   $q->where('alias', 'cron');
+                });
+            })
             ->has('settings')
             ->get();
 
@@ -58,15 +67,15 @@ class Kernel extends ConsoleKernel
                 switch ($setting->alias) {
 
                     // Показатели клиентской базы
-//                        case 'clients-indicators':
-//                            // Ежедневные показатели клиентской базы
-//                            $schedule->command(ClientsIndicatorsDay::class, $companyId = $company->id)
-//                                ->dailyAt('03:00');
-//
-//                            // Ежемесячные показатели клиентской базы
-//                            $schedule->command(ClientsIndicatorsCommand::class)
-//                                ->monthlyOn(1, '04:00');
-//                            break;
+                    case 'clients-indicators':
+                        // Ежедневные показатели клиентской базы
+                        $schedule->command(ClientsIndicatorsDay::class)
+                            ->dailyAt('03:00');
+
+                        // Ежемесячные показатели клиентской базы
+                        $schedule->command(ClientsIndicatorsCommand::class)
+                            ->monthlyOn(1, '04:00');
+                        break;
 
                     // Скидки
                     case 'discounts-recalculate':
@@ -83,15 +92,15 @@ class Kernel extends ConsoleKernel
 
 
         // Показатели клиентской базы
-        if (config('app.clients_indicators')) {
-            // Ежедневные показатели клиентской базы
-            $schedule->command(ClientsIndicatorsDay::class)
-                ->dailyAt('03:00');
-
-            // Ежемесячные показатели клиентской базы
-            $schedule->command(ClientsIndicatorsCommand::class)
-                ->monthlyOn(1, '04:00');
-        }
+//        if (config('app.clients_indicators')) {
+//            // Ежедневные показатели клиентской базы
+//            $schedule->command(ClientsIndicatorsDay::class)
+//                ->dailyAt('03:00');
+//
+//            // Ежемесячные показатели клиентской базы
+//            $schedule->command(ClientsIndicatorsCommand::class)
+//                ->monthlyOn(1, '04:00');
+//        }
 
         if (config('app.roll_house_parser')) {
             // Парсер лидов для РХ
@@ -102,8 +111,8 @@ class Kernel extends ConsoleKernel
         // Рассылка ВК
         if (config('app.vkusnyashka_mailing')) {
             $schedule->command(VkusnyashkaMailingCommand::class)
-            ->hourly()
-            ->between('9:00', '22:00');
+                ->hourly()
+                ->between('9:00', '22:00');
         }
 
         // Ежедневный отчет

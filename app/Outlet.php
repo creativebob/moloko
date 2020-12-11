@@ -25,10 +25,24 @@ class Outlet extends BaseModel
 
         'filial_id',
 
+        'extra_time',
+
         'display',
         'system',
         'moderation'
     ];
+
+
+    public function setExtraTimeAttribute($value)
+    {
+        $this->attributes['extra_time'] = $value * 60;
+    }
+
+    public function getExtraTimeMinutesAttribute()
+    {
+        return $this->extra_time / 60;
+    }
+
 
     public function filial()
     {

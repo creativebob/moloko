@@ -107,7 +107,7 @@
                 type: String,
                 default: null
             },
-            tree: Array,
+            tree: [Array, Object],
             checkeds: Array,
         },
         data() {

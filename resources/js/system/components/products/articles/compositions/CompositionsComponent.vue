@@ -139,11 +139,16 @@
             }
         },
         created() {
-            var totalWeight = 0,
+            let totalWeight = 0,
                 totalCost = 0;
 
             this.curItems.forEach(item => {
-                let weight = parseFloat(item.weight * 1000 * item.pivot.useful).toFixed(2);
+                let weight = 0;
+                if (this.name == 'goods') {
+                    weight = parseFloat(item.article.weight * 1000 * item.pivot.useful).toFixed(2);
+                } else {
+                    weight = parseFloat(item.weight * 1000 * item.pivot.useful).toFixed(2);
+                }
                 totalWeight = parseFloat(totalWeight) + parseFloat(weight);
                 item.totalWeight = weight;
 
@@ -152,8 +157,9 @@
                     cost = parseFloat(item.cost_unit * item.pivot.useful).toFixed(2);
                 } else if (this.name == 'raws') {
                     cost = parseFloat(item.cost_portion * item.pivot.useful).toFixed(2);
+                } else if (this.name == 'goods') {
+                    cost = parseFloat(item.article.cost_default * item.pivot.useful).toFixed(2);
                 }
-
                 totalCost = parseFloat(totalCost) + parseFloat(cost);
                 item.totalCost = cost;
             });
@@ -176,14 +182,14 @@
         },
         methods: {
             setTotalWeight() {
-                var weight = 0;
+                let weight = 0;
                 this.curItems.forEach(item => {
                     weight += parseFloat(item.totalWeight);
                 });
                 this.totalWeight = weight.toFixed(2);
             },
             setTotalCost() {
-                var cost = 0;
+                let cost = 0;
                 this.curItems.forEach(item => {
                     cost += parseFloat(item.totalCost);
                 });

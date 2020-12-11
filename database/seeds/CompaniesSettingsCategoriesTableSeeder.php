@@ -32,6 +32,12 @@ class CompaniesSettingsCategoriesTableSeeder extends Seeder
                 'level' => 1,
                 'alias' => 'leads',
             ],
+            [
+                'name' => 'Система лояльности',
+                'slug' => \Str::slug('Система лояльности'),
+                'level' => 1,
+                'alias' => 'loyalty-system',
+            ],
         ]);
     }
 }

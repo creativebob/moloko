@@ -842,6 +842,11 @@ class LeadController extends Controller
 
 
                 if ($user) {
+                    // Обновляем имя пользователя если его нет
+                    if (($user->first_name == '' || empty($user->first_name)) && isset($newLead['name'])) {
+                        $user->name = $newLead['name'];
+                        $user->saveQuietly();
+                    }
                     $dataLead['user_id'] = $user->id;
                 } else {
                     $dataUser = [
@@ -1836,5 +1841,104 @@ class LeadController extends Controller
         }
 
         dd(__METHOD__, $lead);
+    }
+
+    /**
+     * Поиск клиента физика по номеру телефона
+     *
+     * @param $phone
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function searchUserByPhone($phone)
+    {
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right('users', true, 'index');
+
+        $user = User::with([
+            'client.clientable',
+            'organizations.client',
+        ])
+            ->where('site_id', '!=', 1)
+            ->whereHas('main_phones', function ($q) use ($phone) {
+                $q->where('phone', $phone);
+            })
+            ->moderatorLimit($answer)
+            ->companiesLimit($answer)
+            ->authors($answer)
+            ->systemItem($answer)
+            ->first();
+
+        return response()->json($user);
+    }
+
+    /**
+     * Поиск клиента юрика по имени
+     *
+     * @param $name
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function searchCompaniesByName($name)
+    {
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right('companies', false, 'index');
+
+        $companies = Company::with([
+            'client.clientable',
+            'representatives' => function ($q) {
+                $q->with([
+                    'client'
+                ])
+                    ->latest();
+            }
+        ])
+            ->where('name', 'like', '%' . $name . '%')
+            ->whereHas('companies', function ($q) {
+                $q->where('id', auth()->user()->company_id);
+            })
+            ->moderatorLimit($answer)
+//            ->companiesLimit($answer)
+
+            ->authors($answer)
+            ->systemItem($answer)
+            ->get();
+
+        return response()->json($companies);
+    }
+
+    /**
+     * ПОлучаем историю лида по неомеру телефона
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getLeadHistory(Request $request)
+    {
+        $phone = $request->phone;
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right('leads', true, getmethod('edit'));
+
+        // История лида
+        $leadHistory = Lead::with([
+            'location.city',
+            'choice',
+            'manager',
+            'stage',
+            'user',
+            'challenges.challenge_type',
+            'phones',
+        ])
+            ->companiesLimit($answer)
+            ->systemItem($answer)
+            ->where('draft', false)
+            ->whereHas('phones', function ($query) use ($phone) {
+                $query->where('phone', cleanPhone($phone));
+            })
+            ->where('id', '!=', $request->id)
+            ->oldest('sort')
+            ->get();
+
+        return response()->json($leadHistory);
+
     }
 }

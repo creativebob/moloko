@@ -163,12 +163,12 @@ class EmployeeController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param UserStoreRequest $request
+     * @param EmployeeRequest $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
 //    public function store(EmployeeRequest $request, UserStoreRequest $request_user)
-    public function store(Request $request)
+    public function store(EmployeeRequest $request)
     {
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Employee::class);
@@ -258,15 +258,13 @@ class EmployeeController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param UserUpdateRequest $request
+     * @param EmployeeRequest $request
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function update(Request $request, $id)
+    public function update(EmployeeRequest $request, $id)
     {
-
-//        dd($request);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
