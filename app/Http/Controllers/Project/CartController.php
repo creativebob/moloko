@@ -823,7 +823,7 @@ class CartController extends BaseController
 
                     $cart['prices'][$goodsItem['id']] = [
                         'count' => $goodsItem['quantity'],
-                        'price' => $goodsItem['total_catalogs_item_discount'],
+                        'price' => $goodsItem['price'],
                     ];
                 }
 
@@ -867,7 +867,7 @@ class CartController extends BaseController
 
                 foreach ($prices_goods as $price_goods) {
                     // Проверка на различие цены
-                    if ($price_goods->total_catalogs_item_discount != $prices[$price_goods->id]['price']) {
+                    if ($price_goods->price != $prices[$price_goods->id]['price']) {
                         $result['changePrice'][] = $price_goods;
                     }
 
