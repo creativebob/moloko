@@ -362,6 +362,10 @@ input[type='search'] {
   color: #cacaca;
 }
 
+::-moz-placeholder {
+  color: #cacaca;
+}
+
 ::-ms-input-placeholder {
   color: #cacaca;
 }
@@ -593,6 +597,10 @@ select[multiple] {
 }
 
 .is-invalid-input:not(:focus)::-webkit-input-placeholder {
+  color: #cc4b37;
+}
+
+.is-invalid-input:not(:focus)::-moz-placeholder {
   color: #cc4b37;
 }
 
@@ -9875,6 +9883,10 @@ tbody.brand-logo-table-tbody {
   background-color: transparent !important;
 }
 
+.stage-2 td:first-child {
+  border-left: 8px solid #acd5f1;
+}
+
 .stage-12 td:first-child {
   border-left: 8px solid #afefb9;
 }
@@ -11843,12 +11855,12 @@ tfoot tr.tfoot-estimate-total td {
   background-color: #7e9a06;
 }
 
-.content .content-table tbody tr.stage-6 {
+.content .content-table tbody tr.paid {
   background-color: #e5f3eb;
   border-top: 1px solid white;
 }
 
-.content .content-table tbody tr.stage-6 td {
+.content .content-table tbody tr.paid td {
   border-bottom: 1px solid white;
 }
 

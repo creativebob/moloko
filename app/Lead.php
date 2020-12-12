@@ -390,6 +390,34 @@ class Lead extends BaseModel
             $query->whereIn('stage_id', $filters['stages']);
         }
 
+
+        if (isset($filters['estimate_total_min'])) {
+            $query->whereHas('estimate', function ($q) use ($filters) {
+                $q->where('total', '>=', $filters['estimate_total_min']);
+            });
+        }
+
+        if (isset($filters['estimate_total_max'])) {
+            $query->whereHas('estimate', function ($q) use ($filters) {
+                $q->where('total', '<=', $filters['estimate_total_max']);
+            });
+        }
+
+        // if (isset($filters['prepayment_min'])) {
+        //     $query->whereHas('estimate', function ($q) use ($filters) {
+        //         $q->where('paid', '>=', $filters['prepayment_min'])
+        //         ->where('total', '>', 'paid'); 
+        //     });
+        // }
+
+        // if (isset($filters['prepayment_max'])) {
+        //     $query->whereHas('estimate', function ($q) use ($filters) {
+        //         $q->where('paid', '<=', $filters['prepayment_max'])
+        //         ->where('total', '>', 'paid');
+        //     });
+        // }
+
+
         return $query;
     }
 

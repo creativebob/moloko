@@ -69,7 +69,7 @@
                         <th class="td-manager">Менеджер</th>
                     @endif
 
-                    <th class="td-control"></th>
+                    {{-- <th class="td-control"></th> --}}
                     <th class="td-delete"></th>
                 </tr>
                 </thead>
@@ -79,6 +79,7 @@
                         <tr
                             class="item
                             @if($lead->moderation == 1)no-moderation @endif
+                            @if($lead->estimate->debt == 0)paid @endif
                                 stage-{{$lead->stage->id }}
                                 "
                             id="leads-{{ $lead->id }}"
@@ -146,16 +147,16 @@
                             </td>
 
                             <td class="td-badget">
-              <span class="
-                @if($lead->estimate->payments->sum('total') < $lead->estimate->total)) text-red @endif
-              @if($lead->estimate->payments->sum('total') >= $lead->estimate->total) text-green @endif
-              @if($lead->estimate->total == 0) text-grey @endif
-                  "
-              >{{ ($lead->estimate->total > 0) ? num_format($lead->estimate->total, 0) : num_format($lead->badget, 0) }}</span>
+                                <span class="
+                                    @if($lead->estimate->payments->sum('total') < $lead->estimate->total)) text-red @endif
+                                    @if($lead->estimate->payments->sum('total') >= $lead->estimate->total) text-green @endif
+                                    @if($lead->estimate->total == 0) text-grey @endif">
+                                    {{ ($lead->estimate->total > 0) ? num_format($lead->estimate->total, 0) : num_format($lead->badget, 0) }}
+                                </span>
 
-                                {{--            @if(($lead->payment != $lead->badget)&&($lead->payment != 0))--}}
-                                {{--              <br><span class="tiny-text">{{ num_format($lead->payment, 0) }}</span>--}}
-                                {{--            @endif--}}
+                                @if(($lead->estimate->payments->sum('total') > 0) && ($lead->estimate->payments->sum('total') < $lead->estimate->total))
+                                    <br><span class="text-mini" title="К доплате: {{ num_format($lead->estimate->debt, 0) }} руб.">{{ num_format($lead->estimate->paid, 0) }}</span>
+                                @endif
                             </td>
 
                             <td class="td-reserves">{{ num_format($lead->estimate->goods_items->sum('count'), 0) }} / {{ num_format($lead->estimate->goodsItemsReserves, 0) }}</td>
@@ -199,7 +200,7 @@
 
 
                             {{-- Элементы управления --}}
-                            @include('includes.control.table-td', ['item' => $lead])
+                            {{-- @include('includes.control.table-td', ['item' => $lead]) --}}
 
                             <td class="td-delete">
                                 @if (($lead->system != 1) && ($lead->god != 1))

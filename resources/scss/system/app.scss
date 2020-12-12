@@ -119,6 +119,12 @@ tbody.brand-logo-table-tbody{
 }
 
 // Подсветка лидов по этапам
+
+// Обращение
+.stage-2 td:first-child{
+    border-left: 8px solid #acd5f1;
+}
+
 // Готов
 .stage-12 td:first-child{
     border-left: 8px solid #afefb9;

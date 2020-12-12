@@ -87,14 +87,15 @@
                     @include('includes.inputs.min_max_date', ['name' => 'shipment_date', 'title' => 'Дата отгрузки'])
                 </div>
 
-                <div class="cell small-12 checkbox checkboxer">
-                    <checkboxer-component
-                        name="sources"
-                        title="Источник трафика"
-                        :items='@json($sources)'
-                        :checkeds='@json(request()->sources)'
-                    ></checkboxer-component>
+                <div class="cell small-12">
+                    @include('includes.inputs.min_max', ['name' => 'estimate_total', 'title' => 'Сумма заказа, руб.'])
                 </div>
+
+                {{-- <div class="cell small-12">
+                    @include('includes.inputs.min_max', ['name' => 'prepayment', 'title' => 'Предоплата, руб.'])
+                </div> --}}
+
+
         </div>
     </div>
 
@@ -102,8 +103,14 @@
 </div>
 
 <div class="small-12 medium-6 large-6 cell checkbox checkboxer">
-    <legend>Мои списки:</legend>
-    <div id="booklists">
-        @include('includes.inputs.booklister', ['name'=>'booklist', 'value' => $filter])
+    <div class="grid-x">
+        <div class="cell small-12 checkbox checkboxer">
+            <checkboxer-component
+                name="sources"
+                title="Источник трафика"
+                :items='@json($sources)'
+                :checkeds='@json(request()->sources)'
+            ></checkboxer-component>
+        </div>
     </div>
 </div>

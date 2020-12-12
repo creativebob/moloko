@@ -94,6 +94,16 @@ class Estimate extends BaseModel
         'author_id',
     ];
 
+    public function getDebtAttribute()
+    {
+        return $this->total - $this->payments->sum('total');
+    }
+
+    public function getPaidAttribute()
+    {
+        return $this->payments->sum('total');
+    }
+
     public function getGoodsItemsReservesAttribute()
     {
         if ($this->goods_items->isNotEmpty()) {
