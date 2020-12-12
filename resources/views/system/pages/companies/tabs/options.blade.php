@@ -35,7 +35,9 @@
                 <label>Сумма для начисления поинтов
                     <digit-component
                         name="points_rate"
+                        @isset($company->points_rate)
                         :value="{{ $company->points_rate }}"
+                        @endisset
                     ></digit-component>
                 </label>
             </div>
