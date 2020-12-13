@@ -106,11 +106,15 @@
                 <td class="td-partner">
                   @if(isset($estimate->agent))
                     @if($estimate->agent->agent_id == $estimate->company_id)
-                      {{ num_format($estimate->principal_currency, 0) }} <sup>{{ num_format($estimate->principal_currency * 100 / $estimate->total, 0) }}%</sup><br>
-                      <span class="tiny-text">{{ $estimate->company->name_short ?? $estimate->company->name }} (Принципал)</span>
-                    @else
+                    
                       {{ num_format($estimate->share_currency, 0) }} <sup>{{ num_format($estimate->share_currency * 100 / $estimate->total, 0) }}%</sup><br>
                       <span class="tiny-text">{{ $estimate->agent->company->name_short ?? $estimate->agent->company->name }} (Агент)</span>
+
+                    @else
+
+                      {{ num_format($estimate->principal_currency, 0) }} <sup>{{ num_format($estimate->principal_currency * 100 / $estimate->total, 0) }}%</sup><br>
+                      <span class="tiny-text">{{ $estimate->company->name_short ?? $estimate->company->name }} (Принципал)</span>
+
                     @endif
                   @endif
                 </td>  
