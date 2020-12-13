@@ -6,6 +6,11 @@ const moduleLead = {
         lead: null,
         client: null,
 
+        outlet: null,
+        outletSettings: [],
+
+        catalogGoodsId: null,
+
         estimate: null,
         goodsItems: [],
         servicesItems: [],
@@ -13,12 +18,10 @@ const moduleLead = {
         stock: null,
 
         payments: [],
-
-        outlet: null,
-        outletSettings: [],
-
         paymentsMethods: [],
         paymentsMethodId: null,
+
+        agent: null,
 
         change: false,
         loading: false,
@@ -88,6 +91,11 @@ const moduleLead = {
         },
         SET_OUTLET_SETTINGS(state, settings) {
             state.outletSettings = settings;
+        },
+
+        // Каталоги
+        SET_CATALOG_GOODS_ID(state, id) {
+            state.catalogGoodsId = id;
         },
 
         // Способы платежа
@@ -383,6 +391,11 @@ const moduleLead = {
             state.servicesItems = servicesItems;
         },
 
+        // Агенты
+        SET_AGENT(state, agent) {
+            state.agent = agent;
+        },
+
         // Изменения
         SET_CHANGE(state) {
             state.change = true;
@@ -560,6 +573,27 @@ const moduleLead = {
                 .patch('/admin/estimates/' + state.estimate.id + '/unregistering')
                 .then(response => {
                     this.commit('SET_ESTIMATE', response.data);
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+                .finally(() => (state.loading = false));
+        },
+
+        // Устанавливаем агента для сметы
+        SET_AGENT_FOR_ESTIMATE({state}) {
+            state.loading = true;
+            axios
+                .post('/admin/estimates/set-agent', {
+                    estimate_id: state.estimate.id,
+                    catalog_goods_id: state.catalogGoodsId,
+                    agent_id: state.agent.id,
+                })
+                .then(response => {
+                    if (response.data.success) {
+                        this.commit('SET_ESTIMATE', response.data.estimate);
+                        this.commit('SET_GOODS_ITEMS', response.data.estimate.goods_items);
+                    }
                 })
                 .catch(error => {
                     console.log(error)

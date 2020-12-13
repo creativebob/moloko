@@ -81,6 +81,11 @@ class Estimate extends BaseModel
         'total_points',
         'total_bonuses',
 
+        'agent_id',
+        'agency_scheme_id',
+        'share_currency',
+        'principal_currency',
+
         'margin_percent',
         'margin_currency',
 
@@ -172,6 +177,11 @@ class Estimate extends BaseModel
     public function discounts()
     {
         return $this->belongsToMany('App\Discount');
+    }
+
+    public function agent()
+    {
+        return $this->belongsTo('App\Agent');
     }
 
     /**

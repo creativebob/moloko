@@ -140,7 +140,10 @@ class CatalogsServiceController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $catalogs_service);
 
-        $catalogs_service->load('filials');
+        $catalogs_service->load([
+            'filials',
+            'agency_schemes'
+        ]);
 
         // dd($catalogs_service);
         return view('catalogs_services.edit', [

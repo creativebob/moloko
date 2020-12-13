@@ -73,4 +73,14 @@ class Agent extends Model
         return $this->belongsTo(AgentType::class);
     }
 
+//    public function agent()
+//    {
+//        return $this->belongsTo('App\Company');
+//    }
+
+    public function schemes()
+    {
+        return $this->belongsToMany(AgencyScheme::class, 'agent_scheme', 'agent_id', 'agency_scheme_id');
+    }
+
 }

@@ -111,6 +111,11 @@ class CatalogsService extends Model
         ->whereNull('parent_id');
     }
 
+    public function agency_schemes()
+    {
+        return $this->morphMany(AgencyScheme::class, 'catalog');
+    }
+
     // this is a recommended way to declare event handlers
     public static function boot() {
         parent::boot();

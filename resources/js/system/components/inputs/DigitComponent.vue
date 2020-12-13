@@ -94,7 +94,7 @@
             },
         },
 		methods: {
-            update(count) {
+            update(count = 0) {
                 this.count = parseFloat(count).toFixed(this.decimalPlace);
                 this.blur(this.count);
             },

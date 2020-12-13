@@ -105,7 +105,7 @@ export default {
         // },
     },
     mounted() {
-
+        this.$store.commit('SET_AGENT', this.estimate.agent);
     },
     // created() {
     // this.$store.commit('SET_ESTIMATE', this.estimate);

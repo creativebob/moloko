@@ -1,8 +1,8 @@
 <div class="grid-x">
-    <div class="cell small-12">
+    <div class="cell small-12 medium-6 large-5">
 
         {{-- Основная инфа --}}
-        <div class="grid-x grid-margin-x">
+        <div class="grid-x grid-padding-x">
             <div class="cell small-12 medium-6">
 	            {!! Form::hidden('is_export_yml', 0) !!}
 	            <div class="cell small-12 checkbox">

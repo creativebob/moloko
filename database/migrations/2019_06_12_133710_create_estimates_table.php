@@ -53,6 +53,15 @@ class CreateEstimatesTable extends Migration
             $table->integer('total_points')->default(0)->comment('Итого поинтами');
             $table->integer('total_bonuses')->default(0)->comment('Итого бонусами');
 
+            $table->bigInteger('agent_id')->unsigned()->nullable()->comment('Id агента');
+            $table->foreign('agent_id')->references('id')->on('agents');
+
+            $table->bigInteger('agency_scheme_id')->unsigned()->nullable()->comment('Id агентской схемы');
+            $table->foreign('agency_scheme_id')->references('id')->on('agency_schemes');
+
+            $table->decimal('share_currency', 10,2)->default(0)->comment('Сумма агентсокго вознаграждения');
+            $table->decimal('principal_currency', 10,2)->default(0)->comment('Сумма компании');
+
             $table->decimal('margin_percent', 10, 2)->default(0)->comment('Процент маржи');
             $table->decimal('margin_currency', 10, 2)->default(0)->comment('Сумма маржи');
 

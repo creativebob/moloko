@@ -106,6 +106,11 @@ class OutletsSettingsTableSeeder extends Seeder
                 'alias' => 'shipment_at-calculate',
                 'category_id' => $settingsCategories->firstWhere('alias', 'others')->id
             ],
+            [
+                'name' => 'Работа с агентом',
+                'alias' => 'agents',
+                'category_id' => $settingsCategories->firstWhere('alias', 'others')->id
+            ],
         ]);
     }
 }

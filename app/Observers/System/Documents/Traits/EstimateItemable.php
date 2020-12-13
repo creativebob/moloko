@@ -84,6 +84,12 @@ trait EstimateItemable
                     $item->total_manual_discount = 0;
                 }
 
+                // Агент
+                if ($item->share_percent > 0) {
+                    $item->share_currency = $item->total / 100 * $item->share_percent;
+                    $item->principal_currency = $item->total - $item->share_currency;
+                }
+
                 // Маржа
                 $item->margin_currency = $item->total - $item->cost;
                 if ($item->total > 0) {

@@ -2,6 +2,7 @@
 
 namespace App\Providers\System;
 
+use App\AgencyScheme;
 use App\ArticlesGroup;
 use App\Attachment;
 use App\AttachmentsCategory;
@@ -44,6 +45,7 @@ use App\Manufacturer;
 use App\Agent;
 use App\Menu;
 use App\Metric;
+use App\Observers\System\AgencySchemeObserver;
 use App\Observers\System\ArticlesGroupObserver;
 use App\Observers\System\AttachmentObserver;
 use App\Observers\System\AttachmentsCategoryObserver;
@@ -340,6 +342,7 @@ class ObserverServiceProvider extends ServiceProvider
         Vendor::observe(VendorObserver::class);
         Manufacturer::observe(ManufacturerObserver::class);
         Agent::observe(AgentObserver::class);
+        AgencyScheme::observe(AgencySchemeObserver::class);
 
         // Внутренние
         Client::observe(ClientObserver::class);

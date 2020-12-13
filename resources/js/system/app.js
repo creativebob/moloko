@@ -74,6 +74,7 @@ Vue.component('catalog-services-component', require('./components/leads/catalogs
 Vue.component('select-stocks-component', require('./components/common/selects/SelectStocksComponent.vue'));
 Vue.component('goods-lister-component', require('./components/leads/GoodsListerComponent'));
 Vue.component('button-unregister-component', require('./components/leads/buttons/UnregisterComponent'));
+Vue.component('lead-agents-component', require('./components/leads/agents/AgentsComponent'));
 
 // Скидки
 Vue.component('discounts-component', require('./components/common/discounts/DiscountsComponent'));
@@ -84,6 +85,8 @@ Vue.component('plugins-component', require('./components/plugins/PluginsComponen
 
 // Компании
 Vue.component('director-component', require('./components/companies/director/DirectorComponent'));
+
+
 
 // Поиск
 
@@ -126,6 +129,10 @@ Vue.component('filial-cities-component', require('./components/filials/CitiesCom
 
 // Роли пользователя
 Vue.component('employee-roles-component', require('./components/employees/roles/RolesComponent'));
+
+// Агенты
+Vue.component('agency-schemes-component', require('./components/agency_shcemes/AgencySchemesComponent'));
+Vue.component('agents-schemes-component', require('./components/agents/shcemes/SchemesComponent'));
 
 
 /**

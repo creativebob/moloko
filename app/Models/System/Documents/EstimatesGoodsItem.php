@@ -18,7 +18,7 @@ class EstimatesGoodsItem extends BaseModel
         'currency',
         'reserve'
     ];
-    
+
     protected $dates = [
         'deleted_at'
     ];
@@ -78,6 +78,11 @@ class EstimatesGoodsItem extends BaseModel
 
         'discount_currency',
         'discount_percent',
+
+        'agent_id',
+        'agency_scheme_id',
+
+        'share_percent',
 
         'margin_currency_unit',
         'margin_percent_unit',
@@ -146,5 +151,10 @@ class EstimatesGoodsItem extends BaseModel
     public function currency()
     {
         return $this->belongsTo('App\Currency');
+    }
+
+    public function agency_scheme()
+    {
+        return $this->belongsTo('App\AgencyScheme');
     }
 }

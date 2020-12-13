@@ -38,6 +38,48 @@ class UpdateController extends Controller
     }
 
     /**
+     * Настрока работы с агентом на торговую точку
+     *
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
+    public function addOutletAgentSetting()
+    {
+        OutletsSetting::insert([
+            [
+                'name' => 'Работа с агентом',
+                'alias' => 'agents',
+                'category_id' => OutletsSettingsCategory::where('alias', 'others')
+                    ->value('id')
+            ],
+        ]);
+
+        return __('msg.ok');
+    }
+
+    /**
+     *
+     * Переименование миграций, т.к. пункты сметы стали ссылаться на агентов
+     *
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
+    public function updateAgentsTablesInMigrationsTable()
+    {
+        \DB::table('migrations')->where('migration', '2020_11_06_135658_create_agent_types_table')->update([
+            'migration' => '2019_06_11_135658_create_agent_types_table'
+        ]);
+
+        \DB::table('migrations')->where('migration', '2020_11_07_000000_create_agents_table')->update([
+            'migration' => '2019_06_11_140000_create_agents_table'
+        ]);
+
+        \DB::table('migrations')->where('migration', '2020_12_12_191046_create_agency_schemes_table')->update([
+            'migration' => '2019_06_11_191046_create_agency_schemes_table'
+        ]);
+
+        return __('msg.ok');
+    }
+
+    /**
      * Настройки авторасчета даты отгрузки и начисления поинтов
      *
      * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null

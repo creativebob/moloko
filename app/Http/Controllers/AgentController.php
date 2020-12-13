@@ -138,9 +138,11 @@ class AgentController extends Controller
 
         $this->setStatuses($company);
 
-        logs('companies')->info("Создан производитель. Id: [{$agent->id}]");
+        $agent->schemes()->sync($request->schemes);
+
+        logs('companies')->info("Создан агент. Id: [{$agent->id}]");
         logs('companies')->info('============ КОНЕЦ СОЗДАНИЯ АГЕНТА ===============
-        
+
         ');
 
         return redirect()->route('agents.index');
@@ -168,6 +170,7 @@ class AgentController extends Controller
                     'processes_types'
                 ]);
             },
+            'schemes'
         ])
             ->moderatorLimit($answer)
             ->authors($answer)
@@ -248,9 +251,11 @@ class AgentController extends Controller
             abort(403, __('errors.update'));
         }
 
-        logs('companies')->info("Обновлен производитель. Id: [{$agent->id}]");
+        $agent->schemes()->sync($request->schemes);
+
+        logs('companies')->info("Обновлен агент. Id: [{$agent->id}]");
         logs('companies')->info('============ КОНЕЦ ОБНОВЛЕНИЯ АГЕНТА ===============
-        
+
         ');
 
         return redirect()->route('agents.index');
@@ -300,6 +305,34 @@ class AgentController extends Controller
         } else {
             return $company->name;
         };
+    }
+
+    /**
+     * Получаем агентов с схемами, подключенными к каталогу товаров
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getAgentsByCatalogGoodsId($id)
+    {
+        $answer = operator_right('agents', false, 'index');
+
+        $gents = Agent::with([
+            // TODO - 13.12.20 - Неправильное отношение, правильное agent
+            'company'
+        ])
+            ->moderatorLimit($answer)
+            ->companiesLimit($answer)
+            ->authors($answer)
+            ->systemItem($answer)
+            ->whereHas('schemes', function ($q) use ($id) {
+                $q->where([
+                   'catalog_type' => 'App\CatalogsGoods',
+                   'catalog_id' => $id
+                ]);
+            })
+            ->get();
+
+        return response()->json($gents);
     }
 
 }

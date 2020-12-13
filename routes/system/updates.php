@@ -21,3 +21,6 @@ Route::get('/add-outlets-entity', 'UpdateController@addOutletsEntity');
 Route::get('/add-outlet-settings', 'UpdateController@addOutletSettings');
 Route::get('/add-stock-outlet-setting', 'UpdateController@addStockOutletSetting');
 Route::get('/add-loyalty-settings', 'UpdateController@addLoyaltySettings');
+
+Route::get('/update-agents-tables-in-migrations-table', 'UpdateController@updateAgentsTablesInMigrationsTable');
+Route::get('/add-outlet-agent-setting', 'UpdateController@addOutletAgentSetting');
