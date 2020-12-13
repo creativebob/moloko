@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Agent;
 use App\Client;
 use App\Company;
 use App\ContractsClient;
+use App\Models\System\Documents\EstimatesGoodsItem;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\System\Traits\Clientable;
 use App\Http\Controllers\System\Traits\Companable;
@@ -781,6 +783,70 @@ class EstimateController extends Controller
         // dd($result);
 
         return response()->json($result);
+    }
+
+    /**
+     * Устанавливаем агента на смету, перерасчиываем позиции и агрегируем смету
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function setAgent(Request $request)
+    {
+
+        $catalogId = $request->catalog_goods_id;
+        $agent = Agent::with([
+            'schemes' => function ($q) use ($catalogId) {
+                $q->where('catalog_id', $catalogId);
+            }
+        ])
+            ->whereHas('schemes', function ($q) use ($catalogId) {
+                $q->where('catalog_id', $catalogId);
+            })
+            ->find($request->agent_id);
+
+        $agencyScheme = $agent->schemes->first();
+
+        $estimate = Estimate::with([
+            'goods_items'
+        ])
+            ->find($request->estimate_id);
+
+        foreach($estimate->goods_items as $item) {
+            $item->update([
+                'agent_id' => $agent->id,
+                'agency_scheme_id' => $agencyScheme->id,
+                'share_percent' => $agencyScheme->percent_default,
+            ]);
+        }
+
+        $this->aggregateEstimate($estimate);
+
+        $estimate->update([
+            'agent_id' => $agent->id,
+            'agency_scheme_id' => $agencyScheme->id,
+        ]);
+        // dd($result);
+
+        $estimate = Estimate::with([
+            'goods_items' => function ($q) {
+                $q->with([
+                    'goods.article',
+                    'reserve',
+                    'stock:id,name',
+                    'price_goods',
+                    'currency'
+                ]);
+            },
+            'discounts',
+            'agent.company'
+        ])
+            ->find($request->estimate_id);
+
+        return response()->json([
+            'success' => true,
+            'estimate' => $estimate
+        ]);
     }
 
 }

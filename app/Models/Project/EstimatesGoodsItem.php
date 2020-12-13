@@ -16,7 +16,10 @@ class EstimatesGoodsItem extends Model
     use Cachable;
     use SoftDeletes;
 
-    protected $dates = ['deleted_at'];
+    protected $dates = [
+        'deleted_at'
+    ];
+
     protected $fillable = [
         'estimate_id',
         'price_id',
@@ -83,5 +86,10 @@ class EstimatesGoodsItem extends Model
     public function cmv()
     {
         return $this->belongsTo('App\Goods', 'goods_id');
+    }
+
+    public function agency_scheme()
+    {
+        return $this->belongsTo('App\AgencyScheme');
     }
 }

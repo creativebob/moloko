@@ -787,6 +787,9 @@ Route::patch('/estimates/{id}/produce', 'EstimateController@produce');
 // Продажа
 Route::patch('/estimates/{id}/conducting', 'EstimateController@conducting');
 
+// Агент
+Route::post('/estimates/set-agent', 'EstimateController@setAgent');
+
 // Резервирование
 Route::post('/estimates/{id}/reserving', 'EstimateController@reserving');
 Route::post('/estimates/{id}/unreserving', 'EstimateController@unreserving');
@@ -1021,6 +1024,8 @@ Route::resource('/manufacturers', 'ManufacturerController')
 
 
 // ------------------------------------ Агента ----------------------------------------------------
+
+Route::get('/agents/get-agents-by-catalog-goods-id/{id}', 'AgentController@getAgentsByCatalogGoodsId');
 // Архив
 Route::post('/agents/archive/{id}', 'AgentController@archive');
 // Основные методы
@@ -1028,6 +1033,16 @@ Route::resource('/agents', 'AgentController')
     ->except([
         'show',
         'destroy'
+    ]);
+
+
+// ------------------------------------ Агентские схемы ----------------------------------------------------
+// Архив
+Route::post('/agency_schemes/archive/{id}', 'AgencySchemeController@archive');
+// Основные методы
+Route::resource('/agency_schemes', 'AgencySchemeController')
+    ->only([
+        'store',
     ]);
 
 

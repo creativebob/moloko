@@ -270,7 +270,8 @@ class LeadController extends Controller
                     },
                     'payments',
                     'lead.client.contract',
-                    'discounts'
+                    'discounts',
+                    'agent.company'
                 ]);
             },
             'claims',

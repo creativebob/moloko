@@ -12,7 +12,7 @@ class EstimatesServicesItem extends BaseModel
 {
     // use SoftDeletes;
 //    use Cachable;
-    
+
     protected $dates = [
         'deleted_at'
     ];
@@ -70,6 +70,11 @@ class EstimatesServicesItem extends BaseModel
 
         'discount_currency',
         'discount_percent',
+
+        'agent_id',
+        'agency_scheme_id',
+
+        'share_percent',
 
         'margin_currency_unit',
         'margin_percent_unit',

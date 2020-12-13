@@ -1,23 +1,20 @@
 <template>
-    <input
-        type="text"
-        v-model="string"
+    <textarea
+        v-model="text"
         :name="name"
+        :size="size"
         :id="id"
         :required="required"
         :disabled="disabled"
         :maxlength="maxlength"
         autocomplete="off"
-        :pattern="'[A-Za-zА-Яа-яЁё0-9\W\s]{3,' + maxlength + '}'"
         @input="input"
         @change="change"
         @focus="focus"
         @blur="blur"
         @keydown.enter.prevent="onEnter"
-    >
-<!--    :class="classes"-->
-<!--    class="varchar-field name-field"-->
 
+    ></textarea>
 </template>
 
 <script>
@@ -25,11 +22,15 @@
         props: {
             name: {
                 type: String,
-                default: 'name'
+                default: 'description'
             },
             value: {
                 type: String,
                 default: 0
+            },
+            size: {
+                type: String,
+                default: '10x3'
             },
             maxlength: {
                 type: Number,
@@ -54,33 +55,33 @@
         },
         data() {
             return {
-                string: this.value,
+                text: this.value,
             }
         },
         // watch: {
-        //     string(newVal, oldVal) {
+        //     text(newVal, oldVal) {
         //         console.log(newVal, oldVal);
         //     },
         // },
         methods: {
             update(value = null) {
-                this.string = value;
+                this.text = value;
             },
             focus() {
-                this.$emit('focus', this.string);
+                this.$emit('focus', this.text);
             },
             blur() {
-                this.$emit('blur', this.string);
+                this.$emit('blur', this.text);
             },
             input() {
                 // TODO - 14.09.20 - Здесь нужно валидировать получаемое значение
-                this.$emit('input', this.string);
+                this.$emit('input', this.text);
             },
             change() {
-                this.$emit('change', this.string);
+                this.$emit('change', this.text);
             },
             onEnter() {
-                this.$emit('enter', this.string);
+                this.$emit('enter', this.text);
             }
         },
     }

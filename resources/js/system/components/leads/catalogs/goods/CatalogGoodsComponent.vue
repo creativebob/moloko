@@ -177,6 +177,7 @@
         methods: {
             changeCatalogsItem(id) {
                 this.catalogsItemId = id;
+                this.$store.commit('SET_CATALOG_GOODS_ID', id);
             },
             changeCatalog() {
                 if (this.catalogId !== this.changeCatalogId) {

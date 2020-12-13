@@ -39,7 +39,9 @@ class CatalogsGoods extends Model
 
     protected $table = 'catalogs_goods';
 
-    protected $dates = ['deleted_at'];
+    protected $dates = [
+        'deleted_at'
+    ];
 
     protected $fillable = [
         'name',
@@ -101,6 +103,11 @@ class CatalogsGoods extends Model
                 'archive' => false,
 //                'display' => true
             ]);
+    }
+
+    public function agency_schemes()
+    {
+        return $this->morphMany(AgencyScheme::class, 'catalog');
     }
 
 //    public function prices()

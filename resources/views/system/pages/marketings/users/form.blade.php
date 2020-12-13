@@ -1,5 +1,5 @@
 <div class="grid-x tabs-wrap">
-    <div class="small-12 cell">
+    <div class="cell small-12">
         <ul class="tabs-list" data-tabs id="tabs">
 
             <li class="tabs-title is-active">

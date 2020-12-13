@@ -139,7 +139,10 @@ class CatalogsGoodsController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $catalogs_goods);
 
-        $catalogs_goods->load('filials');
+        $catalogs_goods->load([
+            'filials',
+            'agency_schemes'
+        ]);
 
         // dd($catalogs_goods);
         return view('catalogs_goods.edit', [

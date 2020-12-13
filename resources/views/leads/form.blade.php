@@ -4,8 +4,7 @@
 
 <div class="top-bar head-content">
     <div class="top-bar-left">
-        <h2 class="header-content">ЛИД №:<input id="show-case-number" name="show_case_number" readonly
-                                                class="case_number_field" value="{{ $lead->case_number }}"></h2>
+        <h2 class="header-content">ЛИД №:<input id="show-case-number" name="show_case_number" readonly class="case_number_field" value="{{ $lead->case_number }}"></h2>
     </div>
     <div class="top-bar-right wrap_lead_badget">
 
@@ -210,6 +209,11 @@
                     {{-- ОПЛАТА --}}
                     <div class="tabs-panel" id="tab-payments">
                         @include('leads.tabs.payments')
+                    </div>
+
+                    {{-- Агенты --}}
+                    <div class="tabs-panel" id="tab-agents">
+                        @include('leads.tabs.agents')
                     </div>
 
                     {{-- Аттрибуция --}}

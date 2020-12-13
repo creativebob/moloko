@@ -7,6 +7,7 @@
         <catalog-goods-component></catalog-goods-component>
         <catalog-services-component></catalog-services-component>
         <payment-component></payment-component>
+        <agents-component></agents-component>
 
         <li class="tabs-title">
             <a data-tabs-target="tab-attribution" href="#tab-attribution">Аттрибуция</a>
@@ -17,9 +18,10 @@
 <script>
 export default {
     components: {
-        'payment-component': require('./PaymentsComponent'),
         'catalog-goods-component': require('./CatalogGoodsComponent'),
         'catalog-services-component': require('./CatalogServicesComponent'),
+        'payment-component': require('./PaymentsComponent'),
+        'agents-component': require('./AgentsComponent'),
     },
 }
 </script>

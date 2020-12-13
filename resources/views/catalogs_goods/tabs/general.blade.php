@@ -1,8 +1,8 @@
 <div class="grid-x">
-    <div class="cell small-12 medium-7 large-5">
+    <div class="cell small-12 medium-7 large-3">
 
         {{-- Основная инфа --}}
-        <div class="grid-x grid-margin-x">
+        <div class="grid-x grid-padding-x">
 
             <div class="cell small-12">
                 <label>Название
