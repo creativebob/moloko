@@ -94,8 +94,6 @@
                 {{-- <div class="cell small-12">
                     @include('includes.inputs.min_max', ['name' => 'prepayment', 'title' => 'Предоплата, руб.'])
                 </div> --}}
-
-
         </div>
     </div>
 

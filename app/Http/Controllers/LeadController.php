@@ -1199,6 +1199,12 @@ class LeadController extends Controller
     public function search(Request $request, $search)
     {
 
+        // Подключение политики
+            $this->authorize(getmethod('index'), Lead::class);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('index'));        
+
         $results = Lead::with('main_phones', 'lead_method', 'stage', 'estimate')
             ->where('case_number', $search)
             ->orWhere('name', 'LIKE', '%' . $search . '%')
@@ -1207,6 +1213,10 @@ class LeadController extends Controller
                 $q->where('phone', $search)
                     ->orWhere('crop', $search);
             })
+            ->companiesLimit($answer)
+            ->filials($answer)
+            ->authors($answer)
+            // ->manager($user)
             ->orderBy('created_at', 'desc')
             ->get();
 

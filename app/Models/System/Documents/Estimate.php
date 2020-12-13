@@ -131,6 +131,12 @@ class Estimate extends BaseModel
         return $this->belongsTo('App\Lead');
     }
 
+    // Агент
+    public function agent()
+    {
+       return $this->belongsTo('App\Agent', 'agent_id');
+    }
+
     // Клиент
     public function client()
     {

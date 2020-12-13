@@ -23,7 +23,6 @@
 {{-- Таблица --}}
 <div class="grid-x">
     <div class="small-12 cell">
-
         <table class="content-table tablesorter estimates" id="content" data-sticky-container data-entity-alias="estimates">
 
             <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
@@ -38,8 +37,10 @@
                     <th class="td-discount-currency">Скидка</th>
                     <th class="td-total">Сумма к оплате</th>
                     <th class="td-payment">Оплачено</th>
-                    <th class="td-debt">Долг</th>
                     @if(extra_right('margin-show'))<th class="td-margin_currency">Маржа</th>@endif
+                    <th class="td-partner">Доля партнёра</th>
+                    @if(extra_right('share-currency-show'))<th class="td-share-currency">Доля агента</th>@endif
+                    @if(extra_right('principal-currency-show'))<th class="td-principal-currency">Доля принципала</th>@endif
                     <th class="td-saled">Продажа</th>
                     <th class="td-dissmissed">Списание</th>
                     <th class="td-delete"></th>
@@ -97,22 +98,54 @@
                 </td>
 
                 <td class="td-payment">{{ num_format($estimate->payments->sum('total'), 0) }}</td>
-                <td class="td-debt">{{ num_format($estimate->total - $estimate->payments->sum('amount'), 0) }}</td>
 
                 @if(extra_right('margin-show'))
                   <td class="td-margin_currency">{{ num_format($estimate->margin_currency, 0) }} <sup>{{ num_format($estimate->margin_percent, 0) }}%</sup></td>
                 @endif
 
+                <td class="td-partner">
+                  @if(isset($estimate->agent))
+                    @if($estimate->agent->agent_id == $estimate->company_id)
+                      {{ num_format($estimate->principal_currency, 0) }} <sup>{{ num_format($estimate->principal_currency * 100 / $estimate->total, 0) }}%</sup><br>
+                      <span class="tiny-text">{{ $estimate->company->name_short ?? $estimate->company->name }} (Принципал)</span>
+                    @else
+                      {{ num_format($estimate->share_currency, 0) }} <sup>{{ num_format($estimate->share_currency * 100 / $estimate->total, 0) }}%</sup><br>
+                      <span class="tiny-text">{{ $estimate->agent->company->name_short ?? $estimate->agent->company->name }} (Агент)</span>
+                    @endif
+                  @endif
+                </td>  
+
+                @if(extra_right('share-currency-show'))
+                  <td class="td-share-currency">
+                    @if(isset($estimate->agent))
+                      @if($estimate->agent->agent_id != $estimate->company_id)
+                        {{ num_format($estimate->share_currency, 0) }} <sup>{{ num_format($estimate->share_currency * 100 / $estimate->total, 0) }}%</sup>
+                      @endif
+                    @endif
+                  </td>
+                @endif
+
+
+                @if(extra_right('principal-currency-show'))
+                  <td class="td-principal-currency">
+                    @if(isset($estimate->agent))
+                      @if($estimate->agent->agent_id == Auth::user()->company_id)
+                        {{ num_format($estimate->share_currency, 0) }} <sup>{{ num_format($estimate->principal_currency * 100 / $estimate->total, 0) }}%</sup>
+                      @endif
+                    @endif
+                  </td>
+                @endif        
+
               <td class="td-saled">{{ ($estimate->conducted_at) ? 'Чек закрыт' : '' }}</td>
               <td class="td-dissmissed">{{ ($estimate->is_dissmissed == 1) ? 'Списан' : '' }}</td>
 
-              <td class="td-delete">
-                  {{-- @if ($estimate->system !== 1)
+              {{-- <td class="td-delete">
+                  @if ($estimate->system !== 1)
                   @can('delete', $estimate)
                   <a class="icon-delete sprite" data-open="item-delete"></a>
                   @endcan
-                  @endif --}}
-              </td>
+                  @endif 
+              </td> --}}
           </tr>
           @endforeach
           @endif

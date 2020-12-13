@@ -30,7 +30,7 @@ class EstimatesTotalsComposer
             ->where('draft', false)
             ->whereNotNull('registered_at')
             ->filter()
-            ->select(\DB::raw('SUM(amount) AS amount, SUM(discount_currency) AS discount_currency, SUM(total) AS total'))
+            ->select(\DB::raw('SUM(amount) AS amount, SUM(discount_currency) AS discount_currency, SUM(total) AS total, SUM(share_currency) AS share_currency, SUM(principal_currency) AS principal_currency'))
             ->first();
 //        dd($this->estimatesTotals);
 

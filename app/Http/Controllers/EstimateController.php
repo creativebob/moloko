@@ -62,6 +62,7 @@ class EstimateController extends Controller
         // -------------------------------------------------------------------------------------------
 
         $estimates = Estimate::with([
+            'agent',
             'client.clientable.location',
             'goods_items',
             'author',
@@ -71,17 +72,16 @@ class EstimateController extends Controller
             ->moderatorLimit($answer)
             ->companiesLimit($answer)
             // ->filials($answer)
-            ->authors($answer)
-            ->systemItem($answer)
+            // ->authors($answer)
+            // ->systemItem($answer)
             ->where('draft', false)
             ->whereNotNull('registered_at')
-//        ->whereNotNull('client_id')
-//            ->booklistFilter($request)  // Фильтр по спискам
-//            ->filter($request, 'client_id')
             ->filter()
             ->orderByDesc('created_at')
             ->paginate(30);
-//         dd($estimates);
+
+            // dd($estimates->first());
+
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
@@ -104,6 +104,9 @@ class EstimateController extends Controller
     public function search(Request $request, $search)
     {
 
+        $this->authorize(getmethod('index'), Estimate::class);
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('index'));
+
         $results = Estimate::with('lead')
         ->where('number', $search)
             ->orWhereHas('lead', function ($q) use ($search) {
@@ -115,6 +118,9 @@ class EstimateController extends Controller
                 });
             })
             ->whereNotNull('registered_at')
+            ->companiesLimit($answer)
+            ->filials($answer)
+            ->authors($answer)
             ->orderBy('created_at', 'desc')
             ->get();
 

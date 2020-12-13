@@ -93,6 +93,24 @@ class ChargesTableSeeder extends Seeder
                 'alias' => 'production-cancel',
                 'author_id' => 1,
             ],
+            [
+                'name' => 'Просмотр агентского вознаграждения',
+                'description' => null,
+                'alias' => 'share-currency-show',
+                'author_id' => 1,
+            ],
+            [
+                'name' => 'Просмотр вознаграждения принципала',
+                'description' => null,
+                'alias' => 'principal-currency-show',
+                'author_id' => 1,
+            ],
+            [
+                'name' => 'Просмотр вознаграждения партнера (агент / принципал)',
+                'description' => null,
+                'alias' => 'partner-currency-show',
+                'author_id' => 1,
+            ],
         ]);
 
 

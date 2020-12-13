@@ -27,8 +27,20 @@ trait CompaniesLimitTraitScopes
             return $query->where('company_id', $company_id)
             ->when($entity_name == 'companies', function($q) use ($company_id){
                 $q->orWhere('id', $company_id);
+            })
+            ->when($entity_name == 'estimates', function($q) use ($company_id){
+                $q->orWhereHas('agent', function($q) use ($company_id){
+                     $q->where('agent_id', $company_id);
+                });
+            })
+            ->when($entity_name == 'leads', function($q) use ($company_id){
+                $q->orWhereHas('estimate', function($q) use ($company_id){
+                    $q->whereHas('agent', function($q) use ($company_id){
+                         $q->where('agent_id', $company_id);
+                    });
+                });
             });
-        };
+        }
     }
 
 }
