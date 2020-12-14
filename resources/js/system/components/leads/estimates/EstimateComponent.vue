@@ -19,6 +19,7 @@
                 ></th>
 
                 <reserves-component
+                    v-if="canReserve"
                     :settings="settings"
                 ></reserves-component>
 
@@ -141,6 +142,10 @@ export default {
         // Товары
         goodsItems() {
             return this.$store.state.lead.goodsItems;
+        },
+
+        canReserve() {
+            return this.$store.getters.HAS_OUTLET_SETTING('reserves');
         },
 
         // Услуги

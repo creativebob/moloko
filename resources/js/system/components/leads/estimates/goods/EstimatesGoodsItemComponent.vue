@@ -111,7 +111,7 @@
         </td>
 
         <td
-            v-if="isRegistered && !isConducted"
+            v-if="isRegistered && !isConducted && canReserve"
             class="td-reserve"
         >
             <reserve-component
@@ -188,7 +188,10 @@
             },
             hasComment() {
                 return this.item.comment !== null && this.item.comment !== "";
-            }
+            },
+            canReserve() {
+                return this.$store.getters.HAS_OUTLET_SETTING('reserves');
+            },
         },
         methods: {
             changeComment(comment) {

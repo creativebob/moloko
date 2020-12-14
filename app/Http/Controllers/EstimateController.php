@@ -289,11 +289,26 @@ class EstimateController extends Controller
                 if (isset($goodsItem->reserve)) {
                     $result = $this->cancelReserve($goodsItem);
                 }
+
+                if ($goodsItem->share_percent > 0) {
+                    $goodsItem->update([
+                        'share_percent' => 0,
+
+                        'agent_id' => null,
+                        'agency_scheme_id' => null,
+                    ]);
+                }
             }
 
             $estimate->update([
                 'registered_at' => null,
+
+                'agent_id' => null,
+                'agency_scheme_id' => null,
             ]);
+
+            // Аггрегируем значеняи сметы
+            $this->aggregateEstimate($estimate);
         }
 
         $estimate = Estimate::with([
@@ -347,11 +362,12 @@ class EstimateController extends Controller
 
         if (empty($estimate->conducted_at)) {
 
-            // TODO - 09.11.20 - Пока вшиваем проверку остатка на хранилище
-            $leftover = 1;
+            $user = auth()->user();
+            $useStock = $user->company->settings->firstWhere('alias', 'sale-from-stock');
+            $checkFree = $user->staff->first()->filial->outlets->first()->settings->firstWhere('alias', 'stock-check-free');
 
             // Если нужна проверка остатка на складах
-            if ($leftover) {
+            if ($useStock && $checkFree) {
                 $errors = [];
 
                 $number = 1;
@@ -404,7 +420,7 @@ class EstimateController extends Controller
                 ->info('========================================== НАЧАЛО ПРОДАЖИ СМЕТЫ, ID: ' . $estimate->id . ' ==============================================
                 ');
 
-            if ($estimate->goods_items->isNotEmpty()) {
+            if ($estimate->goods_items->isNotEmpty() && $useStock) {
                 foreach ($estimate->goods_items as $item) {
                     $this->off($item);
                 }
@@ -419,8 +435,6 @@ class EstimateController extends Controller
 
             // Обновляем показатели клиента
             $this->setClientIndicators($estimate);
-
-
 
             logs('documents')
                 ->info('Продана смета c id: ' . $estimate->id);

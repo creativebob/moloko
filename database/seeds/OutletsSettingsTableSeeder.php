@@ -111,6 +111,11 @@ class OutletsSettingsTableSeeder extends Seeder
                 'alias' => 'agents',
                 'category_id' => $settingsCategories->firstWhere('alias', 'others')->id
             ],
+            [
+                'name' => 'Работать с резервами',
+                'alias' => 'reserves',
+                'category_id' => $settingsCategories->firstWhere('alias', 'others')->id
+            ],
         ]);
     }
 }

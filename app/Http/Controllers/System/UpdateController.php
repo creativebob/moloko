@@ -38,6 +38,25 @@ class UpdateController extends Controller
     }
 
     /**
+     * Настройка работы с резервами на торговую точку
+     *
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
+    public function addOutletReservesSetting()
+    {
+        OutletsSetting::insert([
+            [
+                'name' => 'Работать с резервами',
+                'alias' => 'reserves',
+                'category_id' => OutletsSettingsCategory::where('alias', 'others')
+                    ->value('id')
+            ],
+        ]);
+
+        return __('msg.ok');
+    }
+
+    /**
      * Настрока работы с агентом на торговую точку
      *
      * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null

@@ -32,6 +32,8 @@
         $right_lead_dealer = extra_right('lead-dealer');
         $right_lead_service = extra_right('lead-service');
         $right_lead_all_managers = extra_right('lead-all-managers');
+
+        $reserves = auth()->user()->staff->first()->filial->outlets->first()->settings->firstWhere('alias', 'reserves') ? true : false;
     @endphp
 
     <div class="grid-x" id="pagination">
@@ -58,7 +60,9 @@
                     <th class="td-phone">Телефон</th>
                     <th class="td-choice">Спрос</th>
                     <th class="td-badget">Сумма сделки</th>
+                    @if($reserves)
                     <th class="td-reserves">Резервы</th>
+                    @endif
                     <th class="td-stage">Этап</th>
                     <th class="td-challenge">Задачи</th>
                     <th class="td-status">Статус</th>
@@ -159,7 +163,9 @@
                                 @endif
                             </td>
 
+                            @if($reserves)
                             <td class="td-reserves">{{ num_format($lead->estimate->goods_items->sum('count'), 0) }} / {{ num_format($lead->estimate->goodsItemsReserves, 0) }}</td>
+                            @endif
 
                             <td class="td-stage">{{ $lead->stage->name }}</td>
                             <td class="td-challenge">

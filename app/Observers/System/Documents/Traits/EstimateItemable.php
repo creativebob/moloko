@@ -88,6 +88,9 @@ trait EstimateItemable
                 if ($item->share_percent > 0) {
                     $item->share_currency = $item->total / 100 * $item->share_percent;
                     $item->principal_currency = $item->total - $item->share_currency;
+                } else {
+                    $item->share_currency = 0;
+                    $item->principal_currency = 0;
                 }
 
                 // Маржа

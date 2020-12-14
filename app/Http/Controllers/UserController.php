@@ -404,7 +404,7 @@ class UserController extends Controller
         $pageInfo = pageInfo($this->entityAlias);
 //         dd($user);
 
-        return view('users.profile', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list', 'pageInfo', 'countries_list'));
+        return view('system.pages.marketings.users.profile', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list', 'pageInfo', 'countries_list'));
     }
 
     public function update_profile(Request $request)

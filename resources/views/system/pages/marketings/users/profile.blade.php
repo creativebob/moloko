@@ -125,7 +125,7 @@
 
     <div class="small-12 medium-6 cell">
       <label>Почта
-        @include('includes.inputs.email', ['value'=>$user->email, 'name'=>'email', 'required' => true])
+        @include('includes.inputs.email', ['value'=>$user->email, 'name'=>'email'])
       </label>
     </div>
 
