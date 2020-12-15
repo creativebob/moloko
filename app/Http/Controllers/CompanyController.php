@@ -256,6 +256,8 @@ class CompanyController extends Controller
             $this->getDirector($company);
         }
 
+        $this->setStatuses($company);
+
         return redirect()->route('companies.index');
     }
 

@@ -221,6 +221,11 @@ trait Companable
         return $company;
     }
 
+    /**
+     * Устанавливаем статусы компании (поставщик / производитель)
+     *
+     * @param $company
+     */
     public function setStatuses($company)
     {
         $request = request();
