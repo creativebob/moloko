@@ -33,7 +33,10 @@
         $right_lead_service = extra_right('lead-service');
         $right_lead_all_managers = extra_right('lead-all-managers');
 
-        $reserves = auth()->user()->staff->first()->filial->outlets->first()->settings->firstWhere('alias', 'reserves') ? true : false;
+        $reserves = false;
+        if (auth()->user()->staff->first()->filial->outlets->first()) {
+            $reserves = auth()->user()->staff->first()->filial->outlets->first()->settings->firstWhere('alias', 'reserves') ? true : false;
+        }
     @endphp
 
     <div class="grid-x" id="pagination">

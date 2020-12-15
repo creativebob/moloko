@@ -11,7 +11,7 @@
                 </h2>
 
                 @can('create', App\Lead::class)
-                    @if(!empty(Auth::user()->staff[0]))
+                    @if(!empty(Auth::user()->staff[0]) && auth()->user()->staff->first()->filial->outlets->first())
                         <div class="button-group">
                             @if(extra_right('lead-regular'))
                                 {{ link_to_route('leads.create', '+ Обычное', ['lead_type' => 1], ['class' => 'button tiny']) }}
