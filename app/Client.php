@@ -290,33 +290,37 @@ class Client extends BaseModel
             $query->whereDate('last_order_date', '<=', Carbon::createFromFormat('d.m.Y', $filters['last_order_date_max']));
         }
 
-        if (isset($filters['birthday_date_min'])) {
+
+        if ((isset($filters['birthday_date_min']))||(isset($filters['birthday_date_min']))) {
             $query->whereHasMorph(
                 'clientable',
                 [User::class],
                 function ($q) use ($filters) {
-                    $q->whereDate('birthday_date', '>=', Carbon::createFromFormat('d.m.Y', $filters['birthday_date_min']));
-                });
-        }
-        if (isset($filters['birthday_date_max'])) {
-            $query->whereHasMorph(
-                'clientable',
-                [User::class],
-                function ($q) use ($filters) {
-                    $q->whereDate('birthday_date', '<=', Carbon::createFromFormat('d.m.Y', $filters['birthday_date_max']));
+
+                    if (isset($filters['birthday_date_min'])) {
+                        $q->whereDate('birthday_date', '>=', Carbon::createFromFormat('d.m.Y', $filters['birthday_date_min']));
+                    }
+
+                    if (isset($filters['birthday_date_max'])) {
+                        $q->whereDate('birthday_date', '<=', Carbon::createFromFormat('d.m.Y', $filters['birthday_date_max']));
+                    }                   
+
                 });
         }
 
-        if (isset($filters['estimate_date_min'])) {
+
+        if ((isset($filters['estimate_date_min']))||(isset($filters['estimate_date_max']))) {
             $query->whereHas('estimates', function ($q) use ($filters) {
-                $q->whereDate('conducted_at', '>=', Carbon::createFromFormat('d.m.Y', $filters['estimate_date_min']));
+                if (isset($filters['estimate_date_min'])) {
+                    $q->whereDate('date', '>=', Carbon::createFromFormat('d.m.Y', $filters['estimate_date_min']));
+                }
+
+                if (isset($filters['estimate_date_max'])) {
+                    $q->whereDate('date', '<=', Carbon::createFromFormat('d.m.Y', $filters['estimate_date_max']));
+                }
             });
         }
-        if (isset($filters['estimate_date_max'])) {
-            $query->whereHas('estimates', function ($q) use ($filters) {
-                $q->whereDate('conducted_at', '<=', Carbon::createFromFormat('d.m.Y', $filters['estimate_date_max']));
-            });
-        }
+
 
         if (isset($filters['gender'])) {
             $query->whereHasMorph(
