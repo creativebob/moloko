@@ -55,6 +55,8 @@ class Client extends Model
      ];
 
     protected $fillable = [
+        'filial_id',
+
         'clientable_id',
         'clientable_type',
 

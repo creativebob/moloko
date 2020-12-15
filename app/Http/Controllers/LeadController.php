@@ -1204,7 +1204,7 @@ class LeadController extends Controller
             $this->authorize(getmethod('index'), Lead::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('index'));        
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('index'));
 
         $results = Lead::with('main_phones', 'lead_method', 'stage', 'estimate')
             ->where('case_number', $search)

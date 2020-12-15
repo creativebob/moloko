@@ -18,7 +18,10 @@ class ClientObserver
     public function creating(Client $client)
     {
         $this->store($client);
+
         $client->display = false;
+
+        $client->filial_id = auth()->user()->stafferFilialId;
     }
 
     /**

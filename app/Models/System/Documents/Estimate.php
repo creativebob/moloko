@@ -255,12 +255,22 @@ class Estimate extends BaseModel
             $query->where('discount_currency', '<=', $filters['discount_currency_max']);
         }
 
-        // TODO - 01.07.20 - Фильтруем по дате регистрации, нужно фильтровать по дате продажи
         if (isset($filters['registered_at_min'])) {
             $query->whereDate('registered_at', '>=', Carbon::createFromFormat('d.m.Y', $filters['registered_at_min']));
         }
         if (isset($filters['registered_at_max'])) {
             $query->whereDate('registered_at', '<=', Carbon::createFromFormat('d . m . Y', $filters['registered_at_max']));
+        }
+
+        if (isset($filters['conducted_at_min'])) {
+            $query->whereDate('conducted_at', '>=', Carbon::createFromFormat('d.m.Y', $filters['conducted_at_min']));
+        }
+        if (isset($filters['conducted_at_max'])) {
+            $query->whereDate('conducted_at', '<=', Carbon::createFromFormat('d . m . Y', $filters['conducted_at_max']));
+        }
+
+        if (isset($filters['filials'])) {
+            $query->whereIn('filial_id', $filters['filials']);
         }
 
         return $query;

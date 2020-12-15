@@ -2,6 +2,7 @@
 
 namespace App\Providers\System\View;
 
+use App\Http\View\Composers\System\AccessFilialsComposer;
 use App\Http\View\Composers\System\AccountsComposer;
 use App\Http\View\Composers\System\ArticlesCategoriesWithGroupsComposer;
 use App\Http\View\Composers\System\ArticlesCategoriesWithItemsComposer;
@@ -548,6 +549,12 @@ class ViewServiceProvider extends ServiceProvider
         // Клиентские заказы
         view()->composer('estimates.includes.filters', CitiesComposer::class);
         view()->composer('estimates.includes.filters', SourcesComposer::class);
+
+
+        view()->composer([
+            'estimates.includes.filters',
+            'system.pages.clients.includes.filters',
+        ], AccessFilialsComposer::class);
 
         // Рассылки
         view()->composer('system.pages.marketings.subscribers.index', MailingListsComposer::class);

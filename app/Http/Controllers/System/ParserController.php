@@ -67,6 +67,21 @@ class ParserController extends Controller
     }
 
     /**
+     * Обновление клиентского филиала на первый
+     *
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
+    public function updateClientsFilial()
+    {
+        Client::whereNull('filial_id')
+            ->update([
+            'filial_id' => 1
+        ]);
+
+        return __('msg.ok');
+    }
+
+    /**
      * Обновлени типа платежам
      *
      * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null

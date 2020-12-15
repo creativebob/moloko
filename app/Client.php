@@ -29,6 +29,8 @@ class Client extends BaseModel
     ];
 
     protected $fillable = [
+        'filial_id',
+
         'clientable_id',
         'clientable_type',
 
@@ -341,6 +343,10 @@ class Client extends BaseModel
                         });
                     });
                 });
+        }
+
+        if (isset($filters['filials'])) {
+            $query->whereIn('filial_id', $filters['filials']);
         }
 
         return $query;

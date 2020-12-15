@@ -16,6 +16,9 @@ class CreateClientsTable extends Migration
         Schema::create('clients', function (Blueprint $table) {
             $table->bigIncrements('id');
 
+            $table->bigInteger('filial_id')->unsigned()->nullable()->comment('Id филиала');
+            $table->foreign('filial_id')->references('id')->on('departments');
+
             $table->morphs('clientable');
 
             $table->text('description')->nullable()->comment('Описание клиента');

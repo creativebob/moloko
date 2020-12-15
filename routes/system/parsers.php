@@ -38,5 +38,6 @@ Route::get('/re-reserving', 'ParserController@reReserving');
 Route::get('/set-discounts-for-estimates', 'ParserController@setDiscountsForEstimates');
 
 Route::get('/update-payments-sign', 'ParserController@updatePaymentsSign');
+Route::get('/update-clients-filial', 'ParserController@updateClientsFilial');
 
 Route::get('/test', 'ParserController@test');

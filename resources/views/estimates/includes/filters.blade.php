@@ -63,6 +63,19 @@
             @include('includes.inputs.min_max_date', ['name' => 'registered_at', 'title' => 'Дата оформления заказа'])
         </div>
 
+        <div class="cell small-12 medium-6">
+            @include('includes.inputs.min_max_date', ['name' => 'conducted_at', 'title' => 'Дата продажи заказа'])
+        </div>
+
+        <div class="cell small-12 medium-6 checkbox checkboxer">
+            <checkboxer-component
+                name="filials"
+                title="Филиал"
+                :items='@json($filials)'
+                :checkeds='@json(request()->filials)'
+            ></checkboxer-component>
+        </div>
+
     </div>
 </div>
 <div class="small-12 medium-4 large-6 cell checkbox checkboxer">
