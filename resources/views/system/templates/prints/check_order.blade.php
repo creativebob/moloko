@@ -19,17 +19,17 @@
                 </div>
             </div>
             <div class="grid-x order-info">
-                <div class="cell small-6">
+                <div class="cell small-5">
                     <ul class="order-info-list">
                         <li><span class="order-date">Дата: </span><span>{{ $lead->created_at->format('d.m.Y') }}</span></li>
-                        <li><span class="order-time">Время заказа: </span><span>{{ $lead->created_at->format('H:i') }}</span></li>
+                        <li><span class="order-time">Время: </span><span>{{ $lead->created_at->format('H:i') }}</span></li>
                     </ul>
                 </div>
-                <div class="cell small-6 client-info">
+                <div class="cell small-7 client-info">
                     <ul class="client-info-list">
                         <li><span class="client-name">Имя: </span><span>{{ $lead->name }}</span></li>
                         <li><span class="client-city">Город: </span><span>{{ $lead->location->city->name }}</span></li>
-                        <li><span class="client-address">Адрес клиента: </span><span>{{ $lead->location->address }}</span></li>
+                        <li><span class="client-address">Адрес: </span><span>{{ $lead->location->address }}</span></li>
                         <li><span class="client-phone">Телефон: </span><span>{{ decorPhone($lead->main_phone->phone) }}</span></li>
                         <li><span class="client-time">Заказ на: </span><span class="shipment_time">{{ isset($lead->shipment_at) ? $lead->shipment_at->format('d.m.Y H:i') : 'Время не указано' }}</span></li>
                         {{-- <li><span class="client-points">Р/х для клиента:</span><span> </span></li> --}}
@@ -66,21 +66,23 @@
                     <tbody></tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="2">Итого:</td>
                             <td></td>
+                            <td colspan="2">Итого:</td>
                             <td></td>
                             <td>{{ num_format($lead->estimate->amount, 0) }} {{ $item->currency->symbol }}</td>
                             <td></td>
                             <td>{{ num_format($lead->estimate->total, 0) }} {{ $item->currency->symbol }}</td>
                         </tr>
-                        <tr>
-                            <td colspan="2">Сумма всех скидок:</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>{{ num_format($lead->estimate->discount_currency, 0) }} {{ $item->currency->symbol }}</td>
-                        </tr>
+                        @if($lead->estimate->discount_currency > 0)
+                            <tr>
+                                <td></td>
+                                <td colspan="2">Сумма всех скидок:</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>{{ num_format($lead->estimate->discount_currency, 0) }} {{ $item->currency->symbol }}</td>
+                            </tr>
+                        @endif
                     </tfoot>
                 </table>
             </div>
@@ -99,17 +101,17 @@
                 </div>
             </div>
             <div class="grid-x order-info">
-                <div class="cell small-6">
+                <div class="cell small-5">
                     <ul class="order-info-list">
                         <li><span class="order-date">Дата: </span><span>{{ $lead->created_at->format('d.m.Y') }}</span></li>
-                        <li><span class="order-time">Время заказа: </span><span>{{ $lead->created_at->format('H:i') }}</span></li>
+                        <li><span class="order-time">Время: </span><span>{{ $lead->created_at->format('H:i') }}</span></li>
                     </ul>
                 </div>
-                <div class="cell small-6 client-info">
+                <div class="cell small-7 client-info">
                     <ul class="client-info-list">
                         <li><span class="client-name">Имя: </span><span>{{ $lead->name }}</span></li>
                         <li><span class="client-city">Город: </span><span>{{ $lead->location->city->name }}</span></li>
-                        <li><span class="client-address">Адрес клиента: </span><span>{{ $lead->location->address }}</span></li>
+                        <li><span class="client-address">Адрес: </span><span>{{ $lead->location->address }}</span></li>
                         <li><span class="client-phone">Телефон: </span><span>{{ decorPhone($lead->main_phone->phone) }}</span></li>
                         <li><span class="client-time">Заказ на: </span><span class="shipment_time">{{ isset($lead->shipment_at) ? $lead->shipment_at->format('d.m.Y H:i') : 'Время не указано' }}</span></li>
                         {{-- <li><span class="client-points">Р/х для клиента:</span><span> </span></li> --}}
@@ -146,21 +148,23 @@
                     <tbody></tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="2">Итого:</td>
                             <td></td>
+                            <td colspan="2">Итого:</td>
                             <td></td>
                             <td>{{ num_format($lead->estimate->amount, 0) }} {{ $item->currency->symbol }}</td>
                             <td></td>
                             <td>{{ num_format($lead->estimate->total, 0) }} {{ $item->currency->symbol }}</td>
                         </tr>
-                        <tr>
-                            <td colspan="2">Сумма всех скидок:</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>{{ num_format($lead->estimate->discount_currency, 0) }} {{ $item->currency->symbol }}</td>
-                        </tr>
+                        @if($lead->estimate->discount_currency > 0)
+                            <tr>
+                                <td></td>
+                                <td colspan="2">Сумма всех скидок:</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>{{ num_format($lead->estimate->discount_currency, 0) }} {{ $item->currency->symbol }}</td>
+                            </tr>
+                        @endif
                     </tfoot>
                 </table>
             </div>

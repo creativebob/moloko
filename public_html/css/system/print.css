@@ -41,11 +41,6 @@ a {
   padding: 0;
 }
 
-.check-order .client-name, .check-order .client-phone {
-  width: auto;
-  font-size: 1rem;
-}
-
 .check-order .name, .check-order .phone {
   font-size: 1rem;
 }
