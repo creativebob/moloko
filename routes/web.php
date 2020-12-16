@@ -785,7 +785,7 @@ Route::patch('/estimates/{id}/unregistering', 'EstimateController@unregistering'
 // Производство
 Route::patch('/estimates/{id}/produce', 'EstimateController@produce');
 // Продажа
-Route::patch('/estimates/{id}/conducting', 'EstimateController@conducting');
+Route::post('/estimates/{id}/conducting', 'EstimateController@conducting');
 
 // Агент
 Route::post('/estimates/set-agent', 'EstimateController@setAgent');
