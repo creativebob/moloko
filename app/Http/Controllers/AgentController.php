@@ -127,7 +127,7 @@ class AgentController extends Controller
         $company = $this->storeCompany();
 
         if ($request->set_user == 1) {
-            $this->getDirector($company);
+            $this->getDirector($company, $this->entityAlias);
         }
 
         $data = $request->input();
@@ -239,8 +239,10 @@ class AgentController extends Controller
         $company = $this->updateCompany($company);
 
         if ($request->set_user == 1) {
-            $this->getDirector($company);
+            $this->getDirector($company, $this->entityAlias);
         }
+
+        $this->setStatuses($company);
 
         // Обновление информации по клиенту:
         $data = $request->input();

@@ -50,13 +50,15 @@
 
             {{-- Предлагаем добавить компанию в производители, если, конечно, создаем ее не из под страницы создания производителей --}}
             @empty($manufacturer)
-                {!! Form::hidden('is_manufacturer', 0) !!}
-                @can('index', App\Manufacturer::class)
-                    <div class="small-12 cell checkbox">
-                        {{ Form::checkbox('is_manufacturer', 1, isset($company->manufacturer), ['id' => 'checkbox-is_manufacturer']) }}
-                        <label for="checkbox-is_manufacturer"><span>Производитель</span></label>
-                    </div>
-                @endcan
+                @empty($company->manufacturer)
+                    {!! Form::hidden('is_manufacturer', 0) !!}
+                    @can('index', App\Manufacturer::class)
+                        <div class="small-12 cell checkbox">
+                            {{ Form::checkbox('is_manufacturer', 1, isset($company->manufacturer), ['id' => 'checkbox-is_manufacturer']) }}
+                            <label for="checkbox-is_manufacturer"><span>Производитель</span></label>
+                        </div>
+                    @endcan
+                @endempty
             @endempty
             {{--            @empty($manufacturer)--}}
             {{--                @can('index', App\Manufacturer::class)--}}
@@ -74,6 +76,7 @@
 
             {{-- Предлагаем добавить компанию в поставщики, если, конечно, создаем ее не из под страницы создания поставщиков --}}
             @empty($supplier)
+                @empty($company->supplier)
                 {!! Form::hidden('is_supplier', 0) !!}
                 @can('index', App\Supplier::class)
                     <div class="small-12 cell checkbox">
@@ -82,22 +85,24 @@
                     </div>
                 @endcan
             @endempty
-{{--            @can('index', App\Supplier::class)--}}
-{{--                @if(empty($supplier))--}}
-{{--                    @if(isset($company->supplier_self) && (Auth::user()->company_id != null))--}}
-{{--                        @if($company->supplier_self == false)--}}
-{{--                            <div class="small-12 cell checkbox">--}}
-{{--                                {{ Form::checkbox('supplier_self', 1, $company->supplier_self, ['id' => 'supplier_self']) }}--}}
-{{--                                <label for="supplier_self"><span>Поставщик</span></label>--}}
-{{--                            </div>--}}
-{{--                        @endif--}}
+            @endempty
+            {{--            @can('index', App\Supplier::class)--}}
+            {{--                @if(empty($supplier))--}}
+            {{--                    @if(isset($company->supplier_self) && (Auth::user()->company_id != null))--}}
+            {{--                        @if($company->supplier_self == false)--}}
+            {{--                            <div class="small-12 cell checkbox">--}}
+            {{--                                {{ Form::checkbox('supplier_self', 1, $company->supplier_self, ['id' => 'supplier_self']) }}--}}
+            {{--                                <label for="supplier_self"><span>Поставщик</span></label>--}}
+            {{--                            </div>--}}
+            {{--                        @endif--}}
 
-{{--                    @endif--}}
-{{--                @endif--}}
-{{--            @endcan--}}
+            {{--                    @endif--}}
+            {{--                @endif--}}
+            {{--            @endcan--}}
 
             {{-- Предлагаем добавить компанию в клиенты, если, конечно, создаем ее не из под страницы создания клиентов --}}
             @empty($client)
+                @empty($company->client)
                 {!! Form::hidden('is_client', 0) !!}
                 @can('index', App\Client::class)
                     <div class="cell small-12 checkbox">
@@ -105,6 +110,22 @@
                         <label for="checkbox-is_client"><span>Клиент</span></label>
                     </div>
                 @endcan
+            @endempty
+            @endempty
+
+
+            @empty($agent)
+                @empty($company->agent)
+                    @if($company->id != auth()->user()->company_id)
+                    {!! Form::hidden('is_agent', 0) !!}
+                    @can('index', App\Agent::class)
+                        <div class="cell small-12 checkbox">
+                            {{ Form::checkbox('is_agent', 1, isset($company->agent), ['id' => 'checkbox-is_agent']) }}
+                            <label for="checkbox-is_agent"><span>Агент</span></label>
+                        </div>
+                    @endcan
+                        @endif
+                @endempty
             @endempty
 
             {{-- Чекбоксы управления --}}

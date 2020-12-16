@@ -23,9 +23,8 @@ trait EstimateItemable
                 $item->amount = $item->price * $item->count;
 
                 // Скидки
-
                 // Если есть ручная скидка
-                if ($item->manual_discount_currency > 0) {
+                if ($item->is_manual == 1) {
 
                     $item->price_discount = 0;
                     $item->total_price_discount = $item->amount;
@@ -39,12 +38,12 @@ trait EstimateItemable
                     $item->client_discount_currency = 0;
                     $item->total_client_discount = $item->amount;
 
-                    $item->total_manual_discount = $item->manual_discount_currency * $item->count;
-                    $item->total = $item->amount - $item->total_manual_discount;
+                    $item->total_manual_discount = $item->amount - ($item->manual_discount_currency * $item->count);
+                    $item->total = $item->total_manual_discount;
 
-                    $item->total_computed_discount = $item->computed_discount_currency * $item->count;
+                    $item->total_computed_discount = 0;
 
-                    $item->discount_currency = $item->manual_discount_currency;
+                    $item->discount_currency = $item->manual_discount_currency * $item->count;
                     $item->discount_percent = $item->manual_discount_percent;
                 } else {
                     // Иначе рассчитываем
@@ -94,10 +93,20 @@ trait EstimateItemable
                 }
 
                 // Маржа
+                $totalPrice = 0;
+                if ($item->is_manual == 0) {
+                    $totalPrice = $item->price - $item->price_discount_unit - $item->catalogs_item_discount_unit - $item->estimate_discount_unit - $item->client_discount_unit_currency;
+                } else {
+                    $totalPrice = $item->price - $item->manual_discount_currency;
+                }
+                $item->margin_currency_unit = $totalPrice - $item->cost_unit;
                 $item->margin_currency = $item->total - $item->cost;
+
                 if ($item->total > 0) {
+                    $item->margin_percent_unit = ($item->margin_currency_unit / $totalPrice * 100);
                     $item->margin_percent = ($item->margin_currency / $item->total * 100);
                 } else {
+                    $item->margin_percent_unit = ($item->margin_currency_unit * 100);
                     $item->margin_percent = ($item->margin_currency * 100);
                 }
                 break;
