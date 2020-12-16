@@ -889,7 +889,7 @@ class EstimateController extends Controller
 
         if ($notificationId) {
             $msg = "Передали агенту";
-            Telegram::send($notificationId, $msg, $agent->company_id);
+            Telegram::send($notificationId, $msg, $agent->agent_id);
         }
 
         return response()->json([
