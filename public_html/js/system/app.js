@@ -133270,7 +133270,7 @@ var moduleLead = {
             var state = _ref8.state;
 
             state.loading = true;
-            axios.post('/admin/estimates/' + state.estimate.id + '/conducting/').then(function (response) {
+            axios.post('/admin/estimates/' + state.estimate.id + '/conducting').then(function (response) {
                 if (response.data.success) {
                     _this8.commit('SET_ESTIMATE', response.data.estimate);
                 } else {
