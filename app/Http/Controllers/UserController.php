@@ -410,64 +410,81 @@ class UserController extends Controller
     public function update_profile(Request $request)
     {
 
+        $user = auth()->user();
 
-        // Получаем авторизованного пользователя
-        $user_auth = $request->user();
+        $this->updateSubscriber($user);
 
-        $user_auth_id = hideGod($user_auth);
+        $user = $this->updateUser($user);
 
-        $company_id = $user_auth->company_id;
+        if ($user) {
+            // Смотрим обязанности
+            if (isset($request->notifications)) {
+                $user->notifications()->sync($request->notifications);
+            } else {
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        // $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
+                // Если удалили последнюю обязанность для должности и пришел пустой массив
+                $user->notifications()->detach();
+            }
+        }
 
-        // ГЛАВНЫЙ ЗАПРОС:
-        $user = $user_auth;
-
-        $filial_id = $request->filial_id;
-
-        // Подключение политики
-        // $this->authorize(getmethod(__FUNCTION__), $user);
-
-        // Обновляем локацию
-        $user = update_location($request, $user);
-
-        $user->nickname = $request->nickname;
-
-        $user->first_name = $request->first_name;
-        $user->second_name = $request->second_name;
-        $user->patronymic = $request->patronymic;
-        $user->gender = $request->gender;
-        $user->birthday_date = $request->birthday_date;
-
-        // Телефон
-        $phones = add_phones($request, $user);
-
-        $user->telegram = $request->telegram;
-
-        // $user->orgform_status = $request->orgform_status;
-
-        // $user->user_inn = $request->inn;
-
-        // $user->passport_address = $request->passport_address;
-        // $user->passport_number = $request->passport_number;
-        // $user->passport_released = $request->passport_released;
-        // $user->passport_date = $request->passport_date;
-
-        $user->about = $request->about;
-        $user->specialty = $request->specialty;
-        $user->degree = $request->degree;
-        $user->quote = $request->quote;
-
-        // $user->user_type = $request->user_type;
-        // $user->lead_id = $request->lead_id;
-        // $user->employee_id = $request->employee_id;
-        // $user->access_block = $request->access_block;
-
-        // $user->filial_id = $request->filial_id;
-        $user->photo_id = $this->getPhotoId($user);
-
-       $user->save();
+        // TODO - 16.12.20 - Старый код, может есть что нужное
+//        // Получаем авторизованного пользователя
+//        $user_auth = $request->user();
+//
+//        $user_auth_id = hideGod($user_auth);
+//
+//        $company_id = $user_auth->company_id;
+//
+//        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+//        // $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
+//
+//        // ГЛАВНЫЙ ЗАПРОС:
+//        $user = $user_auth;
+//
+//        $filial_id = $request->filial_id;
+//
+//        // Подключение политики
+//        // $this->authorize(getmethod(__FUNCTION__), $user);
+//
+//        // Обновляем локацию
+//        $user = update_location($request, $user);
+//
+//        $user->nickname = $request->nickname;
+//
+//        $user->first_name = $request->first_name;
+//        $user->second_name = $request->second_name;
+//        $user->patronymic = $request->patronymic;
+//        $user->gender = $request->gender;
+//        $user->birthday_date = $request->birthday_date;
+//
+//        // Телефон
+//        $phones = add_phones($request, $user);
+//
+//        $user->telegram = $request->telegram;
+//
+//        // $user->orgform_status = $request->orgform_status;
+//
+//        // $user->user_inn = $request->inn;
+//
+//        // $user->passport_address = $request->passport_address;
+//        // $user->passport_number = $request->passport_number;
+//        // $user->passport_released = $request->passport_released;
+//        // $user->passport_date = $request->passport_date;
+//
+//        $user->about = $request->about;
+//        $user->specialty = $request->specialty;
+//        $user->degree = $request->degree;
+//        $user->quote = $request->quote;
+//
+//        // $user->user_type = $request->user_type;
+//        // $user->lead_id = $request->lead_id;
+//        // $user->employee_id = $request->employee_id;
+//        // $user->access_block = $request->access_block;
+//
+//        // $user->filial_id = $request->filial_id;
+//        $user->photo_id = $this->getPhotoId($user);
+//
+//       $user->save();
 
        if ($user) {
            // Смотрим обязанности

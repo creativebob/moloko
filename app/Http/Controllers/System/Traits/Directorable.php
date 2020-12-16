@@ -17,6 +17,8 @@ trait Directorable
     // TODO - 15.09.20 - Создание директора вынесено в трейт, в дальнейшем думаю реализовывать через шаблон проетирования "Интерфейс"
 
     protected $company;
+    protected $roleAlias;
+
     protected $filial;
     protected $position;
     protected $staffer;
@@ -28,9 +30,10 @@ trait Directorable
      *
      * @param $company
      */
-    public function getDirector($company)
+    public function getDirector($company, $roleAlias = 'base')
     {
         $this->company = $company;
+        $this->roleAlias = $roleAlias;
 
         $company->load('director.user');
 
@@ -310,12 +313,17 @@ trait Directorable
      */
     public function setRole($position, $filial, $user)
     {
-        $role = Role::where('alias', 'base')
+        $role = Role::where('alias', $this->roleAlias)
             ->first();
+
+        if (empty($role)) {
+            $role = Role::where('alias', 'base')
+                ->first();
+        }
 
         $position->roles()->attach($role->id);
 
-        logs('companies')->info("Должность [{$position->id}] связана с базовой ролью [{$role->id}]");
+        logs('companies')->info("Должность [{$position->id}] связана с ролью [{$role->id}]");
 
         $user->roles()->attach([$role->id => [
             'department_id' => $filial->id,
@@ -323,7 +331,7 @@ trait Directorable
         ]
         ]);
 
-        logs('companies')->info("Пользователь [{$user->id}] связан с базовой ролью [{$role->id}]");
+        logs('companies')->info("Пользователь [{$user->id}] связан с ролью [{$role->id}]");
 
         return $role;
     }

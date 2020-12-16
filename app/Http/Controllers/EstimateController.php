@@ -7,6 +7,8 @@ use App\Client;
 use App\Company;
 use App\ContractsClient;
 use App\Models\System\Documents\EstimatesGoodsItem;
+use App\Notification;
+use App\Notifications\System\Telegram;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\System\Traits\Clientable;
 use App\Http\Controllers\System\Traits\Companable;
@@ -448,6 +450,25 @@ class EstimateController extends Controller
 //                ->with(['success' => 'Успешно проведено']);
         }
 
+        $estimate->load([
+            'goods_items' => function ($q) {
+                $q->with([
+                    'goods.article',
+                    'reserve',
+                    'stock:id,name',
+                    'price_goods',
+                    'currency'
+                ]);
+            },
+            'services_items' => function ($q) {
+                $q->with([
+                    'product.process',
+                ]);
+            },
+            'payments',
+            'discounts'
+        ]);
+
 //        return redirect()->route('leads.index');
         return response()->json([
             'success' => true,
@@ -862,6 +883,14 @@ class EstimateController extends Controller
             'agent.company'
         ])
             ->find($request->estimate_id);
+
+        $notificationId = Notification::where('name', 'Прием заказа от партнера')
+            ->value('id');
+
+        if ($notificationId) {
+            $msg = "Передали агенту";
+            Telegram::send($notificationId, $msg, $agent->agent_id);
+        }
 
         return response()->json([
             'success' => true,

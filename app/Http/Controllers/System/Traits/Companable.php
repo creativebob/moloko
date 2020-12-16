@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\System\Traits;
 
+use App\Agent;
 use App\Client;
 use App\Company;
 use App\Domain;
@@ -240,6 +241,12 @@ trait Companable
         if ($request->is_vendor == 1) {
             $vendor = Vendor::create([
                 'supplier_id' => $company->id
+            ]);
+        }
+
+        if ($request->is_agent == 1) {
+            $agent = Agent::create([
+                'agent_id' => $company->id
             ]);
         }
 

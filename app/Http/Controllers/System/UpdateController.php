@@ -38,6 +38,125 @@ class UpdateController extends Controller
     }
 
     /**
+     * Обновление оповещений
+     *
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
+    public function notifications()
+    {
+        $channels = Channel::get();
+        $triggers = Trigger::get();
+
+        $items = [
+            [
+                'name' => 'Лид с сайта',
+                'channel_id' => $channels->firstWhere('name', 'Telegram')->id,
+                'trigger_id' => $triggers->firstWhere('alias', 'create-lead-from-project')->id,
+            ],
+            [
+                'name' => 'Рекламация',
+                'channel_id' => $channels->firstWhere('name', 'Telegram')->id,
+                'trigger_id' => $triggers->firstWhere('alias', 'create-claim')->id,
+            ],
+            [
+                'name' => 'Получать СМС уведомления',
+                'channel_id' => $channels->firstWhere('name', 'Sms')->id,
+                'trigger_id' => $triggers->firstWhere('alias', 'notification')->id,
+            ],
+            [
+                'name' => 'Получать предложения на почту',
+                'channel_id' => $channels->firstWhere('name', 'Email')->id,
+                'trigger_id' => $triggers->firstWhere('alias', 'offer')->id,
+            ],
+            [
+                'name' => 'Контроль вкл / выкл скидок',
+                'channel_id' => $channels->firstWhere('name', 'Telegram')->id,
+                'trigger_id' => $triggers->firstWhere('alias', 'discounts-recalculate')->id,
+            ],
+            [
+                'name' => 'Прием заказа от партнера',
+                'channel_id' => $channels->firstWhere('name', 'Telegram')->id,
+                'trigger_id' => $triggers->firstWhere('alias', 'create-lead-from-project')->id,
+            ],
+        ];
+
+        $count = 0;
+        foreach ($items as $item) {
+            $res = Notification::where($item)
+                ->exists();
+//            dd($res);
+
+            if (!$res) {
+                $notiification = Notification::create($item);
+                $notiification->sites()->attach(1);
+
+                $count++;
+            }
+        }
+        return __("Добавлено оповещений: {$count}");
+    }
+
+    /**
+     * Обновление ролей
+     *
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
+    public function roles()
+    {
+        $items = [
+            [
+                'name' => 'Базовая',
+                'alias' => 'base',
+                'company_id' => null,
+                'system' => false,
+                'author_id' => 1
+            ],
+
+            [
+                'name' => 'Агент',
+                'alias' => 'agents',
+                'company_id' => null,
+                'system' => false,
+                'author_id' => 1
+            ],
+            [
+                'name' => 'Клиент',
+                'alias' => 'clients',
+                'company_id' => null,
+                'system' => false,
+                'author_id' => 1
+            ],
+            [
+                'name' => 'Поставщик',
+                'alias' => 'suppliers',
+                'company_id' => null,
+                'system' => false,
+                'author_id' => 1
+            ],
+            [
+                'name' => 'Производитель',
+                'alias' => 'manufacturers',
+                'company_id' => null,
+                'system' => false,
+                'author_id' => 1
+            ]
+        ];
+
+        $count = 0;
+        foreach ($items as $item) {
+            $res = Role::where($item)
+                ->exists();
+//            dd($res);
+
+            if (!$res) {
+                Role::insert($item);
+                $count++;
+            }
+        }
+        return __("Добавлено ролей: {$count}");
+    }
+
+    /**
      * Настройка работы с резервами на торговую точку
      *
      * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null

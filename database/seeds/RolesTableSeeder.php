@@ -26,6 +26,35 @@ class RolesTableSeeder extends Seeder
                 'system' => false,
                 'author_id' => 1
             ],
+
+            [
+                'name' => 'Агент',
+                'alias' => 'agents',
+                'company_id' => null,
+                'system' => false,
+                'author_id' => 1
+            ],
+            [
+                'name' => 'Клиент',
+                'alias' => 'clients',
+                'company_id' => null,
+                'system' => false,
+                'author_id' => 1
+            ],
+            [
+                'name' => 'Поставщик',
+                'alias' => 'suppliers',
+                'company_id' => null,
+                'system' => false,
+                'author_id' => 1
+            ],
+            [
+                'name' => 'Производитель',
+                'alias' => 'manufacturers',
+                'company_id' => null,
+                'system' => false,
+                'author_id' => 1
+            ],
 //            [
 //                'name' => 'Директор',
 //                'company_id' => null,

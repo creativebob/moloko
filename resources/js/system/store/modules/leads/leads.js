@@ -607,7 +607,7 @@ const moduleLead = {
         CONDUCTED_ESTIMATE({state}) {
             state.loading = true;
             axios
-                .patch('/admin/estimates/' + state.estimate.id + '/conducting/')
+                .post('/admin/estimates/' + state.estimate.id + '/conducting')
                 .then(response => {
                     if (response.data.success) {
                         this.commit('SET_ESTIMATE', response.data.estimate);

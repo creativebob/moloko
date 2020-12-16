@@ -139,7 +139,7 @@ class SupplierController extends Controller
         $company = $this->storeCompany();
 
         if ($request->set_user == 1) {
-            $this->getDirector($company);
+            $this->getDirector($company, $this->entityAlias);
         }
 
         $data = $request->input();
@@ -154,7 +154,7 @@ class SupplierController extends Controller
 
         logs('companies')->info("Создан поставщик. Id: [{$supplier->id}]");
         logs('companies')->info('============ КОНЕЦ СОЗДАНИЯ ПОСТАВЩИКА ===============
-        
+
         ');
 
         return redirect()->route('suppliers.index');
@@ -252,8 +252,10 @@ class SupplierController extends Controller
         $company = $this->updateCompany($company);
 
         if ($request->set_user == 1) {
-            $this->getDirector($company);
+            $this->getDirector($company, $this->entityAlias);
         }
+
+        $this->setStatuses($company);
 
         $data = $request->input();
         $data['description'] = $request->supplier_description;
@@ -265,7 +267,7 @@ class SupplierController extends Controller
 
         logs('companies')->info("Обновлен поставщик. Id: [{$supplier->id}]");
         logs('companies')->info('============ КОНЕЦ ОБНОВЛЕНИЯ ПОСТАВЩИКА ===============
-        
+
         ');
 
         return redirect()->route('suppliers.index');

@@ -128,7 +128,7 @@ class ManufacturerController extends Controller
         $company = $this->storeCompany();
 
         if ($request->set_user == 1) {
-            $this->getDirector($company);
+            $this->getDirector($company, $this->entityAlias);
         }
 
         $data = $request->input();
@@ -141,7 +141,7 @@ class ManufacturerController extends Controller
 
         logs('companies')->info("Создан производитель. Id: [{$manufacturer->id}]");
         logs('companies')->info('============ КОНЕЦ СОЗДАНИЯ ПРОИЗВОДИТЕЛЯ ===============
-        
+
         ');
 
         return redirect()->route('manufacturers.index');
@@ -238,8 +238,10 @@ class ManufacturerController extends Controller
         $company = $this->updateCompany($company);
 
         if ($request->set_user == 1) {
-            $this->getDirector($company);
+            $this->getDirector($company, $this->entityAlias);
         }
+
+        $this->setStatuses($company);
 
         // Обновление информации по клиенту:
         $data = $request->input();
@@ -252,7 +254,7 @@ class ManufacturerController extends Controller
 
         logs('companies')->info("Обновлен производитель. Id: [{$manufacturer->id}]");
         logs('companies')->info('============ КОНЕЦ ОБНОВЛЕНИЯ ПРОИЗВОДИТЕЛЯ ===============
-        
+
         ');
 
         return redirect()->route('manufacturers.index');

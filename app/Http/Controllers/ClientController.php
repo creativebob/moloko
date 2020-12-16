@@ -154,7 +154,7 @@ class ClientController extends Controller
         $company = $this->storeCompany();
 
         if ($request->set_user == 1) {
-            $this->getDirector($company);
+            $this->getDirector($company, $this->entityAlias);
         }
 
         $data = $request->input();
@@ -265,8 +265,10 @@ class ClientController extends Controller
         $company = $this->updateCompany($company);
 
         if ($request->set_user == 1) {
-            $this->getDirector($company);
+            $this->getDirector($company, $this->entityAlias);
         }
+
+        $this->setStatuses($company);
 
         // Обновление информации по клиенту:
         $data = $request->input();
@@ -278,7 +280,6 @@ class ClientController extends Controller
         }
 
         $this->checkChanges($client);
-
 
         logs('companies')->info("Обновлена компания клиент. Id: [{$client->id}]");
         logs('companies')->info('============ КОНЕЦ ОБНОВЛЕНИЯ КОМПАНИИ КЛИЕНТА ===============
