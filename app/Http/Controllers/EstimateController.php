@@ -450,6 +450,25 @@ class EstimateController extends Controller
 //                ->with(['success' => 'Успешно проведено']);
         }
 
+        $estimate->load([
+            'goods_items' => function ($q) {
+                $q->with([
+                    'goods.article',
+                    'reserve',
+                    'stock:id,name',
+                    'price_goods',
+                    'currency'
+                ]);
+            },
+            'services_items' => function ($q) {
+                $q->with([
+                    'product.process',
+                ]);
+            },
+            'payments',
+            'discounts'
+        ]);
+
 //        return redirect()->route('leads.index');
         return response()->json([
             'success' => true,
