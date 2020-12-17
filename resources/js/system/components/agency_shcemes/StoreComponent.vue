@@ -4,6 +4,7 @@
             <label>Имя схемы
                 <string-component
                     v-model="name"
+                    name="scheme_name"
                     ref="nameComponent"
                 ></string-component>
             </label>
@@ -12,6 +13,7 @@
             <label>Описание
                 <textarea-component
                     v-model="description"
+                    name="scheme_description"
                     ref="descriptionComponent"
                 ></textarea-component>
             </label>
