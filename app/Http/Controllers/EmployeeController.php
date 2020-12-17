@@ -149,7 +149,18 @@ class EmployeeController extends Controller
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         $list_user_employees = Employee::with([
-            'user'
+            'user' => function ($q) {
+                $q->with([
+                    'role_user' => function ($q) {
+                        $q->with([
+                            'position',
+                            'department',
+                            'role'
+                        ]);
+                    },
+                    'photo',
+                ]);
+            },
         ])
             ->where('user_id', $employee->user_id)
             ->moderatorLimit($answer)
@@ -209,6 +220,23 @@ class EmployeeController extends Controller
 
         $this->employment($user, $employee, $staff);
 
+
+        // Прописываем права
+        $position = $staff->position;
+        $position->load('roles');
+
+        $roles = [];
+        foreach ($position->roles as $role) {
+            $insert_array[$role->id] = [
+                'department_id' => $staff->department_id,
+                'position_id' => $staff->position_id
+            ];
+        }
+
+        $user->roles()->attach($roles);
+
+        $user->notifications()->attach($position->notifications->pluck('id'));
+
         logs('users')->info('============ КОНЕЦ СОЗДАНИЯ СОТРУДНИКА ===============');
 
         return redirect()->route('employees.index');
@@ -229,7 +257,18 @@ class EmployeeController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $employee = Employee::with([
-            'user.photo',
+            'user' => function ($q) {
+                $q->with([
+                    'role_user' => function ($q) {
+                        $q->with([
+                            'position',
+                            'department',
+                            'role'
+                        ]);
+                    },
+                    'photo',
+                ]);
+            },
             'staffer'
         ])
             ->companiesLimit($answer)
@@ -292,7 +331,8 @@ class EmployeeController extends Controller
         $user = $this->updateUser($user);
 
         // Cохраняем или обновляем роли
-        $result_setroles = setRoles($request, $user);
+//        dd($request->roles);
+        $user->roles()->sync($request->roles);
 
         $photo_id = $this->getPhotoId($user);
         $user->photo_id = $photo_id;
@@ -355,11 +395,7 @@ class EmployeeController extends Controller
 
                 $user->roles()->attach($roles);
 
-                $notifications = [];
-                foreach ($position->notifications as $notification) {
-                    $notifications[] = $notification->id;
-                }
-                $user->notifications()->attach($notifications);
+                $user->notifications()->attach($position->notifications->pluck('id'));
 
                 logs('hr')->info('Записали роли для юзера (сотрудника)');
 

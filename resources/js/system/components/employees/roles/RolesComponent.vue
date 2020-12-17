@@ -17,6 +17,7 @@
                     <role-component
                         v-for="item in activeRoleUser"
                         :item="item"
+                        :user-id="user.id"
                         :key="item.id"
                         @remove="openModalRemove"
                     ></role-component>

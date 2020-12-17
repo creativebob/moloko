@@ -1,16 +1,32 @@
 <template>
     <tr class="item">
-        <td>{{ item.role.name }}</td>
-        <td>{{ item.department.name }}</td>
+        <td>{{ item.role.name }}
+            <input
+                type="hidden"
+                :name="'roles[' + item.role.id + ']'"
+                :value="item.role.id"
+            >
+        </td>
+        <td>{{ item.department.name }}
+            <input
+                type="hidden"
+                :name="'roles[' + item.role.id + '][department_id]'"
+                :value="item.department.id"
+            >
+        </td>
         <td>
             <template
                 v-if="item.position"
             >{{ item.position.name }}
+                <input
+                    type="hidden"
+                    :name="'roles[' + item.role.id + '][position_id]'"
+                    :value="item.position.id"
+                >
             </template>
             <template
                 v-else
-            >Спецправо
-            </template>
+            >Спецправо</template>
         </td>
 <!--        <td>Инфа</td>-->
         <td class="td-delete">
@@ -20,29 +36,14 @@
                 @click="remove"
             ></a>
         </td>
-        <input
-            type="hidden"
-            name="access[]"
-            :value="value"
-        >
-        <!--        {{ Form::hidden('access[]', item->role->id .','. item->department->id .','. $position->id) }}-->
     </tr>
 </template>
 
 <script>
 export default {
     props: {
-        item: Object
-    },
-    // data() {
-    //     return {
-    //         value: this.item.role_id + ',' + this.item.department_id + ',' + this.item.position_id,
-    //     }
-    // },
-    computed: {
-        value() {
-            return this.item.role_id + ',' + this.item.department_id + ',' + this.item.position_id;
-        }
+        item: Object,
+        userId: Number
     },
     methods: {
         remove() {
