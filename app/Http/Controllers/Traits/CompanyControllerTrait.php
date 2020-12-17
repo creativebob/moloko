@@ -93,7 +93,7 @@ trait CompanyControllerTrait
 
             foreach ($names as $name) {
                 $column = $name . '_id';
-                $company->$column = $this->saveVector($request, $company, $name);
+                $company->$column = $this->saveVector($company, $name);
             }
 
 	        $company->save();
@@ -234,7 +234,7 @@ trait CompanyControllerTrait
 
         foreach ($names as $name) {
             $column = $name . '_id';
-            $company->$column = $this->saveVector($request, $company, $name);
+            $company->$column = $this->saveVector($company, $name);
         }
 
         $company->save();

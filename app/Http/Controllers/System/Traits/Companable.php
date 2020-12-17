@@ -47,7 +47,7 @@ trait Companable
             ];
             foreach ($names as $name) {
                 $column = $name . '_id';
-                $company->$column = $this->saveVector($request, $company, $name);
+                $company->$column = $this->saveVector($company, $name);
             }
             $company->save();
 
@@ -104,7 +104,7 @@ trait Companable
 
         foreach ($names as $name) {
             $column = $name . '_id';
-            $data[$column] = $this->saveVector($request, $company, $name);
+            $data[$column] = $this->saveVector($company, $name);
         }
 
         $res = $company->update($data);

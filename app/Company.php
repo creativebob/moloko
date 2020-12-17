@@ -97,6 +97,10 @@ class Company extends Model
         'legal_form_id',
         'photo_id',
 
+        'black_id',
+        'white_id',
+        'color_id',
+
         'points_rate',
 
         'display',
