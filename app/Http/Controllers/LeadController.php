@@ -353,34 +353,33 @@ class LeadController extends Controller
 //            }
 //        }
 //
-//        $goods_categories_list = GoodsCategory::whereNull('parent_id')->get()->mapWithKeys(function ($item) {
-//            return ['goods-' . $item->id => $item->name];
-//        })->toArray();
-//
-//
-//        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-//        $answer_sc = operator_right('services_category', false, getmethod('index'));
-//
-//        $services_categories_list = ServicesCategory::moderatorLimit($answer_sc)
-//            ->companiesLimit($answer_sc)
-//            ->authors($answer_sc)
-//            ->where('is_direction', true)
-//            ->get()
-//            ->mapWithKeys(function ($item) {
-//                return ['service-' . $item->id => $item->name];
-//            })->toArray();
-//
-//        $raws_categories_list = RawsCategory::whereNull('parent_id')->get()->mapWithKeys(function ($item) {
-//            return ['raw-' . $item->id => $item->name];
-//        })->toArray();
-//
-//        $choices = [
-//            'Товары' => $goods_categories_list,
-//            'Услуги' => $services_categories_list,
-//            'Сырье' => $raws_categories_list,
-//        ];
+        $goods_categories_list = GoodsCategory::whereNull('parent_id')->get()->mapWithKeys(function ($item) {
+            return ['goods-' . $item->id => $item->name];
+        })->toArray();
 
-        $choices = [];
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_sc = operator_right('services_category', false, getmethod('index'));
+
+        $services_categories_list = ServicesCategory::moderatorLimit($answer_sc)
+            ->companiesLimit($answer_sc)
+            ->authors($answer_sc)
+            ->where('is_direction', true)
+            ->get()
+            ->mapWithKeys(function ($item) {
+                return ['service-' . $item->id => $item->name];
+            })->toArray();
+
+        $raws_categories_list = RawsCategory::whereNull('parent_id')->get()->mapWithKeys(function ($item) {
+            return ['raw-' . $item->id => $item->name];
+        })->toArray();
+
+        $choices = [
+            'Товары' => $goods_categories_list,
+            'Услуги' => $services_categories_list,
+            'Сырье' => $raws_categories_list,
+        ];
+
 
         // TODO - 04.11.20 - Заглушка торговой точкой
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
