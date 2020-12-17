@@ -8,6 +8,7 @@ use App\Http\Controllers\System\Traits\Userable;
 use App\Http\Controllers\Traits\UserControllerTrait;
 use App\Http\Controllers\Traits\Photable;
 use App\Http\Requests\System\EmployeeRequest;
+use App\Http\Requests\System\EmployeeUpdateRequest;
 use App\Staffer;
 use App\User;
 use App\Employee;
@@ -258,12 +259,12 @@ class EmployeeController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param EmployeeRequest $request
+     * @param EmployeeUpdateRequest $request
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function update(EmployeeRequest $request, $id)
+    public function update(EmployeeUpdateRequest $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
