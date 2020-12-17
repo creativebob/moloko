@@ -123068,11 +123068,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
         item: Object,
         userId: Number
+    },
+    computed: {
+        value: function value() {
+            return this.item.role_id + ',' + this.item.department_id + ',' + this.item.position_id;
+        }
     },
     methods: {
         remove: function remove() {
@@ -123090,39 +123100,15 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("tr", { staticClass: "item" }, [
-    _c("td", [
-      _vm._v(_vm._s(_vm.item.role.name) + "\n            "),
-      _c("input", {
-        attrs: { type: "hidden", name: "roles[" + _vm.item.role.id + "]" },
-        domProps: { value: _vm.item.role.id }
-      })
-    ]),
+    _c("td", [_vm._v(_vm._s(_vm.item.role.name) + "\n")]),
     _vm._v(" "),
-    _c("td", [
-      _vm._v(_vm._s(_vm.item.department.name) + "\n            "),
-      _c("input", {
-        attrs: {
-          type: "hidden",
-          name: "roles[" + _vm.item.role.id + "][department_id]"
-        },
-        domProps: { value: _vm.item.department.id }
-      })
-    ]),
+    _c("td", [_vm._v(_vm._s(_vm.item.department.name) + "\n")]),
     _vm._v(" "),
     _c(
       "td",
       [
         _vm.item.position
-          ? [
-              _vm._v(_vm._s(_vm.item.position.name) + "\n                "),
-              _c("input", {
-                attrs: {
-                  type: "hidden",
-                  name: "roles[" + _vm.item.role.id + "][position_id]"
-                },
-                domProps: { value: _vm.item.position.id }
-              })
-            ]
+          ? [_vm._v(_vm._s(_vm.item.position.name) + "\n")]
           : [_vm._v("Спецправо")]
       ],
       2
@@ -123134,7 +123120,12 @@ var render = function() {
         attrs: { "data-open": "modal-role-remove" },
         on: { click: _vm.remove }
       })
-    ])
+    ]),
+    _vm._v(" "),
+    _c("input", {
+      attrs: { type: "hidden", name: "access[]" },
+      domProps: { value: _vm.value }
+    })
   ])
 }
 var staticRenderFns = []

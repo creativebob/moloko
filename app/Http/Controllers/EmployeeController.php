@@ -331,8 +331,9 @@ class EmployeeController extends Controller
         $user = $this->updateUser($user);
 
         // Cохраняем или обновляем роли
-//        dd($request->roles);
-        $user->roles()->sync($request->roles);
+//        dd($request->access);
+        $result_setroles = setRoles($request, $user);
+//        $user->roles()->sync($request->roles);
 
         $photo_id = $this->getPhotoId($user);
         $user->photo_id = $photo_id;
