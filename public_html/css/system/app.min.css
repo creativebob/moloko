@@ -362,6 +362,10 @@ input[type='search'] {
   color: #cacaca;
 }
 
+::-moz-placeholder {
+  color: #cacaca;
+}
+
 ::-ms-input-placeholder {
   color: #cacaca;
 }
@@ -593,6 +597,10 @@ select[multiple] {
 }
 
 .is-invalid-input:not(:focus)::-webkit-input-placeholder {
+  color: #cc4b37;
+}
+
+.is-invalid-input:not(:focus)::-moz-placeholder {
   color: #cc4b37;
 }
 
@@ -8658,7 +8666,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 }
 
 .check-order .order-info {
-  font-family: SegoeUI;
+  font-family: Calibri;
   font-weight: 400;
   line-height: 1.4;
   font-size: 0.8rem;
@@ -8668,7 +8676,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 .check-order .order-info .order-date,
 .check-order .order-info .order-time {
   display: inline-block;
-  width: 25mm;
+  width: 13mm;
   font-weight: bold;
 }
 
@@ -8679,12 +8687,12 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 .check-order .order-info .client-time,
 .check-order .order-info .client-points {
   display: inline-block;
-  width: 28mm;
+  width: 18mm;
   font-weight: bold;
 }
 
 .check-order .print_table {
-  font-family: SegoeUI;
+  font-family: Calibri;
 }
 
 .check-order .print_table tbody {
@@ -13266,6 +13274,13 @@ a#task-toggle {
   width: 150px;
 }
 
+.content .content-table tfoot tr td {
+  font-size: 1.1rem;
+  font-weight: 500;
+  font-family: PFDinDisplayPro;
+  padding: 8px 4px;
+}
+
 .content .content-table .active tr:first-child td {
   text-align: right;
   padding: 0;
@@ -13820,6 +13835,17 @@ a#task-toggle {
   background-color: transparent;
   font-size: 0.6rem;
   padding: 4px 10px;
+}
+
+.mark-dark {
+  border: 1px solid #000000;
+  color: #000000;
+  background-color: transparent;
+  font-size: 0.7rem;
+  padding: 3px 8px;
+  margin: 3px 0px;
+  font-weight: 500;
+  font-family: calibri;
 }
 
 .content-table-search.table-over {

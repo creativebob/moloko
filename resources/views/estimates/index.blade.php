@@ -43,7 +43,7 @@
                     @if(extra_right('principal-currency-show'))<th class="td-principal-currency">Доля принципала</th>@endif
                     <th class="td-saled">Продажа</th>
                     <th class="td-dissmissed">Списание</th>
-                    <th class="td-delete"></th>
+                    {{-- <th class="td-delete"></th> --}}
                 </tr>
             </thead>
 
@@ -68,6 +68,7 @@
                     <span class="tiny-text">{{ $estimate->registered_at->format('H:i') }}</span>
                 </td>
                 <td class="td-number"><a href="/admin/leads/{{ $estimate->lead_id }}/edit">{{ $estimate->number }}</a>
+                   {{-- <a class="draft" href="/admin/leads/{{ $estimate->lead_id }}/print">Чек</a> --}}
                 </td>
                 <td class="td-name">
                   <a href="/admin/estimates?client_id={{ $estimate->client_id }}" class="filter_link" title="Фильтровать">
@@ -105,15 +106,15 @@
 
                 <td class="td-partner">
                   @if(isset($estimate->agent))
-                    @if($estimate->agent->agent_id == $estimate->company_id)
+                    @if($estimate->agent->agent_id != Auth::user()->company_id)
                     
-                      {{ num_format($estimate->share_currency, 0) }} <sup>{{ num_format($estimate->share_currency * 100 / $estimate->total, 0) }}%</sup><br>
-                      <span class="tiny-text">{{ $estimate->agent->company->name_short ?? $estimate->agent->company->name }} (Агент)</span>
+                      {{ num_format($estimate->share_currency, 0) }} <sup>{{ num_format($estimate->share_currency * 100 / $estimate->total, 0) }}% - Агент</sup><br>
+                      <span class="tiny-text">{{ $estimate->agent->company->name_short ?? $estimate->agent->company->name }}</span>
 
                     @else
 
-                      {{ num_format($estimate->principal_currency, 0) }} <sup>{{ num_format($estimate->principal_currency * 100 / $estimate->total, 0) }}%</sup><br>
-                      <span class="tiny-text">{{ $estimate->company->name_short ?? $estimate->company->name }} (Принципал)</span>
+                      {{ num_format($estimate->principal_currency, 0) }} <sup>{{ num_format($estimate->principal_currency * 100 / $estimate->total, 0) }}% - Принципал</sup><br>
+                      <span class="tiny-text">{{ $estimate->company->name_short ?? $estimate->company->name }}</span>
 
                     @endif
                   @endif

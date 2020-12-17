@@ -198,11 +198,19 @@
 
                             @if($right_lead_all_managers)
                                 <td class="td-manager">
-                                    @if(!empty($lead->manager->first_name))
-                                        {{ $lead->manager->first_name . ' ' . $lead->manager->second_name }}
-
+                                    @if($lead->estimate->agent_id)
+                                        @if($lead->estimate->agent->agent_id == \Auth::user()->company_id)
+                                            <span class="mark-dark">Получен от: {{ $lead->estimate->company->name_short ?? $lead->estimate->company->name }} </span>
+                                        @else
+                                            <span class="mark-dark">Передан агенту: {{ $lead->estimate->agent->company->name_short ?? $lead->estimate->agent->company->name }} </span>
+                                        @endif
                                     @else
-                                        Не назначен
+                                        @if(!empty($lead->manager->first_name))
+                                            {{ $lead->manager->first_name . ' ' . $lead->manager->second_name }}
+
+                                        @else
+                                            Не назначен
+                                        @endif
                                     @endif
                                 </td>
                             @endif

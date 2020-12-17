@@ -1,28 +1,27 @@
 @isset($estimatesTotals)
 <tr>
-    <th class="td-drop"></th>
-    <th class="td-checkbox checkbox-th"></th>
-    <th class="td-date"></th>
-    <th class="td-number"></th>
-    <th class="td-name"></th>
-    <th class="td-phone"></th>
-    <th class="td-amount">{{ num_format($estimatesTotals->amount, 0) }}</th>
-    <th class="td-discount-currency">{{ num_format($estimatesTotals->discount_currency, 0) }}</th>
-    <th class="td-total">{{ num_format($estimatesTotals->total, 0) }}</th>
-    <th class="td-payment"></th>
+    <td class="td-drop"></td>
+    <td colspan="3">Итоговые значения:</td>
+    <td class="td-name"></td>
+    <td class="td-phone"></td>
+    <td class="td-amount">{{ num_format($estimatesTotals->amount, 0) }}</td>
+    <td class="td-discount-currency">{{ num_format($estimatesTotals->discount_currency, 0) }}</td>
+    <td class="td-total" title="С вычетом партнерской доли: {{ num_format($estimatesTotals->total - $estimatesTotals->partner_currency, 0) }}">{{ num_format($estimatesTotals->total, 0) }}</td>
+    <td class="td-payment"></td>
     @if(extra_right('margin-show'))
-        <th class="td-margin_currency"></th>
+        <td class="td-margin_currency"></td>
     @endif
-    <th class="td-partner">
-    </th>
+    <td class="td-partner">
+        {{ num_format($estimatesTotals->partner_currency, 0) }}       
+    </td>
     @if(extra_right('share-currency-show'))
-        <th class="td-share-currency">{{ num_format($estimatesTotals->share_currency, 0) }}</th>
+        <td class="td-share-currency">{{ num_format($estimatesTotals->share_currency, 0) }}</td>
     @endif
     @if(extra_right('principal-currency-show'))
-        <th class="td-principal-currency">{{ num_format($estimatesTotals->principal_currency, 0) }}</th>
+        <td class="td-principal-currency">{{ num_format($estimatesTotals->principal_currency, 0) }}</td>
     @endif
-    <th class="td-saled"></th>
-    <th class="td-dissmissed"></th>
+    <td class="td-saled"></td>
+    <td class="td-dissmissed"></td>
 </tr>
     @endisset
 
