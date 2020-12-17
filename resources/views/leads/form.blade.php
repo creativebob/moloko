@@ -136,12 +136,12 @@
 
                     {{-- КАТАЛОГ ТОВАРОВ --}}
                     <div class="tabs-panel" id="tab-catalog_goods">
-                        @include('leads.tabs.catalogs_goods', ['catalogsIds' => optional($outlet->catalogs_goods)->pluck('id')])
+                        @include('leads.tabs.catalogs_goods')
                     </div>
 
                     {{-- КАТАЛОГ УСЛУГ --}}
                     <div class="tabs-panel" id="tab-catalog_services">
-                        @include('leads.tabs.catalogs_services')
+{{--                        @include('leads.tabs.catalogs_services')--}}
                     </div>
 
                     {{-- ДОКУМЕНТЫ

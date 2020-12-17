@@ -304,81 +304,83 @@ class LeadController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $lead);
 
-        if ($lead->draft == false && $lead->estimate->registered_at) {
-            // Если есть клиент у лида, сравниваем скидку
-            if ($lead->client) {
-                $this->updateClientDiscount($lead);
-            } else {
-                // Если нет клиента, то ищем его
-                // Проверяем организацию
-                if ($lead->organization) {
-                    $organization = $lead->organization;
-                    $organization->load('client');
-                    if ($organization->client) {
-                        $lead->update([
-                            'client_id' => $organization->client->id
-                        ]);
-                        $lead->load('client');
-                        $this->updateClientDiscount($lead);
-                    }
-                } else if ($lead->company_name) {
-                    // Если есть имя компании, ищем первую компанию, которую представляет пользователь
-                    $user = $lead->user;
-                    $user->load('organizations');
+//        if ($lead->draft == false && $lead->estimate->registered_at) {
+//            // Если есть клиент у лида, сравниваем скидку
+//            if ($lead->client) {
+//                $this->updateClientDiscount($lead);
+//            } else {
+//                // Если нет клиента, то ищем его
+//                // Проверяем организацию
+//                if ($lead->organization) {
+//                    $organization = $lead->organization;
+//                    $organization->load('client');
+//                    if ($organization->client) {
+//                        $lead->update([
+//                            'client_id' => $organization->client->id
+//                        ]);
+//                        $lead->load('client');
+//                        $this->updateClientDiscount($lead);
+//                    }
+//                } else if ($lead->company_name) {
+//                    // Если есть имя компании, ищем первую компанию, которую представляет пользователь
+//                    $user = $lead->user;
+//                    $user->load('organizations');
+//
+//                    if ($user->organizations->isNotEmpty()) {
+//                        $organization = $user->organizations->first();
+//                        $organization->load('client');
+//                        if ($organization->client) {
+//                            $lead->update([
+//                                'client_id' => $organization->client->id
+//                            ]);
+//                            $lead->load('client');
+//                            $this->updateClientDiscount($lead);
+//                        }
+//                    }
+//                } else if ($lead->user) {
+//                    // Смотрим, есть ли клиент у юзера
+//                    $user = $lead->user;
+//                    $user->load('client');
+//                    if ($user->client) {
+//                        $lead->update([
+//                            'client_id' => $user->client->id
+//                        ]);
+//                        $lead->load('client');
+//                        $this->updateClientDiscount($lead);
+//                    }
+//
+//                }
+//            }
+//        }
+//
+//        $goods_categories_list = GoodsCategory::whereNull('parent_id')->get()->mapWithKeys(function ($item) {
+//            return ['goods-' . $item->id => $item->name];
+//        })->toArray();
+//
+//
+//        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+//        $answer_sc = operator_right('services_category', false, getmethod('index'));
+//
+//        $services_categories_list = ServicesCategory::moderatorLimit($answer_sc)
+//            ->companiesLimit($answer_sc)
+//            ->authors($answer_sc)
+//            ->where('is_direction', true)
+//            ->get()
+//            ->mapWithKeys(function ($item) {
+//                return ['service-' . $item->id => $item->name];
+//            })->toArray();
+//
+//        $raws_categories_list = RawsCategory::whereNull('parent_id')->get()->mapWithKeys(function ($item) {
+//            return ['raw-' . $item->id => $item->name];
+//        })->toArray();
+//
+//        $choices = [
+//            'Товары' => $goods_categories_list,
+//            'Услуги' => $services_categories_list,
+//            'Сырье' => $raws_categories_list,
+//        ];
 
-                    if ($user->organizations->isNotEmpty()) {
-                        $organization = $user->organizations->first();
-                        $organization->load('client');
-                        if ($organization->client) {
-                            $lead->update([
-                                'client_id' => $organization->client->id
-                            ]);
-                            $lead->load('client');
-                            $this->updateClientDiscount($lead);
-                        }
-                    }
-                } else if ($lead->user) {
-                    // Смотрим, есть ли клиент у юзера
-                    $user = $lead->user;
-                    $user->load('client');
-                    if ($user->client) {
-                        $lead->update([
-                            'client_id' => $user->client->id
-                        ]);
-                        $lead->load('client');
-                        $this->updateClientDiscount($lead);
-                    }
-
-                }
-            }
-        }
-
-        $goods_categories_list = GoodsCategory::whereNull('parent_id')->get()->mapWithKeys(function ($item) {
-            return ['goods-' . $item->id => $item->name];
-        })->toArray();
-
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_sc = operator_right('services_category', false, getmethod('index'));
-
-        $services_categories_list = ServicesCategory::moderatorLimit($answer_sc)
-            ->companiesLimit($answer_sc)
-            ->authors($answer_sc)
-            ->where('is_direction', true)
-            ->get()
-            ->mapWithKeys(function ($item) {
-                return ['service-' . $item->id => $item->name];
-            })->toArray();
-
-        $raws_categories_list = RawsCategory::whereNull('parent_id')->get()->mapWithKeys(function ($item) {
-            return ['raw-' . $item->id => $item->name];
-        })->toArray();
-
-        $choices = [
-            'Товары' => $goods_categories_list,
-            'Услуги' => $services_categories_list,
-            'Сырье' => $raws_categories_list,
-        ];
+        $choices = [];
 
         // TODO - 04.11.20 - Заглушка торговой точкой
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)

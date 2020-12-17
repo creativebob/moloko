@@ -2,7 +2,10 @@
     <div class="grid-x grid-padding-x">
 
         <div class="shrink cell catalog-bar">
-            <div class="grid-x grid-padding-x">
+            <div
+                v-if="catalogs.length"
+                class="grid-x grid-padding-x"
+            >
 
                 <div class="small-12 cell search-in-catalog-panel">
                     <label class="label-icon">
@@ -92,7 +95,7 @@
                             v-for="catalog in outlet.catalogs_goods"
                             :value="catalog.id"
                             :selected="catalogId"
-                        >{{ catalog.name}}
+                        >{{ catalog.name }}
                         </option>
                     </select>
                 </div>
@@ -139,71 +142,95 @@
 </template>
 
 <script>
-    export default {
-        components: {
-            'childrens-component': require('../common/CatalogsItemsChildrensComponent'),
-            'price-goods-component': require('./PriceGoodsComponent'),
-        },
-        props: {
-            catalogsGoodsData: Object,
-            outlet: Object
-            // isPosted: Boolean,
-        },
-        data() {
-            return {
-                view: 'view-list',
+export default {
+    components: {
+        'childrens-component': require('../common/CatalogsItemsChildrensComponent'),
+        'price-goods-component': require('./PriceGoodsComponent'),
+    },
+    props: {
+        // catalogsGoodsData: Object,
+        outlet: Object
+        // isPosted: Boolean,
+    },
+    data() {
+        return {
+            view: 'view-list',
 
-                catalogId: this.catalogsGoodsData.catalogsGoods[0].id,
-                catalogsItemId: this.catalogsGoodsData.catalogsGoodsItems[0].id,
-                catalogs: this.catalogsGoodsData.catalogsGoods,
-                catalogsItems: this.catalogsGoodsData.catalogsGoodsItems,
-                prices: this.catalogsGoodsData.catalogsGoodsPrices,
-                listPrices: [],
-                changeCatalogId: this.catalogsGoodsData.catalogsGoods[0].id
+            catalogId: null,
+            catalogsItemId: null,
+            catalogs: [],
+            catalogsItems: [],
+            prices: [],
+            listPrices: [],
+            changeCatalogId: null
+        }
+    },
+    mounted() {
+        if (this.outlet.catalogs_goods.length) {
+            let catalogsIds = [];
+            this.outlet.catalogs_goods.forEach(catalog => {
+                catalogsIds.push(catalog.id);
+            })
+            axios
+                .post('/admin/catalog_goods/get_catalogs_by_ids', {
+                    catalogsIds: catalogsIds
+                })
+                .then(response => {
+                    this.catalogId = response.data.catalogsGoods[0].id;
+                    this.catalogsItemId = response.data.catalogsGoodsItems[0].id;
+                    this.catalogs = response.data.catalogsGoods;
+                    this.catalogsItems = response.data.catalogsGoodsItems;
+                    this.prices = response.data.catalogsGoodsPrices;
+                    this.changeCatalogId = response.data.catalogsGoods[0].id;
+                })
+                .catch(error => {
+                    alert('Ошибка загрузки каталогов, перезагрузите страницу!')
+                    console.log(error)
+                });
+        }
+    },
+    computed: {
+        catalogGoodsItemsList() {
+            return this.catalogsItems.filter(item => {
+                return item.catalogs_goods_id === this.catalogId;
+            });
+        },
+        pricesList() {
+            return this.prices.filter(item => {
+                return item.catalogs_goods_item_id === this.catalogsItemId;
+            });
+        }
+    },
+    methods: {
+        changeCatalogsItem(id) {
+            this.catalogsItemId = id;
+            this.$store.commit('SET_CATALOG_GOODS_ID', id);
+        },
+        changeCatalog() {
+            if (this.catalogId !== this.changeCatalogId) {
+                this.catalogId = this.changeCatalogId;
+                const item = this.catalogsItems.find(obj => obj.catalogs_goods_id == this.catalogId);
+                this.changeCatalogsItem(item.id);
+            }
+
+            $('#modal-catalogs_goods').foundation('close');
+        },
+        addPriceToEstimate(price) {
+            this.$store.commit('ADD_GOODS_ITEM_TO_ESTIMATE', price);
+        },
+        getPhotoPath(price, format) {
+
+            // Умолчание по формату. Плюс защита от ошибок при указании формата
+            (format != ('small' || 'medium' || 'large')) ? format = 'medium' : format;
+            return '/storage/' + price.company_id + '/media/articles/' + price.goods.article.id + '/img/' + format + '/' + price.goods.article.photo.name;
+        },
+    },
+    directives: {
+        'drilldown': {
+            bind: function (el) {
+                new Foundation.Drilldown($(el))
             }
         },
-        computed: {
-            catalogGoodsItemsList() {
-                return this.catalogsItems.filter(item => {
-                    return item.catalogs_goods_id === this.catalogId;
-                });
-            },
-            pricesList() {
-                return this.prices.filter(item => {
-                    return item.catalogs_goods_item_id === this.catalogsItemId;
-                });
-            }
-        },
-        methods: {
-            changeCatalogsItem(id) {
-                this.catalogsItemId = id;
-                this.$store.commit('SET_CATALOG_GOODS_ID', id);
-            },
-            changeCatalog() {
-                if (this.catalogId !== this.changeCatalogId) {
-                    this.catalogId = this.changeCatalogId;
-                    const item = this.catalogsItems.find(obj => obj.catalogs_goods_id == this.catalogId);
-                    this.changeCatalogsItem(item.id);
-                }
-
-                $('#modal-catalogs_goods').foundation('close');
-            },
-            addPriceToEstimate(price) {
-                this.$store.commit('ADD_GOODS_ITEM_TO_ESTIMATE', price);
-            },
-            getPhotoPath(price, format) {
-
-                // Умолчание по формату. Плюс защита от ошибок при указании формата
-                (format != ('small' || 'medium' || 'large')) ? format = 'medium' : format;
-                return '/storage/' + price.company_id + '/media/articles/' + price.goods.article.id + '/img/' + format + '/' + price.goods.article.photo.name;
-            },
-        },
-        directives: {
-            'drilldown': {
-                bind: function (el) {
-                    new Foundation.Drilldown($(el))
-                }
-            },
-        },
-    }
+    },
+}
 </script>

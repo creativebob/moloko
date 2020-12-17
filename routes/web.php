@@ -1384,6 +1384,8 @@ Route::resource('/news', 'NewsController');
 
 // ----------------------------------------- Каталоги товаров ------------------------------------------
 
+Route::any('/catalog_goods/get_catalogs_by_ids', 'CatalogsGoodsController@getCatalogsByIds');
+
 Route::any('/catalog_goods/{id}', 'CatalogsGoodsController@get_catalog');
 // Основные методы
 Route::resource('/catalogs_goods', 'CatalogsGoodsController');

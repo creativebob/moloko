@@ -420,8 +420,8 @@ class ViewServiceProvider extends ServiceProvider
 
         view()->composer('system.pages.outlets.tabs.settings', PaymentsMethodsComposer::class);
 
-        view()->composer('leads.tabs.catalogs_goods', CatalogGoodsWithPricesComposer::class);
-        view()->composer('leads.tabs.catalogs_services', CatalogServicesWithPricesComposer::class);
+//        view()->composer('leads.tabs.catalogs_goods', CatalogGoodsWithPricesComposer::class);
+//        view()->composer('leads.tabs.catalogs_services', CatalogServicesWithPricesComposer::class);
 
         view()->composer('includes.selects.articles_groups', ArticlesGroupsComposer::class);
         view()->composer('includes.selects.processes_groups', ProcessesGroupsComposer::class);

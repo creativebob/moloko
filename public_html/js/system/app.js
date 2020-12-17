@@ -100716,6 +100716,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
@@ -100723,7 +100726,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         'price-goods-component': __webpack_require__(391)
     },
     props: {
-        catalogsGoodsData: Object,
+        // catalogsGoodsData: Object,
         outlet: Object
         // isPosted: Boolean,
     },
@@ -100731,29 +100734,52 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             view: 'view-list',
 
-            catalogId: this.catalogsGoodsData.catalogsGoods[0].id,
-            catalogsItemId: this.catalogsGoodsData.catalogsGoodsItems[0].id,
-            catalogs: this.catalogsGoodsData.catalogsGoods,
-            catalogsItems: this.catalogsGoodsData.catalogsGoodsItems,
-            prices: this.catalogsGoodsData.catalogsGoodsPrices,
+            catalogId: null,
+            catalogsItemId: null,
+            catalogs: [],
+            catalogsItems: [],
+            prices: [],
             listPrices: [],
-            changeCatalogId: this.catalogsGoodsData.catalogsGoods[0].id
+            changeCatalogId: null
         };
+    },
+    mounted: function mounted() {
+        var _this = this;
+
+        if (this.outlet.catalogs_goods.length) {
+            var catalogsIds = [];
+            this.outlet.catalogs_goods.forEach(function (catalog) {
+                catalogsIds.push(catalog.id);
+            });
+            axios.post('/admin/catalog_goods/get_catalogs_by_ids', {
+                catalogsIds: catalogsIds
+            }).then(function (response) {
+                _this.catalogId = response.data.catalogsGoods[0].id;
+                _this.catalogsItemId = response.data.catalogsGoodsItems[0].id;
+                _this.catalogs = response.data.catalogsGoods;
+                _this.catalogsItems = response.data.catalogsGoodsItems;
+                _this.prices = response.data.catalogsGoodsPrices;
+                _this.changeCatalogId = response.data.catalogsGoods[0].id;
+            }).catch(function (error) {
+                alert('Ошибка загрузки каталогов, перезагрузите страницу!');
+                console.log(error);
+            });
+        }
     },
 
     computed: {
         catalogGoodsItemsList: function catalogGoodsItemsList() {
-            var _this = this;
+            var _this2 = this;
 
             return this.catalogsItems.filter(function (item) {
-                return item.catalogs_goods_id === _this.catalogId;
+                return item.catalogs_goods_id === _this2.catalogId;
             });
         },
         pricesList: function pricesList() {
-            var _this2 = this;
+            var _this3 = this;
 
             return this.prices.filter(function (item) {
-                return item.catalogs_goods_item_id === _this2.catalogsItemId;
+                return item.catalogs_goods_item_id === _this3.catalogsItemId;
             });
         }
     },
@@ -100763,12 +100789,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.$store.commit('SET_CATALOG_GOODS_ID', id);
         },
         changeCatalog: function changeCatalog() {
-            var _this3 = this;
+            var _this4 = this;
 
             if (this.catalogId !== this.changeCatalogId) {
                 this.catalogId = this.changeCatalogId;
                 var item = this.catalogsItems.find(function (obj) {
-                    return obj.catalogs_goods_id == _this3.catalogId;
+                    return obj.catalogs_goods_id == _this4.catalogId;
                 });
                 this.changeCatalogsItem(item.id);
             }
@@ -101225,31 +101251,37 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "grid-x grid-padding-x" }, [
     _c("div", { staticClass: "shrink cell catalog-bar" }, [
-      _c("div", { staticClass: "grid-x grid-padding-x" }, [
-        _vm._m(0),
-        _vm._v(" "),
-        _c("div", { staticClass: "small-12 cell search-in-catalog-panel" }, [
-          _c(
-            "ul",
-            {
-              directives: [{ name: "drilldown", rawName: "v-drilldown" }],
-              staticClass: "vertical menu selecter-catalog-item",
-              attrs: {
-                "data-back-button":
-                  '<li class="js-drilldown-back"><a tabindex="0">Назад</a></li>'
-              }
-            },
-            _vm._l(_vm.catalogGoodsItemsList, function(catalogGoodsItem) {
-              return _c("childrens-component", {
-                key: catalogGoodsItem.id,
-                attrs: { item: catalogGoodsItem },
-                on: { get: _vm.changeCatalogsItem }
-              })
-            }),
-            1
-          )
-        ])
-      ])
+      _vm.catalogs.length
+        ? _c("div", { staticClass: "grid-x grid-padding-x" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "small-12 cell search-in-catalog-panel" },
+              [
+                _c(
+                  "ul",
+                  {
+                    directives: [{ name: "drilldown", rawName: "v-drilldown" }],
+                    staticClass: "vertical menu selecter-catalog-item",
+                    attrs: {
+                      "data-back-button":
+                        '<li class="js-drilldown-back"><a tabindex="0">Назад</a></li>'
+                    }
+                  },
+                  _vm._l(_vm.catalogGoodsItemsList, function(catalogGoodsItem) {
+                    return _c("childrens-component", {
+                      key: catalogGoodsItem.id,
+                      attrs: { item: catalogGoodsItem },
+                      on: { get: _vm.changeCatalogsItem }
+                    })
+                  }),
+                  1
+                )
+              ]
+            )
+          ])
+        : _vm._e()
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "auto cell" }, [
