@@ -24,7 +24,6 @@ class CreateAgentsTable extends Migration
 
             $table->text('description')->nullable()->comment('Описание агента');
 
-            $table->boolean('archive')->default(0)->comment('Статус архива');
             $table->timestamp('archived_at')->nullable()->comment('Архив');
 
             // Общие настройки
