@@ -166,30 +166,12 @@ export default {
         }
     },
     mounted() {
-        if (this.outlet.catalogs_goods.length) {
-            let catalogsIds = [];
-            this.outlet.catalogs_goods.forEach(catalog => {
-                catalogsIds.push(catalog.id);
-            })
-            axios
-                .post('/admin/catalog_goods/get_catalogs_by_ids', {
-                    catalogsIds: catalogsIds
-                })
-                .then(response => {
-                    this.catalogId = response.data.catalogsGoods[0].id;
-                    this.catalogsItemId = response.data.catalogsGoodsItems[0].id;
-                    this.catalogs = response.data.catalogsGoods;
-                    this.catalogsItems = response.data.catalogsGoodsItems;
-                    this.prices = response.data.catalogsGoodsPrices;
-                    this.changeCatalogId = response.data.catalogsGoods[0].id;
-                })
-                .catch(error => {
-                    alert('Ошибка загрузки каталогов, перезагрузите страницу!')
-                    console.log(error)
-                });
-        }
+        this.getCatalogs();
     },
     computed: {
+        activeOutlet() {
+            return this.$store.state.lead.outlet;
+        },
         catalogGoodsItemsList() {
             return this.catalogsItems.filter(item => {
                 return item.catalogs_goods_id === this.catalogId;
@@ -201,7 +183,42 @@ export default {
             });
         }
     },
+    watch: {
+        activeOutlet() {
+            this.getCatalogs();
+        }
+    },
     methods: {
+        getCatalogs() {
+            if (this.$store.state.lead.lead.outlet_id) {
+
+                axios
+                    .post('/admin/catalog_goods/get_catalogs_by_outlet_id/' + this.$store.state.lead.lead.outlet_id)
+                    .then(response => {
+                        if (response.data.success) {
+                            this.catalogId = response.data.catalogsGoods[0].id;
+                            this.catalogsItemId = response.data.catalogsGoodsItems[0].id;
+                            this.catalogs = response.data.catalogsGoods;
+                            this.catalogsItems = response.data.catalogsGoodsItems;
+                            this.prices = response.data.catalogsGoodsPrices;
+                            this.changeCatalogId = response.data.catalogsGoods[0].id;
+                        } else {
+                            this.catalogId = null;
+                            this.catalogsItemId = null;
+                            this.catalogs = [];
+                            this.catalogsItems = [];
+                            this.prices = [];
+                            this.changeCatalogId = null;
+                        }
+
+                        this.$store.commit('SET_CATALOG_GOODS_ID', this.catalogId);
+                    })
+                    .catch(error => {
+                        alert('Ошибка загрузки каталогов, перезагрузите страницу!')
+                        console.log(error)
+                    });
+            }
+        },
         changeCatalogsItem(id) {
             this.catalogsItemId = id;
             this.$store.commit('SET_CATALOG_GOODS_ID', id);

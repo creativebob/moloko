@@ -1,5 +1,6 @@
 <lead-init-component
-    :outlet="{{ $outlet }}"
+    :lead="{{ $lead }}"
+    :outlet-id="{{ $lead->outlet_id }}"
 ></lead-init-component>
 
 <div class="top-bar head-content">

@@ -46,6 +46,13 @@
             </div>
 
             <div class="grid-x grid-padding-x">
+
+                {!! Form::hidden('is_main', 0) !!}
+                    <div class="cell small-12 checkbox">
+                        {!! Form::checkbox('is_main', 1, $outlet->is_main, ['id' => 'checkbox-is_main']) !!}
+                        <label for="checkbox-is_main"><span>Главная</span></label>
+                    </div>
+
                 {{-- Чекбоксы управления --}}
                 @include('includes.control.checkboxes', ['item' => $outlet])
 

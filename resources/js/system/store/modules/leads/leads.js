@@ -10,6 +10,7 @@ const moduleLead = {
         outletSettings: [],
 
         catalogGoodsId: null,
+        catalogsGoodsIds: [],
 
         estimate: null,
         goodsItems: [],
@@ -66,6 +67,12 @@ const moduleLead = {
 
             this.commit('SET_CHANGE');
         },
+        UPDATE_LEAD_FILIAL(state, lead) {
+            state.lead.filial_id = lead.filial_id;
+            state.lead.outlet_id = lead.outlet_id;
+
+            this.commit('SET_CHANGE');
+        },
 
         // Клиент
         SET_CLIENT(state, client) {
@@ -98,6 +105,16 @@ const moduleLead = {
             state.catalogGoodsId = id;
         },
 
+        // Каталоги
+        GET_CATALOG_GOODS_IDS_FROM_ESTIMATE(state) {
+            let ids = [];
+            state.goodsItems.forEach(item => {
+                ids.push(item.catalogs_goods_id);
+            });
+
+            console.log(ids);
+        },
+
         // Способы платежа
         SET_PAYMENTS_METHODS(state, paymentsMethods) {
             state.paymentsMethods = paymentsMethods;
@@ -126,6 +143,10 @@ const moduleLead = {
         // Смета
         SET_ESTIMATE(state, estimate) {
             state.estimate = estimate;
+
+            estimate.catalogs_goods.forEach(catalog => {
+                state.catalogsGoodsIds.push(catalog.id);
+            })
         },
 
         // Товары
@@ -150,7 +171,9 @@ const moduleLead = {
                         id: state.goodsItems.length + 1,
 
                         estimate_id: state.estimate.id,
+
                         price_id: price.id,
+                        price_goods: price,
 
                         goods_id: price.goods_id,
                         goods: price.goods,
@@ -188,6 +211,11 @@ const moduleLead = {
                     index = state.goodsItems.findIndex(obj => obj.id == item.id);
 
                     this.commit('SET_AGGREGATIONS', index);
+
+                    const found = state.catalogsGoodsIds.find(obj => obj == price.catalogs_goods_id);
+                    if (!found) {
+                        state.catalogsGoodsIds.push(price.catalogs_goods_id);
+                    }
                 }
             }
         },
@@ -368,7 +396,23 @@ const moduleLead = {
 
         REMOVE_GOODS_ITEM(state, id) {
             const index = state.goodsItems.findIndex(obj => obj.id === id);
+
+            const catalogsGoodsId = state.goodsItems[index].price_goods.catalogs_goods_id;
+
             state.goodsItems.splice(index, 1);
+
+            if (state.catalogsGoodsIds.length > 1) {
+                const found = state.goodsItems.find(obj => obj.price_goods.catalogs_goods_id == catalogsGoodsId);
+                if (!found) {
+                    const index = state.catalogsGoodsIds.findIndex(obj => obj === catalogsGoodsId);
+                    state.catalogsGoodsIds.splice(index, 1);
+                }
+            }
+
+            if (state.goodsItems.length == 0) {
+                state.catalogsGoodsIds = [];
+            }
+
             this.commit('SET_CHANGE');
         },
         UPDATE_GOODS_ITEMS(state) {
@@ -622,6 +666,22 @@ const moduleLead = {
                 .finally(() => (state.loading = false));
         },
 
+        // Продажа сметы
+        GET_OUTLET({state}, id) {
+            state.loading = true;
+            axios
+                .post('/admin/outlets/get_by_id', {
+                    id: id
+                })
+                .then(response => {
+                    this.commit('SET_OUTLET', response.data);
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+                .finally(() => (state.loading = false));
+        },
+
         // Платежи
         ADD_PAYMENT({state, getters}, data) {
             state.loading = true;
@@ -759,6 +819,11 @@ const moduleLead = {
                     itemsDiscount: (goodsItemsDiscount + servicesItemsDiscount).toFixed(2),
                 },
             };
+        },
+
+        // Статусы сметы
+        IS_REGISTERED: state => {
+            return state.estimate.registered_at !== null;
         },
 
         // Товары

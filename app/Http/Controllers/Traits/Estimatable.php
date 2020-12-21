@@ -16,7 +16,7 @@ trait Estimatable
     public function aggregateEstimate($estimate)
     {
         $estimate->load([
-            'goods_items',
+            'goods_items.price_goods',
             'services_items',
         ]);
 
@@ -37,6 +37,8 @@ trait Estimatable
         $shareCurrency = 0;
         $principalCurrency = 0;
 
+        $catalogsFoodsIds = [];
+
         if ($estimate->goods_items->isNotEmpty()) {
             $cost += $estimate->goods_items->sum('cost');
             $amount += $estimate->goods_items->sum('amount');
@@ -54,6 +56,9 @@ trait Estimatable
 
             $shareCurrency += $estimate->goods_items->sum('share_currency');
             $principalCurrency += $estimate->goods_items->sum('principal_currency');
+
+            $groupedGoodsItems = $estimate->goods_items->groupBy('price_goods.catalogs_goods_id');
+            $catalogsFoodsIds = $groupedGoodsItems->keys();
         }
 
         if ($estimate->services_items->isNotEmpty()) {
@@ -110,5 +115,7 @@ trait Estimatable
         ];
 
         $estimate->update($data);
+
+        $estimate->catalogs_goods()->sync($catalogsFoodsIds);
     }
 }

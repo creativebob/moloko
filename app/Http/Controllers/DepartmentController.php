@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Department;
 use App\City;
 use App\Http\Controllers\System\Traits\Phonable;
+use App\Outlet;
 use App\Position;
 use App\Staffer;
 use App\Page;
@@ -411,5 +412,23 @@ class DepartmentController extends Controller
     {
         $catalog_id = $request->catalog_id;
         return view('products.articles.goods.prices.filials', compact('catalog_id'));
+    }
+
+    public function getUserFilialsWith_Outlets()
+    {
+        $filials = session('access.company_info.filials_for_user');
+        $filialsIds = [];
+        foreach ($filials as $filial) {
+            $filialsIds[] = $filial->id;
+        }
+        $outlets = Outlet::whereIn('filial_id', $filialsIds)
+            ->get();
+
+        $data = [
+            'filials' => $filials,
+            'outlets' => $outlets
+        ];
+
+        return response()->json($data);
     }
 }

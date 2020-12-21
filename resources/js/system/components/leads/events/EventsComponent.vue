@@ -44,6 +44,9 @@
             </div>
 
         </div>
+
+        <filial-with-outlets></filial-with-outlets>
+
     </fieldset>
 </template>
 
@@ -52,7 +55,8 @@
 
     export default {
         components: {
-            'pickmeup-component': require('../inputs/PickmeupComponent'),
+            'pickmeup-component': require('../../inputs/PickmeupComponent'),
+            'filial-with-outlets': require('./FilialWithOutlets'),
             // 'time-component': require('../inputs/TimeComponent'),
         },
         props: {

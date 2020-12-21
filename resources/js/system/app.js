@@ -67,7 +67,7 @@ Vue.component('processes-categories-with-groups-component', require('./component
 // Vue.component('lead-init-component', require('./components/leads/InitComponent'));
 Vue.component('lead-search-in-data-component', require('./components/leads/personals/data/SearchInDataComponent'));
 Vue.component('lead-search-in-db-component', require('./components/leads/personals/db/SearchInDbComponent'));
-Vue.component('lead-events-component', require('./components/leads/EventsComponent'));
+Vue.component('lead-events-component', require('./components/leads/events/EventsComponent'));
 Vue.component('lead-client-component', require('./components/leads/clients/ClientComponent'));
 Vue.component('catalog-goods-component', require('./components/leads/catalogs/goods/CatalogGoodsComponent.vue'));
 Vue.component('catalog-services-component', require('./components/leads/catalogs/services/CatalogServicesComponent.vue'));

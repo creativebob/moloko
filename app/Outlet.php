@@ -3,17 +3,25 @@
 namespace App;
 
 use App\Models\System\BaseModel;
+use App\Models\System\Traits\Archivable;
 use App\Models\System\Traits\Locationable;
 use App\Models\System\Traits\Phonable;
+use App\Models\System\Traits\Quietlable;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Outlet extends BaseModel
 {
-    use SoftDeletes,
+    use Archivable,
+        SoftDeletes,
         Cachable,
         Locationable,
-        Phonable;
+        Phonable,
+        Quietlable;
+
+    protected $dates = [
+        'archived_at',
+    ];
 
     protected $fillable = [
         'name',
@@ -26,6 +34,10 @@ class Outlet extends BaseModel
         'filial_id',
 
         'extra_time',
+
+        'is_main',
+
+        'archived_at',
 
         'display',
         'system',

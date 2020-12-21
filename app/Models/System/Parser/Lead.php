@@ -74,6 +74,9 @@ class Lead extends Model
 
         'client_id',
 
+        'filial_id',
+        'outlet_id',
+
         'display',
         'system',
         'moderation',

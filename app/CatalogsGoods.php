@@ -110,6 +110,11 @@ class CatalogsGoods extends Model
         return $this->morphMany(AgencyScheme::class, 'catalog');
     }
 
+    public function outlets()
+    {
+        return $this->belongsToMany(Outlet::class, 'outlet_catalog_goods', 'catalog_goods_id', 'outlet_id');
+    }
+
 //    public function prices()
 //    {
 //        return $this->hasManyThrough(PricesGoods::class, CatalogsGoodsItem::class);

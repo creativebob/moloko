@@ -46,6 +46,11 @@ class Update2 extends Migration
         Schema::table('clients', function (Blueprint $table) {
             $table->bigInteger('filial_id')->unsigned()->nullable()->comment('Id филиала')->after('id');
         });
+
+        Schema::table('outlets', function (Blueprint $table) {
+            $table->boolean('is_main')->default(0)->comment('Главная')->after('extra_time');
+            $table->timestamp('archived_at')->nullable()->comment('Архив')->after('is_main');
+        });
     }
 
     /**
@@ -88,6 +93,13 @@ class Update2 extends Migration
         Schema::table('clients', function (Blueprint $table) {
             $table->dropColumn([
                 'filial_id',
+            ]);
+        });
+
+        Schema::table('outlets', function (Blueprint $table) {
+            $table->dropColumn([
+                'is_main',
+                'archived_at'
             ]);
         });
     }

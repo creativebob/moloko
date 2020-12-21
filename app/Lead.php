@@ -25,10 +25,10 @@ class Lead extends BaseModel
 
     // public $timestamps = false;
 
-    protected $with = [
-        'location.city',
-        'main_phones'
-    ];
+//    protected $with = [
+//        'location.city',
+//        'main_phones'
+//    ];
 
     protected $dates = [
         'deleted_at',
@@ -45,6 +45,9 @@ class Lead extends BaseModel
 
         'location_id',
         'email',
+
+        'filial_id',
+        'outlet_id',
 
         'client_id',
 
@@ -75,6 +78,11 @@ class Lead extends BaseModel
     public function filial()
     {
         return $this->belongsTo('App\Department');
+    }
+
+    public function outlet()
+    {
+        return $this->belongsTo('App\Outlet');
     }
 
     public function filials()
@@ -406,7 +414,7 @@ class Lead extends BaseModel
         // if (isset($filters['prepayment_min'])) {
         //     $query->whereHas('estimate', function ($q) use ($filters) {
         //         $q->where('paid', '>=', $filters['prepayment_min'])
-        //         ->where('total', '>', 'paid'); 
+        //         ->where('total', '>', 'paid');
         //     });
         // }
 

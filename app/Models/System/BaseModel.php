@@ -48,7 +48,11 @@ class BaseModel extends Model
         $request = request();
         $requestInput = $request->input();
 
-        $user = auth()->user()->load('filters');
+        $user = auth()->user()->load([
+            'filters' => function ($q) use ($alias) {
+                $q->where('alias', $alias);
+            }
+        ]);
         $filter = $user->filters->firstWhere('alias', $alias);
 
         $filters = [];

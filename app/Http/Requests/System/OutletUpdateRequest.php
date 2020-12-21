@@ -32,6 +32,8 @@ class OutletUpdateRequest extends FormRequest
 
               'extra_time' => 'nullable|integer',
 
+              'is_main' => 'required|integer|max:1',
+
               'display' => 'nullable|integer|max:1',
               'system' => 'nullable|integer|max:1',
               'moderation' => 'nullable|integer|max:1',

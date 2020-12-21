@@ -178,6 +178,17 @@ class Estimate extends BaseModel
         return $this->belongsTo('App\Agent');
     }
 
+    public function catalogs_goods()
+    {
+        return $this->belongsToMany('App\CatalogsGoods', 'catalogs_goods_estimate');
+    }
+
+    public function catalogs_services()
+    {
+        return $this->belongsToMany('App\CatalogsService');
+    }
+
+
     /**
      * Фильтр
      *

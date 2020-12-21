@@ -7,6 +7,7 @@ use App\Http\Controllers\System\Traits\Phonable;
 use App\Http\Requests\System\OutletStoreRequest;
 use App\Http\Requests\System\OutletUpdateRequest;
 use App\Outlet;
+use Illuminate\Http\Request;
 
 class OutletController extends Controller
 {
@@ -177,20 +178,20 @@ class OutletController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Архивация указанного ресурса.
      *
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function destroy($id)
+    public function archive($id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('destroy'));
 
+        // ГЛАВНЫЙ ЗАПРОС:
         $outlet = Outlet::moderatorLimit($answer)
             ->find($id);
-        //        dd($outlet);
 
         if (empty($outlet)) {
             abort(403, __('errors.not_found'));
@@ -199,12 +200,21 @@ class OutletController extends Controller
         // Подключение политики
         $this->authorize(getmethod('destroy'), $outlet);
 
-        $res = $outlet->delete();
+        $outlet->archive();
+        return redirect()->route('outlets.index');
+    }
 
-        if ($res) {
-            return redirect()->route('outlets.index');
-        } else {
-            abort(403, __('errors.destroy'));
-        }
+    public function getById(Request $request)
+    {
+        $outlet = Outlet::with([
+            'catalogs_goods',
+            'catalogs_services',
+            'stock',
+            'settings',
+            'payments_methods'
+        ])
+            ->find($request->id);
+
+        return response()->json($outlet);
     }
 }

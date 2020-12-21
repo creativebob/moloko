@@ -390,7 +390,10 @@ class CartController extends BaseController
 
             $lead->site_id = $site->id;
 
+            // Филиал и торговая точка
             $lead->filial_id = $filial->id;
+            $lead->outlet_id = $filial->outletId;
+
             $lead->company_id = $site->company_id;
             $lead->author_id = 1;
 
@@ -602,6 +605,8 @@ class CartController extends BaseController
 
             $count = 0;
 
+            $catalogsFoodsIds = [];
+
             if ($estimate->goods_items->isNotEmpty()) {
                 $cost += $estimate->goods_items->sum('cost');
                 $amount += $estimate->goods_items->sum('amount');
@@ -618,6 +623,9 @@ class CartController extends BaseController
                 $totalBonuses += $estimate->goods_items->sum('total_bonuses');
 
                 $count += $estimate->goods_items->sum('count');
+
+                $groupedGoodsItems = $estimate->goods_items->groupBy('price_goods.catalogs_goods_id');
+                $catalogsFoodsIds = $groupedGoodsItems->keys();
             }
 
 //        if ($estimate->services_items->isNotEmpty()) {
@@ -663,6 +671,10 @@ class CartController extends BaseController
             $estimate->margin_percent = $marginPercent;
 
             $estimate->save();
+
+            $estimate->catalogs_goods()->sync($catalogsFoodsIds);
+
+
 
             // Обновляем бюджет лида
             $lead->badget = $total;

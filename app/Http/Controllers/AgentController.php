@@ -9,6 +9,7 @@ use App\Http\Controllers\System\Traits\Phonable;
 use App\Http\Controllers\Traits\Photable;
 use App\Agent;
 use App\Company;
+use App\Outlet;
 use Illuminate\Http\Request;
 
 class AgentController extends Controller
@@ -128,6 +129,16 @@ class AgentController extends Controller
 
         if ($request->set_user == 1) {
             $this->getDirector($company, $this->entityAlias);
+
+            // Создаем торговую точку
+            $outlet = new Outlet;
+
+            $outlet->name = 'Первая торговая точка';
+            $outlet->filial_id = $company->filials->first()->id;
+            $outlet->company_id = $company->id;
+            $outlet->author_id = 1;
+
+            $outlet->saveQuietly();
         }
 
         $data = $request->input();
@@ -318,23 +329,23 @@ class AgentController extends Controller
     {
         $answer = operator_right('agents', false, 'index');
 
-        $gents = Agent::with([
+        $agents = Agent::with([
             // TODO - 13.12.20 - Неправильное отношение, правильное agent
             'company'
         ])
-            ->moderatorLimit($answer)
-            ->companiesLimit($answer)
-            ->authors($answer)
-            ->systemItem($answer)
+//            ->moderatorLimit($answer)
+//            ->companiesLimit($answer)
+//            ->authors($answer)
+//            ->systemItem($answer)
             ->whereHas('schemes', function ($q) use ($id) {
                 $q->where([
-                   'catalog_type' => 'App\CatalogsGoods',
-                   'catalog_id' => $id
+                    'catalog_type' => 'App\CatalogsGoods',
+                    'catalog_id' => $id
                 ]);
             })
             ->get();
 
-        return response()->json($gents);
+        return response()->json($agents);
     }
 
 }

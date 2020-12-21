@@ -97,6 +97,7 @@ class LeadController extends Controller
             'lead_type',
             'lead_method',
             'stage',
+            'location.city',
             'main_phones',
             'estimate' => function ($q) {
                 $q->with([
@@ -263,6 +264,7 @@ class LeadController extends Controller
                             'currency'
                         ]);
                     },
+                    'catalogs_goods',
                     'services_items' => function ($q) {
                         $q->with([
                             'product.process',
@@ -286,6 +288,15 @@ class LeadController extends Controller
                 $query->with('challenge_type')
                     ->whereNull('status')
                     ->orderBy('deadline_date', 'asc');
+            },
+            'outlet' => function ($q) {
+                $q->with([
+                    'catalogs_goods',
+                    'catalogs_services',
+                    'stock',
+                    'settings',
+                    'payments_methods'
+                ]);
             }
         ])
             ->companiesLimit($answer)
@@ -828,6 +839,9 @@ class LeadController extends Controller
 
                 'stage_id' => $newLead['stage_id'],
                 'shipment_at' => $newLead['shipment_at'],
+
+                'filial_id' => $newLead['filial_id'],
+                'outlet_id' => $newLead['outlet_id'],
             ];
 
             $location = $this->getLocation(1, $newLead['location']['city_id'], $newLead['location']['address']);
@@ -1077,6 +1091,7 @@ class LeadController extends Controller
                             'currency'
                         ]);
                     },
+                    'catalogs_goods',
                     'services_items' => function ($q) {
                         $q->with([
                             'product.process',

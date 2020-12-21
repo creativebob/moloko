@@ -1231,6 +1231,8 @@ Route::post('/departments_list', 'DepartmentController@departments_list')->middl
 // Проверка на существование филиала/отдела
 Route::any('/department_check', 'DepartmentController@ajax_check')->middleware('auth');
 
+Route::any('/get_user_filials_with_outlets', 'DepartmentController@getUserFilialsWith_Outlets');
+
 
 Route::any('/ajax_get_filials_for_catalogs_service', 'DepartmentController@ajax_get_filials_for_catalogs_service')->middleware('auth');
 Route::any('/ajax_get_filials_for_catalogs_goods', 'DepartmentController@ajax_get_filials_for_catalogs_goods')->middleware('auth');
@@ -1385,6 +1387,7 @@ Route::resource('/news', 'NewsController');
 // ----------------------------------------- Каталоги товаров ------------------------------------------
 
 Route::any('/catalog_goods/get_catalogs_by_ids', 'CatalogsGoodsController@getCatalogsByIds');
+Route::post('/catalog_goods/get_catalogs_by_outlet_id/{id}', 'CatalogsGoodsController@getCatalogsByOutletId');
 
 Route::any('/catalog_goods/{id}', 'CatalogsGoodsController@get_catalog');
 // Основные методы
@@ -1575,10 +1578,16 @@ Route::resource('/mailings', 'MailingController')
 
 
 // --------------------------- Торговые точки -------------------------------------
+
+Route::post('/outlets/get_by_id', 'OutletController@getById');
+
+// Архив
+Route::post('/outlets/archive/{id}', 'OutletController@archive');
 // Основные методы
 Route::resource('/outlets', 'OutletController')
     ->except([
-        'show'
+        'show',
+        'destroy'
     ]);
 
 

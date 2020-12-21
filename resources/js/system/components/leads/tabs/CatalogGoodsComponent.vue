@@ -1,6 +1,6 @@
 <template>
     <li
-        v-if="hasCatalogsGoods"
+        v-show="hasCatalogsGoods"
         class="tabs-title"
     >
         <a data-tabs-target="tab-catalog_goods" href="#tab-catalog_goods">Товары</a>

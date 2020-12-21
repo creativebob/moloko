@@ -40,4 +40,6 @@ Route::get('/set-discounts-for-estimates', 'ParserController@setDiscountsForEsti
 Route::get('/update-payments-sign', 'ParserController@updatePaymentsSign');
 Route::get('/update-clients-filial', 'ParserController@updateClientsFilial');
 
+Route::get('/update-leads-outlet-id', 'ParserController@updateLeadsOutletId');
+
 Route::get('/test', 'ParserController@test');

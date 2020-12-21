@@ -77,7 +77,7 @@
 
                         <td class="td-delete">
                             @can('delete', $outlet)
-                                <a class="icon-delete sprite" data-open="item-delete"></a>
+                                <a class="icon-delete sprite" data-open="item-archive"></a>
                             @endcan
                         </td>
                     </tr>
@@ -100,11 +100,8 @@
 
 @section('modals')
     <section id="modal"></section>
-{{-- Модалка удаления с refresh --}}
-@include('includes.modals.modal-delete')
 
-{{-- Модалка удаления с refresh --}}
-@include('includes.modals.modal-delete-ajax')
+    @include('includes.modals.modal-archive')
 @endsection
 
 @push('scripts')
@@ -118,10 +115,6 @@
 
 {{-- Скрипт системной записи --}}
 @include('includes.scripts.ajax-system')
-
-{{-- Скрипт модалки удаления --}}
-@include('includes.scripts.modal-delete-script')
-@include('includes.scripts.delete-ajax-script')
 
 
     <script>

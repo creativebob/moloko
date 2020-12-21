@@ -2,6 +2,7 @@
 
 namespace App\Observers\System;
 
+use App\Department;
 use App\Lead;
 use App\Observers\System\Traits\Commonable;
 
@@ -15,7 +16,17 @@ class LeadObserver
         $this->store($lead);
 
         $user = auth()->user();
-        $lead->filial_id = $user->stafferFilialId;
+
+        // Вписываем филилал и торговую точку
+
+        $filial = Department::with([
+            'outlets'
+        ])
+            ->find($user->stafferFilialId);
+
+        $lead->filial_id = $filial->id;
+        $lead->outlet_id = $filial->outletId;
+
         $lead->manager_id = $user->id;
 
         // TODO - 23.09.20 - Умолчания лечатся умолчаниями в БД

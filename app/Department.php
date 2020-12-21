@@ -103,6 +103,12 @@ class Department extends Model
     }
 
 
+    public function getOutletIdAttribute()
+    {
+        return $this->outlets->firstWhere('is_main', true) ? optional($this->outlets->firstWhere('is_main', true))->id : optional($this->outlets->first())->id;
+    }
+
+
 
     // Вложенные
     public function childs()

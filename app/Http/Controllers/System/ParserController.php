@@ -66,6 +66,29 @@ class ParserController extends Controller
         dd(__METHOD__);
     }
 
+    public function updateLeadsOutletId()
+    {
+        $filials = Department::with([
+            'outlets'
+        ])
+        ->get();
+//        dd($groupedLeads);
+
+        foreach ($filials as $filial) {
+            if ($filial->outlets->isNotEmpty()) {
+                $outletId = $filial->outlets->firstWhere('is_main', true) ? $filial->outlets->firstWhere('is_main', true)->id : $filial->outlets->first()->id;
+
+                Lead::where('filial_id', $filial->id)
+                    ->whereNull('outlet_id')
+                    ->update([
+                        'outlet_id' => $outletId
+                    ]);
+            }
+        }
+
+        return __('msg.ok');
+    }
+
     /**
      * Обновление клиентского филиала на первый
      *

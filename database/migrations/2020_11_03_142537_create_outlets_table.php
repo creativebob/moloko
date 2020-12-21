@@ -33,6 +33,10 @@ class CreateOutletsTable extends Migration
 
             $table->integer('extra_time')->unsigned()->default(0)->comment('Время доставки (для автовычисления), сек');
 
+            $table->boolean('is_main')->default(0)->comment('Главная');
+
+            $table->timestamp('archived_at')->nullable()->comment('Архив');
+
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

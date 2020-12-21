@@ -145,14 +145,17 @@ class RollHouseParser
                             case (ANGARSK):
                                 $city_id = 2;
                                 $filial_id = 1;
+                                $outlet_id = 1;
                                 break;
                             case (USOLYE):
                                 $city_id = 4;
                                 $filial_id = 2;
+                                $outlet_id = 2;
                                 break;
                             case (BRATSK):
                                 $city_id = 3;
                                 $filial_id = 3;
+                                $outlet_id = 3;
                                 break;
                         }
 
@@ -285,14 +288,17 @@ class RollHouseParser
                                 case (ANGARSK):
                                     $city_id = 2;
                                     $filial_id = 1;
+                                    $outlet_id = 1;
                                     break;
                                 case (USOLYE):
                                     $city_id = 4;
                                     $filial_id = 2;
+                                    $outlet_id = 2;
                                     break;
                                 case (BRATSK):
                                     $city_id = 3;
                                     $filial_id = 3;
+                                    $outlet_id = 3;
                                     break;
                             }
 
@@ -323,6 +329,7 @@ class RollHouseParser
                                 $lead->location_id = create_location($request, 1, $city_id);
 
                                 $lead->filial_id = $filial_id;
+                                $lead->outlet_id = $outlet_id;
                                 $lead->name = ($user->name == '' || $user->name == ' ' || is_null($user->name)) ? null : $user->name;
                                 $lead->company_name = NULL;
 
@@ -810,18 +817,22 @@ class RollHouseParser
 
                     $city_id = 2;
                     $filial_id = 1;
+                    $outlet_id = 1;
                     switch ($oldClient->branch_id) {
                         case (ANGARSK):
                             $city_id = 2;
                             $filial_id = 1;
+                            $outlet_id = 1;
                             break;
                         case (USOLYE):
                             $city_id = 4;
                             $filial_id = 2;
+                            $outlet_id = 2;
                             break;
                         case (BRATSK):
                             $city_id = 3;
                             $filial_id = 3;
+                            $outlet_id = 3;
                             break;
                     }
 
@@ -953,14 +964,17 @@ class RollHouseParser
                         case (ANGARSK):
                             $city_id = 2;
                             $filial_id = 1;
+                            $outlet_id = 1;
                             break;
                         case (USOLYE):
                             $city_id = 4;
                             $filial_id = 2;
+                            $outlet_id = 2;
                             break;
                         case (BRATSK):
                             $city_id = 3;
                             $filial_id = 3;
+                            $outlet_id = 3;
                             break;
                     }
 
@@ -975,6 +989,7 @@ class RollHouseParser
                         $lead->location_id = create_location($request, 1, $city_id);
 
                         $lead->filial_id = $filial_id;
+                        $lead->outlet_id = $outlet_id;
                         $lead->name = ($user->name == '' || $user->name == ' ' || is_null($user->name)) ? null : $user->name;
                         $lead->company_name = NULL;
 
@@ -1089,6 +1104,7 @@ class RollHouseParser
                             $lead->location_id = create_location($request, 1, $city_id);
 
                             $lead->filial_id = $filial_id;
+                            $lead->outlet_id = $outlet_id;
                             $lead->name = ($user->name == '' || $user->name == ' ' || is_null($user->name)) ? null : $user->name;
                             $lead->company_name = null;
 
