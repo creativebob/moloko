@@ -585,7 +585,7 @@ class CartController extends BaseController
 
             // Аггрегируем значения сметы
             $estimate->load([
-                'goods_item.price_goods',
+                'goods_items.price_goods',
                 'services_items',
             ]);
 
