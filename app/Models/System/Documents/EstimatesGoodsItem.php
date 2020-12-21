@@ -13,11 +13,11 @@ class EstimatesGoodsItem extends BaseModel
     use SoftDeletes;
 //    use Cachable;
 
-    protected $with = [
-        'goods.article',
-        'currency',
-        'reserve'
-    ];
+//    protected $with = [
+//        'goods.article',
+//        'currency',
+//        'reserve'
+//    ];
 
     protected $dates = [
         'deleted_at'
