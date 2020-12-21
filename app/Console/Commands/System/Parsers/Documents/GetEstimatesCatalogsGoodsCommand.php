@@ -53,35 +53,28 @@ class GetEstimatesCatalogsGoodsCommand extends Command
             }
         ])
             ->doesntHave('catalogs_goods')
-            ->select([
+            ->limit(10000)
+            ->get([
                 'id'
-            ])
-            ->chunk(10000, function($estimates) {
+            ]);
 
-                $this->line('Количество: ' . $estimates->count());
+        $this->line('Количество: ' . $estimates->count());
 
-                $bar = $this->output->createProgressBar($estimates->count());
-                $bar->start();
-
-
-                foreach ($estimates as $estimate) {
-                    if ($estimate->goods_items->isNotEmpty()) {
-                        $groupedGoodsItems = $estimate->goods_items->groupBy('price_goods.catalogs_goods_id');
-                        $catalogsFoodsIds = $groupedGoodsItems->keys();
-                        $estimate->catalogs_goods()->sync($catalogsFoodsIds);
-                    }
-                    $bar->advance();
-                }
-
-                $bar->finish();
-                $this->info('');
-
-            });
-//            ->get([
-//                'id'
-//            ]);
+        $bar = $this->output->createProgressBar($estimates->count());
+        $bar->start();
 
 
+        foreach ($estimates as $estimate) {
+            if ($estimate->goods_items->isNotEmpty()) {
+                $groupedGoodsItems = $estimate->goods_items->groupBy('price_goods.catalogs_goods_id');
+                $catalogsFoodsIds = $groupedGoodsItems->keys();
+                $estimate->catalogs_goods()->sync($catalogsFoodsIds);
+            }
+            $bar->advance();
+        }
+
+        $bar->finish();
+        $this->info('');
 
         $this->info(__('msg.ok'));
     }
