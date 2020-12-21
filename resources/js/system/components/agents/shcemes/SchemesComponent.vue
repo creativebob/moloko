@@ -15,8 +15,8 @@
             <table class="table-payments">
                 <thead>
                     <tr>
+                        <th>Каталог</th>
                         <th>Название</th>
-                        <th>Описание</th>
                         <th>Процент</th>
                         <th></th>
                      </tr>

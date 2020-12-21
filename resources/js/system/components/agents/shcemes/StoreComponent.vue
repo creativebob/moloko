@@ -75,6 +75,9 @@ export default {
         add() {
             if (this.schemeId) {
                 let scheme = this.schemes.find(obj => obj.id == this.schemeId);
+                let catalog = this.catalogs.find(obj => obj.id == this.catalogId);
+                scheme.catalog = catalog;
+
                 this.$emit('add', scheme);
             }
         },

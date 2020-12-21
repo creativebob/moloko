@@ -125334,6 +125334,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 var scheme = this.schemes.find(function (obj) {
                     return obj.id == _this2.schemeId;
                 });
+                var catalog = this.catalogs.find(function (obj) {
+                    return obj.id == _this2.catalogId;
+                });
+                scheme.catalog = catalog;
+
                 this.$emit('add', scheme);
             }
         },
@@ -125565,9 +125570,9 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("tr", [
-    _c("td", [_vm._v(_vm._s(_vm.scheme.name))]),
+    _c("td", [_vm._v(_vm._s(_vm.scheme.catalog.name))]),
     _vm._v(" "),
-    _c("td", [_vm._v(_vm._s(_vm.scheme.description))]),
+    _c("td", [_vm._v(_vm._s(_vm.scheme.name))]),
     _vm._v(" "),
     _c("td", [
       _vm._v(
@@ -125651,9 +125656,9 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
-        _c("th", [_vm._v("Название")]),
+        _c("th", [_vm._v("Каталог")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Описание")]),
+        _c("th", [_vm._v("Название")]),
         _vm._v(" "),
         _c("th", [_vm._v("Процент")]),
         _vm._v(" "),

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\System\Traits\Archivable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -26,8 +27,9 @@ use App\Scopes\Filters\BooklistFilter;
 class Agent extends Model
 {
 
-    // Включаем кеш
-    use Cachable;
+    use Cachable,
+        Archivable,
+        SoftDeletes;
 
     use Notifiable;
     use SoftDeletes;

@@ -62,7 +62,6 @@ class AgentController extends Controller
             ->moderatorLimit($answer)
             ->authors($answer)
             ->systemItem($answer)
-            ->where('archive', false)
             // ->whereHas('company', function ($q) use ($request) {
             //     $q->filter($request, 'country_id', 'location');
             // })
@@ -181,7 +180,7 @@ class AgentController extends Controller
                     'processes_types'
                 ]);
             },
-            'schemes'
+            'schemes.catalog'
         ])
             ->moderatorLimit($answer)
             ->authors($answer)
@@ -275,7 +274,7 @@ class AgentController extends Controller
     }
 
     /**
-     * Архивирование указанного ресурса
+     * Архивация указанного ресурса.
      *
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
@@ -284,28 +283,20 @@ class AgentController extends Controller
     public function archive($id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('delete'));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('destroy'));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $agent = Agent::moderatorLimit($answer)
             ->find($id);
-//        dd($agent);
 
-        if (empty($agent)) {
+        if (empty($subscriber)) {
             abort(403, __('errors.not_found'));
         }
 
         // Подключение политики
         $this->authorize(getmethod('destroy'), $agent);
 
-        $agent->archive = true;
-        $agent->editor_id = hideGod(auth()->user());
-        $agent->save();
-
-        if (!$agent) {
-            abort(403, __('errors.archive'));
-        }
-
+        $agent->archive();
         return redirect()->route('agents.index');
     }
 

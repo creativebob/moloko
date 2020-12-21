@@ -51,6 +51,13 @@ class Update2 extends Migration
             $table->boolean('is_main')->default(0)->comment('Главная')->after('extra_time');
             $table->timestamp('archived_at')->nullable()->comment('Архив')->after('is_main');
         });
+
+        Schema::table('agents', function (Blueprint $table) {
+            $table->timestamp('archived_at')->nullable()->comment('Архив')->after('archive');
+            $table->dropColumn([
+                'archive',
+            ]);
+        });
     }
 
     /**
@@ -100,6 +107,13 @@ class Update2 extends Migration
             $table->dropColumn([
                 'is_main',
                 'archived_at'
+            ]);
+        });
+
+        Schema::table('agents', function (Blueprint $table) {
+            $table->boolean('archive')->default(0)->comment('Статус архива')->after('archived_at');
+            $table->dropColumn([
+                'archived_at',
             ]);
         });
     }

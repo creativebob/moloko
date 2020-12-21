@@ -1,7 +1,7 @@
 <template>
     <tr>
+        <td>{{ scheme.catalog.name }}</td>
         <td>{{ scheme.name }}</td>
-        <td>{{ scheme.description }}</td>
         <td>{{ scheme.percent_default | decimalPlaces | decimalLevel }}</td>
         <td class="td-delete">
             <div
