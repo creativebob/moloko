@@ -120,4 +120,14 @@ class Estimate extends Model
     {
         return $this->morphMany(Payment::class, 'document');
     }
+
+    public function catalogs_goods()
+    {
+        return $this->belongsToMany('App\CatalogsGoods', 'catalogs_goods_estimate');
+    }
+
+    public function catalogs_services()
+    {
+        return $this->belongsToMany('App\CatalogsService');
+    }
 }
