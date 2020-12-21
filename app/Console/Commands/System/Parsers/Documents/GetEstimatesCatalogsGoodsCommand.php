@@ -42,31 +42,46 @@ class GetEstimatesCatalogsGoodsCommand extends Command
         $estimates = Estimate::with([
             'goods_items' => function ($q) {
                 $q->with([
-                    'price_goods'
+                    'price_goods:id,catalogs_goods_id'
                 ])
-                    ->has('price_goods');
+                    ->has('price_goods')
+                ->select([
+                    'id',
+                    'estimate_id',
+                    'price_id'
+                ]);
             }
         ])
             ->doesntHave('catalogs_goods')
-            ->get();
+            ->select([
+                'id'
+            ])
+            ->chunk(10000, function($estimates) {
 
-        $this->line('Количество: ' . $estimates->count());
+                $this->line('Количество: ' . $estimates->count());
 
-        $bar = $this->output->createProgressBar($estimates->count());
-        $bar->start();
+                $bar = $this->output->createProgressBar($estimates->count());
+                $bar->start();
 
 
-        foreach ($estimates as $estimate) {
-            if ($estimate->goods_items->isNotEmpty()) {
-                $groupedGoodsItems = $estimate->goods_items->groupBy('price_goods.catalogs_goods_id');
-                $catalogsFoodsIds = $groupedGoodsItems->keys();
-                $estimate->catalogs_goods()->sync($catalogsFoodsIds);
-            }
-            $bar->advance();
-        }
+                foreach ($estimates as $estimate) {
+                    if ($estimate->goods_items->isNotEmpty()) {
+                        $groupedGoodsItems = $estimate->goods_items->groupBy('price_goods.catalogs_goods_id');
+                        $catalogsFoodsIds = $groupedGoodsItems->keys();
+                        $estimate->catalogs_goods()->sync($catalogsFoodsIds);
+                    }
+                    $bar->advance();
+                }
 
-        $bar->finish();
-        $this->info('');
+                $bar->finish();
+                $this->info('');
+
+            });
+//            ->get([
+//                'id'
+//            ]);
+
+
 
         $this->info(__('msg.ok'));
     }
