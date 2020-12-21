@@ -408,10 +408,11 @@ class CatalogsGoodsController extends Controller
         return response()->json($catalogs_goods_data);
     }
 
-    public function getCatalogsByOutletId($id)
+    public function getCatalogsForOutlet()
     {
+
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right('catalogs_goods', true, getmethod('index'));
+//        $answer = operator_right('catalogs_goods', true, getmethod('index'));
 
         $catalogs_goods = CatalogsGoods::with([
             'items:id,catalogs_goods_id,name,photo_id,parent_id',
@@ -468,7 +469,7 @@ class CatalogsGoodsController extends Controller
                     })
                     ->where([
                         'archive' => false,
-                        'filial_id' => auth()->user()->StafferFilialId
+                        'filial_id' => request()->filial_id
                     ])
 //                ->select([
 //                    'prices_goods.id',
@@ -482,21 +483,21 @@ class CatalogsGoodsController extends Controller
                 ;
             },
         ])
-            ->moderatorLimit($answer)
-            ->companiesLimit($answer)
-            ->authors($answer)
-            ->filials($answer)
+//            ->moderatorLimit($answer)
+//            ->companiesLimit($answer)
+//            ->authors($answer)
+//            ->filials($answer)
 //        ->whereHas('filials', function ($q) {
 //            $q->where('id', auth()->user()->stafferFilialId);
 //        })
-            ->whereHas('outlets', function ($q) use ($id) {
-                $q->where('id', $id);
+            ->whereHas('outlets', function ($q) {
+                $q->where('id', request()->outlet_id);
             })
             ->get();
 //         dd($catalogs_goods);
 
         $success = false;
-        if ($catalogs_goods) {
+        if ($catalogs_goods->isNotEmpty()) {
             $success = true;
         }
 

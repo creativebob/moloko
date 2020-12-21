@@ -394,7 +394,7 @@ class LeadController extends Controller
 
         // TODO - 04.11.20 - Заглушка торговой точкой
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answerOutlets = operator_right('outlets', true, getmethod('index'));
+//        $answerOutlets = operator_right('outlets', true, getmethod('index'));
 
         $outlet = Outlet::with([
             'catalogs_goods',
@@ -403,11 +403,13 @@ class LeadController extends Controller
             'settings',
             'payments_methods'
         ])
-            ->moderatorLimit($answerOutlets)
-            ->companiesLimit($answerOutlets)
-            ->authors($answerOutlets)
-            ->where('filial_id', auth()->user()->stafferFilialId)
-            ->first();
+//            ->moderatorLimit($answerOutlets)
+//            ->companiesLimit($answerOutlets)
+//            ->authors($answerOutlets)
+
+//            ->where('filial_id', auth()->user()->stafferFilialId)
+//            ->first();
+        ->find($lead->outlet_id);
 
         // Настройки компании
         $settings = auth()->user()->company->settings;

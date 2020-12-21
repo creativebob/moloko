@@ -18,11 +18,11 @@ class LeadObserver
         $user = auth()->user();
 
         // Вписываем филилал и торговую точку
-
+        $filialId = session('access.all_rights.index-leads-allow.filials_for_user')[0]->id;
         $filial = Department::with([
             'outlets'
         ])
-            ->find($user->stafferFilialId);
+            ->find($filialId);
 
         $lead->filial_id = $filial->id;
         $lead->outlet_id = $filial->outletId;

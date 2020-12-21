@@ -101078,9 +101078,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         getCatalogs: function getCatalogs() {
             var _this3 = this;
 
-            if (this.$store.state.lead.lead.outlet_id) {
-
-                axios.post('/admin/catalog_goods/get_catalogs_by_outlet_id/' + this.$store.state.lead.lead.outlet_id).then(function (response) {
+            if (this.$store.state.lead.outlet.id) {
+                axios.post('/admin/catalog_goods/get_catalogs_for_outlet', {
+                    outlet_id: this.$store.state.lead.outlet.id,
+                    filial_id: this.$store.state.lead.outlet.filial_id
+                }).then(function (response) {
                     if (response.data.success) {
                         _this3.catalogId = response.data.catalogsGoods[0].id;
                         _this3.catalogsItemId = response.data.catalogsGoodsItems[0].id;
@@ -101098,6 +101100,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     }
 
                     _this3.$store.commit('SET_CATALOG_GOODS_ID', _this3.catalogId);
+                    // Foundation.reInit($('.selecter-catalog-item'));
                 }).catch(function (error) {
                     alert('Ошибка загрузки каталогов, перезагрузите страницу!');
                     console.log(error);

@@ -190,10 +190,12 @@ export default {
     },
     methods: {
         getCatalogs() {
-            if (this.$store.state.lead.lead.outlet_id) {
-
+            if (this.$store.state.lead.outlet.id) {
                 axios
-                    .post('/admin/catalog_goods/get_catalogs_by_outlet_id/' + this.$store.state.lead.lead.outlet_id)
+                    .post('/admin/catalog_goods/get_catalogs_for_outlet', {
+                        outlet_id: this.$store.state.lead.outlet.id,
+                        filial_id: this.$store.state.lead.outlet.filial_id,
+                    })
                     .then(response => {
                         if (response.data.success) {
                             this.catalogId = response.data.catalogsGoods[0].id;
@@ -212,6 +214,7 @@ export default {
                         }
 
                         this.$store.commit('SET_CATALOG_GOODS_ID', this.catalogId);
+                        // Foundation.reInit($('.selecter-catalog-item'));
                     })
                     .catch(error => {
                         alert('Ошибка загрузки каталогов, перезагрузите страницу!')

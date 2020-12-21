@@ -414,9 +414,9 @@ class DepartmentController extends Controller
         return view('products.articles.goods.prices.filials', compact('catalog_id'));
     }
 
-    public function getUserFilialsWith_Outlets()
+    public function getUserFilialsWithOutlets()
     {
-        $filials = session('access.company_info.filials_for_user');
+        $filials = session('access.all_rights.index-leads-allow.filials_for_user');
         $filialsIds = [];
         foreach ($filials as $filial) {
             $filialsIds[] = $filial->id;

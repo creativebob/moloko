@@ -78,8 +78,6 @@ class GetAccessController extends Controller
                 // Пишем в сессию список филиалов
                 if ($department->parent_id == null) {
                     $access['company_info']['filials'][$department->id] = $department->name;
-
-                    $access['company_info']['filials_for_user'][] = $department;
                 };
             }
         };
@@ -202,7 +200,12 @@ class GetAccessController extends Controller
 
                 // Получаем все филиалы компании (Будут использоваться при снятии филиалозависимости)
                 $all_filials_user = Department::whereCompany_id($user->company_id)->whereNull('filial_id')->pluck('name', 'id')->toArray();
-                $allFilialsUser = Department::whereCompany_id($user->company_id)->whereNull('filial_id')->get();
+                $allFilialsUser = Department::whereCompany_id($user->company_id)
+                    ->whereNull('filial_id')
+                    ->get([
+                        'id',
+                        'name'
+                    ]);
 
                 // Формируеться список филиалов и отделов доступных на каждую сущность
                 foreach ($user->roles as $role) {
@@ -235,7 +238,10 @@ class GetAccessController extends Controller
                                 $all_rights[$right->alias_right]['filials'][$role->pivot->department_id] = $departments->where('id', $role->pivot->department_id)->first()->name;
 
                                 // TODO - 15.12.20 - Список филиалов, доступных пользователю
-                                $all_rights[$right->alias_right]['filials_for_user'][] = $departments->where('id', $role->pivot->department_id)->first()->name;
+                                $object = app()->make('stdClass');
+                                $object->id = $departments->where('id', $role->pivot->department_id)->first()->id;
+                                $object->name = $departments->where('id', $role->pivot->department_id)->first()->name;
+                                $all_rights[$right->alias_right]['filials_for_user'][] = $object;
                             };
                         }
 
