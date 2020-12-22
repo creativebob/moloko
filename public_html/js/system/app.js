@@ -85595,6 +85595,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
@@ -85602,6 +85605,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         'catalog-services-component': __webpack_require__(267),
         'payment-component': __webpack_require__(270),
         'agents-component': __webpack_require__(273)
+    },
+    props: {
+        attribution: {
+            type: [Boolean, Number],
+            default: false
+        }
     }
 });
 
@@ -86076,7 +86085,20 @@ var render = function() {
       _vm._v(" "),
       _c("agents-component"),
       _vm._v(" "),
-      _vm._m(1)
+      _vm.attribution
+        ? _c("li", { staticClass: "tabs-title" }, [
+            _c(
+              "a",
+              {
+                attrs: {
+                  "data-tabs-target": "tab-attribution",
+                  href: "#tab-attribution"
+                }
+              },
+              [_vm._v("Аттрибуция")]
+            )
+          ])
+        : _vm._e()
     ],
     1
   )
@@ -86090,23 +86112,6 @@ var staticRenderFns = [
       _c("a", { attrs: { href: "#tab-events", "aria-selected": "true" } }, [
         _vm._v("События")
       ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("li", { staticClass: "tabs-title" }, [
-      _c(
-        "a",
-        {
-          attrs: {
-            "data-tabs-target": "tab-attribution",
-            href: "#tab-attribution"
-          }
-        },
-        [_vm._v("Аттрибуция")]
-      )
     ])
   }
 ]
@@ -103098,9 +103103,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
@@ -103207,53 +103209,47 @@ var render = function() {
             _c("br")
           ])
         : [
-            !_vm.isConducted
+            !_vm.isConducted && _vm.agents.length
               ? _c("div", { staticClass: "cell small-12 input-group" }, [
-                  _vm.agents.length
-                    ? _c("div", { staticClass: "input-group-field" }, [
-                        _c(
-                          "select",
+                  _c("div", { staticClass: "input-group-field" }, [
+                    _c(
+                      "select",
+                      {
+                        directives: [
                           {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.agentId,
-                                expression: "agentId"
-                              }
-                            ],
-                            on: {
-                              change: function($event) {
-                                var $$selectedVal = Array.prototype.filter
-                                  .call($event.target.options, function(o) {
-                                    return o.selected
-                                  })
-                                  .map(function(o) {
-                                    var val = "_value" in o ? o._value : o.value
-                                    return val
-                                  })
-                                _vm.agentId = $event.target.multiple
-                                  ? $$selectedVal
-                                  : $$selectedVal[0]
-                              }
-                            }
-                          },
-                          _vm._l(_vm.agents, function(agent) {
-                            return _c(
-                              "option",
-                              { domProps: { value: agent.id } },
-                              [
-                                _vm._v(
-                                  _vm._s(agent.company.name) +
-                                    "\n                    "
-                                )
-                              ]
-                            )
-                          }),
-                          0
-                        )
-                      ])
-                    : _vm._e(),
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.agentId,
+                            expression: "agentId"
+                          }
+                        ],
+                        on: {
+                          change: function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.agentId = $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          }
+                        }
+                      },
+                      _vm._l(_vm.agents, function(agent) {
+                        return _c("option", { domProps: { value: agent.id } }, [
+                          _vm._v(
+                            _vm._s(agent.company.name) +
+                              "\n                    "
+                          )
+                        ])
+                      }),
+                      0
+                    )
+                  ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "input-group-button" }, [
                     _c("a", { staticClass: "button", on: { click: _vm.set } }, [

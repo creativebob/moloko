@@ -111,7 +111,14 @@ class LeadController extends Controller
                         $q->with([
                             'service.process',
                         ]);
-                    }
+                    },
+                    'payments' => function ($q) {
+                        $q->with([
+                            'method',
+                            'sign'
+                        ]);
+                    },
+                    'agent.company'
                 ]);
             },
         ])
@@ -180,10 +187,13 @@ class LeadController extends Controller
         // Подключение политики
         $this->authorize(__FUNCTION__, Lead::class);
 
-        $location = $this->getLocation();
-        $data['location_id'] = $location->id;
 
-        $lead = Lead::create($data);
+        $lead = Lead::create();
+
+        $location = $this->getLocation(1, $lead->filial->location->city_id);
+        $lead->update([
+            'location_id' => $location->id
+        ]);
 
         // Создаем смету для лида
         $estimate = Estimate::make([

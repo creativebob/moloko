@@ -875,6 +875,10 @@ class EstimateController extends Controller
         ]);
         // dd($result);
 
+        $note = "Передан агенту: " . $agent->company->name . "\r\n";
+        $note .= "Вознаграждение агента:: " . num_format($estimate->share_currency, 0) . "\r\n";
+        $note .= "Вознаграждения принципала: " . num_format($estimate->principal_currency, 0) . "\r\n";
+
         $estimate = Estimate::with([
             'goods_items' => function ($q) {
                 $q->with([
@@ -886,7 +890,8 @@ class EstimateController extends Controller
                 ]);
             },
             'discounts',
-            'agent.company'
+            'agent.company',
+            'lead'
         ])
             ->find($request->estimate_id);
 
@@ -894,9 +899,54 @@ class EstimateController extends Controller
             ->value('id');
 
         if ($notificationId) {
-            $msg = "Передали агенту";
-            Telegram::send($notificationId, $msg, $agent->agent_id);
+
+            $lead = $estimate->lead;
+
+            // Формируем сообщение
+            $message = "Заказ от партнера №{$estimate->id}\r\n";
+            $message .= "Город: {$lead->location->city->name}\r\n";
+            $message .= "Имя клиента: {$lead->name}\r\n";
+            $message .= "Тел: " . decorPhone($lead->main_phone->phone) . "\r\n";
+            if ($lead->description) {
+                $message .= "Примечание: {$lead->description}\r\n";
+            };
+
+            if ($estimate->goods_items->isNotEmpty()) {
+                $estimate->goods_items->load([
+                    'goods.article'
+                ]);
+
+                $message .= "\r\nСостав заказа:\r\n";
+                $num = 1;
+                foreach ($estimate->goods_items as $item) {
+                    $message .= $num . ' - ' . $item->goods->article->name . ": " . num_format($item->count, 0) .
+                        ' ' . $item->goods->article->unit->abbreviation . " (" . num_format($item->total, 0) . " руб.) \r\n";
+                    $num++;
+                }
+                $message .= "\r\n";
+            }
+
+            $message .= "Кол-во товаров: " . num_format($estimate->goods_items->sum('count'), 0) . "\r\n";
+            $message .= "Сумма заказа: " . num_format($estimate->amount, 0) . ' руб.' . "\r\n";
+
+            if ($estimate->discount_currency > 0) {
+                $message .= "Сумма со скидкой: " . num_format($estimate->total, 0) . ' руб.' . "\r\n";
+                $message .= "Скидка: " . num_format($estimate->discount_currency, 0) . ' руб.' . "\r\n";
+            }
+            $message .= "\r\n";
+
+            if ($lead->shipment_at) {
+                $message .= "Доставить к " . $lead->shipment_at->format('H:i');
+                $message .= "\r\n";
+            }
+            Telegram::send($notificationId, $message, $agent->agent_id);
         }
+
+        $lead->notes()->create([
+            'company_id' => $lead->company_id,
+            'body' => $note,
+            'author_id' => 1,
+        ]);
 
         return response()->json([
             'success' => true,
