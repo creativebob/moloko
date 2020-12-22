@@ -38,7 +38,7 @@
                     <th class="td-total">Сумма к оплате</th>
                     <th class="td-payment">Оплачено</th>
                     @if(extra_right('margin-show'))<th class="td-margin_currency">Маржа</th>@endif
-                    <th class="td-partner">Доля партнёра</th>
+                    @if(extra_right('partner-currency-show'))<th class="td-partner">Доля партнёра</th>@endif
                     @if(extra_right('share-currency-show'))<th class="td-share-currency">Доля агента</th>@endif
                     @if(extra_right('principal-currency-show'))<th class="td-principal-currency">Доля принципала</th>@endif
                     <th class="td-saled">Продажа</th>
@@ -104,21 +104,23 @@
                   <td class="td-margin_currency">{{ num_format($estimate->margin_currency, 0) }} <sup>{{ num_format($estimate->margin_percent, 0) }}%</sup></td>
                 @endif
 
-                <td class="td-partner">
-                  @if(isset($estimate->agent))
-                    @if($estimate->agent->agent_id != Auth::user()->company_id)
-                    
-                      {{ num_format($estimate->share_currency, 0) }} <sup>{{ num_format($estimate->share_currency * 100 / $estimate->total, 0) }}% - Агент</sup><br>
-                      <span class="tiny-text">{{ $estimate->agent->company->name_short ?? $estimate->agent->company->name }}</span>
+                @if(extra_right('partner-currency-show'))
+                  <td class="td-partner">
+                    @if(isset($estimate->agent))
+                      @if($estimate->agent->agent_id != Auth::user()->company_id)
+                      
+                        {{ num_format($estimate->share_currency, 0) }} <sup>{{ num_format($estimate->share_currency * 100 / $estimate->total, 0) }}% - Агент</sup><br>
+                        <span class="tiny-text">{{ $estimate->agent->company->name_short ?? $estimate->agent->company->name }}</span>
 
-                    @else
+                      @else
 
-                      {{ num_format($estimate->principal_currency, 0) }} <sup>{{ num_format($estimate->principal_currency * 100 / $estimate->total, 0) }}% - Принципал</sup><br>
-                      <span class="tiny-text">{{ $estimate->company->name_short ?? $estimate->company->name }}</span>
+                        {{ num_format($estimate->principal_currency, 0) }} <sup>{{ num_format($estimate->principal_currency * 100 / $estimate->total, 0) }}% - Принципал</sup><br>
+                        <span class="tiny-text">{{ $estimate->company->name_short ?? $estimate->company->name }}</span>
 
+                      @endif
                     @endif
-                  @endif
-                </td>  
+                  </td>  
+                @endif
 
                 @if(extra_right('share-currency-show'))
                   <td class="td-share-currency">
