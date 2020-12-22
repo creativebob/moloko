@@ -92,7 +92,7 @@
                         v-model="changeCatalogId"
                     >
                         <option
-                            v-for="catalog in outlet.catalogs_goods"
+                            v-for="catalog in catalogs"
                             :value="catalog.id"
                             :selected="catalogId"
                         >{{ catalog.name }}
@@ -224,13 +224,14 @@ export default {
         },
         changeCatalogsItem(id) {
             this.catalogsItemId = id;
-            this.$store.commit('SET_CATALOG_GOODS_ID', id);
         },
         changeCatalog() {
             if (this.catalogId !== this.changeCatalogId) {
                 this.catalogId = this.changeCatalogId;
                 const item = this.catalogsItems.find(obj => obj.catalogs_goods_id == this.catalogId);
                 this.changeCatalogsItem(item.id);
+
+                this.$store.commit('SET_CATALOG_GOODS_ID', id);
             }
 
             $('#modal-catalogs_goods').foundation('close');

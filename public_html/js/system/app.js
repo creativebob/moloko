@@ -101109,7 +101109,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         changeCatalogsItem: function changeCatalogsItem(id) {
             this.catalogsItemId = id;
-            this.$store.commit('SET_CATALOG_GOODS_ID', id);
         },
         changeCatalog: function changeCatalog() {
             var _this4 = this;
@@ -101120,6 +101119,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     return obj.catalogs_goods_id == _this4.catalogId;
                 });
                 this.changeCatalogsItem(item.id);
+
+                this.$store.commit('SET_CATALOG_GOODS_ID', id);
             }
 
             $('#modal-catalogs_goods').foundation('close');
@@ -101701,7 +101702,7 @@ var render = function() {
                   }
                 }
               },
-              _vm._l(_vm.outlet.catalogs_goods, function(catalog) {
+              _vm._l(_vm.catalogs, function(catalog) {
                 return _c(
                   "option",
                   { domProps: { value: catalog.id, selected: _vm.catalogId } },
@@ -133134,6 +133135,7 @@ var moduleLead = {
         SET_ESTIMATE: function SET_ESTIMATE(state, estimate) {
             state.estimate = estimate;
 
+            state.catalogsGoodsIds = [];
             estimate.catalogs_goods.forEach(function (catalog) {
                 state.catalogsGoodsIds.push(catalog.id);
             });

@@ -144,6 +144,7 @@ const moduleLead = {
         SET_ESTIMATE(state, estimate) {
             state.estimate = estimate;
 
+            state.catalogsGoodsIds = [];
             estimate.catalogs_goods.forEach(catalog => {
                 state.catalogsGoodsIds.push(catalog.id);
             })

@@ -75,7 +75,7 @@ class EstimateController extends Controller
         ])
             ->moderatorLimit($answer)
             ->companiesLimit($answer)
-            // ->filials($answer)
+             ->filials($answer)
             // ->authors($answer)
             // ->systemItem($answer)
             ->where('draft', false)
@@ -366,7 +366,13 @@ class EstimateController extends Controller
 
             $user = auth()->user();
             $useStock = $user->company->settings->firstWhere('alias', 'sale-from-stock');
-            $checkFree = $user->staff->first()->filial->outlets->first()->settings->firstWhere('alias', 'stock-check-free');
+
+            $outlet = $user->staff->first()->filial->outlet;
+            if ($outlet) {
+                $checkFree = $user->staff->first()->filial->outlets->first()->settings->firstWhere('alias', 'stock-check-free');
+            } else {
+                $checkFree = null;
+            }
 
             // Если нужна проверка остатка на складах
             if ($useStock && $checkFree) {
