@@ -111,6 +111,13 @@ class ChargesTableSeeder extends Seeder
                 'alias' => 'partner-currency-show',
                 'author_id' => 1,
             ],
+
+            [
+                'name' => 'Просмотр истории лида',
+                'description' => null,
+                'alias' => 'lead-history',
+                'author_id' => 1,
+            ],
         ]);
 
 

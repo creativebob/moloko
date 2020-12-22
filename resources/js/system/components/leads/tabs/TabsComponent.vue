@@ -9,7 +9,10 @@
         <payment-component></payment-component>
         <agents-component></agents-component>
 
-        <li class="tabs-title">
+        <li
+            v-if="attribution"
+            class="tabs-title"
+        >
             <a data-tabs-target="tab-attribution" href="#tab-attribution">Аттрибуция</a>
         </li>
     </ul>
@@ -23,5 +26,11 @@ export default {
         'payment-component': require('./PaymentsComponent'),
         'agents-component': require('./AgentsComponent'),
     },
+    props: {
+        attribution: {
+            type: [Boolean, Number],
+            default: false
+        },
+    }
 }
 </script>

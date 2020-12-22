@@ -108,6 +108,11 @@ class Department extends Model
         return $this->outlets->firstWhere('is_main', true) ? optional($this->outlets->firstWhere('is_main', true))->id : optional($this->outlets->first())->id;
     }
 
+    public function getOutletAttribute()
+    {
+        return $this->outlets->firstWhere('is_main', true) ? $this->outlets->firstWhere('is_main', true) : $this->outlets->first();
+    }
+
 
 
     // Вложенные

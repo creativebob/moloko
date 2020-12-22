@@ -318,7 +318,7 @@ class AgentController extends Controller
      */
     public function getAgentsByCatalogGoodsId($id)
     {
-        $answer = operator_right('agents', false, 'index');
+//        $answer = operator_right('agents', false, 'index');
 
         $agents = Agent::with([
             // TODO - 13.12.20 - Неправильное отношение, правильное agent

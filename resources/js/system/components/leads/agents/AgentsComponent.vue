@@ -11,14 +11,11 @@
 
         <template v-else>
             <div
-                v-if="!isConducted"
+                v-if="!isConducted && agents.length"
 
                 class="cell small-12 input-group"
             >
-                <div
-                    v-if="agents.length"
-                    class="input-group-field"
-                >
+                <div class="input-group-field">
                     <select v-model="agentId">
                         <option
                             v-for="agent in agents"

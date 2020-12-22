@@ -5,7 +5,8 @@
 
 <div class="top-bar head-content">
     <div class="top-bar-left">
-        <h2 class="header-content">ЛИД №:<input id="show-case-number" name="show_case_number" readonly class="case_number_field" value="{{ $lead->case_number }}"></h2>
+        <h2 class="header-content">ЛИД №:<input id="show-case-number" name="show_case_number" readonly
+                                                class="case_number_field" value="{{ $lead->case_number }}"></h2>
     </div>
     <div class="top-bar-right wrap_lead_badget">
 
@@ -39,9 +40,12 @@
                     @endcan
 
                     {{-- <li class="tabs-title" id="tab-address"><a href="#content-panel-address" aria-selected="true">Адреса</a></li> --}}
+
+                    @if(extra_right('lead-history'))
                     <li class="tabs-title">
                         <a data-tabs-target="tab-history" href="#tab-history">История</a>
                     </li>
+                        @endif
                 </ul>
 
 
@@ -55,7 +59,9 @@
                             <div class="small-12 medium-shrink cell estimate-title">
                                 <p>Клиентский заказ
                                     @if($lead->estimate->registered_at)
-                                        № {{ $lead->estimate->number ?? '' }} от {{ $lead->estimate->registered_at->format('d.m.Y') }} <span class="tiny-text">({{ $lead->estimate->registered_at->getTranslatedShortDayName('dd') }})</span>
+                                        № {{ $lead->estimate->number ?? '' }}
+                                        от {{ $lead->estimate->registered_at->format('d.m.Y') }} <span
+                                            class="tiny-text">({{ $lead->estimate->registered_at->getTranslatedShortDayName('dd') }})</span>
                                     @endif
                                 </p>
                             </div>
@@ -84,13 +90,13 @@
                             </div>  -->
                         </div>
                     </div>
-                    {{-- КОНЕЦ АДРЕСА --}}
 
                     {{-- ИСТОРИЯ --}}
+                    @if(extra_right('lead-history'))
                     <div class="tabs-panel" id="tab-history">
                         @include('leads.tabs.history')
                     </div>
-                    {{-- КОНЕЦ ИСТОРИЯ --}}
+                    @endif
 
                     {{-- Конец контента доп таба --}}
                 </div>
@@ -114,16 +120,21 @@
             <div class="cell small-12">
 
 
-                    {{-- <li class="tabs-title"><a href="#content-panel-documents" aria-selected="true">Документы</a></li> --}}
+                {{-- <li class="tabs-title"><a href="#content-panel-documents" aria-selected="true">Документы</a></li> --}}
 
-                    {{-- @can ('index', App\Claim::class)
-                    <li class="tabs-title">
-                        <a data-tabs-target="content-panel-claims" href="#content-panel-claims">Рекламации</a>
-                    </li>
-                    @endcan --}}
-                    <lead-tabs-component></lead-tabs-component>
+                {{-- @can ('index', App\Claim::class)
+                <li class="tabs-title">
+                    <a data-tabs-target="content-panel-claims" href="#content-panel-claims">Рекламации</a>
+                </li>
+                @endcan --}}
 
-                    {{-- <li class="tabs-title"><a href="#content-panel-measurements" aria-selected="true">Замеры</a></li> --}}
+                <lead-tabs-component
+                    @if(extra_right('lead-attribution-show'))
+                    :attribution="{{ extra_right('lead-attribution-show') }}"
+                    @endif
+                ></lead-tabs-component>
+
+                {{-- <li class="tabs-title"><a href="#content-panel-measurements" aria-selected="true">Замеры</a></li> --}}
 
             </div>
 
@@ -142,7 +153,7 @@
 
                     {{-- КАТАЛОГ УСЛУГ --}}
                     <div class="tabs-panel" id="tab-catalog_services">
-{{--                        @include('leads.tabs.catalogs_services')--}}
+                        {{--                        @include('leads.tabs.catalogs_services')--}}
                     </div>
 
                     {{-- ДОКУМЕНТЫ
@@ -218,9 +229,12 @@
                     </div>
 
                     {{-- Аттрибуция --}}
-                    <div class="tabs-panel" id="tab-attribution">
-                        @include('leads.tabs.attribution')
-                    </div>
+                    @if(extra_right('lead-attribution-show'))
+                        <div class="tabs-panel" id="tab-attribution">
+                            @include('leads.tabs.attribution')
+                        </div>
+                    @endif
+
                 </div>
             </div>
         </div>

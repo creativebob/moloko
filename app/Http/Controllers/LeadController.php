@@ -111,7 +111,14 @@ class LeadController extends Controller
                         $q->with([
                             'service.process',
                         ]);
-                    }
+                    },
+                    'payments' => function ($q) {
+                        $q->with([
+                            'method',
+                            'sign'
+                        ]);
+                    },
+                    'agent.company'
                 ]);
             },
         ])
@@ -180,10 +187,13 @@ class LeadController extends Controller
         // Подключение политики
         $this->authorize(__FUNCTION__, Lead::class);
 
-        $location = $this->getLocation();
-        $data['location_id'] = $location->id;
 
-        $lead = Lead::create($data);
+        $lead = Lead::create();
+
+        $location = $this->getLocation(1, $lead->filial->location->city_id);
+        $lead->update([
+            'location_id' => $location->id
+        ]);
 
         // Создаем смету для лида
         $estimate = Estimate::make([
@@ -1114,16 +1124,27 @@ class LeadController extends Controller
                 $query->with('challenge_type')
                     ->whereNull('status')
                     ->orderBy('deadline_date', 'asc');
+            },
+            'outlet' => function ($q) {
+                $q->with([
+                    'catalogs_goods',
+                    'catalogs_services',
+                    'stock',
+                    'settings',
+                    'payments_methods'
+                ]);
             }
         ]);
 
         $estimate = $lead->estimate;
         $goodsItems = $estimate->goods_items;
+        $outlet = $lead->outlet;
 
         return response()->json([
             'lead' => $lead,
             'estimate' => $estimate,
             'goods_items' => $goodsItems,
+            'outlet' => $outlet,
         ]);
     }
 
