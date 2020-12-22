@@ -175,7 +175,7 @@ class Estimate extends BaseModel
 
     public function agent()
     {
-        return $this->belongsTo('App\Agent');
+        return $this->belongsTo('App\Agent')->withArchived();
     }
 
     public function catalogs_goods()
