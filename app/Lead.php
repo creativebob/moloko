@@ -15,7 +15,7 @@ use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 class Lead extends BaseModel
 {
     use SoftDeletes,
-        Cachable,
+//        Cachable,
         Notifiable,
         Quietlable,
         ManagerTraitScopes;
