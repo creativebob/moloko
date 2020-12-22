@@ -38,7 +38,7 @@ class EstimateController extends Controller
     {
         $this->middleware('auth');
         $this->entityAlias = 'estimates';
-        $this->entityDependence = false;
+        $this->entityDependence = true;
     }
 
     use UserControllerTrait,
@@ -65,6 +65,9 @@ class EstimateController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------
 
+        // dd($answer);
+
+
         $estimates = Estimate::with([
             'agent',
             'client.clientable.location',
@@ -75,9 +78,9 @@ class EstimateController extends Controller
         ])
             ->moderatorLimit($answer)
             ->companiesLimit($answer)
-            // ->filials($answer)
+            ->filials($answer)
             // ->authors($answer)
-            // ->systemItem($answer)
+            ->systemItem($answer)
             ->where('draft', false)
             ->whereNotNull('registered_at')
             ->filter()
