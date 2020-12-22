@@ -903,7 +903,7 @@ class EstimateController extends Controller
             $lead = $estimate->lead;
 
             // Формируем сообщение
-            $message = "Заказ от партнера №{$estimate->id}\r\n";
+            $message = "Заказ от партнера №{$estimate->number}\r\n";
             $message .= "Город: {$lead->location->city->name}\r\n";
             $message .= "Имя клиента: {$lead->name}\r\n";
             $message .= "Тел: " . decorPhone($lead->main_phone->phone) . "\r\n";

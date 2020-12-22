@@ -1124,16 +1124,27 @@ class LeadController extends Controller
                 $query->with('challenge_type')
                     ->whereNull('status')
                     ->orderBy('deadline_date', 'asc');
+            },
+            'outlet' => function ($q) {
+                $q->with([
+                    'catalogs_goods',
+                    'catalogs_services',
+                    'stock',
+                    'settings',
+                    'payments_methods'
+                ]);
             }
         ]);
 
         $estimate = $lead->estimate;
         $goodsItems = $estimate->goods_items;
+        $outlet = $lead->outlet;
 
         return response()->json([
             'lead' => $lead,
             'estimate' => $estimate,
             'goods_items' => $goodsItems,
+            'outlet' => $outlet,
         ]);
     }
 

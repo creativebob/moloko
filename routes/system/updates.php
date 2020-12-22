@@ -9,6 +9,12 @@
 |
 */
 
+Route::get('/roles', 'UpdateController@roles');
+Route::get('/notifications', 'UpdateController@notifications');
+Route::get('/charges', 'UpdateController@charges');
+
+
+// Одноразовые
 Route::get('/', 'UpdateController@update');
 Route::get('/vkusnyashka', 'UpdateController@update_vkusnyashka');
 Route::get('/add_discounts_entity', 'UpdateController@addDiscountsEntity');
@@ -25,6 +31,3 @@ Route::get('/add-loyalty-settings', 'UpdateController@addLoyaltySettings');
 Route::get('/update-agents-tables-in-migrations-table', 'UpdateController@updateAgentsTablesInMigrationsTable');
 Route::get('/add-outlet-agent-setting', 'UpdateController@addOutletAgentSetting');
 Route::get('/add-outlet-reserves-setting', 'UpdateController@addOutletReservesSetting');
-
-Route::get('/roles', 'UpdateController@roles');
-Route::get('/notifications', 'UpdateController@notifications');

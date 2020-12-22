@@ -38,6 +38,36 @@ class UpdateController extends Controller
     }
 
     /**
+     * Обновление обязанностей
+     *
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
+    public function charges()
+    {
+        $items = [
+            [
+                'name' => 'Просмотр истории лида',
+                'description' => null,
+                'alias' => 'lead-history',
+                'author_id' => 1,
+            ],
+        ];
+
+        $count = 0;
+        foreach ($items as $item) {
+            $res = Charge::where($item)
+                ->exists();
+//            dd($res);
+
+            if (!$res) {
+                $charge = Charge::insert($item);
+                $count++;
+            }
+        }
+        return __("Добавлено обязанностей: {$count}");
+    }
+
+    /**
      * Обновление оповещений
      *
      * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null

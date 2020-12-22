@@ -477,6 +477,7 @@ const moduleLead = {
         // Обновление лида и сметы
         UPDATE({state}, data) {
             state.loading = true;
+            // console.log(data);
 
             axios
                 .patch('/admin/leads/axios_update/' + state.lead.id, data)
@@ -515,6 +516,11 @@ const moduleLead = {
                     this.commit('SET_ESTIMATE', response.data.estimate);
 
                     this.commit('SET_GOODS_ITEMS', response.data.goods_items);
+
+                    if (response.data.outlet) {
+                        this.commit('SET_OUTLET', response.data.outlet);
+                        this.commit('SET_OUTLET_SETTINGS', response.data.outlet.settings);
+                    }
 
                     state.change = false;
                 })

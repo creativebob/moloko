@@ -40,9 +40,12 @@
                     @endcan
 
                     {{-- <li class="tabs-title" id="tab-address"><a href="#content-panel-address" aria-selected="true">Адреса</a></li> --}}
+
+                    @if(extra_right('lead-history'))
                     <li class="tabs-title">
                         <a data-tabs-target="tab-history" href="#tab-history">История</a>
                     </li>
+                        @endif
                 </ul>
 
 
@@ -87,13 +90,13 @@
                             </div>  -->
                         </div>
                     </div>
-                    {{-- КОНЕЦ АДРЕСА --}}
 
                     {{-- ИСТОРИЯ --}}
+                    @if(extra_right('lead-history'))
                     <div class="tabs-panel" id="tab-history">
                         @include('leads.tabs.history')
                     </div>
-                    {{-- КОНЕЦ ИСТОРИЯ --}}
+                    @endif
 
                     {{-- Конец контента доп таба --}}
                 </div>

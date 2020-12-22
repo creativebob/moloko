@@ -35,7 +35,7 @@
                             :start-cities="cities"
                             :city="city"
                             :disabled="isDisabled"
-                            @input="change"
+                            @change="changeCityId"
                             ref="cityId"
                         ></search-city-component>
                     </div>
@@ -175,6 +175,10 @@
             }
         },
         methods: {
+            changeCityId(id) {
+                this.cityId = id;
+                this.change();
+            },
             change() {
                 const data = {
                     main_phone: this.mainPhone,
