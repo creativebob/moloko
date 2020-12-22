@@ -879,7 +879,7 @@ class EstimateController extends Controller
         // dd($result);
 
         $note = "Передан агенту: " . $agent->company->name . "\r\n";
-        $note .= "Вознаграждение агента:: " . num_format($estimate->share_currency, 0) . "\r\n";
+        $note .= "Вознаграждение агента: " . num_format($estimate->share_currency, 0) . "\r\n";
         $note .= "Вознаграждения принципала: " . num_format($estimate->principal_currency, 0) . "\r\n";
 
         $estimate = Estimate::with([
