@@ -67,14 +67,18 @@
                     <th class="td-reserves">Резервы</th>
                     @endif
                     <th class="td-stage">Этап</th>
-                    <th class="td-challenge">Задачи</th>
+                    {{-- <th class="td-challenge">Задачи</th> --}}
                     <th class="td-status">Статус</th>
                     <th class="td-shipment_at">Дата отгрузки</th>
                     {{-- <th class="td-deadline_date">Дедлайн</th> --}}
 
+                    <th class="td-city-address">Адрес</th>
+
                     @if($right_lead_all_managers)
                         <th class="td-manager">Менеджер</th>
                     @endif
+
+
 
                     {{-- <th class="td-control"></th> --}}
                     <th class="td-delete"></th>
@@ -171,12 +175,10 @@
                             @endif
 
                             <td class="td-stage">{{ $lead->stage->name }}</td>
-                            <td class="td-challenge">
-                                {{-- $lead->first_challenge->challenge_type->name or '' }}<br>
-                                <span class="tiny-text">{{ $lead->first_challenge->appointed->second_name or ''}}</span> --}}
+                            {{-- <td class="td-challenge">
+                                <span class="tiny-text">{{ $lead->first_challenge->appointed->second_name or ''}}</span>
                                 <span class="tiny-text">{{ $lead->challenges_active_count ?? ''}}</span>
-
-                            </td>
+                            </td> --}}
 
                             <td class="td-status">
                                 @if($lead->estimate->conducted_at) Чек закрыт @else Открыт @endif
@@ -196,6 +198,12 @@
                                 @endif
                               </td> --}}
 
+                            <td class="td-city">
+                                {{ $lead->location->city->name }}<br>
+                                <span class="tiny-text">{{ $lead->location->address }}</span>
+
+                            </td>
+
                             @if($right_lead_all_managers)
                                 <td class="td-manager">
                                     @if($lead->estimate->agent_id)
@@ -207,14 +215,12 @@
                                     @else
                                         @if(!empty($lead->manager->first_name))
                                             {{ $lead->manager->first_name . ' ' . $lead->manager->second_name }}
-
                                         @else
                                             Не назначен
                                         @endif
                                     @endif
                                 </td>
                             @endif
-
 
                             {{-- Элементы управления --}}
                             {{-- @include('includes.control.table-td', ['item' => $lead]) --}}

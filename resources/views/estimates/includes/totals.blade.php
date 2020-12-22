@@ -11,9 +11,11 @@
     @if(extra_right('margin-show'))
         <td class="td-margin_currency"></td>
     @endif
-    <td class="td-partner">
-        {{ num_format($estimatesTotals->partner_currency, 0) }}       
-    </td>
+    @if(extra_right('partner-currency-show'))
+        <td class="td-partner">
+            {{ num_format($estimatesTotals->partner_currency, 0) }}       
+        </td>
+    @endif
     @if(extra_right('share-currency-show'))
         <td class="td-share-currency">{{ num_format($estimatesTotals->share_currency, 0) }}</td>
     @endif

@@ -76,10 +76,10 @@ class EstimateController extends Controller
             'payments',
             'lead'
         ])
-            ->moderatorLimit($answer)
+            // ->moderatorLimit($answer)
             ->companiesLimit($answer)
             ->filials($answer)
-            // ->authors($answer)
+            ->authors($answer)
             ->systemItem($answer)
             ->where('draft', false)
             ->whereNotNull('registered_at')
@@ -87,7 +87,7 @@ class EstimateController extends Controller
             ->orderByDesc('created_at')
             ->paginate(30);
 
-            // dd($estimates->first());
+
 
 
         // -----------------------------------------------------------------------------------------------------------
