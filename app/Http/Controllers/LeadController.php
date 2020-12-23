@@ -845,9 +845,9 @@ class LeadController extends Controller
                 'name' => $newLead['name'],
                 'company_name' => $newLead['company_name'],
                 'email' => $newLead['email'],
-                'user_id' => $newLead['user_id'],
-                'organization_id' => $newLead['organization_id'],
-                'client_id' => $newLead['client_id'],
+                'user_id' => $newLead['user_id'] ?? null,
+                'organization_id' => $newLead['organization_id'] ?? null,
+                'client_id' => $newLead['client_id'] ?? null,
 
                 'stage_id' => $newLead['stage_id'],
                 'shipment_at' => $newLead['shipment_at'],
@@ -867,7 +867,6 @@ class LeadController extends Controller
                     ->where('company_id', $lead->company_id)
                     ->where('site_id', '!=', 1)
                     ->first();
-
 
                 if ($user) {
                     // Обновляем имя пользователя если его нет
