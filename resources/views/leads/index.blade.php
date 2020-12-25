@@ -26,7 +26,6 @@
 @endsection
 
 @section('content')
-
     @php
         $right_lead_regular = extra_right('lead-regular');
         $right_lead_dealer = extra_right('lead-dealer');
@@ -98,6 +97,7 @@
                             data-entity="leads"
                             data-id="{{ $lead->id }}"
                         >
+
                             <td class="td-drop">
                                 <div class="sprite icon-drop"></div>
                             </td>

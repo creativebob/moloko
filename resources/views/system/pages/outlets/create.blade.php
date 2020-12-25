@@ -21,7 +21,7 @@
                 <div class="small-12 cell">
 
                     <label>Филиал
-                        @include('includes.selects.user_filials')
+                        @include('includes.selects.user_filials', ['entity' => 'outlets'])
                     </label>
                 </div>
 

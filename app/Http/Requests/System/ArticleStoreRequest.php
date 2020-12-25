@@ -38,7 +38,7 @@ class ArticleStoreRequest extends FormRequest
             // 'manufacturer_id' => 'integer|required',
             // 'articles_group_id' => 'integer|required',
 
-            'cost_default' => 'integer|nullable',
+            'cost_default' => 'nullable',
             'cost_mode' => 'integer|nullable',
             'price_default' => 'integer|nullable',
             'price_mode' => 'integer|nullable',

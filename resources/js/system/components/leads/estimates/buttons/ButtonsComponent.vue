@@ -90,6 +90,9 @@ export default {
         goodsItems() {
             return this.$store.state.lead.goodsItems;
         },
+        labels() {
+            return this.$store.state.lead.labels;
+        },
 
         isRegistered() {
             return this.$store.state.lead.estimate.registered_at !== null;
@@ -119,6 +122,7 @@ export default {
                     client: this.client,
                     estimate: this.estimate,
                     goods_items: this.goodsItems,
+                    labels: this.labels,
                 };
 
                 this.update(data);
@@ -133,6 +137,7 @@ export default {
                     client: this.client,
                     estimate: this.estimate,
                     goods_items: this.goodsItems,
+                    labels: this.labels,
                     is_registered: true
                 };
 

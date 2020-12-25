@@ -40,6 +40,8 @@ class Lead extends BaseModel
         'name',
         'user_id',
 
+        'description',
+
         'company_name',
         'organization_id',
 

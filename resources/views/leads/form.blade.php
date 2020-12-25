@@ -42,10 +42,14 @@
                     {{-- <li class="tabs-title" id="tab-address"><a href="#content-panel-address" aria-selected="true">Адреса</a></li> --}}
 
                     @if(extra_right('lead-history'))
+                        <li class="tabs-title">
+                            <a data-tabs-target="tab-history" href="#tab-history">История</a>
+                        </li>
+                    @endif
+
                     <li class="tabs-title">
-                        <a data-tabs-target="tab-history" href="#tab-history">История</a>
+                        <a data-tabs-target="tab-options" href="#tab-options">Опции</a>
                     </li>
-                        @endif
                 </ul>
 
 
@@ -93,10 +97,14 @@
 
                     {{-- ИСТОРИЯ --}}
                     @if(extra_right('lead-history'))
-                    <div class="tabs-panel" id="tab-history">
-                        @include('leads.tabs.history')
-                    </div>
+                        <div class="tabs-panel" id="tab-history">
+                            @include('leads.tabs.history')
+                        </div>
                     @endif
+
+                    <div class="tabs-panel" id="tab-options">
+                        @include('leads.tabs.options')
+                    </div>
 
                     {{-- Конец контента доп таба --}}
                 </div>

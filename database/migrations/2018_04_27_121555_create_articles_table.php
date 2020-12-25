@@ -31,7 +31,7 @@ class CreateArticlesTable extends Migration
 
             $table->boolean('kit')->default(0)->unsigned()->comment('Статус набора');
 
-            $table->integer('cost_default')->default(0)->comment('Фиксированная себестоимость (руками)');
+            $table->decimal('cost_default', 10, 2)->default(0)->comment('Фиксированная себестоимость (руками)');
             $table->integer('cost_mode')->nullable()->unsigned()->comment('Режим определения себестоимости');
 
             $table->integer('price_default')->default(0)->comment('Фиксированная цена (руками)');

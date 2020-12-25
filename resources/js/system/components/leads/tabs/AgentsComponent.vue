@@ -1,6 +1,6 @@
 <template>
     <li
-        v-show="isRegistered && hasAgentSetting && oneCatalog"
+        v-show="isRegistered && hasAgentSetting && oneCatalog && userHasOutlet"
         class="tabs-title">
         <a data-tabs-target="tab-agents" href="#tab-agents">Агенты</a>
     </li>
@@ -17,6 +17,9 @@
             },
             oneCatalog() {
                 return this.$store.state.lead.catalogsGoodsIds.length == 1;
+            },
+            userHasOutlet() {
+                return this.$store.getters.USER_HAS_OUTLET;
             }
         }
     }

@@ -8,8 +8,12 @@ class FilialsForUserComposer
 {
 	public function compose(View $view)
 	{
-
-		$filial_list = getLS('users', 'view', 'filials');
+        if ($view->entity) {
+            $entity = $view->entity;
+        } else {
+            $entity = 'users';
+        }
+		$filial_list = getLS($entity, 'view', 'filials');
 		return $view->with('filial_list', $filial_list);
 
 	}

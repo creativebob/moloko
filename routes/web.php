@@ -755,6 +755,9 @@ Route::get('/leads/search-user-by-phone/{number}', 'LeadController@searchUserByP
 Route::get('/leads/search-companies-by-name/{name}', 'LeadController@searchCompaniesByName');
 
 
+// Филиалы с торговыми точками
+Route::any('/leads/get_user_filials_with_outlets', 'LeadController@getUserFilialsWithOutlets');
+
 // Поиск
 Route::get('/leads/search/{text}', 'LeadController@search');
 
@@ -1231,7 +1234,8 @@ Route::post('/departments_list', 'DepartmentController@departments_list')->middl
 // Проверка на существование филиала/отдела
 Route::any('/department_check', 'DepartmentController@ajax_check')->middleware('auth');
 
-Route::any('/get_user_filials_with_outlets', 'DepartmentController@getUserFilialsWithOutlets');
+Route::any('/get_user_filials', 'DepartmentController@getUserFilials');
+Route::any('/departments/get_user_filials_with_outlets', 'DepartmentController@getUserFilialsWithOutlets');
 
 
 Route::any('/ajax_get_filials_for_catalogs_service', 'DepartmentController@ajax_get_filials_for_catalogs_service')->middleware('auth');
@@ -1588,6 +1592,27 @@ Route::resource('/outlets', 'OutletController')
     ->except([
         'show',
         'destroy'
+    ]);
+
+
+// --------------------------- Рабочие места -------------------------------------
+// Архив
+Route::post('/workplaces/archive/{id}', 'WorkplaceController@archive');
+// Основные методы
+Route::resource('/workplaces', 'WorkplaceController')
+    ->except([
+        'create',
+        'show',
+        'destroy'
+    ]);
+
+
+// --------------------------- Метки заказа -------------------------------------
+Route::post('/labels/get', 'LabelController@get');
+// Основные методы
+Route::resource('/labels', 'LabelController')
+    ->except([
+        'show',
     ]);
 
 

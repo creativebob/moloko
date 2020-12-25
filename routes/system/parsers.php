@@ -16,30 +16,30 @@ Route::get('/130420', 'ParserController@parser_130420');
 Route::get('/archive_goods', 'ParserController@parserArchiveGoods');
 Route::get('/prices_goods_total', 'ParserController@parserPricesGoodsTotal');
 Route::get('/add_role', 'ParserController@addRole');
-Route::get('/set-morphs-aliases', 'ParserController@setMorphsAliases');
-Route::get('/set-organizations', 'ParserController@setOrganizations');
+Route::get('/set_morphs_aliases', 'ParserController@setMorphsAliases');
+Route::get('/set_organizations', 'ParserController@setOrganizations');
 
-Route::get('/update-productions-entities-models', 'ParserController@updateProductionsEntitiesModel');
-Route::get('/set-registered-at', 'ParserController@setRegisteredAt');
-Route::get('/set-receipted-at', 'ParserController@setReceiptedAt');
-Route::get('/set-produced-at', 'ParserController@setProducedAt');
+Route::get('/update_productions_entities_models', 'ParserController@updateProductionsEntitiesModel');
+Route::get('/set_registered_at', 'ParserController@setRegisteredAt');
+Route::get('/set_receipted_at', 'ParserController@setReceiptedAt');
+Route::get('/set_produced_at', 'ParserController@setProducedAt');
 
-Route::get('/start-registering-documents-command', 'ParserController@startRegisteringDocumentsCommand');
+Route::get('/start_registering_documents_command', 'ParserController@startRegisteringDocumentsCommand');
 
-Route::get('/update-payments', 'ParserController@updatePayments');
-Route::get('/set-sended-at', 'ParserController@setSendedAt');
-Route::get('/create-subscribers-from-users', 'ParserController@createSubscribersFromUsers');
-Route::get('/set-storage-for-consignments-items', 'ParserController@setStorageForConsignmentsItems');
-Route::get('/set-storage-for-productions-items', 'ParserController@setStorageForProductionsItems');
-Route::get('/set-documents-items-entities', 'ParserController@setDocumentsItemsEntities');
+Route::get('/update_payments', 'ParserController@updatePayments');
+Route::get('/set_sended_at', 'ParserController@setSendedAt');
+Route::get('/create_subscribers_from_users', 'ParserController@createSubscribersFromUsers');
+Route::get('/set_storage_for_consignments_items', 'ParserController@setStorageForConsignmentsItems');
+Route::get('/set_storage_for_productions_items', 'ParserController@setStorageForProductionsItems');
+Route::get('/set_documents_items_entities', 'ParserController@setDocumentsItemsEntities');
 
-Route::get('/set-storage-for-reserves', 'ParserController@setStorageForReserves');
-Route::get('/re-reserving', 'ParserController@reReserving');
-Route::get('/set-discounts-for-estimates', 'ParserController@setDiscountsForEstimates');
+Route::get('/set_storage_for_reserves', 'ParserController@setStorageForReserves');
+Route::get('/re_reserving', 'ParserController@reReserving');
+Route::get('/set_discounts_for_estimates', 'ParserController@setDiscountsForEstimates');
 
-Route::get('/update-payments-sign', 'ParserController@updatePaymentsSign');
-Route::get('/update-clients-filial', 'ParserController@updateClientsFilial');
+Route::get('/update_payments_sign', 'ParserController@updatePaymentsSign');
+Route::get('/update_clients_filial', 'ParserController@updateClientsFilial');
 
-Route::get('/update-leads-outlet-id', 'ParserController@updateLeadsOutletId');
+Route::get('/update_leads_outlet_id', 'ParserController@updateLeadsOutletId');
 
 Route::get('/test', 'ParserController@test');

@@ -41,6 +41,9 @@ Vue.component('lead-errors-component', require('./components/leads/ErrorsCompone
 Vue.component('estimate-component', require('./components/leads/estimates/EstimateComponent'));
 Vue.component('lead-tabs-component', require('./components/leads/tabs/TabsComponent'));
 Vue.component('payments-component', require('./components/leads/payments/PaymentsComponent'));
+Vue.component('lead-description-component', require('./components/leads/options/DescriptionComponent'));
+Vue.component('lead-labels-component', require('./components/leads/options/LabelsComponent'));
+
 Vue.component('lead-history-component', require('./components/leads/history/HistoriesComponent'));
 
 Vue.component('checkboxer-component', require('./components/common/CheckboxerComponent'));
@@ -133,6 +136,8 @@ Vue.component('employee-roles-component', require('./components/employees/roles/
 // Агенты
 Vue.component('agency-schemes-component', require('./components/agency_shcemes/AgencySchemesComponent'));
 Vue.component('agents-schemes-component', require('./components/agents/shcemes/SchemesComponent'));
+
+Vue.component('filials-with-outlets-component', require('./components/common/selects/FilialWithOutlets'));
 
 
 /**

@@ -35,6 +35,8 @@ use App\Http\View\Composers\System\PaymentsMethodsComposer;
 use App\Http\View\Composers\System\SuppliersComposer;
 use App\Http\View\Composers\System\TaxationTypesComposer;
 use App\Http\View\Composers\System\TemplatesComposer;
+use App\Http\View\Composers\System\ToolsTypesComposer;
+use App\Http\View\Composers\System\ToolsWithTypeComposer;
 use App\Http\View\Composers\System\UsersWithClientComposer;
 use App\Http\View\Composers\System\CmvArchivesCountComposer;
 use App\Http\View\Composers\System\CompaniesWithClientComposer;
@@ -242,6 +244,8 @@ class ViewServiceProvider extends ServiceProvider
         view()->composer('includes.lists.charges', ChargesComposer::class);
         view()->composer('includes.lists.widgets', WidgetsComposer::class);
         view()->composer('includes.lists.notifications', NotificationsComposer::class);
+
+        view()->composer('includes.lists.tools_with_type', ToolsWithTypeComposer::class);
 
         view()->composer('includes.selects.legal_forms', LegalFormsSelectComposer::class);
         view()->composer('includes.selects.agent_types', AgentTypesComposer::class);
@@ -564,6 +568,9 @@ class ViewServiceProvider extends ServiceProvider
 
 
         view()->composer('estimates.includes.totals', EstimatesTotalsComposer::class);
+
+
+        view()->composer('includes.selects.tools_types', ToolsTypesComposer::class);
     }
 
     /**

@@ -188,6 +188,11 @@ class Estimate extends BaseModel
         return $this->belongsToMany('App\CatalogsService');
     }
 
+    public function labels()
+    {
+        return $this->belongsToMany('App\Label');
+    }
+
 
     /**
      * Фильтр

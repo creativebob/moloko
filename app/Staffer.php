@@ -80,7 +80,10 @@ class Staffer extends Model
     // Пользователь
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)
+            ->withDefault([
+                'name' => 'Вакансия'
+            ]);
     }
 
     // Сотрудники
@@ -120,9 +123,10 @@ class Staffer extends Model
     }
 
     // Получаем график компании в адаптированном под шаблон виде
-    public function getMainScheduleAttribute($value) {
+    public function getMainScheduleAttribute($value)
+    {
         $main_schedule = $this->morphToMany(Schedule::class, 'schedule_entities')->with('worktimes')->wherePivot('mode', 'main')->first();
-        if($main_schedule != null){
+        if ($main_schedule != null) {
             return $main_schedule;
         } else {
             return $value;
@@ -130,9 +134,10 @@ class Staffer extends Model
     }
 
     // Получаем график компании в адаптированном под шаблон виде
-    public function getWorktimeAttribute($value) {
+    public function getWorktimeAttribute($value)
+    {
         $worktime = $this->morphToMany(Schedule::class, 'schedule_entities')->wherePivot('mode', 'main')->first();
-        if($worktime != null){
+        if ($worktime != null) {
             $worktime = $worktime->worktimes;
             return worktime_to_format($worktime->keyBy('weekday'));
         } else {
@@ -146,6 +151,11 @@ class Staffer extends Model
         return $this->hasMany(Worktime::class);
     }
 
+    public function workplaces()
+    {
+        return $this->belongsToMany(Workplace::class, 'workplace_staffer');
+    }
+
     // --------------------------------------- Запросы -----------------------------------------
     public function getIndex($request, $answer)
     {
@@ -157,19 +167,19 @@ class Staffer extends Model
             'employee',
             'company.filials'
         ])
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->filials($answer)
-        ->authors($answer)
-        ->systemItem($answer)
-        ->booklistFilter($request)
-        ->where('archive', false)
-        ->filter($request, 'position_id')
-        ->filter($request, 'department_id')
-        ->dateIntervalFilter($request, 'date_employment')
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->paginate(30);
+            ->moderatorLimit($answer)
+            ->companiesLimit($answer)
+            ->filials($answer)
+            ->authors($answer)
+            ->systemItem($answer)
+            ->booklistFilter($request)
+            ->where('archive', false)
+            ->filter($request, 'position_id')
+            ->filter($request, 'department_id')
+            ->dateIntervalFilter($request, 'date_employment')
+            ->orderBy('moderation', 'desc')
+            ->orderBy('sort', 'asc')
+            ->paginate(30);
     }
 
 }

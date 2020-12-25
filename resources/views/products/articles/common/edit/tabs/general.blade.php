@@ -11,7 +11,9 @@
                     {{ Form::text('name', $article->name, ['required']) }}
                 </label>
 
-                <articles-categories-with-groups-component :item="{{ $item }}" :article="{{ $article }}" :categories='@json($categories_tree)' :groups='@json($groups)'></articles-categories-with-groups-component>
+                <articles-categories-with-groups-component :item="{{ $item }}" :article="{{ $article }}"
+                                                           :categories='@json($categories_tree)'
+                                                           :groups='@json($groups)'></articles-categories-with-groups-component>
 
                 <label>Производитель
                     @if ($item->category->manufacturers->isNotEmpty())
@@ -89,8 +91,16 @@
                 @endif
                 {!! Form::hidden('id', null, ['id' => 'item-id']) !!}
 
+                @if($item->getTable() == 'tools')
+                    <div class="grid-x grid-margin-x">
+                        <div class="cell small-12">
+                            <label>Тип
+                                @include('includes.selects.tools_types', ['value' => $item->tools_type_id, 'placeholder' => true])
+                            </label>
 
-
+                        </div>
+                    </div>
+                @endif
 
             </div>
 
@@ -170,7 +180,6 @@
         @if ($item->getTable() == 'goods')
             @include('products.common.edit.metrics.metrics')
         @endif
-
 
 
         <div id="item-inputs"></div>

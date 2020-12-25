@@ -232,7 +232,8 @@ class CityController extends Controller
             'need_all' => 0,
             'count' => 250,
             'v' => 5.92,
-            'access_token' => config('app.vk_api_token')
+            'access_token' => config('app.vk_api_token'),
+            'lang' => 'ru'
         ];
         $get_params = http_build_query($request_params);
         $result = (file_get_contents('https://api.vk.com/method/database.getCities?'. $get_params));

@@ -24,6 +24,11 @@ const moduleLead = {
 
         agent: null,
 
+        userFilials: [],
+        userOutlets: [],
+
+        labels: [],
+
         change: false,
         loading: false,
 
@@ -73,6 +78,22 @@ const moduleLead = {
 
             this.commit('SET_CHANGE');
         },
+        UPDATE_LEAD_DESC(state, desc) {
+            state.lead.description = desc;
+
+            this.commit('SET_CHANGE');
+        },
+
+        CHANGE_LABELS(state, data) {
+            if (data.status == true) {
+                state.labels.push(data.id)
+            } else {
+                const index = state.labels.findIndex(obj => obj == data.id);
+                state.labels.splice(index, 1);
+            }
+
+            this.commit('SET_CHANGE');
+        },
 
         // Клиент
         SET_CLIENT(state, client) {
@@ -98,6 +119,13 @@ const moduleLead = {
         },
         SET_OUTLET_SETTINGS(state, settings) {
             state.outletSettings = settings;
+        },
+
+        SET_USER_FILIALS(state, filials) {
+            state.userFilials = filials;
+        },
+        SET_USER_OUTLETS(state, outlets) {
+            state.userOutlets = outlets;
         },
 
         // Каталоги
@@ -832,6 +860,9 @@ const moduleLead = {
         IS_REGISTERED: state => {
             return state.estimate.registered_at !== null;
         },
+        IS_CONDUCTED: state => {
+            return state.estimate.conducted_at !== null;
+        },
 
         // Товары
         COUNT_GOODS_ITEM_IN_ESTIMATE: state => id => {
@@ -882,6 +913,9 @@ const moduleLead = {
             const res = state.outletSettings.find(obj => obj.alias == alias);
             return !!res;
         },
+        USER_HAS_OUTLET: state => {
+            return state.userOutlets.find(obj => obj.id == state.outlet.id);
+        }
     }
 };
 

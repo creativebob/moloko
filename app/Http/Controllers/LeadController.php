@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Client;
 use App\Company;
 use App\ContractsClient;
+use App\Department;
 use App\Discount;
 use App\Http\Controllers\Traits\Estimatable;
 use App\Models\System\Documents\Estimate;
@@ -283,7 +284,8 @@ class LeadController extends Controller
                     'payments',
                     'lead.client.contract',
                     'discounts',
-                    'agent.company'
+                    'agent.company',
+                    'labels'
                 ]);
             },
             'claims',
@@ -307,7 +309,8 @@ class LeadController extends Controller
                     'settings',
                     'payments_methods'
                 ]);
-            }
+            },
+            'filial'
         ])
             ->companiesLimit($answer)
             ->filials($answer)
@@ -419,7 +422,7 @@ class LeadController extends Controller
 
 //            ->where('filial_id', auth()->user()->stafferFilialId)
 //            ->first();
-        ->find($lead->outlet_id);
+            ->find($lead->outlet_id);
 
         // Настройки компании
         $settings = auth()->user()->company->settings;
@@ -843,17 +846,19 @@ class LeadController extends Controller
 
             $dataLead = [
                 'name' => $newLead['name'],
-                'company_name' => $newLead['company_name'],
-                'email' => $newLead['email'],
+                'company_name' => $newLead['company_name'] ?? null,
+                'email' => $newLead['email'] ?? null,
                 'user_id' => $newLead['user_id'] ?? null,
                 'organization_id' => $newLead['organization_id'] ?? null,
                 'client_id' => $newLead['client_id'] ?? null,
 
-                'stage_id' => $newLead['stage_id'],
-                'shipment_at' => $newLead['shipment_at'],
+                'stage_id' => $newLead['stage_id'] ?? null,
+                'shipment_at' => $newLead['shipment_at'] ?? null,
 
-                'filial_id' => $newLead['filial_id'],
-                'outlet_id' => $newLead['outlet_id'],
+                'filial_id' => $newLead['filial_id'] ?? null,
+                'outlet_id' => $newLead['outlet_id'] ?? null,
+
+                'description' => $newLead['description'] ?? null,
             ];
 
             $location = $this->getLocation(1, $newLead['location']['city_id'], $newLead['location']['address']);
@@ -1005,6 +1010,8 @@ class LeadController extends Controller
             // Аггрегация сметы
             $this->aggregateEstimate($lead->estimate);
 
+            $lead->estimate->labels()->sync($request->labels);
+
 
             // Проверяем скидки
             if ($request->has('estimate')) {
@@ -1109,7 +1116,8 @@ class LeadController extends Controller
                         ]);
                     },
                     'payments',
-                    'discounts'
+                    'discounts',
+                    'labels'
                 ]);
             },
             'lead_method',
@@ -1239,7 +1247,7 @@ class LeadController extends Controller
     {
 
         // Подключение политики
-            $this->authorize(getmethod('index'), Lead::class);
+        $this->authorize(getmethod('index'), Lead::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('index'));
@@ -1988,6 +1996,32 @@ class LeadController extends Controller
             ->get();
 
         return response()->json($leadHistory);
+
+    }
+
+    public function getUserFilialsWithOutlets(Request $request)
+    {
+        $outlets = session("access.user_info.outlets");
+        $filials = null;
+        if ($outlets) {
+            $filialsIds = [];
+            foreach ($outlets as $outlet) {
+                $filialsIds[] = $outlet->filial_id;
+            }
+
+            $filials = Department::select([
+                'id',
+                'name'
+            ])
+            ->find($filialsIds);
+        }
+
+        $data = [
+            'filials' => $filials,
+            'outlets' => $outlets
+        ];
+
+        return response()->json($data);
 
     }
 }
