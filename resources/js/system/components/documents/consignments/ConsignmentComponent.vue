@@ -200,7 +200,7 @@
                 // Производители
                 manufacturers: this.selectData.manufacturers,
                 itemManufacturer: null,
-                manufacturerId: null,
+                manufacturerId: this.selectData.manufacturers.length ? this.selectData.manufacturers[0].id : null,
 
                 // Валюте
                 currencyId: this.currencies[0].id,
