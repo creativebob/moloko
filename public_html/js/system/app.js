@@ -101403,12 +101403,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
+        'search-component': __webpack_require__(585),
         'childrens-component': __webpack_require__(13),
         'price-goods-component': __webpack_require__(400)
     },
@@ -101960,35 +101958,47 @@ var render = function() {
   return _c("div", { staticClass: "grid-x grid-padding-x" }, [
     _c("div", { staticClass: "shrink cell catalog-bar" }, [
       _vm.catalogs.length
-        ? _c("div", { staticClass: "grid-x grid-padding-x" }, [
-            _vm._m(0),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "small-12 cell search-in-catalog-panel" },
-              [
-                _c(
-                  "ul",
-                  {
-                    directives: [{ name: "drilldown", rawName: "v-drilldown" }],
-                    staticClass: "vertical menu selecter-catalog-item",
-                    attrs: {
-                      "data-back-button":
-                        '<li class="js-drilldown-back"><a tabindex="0">Назад</a></li>'
-                    }
-                  },
-                  _vm._l(_vm.catalogGoodsItemsList, function(catalogGoodsItem) {
-                    return _c("childrens-component", {
-                      key: catalogGoodsItem.id,
-                      attrs: { item: catalogGoodsItem },
-                      on: { get: _vm.changeCatalogsItem }
-                    })
-                  }),
-                  1
-                )
-              ]
-            )
-          ])
+        ? _c(
+            "div",
+            { staticClass: "grid-x grid-padding-x" },
+            [
+              _c("search-component", {
+                attrs: { prices: _vm.prices },
+                on: { add: _vm.addPriceToEstimate }
+              }),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "small-12 cell search-in-catalog-panel" },
+                [
+                  _c(
+                    "ul",
+                    {
+                      directives: [
+                        { name: "drilldown", rawName: "v-drilldown" }
+                      ],
+                      staticClass: "vertical menu selecter-catalog-item",
+                      attrs: {
+                        "data-back-button":
+                          '<li class="js-drilldown-back"><a tabindex="0">Назад</a></li>'
+                      }
+                    },
+                    _vm._l(_vm.catalogGoodsItemsList, function(
+                      catalogGoodsItem
+                    ) {
+                      return _c("childrens-component", {
+                        key: catalogGoodsItem.id,
+                        attrs: { item: catalogGoodsItem },
+                        on: { get: _vm.changeCatalogsItem }
+                      })
+                    }),
+                    1
+                  )
+                ]
+              )
+            ],
+            1
+          )
         : _vm._e()
     ]),
     _vm._v(" "),
@@ -102026,7 +102036,7 @@ var render = function() {
           })
         ]),
         _vm._v(" "),
-        _vm._m(1)
+        _vm._m(0)
       ]),
       _vm._v(" "),
       _c(
@@ -102055,7 +102065,7 @@ var render = function() {
         attrs: { id: "modal-catalogs_goods", "data-reveal": "" }
       },
       [
-        _vm._m(2),
+        _vm._m(1),
         _vm._v(" "),
         _c("div", { staticClass: "grid-x align-center modal-content" }, [
           _c("div", { staticClass: "small-10 cell text-center inputs" }, [
@@ -102097,7 +102107,7 @@ var render = function() {
             )
           ]),
           _vm._v(" "),
-          _vm._m(3)
+          _vm._m(2)
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "grid-x align-center grid-padding-x" }, [
@@ -102128,28 +102138,6 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "small-12 cell search-in-catalog-panel" }, [
-      _c("label", { staticClass: "label-icon" }, [
-        _c("input", {
-          attrs: {
-            type: "text",
-            name: "search",
-            placeholder: "Поиск",
-            maxlength: "25",
-            autocomplete: "off"
-          }
-        }),
-        _vm._v(" "),
-        _c("div", { staticClass: "sprite-input-left icon-search" }),
-        _vm._v(" "),
-        _c("span", { staticClass: "form-error" })
-      ])
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -137222,6 +137210,236 @@ $(document).on('click', '.filter-close', function () {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 583 */,
+/* 584 */,
+/* 585 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(586)
+/* template */
+var __vue_template__ = __webpack_require__(587)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/system/components/leads/catalogs/goods/SearchComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-285f9a76", Component.options)
+  } else {
+    hotAPI.reload("data-v-285f9a76", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 586 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        prices: Array
+    },
+    data: function data() {
+        return {
+            text: '',
+            results: [],
+            search: false
+        };
+    },
+
+    methods: {
+        input: function input() {
+            this.found = false;
+            this.search = false;
+            this.results = [];
+
+            if (this.text.length > 2) {
+                this.check();
+            }
+        },
+        check: function check() {
+            var _this = this;
+
+            this.results = this.prices.filter(function (item) {
+                return item.goods.article.name.toLowerCase().includes(_this.text.toLowerCase());
+            });
+            this.search = this.results.length > 0;
+            this.error = this.results.length == 0;
+        },
+        add: function add(price) {
+            this.found = true;
+            this.search = false;
+            this.results = [];
+
+            this.$emit('add', price);
+        },
+        onEnter: function onEnter() {
+            if (this.results.length == 1) {
+                this.add(this.results[0]);
+            }
+        }
+    }
+
+});
+
+/***/ }),
+/* 587 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "small-12 cell search-in-catalog-panel" }, [
+    _c("label", { staticClass: "label-icon" }, [
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.text,
+            expression: "text"
+          }
+        ],
+        attrs: {
+          type: "text",
+          name: "search",
+          placeholder: "Поиск",
+          maxlength: "25",
+          autocomplete: "off"
+        },
+        domProps: { value: _vm.text },
+        on: {
+          input: [
+            function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.text = $event.target.value
+            },
+            _vm.input
+          ],
+          keydown: function($event) {
+            if (
+              !$event.type.indexOf("key") &&
+              _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+            ) {
+              return null
+            }
+            $event.preventDefault()
+            return _vm.onEnter($event)
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sprite-input-left icon-search" }),
+      _vm._v(" "),
+      _c("span", { staticClass: "form-error" })
+    ]),
+    _vm._v(" "),
+    _c("table", { staticClass: "content-table-search table-over" }, [
+      _c(
+        "tbody",
+        [
+          _vm.search
+            ? _vm._l(_vm.results, function(result) {
+                return _c("tr", [
+                  _c("td", [
+                    _c(
+                      "a",
+                      {
+                        on: {
+                          click: function($event) {
+                            return _vm.add(result)
+                          }
+                        }
+                      },
+                      [_vm._v(_vm._s(result.goods.article.name))]
+                    )
+                  ])
+                ])
+              })
+            : _vm._e()
+        ],
+        2
+      )
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-285f9a76", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

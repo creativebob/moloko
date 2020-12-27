@@ -7,13 +7,10 @@
                 class="grid-x grid-padding-x"
             >
 
-                <div class="small-12 cell search-in-catalog-panel">
-                    <label class="label-icon">
-                        <input type="text" name="search" placeholder="Поиск" maxlength="25" autocomplete="off">
-                        <div class="sprite-input-left icon-search"></div>
-                        <span class="form-error"></span>
-                    </label>
-                </div>
+                <search-component
+                    :prices="prices"
+                    @add="addPriceToEstimate"
+                ></search-component>
 
                 <div class="small-12 cell search-in-catalog-panel">
 
@@ -144,6 +141,7 @@
 <script>
 export default {
     components: {
+        'search-component': require('./SearchComponent'),
         'childrens-component': require('../common/CatalogsItemsChildrensComponent'),
         'price-goods-component': require('./PriceGoodsComponent'),
     },
