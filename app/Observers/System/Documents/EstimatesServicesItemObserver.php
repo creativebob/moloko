@@ -1,13 +1,15 @@
 <?php
-    
-    namespace App\Observers\System\Documents;
+
+namespace App\Observers\System\Documents;
 
 use App\Models\System\Documents\EstimatesServicesItem;
 use App\Observers\System\BaseObserver;
+use App\Observers\System\Documents\Traits\EstimateItemable;
 
 class EstimatesServicesItemObserver extends BaseObserver
 {
-    
+    use EstimateItemable;
+
     /**
      * Handle the estimate service item "creating" event.
      *
@@ -17,7 +19,7 @@ class EstimatesServicesItemObserver extends BaseObserver
     {
         $this->store($estimatesServicesItem);
     }
-    
+
     /**
      * Handle the estimate service item "updating" event.
      *
@@ -26,8 +28,9 @@ class EstimatesServicesItemObserver extends BaseObserver
     public function updating(EstimatesServicesItem $estimatesServicesItem)
     {
         $this->update($estimatesServicesItem);
+        $this->setAggregations($estimatesServicesItem);
     }
-    
+
     /**
      * Handle the estimate service item "deleting" event.
      *

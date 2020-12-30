@@ -43,7 +43,13 @@
 <script>
     export default {
         props: {
-            discount: [Object, Array],
+            discount: {
+                type: [Object, Array],
+                default: {
+                    percent: 0,
+                    currency: 0
+                }
+        },
             disabled: {
                 type: Boolean,
                 default: false
@@ -67,11 +73,6 @@
         mounted() {
             if (this.discount.mode) {
                 this.modeId = this.discount.mode
-            } else {
-                this.discount = {
-                    percent: 0,
-                    currency: 0
-                }
             }
         },
     }

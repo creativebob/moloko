@@ -15,9 +15,11 @@
 		@include('products.articles.goods.goods.goods')
 	</div>
 @else
+    @can('index', App\Raw::class)
     <div class="tabs-panel" id="tab-raws">
         @include('products.articles.goods.raws.raws')
     </div>
+    @endcan
 @endif
 
 @can('index', App\Container::class)

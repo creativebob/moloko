@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\CatalogsService;
+use App\CatalogsServicesItem;
+use App\Discount;
+use App\Http\Controllers\System\Traits\Discountable;
 use App\PricesService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -10,36 +13,39 @@ use Illuminate\Support\Facades\Cookie;
 
 class PricesServiceController extends Controller
 {
+    protected $entityAlias;
+    protected $entityDependence;
+
     /**
      * PricesServiceController constructor.
      */
     public function __construct()
     {
         $this->middleware('auth');
-        $this->entity_alias = with(new PricesService)->getTable();;
-        $this->entity_dependence = true;
-        $this->class = PricesService::class;
-        $this->model = 'App\PricesService';
+        $this->entityAlias = 'prices_services';
+        $this->entityDependence = true;
     }
+
+    use Discountable;
 
     /**
      * Display a listing of the resource.
      *
      * @param Request $request
-     * @param $catalog_id
+     * @param $catalogId
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function index(Request $request, $catalog_id)
+    public function index(Request $request, $catalogId)
     {
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), PricesService::class);
 
         // Включение контроля активного фильтра
-        $filter_url = autoFilter($request, $this->entity_alias);
+        $filter_url = autoFilter($request, $this->entityAlias);
 
         if (($filter_url != null)&&($request->filter != 'active')) {
-            Cookie::queue(Cookie::forget('filter_' . $this->entity_alias));
+            Cookie::queue(Cookie::forget('filter_' . $this->entityAlias));
             return Redirect($filter_url);
         }
 
@@ -49,19 +55,19 @@ class PricesServiceController extends Controller
         // dd($request);
 
         if (isset($request->filial_id)) {
-            $filial_id = $request->filial_id;
+            $filialId = $request->filial_id;
         } else {
             if (!is_null($user_filials)) {
-                $filial_id = key($user_filials);
+                $filialId = key($user_filials);
             } else {
-                $filial_id = null;
+                $filialId = null;
             }
         }
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
-        $prices_services = PricesService::with([
+        $pricesServices = PricesService::with([
             'service' => function ($q) {
                 $q->with([
                     'process' => function ($q) {
@@ -73,14 +79,11 @@ class PricesServiceController extends Controller
                 ]);
             },
             'catalog',
-            'catalogs_item'
+            'catalogs_item',
+            'discount_price',
+            'discount_catalogs_item'
         ])
-//        ->whereHas('service', function ($q) {
-//            $q->whereHas('process', function ($q) {
-//                $q->where('draft', false);
-//            })
-//            ->where('archive', false);
-//        })
+            ->withCount('likes')
         // ->moderatorLimit($answer)
          ->companiesLimit($answer)
         ->booklistFilter($request)
@@ -93,26 +96,28 @@ class PricesServiceController extends Controller
 //            $q->filter($request, 'catalogs_services_item_id');
 //        })
 
-        ->whereHas('service.process', function($q){
-            $q->where('draft', false)
-                ->where('archive', false);
-        })
+        ->whereHas('service', function($q){
+                $q->whereHas('process', function ($q) {
+                    $q->where('draft', false);
+                })
+                    ->where('archive', false);
+            })
 //            ->filials($answer)
         // ->authors($answer)
         // ->systemItem($answer)
         ->where([
             'archive' => false,
-            'catalogs_service_id' => $catalog_id,
-            'filial_id' => $filial_id,
+            'catalogs_service_id' => $catalogId,
+            'filial_id' => $filialId,
         ])
         ->paginate(300);
-//         dd($prices_services);
+//         dd($pricesServices);
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter = setFilter($this->entity_alias, $request, [
+        $filter = setFilter($this->entityAlias, $request, [
 //            'author',                               // Автор записи
 //            'booklist',                             // Списки пользователя
 //            'catalogs_services_items'                  // Списки пользователя
@@ -121,26 +126,26 @@ class PricesServiceController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entityAlias);
 
-        $catalog = CatalogsService::with([
+        $catalogServices = CatalogsService::with([
             'filials'
         ])
-            ->find($catalog_id);
-        $pageInfo->title = 'Прайс: ' . $catalog->name;
-        $pageInfo->name = 'Прайс: ' . $catalog->name;
+            ->find($catalogId);
 
-        return view('prices_services.index', [
-            'prices_services' => $prices_services,
+        $pageInfo->title = 'Прайс: ' . $catalogServices->name;
+        $pageInfo->name = 'Прайс: ' . $catalogServices->name;
+
+        return view('system.pages.catalogs.services.prices_services.index', [
+            'pricesServices' => $pricesServices,
             'pageInfo' => $pageInfo,
-            'class' => $this->class,
-            'entity' => $this->entity_alias,
+            'class' => PricesService::class,
+            'entity' => $this->entityAlias,
             'filter' => $filter,
             'nested' => null,
-            'catalog_id' => $catalog_id,
-            'catalog' => $catalog,
-            'filial_id' => $filial_id,
-            'catalog_services' => $catalog
+            'catalog' => $catalogServices,
+            'filial_id' => $filialId,
+            'catalogServices' => $catalogServices
         ]);
     }
 
@@ -148,17 +153,17 @@ class PricesServiceController extends Controller
      * Show the form for creating a new resource.
      *
      * @param Request $request
-     * @param $catalog_id
+     * @param $catalogId
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function create(Request $request, $catalog_id)
+    public function create(Request $request, $catalogId)
     {
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), PricesService::class);
 
         $filial_id = $request->filial_id;
-        return view('syste.pages.catalogs.services.prices_services.sync.modal', compact('catalog_id', 'filial_id'));
+        return view('system.pages.catalogs.services.prices_services.sync.modal', compact('catalog_id', 'filial_id'));
     }
 
     /**
@@ -170,55 +175,55 @@ class PricesServiceController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
-     * @param Request $request
-     * @param $catalog_id
+     * @param $catalogId
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function edit(Request $request, $catalogId, $id)
+    public function edit($catalogId, $id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         $priceService = PricesService::with([
-            'service.process'
+            'service.process',
+            'currency',
+            'discounts',
+            'discounts_actual'
         ])
             ->moderatorLimit($answer)
             ->find($id);
+//        dd($priceService);
+        if (empty($priceService)) {
+            abort(403, __('errors.not_found'));
+        }
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $priceService);
 
         $catalogServices = CatalogsService::find($catalogId);
 
-        return view('system.pages.catalogs.services.prices_services.edit', [
-            'priceService' => $priceService,
-            'catalogId' => $catalogId,
-            'pageInfo' => pageInfo($this->entity_alias),
-            'catalogServices' => $catalogServices
-        ]);
+        // Инфо о странице
+        $pageInfo = pageInfo($this->entityAlias);
+
+        return view('system.pages.catalogs.services.prices_services.edit', compact('priceService', 'pageInfo', 'catalogId', 'catalogServices'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param $catalog_id
+     * @param $catalogId
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function update(Request $request, $catalogId, $id)
     {
         $priceService = PricesService::find($id);
+//        dd($priceService);
+        if (empty($priceService)) {
+            abort(403, __('errors.not_found'));
+        }
 
         $price = $request->price;
 
@@ -238,38 +243,77 @@ class PricesServiceController extends Controller
         }
 
         $data = $request->input();
+
+        if ($request->ajax()) {
+            if ($priceService->is_discount == 1) {
+                $discountPrice = $priceService->discounts_actual->first();
+                $data['price_discount_id'] = $discountPrice->id ?? null;
+
+                $discountCatalogsItem = $priceService->catalogs_item->discounts_actual->first();
+                $data['catalogs_item_discount_id'] = $discountCatalogsItem->id ?? null;
+            } else {
+                $data['price_discount_id'] = null;
+                $data['catalogs_item_discount_id'] = null;
+            }
+        } else {
+            $priceService->discounts()->sync($request->discounts);
+
+            if ($request->is_discount == 1) {
+                $priceService->load([
+                    'discounts_actual',
+                    'catalogs_item.discounts_actual'
+                ]);
+
+                $discountPrice = $priceService->discounts_actual->first();
+                $data['price_discount_id'] = $discountPrice->id ?? null;
+
+                $discountCatalogsItem = $priceService->catalogs_item->discounts_actual->first();
+                $data['catalogs_item_discount_id'] = $discountCatalogsItem->id ?? null;
+            } else {
+                $data['price_discount_id'] = null;
+                $data['catalogs_item_discount_id'] = null;
+            }
+        }
+
         $priceService->update($data);
 
-        return redirect()->route('prices_services.index', $catalogId);
-    }
+        // Отдаем Ajax
+        if ($request->ajax()) {
+            $priceService = PricesService::with([
+                'catalog',
+                'catalogs_item.parent.parent',
+                'filial',
+                'currency'
+            ])
+                ->find($id);
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param $id
-     */
-    public function destroy($id)
-    {
-        //
+            return response()->json($priceService);
+        }
+
+        return redirect()->route('prices_services.index', $catalogId);
     }
 
     /**
      * Архивирование
      *
      * @param Request $request
-     * @param $catalog_id
+     * @param $catalogId
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function archive(Request $request, $catalog_id, $id)
+    public function archive(Request $request, $catalogId, $id)
     {
         $user = $request->user();
 
-        $price_service = PricesService::find($id);
+        $priceService = PricesService::find($id);
+//        dd($priceService);
+        if (empty($priceService)) {
+            abort(403, __('errors.not_found'));
+        }
 
-        $filial_id = $price_service->filial_id;
+        $filialId = $priceService->filial_id;
 
-        $result = $price_service->update([
+        $result = $priceService->update([
             'archive' => true,
             'editor_id' => hideGod($user)
         ]);
@@ -277,26 +321,26 @@ class PricesServiceController extends Controller
         if ($result) {
             // Переадресовываем на index
             return redirect()->route('prices_services.index', [
-                'catalog_id' => $catalog_id,
-                'filial_id' => $filial_id
+                'catalog_id' => $catalogId,
+                'filial_id' => $filialId
             ]);
         } else {
-            abort(403, 'Ошибка архивирования');
+            abort(403, __('errors.archive'));
         }
     }
 
 
     // --------------------------------- Ajax ----------------------------------------
 
-    public function sync(Request $request, $catalog_id)
+    public function sync(Request $request, $catalogId)
     {
 
         $prices_ids = array_keys($request->prices);
 
-        $filial_id = $request->filial_id;
+        $filialId = $request->filial_id;
 
-        $prices_services = PricesService::with(['follower' => function ($q) use ($filial_id) {
-            $q->where('filial_id', $filial_id);
+        $prices_services = PricesService::with(['follower' => function ($q) use ($filialId) {
+            $q->where('filial_id', $filialId);
         }])
         ->find($prices_ids)
             ->keyBy('id');
@@ -326,7 +370,7 @@ class PricesServiceController extends Controller
 
                     $sync_prices_service->ancestor_id = $prices_service->id;
                     $sync_prices_service->price = $price;
-                    $sync_prices_service->filial_id = $filial_id;
+                    $sync_prices_service->filial_id = $filialId;
                     $sync_prices_service->save();
                 }
             } else {
@@ -342,12 +386,12 @@ class PricesServiceController extends Controller
 
         // Переадресовываем на index
         return redirect()->route('prices_services.index', [
-            'catalog_id' => $catalog_id,
-            'filial_id' => $filial_id
+            'catalog_id' => $catalogId,
+            'filial_id' => $filialId
         ]);
     }
 
-    public function ajax_get(Request $request, $catalog_id, $id)
+    public function ajax_get(Request $request, $catalogId, $id)
     {
         $prices_service = PricesService::find($id);
         // dd($price);
@@ -358,54 +402,89 @@ class PricesServiceController extends Controller
 
     public function ajax_store(Request $request)
     {
-
-        $prices_service = PricesService::firstOrNew([
+        $priceService = PricesService::where([
             'catalogs_services_item_id' => $request->catalogs_services_item_id,
             'catalogs_service_id' => $request->catalogs_service_id,
             'service_id' => $request->service_id,
             'filial_id' => $request->filial_id,
             'currency_id' => $request->currency_id,
-        ], [
-            'price' => $request->price
-        ]);
+        ])
+            ->first();
 
-        if ($prices_service->id) {
-            $prices_service->update([
-                'archive' => false
-            ]);
+        $catalogsServicesItem = CatalogsServicesItem::find($request->catalogs_services_item_id);
 
-            if ($prices_service->price != $request->price) {
+        $discountCatalogsItemId = null;
+        if ($catalogsServicesItem) {
+            $discountCatalogsItem = $catalogsServicesItem->discounts_actual->first();
 
-                $prices_service->actual_price->update([
+            if ($discountCatalogsItem) {
+                $discountCatalogsItemId = $discountCatalogsItem->id;
+            }
+        }
+
+        $discountEstimate = Discount::where([
+            'company_id' => auth()->user()->company_id,
+            'archive' => false
+        ])
+            ->whereHas('entity', function ($q) {
+                $q->where('alias', 'estimates');
+            })
+            ->where('begined_at', '<=', now())
+            ->where(function ($q) {
+                $q->where('ended_at', '>=', now())
+                    ->orWhereNull('ended_at');
+            })
+            ->first();
+
+        $discountEstimateId = $discountEstimate->id ?? null;
+
+        if ($priceService) {
+
+            if ($priceService->price != $request->price) {
+                $priceService->actual_price->update([
                     'end_date' => now(),
                 ]);
-
-                $prices_service->history()->create([
+                $priceService->history()->create([
                     'price' => $request->price,
-                    'currency_id' => $prices_service->currency_id,
-                ]);
-
-                $prices_service->update([
-                    'price' => $request->price,
+                    'currency_id' => $priceService->currency_id,
                 ]);
             }
 
+            $priceService->update([
+                'price' => $request->price,
+                'is_discount' => 1,
+                'catalogs_item_discount_id' => $discountCatalogsItemId,
+                'estimate_discount_id' => $discountEstimateId,
+                'archive' => false
+            ]);
+
         } else {
-            $prices_service->save();
+            $data = $request->input();
+            $data['is_discount'] = 1;
+            $data['catalogs_item_discount_id'] = $discountCatalogsItemId;
+            $data['estimate_discount_id'] = $discountEstimateId;
+//            return $data;
+            $priceService = PricesService::create($data);
         }
 
+        $priceService->load([
+            'catalog',
+            'catalogs_item.parent.parent',
+            'filial',
+            'currency'
+        ]);
 
-        return view('products.processes.services.prices.price', compact('prices_service'));
+        return response()->json($priceService);
     }
 
-    public function ajax_edit(Request $request, $catalog_id)
+    public function ajax_edit(Request $request, $catalogId)
     {
         $price = PricesService::find($request->id);
         // dd($price);
         return view('products.processes.services.prices.catalogs_item_edit', compact('price'));
     }
 
-    public function ajax_update(Request $request, $catalog_id)
+    public function ajax_update(Request $request, $catalogId)
     {
 
         $prices_service = PricesService::find($request->id);

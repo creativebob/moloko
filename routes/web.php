@@ -360,9 +360,9 @@ Route::post('/ajax_get_workflow', 'WorkflowController@ajax_get_workflow')->middl
 Route::post('/ajax_get_service', 'ServiceController@ajax_get_service')->middleware('auth');
 
 
-// ---------------------------------- Артикулы -------------------------------------------
+// ---------------------------------- Группы артикулов -------------------------------------------
 // Основные методы
-Route::resource('articles_groups', 'ArticlesGroupController')->middleware('auth');
+Route::resource('/articles_groups', 'ArticlesGroupController')->middleware('auth');
 
 
 // ------------------------------------- Категории сырья -------------------------------------------
@@ -623,22 +623,40 @@ Route::get('/raws_stocks/search/{search}', 'RawsStockController@search');
 Route::get('/containers_stocks/search/{search}', 'ContainersStockController@search');
 Route::get('/attachments_stocks/search/{search}', 'AttachmentsStockController@search');
 
+
+// ---------------------------------- Группы процессов -------------------------------------------
+// Основные методы
+Route::resource('/processes_groups', 'ProcessesGroupController')
+    ->except([
+        'create',
+        'store',
+        'show'
+    ]);
+
 // -------------------------------- Категории услуг -------------------------------------------
 
 // Текущая добавленная/удаленная категория
-Route::any('/services_categories', 'ServicesCategoryController@index')->middleware('auth');
-Route::match(['get', 'post'], '/services_categories/{id}/edit', 'ServicesCategoryController@edit')->middleware('auth');
+Route::any('/services_categories', 'ServicesCategoryController@index');
+Route::match([
+    'get', 'post'
+], '/services_categories/{id}/edit', 'ServicesCategoryController@edit');
 // Основные методы
-Route::resource('/services_categories', 'ServicesCategoryController')->middleware('auth');
+Route::resource('/services_categories', 'ServicesCategoryController')
+    ->except([
+        'show'
+    ]);
 // Проверка на существование
-Route::post('/services_category_check', 'ServicesCategoryController@ajax_check')->middleware('auth');
+Route::post('/services_category_check', 'ServicesCategoryController@ajax_check');
 
 
 // ---------------------------------- Услуги -------------------------------------------
 
 Route::get('/services/search/{search}', 'ServiceController@search');
 // Основные методы
-Route::resource('/services', 'ServiceController');
+Route::resource('/services', 'ServiceController')->except([
+    'show',
+    'destroy'
+]);
 // Поиск
 Route::post('/services/search/{text_fragment}', 'ServiceController@search');
 // Архив
@@ -653,10 +671,14 @@ Route::post('/service/photos', 'ServiceController@photos');
 // -------------------------------- Категории рабочих процессов -------------------------------------------
 
 // Текущая добавленная/удаленная категория
-Route::any('/workflows_categories', 'WorkflowsCategoryController@index')->middleware('auth');
-Route::match(['get', 'post'], '/workflows_categories/{id}/edit', 'WorkflowsCategoryController@edit')->middleware('auth');
+Route::any('/workflows_categories', 'WorkflowsCategoryController@index');
+Route::match([
+    'get', 'post'
+], '/workflows_categories/{id}/edit', 'WorkflowsCategoryController@edit');
 // Основные методы
-Route::resource('/workflows_categories', 'WorkflowsCategoryController')->middleware('auth');
+Route::resource('/workflows_categories', 'WorkflowsCategoryController')->except([
+    'show',
+]);
 // Проверка на существование
 // Route::post('/workflows_category_check', 'ServicesCategoryController@ajax_check')->middleware('auth');
 
@@ -664,7 +686,10 @@ Route::resource('/workflows_categories', 'WorkflowsCategoryController')->middlew
 // ---------------------------------- Рабочие процессы -------------------------------------------
 
 // Основные методы
-Route::resource('/workflows', 'WorkflowController');
+Route::resource('/workflows', 'WorkflowController')->except([
+    'show',
+    'destroy'
+]);
 // Поиск
 Route::post('/workflows/search/{text_fragment}', 'WorkflowController@search');
 // Архив
@@ -1390,10 +1415,10 @@ Route::resource('/news', 'NewsController');
 
 // ----------------------------------------- Каталоги товаров ------------------------------------------
 
-Route::any('/catalog_goods/get_catalogs_by_ids', 'CatalogsGoodsController@getCatalogsByIds');
-Route::any('/catalog_goods/get_catalogs_for_outlet', 'CatalogsGoodsController@getCatalogsForOutlet');
+Route::any('/catalogs_goods/get_catalogs_by_ids', 'CatalogsGoodsController@getCatalogsByIds');
+Route::any('/catalogs_goods/get_catalogs_for_outlet', 'CatalogsGoodsController@getCatalogsForOutlet');
 
-Route::any('/catalog_goods/{id}', 'CatalogsGoodsController@get_catalog');
+Route::any('/catalogs_goods/{id}', 'CatalogsGoodsController@get_catalog');
 // Основные методы
 Route::resource('/catalogs_goods', 'CatalogsGoodsController');
 // Проверка на существование
@@ -1432,41 +1457,43 @@ Route::prefix('catalogs_goods/{catalog_id}')->group(function () {
 
 
 // ----------------------------------------- Каталоги услуг ------------------------------------------
-
+Route::any('/catalogs_services/get_catalogs_for_outlet', 'CatalogsServiceController@getCatalogsForOutlet');
 // Основные методы
-Route::resource('catalogs_services', 'CatalogsServiceController');
-
+Route::resource('/catalogs_services', 'CatalogsServiceController')
+    ->except([
+        'show',
+    ]);
 // Проверка на существование
 // Route::post('/catalog_check', 'CatalogController@ajax_check')->middleware('auth');
 
 // -------------------------------- Наполнение каталогов услуг -------------------------------------
+Route::prefix('/catalogs_services/{catalogId}')->group(function () {
 
-
-Route::prefix('catalogs_services/{catalog_id}')->group(function () {
-
+    // ----------------------------------------- Разделы каталога услуг ----------------------------
     // Текущий добавленный/удаленный пунк меню
-    Route::any('catalogs_services_items', 'CatalogsServicesItemController@index');
-
+    Route::any('/catalogs_services_items', 'CatalogsServicesItemController@index');
     // Основные методы
-    Route::resource('catalogs_services_items', 'CatalogsServicesItemController');
-    Route::delete('prices_services/{id}', 'PricesServiceController@archive');
+    Route::resource('/catalogs_services_items', 'CatalogsServicesItemController')
+        ->except([
+            'show',
+        ]);
 
-    Route::post('get_catalogs_services_items', 'CatalogsServicesItemController@ajax_get');
 
-    Route::any('get_prices_service/{id}', 'PricesServiceController@ajax_get');
-    Route::any('edit_prices_service', 'PricesServiceController@ajax_edit');
-    Route::any('update_prices_service', 'PricesServiceController@ajax_update');
-    Route::any('prices_services/{id}/archive', 'PricesServiceController@ajax_archive');
-
-    Route::any('prices_services/ajax_store', 'PricesServiceController@ajax_store');
-
-    Route::any('prices_services_sync', 'PricesServiceController@sync')->name('prices_services.sync');
-
-    Route::any('prices_services_status', 'PricesServiceController@ajax_status');
-    Route::any('prices_services_hit', 'PricesServiceController@ajax_hit');
-    Route::any('prices_services_new', 'PricesServiceController@ajax_new');
-
-    Route::resource('prices_services', 'PricesServiceController');
+    // ----------------------------------------- Прайсы услуг ----------------------------
+    Route::delete('/prices_services/{id}', 'PricesServiceController@archive');
+    Route::post('/get_catalogs_services_items', 'CatalogsServicesItemController@ajax_get');
+    Route::any('/get_prices_service/{id}', 'PricesServiceController@ajax_get');
+    Route::any('/edit_prices_service', 'PricesServiceController@ajax_edit');
+    Route::any('/update_prices_service', 'PricesServiceController@ajax_update');
+    Route::any('/prices_services/{id}/archive', 'PricesServiceController@ajax_archive');
+    Route::any('/prices_services/ajax_store', 'PricesServiceController@ajax_store');
+    Route::any('/prices_services_sync', 'PricesServiceController@sync')
+        ->name('prices_services.sync');
+    Route::any('/prices_services_status', 'PricesServiceController@ajax_status');
+    Route::any('/prices_services_hit', 'PricesServiceController@ajax_hit');
+    Route::any('/prices_services_new', 'PricesServiceController@ajax_new');
+    // Основные методы
+    Route::resource('/prices_services', 'PricesServiceController');
 });
 
 // --------------------------- Продвижение -------------------------------------

@@ -1,4 +1,4 @@
-<compositions-component
+<cmv-compositions-component
     :categories='@json($attachmentsCategories)'
     :items='@json($attachments->setAppends([
         'weight',
@@ -12,7 +12,7 @@
     @if($article->draft == 0)
         :disabled="true"
     @endif
-></compositions-component>
+></cmv-compositions-component>
 
 {{--<div class="grid-x grid-padding-x">--}}
 {{--	<div class="small-12 medium-9 cell">--}}

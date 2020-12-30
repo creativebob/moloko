@@ -21,7 +21,7 @@ class EstimatesServicesItem extends BaseModel
         'estimate_id',
         'price_id',
 
-        'goods_id',
+        'service_id',
         'currency_id',
         'sale_mode',
 
@@ -119,6 +119,16 @@ class EstimatesServicesItem extends BaseModel
     public function product()
     {
         return $this->belongsTo(Service::class, 'service_id');
+    }
+
+    public function currency()
+    {
+        return $this->belongsTo('App\Currency');
+    }
+
+    public function agency_scheme()
+    {
+        return $this->belongsTo('App\AgencyScheme');
     }
 
 }

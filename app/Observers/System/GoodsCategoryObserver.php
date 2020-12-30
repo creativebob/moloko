@@ -9,11 +9,6 @@ use App\Observers\System\Traits\Directionable;
 
 class GoodsCategoryObserver
 {
-    public function __construct()
-    {
-        $this->model ='App\GoodsТCategory';
-    }
-
     use Commonable;
     use Categorable;
     use Directionable;
@@ -29,7 +24,7 @@ class GoodsCategoryObserver
         $this->update($category);
         $this->updateCategory($category);
 
-        $this->checkDirection($category);
+        $this->checkDirection($category, 'App\GoodsТCategory');
     }
 
     public function updated(Category $category)

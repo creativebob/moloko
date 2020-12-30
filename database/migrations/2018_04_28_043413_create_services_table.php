@@ -22,8 +22,13 @@ class CreateServicesTable extends Migration
             $table->bigInteger('category_id')->nullable()->unsigned()->comment('Id категории услуг');
             $table->foreign('category_id')->references('id')->on('services_categories');
 
-            $table->boolean('archive')->default(0)->unsigned()->comment('Статус архива');
+            $table->bigInteger('price_unit_category_id')->nullable()->unsigned()->comment('Категория единицы измерения для определения цены');
+            $table->foreign('price_unit_category_id')->references('id')->on('units_categories');
 
+            $table->bigInteger('price_unit_id')->nullable()->unsigned()->comment('Единица измерения для определения цены');
+            $table->foreign('price_unit_id')->references('id')->on('units');
+
+            $table->boolean('archive')->default(0)->unsigned()->comment('Статус архива');
             $table->boolean('serial')->default(0)->unsigned()->comment('Серийный номер');
 
 

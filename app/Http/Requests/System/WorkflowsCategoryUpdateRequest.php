@@ -31,7 +31,7 @@ class WorkflowsCategoryUpdateRequest extends FormRequest
             'seo_description' => 'string|nullable',
             'parent_id' => 'integer|nullable',
 
-            'processes_type_id' => 'required|integer|max:1',
+            'processes_type_id' => 'required|integer|exists:processes_types,id',
 
             'photo' => "nullable|max:{$settings['img_max_size']}|mimes:{$settings['img_formats']}",
 

@@ -13,7 +13,7 @@ class CatalogsServiceRequest extends FormRequest
      */
     public function authorize()
     {
-      return true;
+        return true;
     }
 
     /**
@@ -23,18 +23,16 @@ class CatalogsServiceRequest extends FormRequest
      */
     public function rules()
     {
-      return [
-        'name' => 'required|string|max:255',
-        'alias' => 'string|max:255|nullable',
-        'slug' => 'string|max:255|nullable',
+        return [
+            'name' => 'required|string|max:255',
+            'alias' => 'string|max:255|nullable',
+            'slug' => 'string|max:255|nullable',
+            'description' => 'string|nullable',
+            // 'seo_description' => 'string|nullable',
 
-        'photo_id' => 'integer|nullable',
-        'description' => 'string|nullable',
-        // 'seo_description' => 'string|nullable',
-
-        'display' => 'nullable|integer|max:1',
+            'display' => 'nullable|integer|max:1',
             'system' => 'nullable|integer|max:1',
             'moderation' => 'nullable|integer|max:1',
-      ];
+        ];
     }
-  }
+}

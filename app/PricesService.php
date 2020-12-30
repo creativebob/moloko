@@ -2,46 +2,14 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
+use App\Models\System\BaseModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
-// Scopes для главного запроса
-use App\Scopes\Traits\CompaniesLimitTraitScopes;
-use App\Scopes\Traits\AuthorsTraitScopes;
-use App\Scopes\Traits\SystemItemTraitScopes;
-use App\Scopes\Traits\FilialsTraitScopes;
-use App\Scopes\Traits\TemplateTraitScopes;
-use App\Scopes\Traits\ModeratorLimitTraitScopes;
-use App\Scopes\Traits\SuppliersTraitScopes;
-
-// Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
-// Фильтры
-use App\Scopes\Filters\Filter;
-use App\Scopes\Filters\BooklistFilter;
-
-class PricesService extends Model
+class PricesService extends BaseModel
 {
-    // Включаем кеш
-    use Cachable;
-
-    use Notifiable;
-    use SoftDeletes;
-
-    // Включаем Scopes
-    use CompaniesLimitTraitScopes;
-    use AuthorsTraitScopes;
-    use SystemItemTraitScopes;
-    use FilialsTraitScopes;
-    use TemplateTraitScopes;
-    use ModeratorLimitTraitScopes;
-    use SuppliersTraitScopes;
-
-    // Фильтры
-    use Filter;
-    use BooklistFilter;
+    use Cachable,
+        SoftDeletes;
 
     protected $fillable = [
         'catalogs_services_item_id',
@@ -50,6 +18,7 @@ class PricesService extends Model
         'filial_id',
 
         'price',
+        'name_alt',
 
         'discount_mode',
         'discount_percent',
@@ -80,7 +49,11 @@ class PricesService extends Model
         'is_priority',
 
         'is_show_price',
+
+        'is_discount',
         'is_need_recalculate',
+
+        'external',
 
         'display',
         'system',
@@ -168,51 +141,118 @@ class PricesService extends Model
         return $this->belongsTo(Currency::class);
     }
 
+    public function discounts()
+    {
+        return $this->belongsToMany(Discount::class, 'discount_price_service', 'price_service_id', 'discount_id')
+            ->withPivot([
+                'sort'
+            ])
+            ->orderBy('pivot_sort');
+    }
+
+    public function discounts_actual()
+    {
+        return $this->belongsToMany(Discount::class, 'discount_price_service', 'price_service_id', 'discount_id')
+            ->where('archive', false)
+            ->where('begined_at', '<=', now())
+            ->where(function ($q) {
+                $q->where('ended_at', '>', now())
+                    ->orWhereNull('ended_at');
+            })
+            ->withPivot([
+                'sort'
+            ])
+            ->orderBy('pivot_sort');
+    }
+
+    public function discount_price()
+    {
+        return $this->belongsTo(Discount::class, 'price_discount_id');
+    }
+
+    public function discount_catalogs_item()
+    {
+        return $this->belongsTo(Discount::class, 'catalogs_item_discount_id');
+    }
+
+    public function discount_estimate()
+    {
+        return $this->belongsTo(Discount::class, 'estimate_discount_id');
+    }
+
+    public function likes()
+    {
+        return $this->belongsToMany(User::class, 'like_prices_service', 'prices_service_id', 'user_id');
+    }
+
+    /**
+     * Вычисление итоговой стоимости услуги с учетом подключенных скидок.
+     * Сложение скидок прайса, раздела каталога.
+     *
+     * @return int|mixed
+     */
+    public function getTotalWithDiscountsAttribute()
+    {
+        $total = 0;
+        $res = [];
+
+        // Вычисление всех скидок на прайсе товара
+        if ($this->is_discount == 1) {
+            $priceServiceDiscounts = $this->discounts_actual;
+            $totalWithoutDiscounts = $this->total;
+            $resPrice = $this->getDynamicDiscounts($priceServiceDiscounts, $totalWithoutDiscounts);
+            $total = $resPrice['total'];
+        }
+
+        // Вычисление всех скидок на разделе каталога, в котором находится прайс
+        if (!$resPrice['break']) {
+            $catalogsServicesItem = $this->catalogs_item;
+            if ($catalogsServicesItem->is_discount == 1) {
+                $catalogsServicesItemDiscounts = $catalogsServicesItem->discounts_actual;
+                $resCatalogItem = $this->getDynamicDiscounts($catalogsServicesItemDiscounts, $total);
+                $total = $resCatalogItem['total'];
+            }
+        }
+
+        return $total;
+    }
+
+    public function getDynamicDiscounts($discounts, $totalWithoutDiscounts)
+    {
+        $break = false;
+        $sumPercent = 0;
+        $sumCurrency = 0;
+        foreach ($discounts as $discount) {
+            switch ($discount->mode) {
+                case(1):
+                    $sumPercent += $discount->percent;
+                    break;
+                case(2):
+                    $sumCurrency += $discount->currency;
+                    break;
+            }
+            if ($discount->is_block == 1) {
+                $break = true;
+                break;
+            }
+        }
+
+        $sumDiscountInCurrency = $totalWithoutDiscounts / 100 * $sumPercent;
+        $total = $totalWithoutDiscounts - $sumDiscountInCurrency - $sumCurrency;
+
+        $res = [
+            'total' => $total,
+            'break' => $break
+        ];
+        return $res;
+    }
+
     // Фильтр
     public function scopeFilter($query)
     {
-        if (request('price')) {
-            $price = request('price');
-            if (isset($price['min'])) {
-                $query->where('price', '>=', $price['min']);
-            }
-            if (isset($price['max'])) {
-                $query->where('price', '<=', $price['max']);
-            }
-            $query->orderBy('price');
+        if (request('catalogs_services_items')) {
+            $query->whereIn('catalogs_services_item_id', request('catalogs_services_items'));
         }
-
-        if (request('length')) {
-            $weight = request('length');
-            $query->whereHas('service_public', function($q) use ($weight) {
-                $q->whereHas('process', function($q) use ($weight) {
-                    $q->where('length', '>=', $weight['min'] / 1000)
-                        ->where('length', '<=', $weight['max'] / 1000);
-                });
-            });
-        }
-
-        if (request('catalogs_services_item')) {
-            $catalogs_services_item = request('catalogs_services_item');
-            $query->where('catalogs_services_item_id', $catalogs_services_item);
-        }
-
-//        if (request('raws_articles_groups')) {
-//            $raws_articles_groups = request('raws_articles_groups');
-////		    dd($raws_articles_groups);
-//
-//            $query->whereHas('goods_public', function($q) use ($raws_articles_groups) {
-//                $q->whereHas('article', function($q) use ($raws_articles_groups) {
-//                    foreach($raws_articles_groups as $item){
-//                        $q->whereHas('attachments',function($q) use ($item) {
-//                            $q->whereHas('article', function ($q) use ($item) {
-//                                $q->where('articles_group_id', $item);
-//                            });
-//                        });
-//                    }
-//                });
-//            });
-//        }
 
         return $query;
     }

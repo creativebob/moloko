@@ -2,49 +2,14 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
+use App\Models\System\BaseModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
-// Scopes для главного запроса
-use App\Scopes\Traits\CompaniesLimitTraitScopes;
-use App\Scopes\Traits\AuthorsTraitScopes;
-use App\Scopes\Traits\SystemItemTraitScopes;
-use App\Scopes\Traits\FilialsTraitScopes;
-use App\Scopes\Traits\TemplateTraitScopes;
-use App\Scopes\Traits\ModeratorLimitTraitScopes;
-
-use App\Scopes\Traits\ManufacturersTraitScopes;
-
-// Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
-// Фильтры
-use App\Scopes\Filters\Filter;
-use App\Scopes\Filters\BooklistFilter;
-
-class Process extends Model
+class Process extends BaseModel
 {
-    // Включаем кеш
-    use Cachable;
-
-    use Notifiable;
-    use SoftDeletes;
-
-    // Включаем Scopes
-    use CompaniesLimitTraitScopes;
-    use AuthorsTraitScopes;
-    use SystemItemTraitScopes;
-    use FilialsTraitScopes;
-    use TemplateTraitScopes;
-    use ModeratorLimitTraitScopes;
-
-    use ManufacturersTraitScopes;
-
-    // Фильтры
-    use Filter;
-    use BooklistFilter;
-    // use DateIntervalFilter;
+    use Cachable,
+        SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -150,18 +115,6 @@ class Process extends Model
         return $this->belongsTo(Photo::class);
     }
 
-    // Компания
-    public function company()
-    {
-        return $this->belongsTo(Company::class);
-    }
-
-    // Автор
-    public function author()
-    {
-        return $this->belongsTo(User::class);
-    }
-
     // Услуга
     public function service()
     {
@@ -178,6 +131,16 @@ class Process extends Model
     public function unit_length()
     {
         return $this->belongsTo(Unit::class);
+    }
+
+    public function in_services()
+    {
+        return $this->hasMany(Service::class, 'process_id');
+    }
+
+    public function in_workflows()
+    {
+        return $this->hasMany(Workflow::class, 'process_id');
     }
 
 

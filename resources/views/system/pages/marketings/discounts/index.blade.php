@@ -74,7 +74,13 @@
                                         Товар
                                     @break
                                     @case('catalogs_goods_items')
-                                        Раздел каталога
+                                        Раздел каталога товаров
+                                    @break
+                                    @case('prices_services')
+                                        Услуга
+                                    @break
+                                    @case('catalogs_services_items')
+                                        Раздел каталога услуг
                                     @break
                                 @endswitch
                             </td>

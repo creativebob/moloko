@@ -74,9 +74,24 @@ class Discount extends Model
         return $this->hasMany(PricesGoods::class, 'price_discount_id');
     }
 
+    public function prices_services()
+    {
+        return $this->belongsToMany(PricesService::class, 'discount_price_service', 'discount_id', 'price_service_id');
+    }
+
+    public function prices_services_actual()
+    {
+        return $this->hasMany(PricesService::class, 'price_discount_id');
+    }
+
     public function catalogs_goods_items_prices_goods_actual()
     {
         return $this->hasMany(PricesGoods::class, 'catalogs_item_discount_id');
+    }
+
+    public function catalogs_services_items_prices_services_actual()
+    {
+        return $this->hasMany(PricesService::class, 'catalogs_item_discount_id');
     }
 
     public function estimates_prices_goods_actual()
@@ -84,20 +99,23 @@ class Discount extends Model
         return $this->hasMany(PricesGoods::class, 'estimate_discount_id');
     }
 
+    public function estimates_prices_services_actual()
+    {
+        return $this->hasMany(PricesService::class, 'estimate_discount_id');
+    }
+
     public function catalogs_goods_items()
     {
         return $this->belongsToMany(CatalogsGoodsItem::class, 'discount_catalogs_goods_item', 'discount_id', 'catalogs_goods_item_id');
     }
 
-    public function prices_goods_catalogs_goods_items_actual()
+    public function catalogs_services_items()
     {
-        return $this->hasMany(PricesGoods::class, 'catalogs_item_discount_id');
+        return $this->belongsToMany(CatalogsServicesItem::class, 'discount_catalogs_services_item', 'discount_id', 'catalogs_services_item_id');
     }
 
     public function entity()
     {
         return $this->belongsTo(Entity::class);
     }
-
-
 }

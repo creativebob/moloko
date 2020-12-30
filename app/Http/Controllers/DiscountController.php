@@ -243,6 +243,23 @@ class DiscountController extends Controller
                 }
                 break;
 
+            case('prices_services'):
+                $discount->load([
+                    'prices_services_actual'
+                ]);
+
+                $pricesServices = $discount->prices_services_actual;
+
+                $discount->prices_goods()->detach();
+
+                foreach($pricesServices as $priceService) {
+                    $priceService->update([
+                        'is_need_recalculate' => true
+//                        'price_discount_id' => null
+                    ]);
+                }
+                break;
+
             case('catalogs_goods_items'):
                 $discount->load([
                     'catalogs_goods_items_prices_goods_actual'
@@ -260,15 +277,40 @@ class DiscountController extends Controller
                 }
                 break;
 
+            case('catalogs_services_items'):
+                $discount->load([
+                    'catalogs_services_items_prices_services_actual'
+                ]);
+
+                $pricesServices = $discount->catalogs_services_items_prices_services_actual;
+
+                $discount->catalogs_goods_items()->detach();
+
+                foreach($pricesServices as $priceService) {
+                    $priceService->update([
+                        'is_need_recalculate' => true
+//                        'catalogs_item_discount_id' => null
+                    ]);
+                }
+                break;
+
             case('estimates'):
                 $discount->load([
-                    'estimates_prices_goods_actual'
+                    'estimates_prices_goods_actual',
+                    'estimates_prices_services_actual'
                 ]);
 
                 $pricesGoods = $discount->estimates_prices_goods_actual;
-
                 foreach($pricesGoods as $priceGoods) {
                     $priceGoods->update([
+                        'is_need_recalculate' => true
+//                        'estimate_discount_id' => null
+                    ]);
+                }
+
+                $pricesServices = $discount->estimates_prices_services_actual;
+                foreach($pricesServices as $priceService) {
+                    $priceService->update([
                         'is_need_recalculate' => true
 //                        'estimate_discount_id' => null
                     ]);
@@ -285,7 +327,14 @@ class DiscountController extends Controller
         $message .= "\r\n";
 
         $message .= "\r\n";
-        $message .= "Затронуто позиций: " . $pricesGoods->count() .  " шт.";
+        if (isset($pricesGoods)) {
+            $message .= "Затронуто позиций товаров: " . $pricesGoods->count() .  " шт.";
+        }
+
+        if (isset($pricesServices)) {
+            $message .= "Затронуто позиций услуг: " . $pricesServices->count() .  " шт.";
+        }
+
 
         // отправляем мессагу подписанным
         Notifications::sendNotification(5, $message, $discount->company_id);

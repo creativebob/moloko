@@ -10,19 +10,18 @@ use Illuminate\Http\Request;
 
 class WorkflowsCategoryController extends Controller
 {
+    protected $entityAlias;
+    protected $entityDependence;
 
     /**
      * WorkflowsCategoryController constructor.
-     * @param WorkflowsCategory $workflows_category
      */
-    public function __construct(WorkflowsCategory $workflows_category)
+    public function __construct()
     {
         $this->middleware('auth');
-        $this->workflows_category = $workflows_category;
-        $this->class = WorkflowsCategory::class;
         $this->model = 'App\WorkflowsCategory';
-        $this->entity_alias = with(new $this->class)->getTable();
-        $this->entity_dependence = false;
+        $this->entityAlias = 'workflows_categories';
+        $this->entityDependence = false;
         $this->type = 'page';
     }
 
@@ -32,18 +31,17 @@ class WorkflowsCategoryController extends Controller
      * Display a listing of the resource.
      *
      * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function index(Request $request)
     {
-
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), WorkflowsCategory::class);
 
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
-        $workflows_categories = WorkflowsCategory::with([
+        $workflowsCategories = WorkflowsCategory::with([
             'workflows',
             'childs',
             'groups'
@@ -64,12 +62,13 @@ class WorkflowsCategoryController extends Controller
 
             return view('system.common.categories.index.categories_list',
                 [
-                    'items' => $workflows_categories,
-                    'entity' => $this->entity_alias,
+                    'items' => $workflowsCategories,
+                    'entity' => $this->entityAlias,
                     'class' => $this->model,
                     'type' => $this->type,
-                    'count' => $workflows_categories->count(),
+                    'count' => $workflowsCategories->count(),
                     'id' => $request->id,
+                    'nested' => 'childs_count',
                     // 'nested' => 'workflows_products_count',
                 ]
             );
@@ -78,14 +77,14 @@ class WorkflowsCategoryController extends Controller
         // Отдаем на шаблон
         return view('system.common.categories.index.index',
             [
-                'items' => $workflows_categories,
-                'pageInfo' => pageInfo($this->entity_alias),
-                'entity' => $this->entity_alias,
+                'items' => $workflowsCategories,
+                'pageInfo' => pageInfo($this->entityAlias),
+                'entity' => $this->entityAlias,
                 'class' => $this->model,
                 'type' => $this->type,
                 'id' => $request->id,
                 'nested' => 'childs_count',
-                'filter' => setFilter($this->entity_alias, $request, [
+                'filter' => setFilter($this->entityAlias, $request, [
                     'booklist'
                 ]),
             ]
@@ -96,21 +95,21 @@ class WorkflowsCategoryController extends Controller
      * Show the form for creating a new resource.
      *
      * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function create(Request $request)
     {
-
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), WorkflowsCategory::class);
 
         return view('system.common.categories.create.modal.create', [
             'item' => WorkflowsCategory::make(),
-            'entity' => $this->entity_alias,
+            'entity' => $this->entityAlias,
             'title' => 'Добавление категории рабочих процессов',
             'parent_id' => $request->parent_id,
-            'category_id' => $request->category_id
+            'category_id' => $request->category_id,
+            'pageInfo' => pageInfo($this->entityAlias),
         ]);
     }
 
@@ -123,32 +122,21 @@ class WorkflowsCategoryController extends Controller
      */
     public function store(WorkflowsCategoryStoreRequest $request)
     {
-
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), WorkflowsCategory::class);
 
         $data = $request->input();
-        $workflows_category = WorkflowsCategory::create($data);
+        $workflowsCategory = WorkflowsCategory::create($data);
 
-        if ($workflows_category) {
+        if ($workflowsCategory) {
             // Переадресовываем на index
-            return redirect()->route('workflows_categories.index', ['id' => $workflows_category->id]);
+            return redirect()->route('workflows_categories.index', ['id' => $workflowsCategory->id]);
         } else {
             $result = [
                 'error_status' => 1,
-                'error_message' => 'Ошибка при записи категории сырья!',
+                'error_message' => __('errors.store'),
             ];
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param $id
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**
@@ -156,17 +144,16 @@ class WorkflowsCategoryController extends Controller
      *
      * @param Request $request
      * @param $id
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function edit(Request $request, $id)
     {
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $workflows_category = WorkflowsCategory::with([
+        $workflowsCategory = WorkflowsCategory::with([
             'manufacturers',
             'metrics' => function ($q) {
                 $q->with([
@@ -179,18 +166,18 @@ class WorkflowsCategoryController extends Controller
         ->find($id);
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $workflows_category);
-        // dd($workflows_category_metrics);
+        $this->authorize(getmethod(__FUNCTION__), $workflowsCategory);
+        // dd($workflowsCategory_metrics);
 
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entityAlias);
 
-        $settings = getPhotoSettings($this->entity_alias);
+        $settings = $this->getPhotoSettings($this->entityAlias);
 
         // При добавлении метрики отдаем ajax новый список свойст и метрик
         if ($request->ajax()) {
             return view('products.common.metrics.properties_list', [
-                'category' => $workflows_category,
+                'category' => $workflowsCategory,
                 'pageInfo' => $pageInfo,
             ]);
         }
@@ -198,10 +185,10 @@ class WorkflowsCategoryController extends Controller
         // dd($goods_category->direction);
         return view('products.processes_categories.common.edit.edit', [
             'title' => 'Редактирование категории рабочих процессов',
-            'category' => $workflows_category,
+            'category' => $workflowsCategory,
             'pageInfo' => $pageInfo,
             'settings' => $settings,
-            'entity' => $this->entity_alias,
+            'entity' => $this->entityAlias,
         ]);
     }
 
@@ -215,35 +202,34 @@ class WorkflowsCategoryController extends Controller
      */
     public function update(WorkflowsCategoryUpdateRequest $request, $id)
     {
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
-        $workflows_category = WorkflowsCategory::moderatorLimit($answer)
+        $workflowsCategory = WorkflowsCategory::moderatorLimit($answer)
         ->find($id);
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $workflows_category);
+        $this->authorize(getmethod(__FUNCTION__), $workflowsCategory);
 
         $data = $request->input();
-        $data['photo_id'] = $this->getPhotoId($workflows_category);
-        $result = $workflows_category->update($data);
+        $data['photo_id'] = $this->getPhotoId($workflowsCategory);
+        $result = $workflowsCategory->update($data);
 
         if ($result) {
 
-            $workflows_category->manufacturers()->sync($request->manufacturers);
+            $workflowsCategory->manufacturers()->sync($request->manufacturers);
 
             $metrics = session('access.all_rights.index-metrics-allow');
             if ($metrics) {
-                $workflows_category->metrics()->sync($request->metrics);
+                $workflowsCategory->metrics()->sync($request->metrics);
             }
 
            // Переадресовываем на index
-            return redirect()->route('workflows_categories.index', ['id' => $workflows_category->id]);
+            return redirect()->route('workflows_categories.index', ['id' => $workflowsCategory->id]);
         } else {
             $result = [
                 'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении категории рабочих процессов!'
+                'error_message' => __('errors.update')
             ];
         }
     }
@@ -251,19 +237,17 @@ class WorkflowsCategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param Request $request
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $workflows_category = WorkflowsCategory::with([
+        $workflowsCategory = WorkflowsCategory::with([
             'childs',
             'workflows'
         ])
@@ -271,19 +255,19 @@ class WorkflowsCategoryController extends Controller
         ->find($id);
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $workflows_category);
+        $this->authorize(getmethod(__FUNCTION__), $workflowsCategory);
 
-        $parent_id = $workflows_category->parent_id;
+        $parent_id = $workflowsCategory->parent_id;
 
-        $workflows_category->delete();
+        $workflowsCategory->delete();
 
-        if ($workflows_category) {
+        if ($workflowsCategory) {
             // Переадресовываем на index
             return redirect()->route('workflows_categories.index', ['id' => $parent_id]);
         } else {
             $result = [
                 'error_status' => 1,
-                'error_message' => 'Ошибка при удалении категории!'
+                'error_message' => __('errors.destroy')
             ];
         }
     }

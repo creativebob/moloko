@@ -10,28 +10,38 @@ use Illuminate\Http\Request;
 
 class GoodsCategoryController extends Controller
 {
+    protected $entityAlias;
+    protected $entityDependence;
 
-    // Настройки сконтроллера
-    public function __construct(GoodsCategory $goods_category)
+    /**
+     * GoodsCategoryController constructor.
+     */
+    public function __construct()
     {
         $this->middleware('auth');
-        $this->goods_category = $goods_category;
         $this->class = GoodsCategory::class;
         $this->model = 'App\GoodsCategory';
-        $this->entity_alias = with(new $this->class)->getTable();
-        $this->entity_dependence = false;
+        $this->entityAlias = 'goods_categories';
+        $this->entityDependence = false;
         $this->type = 'page';
     }
 
     use Photable;
 
+    /**
+     * Display a listing of the resource.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function index(Request $request)
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), GoodsCategory::class);
 
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         $goods_categories = GoodsCategory::with([
             'goods',
@@ -56,7 +66,7 @@ class GoodsCategoryController extends Controller
             return view('system.common.categories.index.categories_list',
                 [
                     'items' => $goods_categories,
-                    'entity' => $this->entity_alias,
+                    'entity' => $this->entityAlias,
                     'class' => $this->model,
                     'type' => $this->type,
                     'count' => $goods_categories->count(),
@@ -70,39 +80,53 @@ class GoodsCategoryController extends Controller
         return view('system.common.categories.index.index',
             [
                 'items' => $goods_categories,
-                'pageInfo' => pageInfo($this->entity_alias),
-                'entity' => $this->entity_alias,
+                'pageInfo' => pageInfo($this->entityAlias),
+                'entity' => $this->entityAlias,
                 'class' => $this->model,
                 'type' => $this->type,
                 'id' => $request->id,
                 'nested' => 'childs_count',
-                'filter' => setFilter($this->entity_alias, $request, [
+                'filter' => setFilter($this->entityAlias, $request, [
                     'booklist'
                 ]),
             ]
         );
     }
 
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function create(Request $request)
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), GoodsCategory::class);
 
         return view('system.common.categories.create.modal.create', [
-            'item' => new $this->class,
-            'entity' => $this->entity_alias,
+            'item' => GoodsCategory::make(),
+            'entity' => $this->entityAlias,
             'title' => 'Добавление категории товаров',
             'parent_id' => $request->parent_id,
             'category_id' => $request->category_id
         ]);
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param GoodsCategoryStoreRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function store(GoodsCategoryStoreRequest $request)
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), GoodsCategory::class);
 
         $data = $request->input();
         $goods_category = GoodsCategory::create($data);
@@ -118,16 +142,19 @@ class GoodsCategoryController extends Controller
         }
     }
 
-    public function show($id)
-    {
-        //
-    }
-
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function edit(Request $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $goods_category = GoodsCategory::with([
@@ -175,9 +202,9 @@ class GoodsCategoryController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $goods_category);
 
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entityAlias);
 
-        $settings = getPhotoSettings($this->entity_alias);
+        $settings = getPhotoSettings($this->entityAlias);
 
         // При добавлении метрики отдаем ajax новый список свойст и метрик
         if ($request->ajax()) {
@@ -193,14 +220,22 @@ class GoodsCategoryController extends Controller
             'category' => $goods_category,
             'pageInfo' => $pageInfo,
             'settings' => $settings,
-            'entity' => $this->entity_alias,
+            'entity' => $this->entityAlias,
         ]);
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param GoodsCategoryUpdateRequest $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function update(GoodsCategoryUpdateRequest $request, $id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         $goods_category = GoodsCategory::moderatorLimit($answer)
         ->find($id);
@@ -241,11 +276,19 @@ class GoodsCategoryController extends Controller
         }
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function destroy(Request $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $goods_category = GoodsCategory::with([
@@ -272,7 +315,7 @@ class GoodsCategoryController extends Controller
         // $goods_category->set_metrics()->detach();
 
         // // Удаляем папку
-        // $directory = $goods_category->company_id . '/media/' . $this->entity_alias . '/' . $goods_category->id;
+        // $directory = $goods_category->company_id . '/media/' . $this->entityAlias . '/' . $goods_category->id;
         // $del_dir = Storage::disk('public')->deleteDirectory($directory);
 
         $parent_id = $goods_category->parent_id;

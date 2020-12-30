@@ -39,7 +39,7 @@
     <div class="small-12 cell tabs-margin-top">
         <div class="tabs-content" data-tabs-content="tabs">
 
-            {!! Form::model($priceGoods, ['route' => ['prices_goods.update', 'catalog_id' => $catalogId, $priceGoods->id], 'data-abide', 'novalidate', 'files' => 'true']) !!}
+            {!! Form::model($priceGoods, ['route' => ['prices_goods.update', [$catalogId, $priceGoods->id]], 'data-abide', 'novalidate', 'files' => 'true']) !!}
             @method('PATCH')
 
             {{-- Общая информация --}}
@@ -159,7 +159,7 @@
                     </div>
 
                 </div>
-            </div>            
+            </div>
 
             {!! Form::close() !!}
         </div>

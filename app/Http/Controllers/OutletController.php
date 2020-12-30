@@ -166,6 +166,7 @@ class OutletController extends Controller
 
         $outlet->taxation_types()->sync($request->taxation_types);
         $outlet->catalogs_goods()->sync($request->catalogs_goods);
+        $outlet->catalogs_services()->sync($request->catalogs_services);
         $outlet->staff()->sync($request->staff);
         $outlet->settings()->sync($request->settings);
         $outlet->payments_methods()->sync($request->payments_methods);

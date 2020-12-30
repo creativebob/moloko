@@ -17,7 +17,7 @@ trait Estimatable
     {
         $estimate->load([
             'goods_items.price_goods',
-            'services_items',
+            'services_items.price_service',
         ]);
 
         $cost = 0;
@@ -37,7 +37,8 @@ trait Estimatable
         $shareCurrency = 0;
         $principalCurrency = 0;
 
-        $catalogsFoodsIds = [];
+        $catalogsGoodsIds = [];
+        $catalogsServicesIds = [];
 
         if ($estimate->goods_items->isNotEmpty()) {
             $cost += $estimate->goods_items->sum('cost');
@@ -58,7 +59,7 @@ trait Estimatable
             $principalCurrency += $estimate->goods_items->sum('principal_currency');
 
             $groupedGoodsItems = $estimate->goods_items->groupBy('price_goods.catalogs_goods_id');
-            $catalogsFoodsIds = $groupedGoodsItems->keys();
+            $catalogsGoodsIds = $groupedGoodsItems->keys();
         }
 
         if ($estimate->services_items->isNotEmpty()) {
@@ -66,11 +67,21 @@ trait Estimatable
             $amount += $estimate->services_items->sum('amount');
             $total += $estimate->services_items->sum('total');
 
-            $priceDiscount += $estimate->goods_items->sum('price_discount');
-            $catalogsItemDiscount += $estimate->goods_items->sum('catalogs_item_discount');
-            $estimateDiscount += $estimate->goods_items->sum('estimate_discount');
-            $clientDiscount += $estimate->goods_items->sum('client_discount_currency');
-            $manualDiscount += $estimate->goods_items->sum('manual_discount_currency');
+            $priceDiscount += $estimate->services_items->sum('price_discount');
+            $catalogsItemDiscount += $estimate->services_items->sum('catalogs_item_discount');
+            $estimateDiscount += $estimate->services_items->sum('estimate_discount');
+            $clientDiscount += $estimate->services_items->sum('client_discount_currency');
+            $manualDiscount += $estimate->services_items->sum('manual_discount_currency');
+
+            $total += $estimate->services_items->sum('total');
+            $totalPoints += $estimate->services_items->sum('total_points');
+            $totalBonuses += $estimate->services_items->sum('total_bonuses');
+
+            $shareCurrency += $estimate->services_items->sum('share_currency');
+            $principalCurrency += $estimate->services_items->sum('principal_currency');
+
+            $groupedServicesItems = $estimate->services_items->groupBy('price_service.catalogs_service_id');
+            $catalogsServicesIds = $groupedServicesItems->keys();
         }
 
         // Скидки
@@ -116,6 +127,7 @@ trait Estimatable
 
         $estimate->update($data);
 
-        $estimate->catalogs_goods()->sync($catalogsFoodsIds);
+        $estimate->catalogs_goods()->sync($catalogsGoodsIds);
+        $estimate->catalogs_services()->sync($catalogsServicesIds);
     }
 }

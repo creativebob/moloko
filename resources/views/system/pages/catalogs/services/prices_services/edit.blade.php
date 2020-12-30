@@ -19,7 +19,17 @@
     <div class="small-12 cell">
         <ul class="tabs-list" data-tabs id="tabs">
             <li class="tabs-title is-active">
-                <a href="#tab-options" aria-selected="true">Общая информация</a>
+                <a href="#tab-general" aria-selected="true">Общая информация</a>
+            </li>
+
+            @can('index', App\Discount::class)
+                <li class="tabs-title">
+                    <a href="#tab-discounts" data-tabs-target="tab-discounts">Скидки</a>
+                </li>
+            @endcan
+
+            <li class="tabs-title">
+                <a href="#tab-options" aria-selected="true">Опции</a>
             </li>
         </ul>
     </div>
@@ -29,64 +39,22 @@
     <div class="small-12 cell tabs-margin-top">
         <div class="tabs-content" data-tabs-content="tabs">
 
-            {!! Form::model($priceService, ['route' => ['prices_services.update', 'catalog_id' => $catalogId, $priceService->id], 'data-abide', 'novalidate', 'files' => 'true']) !!}
+            {!! Form::model($priceService, ['route' => ['prices_services.update', [$catalogId, $priceService->id]], 'data-abide', 'novalidate', 'files' => 'true']) !!}
             @method('PATCH')
 
             {{-- Общая информация --}}
-            <div class="tabs-panel is-active" id="tab-options">
-                <div class="grid-x grid-padding-x">
+            <div class="tabs-panel is-active" id="tab-general">
+                @include('system.pages.catalogs.services.prices_services.tabs.general')
+            </div>
 
-                    <div class="small-12 medium-6 cell">
-                        <div class="grid-x grid-padding-x">
-
-                            <div class="cell small-12 medium-4">
-                                <label>Цена
-                                    {!! Form::number('price', $priceService->price, ['required']) !!}
-                                </label>
-                            </div>
-
-                            <div class="cell small-12 medium-4">
-                                <label>Внут. валюта
-                                    {!! Form::number('points', $priceService->points, ['required']) !!}
-                                </label>
-                            </div>
-
-                            <div class="cell small-12 medium-4">
-                                <label>Индивидуальная скидка
-                                    {!! Form::number('discount', $priceService->discount, ['required']) !!}
-                                </label>
-                            </div>
-
-
-                            <div class="small-12 cell checkbox">
-                                {!! Form::hidden('status', 0) !!}
-                                {!! Form::checkbox('status', 1, $priceService->status, ['id' => 'checkbox-status']) !!}
-                                <label for="checkbox-status"><span>Продан</span></label>
-                            </div>
-
-                            <div class="small-12 cell checkbox">
-                                {!! Form::hidden('is_hit', 0) !!}
-                                {!! Form::checkbox('is_hit', 1, $priceService->is_hit, ['id' => 'checkbox-is_hit']) !!}
-                                <label for="checkbox-is_hit"><span>Хит</span></label>
-                            </div>
-
-                            <div class="small-12 cell checkbox">
-                                {!! Form::hidden('is_new', 0) !!}
-                                {!! Form::checkbox('is_new', 1, $priceService->is_new, ['id' => 'checkbox-is_new']) !!}
-                                <label for="checkbox-is_new"><span>Новинка</span></label>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    @include('includes.control.checkboxes', ['item' => $priceService])
-
-                    {{-- Кнопка --}}
-                    <div class="small-12 cell tabs-button tabs-margin-top">
-                        {{ Form::submit('Редактировать', ['class' => 'button']) }}
-                    </div>
+            @can('index', App\Discount::class)
+                <div class="tabs-panel" id="tab-discounts">
+                    @include('system.common.discounts.discounts', ['item' => $priceService, 'entity' => 'prices_services'])
                 </div>
+            @endcan
+
+            <div class="tabs-panel" id="tab-options">
+                @include('system.pages.catalogs.services.prices_services.tabs.options')
             </div>
 
             {!! Form::close() !!}

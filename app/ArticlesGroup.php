@@ -54,6 +54,10 @@ class ArticlesGroup extends Model
         'units_category_id',
         'rule_id',
         'album_id',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Артикулы

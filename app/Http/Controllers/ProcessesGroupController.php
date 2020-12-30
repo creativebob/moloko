@@ -12,36 +12,39 @@ use App\Http\Requests\System\ProcessesGroupRequest;
 
 class ProcessesGroupController extends Controller
 {
-    // Настройки сконтроллера
-    public function __construct(ProcessesGroup $processes_group)
+    protected $entityAlias;
+    protected $entityDependence;
+
+    /**
+     * ProcessesGroupController constructor.
+     */
+    public function __construct()
     {
         $this->middleware('auth');
-        $this->processes_group = $processes_group;
-        $this->class = ProcessesGroup::class;
-        $this->model = 'App\ProcessesGroup';
-        $this->entity_alias = with(new $this->class)->getTable();
-        $this->entity_dependence = false;
+        $this->entityAlias = 'processes_groups';
+        $this->entityDependence = false;
     }
 
-    public function index(Request $request)
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function index()
     {
-
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), ProcessesGroup::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
-        // -----------------------------------------------------------------------------------------------------------------------------
-        // ГЛАВНЫЙ ЗАПРОС
-        // -----------------------------------------------------------------------------------------------------------------------------
-
-        $articles_groups = ArticlesGroup::with(
+        $processesGroups = ProcessesGroup::with([
             'author',
             'company',
-            'articles'
-        )
-        ->withCount('articles')
+            'processes'
+        ])
+        ->withCount('processes')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
@@ -50,142 +53,104 @@ class ProcessesGroupController extends Controller
         // ->filter($request, 'author_id')
         // ->filter($request, 'company_id')
         ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
+        ->oldest('sort')
         ->paginate(30);
 
+        // Инфо о странице
+        $pageInfo = pageInfo($this->entityAlias);
 
-        return view('articles_groups.index',[
-            'articles_groups' => $articles_groups,
-            'pageInfo' => pageInfo($this->entity_alias),
-            // 'filter' => $filter,
-            'nested' => 'articles_count'
-        ]);
+        return view('products.processes_groups.index', compact('processesGroups', 'pageInfo', 'nested'));
     }
 
-    public function create()
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function edit($id)
     {
-
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
-
-        return view('articles_groups.create', [
-            'articles_group' => new $this->class,
-            'pageInfo' => pageInfo($this->entity_alias),
-        ]);
-    }
-
-    public function store(ArticlesGroupRequest $request)
-    {
-
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
-
-        // Наполняем сущность данными
-        $articles_group = new ArticlesGroup;
-        $articles_group->name = $request->name;
-        $articles_group->description = $request->description;
-        $articles_group->unit_id = $request->unit_id;
-
-        $articles_group->set_status = $request->has('set_status');
-
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
-        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-        if ($answer['automoderate'] == false){
-            $articles_group->moderation = true;
+        $processesGroup = ProcessesGroup::moderatorLimit($answer)
+        ->find($id);
+        //        dd($processesGroup);
+        if (empty($processesGroup)) {
+            abort(403, __('errors.not_found'));
         }
 
-        $articles_group->system = $request->system;
-        $articles_group->display = $request->display;
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $processesGroup);
 
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
+        // Инфо о странице
+        $pageInfo = pageInfo($this->entityAlias);
 
-        $articles_group->company_id = $user->company_id;
-        $articles_group->author_id = hideGod($user);
-
-        $articles_group->save();
-
-        return redirect()->route('articles_groups.index');
+        return view('products.processes_groups.edit', compact('processesGroup', 'pageInfo'));
     }
 
-    public function show(ArticlesGroup $articlesGroup)
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param ProcessesGroupRequest $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function update(ProcessesGroupRequest $request, $id)
     {
-        //
-    }
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
-    public function edit(Request $request, $id)
-    {
-
-        $articles_group = ArticlesGroup::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
+        $processesGroup = ProcessesGroup::moderatorLimit($answer)
         ->find($id);
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $articles_group);
+        $this->authorize(getmethod(__FUNCTION__), $processesGroup);
 
-        $articles_group->load('unit');
-
-        return view('articles_groups.edit', [
-            'articles_group' => $articles_group,
-            'pageInfo' => pageInfo($this->entity_alias),
-        ]);
-    }
-
-    public function update(ArticlesGroupRequest $request, $id)
-    {
-
-        $articles_group = ArticlesGroup::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
-        ->find($id);
-
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $articles_group);
-
-        $articles_group->name = $request->name;
-        $articles_group->description = $request->description;
-        $articles_group->unit_id = $request->unit_id;
-
-        if ($articles_group->articles->count() == 0) {
-            $articles_group->set_status = $request->has('set_status');
+        $data = $request->input();
+        if ($processesGroup->processes->count() == 0) {
+            $data['set_status'] = $request->has('set_status');
         }
+        $result = $processesGroup->update($data);
 
-
-        // Модерация и системная запись
-        $articles_group->system = $request->system;
-        $articles_group->display = $request->display;
-
-        $articles_group->moderation = $request->moderation;
-
-        $articles_group->editor_id = hideGod($request->user());
-        $articles_group->save();
-
-        if ($articles_group) {
-            return redirect()->route('articles_groups.index');
+        if ($result) {
+            return redirect()->route('processes_groups.index');
         } else {
-            abort(403, 'Ошибка обновления группы артикулов');
+            abort(403, __('errors.update'));
         }
     }
 
-    public function destroy(Request $request, $id)
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function destroy($id)
     {
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
-        $articles_group = ArticlesGroup::with('articles')
-        ->moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
+        $processesGroup = ProcessesGroup::with('processes')
+        ->moderatorLimit($answer)
         ->find($id);
+        //        dd($processesGroup);
+        if (empty($processesGroup)) {
+            abort(403, __('errors.not_found'));
+        }
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $articles_group);
+        $this->authorize(getmethod(__FUNCTION__), $processesGroup);
 
-        $articles_group->editor_id = hideGod($request->user());
-        $articles_group->save();
+        $processesGroup->delete();
 
-        $articles_group->delete();
-
-        if ($articles_group) {
-            return redirect()->route('articles_groups.index');
+        if ($processesGroup) {
+            return redirect()->route('processes_groups.index');
         } else {
-            abort(403, 'Ошибка удаления группы артикулов');
+            abort(403, __('errors.destroy'));
         }
     }
 
@@ -211,8 +176,8 @@ class ProcessesGroupController extends Controller
 
         // if ($category->groups_count > 0) {
 
-        //     $articles_groups = $category->groups;
-        //     return view('goods.create_modes.mode_select', compact('articles_groups'));
+        //     $processesGroups = $category->groups;
+        //     return view('goods.create_modes.mode_select', compact('processesGroups'));
 
         // } else {
 
@@ -247,7 +212,7 @@ class ProcessesGroupController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, 'index');
+        $answer = operator_right($this->entityAlias, $this->entityDependence, 'index');
 
         $relation = $request->category_entity;
         $category_id = $request->category_id;

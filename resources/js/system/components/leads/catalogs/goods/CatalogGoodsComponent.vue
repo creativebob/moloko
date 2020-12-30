@@ -8,7 +8,7 @@
             >
 
                 <search-component
-                    :prices="prices"
+                    :prices="catalogPrices"
                     @add="addPriceToEstimate"
                 ></search-component>
 
@@ -179,6 +179,11 @@ export default {
             return this.prices.filter(item => {
                 return item.catalogs_goods_item_id === this.catalogsItemId;
             });
+        },
+        catalogPrices() {
+            return this.prices.filter(item => {
+                return item.catalogs_goods_id === this.catalogId;
+            });
         }
     },
     watch: {
@@ -190,7 +195,7 @@ export default {
         getCatalogs() {
             if (this.$store.state.lead.outlet.id) {
                 axios
-                    .post('/admin/catalog_goods/get_catalogs_for_outlet', {
+                    .post('/admin/catalogs_goods/get_catalogs_for_outlet', {
                         outlet_id: this.$store.state.lead.outlet.id,
                         filial_id: this.$store.state.lead.outlet.filial_id,
                     })
@@ -215,7 +220,7 @@ export default {
                         // Foundation.reInit($('.selecter-catalog-item'));
                     })
                     .catch(error => {
-                        alert('Ошибка загрузки каталогов, перезагрузите страницу!')
+                        alert('Ошибка загрузки каталогов товаров, перезагрузите страницу!')
                         console.log(error)
                     });
             }

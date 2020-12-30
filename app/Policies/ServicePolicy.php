@@ -50,8 +50,9 @@ class ServicePolicy
 
     public function delete(User $user, Model $model)
     {
-
-
+//        if ($model->in_kits->isNotEmpty()) {
+//            return false;
+//        }
 
         $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
         return $result;

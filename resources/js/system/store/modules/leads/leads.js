@@ -12,6 +12,9 @@ const moduleLead = {
         catalogGoodsId: null,
         catalogsGoodsIds: [],
 
+        catalogServicesId: null,
+        catalogsServicesIds: [],
+
         estimate: null,
         goodsItems: [],
         servicesItems: [],
@@ -132,15 +135,8 @@ const moduleLead = {
         SET_CATALOG_GOODS_ID(state, id) {
             state.catalogGoodsId = id;
         },
-
-        // Каталоги
-        GET_CATALOG_GOODS_IDS_FROM_ESTIMATE(state) {
-            let ids = [];
-            state.goodsItems.forEach(item => {
-                ids.push(item.catalogs_goods_id);
-            });
-
-            console.log(ids);
+        SET_CATALOG_SERVICES_ID(state, id) {
+            state.catalogServicesId = id;
         },
 
         // Способы платежа
@@ -176,6 +172,11 @@ const moduleLead = {
             estimate.catalogs_goods.forEach(catalog => {
                 state.catalogsGoodsIds.push(catalog.id);
             })
+
+            state.catalogsServicesIds = [];
+            estimate.catalogs_services.forEach(catalog => {
+                state.catalogsServicesIds.push(catalog.id);
+            })
         },
 
         // Товары
@@ -194,7 +195,7 @@ const moduleLead = {
                     item.count = parseFloat(item.count) + 1;
                     Vue.set(state.goodsItems, index, item);
 
-                    this.commit('SET_AGGREGATIONS', index);
+                    this.commit('SET_GOODS_ITEM_AGGREGATIONS', index);
                 } else {
                     let item = {
                         id: state.goodsItems.length + 1,
@@ -239,7 +240,7 @@ const moduleLead = {
                     state.goodsItems.push(item);
                     index = state.goodsItems.findIndex(obj => obj.id == item.id);
 
-                    this.commit('SET_AGGREGATIONS', index);
+                    this.commit('SET_GOODS_ITEM_AGGREGATIONS', index);
 
                     const found = state.catalogsGoodsIds.find(obj => obj == price.catalogs_goods_id);
                     if (!found) {
@@ -263,7 +264,7 @@ const moduleLead = {
             item.count = data.count;
             Vue.set(state.goodsItems, index, item);
 
-            this.commit('SET_AGGREGATIONS', index);
+            this.commit('SET_GOODS_ITEM_AGGREGATIONS', index);
         },
         UPDATE_GOODS_ITEM_IS_MANUAL(state, data) {
             this.commit('SET_CHANGE');
@@ -278,17 +279,17 @@ const moduleLead = {
 
             Vue.set(state.goodsItems, index, item);
 
-            this.commit('SET_AGGREGATIONS', index);
+            this.commit('SET_GOODS_ITEM_AGGREGATIONS', index);
         },
 
         UPDATE_GOODS_ITEM(state, item) {
             const index = state.goodsItems.findIndex(obj => obj.id === item.id);
             Vue.set(state.goodsItems, index, item);
 
-            this.commit('SET_AGGREGATIONS', index);
+            this.commit('SET_GOODS_ITEM_AGGREGATIONS', index);
         },
 
-        SET_AGGREGATIONS(state, index) {
+        SET_GOODS_ITEM_AGGREGATIONS(state, index) {
             let item = state.goodsItems[index];
 
             const count = parseFloat(item.count);
@@ -447,7 +448,7 @@ const moduleLead = {
         UPDATE_GOODS_ITEMS(state) {
             state.goodsItems.forEach(item => {
                 const index = state.goodsItems.findIndex(obj => obj.id === item.id);
-                this.commit('SET_AGGREGATIONS', index);
+                this.commit('SET_GOODS_ITEM_AGGREGATIONS', index);
             });
         },
 
@@ -455,14 +456,273 @@ const moduleLead = {
         SET_SERVICES_ITEMS(state, servicesItems) {
             state.servicesItems = servicesItems;
         },
-        UPDATE_SERVICES_ITEM(state, item) {
-            let id = item.id;
-            let index = state.servicesItems.findIndex(item => item.id === id);
+
+        ADD_SERVICE_ITEM_TO_ESTIMATE(state, price) {
+            if (!state.estimate.registered_at) {
+                this.commit('SET_CHANGE');
+
+                // TODO - 25.09.20 - Нужна будет проверка на серийность
+                let index = state.servicesItems.findIndex(obj => obj.price_id == price.id);
+                if (index > -1) {
+                    let item = state.servicesItems[index];
+                    item.count = parseFloat(item.count) + 1;
+                    Vue.set(state.servicesItems, index, item);
+
+                    this.commit('SET_SERVICE_ITEM_AGGREGATIONS', index);
+                } else {
+                    let item = {
+                        id: state.servicesItems.length + 1,
+
+                        estimate_id: state.estimate.id,
+
+                        price_id: price.id,
+                        price_service: price,
+
+                        service_id: price.service_id,
+                        service: price.service,
+
+                        currency_id: price.currency_id,
+                        currency: price.currency,
+
+                        sale_mode: 1,
+                        comment: null,
+
+                        cost_unit: parseFloat(price.service.process.cost_default),
+                        price: parseFloat(price.price),
+                        points: price.points,
+                        count: "1.00",
+
+                        price_discount_id: price.price_discount_id,
+                        price_discount_unit: parseFloat(price.price_discount),
+
+                        catalogs_item_discount_id: price.catalogs_item_discount_id,
+                        catalogs_item_discount_unit: parseFloat(price.catalogs_item_discount),
+
+                        estimate_discount_id: price.estimate_discount_id,
+                        estimate_discount_unit: parseFloat(price.estimate_discount),
+
+                        manual_discount_currency: 0,
+                        manual_discount_percent: 0,
+
+                        is_manual: 0,
+
+                        company_id: null,
+                    };
+                    state.servicesItems.push(item);
+                    index = state.servicesItems.findIndex(obj => obj.id == item.id);
+
+                    this.commit('SET_SERVICE_ITEM_AGGREGATIONS', index);
+
+                    const found = state.catalogsServicesIds.find(obj => obj == price.catalogs_service_id);
+                    if (!found) {
+                        state.catalogsServicesIds.push(price.catalogs_service_id);
+                    }
+                }
+            }
+        },
+
+        UPDATE_SERVICE_ITEM_COMMENT(state, data) {
+            this.commit('SET_CHANGE');
+            const index = state.servicesItems.findIndex(obj => obj.id === data.id);
+            let item = state.servicesItems[index];
+            item.comment = data.comment;
             Vue.set(state.servicesItems, index, item);
         },
-        UPDATE_SERVICES_ITEMS(state, servicesItems) {
-            state.servicesItems = servicesItems;
+        UPDATE_SERVICE_ITEM_COUNT(state, data) {
+            this.commit('SET_CHANGE');
+            const index = state.servicesItems.findIndex(obj => obj.id === data.id);
+            let item = state.servicesItems[index];
+            item.count = data.count;
+            Vue.set(state.servicesItems, index, item);
+
+            this.commit('SET_SERVICE_ITEM_AGGREGATIONS', index);
         },
+        UPDATE_SERVICE_ITEM_IS_MANUAL(state, data) {
+            this.commit('SET_CHANGE');
+            const index = state.servicesItems.findIndex(obj => obj.id === data.id);
+            let item = state.servicesItems[index];
+
+            item.manual_discount_currency = data.manual_discount_currency;
+            item.manual_discount_percent = data.manual_discount_percent;
+            item.is_manual = data.is_manual;
+
+            item.count = data.count;
+
+            Vue.set(state.servicesItems, index, item);
+
+            this.commit('SET_SERVICE_ITEM_AGGREGATIONS', index);
+        },
+
+        UPDATE_SERVICE_ITEM(state, item) {
+            const index = state.servicesItems.findIndex(obj => obj.id === item.id);
+            Vue.set(state.servicesItems, index, item);
+
+            this.commit('SET_SERVICE_ITEM_AGGREGATIONS', index);
+        },
+
+        SET_SERVICE_ITEM_AGGREGATIONS(state, index) {
+            let item = state.servicesItems[index];
+
+            const count = parseFloat(item.count);
+            item.count = parseFloat(item.count).toFixed(2);
+
+            switch (item.sale_mode) {
+                case (1):
+                    item.total_points = 0;
+                    item.total_bonuses = 0;
+
+                    // Основные расчеты
+                    item.cost = item.cost_unit * count;
+                    item.amount = parseFloat(item.price) * count;
+
+                    // Скидки
+                    // Если есть ручная скидка
+                    if (item.is_manual == 1) {
+
+                        item.price_discount = 0;
+                        item.total_price_discount = item.amount;
+
+                        item.catalogs_item_discount = 0;
+                        item.total_catalogs_item_discount = item.amount;
+
+                        item.estimate_discount = 0;
+                        item.total_estimate_discount = item.amount;
+
+                        item.client_discount_currency = 0;
+                        item.total_client_discount = item.amount;
+
+                        item.total_manual_discount = item.amount - (item.manual_discount_currency * count);
+                        item.total = item.total_manual_discount;
+
+                        item.total_computed_discount = 0;
+
+                        item.discount_currency = item.manual_discount_currency * count;
+                        item.discount_percent = item.manual_discount_percent;
+                    } else {
+                        // Иначе рассчитываем
+                        item.price_discount = item.price_discount_unit * count;
+                        item.total_price_discount = item.amount - item.price_discount;
+
+                        item.catalogs_item_discount = item.catalogs_item_discount_unit * count;
+                        item.total_catalogs_item_discount = item.total_price_discount - item.catalogs_item_discount;
+
+                        item.estimate_discount = item.estimate_discount_unit * count;
+                        item.total_estimate_discount = item.total_catalogs_item_discount - item.estimate_discount;
+
+                        item.client_discount_percent = state.client ? state.client.discount : 0;
+
+                        if (item.client_discount_percent > 0) {
+                            item.client_discount_unit_currency = item.total_estimate_discount / 100 * item.client_discount_percent / count;
+                            item.client_discount_currency = item.client_discount_unit_currency * count;
+                        } else {
+                            item.client_discount_unit_currency = 0;
+                            item.client_discount_currency = 0;
+                        }
+                        item.total_client_discount = item.total_estimate_discount - item.client_discount_currency;
+
+                        item.total = item.total_client_discount;
+
+                        item.discount_currency = item.amount - item.total;
+                        if (item.discount_currency > 0) {
+                            item.discount_percent = item.discount_currency * 100 / item.amount;
+                        } else {
+                            item.discount_percent = 0;
+                        }
+
+                        item.computed_discount_percent = item.discount_percent;
+                        item.computed_discount_currency = item.discount_currency / count;
+                        item.total_computed_discount = item.discount_currency;
+
+                        item.manual_discount_currency = 0;
+                        item.manual_discount_percent = 0;
+                        item.total_manual_discount = 0;
+                    }
+
+                    // Маржа
+                    let totalPrice = 0;
+                    if (item.is_manual == 0) {
+                        totalPrice = parseFloat(item.price) - item.price_discount_unit - item.catalogs_item_discount_unit - item.estimate_discount_unit - item.client_discount_unit_currency;
+                    } else {
+                        totalPrice = parseFloat(item.price) - item.manual_discount_currency;
+                    }
+                    item.margin_currency_unit = totalPrice - item.cost_unit;
+                    item.margin_currency = item.total - item.cost;
+
+                    if (item.total > 0) {
+                        item.margin_percent_unit = (item.margin_currency_unit / totalPrice * 100);
+                        item.margin_percent = (item.margin_currency / item.total * 100);
+                    } else {
+                        item.margin_percent_unit = (item.margin_currency_unit * 100);
+                        item.margin_percent = (item.margin_currency * 100);
+                    }
+                    break;
+
+                case (2):
+                    item.amount = 0;
+
+                    item.price_discount = 0;
+                    item.total_price_discount = 0;
+
+                    item.catalogs_item_discount = 0;
+                    item.total_catalogs_item_discount = 0;
+
+                    item.estimate_discount = 0;
+                    item.total_estimate_discount = 0;
+
+                    item.manual_discount_currency = 0;
+                    item.manual_discount_percent = 0;
+                    item.total_manual_discount = 0;
+
+                    item.client_discount_currency = 0;
+                    item.total_client_discount = 0;
+
+                    item.computed_discount_percent = 0;
+                    item.computed_discount_currency = 0;
+                    item.total_computed_discount = 0;
+
+                    item.total = 0;
+                    item.total_bonuses = 0;
+                    item.total_points = item.points * count;
+
+                    item.discount_currency = 0;
+                    item.discount_percent = 0;
+
+                    item.margin_currency = 0;
+                    item.margin_percent = 0;
+                    break;
+            }
+
+            Vue.set(state.servicesItems, index, item);
+        },
+
+        REMOVE_SERVICE_ITEM(state, id) {
+            const index = state.servicesItems.findIndex(obj => obj.id === id);
+
+            const catalogsServiceId = state.servicesItems[index].price_service.catalogs_service_id;
+
+            state.servicesItems.splice(index, 1);
+
+            if (state.catalogsServicesIds.length > 1) {
+                const found = state.servicesItems.find(obj => obj.price_service.catalogs_service_id == catalogsServiceId);
+                if (!found) {
+                    const index = state.catalogsServicesIds.findIndex(obj => obj === catalogsServiceId);
+                    state.catalogsServicesIds.splice(index, 1);
+                }
+            }
+
+            if (state.servicesItems.length == 0) {
+                state.catalogsServicesIds = [];
+            }
+
+            this.commit('SET_CHANGE');
+        },
+        UPDATE_SERVICES_ITEMS(state) {
+            state.servicesItems.forEach(item => {
+                const index = state.servicesItems.findIndex(obj => obj.id === item.id);
+                this.commit('SET_SERVICE_ITEM_AGGREGATIONS', index);
+            });
+        },
+
 
         // Агенты
         SET_AGENT(state, agent) {
@@ -496,7 +756,7 @@ const moduleLead = {
 
                     Vue.set(state.goodsItems, index, item);
 
-                    this.commit('SET_AGGREGATIONS', index);
+                    this.commit('SET_GOODS_ITEM_AGGREGATIONS', index);
                 }
             })
         }
@@ -544,6 +804,7 @@ const moduleLead = {
                     this.commit('SET_ESTIMATE', response.data.estimate);
 
                     this.commit('SET_GOODS_ITEMS', response.data.goods_items);
+                    this.commit('SET_SERVICES_ITEMS', response.data.services_items);
 
                     if (response.data.outlet) {
                         this.commit('SET_OUTLET', response.data.outlet);
@@ -876,6 +1137,20 @@ const moduleLead = {
         },
         GOODS_ITEM: state => id => {
             return state.goodsItems.find(item => item.id == id);
+        },
+
+        // Услуги
+        COUNT_SERVICE_ITEM_IN_ESTIMATE: state => id => {
+            let count = 0;
+            state.servicesItems.forEach(item => {
+                if (item.price_id == id) {
+                    count += parseFloat(item.count);
+                }
+            });
+            return count;
+        },
+        SERVICE_ITEM: state => id => {
+            return state.servicesItems.find(item => item.id == id);
         },
 
         // Платежи

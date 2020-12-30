@@ -42,7 +42,9 @@ class CatalogsService extends Model
     // use BooklistFilter;
     // use DateIntervalFilter;
 
-    protected $dates = ['deleted_at'];
+    protected $dates = [
+        'deleted_at'
+    ];
 
     protected $fillable = [
         'name',
@@ -77,10 +79,15 @@ class CatalogsService extends Model
         return $this->hasMany(PricesService::class);
     }
 
+    public function prices_services()
+    {
+        return $this->hasMany(PricesService::class);
+    }
+
     // Филиалы
     public function filials()
     {
-        return $this->belongsToMany(Site::class, 'catalogs_service_filial', 'catalogs_service_id', 'filial_id');
+        return $this->belongsToMany(Department::class, 'catalogs_service_filial', 'catalogs_service_id', 'filial_id');
     }
 
     // Аавтор
@@ -114,6 +121,11 @@ class CatalogsService extends Model
     public function agency_schemes()
     {
         return $this->morphMany(AgencyScheme::class, 'catalog');
+    }
+
+    public function outlets()
+    {
+        return $this->belongsToMany(Outlet::class, 'outlet_catalog_services', 'catalog_services_id', 'outlet_id');
     }
 
     // this is a recommended way to declare event handlers

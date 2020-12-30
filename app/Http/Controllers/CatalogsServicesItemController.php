@@ -11,19 +11,18 @@ use Illuminate\Http\Request;
 
 class CatalogsServicesItemController extends Controller
 {
+    protected $entityAlias;
+    protected $entityDependence;
 
     /**
      * CatalogsServicesItemController constructor.
-     * @param CatalogsServicesItem $catalogs_services_item
      */
-    public function __construct(CatalogsServicesItem $catalogs_services_item)
+    public function __construct()
     {
         $this->middleware('auth');
-        $this->catalogs_services_item = $catalogs_services_item;
-        $this->class = CatalogsServicesItem::class;
         $this->model = 'App\CatalogsServicesItem';
-        $this->entity_alias = with(new $this->class)->getTable();
-        $this->entity_dependence = false;
+        $this->entityAlias = 'catalogs_services_items';
+        $this->entityDependence = false;
         $this->type = 'page';
     }
 
@@ -33,17 +32,17 @@ class CatalogsServicesItemController extends Controller
      * Display a listing of the resource.
      *
      * @param Request $request
-     * @param $catalog_id
+     * @param $catalogId
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function index(Request $request, $catalog_id)
+    public function index(Request $request, $catalogId)
     {
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), CatalogsServicesItem::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         $columns = [
             'id',
@@ -58,64 +57,63 @@ class CatalogsServicesItemController extends Controller
             'author_id'
         ];
 
-        $catalogs_services_items = CatalogsServicesItem::with('childs')
+        $catalogsServicesItems = CatalogsServicesItem::with('childs')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
-        ->where('catalogs_service_id', $catalog_id)
+        ->where('catalogs_service_id', $catalogId)
             ->orderBy('sort')
         ->get();
-        // dd($catalogs_services_items);
+        // dd($catalogsServicesItems);
 
         // Отдаем Ajax
         if ($request->ajax()) {
 
             return view('system.common.categories.index.categories_list',
                 [
-                    'items' => $catalogs_services_items,
-                    'entity' => $this->entity_alias,
+                    'items' => $catalogsServicesItems,
+                    'entity' => $this->entityAlias,
                     'class' => $this->model,
                     'type' => $this->type,
-                    'count' => $catalogs_services_items->count(),
+                    'count' => $catalogsServicesItems->count(),
                     'id' => $request->id,
                     'nested' => 'childs_count',
                 ]
             );
         }
 
-        $catalog_service = CatalogsService::find($catalog_id);
+        $catalogServices = CatalogsService::find($catalogId);
+
+        $id = $request->id;
+
+        // Инфо о странице
+        $pageInfo = pageInfo($this->entityAlias);
 
         // Отдаем на шаблон
-        return view('catalogs_services_items.index', [
-            'catalogs_services_items' => $catalogs_services_items,
-            'pageInfo' => pageInfo($this->entity_alias),
-            'id' => $request->id,
-            'catalog_id' => $catalog_id,
-            'catalog_service' => $catalog_service
-        ]);
+        return view('system.pages.catalogs.services.catalogs_services_items.index', compact('catalogsServicesItems', 'pageInfo', 'id', 'catalogServices'));
     }
 
     /**
      * Show the form for creating a new resource.
      *
      * @param Request $request
-     * @param $catalog_id
+     * @param $catalogId
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function create(Request $request, $catalog_id)
+    public function create(Request $request, $catalogId)
     {
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), CatalogsServicesItem::class);
 
         return view('system.common.categories.create.modal.create', [
             'item' => CatalogsService::make(),
-            'entity' => $this->entity_alias,
+            'entity' => $this->entityAlias,
             'title' => 'Добавление пункта каталога',
             'parent_id' => $request->parent_id,
             'category_id' => $request->category_id,
-            'catalog_id' => $catalog_id,
+            'catalogId' => $catalogId,
         ]);
     }
 
@@ -123,108 +121,138 @@ class CatalogsServicesItemController extends Controller
      * Store a newly created resource in storage.
      *
      * @param CatalogsServicesItemStoreRequest $request
-     * @param $catalog_id
+     * @param $catalogId
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function store(CatalogsServicesItemStoreRequest $request, $catalog_id)
+    public function store(CatalogsServicesItemStoreRequest $request, $catalogId)
     {
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), CatalogsServicesItem::class);
 
         $data = $request->input();
-        $data['catalogs_service_id'] = $catalog_id;
-        $catalogs_services_item = CatalogsServicesItem::create($data);
+        $data['catalogs_service_id'] = $catalogId;
+        $catalogsServicesItem = CatalogsServicesItem::create($data);
 
-        if ($catalogs_services_item) {
+        if ($catalogsServicesItem) {
 
             // Переадресовываем на index
-            return redirect()->route('catalogs_services_items.index', ['catalog_id' => $catalog_id, 'id' => $catalogs_services_item->id]);
+            return redirect()->route('catalogs_services_items.index', ['catalogId' => $catalogId, 'id' => $catalogsServicesItem->id]);
 
         } else {
             $result = [
                 'error_status' => 1,
-                'error_message' => 'Ошибка при записи пункта каталога!'
+                'error_message' => __('errors.store')
             ];
         }
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param $id
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
-     * @param Request $request
-     * @param $catalog_id
+     * @param $catalogId
      * @param $id
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function edit(Request $request, $catalog_id, $id)
+    public function edit($catalogId, $id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
-        $catalogs_services_item = CatalogsServicesItem::moderatorLimit($answer)
+        $catalogsServicesItem = CatalogsServicesItem::moderatorLimit($answer)
         ->find($id);
-        // dd($catalogs_services_item);
+        // dd($catalogsServicesItem);
+        if (empty($catalogsServicesItem)) {
+            abort(403, __('errors.not_found'));
+        }
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $catalogs_services_item);
+        $this->authorize(getmethod(__FUNCTION__), $catalogsServicesItem);
 
-        $catalog_service = CatalogsService::find($catalog_id);
-
-        return view('catalogs_services_items.edit', [
-            'catalogs_services_item' => $catalogs_services_item,
-            'catalog_id' => $catalog_id,
-            'pageInfo' => pageInfo($this->entity_alias),
-            'catalog_service' => $catalog_service
+        $catalogsServicesItem->load([
+            'discounts'
         ]);
+
+        $catalogServices = CatalogsService::find($catalogId);
+
+        // Инфо о странице
+        $pageInfo = pageInfo($this->entityAlias);
+
+        return view('system.pages.catalogs.services.catalogs_services_items.edit', compact('catalogsServicesItem', 'pageInfo', 'catalogServices'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param CatalogsServicesItemUpdateRequest $request
-     * @param $catalog_id
+     * @param $catalogId
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function update(CatalogsServicesItemUpdateRequest $request, $catalog_id, $id)
+    public function update(CatalogsServicesItemUpdateRequest $request, $catalogId, $id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $catalogs_services_item = CatalogsServicesItem::moderatorLimit($answer)
+        $catalogsServicesItem = CatalogsServicesItem::moderatorLimit($answer)
         ->find($id);
+        // dd($catalogsServicesItem);
+        if (empty($catalogsServicesItem)) {
+            abort(403, __('errors.not_found'));
+        }
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $catalogs_services_item);
+        $this->authorize(getmethod(__FUNCTION__), $catalogsServicesItem);
 
         $data = $request->input();
-        $data['photo_id'] = $this->getPhotoId($catalogs_services_item);
-        $result = $catalogs_services_item->update($data);
+        $data['photo_id'] = $this->getPhotoId($catalogsServicesItem);
+        $result = $catalogsServicesItem->update($data);
 
         if ($result) {
 
-            $catalogs_services_item->filters()->sync($request->filters);
+            $catalogsServicesItem->filters()->sync($request->filters);
+
+            $catalogsServicesItem->discounts()->sync($request->discounts);
+
+            if ($request->is_discount == 1) {
+                $catalogsServicesItem->load([
+                    'discounts_actual',
+                    'prices_services_actual'
+                ]);
+                $discountCatalogsItem = $catalogsServicesItem->discounts_actual->first();
+                if ($discountCatalogsItem) {
+                    foreach($catalogsServicesItem->prices_services_actual as $priceService) {
+                        $priceService->update([
+                            'is_need_recalculate' => true
+//                            'catalogs_item_discount_id' => $discountCatalogsItem->id ? $discountCatalogsItem->id : null
+                        ]);
+                    }
+                } else {
+                    foreach($catalogsServicesItem->prices_services_actual as $priceService) {
+                        $priceService->update([
+                            'is_need_recalculate' => true
+//                            'catalogs_item_discount_id' => null
+                        ]);
+                    }
+                }
+            } else {
+                foreach($catalogsServicesItem->prices_services_actual as $priceService) {
+                    $priceService->update([
+                        'is_need_recalculate' => true
+//                        'catalogs_item_discount_id' => null
+                    ]);
+                }
+            }
 
             // Переадресовываем на index
-            return redirect()->route('catalogs_services_items.index', ['catalog_id' => $catalog_id, 'id' => $catalogs_services_item->id]);
+            return redirect()->route('catalogs_services_items.index', ['catalogId' => $catalogId, 'id' => $catalogsServicesItem->id]);
         } else {
             $result = [
                 'error_status' => 1,
-                'error_message' => 'Ошибка при обновлени пункта меню!'
+                'error_message' => __('errors.update')
             ];
         }
     }
@@ -233,31 +261,35 @@ class CatalogsServicesItemController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Request $request
-     * @param $catalog_id
+     * @param $catalogId
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function destroy(Request $request, $catalog_id, $id)
+    public function destroy(Request $request, $catalogId, $id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $catalogs_services_item = CatalogsServicesItem::moderatorLimit($answer)
+        $catalogsServicesItem = CatalogsServicesItem::moderatorLimit($answer)
         ->find($id);
+        // dd($catalogsServicesItem);
+        if (empty($catalogsServicesItem)) {
+            abort(403, __('errors.not_found'));
+        }
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $catalogs_services_item);
+        $this->authorize(getmethod(__FUNCTION__), $catalogsServicesItem);
 
-        $parent_id = $catalogs_services_item->parent_id;
+        $parent_id = $catalogsServicesItem->parent_id;
 
-        $catalogs_services_item->delete();
+        $catalogsServicesItem->delete();
 
-        if ($catalogs_services_item) {
+        if ($catalogsServicesItem) {
 
             // Переадресовываем на index
-            return redirect()->route('catalogs_services_items.index', ['catalog_id' => $catalog_id, 'id' => $parent_id]);
+            return redirect()->route('catalogs_services_items.index', ['catalogId' => $catalogId, 'id' => $parent_id]);
 
         } else {
             $result = [
@@ -277,10 +309,10 @@ class CatalogsServicesItemController extends Controller
         // $this->authorize('index', Goods::class);
 
         // $text_fragment = 'тест';
-        // $catalog_id = 1;
+        // $catalogId = 1;
 
         $text_fragment = $request->text_fragment;
-        $catalog_id = $request->catalog_id;
+        $catalogId = $request->catalog_id;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_goods = operator_right('goods', false, 'index');
@@ -290,7 +322,7 @@ class CatalogsServicesItemController extends Controller
         // --------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // --------------------------------------------------------------------------------------------------------------
-        $catalog = CatalogsService::with('goods', 'raws', 'services')->find($catalog_id);
+        $catalog = CatalogsService::with('goods', 'raws', 'services')->find($catalogId);
         // dd($catalog->goods->keyBy('id')->toArray());
 
         $result_search_goods = Goods::with('goods_article')
@@ -357,15 +389,15 @@ class CatalogsServicesItemController extends Controller
 
         $product_id = $request->product_id;
         $product_type = $request->product_type;
-        $catalog_id = $request->catalog_id;
+        $catalogId = $request->catalog_id;
 
         // $product_id = 1;
         // $product_type = 'services';
-        // $catalog_id = 1;
+        // $catalogId = 1;
 
         // Добавление связи
         $catalog = CatalogsService::with('goods', 'raws', 'services')
-        ->find($catalog_id);
+        ->find($catalogId);
         // return $catalog->count();
 
         $catalog->$product_type()->attach($product_id, ['display' => 1]);
@@ -375,7 +407,7 @@ class CatalogsServicesItemController extends Controller
                 $query->orderBy('catalog_products.sort', 'asc');
             }
         ])
-        ->find($catalog_id);
+        ->find($catalogId);
 
         return view('catalog_products.content_core', compact('catalog'));
     }
@@ -403,7 +435,7 @@ class CatalogsServicesItemController extends Controller
         return view('leads.catalogs.prices_services', compact('catalogs_services_item'));
     }
 
-    public function ajax_get(Request $request, $catalog_id)
+    public function ajax_get(Request $request, $catalogId)
     {
         return view('products.processes.services.prices.catalogs_items', compact('catalog_id'));
     }

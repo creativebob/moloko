@@ -2,40 +2,65 @@
 
 namespace App\Observers\System;
 
+use App\Observers\System\Traits\Discountable;
 use App\PricesService;
 
-use App\Observers\System\Traits\Commonable;
-
-class PricesServiceObserver
+class PricesServiceObserver extends BaseObserver
 {
+    use Discountable;
 
-    use Commonable;
-
-    public function creating(PricesService $prices_service)
+    /**
+     * Handle the priceService "creating" event.
+     *
+     * @param PricesService $priceService
+     */
+    public function creating(PricesService $priceService)
     {
-        $this->store($prices_service);
-        $prices_service->display = true;
+        $this->store($priceService);
+        $priceService->display = true;
 
         // TODO - 19.11.19 - Пока по дефолту рубль
-        $prices_service->currency_id = 1;
+        $priceService->currency_id = 1;
+
+        $this->setDiscountsPriceService($priceService);
     }
 
-    public function created(PricesService $prices_service)
+    /**
+     * Handle the priceService "created" event.
+     *
+     * @param PricesService $priceService
+     */
+    public function created(PricesService $priceService)
     {
-        $prices_service->history()->create([
-            'price' => $prices_service->price,
-            'currency_id' => $prices_service->currency_id,
+        $priceService->history()->create([
+            'price' => $priceService->price,
+            'currency_id' => $priceService->currency_id,
         ]);
+
+        $priceService->sort = $priceService->id;
+        $priceService->save();
     }
 
-    public function updating(PricesService $prices_service)
+    /**
+     * Handle the priceService "updating" event.
+     *
+     * @param PricesService $priceService
+     */
+    public function updating(PricesService $priceService)
     {
-        $this->update($prices_service);
+        $this->update($priceService);
+        $this->setDiscountsPriceService($priceService);
+        $priceService->is_need_recalculate = false;
     }
 
-    public function deleting(PricesService $prices_service)
+    /**
+     * Handle the priceService "deleting" event.
+     *
+     * @param PricesService $priceService
+     */
+    public function deleting(PricesService $priceService)
     {
-        $this->destroy($prices_service);
+        $this->destroy($priceService);
     }
 
 }

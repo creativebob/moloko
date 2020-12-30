@@ -3,24 +3,36 @@
 namespace App\Observers\System;
 
 use App\ProcessesGroup;
-use App\Observers\System\Traits\Commonable;
 
-class ProcessesGroupObserver
+class ProcessesGroupObserver extends BaseObserver
 {
-    use Commonable;
-
-    public function creating(ProcessesGroup $processes_group)
+    /**
+     * Handle the processesGroup "creating" event.
+     *
+     * @param ProcessesGroup $processesGroup
+     */
+    public function creating(ProcessesGroup $processesGroup)
     {
-        $this->store($processes_group);
+        $this->store($processesGroup);
     }
 
-    public function updating(ProcessesGroup $processes_group)
+    /**
+     * Handle the processesGroup "updating" event.
+     *
+     * @param ProcessesGroup $processesGroup
+     */
+    public function updating(ProcessesGroup $processesGroup)
     {
-        $this->update($processes_group);
+        $this->update($processesGroup);
     }
 
-    public function deleting(ProcessesGroup $processes_group)
+    /**
+     * Handle the processesGroup "deleting" event.
+     *
+     * @param ProcessesGroup $processesGroup
+     */
+    public function deleting(ProcessesGroup $processesGroup)
     {
-        $this->destroy($processes_group);
+        $this->destroy($processesGroup);
     }
 }

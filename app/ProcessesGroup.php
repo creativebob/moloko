@@ -2,52 +2,17 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
+use App\Models\System\BaseModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
-// Scopes для главного запроса
-use App\Scopes\Traits\CompaniesLimitTraitScopes;
-use App\Scopes\Traits\AuthorsTraitScopes;
-use App\Scopes\Traits\SystemItemTraitScopes;
-use App\Scopes\Traits\FilialsTraitScopes;
-use App\Scopes\Traits\TemplateTraitScopes;
-use App\Scopes\Traits\ModeratorLimitTraitScopes;
-
-use App\Scopes\Traits\ManufacturersTraitScopes;
-
-// Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
-// Фильтры
-use App\Scopes\Filters\Filter;
-use App\Scopes\Filters\BooklistFilter;
-
-class ProcessesGroup extends Model
+class ProcessesGroup extends BaseModel
 {
     // Включаем кеш
-    use Cachable;
-
-    use Notifiable;
-    use SoftDeletes;
-
-    // Включаем Scopes
-    use CompaniesLimitTraitScopes;
-    use AuthorsTraitScopes;
-    use SystemItemTraitScopes;
-    use FilialsTraitScopes;
-    use TemplateTraitScopes;
-    use ModeratorLimitTraitScopes;
-
-    use ManufacturersTraitScopes;
-
-    // Фильтры
-    use Filter;
-    use BooklistFilter;
-    // use DateIntervalFilter;
+    use Cachable,
+        SoftDeletes;
 
     protected $fillable = [
-        'company_id',
         'name',
         'photo_id',
         'status',
@@ -56,17 +21,15 @@ class ProcessesGroup extends Model
         'rule_id',
         'album_id',
 
-        'company_id',
-
         'display',
         'system',
         'moderation'
     ];
 
-    // Артикулы
-    public function articles()
+    // Процессы
+    public function processes()
     {
-        return $this->hasMany(Article::class);
+        return $this->hasMany(Process::class);
     }
 
     // Альбом
@@ -87,16 +50,10 @@ class ProcessesGroup extends Model
         return $this->belongsTo(Unit::class);
     }
 
-    // Автора
-    public function author()
+    // Еденица измерения
+    public function units_category()
     {
-        return $this->belongsTo(User::class);
-    }
-
-    // Компания
-    public function company()
-    {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(UnitsCategory::class);
     }
 
     // Категории
@@ -111,7 +68,7 @@ class ProcessesGroup extends Model
         return $this->morphedByMany(ServicesCategory::class, 'entity', 'processes_group_entity');
     }
 
-    // рабочих процессов
+    // Рабочих процессов
     public function workflows_categories()
     {
         return $this->morphedByMany(WorkflowsCategory::class, 'entity', 'processes_group_entity');

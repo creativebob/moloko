@@ -59,12 +59,14 @@ Vue.component('articles-categories-with-groups-component', require('./components
 Vue.component('manufacturers-component', require('./components/ManufacturersComponent.vue'));
 
 Vue.component('goods-store-component', require('./components/products/articles/common/GoodsStateComponent'));
-Vue.component('compositions-component', require('./components/products/articles/compositions/CompositionsComponent'));
+Vue.component('cmv-compositions-component', require('./components/products/articles/compositions/CompositionsComponent'));
 Vue.component('presets-component', require('./components/products/articles/presets/PresetsComponent.vue'));
 
 // Услуги
 Vue.component('processes-categories-with-groups-component', require('./components/ProcessesCategoriesWithGroupsComponent.vue'));
 
+Vue.component('services-store-component', require('./components/products/processes/common/ServicesStateComponent'));
+Vue.component('process-compositions-component', require('./components/products/processes/compositions/CompositionsComponent'));
 
 // Лиды
 // Vue.component('lead-init-component', require('./components/leads/InitComponent'));
@@ -103,6 +105,7 @@ Vue.component('search-articles-component', require('./components/search/SearchAr
 Vue.component('search-processes-component', require('./components/search/SearchProcessesComponent'));
 Vue.component('search-prices-goods-component', require('./components/search/SearchPricesGoodsComponent'));
 Vue.component('search-articles-groups-component', require('./components/search/SearchArticlesGroupsComponent'));
+Vue.component('search-processes-groups-component', require('./components/search/SearchProcessesGroupsComponent'));
 
 Vue.component('search-estimates-component', require('./components/search/SearchEstimatesComponent'));
 Vue.component('search-client-component', require('./components/search/SearchClientComponent'));
@@ -127,6 +130,8 @@ Vue.component('clients-indicators-component', require('./components/widgets/Clie
 // Прайсы
 Vue.component('prices-goods-component', require('./components/products/articles/prices/PricesGoodsComponent'));
 Vue.component('prices-goods-discount-component', require('./components/prices_goods/DiscountComponent'));
+
+Vue.component('prices-service-component', require('./components/products/processes/prices/PricesServiceComponent'));
 
 Vue.component('filial-cities-component', require('./components/filials/CitiesComponent'));
 

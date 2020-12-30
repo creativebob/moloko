@@ -97,8 +97,8 @@ class CreateEstimatesGoodsItemsTable extends Migration
             $table->decimal('share_currency', 10,2)->default(0)->comment('Сумма агентсокго вознаграждения');
             $table->decimal('principal_currency', 10,2)->default(0)->comment('Сумма компании');
 
-            $table->decimal('margin_currency_unit', 10,2)->default(0)->comment('Процент маржи за единицу');
-            $table->decimal('margin_percent_unit', 10,2)->default(0)->comment('Сумма маржи за единицу');
+            $table->decimal('margin_currency_unit', 10,2)->default(0)->comment('Сумма маржи за единицу');
+            $table->decimal('margin_percent_unit', 10,2)->default(0)->comment('Процент маржи за единицу');
             $table->decimal('margin_percent', 10,2)->default(0)->comment('Процент маржи');
             $table->decimal('margin_currency', 10,2)->default(0)->comment('Сумма маржи');
 

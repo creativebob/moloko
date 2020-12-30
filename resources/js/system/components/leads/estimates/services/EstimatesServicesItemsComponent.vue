@@ -1,150 +1,130 @@
 <template>
-    <div>
-
-        <table class="table-estimate lead-estimate" id="table-estimate_services_items">
-
-            <caption>Услуги</caption>
-
-            <thead>
-            <tr>
-                <th>Наименование</th>
-                <th>Цена</th>
-                <th>Кол-во</th>
-                <th class="th-amount">Сумма</th>
-                <th class="th-delete"></th>
-                <th class="th-action"></th>
-            </tr>
-            </thead>
-
-            <tbody>
-            <estimates-services-item-component
-                v-for="(item, index) in items"
-                :item="item"
-                :index="index"
-                :key="item.id"
-                :is-registered="isRegistered"
-                @open-modal-remove="openModal(item, index)"
-                @update="updateItem"
-            ></estimates-services-item-component>
-            </tbody>
-
-            <tfoot>
-            <tr>
-                <td colspan="3" class="text-right">Итого:</td>
-                <td>{{ itemsAmount | roundToTwo | level }}</td>
-                <td colspan="2"></td>
-            </tr>
-            <tr v-if="discountPercent > 0">
-                <td colspan="3" class="text-right">Итого со скидкой ({{ discountPercent }}%):</td>
-                <td>{{ titemsTotal | roundToTwo | level }}</td>
-                <td colspan="2"></td>
-            </tr>
-            </tfoot>
-
-        </table>
-
-        <div class="reveal rev-small" id="delete-estimates_services_item" data-reveal>
-            <div class="grid-x">
-                <div class="small-12 cell modal-title">
-                    <h5>Удаление</h5>
-                </div>
-            </div>
-            <div class="grid-x align-center modal-content ">
-                <div class="small-10 cell text-center">
-                    <p>Удаляем "{{ itemName }}", вы уверены?</p>
-                </div>
-            </div>
-            <div class="grid-x align-center grid-padding-x">
-                <div class="small-6 medium-4 cell">
-                    <button
-                        @click.prevent="deleteItem"
-                        data-close
-                        class="button modal-button"
-                        type="submit"
-                    >Удалить</button>
-                </div>
-                <div class="small-6 medium-4 cell">
-                    <button data-close class="button modal-button" type="submit">Отменить</button>
-                </div>
+    <tbody>
+    <estimates-services-item-component
+        v-for="(item, index) in items"
+        :id="item.id"
+        :index="index"
+        :key="item.id"
+        :settings="settings"
+        @open-modal-remove="openModal(item, index)"
+    ></estimates-services-item-component>
+    <div
+        class="reveal rev-small"
+        id="delete-estimates_services_item"
+        data-reveal
+        v-reveal
+    >
+        <div class="grid-x">
+            <div class="small-12 cell modal-title">
+                <h5>Удаление</h5>
             </div>
         </div>
-
+        <div class="grid-x align-center modal-content ">
+            <div class="small-10 cell text-center">
+                <p>Удаляем "{{ itemName }}", вы уверены?</p>
+            </div>
+        </div>
+        <div class="grid-x align-center grid-padding-x">
+            <div class="small-6 medium-4 cell">
+                <button
+                    @click.prevent="deleteItem"
+                    data-close
+                    class="button modal-button"
+                    type="submit"
+                >Удалить
+                </button>
+            </div>
+            <div class="small-6 medium-4 cell">
+                <button data-close class="button modal-button" type="submit">Отменить</button>
+            </div>
+        </div>
     </div>
+    </tbody>
 </template>
 
 <script>
-    export default {
-        components: {
-            'estimates-services-item-component': require('./EstimatesServicesItemComponent.vue')
+export default {
+    components: {
+        'estimates-services-item-component': require('./EstimatesServicesItemComponent'),
+    },
+    props: {
+        items: Array,
+        settings: Array,
+    },
+    data() {
+        return {
+            item: null,
+            itemName: null,
+            itemIndex: null,
+        }
+    },
+    mounted() {
+        Foundation.reInit($('#delete-estimates_services_item'));
+    },
+    computed: {
+        estimate() {
+            return this.$store.state.lead.estimate;
         },
-        props: {
-            items: Array,
+        isRegistered() {
+            return this.$store.state.lead.estimate.registered_at;
         },
-        data() {
-            return {
-                id: null,
-
-                count: null,
-                cost: null,
-                discountPercent: Number(this.$store.state.lead.estimate.discount_percent),
-
-                item: null,
-                itemName: null,
-                itemIndex: null,
-
-                isRegistered: this.$store.state.lead.estimate.registered_at,
-            }
+        itemsAmount() {
+            let amount = 0;
+            this.items.forEach(item => {
+                return amount += parseFloat(item.amount)
+            });
+            return amount;
         },
-        computed: {
-            estimate() {
-                return this.$store.state.lead.estimate;
-            },
-            itemsAmount() {
-                return this.$store.getters.servicesItemsAmount;
-            },
-            itemsTotal() {
-                return this.$store.getters.servicesItemsTotal;
-            },
-            showButtonReserved() {
-                return this.estimate.is_reserved === 0;
-            },
-            isReserved() {
-                let result = [];
-                result = this.$store.state.lead.servicesItems.filter(item => {
-                    if (item.reserve !== null) {
-                        if (item.reserve.count > 0) {
-                            return item;
-                        }
-                    }
-                });
-                return result.length > 0;
-            }
+        itemsDiscount() {
+            let discount = 0;
+            this.items.forEach(item => {
+                return discount += parseFloat(item.discount_currency)
+            });
+            return discount;
         },
-        methods: {
-            changeCount: function(value) {
-                this.count = value;
-            },
-            openModal(item, index) {
-                this.itemIndex = index;
-                this.item = item;
-                this.itemName = item.product.process.name;
-            },
-            updateItem: function(item) {
-                this.$store.commit('UPDATE_SERVICES_ITEM', item);
-            },
-            deleteItem() {
-                this.$store.dispatch('REMOVE_SERVICES_ITEM_FROM_ESTIMATE', this.item.id);
-                $('#delete-estimates_services_item').foundation('close');
-            },
+        itemsTotal() {
+            let total = 0;
+            this.items.forEach(item => {
+                return total += parseFloat(item.total)
+            });
+            return total;
         },
-        filters: {
-            roundToTwo: function (value) {
-                return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
-            },
-            // Создает разделители разрядов в строке с числами
-            level: function (value) {
-                return Number(value).toLocaleString();
-            },
+        itemsTotalPoints() {
+            let points = 0;
+            this.items.forEach(item => {
+                return points += parseFloat(item.points)
+            });
+            return points;
         },
+    },
+    methods: {
+        openModal(item, index) {
+            this.itemIndex = index;
+            this.item = item;
+            this.itemName = item.service.process.name;
+        },
+        deleteItem() {
+            this.$store.commit('REMOVE_SERVICE_ITEM', this.item.id);
+            $('#delete-estimates_services_item').foundation('close');
+        },
+    },
+    filters: {
+        decimalPlaces(value) {
+            return parseFloat(value).toFixed(2);
+        },
+        decimalLevel: function (value) {
+            return parseFloat(value).toLocaleString();
+        },
+        onlyInteger(value) {
+            return Math.floor(value);
+        },
+    },
+    directives: {
+        'reveal': {
+            bind: function (el) {
+                new Foundation.Reveal($(el))
+            },
+        }
     }
+}
 </script>

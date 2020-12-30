@@ -5,7 +5,7 @@
         </li>
 
         <catalog-goods-component></catalog-goods-component>
-<!--        <catalog-services-component></catalog-services-component>-->
+        <catalog-services-component></catalog-services-component>
         <payment-component></payment-component>
         <agents-component></agents-component>
 

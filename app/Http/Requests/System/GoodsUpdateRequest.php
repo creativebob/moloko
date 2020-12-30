@@ -22,7 +22,7 @@ class GoodsUpdateRequest extends FormRequest
      */
     public function authorize()
     {
-      return true;
+        return true;
     }
 
     /**
@@ -32,24 +32,24 @@ class GoodsUpdateRequest extends FormRequest
      */
     public function rules()
     {
-          return [
-              'category_id' => 'required|integer',
+        return [
+            'category_id' => 'required|integer',
 
-              'is_produced' => 'integer|max:1|nullable',
-              'is_ordered' => 'integer|max:1|nullable',
+            'photo' => 'nullable|mimes:' . str_replace('.', '', $this->settings['img_formats']) . '|dimensions:min_width=' . $this->settings['img_min_width'] . ',min_height=' . $this->settings['img_min_height'],
 
-              'display' => 'nullable|integer|max:1',
+            'is_produced' => 'integer|max:1|nullable',
+            'is_ordered' => 'integer|max:1|nullable',
+
+            'display' => 'nullable|integer|max:1',
             'system' => 'nullable|integer|max:1',
             'moderation' => 'nullable|integer|max:1',
-
-              'photo' => 'nullable|mimes:'.str_replace('.', '', $this->settings['img_formats']).'|dimensions:min_width='.$this->settings['img_min_width'].',min_height='.$this->settings['img_min_height']
-          ];
+        ];
     }
 
     public function messages()
     {
         return [
-            'photo.dimensions' => 'Фото должно быть не менее '.$this->settings['img_min_width'].' x '.$this->settings['img_min_height'].' px',
+            'photo.dimensions' => 'Фото должно быть не менее ' . $this->settings['img_min_width'] . ' x ' . $this->settings['img_min_height'] . ' px',
         ];
     }
-  }
+}

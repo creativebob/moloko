@@ -2,32 +2,48 @@
 
 namespace App\Observers\System;
 
-use App\Observers\System\Traits\Commonable;
 use App\CatalogsService;
 
-class CatalogsServiceObserver
+class CatalogsServiceObserver extends BaseObserver
 {
-
-    use Commonable;
-
-    public function creating(CatalogsService $catalogs_service)
+    /**
+     * Handle the catalogsService "creating" event.
+     *
+     * @param CatalogsService $catalogsService
+     */
+    public function creating(CatalogsService $catalogsService)
     {
-        $this->store($catalogs_service);
+        $this->store($catalogsService);
     }
 
-    public function updating(CatalogsService $catalogs_service)
+    /**
+     * Handle the catalogsService "updating" event.
+     *
+     * @param CatalogsService $catalogsService
+     */
+    public function updating(CatalogsService $catalogsService)
     {
-        $this->update($catalogs_service);
+        $this->update($catalogsService);
     }
 
-    public function deleting(CatalogsService $catalogs_service)
+    /**
+     * Handle the catalogsService "deleting" event.
+     *
+     * @param CatalogsService $catalogsService
+     */
+    public function deleting(CatalogsService $catalogsService)
     {
-        $this->destroy($catalogs_service);
+        $this->destroy($catalogsService);
     }
 
-    public function saving(CatalogsService $catalogs_service)
+    /**
+     * Handle the catalogsService "saving" event.
+     *
+     * @param CatalogsService $catalogsService
+     */
+    public function saving(CatalogsService $catalogsService)
     {
-        $this->setSlug($catalogs_service);
+        $this->setSlug($catalogsService);
     }
 
 }

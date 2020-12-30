@@ -1,15 +1,17 @@
 <li class="tabs-title">
-	<a data-tabs-target="tab-prices" href="#tab-prices">Расположение в прайсах</a>
+    <a data-tabs-target="tab-prices" href="#tab-prices">Расположение в прайсах</a>
 </li>
 
 @if($article->kit)
-	<li class="tabs-title">
-		<a data-tabs-target="tab-goods" href="#tab-goods">Набор товаров</a>
-	</li>
+    <li class="tabs-title">
+        <a data-tabs-target="tab-goods" href="#tab-goods">Набор товаров</a>
+    </li>
 @else
-	<li class="tabs-title">
-		<a data-tabs-target="tab-raws" href="#tab-raws">Состав</a>
-	</li>
+    @can('index', App\Raw::class)
+        <li class="tabs-title">
+            <a data-tabs-target="tab-raws" href="#tab-raws">Состав</a>
+        </li>
+    @endcan
 @endif
 
 @can('index', App\Container::class)

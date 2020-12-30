@@ -106,18 +106,8 @@ class CatalogsGoodsController extends Controller
             return redirect()->route('catalogs_goods.index');
 
         } else {
-            abort(403, 'Ошибка при записи каталога!');
+            abort(403, __('errors.store'));
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param $id
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**
@@ -183,7 +173,7 @@ class CatalogsGoodsController extends Controller
             return redirect()->route('catalogs_goods.index');
 
         } else {
-            abort(403, 'Ошибка при обновлении каталога!');
+            abort(403, __('errors.update'));
         }
     }
 
@@ -408,13 +398,18 @@ class CatalogsGoodsController extends Controller
         return response()->json($catalogs_goods_data);
     }
 
+    /**
+     * Получение каталогов торговой точки
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getCatalogsForOutlet()
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
 //        $answer = operator_right('catalogs_goods', true, getmethod('index'));
 
-        $catalogs_goods = CatalogsGoods::with([
+        $catalogsGoods = CatalogsGoods::with([
             'items:id,catalogs_goods_id,name,photo_id,parent_id',
             'prices' => function ($q) {
                 $q->with([
@@ -494,31 +489,31 @@ class CatalogsGoodsController extends Controller
                 $q->where('id', request()->outlet_id);
             })
             ->get();
-//         dd($catalogs_goods);
+//         dd($catalogsGoods);
 
         $success = false;
-        if ($catalogs_goods->isNotEmpty()) {
+        if ($catalogsGoods->isNotEmpty()) {
             $success = true;
         }
 
-        $catalogs_goods_items = [];
-        $catalogs_goods_prices = [];
-        foreach ($catalogs_goods as $catalog_goods) {
-            $catalogs_goods_items = array_merge($catalogs_goods_items, buildTreeArray($catalog_goods->items));
+        $catalogsGoodsItems = [];
+        $catalogsGoodsPrices = [];
+        foreach ($catalogsGoods as $catalog_goods) {
+            $catalogsGoodsItems = array_merge($catalogsGoodsItems, buildTreeArray($catalog_goods->items));
 
-            $catalogs_goods_prices = array_merge($catalogs_goods_prices, $catalog_goods->prices->setAppends([
+            $catalogsGoodsPrices = array_merge($catalogsGoodsPrices, $catalog_goods->prices->setAppends([
                 'totalWithDiscounts',
             ])->toArray());
         }
-//        dd($catalogs_goods_prices);
+//        dd($catalogsGoodsPrices);
 
-        $catalogs_goods_data = [
+        $catalogsGoodsData = [
             'success' => $success,
-            'catalogsGoods' => $catalogs_goods,
-            'catalogsGoodsItems' => $catalogs_goods_items,
-            'catalogsGoodsPrices' => $catalogs_goods_prices
+            'catalogsGoods' => $catalogsGoods,
+            'catalogsGoodsItems' => $catalogsGoodsItems,
+            'catalogsGoodsPrices' => $catalogsGoodsPrices
         ];
 
-        return response()->json($catalogs_goods_data);
+        return response()->json($catalogsGoodsData);
     }
 }

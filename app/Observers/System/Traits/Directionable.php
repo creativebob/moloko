@@ -7,7 +7,7 @@ use App\Direction;
 trait Directionable
 {
 
-    public function checkDirection($category)
+    public function checkDirection($category, $model)
     {
 
         if (is_null($category->parent_id)) {
@@ -21,7 +21,7 @@ trait Directionable
                 if (is_null($direction)) {
                     $direction = Direction::firstOrCreate([
                         'category_id' => $category->id,
-                        'category_type' => $this->model,
+                        'category_type' => $model,
                         'archive' => false
                     ]);
                 } else {

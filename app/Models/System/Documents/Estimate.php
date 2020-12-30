@@ -185,7 +185,7 @@ class Estimate extends BaseModel
 
     public function catalogs_services()
     {
-        return $this->belongsToMany('App\CatalogsService');
+        return $this->belongsToMany('App\CatalogsService', 'catalogs_service_estimate');
     }
 
     public function labels()

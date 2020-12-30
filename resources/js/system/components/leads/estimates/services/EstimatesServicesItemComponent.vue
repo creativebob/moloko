@@ -1,121 +1,254 @@
 <template>
     <tr
-        class="item"
+        class="item commentable"
+        :class="[{'process-archive' : isArchive}]"
         :id="'estimates_services_items-' + item.id"
-        :data-name="item.product.process.name"
-        :data-price_id="item.price_id"
-        :data-count="item.count"
-        :data-price="item.price">
-        <!--        <td>{{ index + 1 }}</td>-->
-        <td>
-            {{ item.product.process.name }}
-            <span class="icon-comment"></span>
-        </td>
-        <td>{{ item.price | roundToTwo | level }}</td>
+    >
 
-        <!--        <td>{{ item.count }}</td>-->
-        <td @click="checkChangeCount">
-            <template v-if="isChangeCount">
-                <input
-                    @keydown.enter.prevent="updateItem"
-                    type="number"
-                    v-focus
-                    @focusout="changeCount = false"
-                    v-model="count"
-                >
+        <td class="td-name">
+            {{ item.service.process.name }}<span v-if="isArchive"> (Архивный)</span>
+            <template
+                v-if="isRegistered"
+            >
+                <span
+                    v-if="item.comment"
+                    class="icon-comment"
+                    data-tooltip
+                    tabindex="1"
+                    :title="item.comment"
+                ></span>
             </template>
-            <template v-else="changeCount">{{ item.count | roundToTwo | level }}</template>
+
+            <span
+                v-else
+                :class="[{'comment' : hasComment}]"
+            >
+                <comment-component
+                    :comment="item.comment"
+                    @update="changeComment"
+                ></comment-component>
+            </span>
+
         </td>
 
-        <td class="td-amount"><a class="button green-button" data-open="price-set">{{ item.amount | roundToTwo | level }}</a></td>
-        <td class="td-delete">
+        <!--        <td v-if="settings.length && stocks.length">-->
+        <!--            <select-->
+        <!--                name="stock_id"-->
+        <!--                v-model="stockId"-->
+        <!--            >-->
+        <!--                <option v-for="stock in stocks"-->
+        <!--                    :value="stock.id"-->
+        <!--                >{{ stock.name }}</option>-->
+        <!--            </select>-->
+        <!--        </td>-->
+        <!--        <td v-else>-->
+        <!--            {{ item.stock.name }}-->
+        <!--        </td>-->
+
+        <template
+            v-if="item.sale_mode == 1"
+        >
+            <currency-component
+                :item="item"
+                :is-registered="isRegistered"
+                @update="updatePrice"
+            ></currency-component>
+        </template>
+        <template
+            v-else
+        >
+            <points-component
+                :item="item"
+                :is-registered="isRegistered"
+                @update="updatePrice"
+            ></points-component>
+        </template>
+
+        <td class="td-count">
+            <span
+                v-if="isRegistered || this.item.service.serial === 1"
+            >{{ item.count | onlyInteger | level }}</span>
+            <count-component
+                v-else
+                :count="item.count"
+                :limit-min="1"
+                @update="changeCount"
+                ref="countComponent"
+            ></count-component>
+        </td>
+
+        <td class="td-discount">
+            <template
+                v-if="item.discount_percent > 0"
+            >
+                {{ item.discount_percent | decimalPlaces | decimalLevel }}
+                <span class="percent-symbol">%</span>
+            </template>
+        </td>
+
+        <td class="td-total">
+            <a
+                v-if="item.sale_mode == 1"
+                class="button green-button open-modal-estimate-item"
+                :data-open="'modal-estimates_services_item-' + item.id"
+            >{{ item.total | decimalPlaces | decimalLevel }}</a>
+            <a
+                v-else
+                class="button green-button open-modal-estimate-item"
+            >{{ item.total_points | level }} поинтов</a>
+        </td>
+
+        <td
+            v-if="!isRegistered"
+            class="td-delete"
+        >
             <div
-                v-if="!this.isRegistered"
-                @click="openModalRemoveItem"
+
+                @click="openModalRemove"
                 class="icon-delete sprite"
                 data-open="delete-estimates_services_item"
             ></div>
         </td>
-        <td class="td-action">
 
-        </td>
+        <td
+            v-if="isRegistered && !isConducted"
+            class="td-reserve"
+        ></td>
+
+        <modal-component
+            :id="id"
+            ref="modalCurrencyComponent"
+            @update="update"
+        ></modal-component>
     </tr>
 </template>
 
 <script>
-    export default {
-        props: {
-            item: Object,
-            index: Number,
-            isRegistered: Boolean,
-        },
-        data() {
-            return {
-                countInput: Number(this.item.count),
-                cost: Number(this.item.cost),
-                changeCount: false,
-                changeCost: false,
+export default {
+    components: {
+        'comment-component': require('./CommentComponent'),
+        'currency-component': require('./price/CurrencyComponent'),
+        'points-component': require('./price/PointsComponent'),
+        'count-component': require('../../../inputs/CountWithButtonsComponent'),
+        'modal-component': require('./ModalCurrencyComponent'),
+        'digit-component': require('../../../inputs/DigitComponent'),
+    },
+    props: {
+        id: Number,
+        // item: Object,
+        index: Number,
+        settings: {
+            type: Array,
+            default: () => {
+                return [];
             }
         },
-        computed: {
-            isChangeCount() {
-                return this.changeCount
-            },
-            count: {
-                get () {
-                    return Number(this.item.count);
-                },
-                set (value) {
-                    this.countInput = Number(value)
-                }
-            },
+        // stock: Object,
+    },
+    data() {
+        return {
+            // count: parseFloat(this.item.count),
+            // stockId: null,
 
+        }
+    },
+    // watch: {
+    //     count: ((val, oldVal) => {
+    //         if (val != oldVal) {
+    //             alert(val);
+    //         }
+    //     })
+    // },
+    // mounted() {
+    //     if (this.settings.length && this.stock.id && this.item.stock_id === null) {
+    //         this.stockId = this.stock.id;
+    //     } else {
+    //         this.stockId = this.item.stock_id;
+    //     }
+    // },
+    computed: {
+        item() {
+            return this.$store.getters.SERVICE_ITEM(this.id);
         },
-        methods: {
-            openModalRemoveItem() {
-                this.$emit('open-modal-remove', this.item);
-            },
-            checkChangeCount() {
-                if (this.item.product.serial === 0) {
-                    if (!this.isRegistered) {
-                        this.changeCount = !this.changeCount
-                    }
-                }
-            },
-            updateItem: function() {
-                this.changeCount = false;
-                // this.changeCost = false;
-                axios
-                    .patch('/admin/estimates_services_items/' + this.item.id, {
-                        count: Number(this.countInput),
-                        // cost: Number(this.cost)
-                    })
-                    .then(response => {
-                        this.$emit('update', response.data);
-                        this.countInput = Number(response.data.count);
-                        // this.cost = Number(response.data.cost);
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    });
-            },
-
+        isRegistered() {
+            return this.$store.state.lead.estimate.registered_at;
         },
-        directives: {
-            focus: {
-                inserted: function (el) {
-                    el.focus()
-                }
+        isConducted() {
+            return this.$store.state.lead.estimate.conducted_at;
+        },
+        isArchive() {
+            return this.item.service.archive == 1;
+        },
+        hasComment() {
+            return this.item.comment !== null && this.item.comment !== "";
+        },
+    },
+    methods: {
+        changeComment(comment) {
+            // Оновление ккомментария
+            let data = {
+                id: this.id,
+                comment: comment
+            };
+            this.$store.commit('UPDATE_SERVICE_ITEM_COMMENT', data)
+        },
+        changeCount(count) {
+            // Оновление количества из строки
+            // this.item.count = count;
+            const data = {
+                id: this.id,
+                count: count
+            };
+            this.$store.commit('UPDATE_SERVICE_ITEM_COUNT', data);
+            this.$refs.modalCurrencyComponent.reset();
+        },
+        update(data) {
+            // Обновление из модалки
+            this.$store.commit('UPDATE_SERVICE_ITEM_IS_MANUAL', data)
+        },
+        openModalRemove() {
+            // Открытие модалки удаления
+            this.$emit('open-modal-remove', this.item);
+        },
+        updatePrice(item) {
+            // Обновление редима оплаты (валюта / поинты)
+            if (item.sale_mode == 2) {
+                this.$refs.modalCurrencyComponent.reset();
             }
+
+            if (item.remove_from_page) {
+                this.$store.dispatch('REMOVE_SERVICE_ITEM_FROM_ESTIMATE', item.remove_from_page);
+                // this.$refs.countComponent.setCount(item.count);
+            }
+            this.$store.commit('UPDATE_SERVICE_ITEM', item)
         },
-        filters: {
-            roundToTwo: function (value) {
-                return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
-            },
-            // Создает разделители разрядов в строке с числами
-            level: function (value) {
-                return Number(value).toLocaleString();
-            },
+    },
+    directives: {
+        focus: {
+            inserted: function (el) {
+                el.focus()
+            }
+        }
+    },
+    filters: {
+        decimalPlaces(value) {
+            return parseFloat(value).toFixed(2);
         },
-    }
+        decimalLevel: function (value) {
+            return parseFloat(value).toLocaleString();
+        },
+        roundToTwo: function (value) {
+            return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
+        },
+        // Создает разделители разрядов в строке с числами
+        level: function (value) {
+            return parseInt(value).toLocaleString();
+        },
+
+        // Отбраcывает дробную часть в строке с числами
+        onlyInteger(value) {
+            return Math.floor(value);
+        },
+    },
+}
 </script>

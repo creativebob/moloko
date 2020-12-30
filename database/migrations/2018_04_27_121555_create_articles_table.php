@@ -34,7 +34,7 @@ class CreateArticlesTable extends Migration
             $table->decimal('cost_default', 10, 2)->default(0)->comment('Фиксированная себестоимость (руками)');
             $table->integer('cost_mode')->nullable()->unsigned()->comment('Режим определения себестоимости');
 
-            $table->integer('price_default')->default(0)->comment('Фиксированная цена (руками)');
+            $table->decimal('price_default', 10, 2)->default(0)->comment('Фиксированная цена (руками)');
             $table->integer('price_mode')->nullable()->unsigned()->comment('Режим определения цены');
 
             $table->bigInteger('price_rule_id')->nullable()->unsigned()->comment('ID ценовой политики');

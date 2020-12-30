@@ -20,7 +20,7 @@ trait Processable
     /**
      * Запись процесса в бд
      *
-     * @param ProcessRequest $request
+     * @param $request
      * @param $category
      * @return mixed
      */
@@ -69,7 +69,7 @@ trait Processable
             break;
         }
 
-        Log::channel('operations')
+        logs('operations')
             ->info('Режим создания: ' . $request->mode . '. Записали или нашли группу процессов c id: ' . $processes_group->id . ', в зависимости от режима. Связали с категорией.');
 
         $data = $request->input();
@@ -116,7 +116,7 @@ trait Processable
         // dd($length);
 
         $process = Process::create($data);
-        Log::channel('operations')
+        logs('operations')
             ->info('Записали процесс c id: ' . $process->id);
 
         return $process;
@@ -273,7 +273,7 @@ trait Processable
 //        $this->authorize('index',  $this->class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('index'));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('index'));
 
 //        $search = $request->search;
         $items = $this->class::with([
@@ -313,12 +313,14 @@ trait Processable
         ])
         ->where('draft', false)
         ->where('id', '!=', $data['id'])
-        ->get([
-            'id',
-            'name',
-            'processes_group_id',
-            'manufacturer_id',
-        ]);
+        ->get(
+//            [
+//            'id',
+//            'name',
+//            'processes_group_id',
+//            'manufacturer_id',
+//        ]
+        );
         // dd($processes);
 
         // Если нашлись артикулы

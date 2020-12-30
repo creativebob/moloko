@@ -11,7 +11,6 @@
         @include('products.articles.goods.raws.class')
         @include('products.articles.goods.containers.class')
     @endif
-
 @endsection
 
 @section('title', $title)
@@ -93,9 +92,11 @@
                 @includeIf($pageInfo->entity->view_path . '.tabs_content')
 
                 {{-- Сайт --}}
+                @can('index', App\Site::class)
                 <div class="tabs-panel" id="tab-site">
                     @include('products.articles.common.edit.tabs.site')
                 </div>
+                @endcan
 
                 {{ Form::close() }}
 
@@ -110,7 +111,6 @@
 @endsection
 
 @section('modals')
-    {{--	@include('includes.modals.modal_item_delete')--}}
     @includeIf($pageInfo->entity->view_path . '.modals')
 @endsection
 

@@ -174,7 +174,7 @@ class PricesGoodsController extends Controller
             ->where('archive', false)
             ->get();
 
-            // Модифицируем данные 
+            // Модифицируем данные
             $modified = $results->map(function($value, $key) {
                 $value['total'] = num_format($value['total'], 0);
                 // $value['created_at'] = Carbon::parse($value['created_at']);
@@ -364,7 +364,7 @@ class PricesGoodsController extends Controller
                 'filial_id' => $filial_id
             ]);
         } else {
-            abort(403, 'Ошибка архивирования');
+            abort(403, __('errors.archive'));
         }
     }
 

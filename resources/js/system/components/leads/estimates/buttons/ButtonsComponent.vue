@@ -90,6 +90,9 @@ export default {
         goodsItems() {
             return this.$store.state.lead.goodsItems;
         },
+        servicesItems() {
+            return this.$store.state.lead.servicesItems;
+        },
         labels() {
             return this.$store.state.lead.labels;
         },
@@ -122,6 +125,7 @@ export default {
                     client: this.client,
                     estimate: this.estimate,
                     goods_items: this.goodsItems,
+                    services_items: this.servicesItems,
                     labels: this.labels,
                 };
 
@@ -137,6 +141,7 @@ export default {
                     client: this.client,
                     estimate: this.estimate,
                     goods_items: this.goodsItems,
+                    services_items: this.servicesItems,
                     labels: this.labels,
                     is_registered: true
                 };

@@ -17,6 +17,7 @@ use App\Http\Controllers\System\Traits\Timestampable;
 use App\Http\Controllers\System\Traits\Userable;
 use App\Http\Controllers\Traits\Offable;
 use App\Http\Controllers\Traits\Photable;
+use App\Models\System\Documents\EstimatesServicesItem;
 use App\Outlet;
 use App\Representative;
 use App\Stock;
@@ -278,9 +279,12 @@ class LeadController extends Controller
                     'catalogs_goods',
                     'services_items' => function ($q) {
                         $q->with([
-                            'product.process',
+                            'service.process',
+                            'price_service',
+                            'currency'
                         ]);
                     },
+                    'catalogs_services',
                     'payments',
                     'lead.client.contract',
                     'discounts',
@@ -817,6 +821,8 @@ class LeadController extends Controller
                     'services_items' => function ($q) {
                         $q->with([
                             'product.process',
+                            'price_service',
+                            'currency'
                         ]);
                     },
                     'payments',
@@ -920,8 +926,11 @@ class LeadController extends Controller
             $this->savePhones($lead, $newLead['main_phone']);
 
             // Обновляем пункты сметы
+
+            // Товары
             $goodsItems = $lead->estimate->goods_items;
             $newGoodsItems = $request->goods_items;
+            $oldGoodsItemsIds = $lead->estimate->goods_items->pluck('id')->toArray();
 
             $newGoodsItemsIds = [];
             $sort = 1;
@@ -1002,10 +1011,94 @@ class LeadController extends Controller
                 $sort++;
             }
 
-            $oldGoodsItemsIds = $lead->estimate->goods_items->pluck('id')->toArray();
-
             $deleteIds = array_diff($oldGoodsItemsIds, $newGoodsItemsIds);
             $res = EstimatesGoodsItem::destroy($deleteIds);
+
+            // Услуги
+            $servicesItems = $lead->estimate->services_items;
+            $newServicesItems = $request->services_items;
+            $oldServicesItemsIds = $lead->estimate->services_items->pluck('id')->toArray();
+
+            $newServicesItemsIds = [];
+            $sort = 1;
+
+            foreach ($newServicesItems as $newServicesItem) {
+
+                $data = [
+                    'estimate_id' => $newServicesItem['estimate_id'],
+                    'price_id' => $newServicesItem['price_id'],
+
+                    'service_id' => $newServicesItem['service_id'],
+                    'currency_id' => $newServicesItem['currency_id'],
+                    'sale_mode' => $newServicesItem['sale_mode'],
+
+                    'comment' => $newServicesItem['comment'],
+
+                    'cost_unit' => $newServicesItem['cost_unit'],
+                    'price' => $newServicesItem['price'],
+                    'points' => $newServicesItem['points'],
+                    'count' => $newServicesItem['count'],
+
+                    'cost' => $newServicesItem['cost'],
+                    'amount' => $newServicesItem['amount'],
+
+                    'price_discount_id' => $newServicesItem['price_discount_id'],
+                    'price_discount_unit' => $newServicesItem['price_discount_unit'],
+                    'price_discount' => $newServicesItem['price_discount'],
+                    'total_price_discount' => $newServicesItem['total_price_discount'],
+
+                    'catalogs_item_discount_id' => $newServicesItem['catalogs_item_discount_id'],
+                    'catalogs_item_discount_unit' => $newServicesItem['catalogs_item_discount_unit'],
+                    'catalogs_item_discount' => $newServicesItem['catalogs_item_discount'],
+                    'total_catalogs_item_discount' => $newServicesItem['total_catalogs_item_discount'],
+
+                    'estimate_discount_id' => $newServicesItem['estimate_discount_id'],
+                    'estimate_discount_unit' => $newServicesItem['estimate_discount_unit'],
+                    'estimate_discount' => $newServicesItem['estimate_discount'],
+                    'total_estimate_discount' => $newServicesItem['total_estimate_discount'],
+
+                    'client_discount_percent' => $newServicesItem['client_discount_percent'],
+                    'client_discount_unit_currency' => $newServicesItem['client_discount_unit_currency'],
+                    'client_discount_currency' => $newServicesItem['client_discount_currency'],
+                    'total_client_discount' => $newServicesItem['total_client_discount'],
+
+                    'total' => $newServicesItem['total'],
+                    'total_points' => $newServicesItem['total_points'],
+                    'total_bonuses' => $newServicesItem['total_bonuses'],
+
+                    'computed_discount_percent' => $newServicesItem['computed_discount_percent'],
+                    'computed_discount_currency' => $newServicesItem['computed_discount_currency'],
+                    'total_computed_discount' => $newServicesItem['total_computed_discount'],
+
+                    'is_manual' => $newServicesItem['is_manual'],
+                    'manual_discount_percent' => $newServicesItem['manual_discount_percent'],
+                    'manual_discount_currency' => $newServicesItem['manual_discount_currency'],
+                    'total_manual_discount' => $newServicesItem['total_manual_discount'],
+
+                    'discount_currency' => $newServicesItem['discount_currency'],
+                    'discount_percent' => $newServicesItem['discount_percent'],
+
+                    'margin_currency_unit' => $newServicesItem['margin_currency_unit'],
+                    'margin_percent_unit' => $newServicesItem['margin_percent_unit'],
+                    'margin_currency' => $newServicesItem['margin_currency'],
+                    'margin_percent' => $newServicesItem['margin_percent'],
+
+                    'sort' => $sort,
+                ];
+
+                if (isset($newServicesItem['company_id'])) {
+                    $servicesItem = $servicesItems->firstWhere('id', $newServicesItem['id']);
+                    $servicesItem->update($data);
+                } else {
+                    $servicesItem = EstimatesServicesItem::create($data);
+                }
+
+                $newServicesItemsIds[] = $servicesItem['id'];
+                $sort++;
+            }
+
+            $deleteIds = array_diff($oldServicesItemsIds, $newServicesItemsIds);
+            $res = EstimatesServicesItem::destroy($deleteIds);
 
             // Аггрегация сметы
             $this->aggregateEstimate($lead->estimate);
@@ -1112,9 +1205,12 @@ class LeadController extends Controller
                     'catalogs_goods',
                     'services_items' => function ($q) {
                         $q->with([
-                            'product.process',
+                            'service.process',
+                            'price_service',
+                            'currency'
                         ]);
                     },
+                    'catalogs_services',
                     'payments',
                     'discounts',
                     'labels'
@@ -1145,12 +1241,14 @@ class LeadController extends Controller
 
         $estimate = $lead->estimate;
         $goodsItems = $estimate->goods_items;
+        $servicesItems = $estimate->services_items;
         $outlet = $lead->outlet;
 
         return response()->json([
             'lead' => $lead,
             'estimate' => $estimate,
             'goods_items' => $goodsItems,
+            'services_items' => $servicesItems,
             'outlet' => $outlet,
         ]);
     }

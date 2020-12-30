@@ -58,32 +58,12 @@
 
                     {{-- Смета --}}
                     <div class="tabs-panel is-active" id="tab-estimate">
-
-                        <div class="grid-x grid-padding-x wrap-estimate-title">
-                            <div class="small-12 medium-shrink cell estimate-title">
-                                <p>Клиентский заказ
-                                    @if($lead->estimate->registered_at)
-                                        № {{ $lead->estimate->number ?? '' }}
-                                        от {{ $lead->estimate->registered_at->format('d.m.Y') }} <span
-                                            class="tiny-text">({{ $lead->estimate->registered_at->getTranslatedShortDayName('dd') }})</span>
-                                    @endif
-                                </p>
-                            </div>
-                            <div class="small-12 medium-auto cell estimate-control">
-                                <a href="/admin/leads/{{ $lead->id }}/print_sticker_stock" target="_blank">
-                                    <span class="button-print-stock-sticker" title="Маркер для склада"></span>
-                                </a>
-                            </div>
-                        </div>
-
                         @include('leads.tabs.estimate')
                     </div>
 
                     {{-- КЛИЕНТ --}}
                     <div class="tabs-panel" id="content-panel-client">
-
                         @include('leads.tabs.client')
-
                     </div>
                     {{-- КОНЕЦ КЛИЕНТ --}}
 
@@ -161,7 +141,7 @@
 
                     {{-- КАТАЛОГ УСЛУГ --}}
                     <div class="tabs-panel" id="tab-catalog_services">
-                        {{--                        @include('leads.tabs.catalogs_services')--}}
+                        @include('leads.tabs.catalogs_services')
                     </div>
 
                     {{-- ДОКУМЕНТЫ
