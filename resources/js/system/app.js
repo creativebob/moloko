@@ -68,6 +68,8 @@ Vue.component('processes-categories-with-groups-component', require('./component
 Vue.component('services-store-component', require('./components/products/processes/common/ServicesStateComponent'));
 Vue.component('process-compositions-component', require('./components/products/processes/compositions/CompositionsComponent'));
 
+Vue.component('processes-presets-component', require('./components/products/processes/presets/PresetsComponent.vue'));
+
 // Лиды
 // Vue.component('lead-init-component', require('./components/leads/InitComponent'));
 Vue.component('lead-search-in-data-component', require('./components/leads/personals/data/SearchInDataComponent'));

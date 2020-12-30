@@ -465,7 +465,7 @@ class ViewServiceProvider extends ServiceProvider
         ], RelatedComposer::class);
 
         view()->composer([
-            'products.processes_categories.services_categories.workflows.workflows_list',
+            'products.processes_categories.services_categories.workflows.workflows',
             'products.processes.workflows.workflows.workflows',
             'products.processes.services.workflows.workflows'
         ], WorkflowsCategoriesWithWorkflowsComposer::class);
