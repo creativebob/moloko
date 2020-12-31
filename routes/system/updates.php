@@ -12,6 +12,7 @@
 Route::get('/roles', 'UpdateController@roles');
 Route::get('/notifications', 'UpdateController@notifications');
 Route::get('/charges', 'UpdateController@charges');
+Route::get('/triggers', 'UpdateController@triggers');
 
 
 // Одноразовые
