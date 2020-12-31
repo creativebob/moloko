@@ -7,14 +7,14 @@ use App\Http\Controllers\Project\Traits\Commonable;
 use App\Tool;
 use Illuminate\Http\Request;
 
-class ToolController extends Controller
+class ToolController extends BaseController
 {
     /**
      * ToolController constructor.
      */
     public function __construct()
     {
-//        parent::__construct();
+        parent::__construct();
     }
 
     /**
