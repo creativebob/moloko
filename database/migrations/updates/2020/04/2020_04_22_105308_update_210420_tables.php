@@ -59,13 +59,13 @@ class Update210420Tables extends Migration
             $table->decimal('margin_currency', 10, 2)->default(0)->comment('Сумма маржи')->after('margin_percent');
             $table->integer('points')->default(0)->comment('Внутренняя валюта')->after('margin_percent');
 
-            $table->decimal('price_discount', 10, 2)->default(0)->comment('Скидки по прайсу')->after('amount');
-            $table->decimal('catalogs_item_discount', 10, 2)->default(0)->comment('Скидкки по разделу каталога')->after('price_discount');
-            $table->decimal('estimate_discount', 10, 2)->default(0)->comment('Скидкки по смете')->after('catalogs_item_discount');
-            $table->decimal('client_discount', 10, 2)->default(0)->comment('Скидки клиента')->after('estimate_discount');
-            $table->decimal('manual_discount', 10, 2)->default(0)->comment('Скидки ручная')->after('client_discount');
+//            $table->decimal('price_discount', 10, 2)->default(0)->comment('Скидки по прайсу')->after('amount');
+//            $table->decimal('catalogs_item_discount', 10, 2)->default(0)->comment('Скидкки по разделу каталога')->after('price_discount');
+//            $table->decimal('estimate_discount', 10, 2)->default(0)->comment('Скидкки по смете')->after('catalogs_item_discount');
+//            $table->decimal('client_discount', 10, 2)->default(0)->comment('Скидки клиента')->after('estimate_discount');
+//            $table->decimal('manual_discount', 10, 2)->default(0)->comment('Скидки ручная')->after('client_discount');
 
-            $table->decimal('certificate_amount', 12, 2)->default(0)->comment('Сумма оплаченная по сертификатам')->after('discount_items_currency');
+            $table->decimal('certificate_amount', 12, 2)->default(0)->comment('Сумма оплаченная по сертификатам')->after('manual_discount');
 
             $table->decimal('surplus', 12, 4)->default(0)->comment('Излишек оплаты')->after('certificate_amount');
             $table->decimal('losses_from_points', 12, 4)->default(0)->comment('Потери от поинтов')->after('surplus');
@@ -85,94 +85,94 @@ class Update210420Tables extends Migration
         Schema::table('estimates_goods_items', function (Blueprint $table) {
             $table->integer('points')->default(0)->comment('Внутренняя валюта')->after('amount');
 
-            $table->integer('cost_unit')->default(0)->comment('Себестоимость за единицу')->after('cost_unit');
+//            $table->integer('cost_unit')->default(0)->comment('Себестоимость за единицу')->after('cost_unit');
 
             $table->bigInteger('price_discount_id')->nullable()->unsigned()->comment('Id скидки прайса')->after('amount');
 //            $table->foreign('price_discount_id')->references('id')->on('discounts')->after('discount_currency');
-            $table->decimal('price_discount_unit', 10, 2)->default(0)->comment('Скидка по прайсу за единицу')->after('price_discount_id');
+//            $table->decimal('price_discount_unit', 10, 2)->default(0)->comment('Скидка по прайсу за единицу')->after('price_discount_id');
             $table->decimal('price_discount', 10, 2)->default(0)->comment('Скидка по прайсу')->after('price_discount_unit');
             $table->decimal('total_price_discount', 10, 2)->default(0)->comment('Сумма с скидкой по прайсу')->after('price_discount');
 
             $table->bigInteger('catalogs_item_discount_id')->nullable()->unsigned()->comment('Id скидки раздела каталога')->after('total_price_discount');
 //            $table->foreign('catalogs_item_discount_id')->references('id')->on('discounts')->after('discount_currency');
-            $table->decimal('catalogs_item_discount_unit', 10, 2)->default(0)->comment('Скидкка по разделу каталога за единицу')->after('catalogs_item_discount_id');
+//            $table->decimal('catalogs_item_discount_unit', 10, 2)->default(0)->comment('Скидкка по разделу каталога за единицу')->after('catalogs_item_discount_id');
             $table->decimal('catalogs_item_discount', 10, 2)->default(0)->comment('Скидкка по разделу каталога')->after('catalogs_item_discount_unit');
             $table->decimal('total_catalogs_item_discount', 10, 2)->default(0)->comment('Сумма с скидкой по разделу каталога')->after('catalogs_item_discount');
 
             $table->bigInteger('estimate_discount_id')->nullable()->unsigned()->comment('Id скидки сметы')->after('total_catalogs_item_discount');
 //            $table->foreign('estimate_discount_id')->references('id')->on('discounts');
-            $table->decimal('estimate_discount_unit', 10, 2)->default(0)->comment('Скидкка по смете за единицу')->after('estimate_discount_id');
+//            $table->decimal('estimate_discount_unit', 10, 2)->default(0)->comment('Скидкка по смете за единицу')->after('estimate_discount_id');
             $table->decimal('estimate_discount', 10, 2)->default(0)->comment('Скидкка по смете')->after('estimate_discount_unit');
             $table->decimal('total_estimate_discount', 10, 2)->default(0)->comment('Сумма с скидкой по смете')->after('estimate_discount');
 
-            $table->decimal('client_discount_percent', 10, 2)->default(0)->comment('Скидка клиента (%)')->after('total_estimate_discount');
-            $table->decimal('client_discount_unit_currency', 10, 2)->default(0)->comment('Скидка клиента за единицу (валюта)')->after('client_discount_percent');
-            $table->decimal('client_discount_currency', 10, 2)->default(0)->comment('Скидка клиента (валюта)')->after('client_discount_unit_currency');
-            $table->decimal('total_client_discount', 10, 2)->default(0)->comment('Сумма со скидкой клиента')->after('client_discount_currency');
+//            $table->decimal('client_discount_percent', 10, 2)->default(0)->comment('Скидка клиента (%)')->after('total_estimate_discount');
+//            $table->decimal('client_discount_unit_currency', 10, 2)->default(0)->comment('Скидка клиента за единицу (валюта)')->after('client_discount_percent');
+//            $table->decimal('client_discount_currency', 10, 2)->default(0)->comment('Скидка клиента (валюта)')->after('client_discount_unit_currency');
+//            $table->decimal('total_client_discount', 10, 2)->default(0)->comment('Сумма со скидкой клиента')->after('client_discount_currency');
 
-            $table->decimal('computed_discount_percent', 10, 2)->default(0)->comment('высчитанная скидка (%)')->after('total_client_discount');
-            $table->decimal('computed_discount_currency', 10, 2)->default(0)->comment('высчитанная скидка (валюта)')->after('computed_discount_percent');
-            $table->decimal('total_computed_discount', 10, 2)->default(0)->comment('Сумма с высчитанной скидкой ')->after('computed_discount_currency');
+//            $table->decimal('computed_discount_percent', 10, 2)->default(0)->comment('высчитанная скидка (%)')->after('total_client_discount');
+//            $table->decimal('computed_discount_currency', 10, 2)->default(0)->comment('высчитанная скидка (валюта)')->after('computed_discount_percent');
+//            $table->decimal('total_computed_discount', 10, 2)->default(0)->comment('Сумма с высчитанной скидкой ')->after('computed_discount_currency');
 
-            $table->boolean('is_manual')->default(0)->comment('Ручной режим скидки')->after('total_computed_discount');
-            $table->decimal('manual_discount_percent', 10, 2)->default(0)->comment('Ручная скидка (%)')->after('is_manual');
-            $table->decimal('manual_discount_currency', 10, 2)->default(0)->comment('Ручная скидка (валюта)')->after('manual_discount_percent');
-            $table->decimal('total_manual_discount', 10, 2)->default(0)->comment('Сумма с ручной скидкой')->after('manual_discount_currency');
+//            $table->boolean('is_manual')->default(0)->comment('Ручной режим скидки')->after('total_computed_discount');
+//            $table->decimal('manual_discount_percent', 10, 2)->default(0)->comment('Ручная скидка (%)')->after('is_manual');
+//            $table->decimal('manual_discount_currency', 10, 2)->default(0)->comment('Ручная скидка (валюта)')->after('manual_discount_percent');
+//            $table->decimal('total_manual_discount', 10, 2)->default(0)->comment('Сумма с ручной скидкой')->after('manual_discount_currency');
 
-            $table->decimal('margin_currency_unit', 10,2)->default(0)->comment('Процент маржи за единицу')->after('total_bonuses');
-            $table->decimal('margin_percent_unit', 10,2)->default(0)->comment('Сумма маржи за единицу')->after('total_bonuses');
+//            $table->decimal('margin_currency_unit', 10,2)->default(0)->comment('Процент маржи за единицу')->after('total_bonuses');
+//            $table->decimal('margin_percent_unit', 10,2)->default(0)->comment('Сумма маржи за единицу')->after('total_bonuses');
 
             $table->text('comment')->nullable()->comment('Комментарий')->after('profit');
             $table->tinyInteger('sale_mode')->default(1)->comment('Режим продажи: 1 - валюта, 2 - поинты')->after('goods_id');
-            $table->integer('total_points')->default(0)->comment('Итого поинтами')->after('total');
-            $table->integer('total_bonuses')->default(0)->comment('Итого бонусами')->after('total_points');
+//            $table->integer('total_points')->default(0)->comment('Итого поинтами')->after('total');
+//            $table->integer('total_bonuses')->default(0)->comment('Итого бонусами')->after('total_points');
 
         });
 
         Schema::table('estimates_services_items', function (Blueprint $table) {
             $table->integer('points')->default(0)->comment('Внутренняя валюта')->after('amount');
 
-            $table->integer('cost_unit')->default(0)->comment('Себестоимость за единицу')->after('cost_unit');
+//            $table->integer('cost_unit')->default(0)->comment('Себестоимость за единицу')->after('cost_unit');
 
             $table->bigInteger('price_discount_id')->nullable()->unsigned()->comment('Id скидки прайса')->after('amount');
 //            $table->foreign('price_discount_id')->references('id')->on('discounts')->after('discount_currency');
-            $table->decimal('price_discount_unit', 10, 2)->default(0)->comment('Скидка по прайсу за единицу')->after('price_discount_id');
+//            $table->decimal('price_discount_unit', 10, 2)->default(0)->comment('Скидка по прайсу за единицу')->after('price_discount_id');
             $table->decimal('price_discount', 10, 2)->default(0)->comment('Скидка по прайсу')->after('price_discount_unit');
             $table->decimal('total_price_discount', 10, 2)->default(0)->comment('Сумма с скидкой по прайсу')->after('price_discount');
 
             $table->bigInteger('catalogs_item_discount_id')->nullable()->unsigned()->comment('Id скидки раздела каталога')->after('total_price_discount');
 //            $table->foreign('catalogs_item_discount_id')->references('id')->on('discounts')->after('discount_currency');
-            $table->decimal('catalogs_item_discount_unit', 10, 2)->default(0)->comment('Скидкка по разделу каталога за единицу')->after('catalogs_item_discount_id');
+//            $table->decimal('catalogs_item_discount_unit', 10, 2)->default(0)->comment('Скидкка по разделу каталога за единицу')->after('catalogs_item_discount_id');
             $table->decimal('catalogs_item_discount', 10, 2)->default(0)->comment('Скидкка по разделу каталога')->after('catalogs_item_discount_unit');
             $table->decimal('total_catalogs_item_discount', 10, 2)->default(0)->comment('Сумма с скидкой по разделу каталога')->after('catalogs_item_discount');
 
             $table->bigInteger('estimate_discount_id')->nullable()->unsigned()->comment('Id скидки сметы')->after('total_catalogs_item_discount');
 //            $table->foreign('estimate_discount_id')->references('id')->on('discounts');
-            $table->decimal('estimate_discount_unit', 10, 2)->default(0)->comment('Скидкка по смете за единицу')->after('estimate_discount_id');
+//            $table->decimal('estimate_discount_unit', 10, 2)->default(0)->comment('Скидкка по смете за единицу')->after('estimate_discount_id');
             $table->decimal('estimate_discount', 10, 2)->default(0)->comment('Скидкка по смете')->after('estimate_discount_unit');
             $table->decimal('total_estimate_discount', 10, 2)->default(0)->comment('Сумма с скидкой по смете')->after('estimate_discount');
 
-            $table->decimal('client_discount_percent', 10, 2)->default(0)->comment('Скидка клиента (%)')->after('total_estimate_discount');
-            $table->decimal('client_discount_unit_currency', 10, 2)->default(0)->comment('Скидка клиента за единицу (валюта)')->after('client_discount_percent');
-            $table->decimal('client_discount_currency', 10, 2)->default(0)->comment('Скидка клиента (валюта)')->after('client_discount_unit_currency');
-            $table->decimal('total_client_discount', 10, 2)->default(0)->comment('Сумма со скидкой клиента')->after('client_discount_currency');
+//            $table->decimal('client_discount_percent', 10, 2)->default(0)->comment('Скидка клиента (%)')->after('total_estimate_discount');
+//            $table->decimal('client_discount_unit_currency', 10, 2)->default(0)->comment('Скидка клиента за единицу (валюта)')->after('client_discount_percent');
+//            $table->decimal('client_discount_currency', 10, 2)->default(0)->comment('Скидка клиента (валюта)')->after('client_discount_unit_currency');
+//            $table->decimal('total_client_discount', 10, 2)->default(0)->comment('Сумма со скидкой клиента')->after('client_discount_currency');
 
-            $table->decimal('computed_discount_percent', 10, 2)->default(0)->comment('высчитанная скидка (%)')->after('total_client_discount');
-            $table->decimal('computed_discount_currency', 10, 2)->default(0)->comment('высчитанная скидка (валюта)')->after('computed_discount_percent');
-            $table->decimal('total_computed_discount', 10, 2)->default(0)->comment('Сумма с высчитанной скидкой ')->after('computed_discount_currency');
+//            $table->decimal('computed_discount_percent', 10, 2)->default(0)->comment('высчитанная скидка (%)')->after('total_client_discount');
+//            $table->decimal('computed_discount_currency', 10, 2)->default(0)->comment('высчитанная скидка (валюта)')->after('computed_discount_percent');
+//            $table->decimal('total_computed_discount', 10, 2)->default(0)->comment('Сумма с высчитанной скидкой ')->after('computed_discount_currency');
 
-            $table->boolean('is_manual')->default(0)->comment('Ручной режим скидки')->after('total_computed_discount');
-            $table->decimal('manual_discount_percent', 10, 2)->default(0)->comment('Ручная скидка (%)')->after('is_manual');
-            $table->decimal('manual_discount_currency', 10, 2)->default(0)->comment('Ручная скидка (валюта)')->after('manual_discount_percent');
-            $table->decimal('total_manual_discount', 10, 2)->default(0)->comment('Сумма с ручной скидкой')->after('manual_discount_currency');
+//            $table->boolean('is_manual')->default(0)->comment('Ручной режим скидки')->after('total_computed_discount');
+//            $table->decimal('manual_discount_percent', 10, 2)->default(0)->comment('Ручная скидка (%)')->after('is_manual');
+//            $table->decimal('manual_discount_currency', 10, 2)->default(0)->comment('Ручная скидка (валюта)')->after('manual_discount_percent');
+//            $table->decimal('total_manual_discount', 10, 2)->default(0)->comment('Сумма с ручной скидкой')->after('manual_discount_currency');
 
-            $table->decimal('margin_currency_unit', 10,2)->default(0)->comment('Процент маржи за единицу')->after('total_bonuses');
-            $table->decimal('margin_percent_unit', 10,2)->default(0)->comment('Сумма маржи за единицу')->after('total_bonuses');
+//            $table->decimal('margin_currency_unit', 10,2)->default(0)->comment('Процент маржи за единицу')->after('total_bonuses');
+//            $table->decimal('margin_percent_unit', 10,2)->default(0)->comment('Сумма маржи за единицу')->after('total_bonuses');
 
             $table->text('comment')->nullable()->comment('Комментарий')->after('profit');
             $table->tinyInteger('sale_mode')->default(1)->comment('Режим продажи: 1 - валюта, 2 - поинты')->after('service_id');
-            $table->integer('total_points')->default(0)->comment('Итого поинтами')->after('total');
-            $table->integer('total_bonuses')->default(0)->comment('Итого бонусами')->after('total_points');
+//            $table->integer('total_points')->default(0)->comment('Итого поинтами')->after('total');
+//            $table->integer('total_bonuses')->default(0)->comment('Итого бонусами')->after('total_points');
         });
 
         Schema::table('companies', function (Blueprint $table) {
@@ -204,19 +204,19 @@ class Update210420Tables extends Migration
             $table->text('vertical')->nullable()->comment('vertical')->after('horizontal');
             $table->text('square')->nullable()->comment('square')->after('vertical');
             $table->string('prom')->nullable()->comment('Триггер для отображения')->after('square');
-            $table->decimal('total_min', 10,2)->default(0)->comment('Минимальная сумма')->after('prom');
+//            $table->decimal('total_min', 10,2)->default(0)->comment('Минимальная сумма')->after('prom');
         });
 
         Schema::table('leads', function (Blueprint $table) {
-            $table->boolean('is_create_parse')->default(0)->comment('Создан парсером')->after('delivered_at');
+            $table->boolean('is_create_parse')->default(0)->comment('Создан парсером')->after('shipment_at');
             $table->boolean('is_link_parse')->default(0)->comment('Связан парсером со сметой')->after('is_create_parse');
             $table->decimal('order_amount_base', 12, 4)->default(0)->comment('Сумма первоначального заказа')->after('is_link_parse');
             $table->boolean('need_delivery')->default(0)->comment('Нужна доставка')->after('order_amount_base');
-            $table->bigInteger('organization_id')->unsigned()->nullable()->comment('Id организации')->after('user_id');
+//            $table->bigInteger('organization_id')->unsigned()->nullable()->comment('Id организации')->after('user_id');
         });
 
         Schema::table('users', function (Blueprint $table) {
-            $table->dateTime('login_date')->nullable()->comment('Последняя авторизация')->after('login');
+//            $table->dateTime('login_date')->nullable()->comment('Последняя авторизация')->after('login');
             $table->integer('external')->nullable()->comment('Внешний id')->after('filial_id');
         });
 
