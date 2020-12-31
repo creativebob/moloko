@@ -52,12 +52,12 @@ class Update2 extends Migration
 //            $table->timestamp('archived_at')->nullable()->comment('Архив')->after('is_main');
 //        });
 
-        Schema::table('agents', function (Blueprint $table) {
-            $table->timestamp('archived_at')->nullable()->comment('Архив')->after('archive');
-            $table->dropColumn([
-                'archive',
-            ]);
-        });
+//        Schema::table('agents', function (Blueprint $table) {
+//            $table->timestamp('archived_at')->nullable()->comment('Архив')->after('archive');
+//            $table->dropColumn([
+//                'archive',
+//            ]);
+//        });
 
         Schema::table('tools', function (Blueprint $table) {
             $table->bigInteger('tools_type_id')->nullable()->unsigned()->comment('Id типа оборудования')->after('price_unit_id');
@@ -114,14 +114,14 @@ class Update2 extends Migration
 //            ]);
 //        });
 
-        Schema::table('agents', function (Blueprint $table) {
-            $table->boolean('archive')->default(0)->comment('Статус архива')->after('archived_at');
-            $table->dropColumn([
-                'archived_at',
-            ]);
-        });
+//        Schema::table('agents', function (Blueprint $table) {
+//            $table->boolean('archive')->default(0)->comment('Статус архива')->after('archived_at');
+//            $table->dropColumn([
+//                'archived_at',
+//            ]);
+//        });
 
-        Schema::table('agents', function (Blueprint $table) {
+        Schema::table('tools', function (Blueprint $table) {
             $table->dropColumn([
                 'tools_type_id',
             ]);
