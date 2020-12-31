@@ -1,6 +1,6 @@
 <ul>
     @foreach ($notifications as $notification)
-
+        @isset($notification->trigger->entity)
         @php
             $model = $notification->trigger->entity->model;
         @endphp
@@ -12,5 +12,6 @@
                 </div>
             </li>
         @endcan
+        @endisset
     @endforeach
 </ul>
