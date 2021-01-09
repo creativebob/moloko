@@ -22,6 +22,11 @@
                 </label>
             </div>
             <div class="small-12 cell">
+                <label>Список ключевых слов (Keywords)
+                    @include('includes.inputs.string', ['name' => 'keywords'])
+                </label>
+            </div>
+            <div class="small-12 cell">
                 <label>Режим отображения
                     @include('includes.selects.display_modes')
                 </label>
