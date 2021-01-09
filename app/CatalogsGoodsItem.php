@@ -50,6 +50,7 @@ use App\Scopes\Filters\BooklistFilter;
 			'description',
             'header',
 			'title',
+			'keywords',
 			'seo_description',
 			'parent_id',
 			'photo_id',

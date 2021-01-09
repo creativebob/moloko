@@ -2,22 +2,22 @@
     <div class="small-12 medium-6 cell">
         <div class="grid-x grid-padding-x">
             <div class="small-12 cell">
-                <label>Название страницы
+                <label>Название страницы (Title)
                     @include('includes.inputs.string', ['name' => 'title'])
                 </label>
             </div>
             <div class="small-12 cell">
-                <label>Заголовок страницы
+                <label>Заголовок страницы (H1)
                     @include('includes.inputs.string', ['name' => 'header'])
                 </label>
             </div>
             <div class="small-12 cell">
-                <label>Описание:
+                <label>Описание для вывода на сайт:
                     {{ Form::textarea('description', $catalogsServicesItem->description, ['id'=>'content-ckeditor', 'autocomplete'=>'off', 'size' => '10x3']) }}
                 </label>
             </div>
             <div class="small-12 cell">
-                <label>Description для сайта
+                <label>Описание для поисковых систем (Description)
                     @include('includes.inputs.textarea', ['value' => $catalogsServicesItem->seo_description, 'name' => 'seo_description'])
                 </label>
             </div>

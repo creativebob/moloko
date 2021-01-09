@@ -50,6 +50,7 @@ class CatalogsServicesItem extends Model
         'description',
         'header',
         'title',
+        'keywords',
         'seo_description',
         'parent_id',
         'photo_id',
