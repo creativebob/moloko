@@ -11,7 +11,10 @@
                 <a data-tabs-target="tab-staff" href="#tab-staff">Сотрудники</a>
             </li>
             <li class="tabs-title">
-                <a data-tabs-target="tab-catalogs_goods" href="#tab-catalogs_goods">Каталоги товаров</a>
+                <a data-tabs-target="tab-catalogs" href="#tab-catalogs">Каталоги</a>
+            </li>
+            <li class="tabs-title">
+                <a data-tabs-target="tab-cash_register" href="#tab-cash_register">Торгово-кассовое оборудование</a>
             </li>
             <li class="tabs-title">
                 <a data-tabs-target="tab-settings" href="#tab-settings">Настройки</a>
@@ -37,8 +40,12 @@
                 @include('system.pages.outlets.tabs.staff', ['filialId' => $outlet->filial_id])
             </div>
 
-            <div class="tabs-panel" id="tab-catalogs_goods">
-                @include('system.pages.outlets.tabs.catalogs_goods', ['filialId' => $outlet->filial_id])
+            <div class="tabs-panel" id="tab-catalogs">
+                @include('system.pages.outlets.tabs.catalogs', ['filialId' => $outlet->filial_id])
+            </div>
+
+            <div class="tabs-panel" id="tab-cash_register">
+                @include('system.pages.outlets.tabs.tools')
             </div>
 
             <div class="tabs-panel" id="tab-settings">

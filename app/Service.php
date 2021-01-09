@@ -2,25 +2,15 @@
 
 namespace App;
 
-use App\Models\System\Traits\Commonable;
+use App\Models\System\BaseModel;
 use App\Models\System\Traits\Processable;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-// Подключаем кеш
-use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-
-class Service extends Model
+class Service extends BaseModel
 {
-
 	// Включаем кеш
-    use Cachable;
-
-    use Notifiable;
+//    use Cachable;
     use SoftDeletes;
-
-    use Commonable;
     use Processable;
 
     protected $fillable = [

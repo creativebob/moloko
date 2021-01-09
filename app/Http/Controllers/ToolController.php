@@ -354,7 +354,7 @@ class ToolController extends Controller
         ]);
     }
 
-    public function update(ArticleStoreRequest $request, $id)
+    public function update(Request $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
@@ -378,11 +378,8 @@ class ToolController extends Controller
             // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
             $this->changeCategory($request, $tool);
 
-            $tool->serial = $request->serial;
-            $tool->display = $request->display;
-            $tool->system = $request->system;
-            $tool->save();
-
+            $data = $request->input();
+            $tool->update($data);
 
             // Если ли есть
             if ($request->cookie('backlink') != null) {

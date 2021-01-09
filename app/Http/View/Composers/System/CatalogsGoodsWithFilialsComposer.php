@@ -28,8 +28,8 @@ class CatalogsGoodsWithFilialsComposer
         ->get();
         // dd($catalogs_goods);
 
-        $catalogsGoodsItems = [];
-        $filials = [];
+//        $catalogsGoodsItems = [];
+//        $filials = [];
         foreach($catalogsGoods as $catalogGoods) {
 
             $catalogGoods->items_tree = buildTreeArray($catalogGoods->items);

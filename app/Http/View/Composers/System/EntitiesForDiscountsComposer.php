@@ -20,7 +20,9 @@ class EntitiesForDiscountsComposer
     {
         $entities = [
             'prices_goods',
+            'prices_services',
             'catalogs_goods_items',
+            'catalogs_services_items',
             'estimates',
         ];
 

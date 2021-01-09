@@ -63,6 +63,11 @@ trait Processable
         }
     }
 
+    public function getLengthAttribute()
+    {
+        return $this->process->length;
+    }
+
     // Геттер: Функция получения обьема в м3. учитывая все надстройки и переопределения в еденицах измерения
     public function getVolumeAttribute()
     {

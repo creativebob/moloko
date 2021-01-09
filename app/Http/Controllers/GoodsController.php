@@ -50,17 +50,6 @@ class GoodsController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -----------------------------------------------------------------------------------------------------------------------------
 
-        $columns = [
-            'id',
-            'article_id',
-            'category_id',
-            'price_unit_id',
-            'author_id',
-            'company_id',
-            'display',
-            'system',
-        ];
-
         $goods = Goods::with([
             'author',
             'price_unit',

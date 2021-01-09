@@ -48,8 +48,6 @@ class WorkflowsCategoryPolicy
 
     public function delete(User $user, Model $model)
     {
-
-
         if ($model->workflows->count() > 0) {
             return false;
         }
@@ -61,12 +59,6 @@ class WorkflowsCategoryPolicy
         if ($model->groups->count() > 0) {
             return false;
         }
-
-        // foreach ($model->getRelations() as $relation) {
-        //     if ($relation->count() > 0) {
-        //         return false;
-        //     }
-        // }
 
         return $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
     }

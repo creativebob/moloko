@@ -67,17 +67,23 @@ class LeadPolicy
             return false;
         }
 
-        if ($model->estimate->conducted_at) {
+
+        // TODO - 23.12.20 - Решили не давать удалят ьесли смета офрмлена
+        if ($model->estimate->registered_at) {
             return false;
         }
 
-        if ($model->estimate->goods_items->isNotEmpty()) {
-            foreach ($model->estimate->goods_items as $item) {
-                if (optional($item->reserve)->count > 0) {
-                    return false;
-                }
-            }
-        }
+//        if ($model->estimate->conducted_at) {
+//            return false;
+//        }
+//
+//        if ($model->estimate->goods_items->isNotEmpty()) {
+//            foreach ($model->estimate->goods_items as $item) {
+//                if (optional($item->reserve)->count > 0) {
+//                    return false;
+//                }
+//            }
+//        }
 
         return $result;
     }

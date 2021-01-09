@@ -90,13 +90,13 @@ class PricesGoods extends Model
         'is_discount',
         'is_need_recalculate',
 
-        'external', 
+        'external',
 
         'display',
         'system',
         'moderation'
     ];
-    
+
     // Компания
     public function company()
     {
@@ -280,7 +280,7 @@ class PricesGoods extends Model
         }
 
         // Вычисление всех скидок на разделе каталога, в котором находится прайс
-        if (! $resPrice['break']) {
+        if (!$resPrice['break']) {
             $catalogsGoodsItem = $this->catalogs_item;
             if ($catalogsGoodsItem->is_discount == 1) {
                 $catalogsGoodsItemDiscounts = $catalogsGoodsItem->discounts_actual;

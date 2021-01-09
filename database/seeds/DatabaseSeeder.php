@@ -128,5 +128,7 @@ class DatabaseSeeder extends Seeder
 
         // Шаблоны
         $this->call(TemplatesCategoriesTableSeeder::class);
+
+        $this->call(ToolsTypesTableSeeder::class);
     }
 }

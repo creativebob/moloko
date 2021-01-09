@@ -48,8 +48,6 @@ class ServicesCategoryPolicy
 
     public function delete(User $user, Model $model)
     {
-
-
         if ($model->services->count() > 0) {
             return false;
         }

@@ -95,4 +95,9 @@ class Outlet extends BaseModel
     {
         return $this->belongsToMany(PaymentsMethod::class);
     }
+
+    public function tools()
+    {
+        return $this->belongsToMany(Tool::class);
+    }
 }

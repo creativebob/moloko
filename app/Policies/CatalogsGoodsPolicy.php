@@ -46,8 +46,6 @@ class CatalogsGoodsPolicy
 
     public function delete(User $user, Model $model)
     {
-
-
         if ($model->items->count() > 0) {
             return false;
         }

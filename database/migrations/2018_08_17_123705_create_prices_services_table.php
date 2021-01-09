@@ -32,6 +32,8 @@ class CreatePricesServicesTable extends Migration
             $table->foreign('ancestor_id')->references('id')->on('prices_services');
 
             $table->decimal('price', 10,2)->default(0)->comment('Цена');
+            $table->string('name_alt')->nullable()->comment('Альтернативное имя');
+            $table->string('external')->nullable()->comment('Внешний ID');
 
             $table->boolean('is_discount')->default(1)->unsigned()->comment('Режим скидок');
 
@@ -70,6 +72,7 @@ class CreatePricesServicesTable extends Migration
 
             $table->boolean('is_show_price')->default(0)->comment('Показывать цену');
             $table->boolean('is_need_recalculate')->default(0)->comment('Требуется перерасчет');
+
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

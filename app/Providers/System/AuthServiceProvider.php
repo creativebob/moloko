@@ -8,6 +8,7 @@ use App\AttachmentsCategory;
 use App\BusinessCase;
 use App\Container;
 use App\ContainersCategory;
+use App\Label;
 use App\Mailing;
 use App\MailingList;
 use App\Models\System\Documents\Consignment;
@@ -36,6 +37,7 @@ use App\Policies\Documents\ConsignmentPolicy;
 use App\Policies\Documents\ProductionPolicy;
 use App\Policies\DomainPolicy;
 use App\Policies\IndicatorPolicy;
+use App\Policies\LabelPolicy;
 use App\Policies\MailingListPolicy;
 use App\Policies\MailingPolicy;
 use App\Policies\MetricPolicy;
@@ -59,6 +61,7 @@ use App\Policies\TemplatePolicy;
 use App\Policies\TemplatesCategoryPolicy;
 use App\Policies\ToolsStockPolicy;
 use App\Policies\VendorPolicy;
+use App\Policies\WorkplacePolicy;
 use App\Portfolio;
 use App\PortfoliosItem;
 use App\PricesGoods;
@@ -201,6 +204,7 @@ use App\CatalogsServicesItem;
 use App\Policies\CatalogsServicesItemPolicy;
 use App\Models\System\Documents\Estimate;
 use App\Policies\Documents\EstimatePolicy;
+use App\Workplace;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -350,6 +354,7 @@ class AuthServiceProvider extends ServiceProvider
         Stock::class => StockPolicy::class,
 
         Outlet::class => OutletPolicy::class,
+        Workplace::class => WorkplacePolicy::class,
 
         Lead::class => LeadPolicy::class,
         Note::class => NotePolicy::class,
@@ -357,6 +362,7 @@ class AuthServiceProvider extends ServiceProvider
         Claim::class => ClaimPolicy::class,
         Stage::class => StagePolicy::class,
         Feedback::class => FeedbackPolicy::class,
+        Label::class => LabelPolicy::class,
 
         // Выполненные работы
         OutcomesCategory::class => OutcomesCategoryPolicy::class,

@@ -473,7 +473,8 @@ class EstimateController extends Controller
                 ]);
             },
             'payments',
-            'discounts'
+            'discounts',
+            'labels'
         ]);
 
 //        return redirect()->route('leads.index');
@@ -954,5 +955,4 @@ class EstimateController extends Controller
             'estimate' => $estimate
         ]);
     }
-
 }

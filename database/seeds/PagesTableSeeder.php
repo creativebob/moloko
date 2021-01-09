@@ -920,6 +920,29 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => true,
             ],
+            [
+                'name' => 'Рабочие места',
+                'site_id' => 1,
+                'title' => 'Рабочие места',
+                'description' => 'Рабочие места',
+                'alias' => 'workplaces',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+
+            [
+                'name' => 'Метки заказа',
+                'site_id' => 1,
+                'title' => 'Метки заказа',
+                'description' => 'Метки заказа',
+                'alias' => 'labels',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
 
             // [
             //     'name' => 'Продукция на сайте',

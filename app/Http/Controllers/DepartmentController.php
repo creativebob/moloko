@@ -414,9 +414,15 @@ class DepartmentController extends Controller
         return view('products.articles.goods.prices.filials', compact('catalog_id'));
     }
 
-    public function getUserFilialsWithOutlets()
+    public function getUserFilials(Request $request)
     {
-        $filials = session('access.all_rights.index-leads-allow.filials_for_user');
+        $filials = session("access.all_rights.index-{$request->entity}-allow.filials_for_user");
+        return response()->json($filials);
+    }
+
+    public function getUserFilialsWithOutlets(Request $request)
+    {
+        $filials = session("access.all_rights.index-{$request->entity}-allow.filials_for_user");
         $filialsIds = [];
         foreach ($filials as $filial) {
             $filialsIds[] = $filial->id;

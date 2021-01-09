@@ -28,6 +28,9 @@ class CreateToolsTable extends Migration
             $table->bigInteger('price_unit_id')->nullable()->unsigned()->comment('Единица измерения для определения цены');
             $table->foreign('price_unit_id')->references('id')->on('units');
 
+            $table->bigInteger('tools_type_id')->nullable()->unsigned()->comment('Id типа оборудования');
+            $table->foreign('tools_type_id')->references('id')->on('tools_types');
+
             $table->boolean('portion_status')->default(0)->unsigned()->comment('Статус порции');
             $table->string('portion_name')->nullable()->comment('Имя порции');
             $table->string('portion_abbreviation')->nullable()->comment('Сокращение порции');

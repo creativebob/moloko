@@ -1,1 +1,0 @@
-{!! Form::number('price', $price->price, null, []) !!}

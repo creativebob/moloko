@@ -24,6 +24,7 @@
                 <label>Дата отгрузки
                     <pickmeup-component
                         :value="shipmentDate"
+                        :disabled="isConducted"
                         @change="changeDate"
                     ></pickmeup-component>
                 </label>
@@ -39,6 +40,7 @@
                         pattern="([0-1][0-9]|[2][0-3]):[0-5][0-9]"
                         placeholder="10:00"
                         v-model="shipmentTime"
+                        :disabled="isConducted"
                     >
                 </label>
             </div>
@@ -102,6 +104,9 @@
                     }
                 }
                 return shipmentAt;
+            },
+            isConducted() {
+                return this.$store.getters.IS_CONDUCTED;
             }
         },
         watch: {

@@ -14,6 +14,7 @@ use App\Http\View\Composers\System\CatalogServicesWithPricesComposer;
 use App\Http\View\Composers\System\CatalogsGoodsItemsTreeComposer;
 use App\Http\View\Composers\System\CatalogsGoodsWithFilialsComposer;
 use App\Http\View\Composers\System\CatalogsGoodsWithSchemesComposer;
+use App\Http\View\Composers\System\CatalogsServicesWithFilialsComposer;
 use App\Http\View\Composers\System\ChannelsComposer;
 use App\Http\View\Composers\System\ChargesComposer;
 use App\Http\View\Composers\System\CitiesComposer;
@@ -26,15 +27,19 @@ use App\Http\View\Composers\System\DepartmentsForUserComposer;
 use App\Http\View\Composers\System\DiscountsForEstimatesComposer;
 use App\Http\View\Composers\System\EstimatesTotalsComposer;
 use App\Http\View\Composers\System\FilialCatalogsGoodsComposer;
+use App\Http\View\Composers\System\FilialCatalogsServicesComposer;
 use App\Http\View\Composers\System\FilialStaffComposer;
 use App\Http\View\Composers\System\LeadHistoryComposer;
 use App\Http\View\Composers\System\MailingListsComposer;
 use App\Http\View\Composers\System\MailingsComposer;
 use App\Http\View\Composers\System\OutletsSettingsCategoriesWithSettingsComposer;
 use App\Http\View\Composers\System\PaymentsMethodsComposer;
+use App\Http\View\Composers\System\ServicesCategoriesWithServicesComposer;
 use App\Http\View\Composers\System\SuppliersComposer;
 use App\Http\View\Composers\System\TaxationTypesComposer;
 use App\Http\View\Composers\System\TemplatesComposer;
+use App\Http\View\Composers\System\ToolsTypesComposer;
+use App\Http\View\Composers\System\ToolsWithTypeComposer;
 use App\Http\View\Composers\System\UsersWithClientComposer;
 use App\Http\View\Composers\System\CmvArchivesCountComposer;
 use App\Http\View\Composers\System\CompaniesWithClientComposer;
@@ -67,6 +72,7 @@ use App\Http\View\Composers\System\SourcesComposer;
 use App\Http\View\Composers\System\StagesComposer;
 use App\Http\View\Composers\System\StocksComposer;
 use App\Http\View\Composers\System\WidgetsComposer;
+use App\Http\View\Composers\System\WorkflowsCategoriesWithWorkflowsComposer;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -228,8 +234,8 @@ class ViewServiceProvider extends ServiceProvider
         view()->composer('system.pages.hr.employees.includes.access.roles', DepartmentsForUserComposer::class);
 
         view()->composer([
-            'prices_services.select_user_filials',
             'system.pages.catalogs.goods.prices_goods.select_user_filials',
+            'system.pages.catalogs.services.prices_services.select_user_filials',
         ], UserFilialsComposer::class);
         view()->composer('prices_services.sync.modal', CatalogsServicesItemsForFilialComposer::class);
 
@@ -242,6 +248,8 @@ class ViewServiceProvider extends ServiceProvider
         view()->composer('includes.lists.charges', ChargesComposer::class);
         view()->composer('includes.lists.widgets', WidgetsComposer::class);
         view()->composer('includes.lists.notifications', NotificationsComposer::class);
+
+        view()->composer('includes.lists.tools_with_type', ToolsWithTypeComposer::class);
 
         view()->composer('includes.selects.legal_forms', LegalFormsSelectComposer::class);
         view()->composer('includes.selects.agent_types', AgentTypesComposer::class);
@@ -412,10 +420,18 @@ class ViewServiceProvider extends ServiceProvider
         ], CatalogsGoodsComposer::class);
         view()->composer('products.articles.goods.prices.prices', CatalogsGoodsWithFilialsComposer::class);
 
+        view()->composer([
+            'products.processes.services.prices.catalogs',
+//            'leads.catalogs.modal_catalogs_goods'
+        ], CatalogsGoodsComposer::class);
+        view()->composer('products.processes.services.prices.prices', CatalogsServicesWithFilialsComposer::class);
+
         view()->composer('products.articles.goods.prices.catalogs_items', CatalogsGoodsItemsSelectComposer::class);
         view()->composer('products.articles.goods.prices.filials', FilialsForCatalogsGoodsComposer::class);
 
-        view()->composer('system.pages.outlets.tabs.catalogs_goods', FilialCatalogsGoodsComposer::class);
+        view()->composer('system.pages.outlets.tabs.catalogs', FilialCatalogsGoodsComposer::class);
+        view()->composer('system.pages.outlets.tabs.catalogs', FilialCatalogsServicesComposer::class);
+
         view()->composer('system.pages.outlets.tabs.staff', FilialStaffComposer::class);
 
         view()->composer('system.pages.outlets.tabs.settings', PaymentsMethodsComposer::class);
@@ -449,13 +465,14 @@ class ViewServiceProvider extends ServiceProvider
         ], RelatedComposer::class);
 
         view()->composer([
-            'products.processes_categories.services_categories.workflows.workflows_list',
-            'products.processes.services.workflows.workflows_list'
-        ], WorkflowsComposer::class);
+            'products.processes_categories.services_categories.workflows.workflows',
+            'products.processes.workflows.workflows.workflows',
+            'products.processes.services.workflows.workflows'
+        ], WorkflowsCategoriesWithWorkflowsComposer::class);
 
         view()->composer([
-            'products.processes.services.services.services_list'
-        ], ServicesComposer::class);
+            'products.processes.services.services.services'
+        ], ServicesCategoriesWithServicesComposer::class);
 
         view()->composer('includes.selects.tmc', TmcComposer::class);
         view()->composer([
@@ -513,7 +530,7 @@ class ViewServiceProvider extends ServiceProvider
 
         // Скидки
         view()->composer('system.common.discounts.discounts', DiscountsComposer::class);
-        view()->composer('system.pages.marketings.discounts.form', EntitiesForDiscountsComposer::class);
+        view()->composer('system.pages.marketings.discounts.tabs.general', EntitiesForDiscountsComposer::class);
 
         view()->composer('system.prints.check_order', DomainsForFilialComposer::class);
 
@@ -564,6 +581,9 @@ class ViewServiceProvider extends ServiceProvider
 
 
         view()->composer('estimates.includes.totals', EstimatesTotalsComposer::class);
+
+
+        view()->composer('includes.selects.tools_types', ToolsTypesComposer::class);
     }
 
     /**

@@ -63,6 +63,8 @@ class CatalogsServicesItem extends Model
         'is_show_subcategory',
         'is_hide_submenu',
 
+        'is_discount',
+
         'display',
         'system',
         'moderation'
@@ -116,6 +118,12 @@ class CatalogsServicesItem extends Model
 		return $this->hasMany(PricesService::class);
 	}
 
+    public function prices_services_actual()
+    {
+        return $this->hasMany(PricesService::class)
+            ->where('archive', false);
+    }
+
     public function prices()
     {
         return $this->hasMany(PricesService::class);
@@ -154,6 +162,30 @@ class CatalogsServicesItem extends Model
     public function directive_category()
     {
         return $this->belongsTo(UnitsCategory::class);
+    }
+
+    public function discounts()
+    {
+        return $this->belongsToMany(Discount::class, 'discount_catalogs_services_item', 'catalogs_services_item_id', 'discount_id')
+            ->withPivot([
+                'sort'
+            ])
+            ->orderBy('pivot_sort');
+    }
+
+    public function discounts_actual()
+    {
+        return $this->belongsToMany(Discount::class, 'discount_catalogs_services_item', 'catalogs_services_item_id', 'discount_id')
+            ->where('archive', false)
+            ->where('begined_at', '<=', now())
+            ->where(function ($q) {
+                $q->where('ended_at', '>', now())
+                    ->orWhereNull('ended_at');
+            })
+            ->withPivot([
+                'sort'
+            ])
+            ->orderBy('pivot_sort');
     }
 
     public function getNameWithParentAttribute()

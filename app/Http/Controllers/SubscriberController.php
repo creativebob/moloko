@@ -5,13 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\System\SubscriberRequest;
 use App\Imports\SubscribersImport;
 use App\MailingList;
-use App\MailingListItem;
 use App\Subscriber;
 use Maatwebsite\Excel\Facades\Excel;
 
 class SubscriberController extends Controller
 {
-
     protected $entityAlias;
     protected $entityDependence;
 
@@ -119,7 +117,6 @@ class SubscriberController extends Controller
         $subscriber = Subscriber::moderatorLimit($answer)
             ->find($id);
 //        dd($subscriber);
-
         if (empty($subscriber)) {
             abort(403, __('errors.not_found'));
         }
@@ -150,7 +147,6 @@ class SubscriberController extends Controller
         $subscriber = Subscriber::moderatorLimit($answer)
             ->find($id);
         //        dd($subscriber);
-
         if (empty($subscriber)) {
             abort(403, __('errors.not_found'));
         }
@@ -192,7 +188,6 @@ class SubscriberController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
         $subscriber = Subscriber::moderatorLimit($answer)
             ->find($id);
-
         if (empty($subscriber)) {
             abort(403, __('errors.not_found'));
         }

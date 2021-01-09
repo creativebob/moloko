@@ -10,57 +10,50 @@ use App\Manufacturer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use App\Http\Controllers\Traits\Processable;
-use Illuminate\Support\Facades\Log;
 
 class ServiceController extends Controller
 {
+    protected $entityAlias;
+    protected $entityDependence;
 
     /**
      * ServiceController constructor.
-     * @param Service $service
      */
-    public function __construct(Service $service)
+    public function __construct()
     {
         $this->middleware('auth');
-        $this->service = $service;
-        $this->class = Service::class;
-        $this->model = 'App\Service';
-        $this->entity_alias = with(new $this->class)->getTable();
-        $this->entity_dependence = false;
+        $this->entityAlias = 'services';
+        $this->entityDependence = false;
     }
 
     use Processable;
 
+    /**
+     * Display a listing of the resource.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function index(Request $request)
     {
-
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), Service::class);
 
         // Включение контроля активного фильтра
-        $filter_url = autoFilter($request, $this->entity_alias);
-        if (($filter_url != null)&&($request->filter != 'active')) {
-            Cookie::queue(Cookie::forget('filter_' . $this->entity_alias));
+        $filter_url = autoFilter($request, $this->entityAlias);
+        if (($filter_url != null) && ($request->filter != 'active')) {
+            Cookie::queue(Cookie::forget('filter_' . $this->entityAlias));
             return Redirect($filter_url);
         }
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
         // dd($answer);
 
         // -------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------------------------
-
-        $columns = [
-            'id',
-            'process_id',
-            'category_id',
-            'author_id',
-            'company_id',
-            'display',
-            'system'
-        ];
 
         $services = Service::with([
             'author',
@@ -80,28 +73,27 @@ class ServiceController extends Controller
 //            }
             ,
         ])
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer)
+            ->moderatorLimit($answer)
+            ->companiesLimit($answer)
+            ->authors($answer)
+            ->systemItem($answer)
 //        ->template($answer)
-        ->booklistFilter($request)
-        ->filter($request, 'author_id')
-        // ->filter($request, 'services_category_id', 'process.product')
-        // ->filter($request, 'services_product_id', 'process')
-        ->where('archive', false)
+            ->booklistFilter($request)
+//        ->filter($request, 'author_id')
+            // ->filter($request, 'services_category_id', 'process.product')
+            // ->filter($request, 'services_product_id', 'process')
+            ->where('archive', false)
 //        ->select($columns)
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->paginate(30);
+            ->orderBy('moderation', 'desc')
+            ->oldest('sort')
+            ->paginate(30);
         // dd($services);
-
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter = setFilter($this->entity_alias, $request, [
+        $filter = setFilter($this->entityAlias, $request, [
             'author',               // Автор записи
             // 'services_category',    // Категория услуги
             // 'services_product',     // Группа услуги
@@ -109,40 +101,130 @@ class ServiceController extends Controller
             'booklist'              // Списки пользователя
         ]);
 
-
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entityAlias);
 
         return view('products.processes.common.index.index', [
             'items' => $services,
             'pageInfo' => $pageInfo,
-            'class' => $this->class,
-            'entity' => $this->entity_alias,
+            'class' => Service::class,
+            'entity' => $this->entityAlias,
             'category_entity' => 'services_categories',
             'filter' => $filter,
         ]);
     }
 
-    public function create(Request $request)
+    /**
+     * Отображение архивных записей
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function archives(Request $request)
     {
+
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize('index', Service::class);
+
+        // Включение контроля активного фильтра
+        $filter_url = autoFilter($request, $this->entityAlias);
+
+        if (($filter_url != null) && ($request->filter != 'active')) {
+            Cookie::queue(Cookie::forget('filter_' . $this->entityAlias));
+            return Redirect($filter_url);
+        }
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right('services_categories', false, 'index');
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('index'));
+
+        // -----------------------------------------------------------------------------------------------------------------------------
+        // ГЛАВНЫЙ ЗАПРОС
+        // -----------------------------------------------------------------------------------------------------------------------------
+
+        $services = Service::with([
+            'author',
+            'company',
+            'process' => function ($q) {
+                $q->with([
+                    'group',
+                    'photo'
+                ]);
+            },
+            'category'
+        ])
+            ->moderatorLimit($answer)
+            ->companiesLimit($answer)
+            ->authors($answer)
+            ->systemItem($answer)
+            ->booklistFilter($request)
+//            ->filter($request, 'author_id')
+//
+//            ->whereHas('article', function($q) use ($request){
+//                $q->filter($request, 'articles_group_id');
+//            })
+//
+//            ->filter($request, 'category_id')
+            // ->filter($request, 'goods_product_id', 'article')
+            ->where('archive', true)
+//        ->select($columns)
+            ->orderBy('moderation', 'desc')
+            ->oldest('id')
+            ->paginate(30);
+//         dd($goods);
+
+        // -----------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
+
+        $filter = setFilter($this->entityAlias, $request, [
+            'author',               // Автор записи
+//            'goods_category',       // Категория товара
+//            'articles_group',    // Группа артикула
+            'booklist'              // Списки пользователя
+        ]);
+
+        // Окончание фильтра -----------------------------------------------------------------------------------------
+
+        // Инфо о странице
+        $pageInfo = pageInfo($this->entityAlias);
+
+        return view('products.processes.common.index.index', [
+            'items' => $services,
+            'pageInfo' => $pageInfo,
+            'class' => Service::class,
+            'entity' => $this->entityAlias,
+            'category_entity' => 'services_categories',
+            'filter' => $filter,
+        ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function create()
+    {
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), Service::class);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entityAlias, $this->entityDependence, 'index');
 
         // Главный запрос
-        $services_categories = ServicesCategory::withCount('manufacturers')
-        ->with('manufacturers')
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer)
-        ->template($answer)
-        ->orderBy('sort', 'asc')
-        ->get();
+        $servicesCategories = ServicesCategory::withCount('manufacturers')
+            ->with('manufacturers')
+            ->moderatorLimit($answer)
+            ->companiesLimit($answer)
+            ->authors($answer)
+            ->systemItem($answer)
+            ->template($answer)
+            ->orderBy('sort', 'asc')
+            ->get();
 
-        if ($services_categories->count() == 0){
+        if ($servicesCategories->count() == 0) {
 
             // Описание ошибки
             $ajax_error = [];
@@ -158,9 +240,9 @@ class ServiceController extends Controller
         $answer = operator_right('manufacturers', false, 'index');
 
         $manufacturers_count = Manufacturer::moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->systemItem($answer)
-        ->count();
+            ->companiesLimit($answer)
+            ->systemItem($answer)
+            ->count();
 
         // Если нет производителей
         if ($manufacturers_count == 0) {
@@ -176,26 +258,33 @@ class ServiceController extends Controller
         }
 
         return view('products.processes.common.create.create', [
-            'item' => new $this->class,
+            'item' => Service::make(),
             'title' => 'Добавление услуги',
-            'entity' => $this->entity_alias,
+            'entity' => $this->entityAlias,
             'category_entity' => 'services_categories',
             'units_category_default' => 6,
             'unit_default' => 32,
         ]);
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param ServiceStoreRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function store(ServiceStoreRequest $request)
     {
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), Service::class);
 
-        Log::channel('operations')
-        ->info('========================================== НАЧИНАЕМ ЗАПИСЬ УСЛУГИ ==============================================');
+        logs('operations')
+            ->info('========================================== НАЧИНАЕМ ЗАПИСЬ УСЛУГИ ==============================================');
 
-        $services_category = ServicesCategory::find($request->category_id);
-        // dd($services_category->load('groups'));
-        $process = $this->storeProcess($request, $services_category);
+        $servicesCategory = ServicesCategory::find($request->category_id);
+        // dd($servicesCategory->load('groups'));
+        $process = $this->storeProcess($request, $servicesCategory);
 
         if ($process) {
 
@@ -205,8 +294,8 @@ class ServiceController extends Controller
 
             if ($service) {
 
-                $services_category = $services_category->load('workflows:id');
-                $workflows = $services_category->workflows->pluck('id')->toArray();
+//                $servicesCategory = $servicesCategory->load('workflows:id');
+                $workflows = $servicesCategory->workflows->pluck('id')->toArray();
                 $process->workflows()->sync($workflows);
 
                 // Пишем куки состояния
@@ -214,12 +303,12 @@ class ServiceController extends Controller
                 //     'goods_category' => $goods_category_id,
                 // ];
                 // Cookie::queue('conditions_goods_category', $goods_category_id, 1440);
-                Log::channel('operations')
-                ->info('Записали услугу с id: ' . $service->id);
-                Log::channel('operations')
-                ->info('Автор: ' . $service->author->name . ' id: ' . $service->author_id .  ', компания: ' . is_null($service->company) ? 'шаблон' : $service->company->name . ', id: ' . $service->company_id);
-                Log::channel('operations')
-                ->info('========================================== КОНЕЦ ЗАПИСИ УСЛУГИ ==============================================
+                logs('operations')
+                    ->info('Записали услугу с id: ' . $service->id);
+                logs('operations')
+                    ->info('Автор: ' . $service->author->name . ' id: ' . $service->author_id . ', компания: ' . is_null($service->company) ? 'шаблон' : $service->company->name . ', id: ' . $service->company_id);
+                logs('operations')
+                    ->info('========================================== КОНЕЦ ЗАПИСИ УСЛУГИ ==============================================
 
                     ');
                 // dd($request->quickly);
@@ -229,28 +318,32 @@ class ServiceController extends Controller
                     return redirect()->route('services.edit', $service->id);
                 }
             } else {
-                abort(403, 'Ошибка записи услуги');
+                abort(403, __('errors.store'));
             }
         } else {
             abort(403, 'Ошибка записи информации услуги');
         }
     }
 
-    public function show($id)
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function edit($id)
     {
-        //
-    }
-
-    public function edit(Request $request, $id)
-    {
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // Главный запрос
         $service = Service::moderatorLimit($answer)
-        ->find($id);
-        // dd($service);
+            ->find($id);
+        //        dd($service);
+        if (empty($service)) {
+            abort(403, __('errors.not_found'));
+        }
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $service);
@@ -258,15 +351,30 @@ class ServiceController extends Controller
         $service->load([
             'process' => function ($q) {
                 $q->with([
-                    'group',
                     'unit',
-                    'unit_length',
-                    'workflows.process.group.unit',
-                    'workflows.category'
+                    'workflows' => function ($q) {
+                        $q->with([
+                            'category',
+                            'process.unit'
+                        ]);
+                    },
+                    'services' => function ($q) {
+                        $q->with([
+                            'category',
+                            'process.unit'
+                        ]);
+                    }
                 ]);
             },
             'metrics',
-            'prices'
+            'prices' => function ($q) {
+                $q->with([
+                    'catalog',
+                    'catalogs_item.parent.parent',
+                    'filial',
+                    'currency'
+                ]);
+            },
         ]);
 //        dd($service);
 
@@ -274,10 +382,10 @@ class ServiceController extends Controller
         // dd($process);
 
         // Получаем настройки по умолчанию
-        $settings = $this->getPhotoSettings($this->entity_alias);
+        $settings = $this->getPhotoSettings($this->entityAlias);
 
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entityAlias);
         // dd($pageInfo);
 
         return view('products.processes.common.edit.edit', [
@@ -286,22 +394,33 @@ class ServiceController extends Controller
             'process' => $process,
             'pageInfo' => $pageInfo,
             'settings' => $settings,
-            'entity' => $this->entity_alias,
+            'entity' => $this->entityAlias,
             'category_entity' => 'services_categories',
             'categories_select_name' => 'services_category_id',
             'previous_url' => url()->previous()
         ]);
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param ServiceUpdateRequest $request
+     * @param $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function update(ServiceUpdateRequest $request, $id)
     {
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $service = Service::moderatorLimit($answer)
-        ->find($id);
-        // dd($service);
+            ->find($id);
+        //        dd($service);
+        if (empty($service)) {
+            abort(403, __('errors.not_found'));
+        }
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $service);
@@ -316,12 +435,8 @@ class ServiceController extends Controller
             // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
             $this->changeCategory($request, $service);
 
-            $service->serial = $request->serial;
-            $service->display = $request->display;
-            $service->system = $request->system;
-            $service->save();
-
-
+            $data = $request->input();
+            $service->update($data);
 
             // Метрики
             if ($request->has('metrics')) {
@@ -346,47 +461,54 @@ class ServiceController extends Controller
                 return Redirect($backlink);
             }
 
-            return redirect()->route('services.index');
+            if ($service->archive) {
+                return redirect()->route('services.archives');
+            } else {
+                return redirect()->route('services.index');
+            }
         } else {
             return back()
-            ->withErrors($result)
-            ->withInput();
+                ->withErrors($result)
+                ->withInput();
         }
     }
 
-    public function destroy($id)
-    {
-        //
-    }
-
+    /**
+     * Архивация указанного ресурса.
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function archive(Request $request, $id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, 'delete');
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('destroy'));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $service = Service::moderatorLimit($answer)
-        ->find($id);
+            ->find($id);
+        //        dd($service);
+        if (empty($service)) {
+            abort(403, __('errors.not_found'));
+        }
 
         // Подключение политики
         $this->authorize(getmethod('destroy'), $service);
 
+        $service->archive = true;
+
+        // Скрываем бога
+        $service->editor_id = hideGod($request->user());
+        $service->save();
+
         if ($service) {
-
-            $service->archive = true;
-
-            // Скрываем бога
-            $service->editor_id = hideGod($request->user());
-            $service->save();
-
-            if ($service) {
-                return redirect()->route('services.index');
-            } else {
-                abort(403, 'Ошибка при архивации');
-            }
+            return redirect()->route('services.index');
         } else {
-            abort(403, 'Не найдено');
+            abort(403, __('errors.archive'));
         }
+
     }
 
     public function replicate(Request $request, $id)
@@ -416,7 +538,7 @@ class ServiceController extends Controller
             $res = $new_process->positions()->attach($process->positions->pluck('id'));
         }
 
-        if($process->kit) {
+        if ($process->kit) {
             $process->load('services');
             if ($process->services->isNotEmpty()) {
                 $services_insert = [];
@@ -441,7 +563,6 @@ class ServiceController extends Controller
                 $res = $new_process->workflows()->attach($workflows_insert);
             }
         }
-
 
         return redirect()->route('services.index');
     }

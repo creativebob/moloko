@@ -41,6 +41,9 @@ Vue.component('lead-errors-component', require('./components/leads/ErrorsCompone
 Vue.component('estimate-component', require('./components/leads/estimates/EstimateComponent'));
 Vue.component('lead-tabs-component', require('./components/leads/tabs/TabsComponent'));
 Vue.component('payments-component', require('./components/leads/payments/PaymentsComponent'));
+Vue.component('lead-description-component', require('./components/leads/options/DescriptionComponent'));
+Vue.component('lead-labels-component', require('./components/leads/options/LabelsComponent'));
+
 Vue.component('lead-history-component', require('./components/leads/history/HistoriesComponent'));
 
 Vue.component('checkboxer-component', require('./components/common/CheckboxerComponent'));
@@ -56,12 +59,16 @@ Vue.component('articles-categories-with-groups-component', require('./components
 Vue.component('manufacturers-component', require('./components/ManufacturersComponent.vue'));
 
 Vue.component('goods-store-component', require('./components/products/articles/common/GoodsStateComponent'));
-Vue.component('compositions-component', require('./components/products/articles/compositions/CompositionsComponent'));
+Vue.component('cmv-compositions-component', require('./components/products/articles/compositions/CompositionsComponent'));
 Vue.component('presets-component', require('./components/products/articles/presets/PresetsComponent.vue'));
 
 // Услуги
 Vue.component('processes-categories-with-groups-component', require('./components/ProcessesCategoriesWithGroupsComponent.vue'));
 
+Vue.component('services-store-component', require('./components/products/processes/common/ServicesStateComponent'));
+Vue.component('process-compositions-component', require('./components/products/processes/compositions/CompositionsComponent'));
+
+Vue.component('processes-presets-component', require('./components/products/processes/presets/PresetsComponent.vue'));
 
 // Лиды
 // Vue.component('lead-init-component', require('./components/leads/InitComponent'));
@@ -100,6 +107,7 @@ Vue.component('search-articles-component', require('./components/search/SearchAr
 Vue.component('search-processes-component', require('./components/search/SearchProcessesComponent'));
 Vue.component('search-prices-goods-component', require('./components/search/SearchPricesGoodsComponent'));
 Vue.component('search-articles-groups-component', require('./components/search/SearchArticlesGroupsComponent'));
+Vue.component('search-processes-groups-component', require('./components/search/SearchProcessesGroupsComponent'));
 
 Vue.component('search-estimates-component', require('./components/search/SearchEstimatesComponent'));
 Vue.component('search-client-component', require('./components/search/SearchClientComponent'));
@@ -125,6 +133,8 @@ Vue.component('clients-indicators-component', require('./components/widgets/Clie
 Vue.component('prices-goods-component', require('./components/products/articles/prices/PricesGoodsComponent'));
 Vue.component('prices-goods-discount-component', require('./components/prices_goods/DiscountComponent'));
 
+Vue.component('prices-service-component', require('./components/products/processes/prices/PricesServiceComponent'));
+
 Vue.component('filial-cities-component', require('./components/filials/CitiesComponent'));
 
 // Роли пользователя
@@ -133,6 +143,8 @@ Vue.component('employee-roles-component', require('./components/employees/roles/
 // Агенты
 Vue.component('agency-schemes-component', require('./components/agency_shcemes/AgencySchemesComponent'));
 Vue.component('agents-schemes-component', require('./components/agents/shcemes/SchemesComponent'));
+
+Vue.component('filials-with-outlets-component', require('./components/common/selects/FilialWithOutlets'));
 
 
 /**

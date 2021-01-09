@@ -50,15 +50,34 @@ export default {
     },
     mounted() {
         axios
-            .post('/admin/get_user_filials_with_outlets')
+            .post('/admin/leads/get_user_filials_with_outlets')
             .then(response => {
-                if (response.data.filials.length) {
+                if (response.data.filials && response.data.outlets) {
                     this.filials = response.data.filials;
+                    this.outlets = response.data.outlets;
+
+                    this.$store.commit('SET_USER_FILIALS', this.filials);
+                    this.$store.commit('SET_USER_OUTLETS', this.outlets);
+                } else {
+                    axios
+                        .post('/admin/departments/get_user_filials_with_outlets', {
+                            entity: 'leads'
+                        })
+                        .then(response => {
+                            if (response.data.filials && response.data.outlets) {
+                                this.filials = response.data.filials;
+                                this.outlets = response.data.outlets;
+                            } else {
+                                this.filials.push(this.$store.state.lead.lead.filial);
+                                this.outlets.push(this.$store.state.lead.lead.outlet);
+                            }
+                        })
+                        .catch(error => {
+                            alert('Ошибка загрузки, перезагрузите страницу!')
+                            console.log(error)
+                        });
                 }
 
-                if (response.data.outlets.length) {
-                    this.outlets = response.data.outlets;
-                }
             })
             .catch(error => {
                 alert('Ошибка загрузки, перезагрузите страницу!')

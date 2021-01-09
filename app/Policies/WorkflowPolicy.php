@@ -50,13 +50,6 @@ class WorkflowPolicy
 
     public function delete(User $user, Model $model)
     {
-
-
-
-        if ($model->compositions->isNotEmpty()) {
-            return false;
-        }
-
         $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
         return $result;
     }

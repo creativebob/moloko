@@ -50,12 +50,12 @@ class ArticlesGroupPolicy
 
     public function delete(User $user, Model $model)
     {
-
         if ($model->articles->count() > 0) {
             return false;
         }
 
-
+        $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
+        return $result;
     }
 
     public function moderator(User $user, Model $model)

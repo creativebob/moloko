@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('inhead')
-<meta name="description" content="{{ $pageInfo->page_description }}" />
+<meta name="description" content="{{ $pageInfo->description }}" />
 
 @endsection
 
@@ -20,7 +20,7 @@
 
 @section('title-content')
 {{-- Таблица --}}
-@include('products.processes.common.index.includes.title_processes', ['pageInfo' => $pageInfo, 'class' => $class])
+@include('products.processes.common.index.includes.title', ['pageInfo' => $pageInfo, 'class' => $class])
 @endsection
 
 @section('content')

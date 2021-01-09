@@ -38,6 +38,287 @@ class UpdateController extends Controller
     }
 
     /**
+     * Добавление в развернутую систему сущности меток заказа с правами
+     *
+     * @return string
+     */
+    public function addLabelsEntity()
+    {
+        Page::insert([
+            [
+                'name' => 'Метки заказа',
+                'site_id' => 1,
+                'title' => 'Метки заказа',
+                'description' => 'Метки заказа',
+                'alias' => 'labels',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+        ]);
+        echo "Добавлена страница<br><br>";
+
+        $pages = Page::get();
+        $menus = Menu::get();
+
+        Menu::insert([
+            [
+                'name' => 'Метки заказа',
+                'icon' => null,
+                'alias' => 'admin/labels',
+                'tag' => 'labels',
+                'parent_id' => $menus->firstWhere('tag', 'guides')->id,
+                'page_id' => $pages->firstWhere('alias', 'labels')->id,
+                'navigation_id' => 1,
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+                'sort' => null,
+            ],
+        ]);
+        echo "Добавлен пункт меню<br><br>";
+
+        $entities = Entity::get([
+            'id',
+            'alias',
+        ]);
+        Entity::insert([
+            [
+                'name' => 'Метки заказа',
+                'alias' => 'labels',
+                'model' => 'App\Label',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'metric' => 0,
+                'view_path' => 'system.pages.labels',
+                'page_id' => $pages->firstWhere('alias', 'labels')->id,
+            ],
+        ]);
+        echo 'Добавлена сущность<br><br>';
+
+        // Наваливание прав
+        $entities = Entity::where('alias', 'labels')
+            ->get();
+
+        foreach ($entities as $entity) {
+            // Генерируем права
+            $actions = Action::get();
+            $mass = [];
+
+            foreach ($actions as $action) {
+                $mass[] = ['action_id' => $action->id, 'entity_id' => $entity->id, 'alias_action_entity' => $action->method . '-' . $entity->alias];
+            };
+            DB::table('action_entity')->insert($mass);
+
+            $actionentities = ActionEntity::where('entity_id', $entity->id)->get();
+            $mass = [];
+
+            foreach ($actionentities as $actionentity) {
+
+                $mass[] = ['name' => "Разрешение на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'allow', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-allow'];
+
+                $mass[] = ['name' => "Запрет на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'deny', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-deny'];
+            };
+
+            DB::table('rights')->insert($mass);
+
+            $actionentities = $actionentities->pluck('id')->toArray();
+
+            // Получаем все существующие разрешения (allow)
+            $rights = Right::whereIn('object_entity', $actionentities)->where('directive', 'allow')->get();
+
+            $mass = [];
+            // Генерируем права на полный доступ
+            foreach ($rights as $right) {
+                $mass[] = [
+                    'right_id' => $right->id,
+                    'role_id' => 1,
+                    'system' => 1
+                ];
+            };
+
+            DB::table('right_role')->insert($mass);
+        }
+
+        echo "Добавлены права на сущность<br><br>";
+
+        return "<strong>Добавление сущности меток заказа завершено</strong>";
+    }
+
+    /**
+     * Добавление в развернутую систему сущности рабочих мест с правами
+     *
+     * @return string
+     */
+    public function addWorkplacesEntity()
+    {
+        Page::insert([
+            [
+                'name' => 'Рабочие места',
+                'site_id' => 1,
+                'title' => 'Рабочие места',
+                'description' => 'Рабочие места',
+                'alias' => 'workplaces',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+        ]);
+        echo "Добавлена страница<br><br>";
+
+        $pages = Page::get();
+        $menus = Menu::get();
+
+        Menu::insert([
+            [
+                'name' => 'Рабочие места',
+                'icon' => null,
+                'alias' => 'admin/workplaces',
+                'tag' => 'workplaces',
+                'parent_id' => $menus->firstWhere('tag', 'sales')->id,
+                'page_id' => $pages->firstWhere('alias', 'workplaces')->id,
+                'navigation_id' => 1,
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+                'sort' => 7,
+            ],
+        ]);
+        echo "Добавлен пункт меню<br><br>";
+
+        $entities = Entity::get([
+            'id',
+            'alias',
+        ]);
+        Entity::insert([
+            [
+                'name' => 'Рабочие места',
+                'alias' => 'workplaces',
+                'model' => 'App\Workplace',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'metric' => 0,
+                'view_path' => 'system.pages.workplaces',
+                'page_id' => $pages->firstWhere('alias', 'workplaces')->id,
+            ],
+
+        ]);
+        echo 'Добавлена сущность<br><br>';
+
+        // Наваливание прав
+        $entities = Entity::where('alias', 'workplaces')
+            ->get();
+
+        foreach ($entities as $entity) {
+            // Генерируем права
+            $actions = Action::get();
+            $mass = [];
+
+            foreach ($actions as $action) {
+                $mass[] = ['action_id' => $action->id, 'entity_id' => $entity->id, 'alias_action_entity' => $action->method . '-' . $entity->alias];
+            };
+            DB::table('action_entity')->insert($mass);
+
+            $actionentities = ActionEntity::where('entity_id', $entity->id)->get();
+            $mass = [];
+
+            foreach ($actionentities as $actionentity) {
+
+                $mass[] = ['name' => "Разрешение на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'allow', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-allow'];
+
+                $mass[] = ['name' => "Запрет на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'deny', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-deny'];
+            };
+
+            DB::table('rights')->insert($mass);
+
+            $actionentities = $actionentities->pluck('id')->toArray();
+
+            // Получаем все существующие разрешения (allow)
+            $rights = Right::whereIn('object_entity', $actionentities)->where('directive', 'allow')->get();
+
+            $mass = [];
+            // Генерируем права на полный доступ
+            foreach ($rights as $right) {
+                $mass[] = [
+                    'right_id' => $right->id,
+                    'role_id' => 1,
+                    'system' => 1
+                ];
+            };
+
+            DB::table('right_role')->insert($mass);
+        }
+
+        echo "Добавлены права на сущность<br><br>";
+
+        return "<strong>Добавление сущности рабочих мест завершено</strong>";
+    }
+
+    /**
+     * Обновление триггеров
+     *
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
+    public function triggers()
+    {
+        $entities = Entity::get();
+
+        $items = [
+            [
+                'name' => 'Лид с сайта',
+                'alias' => 'create-lead-from-project',
+                'description' => null,
+                'entity_id' => $entities->firstWhere('alias', 'leads')->id,
+            ],
+            [
+                'name' => 'Рекламация',
+                'alias' => 'create-claim',
+                'description' => null,
+                'entity_id' => $entities->firstWhere('alias', 'claims')->id,
+            ],
+            [
+                'name' => 'Уведомление',
+                'alias' => 'notification',
+                'description' => null,
+                'entity_id' => null,
+            ],
+            [
+                'name' => 'Предложение',
+                'alias' => 'offer',
+                'description' => null,
+                'entity_id' => null,
+            ],
+            [
+                'name' => 'Контроль вкл / выкл скидок',
+                'alias' => 'discounts-recalculate',
+                'description' => null,
+                'entity_id' => $entities->firstWhere('alias', 'discounts')->id,
+            ],
+        ];
+
+        $count = 0;
+        foreach ($items as $item) {
+            $res = Trigger::where($item)
+                ->exists();
+//            dd($res);
+
+            if (!$res) {
+                $charge = Trigger::insert($item);
+                $count++;
+            }
+        }
+        return __("Добавлено триггеров: {$count}");
+    }
+
+    /**
      * Обновление обязанностей
      *
      * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null

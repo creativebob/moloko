@@ -169,11 +169,10 @@ class CartController extends BaseController
             $firstName = isset($request->first_name) ? $request->first_name : 'Клиент не указал имя';
             $secondName = $request->second_name;
 
-            $name = null;
+            $name = $firstName;
             if (isset($secondName)) {
                 $name = $firstName . ' ' . $secondName;
             }
-
 
             $user = auth()->user();
 

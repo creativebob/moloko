@@ -6,6 +6,7 @@ use App\Discount;
 use App\Observers\System\Traits\Commonable;
 use App\Observers\System\Traits\Discountable;
 use App\PricesGoods;
+use App\PricesService;
 
 class DiscountObserver
 {
@@ -40,7 +41,7 @@ class DiscountObserver
         $this->destroy($discount);
     }
 
-    public function recalculatingPrices(Discount $discount)
+    public function recalculatingPrices()
     {
         $pricesGoods = PricesGoods::where([
             'company_id' => auth()->user()->company_id,
@@ -50,6 +51,19 @@ class DiscountObserver
 
         foreach ($pricesGoods as $priceGoods) {
             $priceGoods->update([
+                'is_need_recalculate' => true
+//                'estimate_discount_id' => $discount->id
+            ]);
+        }
+
+        $pricesServices = PricesService::where([
+            'company_id' => auth()->user()->company_id,
+            'archive' => false
+        ])
+            ->get();
+
+        foreach ($pricesServices as $priceService) {
+            $priceService->update([
                 'is_need_recalculate' => true
 //                'estimate_discount_id' => $discount->id
             ]);
@@ -86,6 +100,16 @@ class DiscountObserver
                     }
                     break;
 
+                case ('prices_services'):
+                    $discount->load([
+                        'prices_services_actual'
+                    ]);
+                    foreach ($discount->prices_services_actual as $priceService) {
+                        $priceService = $this->setDiscountsPriceService($priceService);
+                        $priceService->save();
+                    }
+                    break;
+
                 case ('catalogs_goods_items'):
                     $discount->load([
                         'catalogs_goods_items_prices_goods_actual'
@@ -93,6 +117,16 @@ class DiscountObserver
                     foreach ($discount->catalogs_goods_items_prices_goods_actual as $priceGoods) {
                         $priceGoods = $this->setDiscountsPriceGoods($priceGoods);
                         $priceGoods->save();
+                    }
+                    break;
+
+                case ('catalogs_services_items'):
+                    $discount->load([
+                        'catalogs_services_items_prices_services_actual'
+                    ]);
+                    foreach ($discount->catalogs_services_items_prices_goods_actual as $priceService) {
+                        $priceService = $this->setDiscountsPriceService($priceService);
+                        $priceService->save();
                     }
                     break;
 

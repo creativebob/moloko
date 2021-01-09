@@ -6,6 +6,7 @@ use App\AgencyScheme;
 use App\ArticlesGroup;
 use App\Attachment;
 use App\AttachmentsCategory;
+use App\Label;
 use App\Mailing;
 use App\MailingList;
 use App\Models\System\Documents\Consignment;
@@ -53,6 +54,7 @@ use App\Observers\System\Documents\ConsignmentObserver;
 use App\Observers\System\Documents\ConsignmentsItemObserver;
 use App\Observers\System\Documents\ProductionObserver;
 use App\Observers\System\Documents\ProductionsItemObserver;
+use App\Observers\System\LabelObserver;
 use App\Observers\System\MailingListObserver;
 use App\Observers\System\MailingObserver;
 use App\Observers\System\OutletObserver;
@@ -120,6 +122,7 @@ use App\Observers\System\TemplatesCategoryObserver;
 use App\Observers\System\VectorObserver;
 use App\Observers\System\VendorObserver;
 use App\Observers\System\WorkflowsCategoryObserver;
+use App\Observers\System\WorkplaceObserver;
 use App\Off;
 use App\Outcome;
 use App\OutcomesCategory;
@@ -152,6 +155,7 @@ use App\TemplatesCategory;
 use App\Vector;
 use App\Vendor;
 use App\WorkflowsCategory;
+use App\Workplace;
 use Illuminate\Support\ServiceProvider;
 use App\RawsCategory;
 use App\Observers\System\RawsCategoryObserver;
@@ -213,7 +217,9 @@ class ObserverServiceProvider extends ServiceProvider
         Representative::observe(RepresentativeObserver::class);
 
         Outlet::observe(OutletObserver::class);
+        Workplace::observe(WorkplaceObserver::class);
         Lead::observe(LeadObserver::class);
+        Label::observe(LabelObserver::class);
 
         // HR
         Department::observe(DepartmentObserver::class);

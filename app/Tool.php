@@ -48,6 +48,11 @@ class Tool extends Model
         'category_id',
         'article_id',
 
+        'serial',
+
+        'tools_type_id',
+
+
         'display',
         'system',
         'moderation'
@@ -76,5 +81,11 @@ class Tool extends Model
     public function author()
     {
         return $this->belongsTo(User::class);
+    }
+
+    // Автор
+    public function type()
+    {
+        return $this->belongsTo(ToolsType::class, 'tools_type_id');
     }
 }

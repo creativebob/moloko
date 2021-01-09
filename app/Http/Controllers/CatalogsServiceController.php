@@ -14,38 +14,35 @@ use Illuminate\Support\Str;
 
 class CatalogsServiceController extends Controller
 {
+    protected $entityAlias;
+    protected $entityDependence;
 
     /**
      * CatalogsServiceController constructor.
-     * @param CatalogsService $catalogs_service
      */
-    public function __construct(CatalogsService $catalogs_service)
+    public function __construct()
     {
         $this->middleware('auth');
-        $this->catalogs_service = $catalogs_service;
-        $this->entity_alias = with(new CatalogsService)->getTable();;
-        $this->entity_dependence = false;
-        $this->class = CatalogsService::class;
-        $this->model = 'App\CatalogsService';
+        $this->entityAlias = 'catalogs_services';
+        $this->entityDependence = false;
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function index(Request $request)
+    public function index()
     {
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), CatalogsService::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
-        $catalogs_services = CatalogsService::with([
-            'price_services.service.process',
+        $catalogsServices = CatalogsService::with([
+            'prices_services.service.process',
             'author',
         ])
         ->moderatorLimit($answer)
@@ -54,32 +51,32 @@ class CatalogsServiceController extends Controller
         ->systemItem($answer)
         ->template($answer)
         ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
+        ->oldest('sort')
         ->paginate(30);
-        // dd($catalogs_services);
+        // dd($catalogsServices);
 
-        return view('catalogs_services.index',[
-            'catalogs_services' => $catalogs_services,
-            'pageInfo' => pageInfo($this->entity_alias),
-        ]);
+        // Инфо о странице
+        $pageInfo = pageInfo($this->entityAlias);
+
+        return view('system.pages.catalogs.services.catalogs_services.index', compact('catalogsServices', 'pageInfo'));
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function create(Request $request)
+    public function create()
     {
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), CatalogsService::class);
 
-        return view('catalogs_services.create', [
-            'catalogs_service' => CatalogsService::make(),
-            'pageInfo' => pageInfo($this->entity_alias),
-        ]);
+        $catalogServices = CatalogsService::make();
+
+        $pageInfo = pageInfo($this->entityAlias);
+
+        return view('system.pages.catalogs.services.catalogs_services.create', compact('catalogServices', 'pageInfo'));
     }
 
     /**
@@ -92,64 +89,55 @@ class CatalogsServiceController extends Controller
     public function store(CatalogsServiceRequest $request)
     {
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), CatalogsService::class);
 
         $data = $request->input();
-        $catalog_service = CatalogsService::create($data);
+        $catalogServices = CatalogsService::create($data);
 
-        if ($catalog_service) {
+        if ($catalogServices) {
 
             $departments = session('access.all_rights.index-departments-allow');
             if ($departments) {
-                $catalog_service->filials()->sync($request->filials);
+                $catalogServices->filials()->sync($request->filials);
             }
 
             return redirect()->route('catalogs_services.index');
 
         } else {
-            abort(403, 'Ошибка при записи каталога!');
+            abort(403, __('errors.store'));
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param $id
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param Request $request
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function edit(Request $request, $id)
+    public function edit($id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
-        $catalogs_service = CatalogsService::moderatorLimit($answer)
+        $catalogServices = CatalogsService::moderatorLimit($answer)
         ->find($id);
+//        dd($catalogServices);
+        if (empty($catalogServices)) {
+            abort(403, __('errors.not_found'));
+        }
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $catalogs_service);
+        $this->authorize(getmethod(__FUNCTION__), $catalogServices);
 
-        $catalogs_service->load([
+        $catalogServices->load([
             'filials',
             'agency_schemes'
         ]);
 
-        // dd($catalogs_service);
-        return view('catalogs_services.edit', [
-            'catalogs_service' => $catalogs_service,
-            'pageInfo' => pageInfo($this->entity_alias),
-        ]);
+        $pageInfo = pageInfo($this->entityAlias);
+
+        return view('system.pages.catalogs.services.catalogs_services.edit', compact('catalogServices', 'pageInfo'));
     }
 
     /**
@@ -163,60 +151,63 @@ class CatalogsServiceController extends Controller
     public function update(CatalogsServiceRequest $request, $id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
-        $catalogs_service = CatalogsService::moderatorLimit($answer)
+        $catalogServices = CatalogsService::moderatorLimit($answer)
         ->find($id);
+        //        dd($catalogServices);
+        if (empty($catalogServices)) {
+            abort(403, __('errors.not_found'));
+        }
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $catalogs_service);
+        $this->authorize(getmethod(__FUNCTION__), $catalogServices);
 
         $data = $request->input();
-        $result = $catalogs_service->update($data);
+        $result = $catalogServices->update($data);
 
         if ($result) {
-
             $departments = session('access.all_rights.index-departments-allow');
             if ($departments) {
-                $catalogs_service->filials()->sync($request->filials);
+                $catalogServices->filials()->sync($request->filials);
             }
 
             return redirect()->route('catalogs_services.index');
-
         } else {
-            abort(403, 'Ошибка при обновлении каталога!');
+            abort(403, __('errors.update'));
         }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param Request $request
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $catalogs_service = CatalogsService::with([
+        $catalogServices = CatalogsService::with([
             'items'
         ])
         ->moderatorLimit($answer)
         ->find($id);
+        //        dd($catalogServices);
+        if (empty($catalogServices)) {
+            abort(403, __('errors.not_found'));
+        }
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $catalogs_service);
+        $this->authorize(getmethod(__FUNCTION__), $catalogServices);
 
-        $catalogs_service->delete();
+        $catalogServices->delete();
 
-        if ($catalogs_service) {
-
+        if ($catalogServices) {
             return redirect()->route('catalogs_services.index');
-
         } else {
             abort(403, 'Ошибка при удалении каталога!');
         }
@@ -247,5 +238,122 @@ class CatalogsServiceController extends Controller
         ->count();
 
         return response()->json($result_count);
+    }
+
+    /**
+     * Получение каталогов торговой точки
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getCatalogsForOutlet()
+    {
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+//        $answer = operator_right('catalogs_goods', true, getmethod('index'));
+
+        $catalogsServices = CatalogsService::with([
+            'items:id,catalogs_service_id,name,photo_id,parent_id',
+            'prices' => function ($q) {
+                $q->with([
+                    'service' => function($q) {
+                        $q->with([
+                            'process' => function ($q) {
+                                $q->with([
+                                    'photo',
+                                    'manufacturer'
+                                ])
+                                    ->where('draft', false)
+                                    ->select([
+                                        'id',
+                                        'name',
+                                        'photo_id',
+                                        'manufacturer_id',
+                                        'draft',
+                                        'cost_default'
+                                    ]);
+                            },
+                        ])
+                            ->where('archive', false)
+                            ->select([
+                                'id',
+                                'process_id',
+                                'serial'
+                            ]);
+                    },
+                    'currency',
+                    'discounts_actual',
+                    'catalogs_item.discounts_actual'
+                ])
+                    ->whereHas('service', function ($q) {
+                        $q
+//                        ->when($settings->firstWhere('alias', 'sale-for-order'), function ($q) {
+//                        $q->where('is_ordered', true);
+//                    })
+//                    ->when($settings->firstWhere('alias', 'sale-for-production'), function ($q) {
+//                        $q->where('is_produced', true);
+//                    })
+//                    ->when($settings->firstWhere('alias', 'sale-from-stock'), function ($q) {
+//                        $q->whereHas('stocks', function ($q) {
+//                            $q->where('filial_id', auth()->user()->StafferFilialId)
+//                            ->where('free', '>', 0);
+//                        });
+//                    })
+                            ->where('archive', false)
+                            ->whereHas('process', function ($q) {
+                                $q->where('draft', false);
+                            });
+                    })
+                    ->where([
+                        'archive' => false,
+                        'filial_id' => request()->filial_id
+                    ])
+//                ->select([
+//                    'prices_goods.id',
+//                    'archive',
+//                    'prices_goods.catalogs_goods_id',
+//                    'catalogs_goods_item_id',
+//                    'price',
+//                    'goods_id',
+//                    'filial_id'
+//                ])
+                ;
+            },
+        ])
+//            ->moderatorLimit($answer)
+//            ->companiesLimit($answer)
+//            ->authors($answer)
+//            ->filials($answer)
+//        ->whereHas('filials', function ($q) {
+//            $q->where('id', auth()->user()->stafferFilialId);
+//        })
+            ->whereHas('outlets', function ($q) {
+                $q->where('id', request()->outlet_id);
+            })
+            ->get();
+//         dd($catalogsServices);
+
+        $success = false;
+        if ($catalogsServices->isNotEmpty()) {
+            $success = true;
+        }
+
+        $catalogsServicesItems = [];
+        $catalogsServicesPrices = [];
+        foreach ($catalogsServices as $catalogServices) {
+            $catalogsServicesItems = array_merge($catalogsServicesItems, buildTreeArray($catalogServices->items));
+
+            $catalogsServicesPrices = array_merge($catalogsServicesPrices, $catalogServices->prices->setAppends([
+                'totalWithDiscounts',
+            ])->toArray());
+        }
+//        dd($catalogsServicesPrices);
+
+        $catalogsServicesData = [
+            'success' => $success,
+            'catalogsServices' => $catalogsServices,
+            'catalogsServicesItems' => $catalogsServicesItems,
+            'catalogsServicesPrices' => $catalogsServicesPrices
+        ];
+
+        return response()->json($catalogsServicesData);
     }
 }

@@ -14,53 +14,47 @@ use Illuminate\Support\Facades\Log;
 
 class WorkflowController extends Controller
 {
+    protected $entityAlias;
+    protected $entityDependence;
 
     /**
      * WorkflowController constructor.
-     * @param Workflow $workflow
      */
-    public function __construct(Workflow $workflow)
+    public function __construct()
     {
         $this->middleware('auth');
-        $this->workflow = $workflow;
-        $this->class = Workflow::class;
-        $this->model = 'App\Workflow';
-        $this->entity_alias = with(new $this->class)->getTable();
-        $this->entity_dependence = false;
+        $this->entityAlias = 'workflows';
+        $this->entityDependence = false;
     }
 
     use Processable;
 
+    /**
+     * Display a listing of the resource.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function index(Request $request)
     {
-
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), Workflow::class);
 
         // Включение контроля активного фильтра
-        $filter_url = autoFilter($request, $this->entity_alias);
-        if (($filter_url != null)&&($request->filter != 'active')) {
-            Cookie::queue(Cookie::forget('filter_' . $this->entity_alias));
+        $filter_url = autoFilter($request, $this->entityAlias);
+        if (($filter_url != null) && ($request->filter != 'active')) {
+            Cookie::queue(Cookie::forget('filter_' . $this->entityAlias));
             return Redirect($filter_url);
         }
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
         // dd($answer);
 
         // -------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------------------------
-
-        $columns = [
-            'id',
-            'process_id',
-            'category_id',
-            'author_id',
-            'company_id',
-            'display',
-            'system'
-        ];
 
         $workflows = Workflow::with([
             'author',
@@ -81,27 +75,26 @@ class WorkflowController extends Controller
 //            }
             ,
         ])
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->booklistFilter($request)
-        ->filter($request, 'author_id')
-        // ->filter($request, 'workflows_category_id', 'process.product')
-        // ->filter($request, 'workflows_product_id', 'process')
-        ->where('archive', false)
+            ->moderatorLimit($answer)
+            ->companiesLimit($answer)
+            ->authors($answer)
+            ->systemItem($answer) // Фильтр по системным записям
+            ->booklistFilter($request)
+//        ->filter($request, 'author_id')
+            // ->filter($request, 'workflows_category_id', 'process.product')
+            // ->filter($request, 'workflows_product_id', 'process')
+            ->where('archive', false)
 //        ->select($columns)
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->paginate(30);
+            ->orderBy('moderation', 'desc')
+            ->oldest('sort')
+            ->paginate(30);
         // dd($workflows);
-
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter = setFilter($this->entity_alias, $request, [
+        $filter = setFilter($this->entityAlias, $request, [
             'author',               // Автор записи
             // 'workflows_category',    // Категория услуги
             // 'workflows_product',     // Группа услуги
@@ -109,39 +102,129 @@ class WorkflowController extends Controller
             'booklist'              // Списки пользователя
         ]);
 
-
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entityAlias);
 
         return view('products.processes.common.index.index', [
             'items' => $workflows,
             'pageInfo' => $pageInfo,
-            'class' => $this->class,
-            'entity' => $this->entity_alias,
+            'class' => Workflow::class,
+            'entity' => $this->entityAlias,
             'category_entity' => 'workflows_categories',
             'filter' => $filter,
         ]);
     }
 
-    public function create(Request $request)
+    /**
+     * Отображение архивных записей
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function archives(Request $request)
     {
+
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize('index', Workflow::class);
+
+        // Включение контроля активного фильтра
+        $filter_url = autoFilter($request, $this->entityAlias);
+
+        if (($filter_url != null) && ($request->filter != 'active')) {
+            Cookie::queue(Cookie::forget('filter_' . $this->entityAlias));
+            return Redirect($filter_url);
+        }
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right('workflows_categories', false, 'index');
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('index'));
+
+        // -----------------------------------------------------------------------------------------------------------------------------
+        // ГЛАВНЫЙ ЗАПРОС
+        // -----------------------------------------------------------------------------------------------------------------------------
+
+        $workflows = Workflow::with([
+            'author',
+            'company',
+            'process' => function ($q) {
+                $q->with([
+                    'group',
+                    'photo'
+                ]);
+            },
+            'category'
+        ])
+            ->moderatorLimit($answer)
+            ->companiesLimit($answer)
+            ->authors($answer)
+            ->systemItem($answer)
+            ->booklistFilter($request)
+//            ->filter($request, 'author_id')
+//
+//            ->whereHas('article', function($q) use ($request){
+//                $q->filter($request, 'articles_group_id');
+//            })
+//
+//            ->filter($request, 'category_id')
+            // ->filter($request, 'goods_product_id', 'article')
+            ->where('archive', true)
+//        ->select($columns)
+            ->orderBy('moderation', 'desc')
+            ->oldest('id')
+            ->paginate(30);
+//         dd($workflows);
+
+        // -----------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
+
+        $filter = setFilter($this->entityAlias, $request, [
+            'author',               // Автор записи
+//            'goods_category',       // Категория товара
+//            'articles_group',    // Группа артикула
+            'booklist'              // Списки пользователя
+        ]);
+
+        // Окончание фильтра -----------------------------------------------------------------------------------------
+
+        // Инфо о странице
+        $pageInfo = pageInfo($this->entityAlias);
+
+        return view('products.processes.common.index.index', [
+            'items' => $workflows,
+            'pageInfo' => $pageInfo,
+            'class' => Workflow::class,
+            'entity' => $this->entityAlias,
+            'category_entity' => 'workflows_categories',
+            'filter' => $filter,
+        ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function create()
+    {
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), Workflow::class);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entityAlias, $this->entityDependence, 'index');
 
         // Главный запрос
-        $workflows_categories = WorkflowsCategory::withCount('manufacturers')
-        ->with('manufacturers')
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer)
-        ->orderBy('sort', 'asc')
-        ->get();
+        $workflowsCategories = WorkflowsCategory::withCount('manufacturers')
+            ->with('manufacturers')
+            ->moderatorLimit($answer)
+            ->companiesLimit($answer)
+            ->authors($answer)
+            ->systemItem($answer)
+            ->orderBy('sort', 'asc')
+            ->get();
 
-        if($workflows_categories->count() == 0){
+        if ($workflowsCategories->count() == 0) {
 
             // Описание ошибки
             $ajax_error = [];
@@ -157,12 +240,12 @@ class WorkflowController extends Controller
         $answer = operator_right('manufacturers', false, 'index');
 
         $manufacturers_count = Manufacturer::moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->systemItem($answer)
-        ->count();
+            ->companiesLimit($answer)
+            ->systemItem($answer)
+            ->count();
 
         // Если нет производителей
-        if ($manufacturers_count == 0){
+        if ($manufacturers_count == 0) {
 
             // Описание ошибки
             // $ajax_error = [];
@@ -175,26 +258,33 @@ class WorkflowController extends Controller
         }
 
         return view('products.processes.common.create.create', [
-            'item' => new $this->class,
+            'item' => Workflow::make(),
             'title' => 'Добавление рабочего процесса',
-            'entity' => $this->entity_alias,
+            'entity' => $this->entityAlias,
             'category_entity' => 'workflows_categories',
             'units_category_default' => 6,
             'unit_default' => 32,
         ]);
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param WorkflowStoreRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function store(WorkflowStoreRequest $request)
     {
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), Workflow::class);
 
-        Log::channel('operations')
-        ->info('========================================== НАЧИНАЕМ ЗАПИСЬ РАБОЧЕГО ПРОЦЕССА ==============================================');
+        logs('operations')
+            ->info('========================================== НАЧИНАЕМ ЗАПИСЬ РАБОЧЕГО ПРОЦЕССА ==============================================');
 
-        $workflows_category = WorkflowsCategory::find($request->category_id);
-        // dd($workflows_category->load('groups'));
-        $process = $this->storeProcess($request, $workflows_category);
+        $workflowsCategory = WorkflowsCategory::find($request->category_id);
+        // dd($workflowsCategory->load('groups'));
+        $process = $this->storeProcess($request, $workflowsCategory);
 
         if ($process) {
 
@@ -210,12 +300,12 @@ class WorkflowController extends Controller
                 // ];
                 // Cookie::queue('conditions_goods_category', $goods_category_id, 1440);
 
-                Log::channel('operations')
-                ->info('Записали рабочий процесс');
-                Log::channel('operations')
-                ->info('Автор: ' . $workflow->author->name . ' id: ' . $workflow->author_id .  ', компания: ' . $workflow->company->name . ', id: ' .$workflow->company_id);
-                Log::channel('operations')
-                ->info('========================================== КОНЕЦ ЗАПИСИ РАБОЧЕГО ПРОЦЕССА ==============================================
+                logs('operations')
+                    ->info('Записали рабочий процесс с id: ' . $workflow->id);
+                logs('operations')
+                    ->info('Автор: ' . $workflow->author->name . ' id: ' . $workflow->author_id . ', компания: ' . $workflow->company->name . ', id: ' . $workflow->company_id);
+                logs('operations')
+                    ->info('========================================== КОНЕЦ ЗАПИСИ РАБОЧЕГО ПРОЦЕССА ==============================================
 
                     ');
 
@@ -226,27 +316,28 @@ class WorkflowController extends Controller
                     return redirect()->route('workflows.edit', $workflow->id);
                 }
             } else {
-                abort(403, 'Ошибка записи сырья');
+                abort(403, __('errors.store'));
             }
         } else {
             abort(403, 'Ошибка записи информации сырья');
         }
     }
 
-    public function show($id)
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function edit($id)
     {
-        //
-    }
-
-    public function edit(Request $request, $id)
-    {
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // Главный запрос
         $workflow = Workflow::moderatorLimit($answer)
-        ->find($id);
+            ->find($id);
         // dd($workflow);
 
         // Подключение политики
@@ -264,15 +355,20 @@ class WorkflowController extends Controller
                 ]);
             },
         ]);
+//        dd($workflow);
+        if (empty($workflow)) {
+            abort(403, __('errors.not_found'));
+        }
+
         $process = $workflow->process;
         // dd($process);
 
         // Получаем настройки по умолчанию
-        $settings = $this->getPhotoSettings($this->entity_alias);
+        $settings = $this->getPhotoSettings($this->entityAlias);
 //        dd($settings);
 
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entityAlias);
         // dd($pageInfo);
 
         return view('products.processes.common.edit.edit', [
@@ -281,35 +377,39 @@ class WorkflowController extends Controller
             'process' => $process,
             'pageInfo' => $pageInfo,
             'settings' => $settings,
-            'entity' => $this->entity_alias,
+            'entity' => $this->entityAlias,
             'category_entity' => 'workflows_categories',
             'categories_select_name' => 'workflows_category_id',
-            'workflow' => $workflow,
             'previous_url' => url()->previous()
         ]);
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param WorkflowUpdateRequest $request
+     * @param $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function update(WorkflowUpdateRequest $request, $id)
     {
-
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $workflow = Workflow::with('process')
-        ->moderatorLimit($answer)
-        ->find($id);
-        // dd($workflow);
+        $workflow = Workflow::moderatorLimit($answer)
+            ->find($id);
+//        dd($workflow);
+        if (empty($workflow)) {
+            abort(403, __('errors.not_found'));
+        }
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $workflow);
 
         $process = $workflow->process;
         // dd($process);
-
-        if ($process->draft) {
-            $workflow->serial = $request->serial;
-        }
 
         $result = $this->updateProcess($request, $workflow);
         // Если результат не массив с ошибками, значит все прошло удачно
@@ -318,28 +418,24 @@ class WorkflowController extends Controller
             // ПЕРЕНОС ГРУППЫ В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
             $this->changeCategory($request, $workflow);
 
-            $workflow->display = $request->display;
-            $workflow->system = $request->system;
-            $workflow->save();
+            $data = $request->input();
+            $workflow->update($data);
 
-            $access = session('access.all_rights.index-metrics-allow');
-            if ($access) {
-                // Метрики
-                if ($request->has('metrics')) {
-                    // dd($request);
+            // Метрики
+            if ($request->has('metrics')) {
+                // dd($request);
 
-                    $metrics_insert = [];
-                    foreach ($request->metrics as $metric_id => $value) {
-                        if (is_array($value)) {
-                            $metrics_insert[$metric_id]['value'] = implode(',', $value);
-                        } else {
+                $metrics_insert = [];
+                foreach ($request->metrics as $metric_id => $value) {
+                    if (is_array($value)) {
+                        $metrics_insert[$metric_id]['value'] = implode(',', $value);
+                    } else {
 //                        if (!is_null($value)) {
-                            $metrics_insert[$metric_id]['value'] = $value;
+                        $metrics_insert[$metric_id]['value'] = $value;
 //                        }
-                        }
                     }
-                    $workflow->metrics()->syncWithoutDetaching($metrics_insert);
                 }
+                $workflow->metrics()->syncWithoutDetaching($metrics_insert);
             }
 
             // Если ли есть
@@ -355,47 +451,45 @@ class WorkflowController extends Controller
             return redirect()->route('workflows.index');
         } else {
             return back()
-            ->withErrors($result)
-            ->withInput();
+                ->withErrors($result)
+                ->withInput();
         }
     }
 
-    public function destroy($id)
-    {
-        //
-    }
-
+    /**
+     * Архивация указанного ресурса.
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function archive(Request $request, $id)
     {
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, 'delete');
+        $answer = operator_right($this->entityAlias, $this->entityDependence, 'delete');
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $workflow = Workflow::with([
-            'compositions.service',
-        ])
-        ->moderatorLimit($answer)
-        ->find($id);
+        $workflow = Workflow::moderatorLimit($answer)
+            ->find($id);
+//        dd($workflow);
+        if (empty($workflow)) {
+            abort(403, __('errors.not_found'));
+        }
 
         // Подключение политики
         $this->authorize(getmethod('destroy'), $workflow);
 
+        $workflow->archive = true;
+
+        // Скрываем бога
+        $workflow->editor_id = hideGod($request->user());
+        $workflow->save();
+
         if ($workflow) {
-
-            $workflow->archive = true;
-
-            // Скрываем бога
-            $workflow->editor_id = hideGod($request->user());
-            $workflow->save();
-
-            if ($workflow) {
-                return redirect()->route('workflows.index');
-            } else {
-                abort(403, 'Ошибка при архивации рабочего процесса');
-            }
+            return redirect()->route('workflows.index');
         } else {
-            abort(403, 'Рабочий процесс не найден');
+            abort(403, __('errors.archive'));
         }
     }
 
@@ -420,7 +514,7 @@ class WorkflowController extends Controller
             $res = $new_workflow->metrics()->attach($metrics_insert);
         }
 
-        if($process->kit) {
+        if ($process->kit) {
             $process->load('workflows');
             if ($process->workflows->isNotEmpty()) {
                 $workflows_insert = [];
@@ -442,7 +536,7 @@ class WorkflowController extends Controller
             'process.group.unit',
             'category'
         ])
-        ->find($request->id);
+            ->find($request->id);
 
         return view('products.processes.services.workflows.workflow_input', compact('workflow'));
     }
@@ -455,7 +549,7 @@ class WorkflowController extends Controller
             'process.group.unit',
             'category'
         ])
-        ->find($request->id);
+            ->find($request->id);
 
         return view('products.processes_categories.services_categories.workflows.workflow_tr', compact('workflow'));
     }

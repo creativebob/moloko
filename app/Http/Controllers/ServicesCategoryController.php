@@ -10,19 +10,18 @@ use Illuminate\Http\Request;
 
 class ServicesCategoryController extends Controller
 {
+    protected $entityAlias;
+    protected $entityDependence;
 
     /**
      * ServicesCategoryController constructor.
-     * @param ServicesCategory $services_category
      */
-    public function __construct(ServicesCategory $services_category)
+    public function __construct()
     {
         $this->middleware('auth');
-        $this->services_category = $services_category;
-        $this->class = ServicesCategory::class;
         $this->model = 'App\ServicesCategory';
-        $this->entity_alias = with(new $this->class)->getTable();
-        $this->entity_dependence = false;
+        $this->entityAlias = 'services_categories';
+        $this->entityDependence = false;
         $this->type = 'page';
     }
 
@@ -32,18 +31,17 @@ class ServicesCategoryController extends Controller
      * Display a listing of the resource.
      *
      * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function index(Request $request)
     {
-
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), ServicesCategory::class);
 
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
-        $services_categories = ServicesCategory::with([
+        $servicesCategories = ServicesCategory::with([
             'services',
             'childs',
             'groups',
@@ -59,17 +57,17 @@ class ServicesCategoryController extends Controller
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->get();
-        // dd($services_categories);
+        // dd($servicesCategories);
 
         // Отдаем Ajax
         if ($request->ajax()) {
             return view('system.common.categories.index.categories_list',
                 [
-                    'items' => $services_categories,
-                    'entity' => $this->entity_alias,
+                    'items' => $servicesCategories,
+                    'entity' => $this->entityAlias,
                     'class' => $this->model,
                     'type' => $this->type,
-                    'count' => $services_categories->count(),
+                    'count' => $servicesCategories->count(),
                     'id' => $request->id,
                     'nested' => 'childs_count',
                 ]
@@ -79,14 +77,14 @@ class ServicesCategoryController extends Controller
         // Отдаем на шаблон
         return view('system.common.categories.index.index',
             [
-                'items' => $services_categories,
-                'pageInfo' => pageInfo($this->entity_alias),
-                'entity' => $this->entity_alias,
+                'items' => $servicesCategories,
+                'pageInfo' => pageInfo($this->entityAlias),
+                'entity' => $this->entityAlias,
                 'class' => $this->model,
                 'type' => $this->type,
                 'id' => $request->id,
                 'nested' => 'childs_count',
-                'filter' => setFilter($this->entity_alias, $request, [
+                'filter' => setFilter($this->entityAlias, $request, [
                     'booklist'
                 ]),
             ]
@@ -97,22 +95,21 @@ class ServicesCategoryController extends Controller
      * Show the form for creating a new resource.
      *
      * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function create(Request $request)
     {
-
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), ServicesCategory::class);
 
         return view('system.common.categories.create.modal.create', [
-            'item' => new $this->class,
-            'entity' => $this->entity_alias,
+            'item' => ServicesCategory::make(),
+            'entity' => $this->entityAlias,
             'title' => 'Добавление категории услуг',
             'parent_id' => $request->parent_id,
             'category_id' => $request->category_id,
-            'pageInfo' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entityAlias),
         ]);
     }
 
@@ -125,32 +122,21 @@ class ServicesCategoryController extends Controller
      */
     public function store(ServicesCategoryStoreRequest $request)
     {
-
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), ServicesCategory::class);
 
         $data = $request->input();
-        $services_category = ServicesCategory::create($data);
+        $servicesCategory = ServicesCategory::create($data);
 
-        if ($services_category) {
+        if ($servicesCategory) {
             // Переадресовываем на index
-            return redirect()->route('services_categories.index', ['id' => $services_category->id]);
+            return redirect()->route('services_categories.index', ['id' => $servicesCategory->id]);
         } else {
             $result = [
                 'error_status' => 1,
-                'error_message' => 'Ошибка при записи категории услуг!',
+                'error_message' => __('errors.store'),
             ];
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param $id
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**
@@ -158,17 +144,16 @@ class ServicesCategoryController extends Controller
      *
      * @param Request $request
      * @param $id
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function edit(Request $request, $id)
     {
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $services_category = ServicesCategory::with([
+        $servicesCategory = ServicesCategory::with([
             'workflows' => function ($q) {
                 $q->with([
                     'category',
@@ -186,30 +171,30 @@ class ServicesCategoryController extends Controller
         ])
         ->moderatorLimit($answer)
         ->find($id);
-//         dd(isset($services_category->direction));
+//         dd(isset($servicesCategory->direction));
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $services_category);
+        $this->authorize(getmethod(__FUNCTION__), $servicesCategory);
 
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entityAlias);
 
-        $settings = getPhotoSettings($this->entity_alias);
+        $settings = getPhotoSettings($this->entityAlias);
 
         // При добавлении метрики отдаем ajax новый список свойст и метрик
         if ($request->ajax()) {
             return view('products.common.metrics.properties_list', [
-                'category' => $services_category,
+                'category' => $servicesCategory,
                 'pageInfo' => $pageInfo,
             ]);
         }
 
         return view('products.processes_categories.common.edit.edit', [
             'title' => 'Редактирование категории услуг',
-            'category' => $services_category,
+            'category' => $servicesCategory,
             'pageInfo' => $pageInfo,
             'settings' => $settings,
-            'entity' => $this->entity_alias,
+            'entity' => $this->entityAlias,
         ]);
     }
 
@@ -223,39 +208,39 @@ class ServicesCategoryController extends Controller
      */
     public function update(ServicesCategoryUpdateRequest $request, $id)
     {
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
-        $services_category = ServicesCategory::moderatorLimit($answer)
+        $servicesCategory = ServicesCategory::moderatorLimit($answer)
         ->find($id);
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $services_category);
+        $this->authorize(getmethod(__FUNCTION__), $servicesCategory);
 
         $data = $request->input();
-        $data['photo_id'] = $this->getPhotoId($services_category);
-        $result = $services_category->update($data);
+        $data['photo_id'] = $this->getPhotoId($servicesCategory);
+        $result = $servicesCategory->update($data);
 
         if ($result) {
 
-            $services_category->manufacturers()->sync($request->manufacturers);
+            $servicesCategory->manufacturers()->sync($request->manufacturers);
+
             $metrics = session('access.all_rights.index-metrics-allow');
             if ($metrics) {
-                $services_category->metrics()->sync($request->metrics);
+                $servicesCategory->metrics()->sync($request->metrics);
             }
 
             $workflows = session('access.all_rights.index-workflows-allow');
             if ($workflows) {
-                $services_category->workflows()->sync($request->workflows);
+                $servicesCategory->workflows()->sync($request->workflows);
             }
 
             // Переадресовываем на index
-            return redirect()->route('services_categories.index', ['id' => $services_category->id]);
+            return redirect()->route('services_categories.index', ['id' => $servicesCategory->id]);
         } else {
             $result = [
                 'error_status' => 1,
-                'error_message' => 'Ошибка при записи категории услуг!'
+                'error_message' => __('errors.update')
             ];
         }
     }
@@ -263,19 +248,17 @@ class ServicesCategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param Request $request
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $services_category = ServicesCategory::with([
+        $servicesCategory = ServicesCategory::with([
             'childs',
             'services'
         ])
@@ -283,19 +266,19 @@ class ServicesCategoryController extends Controller
         ->find($id);
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $services_category);
+        $this->authorize(getmethod(__FUNCTION__), $servicesCategory);
 
-        $parent_id = $services_category->parent_id;
+        $parent_id = $servicesCategory->parent_id;
 
-        $services_category->delete();
+        $servicesCategory->delete();
 
-        if ($services_category) {
+        if ($servicesCategory) {
             // Переадресовываем на index
             return redirect()->route('services_categories.index', ['id' => $parent_id]);
         } else {
             $result = [
                 'error_status' => 1,
-                'error_message' => 'Ошибка при удалении категории!'
+                'error_message' => __('errors.destroy')
             ];
         }
     }

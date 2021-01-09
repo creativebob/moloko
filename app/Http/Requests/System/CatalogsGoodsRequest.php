@@ -27,8 +27,6 @@ class CatalogsGoodsRequest extends FormRequest
         'name' => 'required|string|max:255',
         'alias' => 'string|max:255|nullable',
         'slug' => 'string|max:255|nullable',
-
-        'photo_id' => 'integer|nullable',
         'description' => 'string|nullable',
         // 'seo_description' => 'string|nullable',
 

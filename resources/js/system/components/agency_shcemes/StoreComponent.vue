@@ -63,7 +63,7 @@ export default {
             if (this.percent > 0 && (this.name || this.name.length)) {
                 const data = {
                     catalog_id: this.catalogId,
-                    catalog_type: this.alias == 'catalogs_goods' ? 'App\\CatalogsGoods' : 'App\\CatalogService',
+                    catalog_type: this.alias == 'catalogs_goods' ? 'App\\CatalogsGoods' : 'App\\CatalogsService',
 
                     name: this.name,
                     description: this.description,

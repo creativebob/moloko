@@ -100,7 +100,7 @@ class StafferController extends Controller
      */
     public function create()
     {
-        return redirect()->action('DepartmentController@index');
+        return redirect()->route('departments.index');
     }
 
     /**
@@ -293,7 +293,7 @@ class StafferController extends Controller
         $staffer->save();
 
         logs('hr')->info("============== ЗАВЕРШЕНО ОБНОВЛЕНИЕ {$staffer->getTable()} с id: {$staffer->id} ========
-            
+
             ");
 
         if ($staffer) {

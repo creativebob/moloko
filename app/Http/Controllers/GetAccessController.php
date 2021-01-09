@@ -276,6 +276,28 @@ class GetAccessController extends Controller
                 $access['user_info']['extra_rights'] = $extra_rights;
             }
 
+
+            // Торговые точки и рабочие места
+            if ($user->staff->isNotEmpty()) {
+                $workplaces = $user->staff->first()->workplaces;
+                $access['user_info']['workplaces'] = $user->staff->first()->workplaces;
+                if ($workplaces->isNotEmpty()) {
+                    $workplaces->load([
+                        'outlet'
+                    ]);
+                    foreach($workplaces as $workplace) {
+                        $access['user_info']['outlets'][] = (object) [
+                            'id' => $workplace->outlet->id,
+                            'name' => $workplace->outlet->name,
+                            'filial_id' => $workplace->outlet->filial_id,
+                        ];
+                    }
+                } else {
+                    $access['user_info']['outlets'] = null;
+                }
+            }
+
+
             // $challenges = Challenge::with(
             //     'author',
             //     'appointed',

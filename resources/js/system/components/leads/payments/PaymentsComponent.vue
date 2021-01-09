@@ -1,7 +1,7 @@
 <template>
     <div class="grid-x grid-padding-x payment-block">
         <store-component
-            v-if="showStoreComponent"
+            v-if="showStoreComponent && userHasOutlet"
             :currencies="currencies"
         ></store-component>
 
@@ -113,6 +113,9 @@
             },
             canCancel() {
                 return this.$store.getters.HAS_OUTLET_SETTING('use-cash-register') && this.$store.getters.HAS_OUTLET_SETTING('payment-edit') && this.$store.state.lead.estimate.conducted_at === null;
+            },
+            userHasOutlet() {
+                return this.$store.getters.USER_HAS_OUTLET;
             }
         },
         methods: {
