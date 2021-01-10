@@ -23,7 +23,7 @@
             </div>
             <div class="small-12 cell">
                 <label>Список ключевых слов (Keywords)
-                    @include('includes.inputs.string', ['name' => 'keywords'])
+                    {!! Form::text('keywords', null, ['maxlength'=>'250', 'autocomplete'=>'off', 'data']) !!}
                 </label>
             </div>
             <div class="small-12 cell">

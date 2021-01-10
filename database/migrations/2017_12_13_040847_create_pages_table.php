@@ -27,6 +27,7 @@ class CreatePagesTable extends Migration
             $table->string('slug')->index()->nullable()->comment('Слаг');
 
             $table->text('description')->nullable()->comment('Description для страницы');
+            $table->string('keywords')->nullable()->comment('Ключевые слова');
             $table->text('content')->nullable()->comment('Контент страницы');
 
             $table->string('video_url')->nullable()->comment('Ссылка на видео');

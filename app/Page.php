@@ -54,6 +54,7 @@ class Page extends Model
         'header',
         'subtitle',
         'description',
+        'keywords',
         'content',
         'alias',
 

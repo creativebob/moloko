@@ -27,6 +27,7 @@ class CreateCatalogsServicesItemsTable extends Migration
             $table->string('title')->nullable()->comment('Название страницы');
             $table->text('description')->nullable()->comment('Описание');
             $table->text('seo_description')->nullable()->comment('Описание для сайта');
+            $table->string('keywords')->nullable()->comment('Ключевые слова');
 
             $table->bigInteger('photo_id')->nullable()->unsigned()->comment('Id фото (аватар)');
             $table->foreign('photo_id')->references('id')->on('photos');
