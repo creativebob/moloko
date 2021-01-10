@@ -5,7 +5,7 @@
             @include('includes.inputs.name', ['name' => 'name', 'required' => true])
         </label>
 
-        <label>Заголовок страницы
+        <label>Заголовок страницы (Title)
             @include('includes.inputs.string', ['name' => 'title', 'required' => true])
         </label>
 
@@ -13,12 +13,16 @@
             @include('includes.inputs.string', ['name' => 'subtitle'])
         </label>
 
-        <label>Заголовок
+        <label>Заголовок (H1)
             @include('includes.inputs.string', ['name' => 'header'])
         </label>
 
-        <label>Описание страницы
+        <label>Описание страницы (Description)
             @include('includes.inputs.textarea', ['name' => 'description'])
+        </label>
+
+        <label>Список ключевых слов (Keywords)
+            {!! Form::text('keywords', null, ['maxlength'=>'250', 'autocomplete'=>'off', 'data']) !!}
         </label>
 
         <label>Алиас страницы
