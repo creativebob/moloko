@@ -6,15 +6,15 @@
         </label>
 
         <label>Заголовок страницы (Title)
-            @include('includes.inputs.string', ['name' => 'title', 'required' => true])
+            @include('includes.inputs.varchar', ['name' => 'title', 'required' => true])
         </label>
 
         <label>Подзаголовок страницы
-            @include('includes.inputs.string', ['name' => 'subtitle'])
+            @include('includes.inputs.varchar', ['name' => 'subtitle'])
         </label>
 
         <label>Заголовок (H1)
-            @include('includes.inputs.string', ['name' => 'header'])
+            @include('includes.inputs.varchar', ['name' => 'header'])
         </label>
 
         <label>Описание страницы (Description)
@@ -22,7 +22,7 @@
         </label>
 
         <label>Список ключевых слов (Keywords)
-            {!! Form::text('keywords', null, ['maxlength'=>'250', 'autocomplete'=>'off', 'data']) !!}
+            @include('includes.inputs.varchar', ['name' => 'keywords'])
         </label>
 
         <label>Алиас страницы

@@ -100,7 +100,7 @@
                         </label>
 
                         <label>Список ключевых слов (Keywords)
-                            {!! Form::text('keywords', null, ['maxlength'=>'250', 'autocomplete'=>'off', 'data']) !!}
+                            @include('includes.inputs.varchar', ['name' => 'keywords'])
                         </label>
 
                     </div>

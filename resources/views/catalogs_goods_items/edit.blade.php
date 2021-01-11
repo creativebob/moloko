@@ -99,15 +99,13 @@
                     <div class="small-12 medium-6 cell">
                         <div class="grid-x grid-padding-x">
                             <div class="small-12 cell">
-                                <label>Название страницы (Title)
-                                    {!! Form::text('title', null, ['maxlength'=>'250', 'autocomplete'=>'off', 'autofocus', 'data']) !!}
-{{--                                    @include('includes.inputs.string', ['name' => 'title'])--}}
+                                <label>Заголовок страницы (Title)
+                                    @include('includes.inputs.varchar', ['name' => 'title', 'required' => true])
                                 </label>
                             </div>
                             <div class="small-12 cell">
-                                <label>Заголовок страницы (H1)
-                                    {!! Form::text('header', null, ['maxlength'=>'250', 'autocomplete'=>'off', 'autofocus', 'data']) !!}
-{{--                                    @include('includes.inputs.string', ['name' => 'header'])--}}
+                                <label>Заголовок (H1)
+                                    @include('includes.inputs.varchar', ['name' => 'header'])
                                 </label>
                             </div>
                             <div class="small-12 cell">
@@ -122,7 +120,7 @@
                             </div>
                             <div class="small-12 cell">
                                 <label>Список ключевых слов (Keywords)
-                                    {!! Form::text('keywords', null, ['maxlength'=>'250', 'autocomplete'=>'off', 'data']) !!}
+                                    @include('includes.inputs.varchar', ['name' => 'keywords'])
                                 </label>
                             </div>     
                             <div class="small-6 cell">
