@@ -1,9 +1,9 @@
 {{-- Varchar --}}
 {{ Form::text($name, ($value ?? null), [
 	'class'=>'varchar-field' . (isset($check) ? ' check-field' : ''),
-	'maxlength'=>'40',
+	'maxlength'=>'120',
 	'autocomplete'=>'off',
-	'pattern'=>'[A-Za-zА-Яа-яЁё0-9\W\s]{3,40}',
+	'pattern'=>'[A-Za-zА-Яа-яЁё0-9\W\s]{3,120}',
 	(isset($required) ? 'required' : '')
 ]
 ) }}
