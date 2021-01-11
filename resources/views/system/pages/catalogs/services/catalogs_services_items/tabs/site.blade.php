@@ -3,12 +3,12 @@
         <div class="grid-x grid-padding-x">
             <div class="small-12 cell">
                 <label>Название страницы (Title)
-                    @include('includes.inputs.string', ['name' => 'title'])
+                    @include('includes.inputs.varchar', ['name' => 'title'])
                 </label>
             </div>
             <div class="small-12 cell">
                 <label>Заголовок страницы (H1)
-                    @include('includes.inputs.string', ['name' => 'header'])
+                    @include('includes.inputs.varchar', ['name' => 'header'])
                 </label>
             </div>
             <div class="small-12 cell">
@@ -23,7 +23,7 @@
             </div>
             <div class="small-12 cell">
                 <label>Список ключевых слов (Keywords)
-                    {!! Form::text('keywords', null, ['maxlength'=>'250', 'autocomplete'=>'off', 'data']) !!}
+                    @include('includes.inputs.varchar', ['name' => 'keywords'])
                 </label>
             </div>
             <div class="small-12 cell">
