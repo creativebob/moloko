@@ -99,28 +99,30 @@
                     <div class="small-12 medium-6 cell">
                         <div class="grid-x grid-padding-x">
                             <div class="small-12 cell">
-                                <label>Название страницы
-                                    {!! Form::text('title', null, ['maxlength'=>'250', 'autocomplete'=>'off', 'autofocus', 'data']) !!}
-{{--                                    @include('includes.inputs.string', ['name' => 'title'])--}}
+                                <label>Заголовок страницы (Title)
+                                    @include('includes.inputs.varchar', ['name' => 'title', 'required' => true])
                                 </label>
                             </div>
                             <div class="small-12 cell">
-                                <label>Заголовок страницы
-                                    {!! Form::text('header', null, ['maxlength'=>'250', 'autocomplete'=>'off', 'autofocus', 'data']) !!}
-{{--                                    @include('includes.inputs.string', ['name' => 'header'])--}}
+                                <label>Заголовок (H1)
+                                    @include('includes.inputs.varchar', ['name' => 'header'])
                                 </label>
                             </div>
                             <div class="small-12 cell">
-                                <label>Описание:
+                                <label>Описание для вывода на сайт:
                                     {{ Form::textarea('description', $catalogs_goods_item->description, ['id'=>'content-ckeditor', 'autocomplete'=>'off', 'size' => '10x3']) }}
                                 </label>
-                                <br>
                             </div>
                             <div class="small-12 cell">
-                                <label>Description для сайта
+                                <label>Описание для поисковых систем (Description)
                                     @include('includes.inputs.textarea', ['value' => $catalogs_goods_item->seo_description, 'name' => 'seo_description'])
                                 </label>
                             </div>
+                            <div class="small-12 cell">
+                                <label>Список ключевых слов (Keywords)
+                                    @include('includes.inputs.varchar', ['name' => 'keywords'])
+                                </label>
+                            </div>     
                             <div class="small-6 cell">
                                 <label>Режим отображения
                                     @include('includes.selects.display_modes')

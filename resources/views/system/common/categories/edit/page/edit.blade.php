@@ -99,6 +99,10 @@
                             @include('includes.inputs.textarea', ['value' => $category->seo_description, 'name' => 'seo_description'])
                         </label>
 
+                        <label>Список ключевых слов (Keywords)
+                            @include('includes.inputs.varchar', ['name' => 'keywords'])
+                        </label>
+
                     </div>
                     <div class="small-12 medium-6 cell">
                         <div class="grid-x">

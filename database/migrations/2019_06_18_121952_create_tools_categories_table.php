@@ -22,6 +22,7 @@ class CreateToolsCategoriesTable extends Migration
 
             $table->text('description')->nullable()->comment('Описание');
             $table->text('seo_description')->nullable()->comment('Описание для сайта');
+            $table->string('keywords')->nullable()->comment('Ключевые слова');
 
             $table->bigInteger('photo_id')->nullable()->unsigned()->comment('Id фото (аватар)');
             $table->foreign('photo_id')->references('id')->on('photos');

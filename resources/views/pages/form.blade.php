@@ -5,20 +5,24 @@
             @include('includes.inputs.name', ['name' => 'name', 'required' => true])
         </label>
 
-        <label>Заголовок страницы
-            @include('includes.inputs.string', ['name' => 'title', 'required' => true])
+        <label>Заголовок страницы (Title)
+            @include('includes.inputs.varchar', ['name' => 'title', 'required' => true])
         </label>
 
         <label>Подзаголовок страницы
-            @include('includes.inputs.string', ['name' => 'subtitle'])
+            @include('includes.inputs.varchar', ['name' => 'subtitle'])
         </label>
 
-        <label>Заголовок
-            @include('includes.inputs.string', ['name' => 'header'])
+        <label>Заголовок (H1)
+            @include('includes.inputs.varchar', ['name' => 'header'])
         </label>
 
-        <label>Описание страницы
+        <label>Описание страницы (Description)
             @include('includes.inputs.textarea', ['name' => 'description'])
+        </label>
+
+        <label>Список ключевых слов (Keywords)
+            @include('includes.inputs.varchar', ['name' => 'keywords'])
         </label>
 
         <label>Алиас страницы
