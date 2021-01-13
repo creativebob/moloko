@@ -631,10 +631,10 @@ class ProductionController extends Controller
                     logs('documents')
                         ->info('=== ПЕРЕБИРАЕМ ПУНКТ ' . $item->getTable() . ' ' . $item->id . ' ===
                         ');
-
                     $this->cancelOffs($item);
 
                     $this->cancelReceipt($item);
+
                 }
 
                 $production->update([

@@ -43,6 +43,7 @@ Vue.component('lead-tabs-component', require('./components/leads/tabs/TabsCompon
 Vue.component('payments-component', require('./components/leads/payments/PaymentsComponent'));
 Vue.component('lead-description-component', require('./components/leads/options/DescriptionComponent'));
 Vue.component('lead-labels-component', require('./components/leads/options/LabelsComponent'));
+Vue.component('lead-dismissed-component', require('./components/leads/dismisses/DismissedComponent'));
 
 Vue.component('lead-history-component', require('./components/leads/history/HistoriesComponent'));
 

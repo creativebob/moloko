@@ -4,7 +4,9 @@ namespace App\Models\System\Documents;
 
 use App\Goods;
 use App\Models\System\BaseModel;
+use App\Off;
 use App\PricesGoods;
+use App\Receipt;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
@@ -156,5 +158,15 @@ class EstimatesGoodsItem extends BaseModel
     public function agency_scheme()
     {
         return $this->belongsTo('App\AgencyScheme');
+    }
+
+    public function offs()
+    {
+        return $this->morphMany(Off::class, 'documents_item');
+    }
+
+    public function receipt()
+    {
+        return $this->morphOne(Receipt::class, 'documents_item');
     }
 }

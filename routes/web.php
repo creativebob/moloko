@@ -805,22 +805,25 @@ Route::post('/leads/autofind/{phone}', 'LeadController@ajax_autofind_phone');
 
 
 // --------------------------------------- Расчеты (Сметы) -----------------------------------------------
-
 // Регистрация
 Route::patch('/estimates/{id}/registering', 'EstimateController@registering');
-// Отмена регистрации
 Route::patch('/estimates/{id}/unregistering', 'EstimateController@unregistering');
-// Производство
-Route::patch('/estimates/{id}/produce', 'EstimateController@produce');
-// Продажа
-Route::post('/estimates/{id}/conducting', 'EstimateController@conducting');
 
-// Агент
-Route::post('/estimates/set-agent', 'EstimateController@setAgent');
+// Производство
+Route::post('/estimates/{id}/producing', 'EstimateController@producing');
 
 // Резервирование
 Route::post('/estimates/{id}/reserving', 'EstimateController@reserving');
 Route::post('/estimates/{id}/unreserving', 'EstimateController@unreserving');
+
+// Агент
+Route::post('/estimates/set-agent', 'EstimateController@setAgent');
+
+// Продажа
+Route::post('/estimates/{id}/conducting', 'EstimateController@conducting');
+
+// Списание
+Route::post('/estimates/{id}/dismissing', 'EstimateController@dismissing');
 
 // Основные методы
 Route::resource('/estimates', 'EstimateController');
@@ -1643,5 +1646,16 @@ Route::resource('/labels', 'LabelController')
     ]);
 
 
+// --------------------------- Метки заказа -------------------------------------
+Route::post('/estimates_cancel_grounds/get', 'EstimatesCancelGroundController@get');
+// Основные методы
+//Route::resource('/estimates_cancel_grounds', 'EstimatesCancelGroundController')
+//    ->except([
+//        'show',
+//    ]);
+
+
 // ------------------------------------- Отображение сессии -----------------------------------------
-Route::get('/show_session', 'HelpController@show_session')->middleware('auth')->name('help.show_session');
+Route::get('/show_session', 'HelpController@show_session')
+    ->middleware('auth')
+    ->name('help.show_session');

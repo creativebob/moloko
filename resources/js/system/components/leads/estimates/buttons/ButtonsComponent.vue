@@ -20,9 +20,14 @@
                 >Оформить</a>
             </template>
 
-            <!--            <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">-->
-            <!--                <production-button-component></estimate-production-button-component>-->
-            <!--            </div>-->
+            <template
+                v-if="isRegistered && showProductionButton"
+            >
+                <a
+                    class="button"
+                    @click="producedEstimate"
+                >Произвести</a>
+            </template>
 
             <template
                 v-if="showSaleButton"
@@ -105,6 +110,10 @@ export default {
             return this.$store.state.lead.goodsItems.length > 0 || this.$store.state.lead.servicesItems.length > 0;
         },
 
+        showProductionButton() {
+            return this.$store.state.lead.needProduction && this.$store.state.lead.goodsItems.length > 0 && this.$store.state.lead.estimate.produced_at == null;
+        },
+
         showSaleButton() {
             return this.$store.state.lead.estimate.registered_at !== null && this.$store.state.lead.estimate.conducted_at === null && (this.$store.getters.PAYMENTS_TOTAL >= parseFloat(this.$store.getters.ESTIMATE_AGGREGATIONS.estimate.total));
         },
@@ -148,6 +157,9 @@ export default {
 
                 this.update(data);
             }
+        },
+        producedEstimate() {
+            this.$store.dispatch('PRODUCED_ESTIMATE');
         },
         conductedEstimate() {
             this.$store.dispatch('CONDUCTED_ESTIMATE');

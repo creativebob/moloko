@@ -51,10 +51,12 @@ class Estimate extends BaseModel
         'draft',
 
         'registered_at',
+        'produced_at',
         'conducted_at',
-        'is_produced',
 
         'is_dismissed',
+        'cancel_ground_id',
+
         'is_main',
         'is_create_parse',
 
@@ -191,6 +193,11 @@ class Estimate extends BaseModel
     public function labels()
     {
         return $this->belongsToMany('App\Label');
+    }
+
+    public function cancel_ground()
+    {
+        return$this->belongsTo('App\EstimatesCancelGround', 'cancel_ground_id');
     }
 
 

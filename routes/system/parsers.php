@@ -9,6 +9,8 @@
 |
 */
 
+Route::get('/set_rh_cancel_grounds', 'ParserController@setRhCancelGrounds');
+
 Route::get('/update_parser', 'ParserController@parser');
 Route::get('/roll_house_parser', 'ParserController@roll_house_parser');
 Route::get('/parser_rh_goods_metrics', 'ParserController@parserRhGoodsMetrics');

@@ -6,6 +6,7 @@ use App\AgencyScheme;
 use App\ArticlesGroup;
 use App\Attachment;
 use App\AttachmentsCategory;
+use App\EstimatesCancelGround;
 use App\Label;
 use App\Mailing;
 use App\MailingList;
@@ -31,7 +32,6 @@ use App\CostsHistory;
 use App\Department;
 use App\Direction;
 use App\Discount;
-use App\Dispatch;
 use App\Domain;
 use App\Employee;
 use App\Models\System\Documents\Estimate;
@@ -54,6 +54,7 @@ use App\Observers\System\Documents\ConsignmentObserver;
 use App\Observers\System\Documents\ConsignmentsItemObserver;
 use App\Observers\System\Documents\ProductionObserver;
 use App\Observers\System\Documents\ProductionsItemObserver;
+use App\Observers\System\EstimatesCancelGroundObserver;
 use App\Observers\System\LabelObserver;
 use App\Observers\System\MailingListObserver;
 use App\Observers\System\MailingObserver;
@@ -76,7 +77,6 @@ use App\Observers\System\CostsHistoryObserver;
 use App\Observers\System\DepartmentObserver;
 use App\Observers\System\DirectionObserver;
 use App\Observers\System\DiscountObserver;
-use App\Observers\System\DispatchObserver;
 use App\Observers\System\DomainObserver;
 use App\Observers\System\EmployeeObserver;
 use App\Observers\System\Documents\EstimateObserver;
@@ -276,6 +276,7 @@ class ObserverServiceProvider extends ServiceProvider
 
         // Сметы
         Estimate::observe(EstimateObserver::class);
+        EstimatesCancelGround::observe(EstimatesCancelGroundObserver::class);
         EstimatesGoodsItem::observe(EstimatesGoodsItemObserver::class);
         EstimatesServicesItem::observe(EstimatesServicesItemObserver::class);
 
