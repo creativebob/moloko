@@ -511,6 +511,7 @@ class GoodsController extends Controller
                             'costs',
                         ]);
                     },
+                    'codes'
                 ]);
             },
             'metrics',

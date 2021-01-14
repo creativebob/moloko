@@ -360,6 +360,14 @@ Route::post('/ajax_get_workflow', 'WorkflowController@ajax_get_workflow')->middl
 Route::post('/ajax_get_service', 'ServiceController@ajax_get_service')->middleware('auth');
 
 
+// ---------------------------------- Коды артикулов -------------------------------------------
+// Основные методы
+Route::resource('/article_codes', 'ArticleCodeController')
+    ->only([
+        'store',
+        'destroy'
+    ]);
+
 // ---------------------------------- Группы артикулов -------------------------------------------
 // Основные методы
 Route::resource('/articles_groups', 'ArticlesGroupController')->middleware('auth');

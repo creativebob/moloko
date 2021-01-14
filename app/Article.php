@@ -256,6 +256,11 @@ class Article extends Model
         return $this->hasOne(Attachment::class);
     }
 
+    public function codes()
+    {
+        return $this->hasMany(ArticleCode::class);
+    }
+
     // Единица измерения
     public function unit()
     {

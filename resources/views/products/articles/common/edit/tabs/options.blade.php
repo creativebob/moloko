@@ -1,5 +1,5 @@
 <div class="grid-x grid-padding-x">
-    <div class="small-12 medium-6 cell">
+    <div class="cell small-12 medium-6">
 
         <fieldset class="fieldset-access">
             <legend>Артикул</legend>
@@ -147,5 +147,17 @@
             {{--                                </label>--}}
         </fieldset>
 
+    </div>
+
+    <div class="cell small-12 medium-6">
+        @if($item->getTable() == 'goods')
+            <fieldset class="fieldset-access">
+                <legend>Доп. коды</legend>
+                <article-codes-component
+                    :article-id="{{ $article->id }}"
+                    :article-codes='@json($article->codes)'
+                ></article-codes-component>
+            </fieldset>
+        @endif
     </div>
 </div>

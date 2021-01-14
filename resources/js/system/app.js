@@ -63,6 +63,8 @@ Vue.component('goods-store-component', require('./components/products/articles/c
 Vue.component('cmv-compositions-component', require('./components/products/articles/compositions/CompositionsComponent'));
 Vue.component('presets-component', require('./components/products/articles/presets/PresetsComponent.vue'));
 
+Vue.component('article-codes-component', require('./components/products/articles/codes/CodesComponent'));
+
 // Услуги
 Vue.component('processes-categories-with-groups-component', require('./components/ProcessesCategoriesWithGroupsComponent.vue'));
 

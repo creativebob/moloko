@@ -3,6 +3,7 @@
 namespace App\Providers\System;
 
 use App\AgencyScheme;
+use App\ArticleCode;
 use App\ArticlesGroup;
 use App\Attachment;
 use App\AttachmentsCategory;
@@ -51,6 +52,7 @@ use App\Metric;
 use App\Models\System\Stocks\ImpactsStock;
 use App\Models\System\Stocks\ToolsStock;
 use App\Observers\System\AgencySchemeObserver;
+use App\Observers\System\ArticleCodeObserver;
 use App\Observers\System\ArticlesGroupObserver;
 use App\Observers\System\AttachmentObserver;
 use App\Observers\System\AttachmentsCategoryObserver;
@@ -250,6 +252,7 @@ class ObserverServiceProvider extends ServiceProvider
 
         // Артикулы
         Article::observe(ArticleObserver::class);
+        ArticleCode::observe(ArticleCodeObserver::class);
         ArticlesGroup::observe(ArticlesGroupObserver::class);
         Goods::observe(GoodsObserver::class);
         Raw::observe(RawObserver::class);

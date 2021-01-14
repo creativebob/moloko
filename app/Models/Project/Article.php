@@ -18,20 +18,24 @@ class Article extends Model
         'unit',
         'unit_weight',
 
+        'goods.article.codes',
+
         // TODO - 16.04.20 - Используется на ВД
         'manufacturer.company',
 
         // TODO - 15.04.20 - Используется на Вкусняшке (пока еще не разведены запросы для пагинации и общей кучи)
         'attachments.article.photo',
-
-        // TODO - 02.07.20 - Используется на РХ
-        'goods.article',
     ];
 
     // Группа
     public function group()
     {
         return $this->belongsTo('App\ArticlesGroup', 'articles_group_id');
+    }
+
+    public function codes()
+    {
+        return $this->hasMany('App\ArticleCode');
     }
 
     // Товары из которых состоит текущий артикул (Набор товаров)
