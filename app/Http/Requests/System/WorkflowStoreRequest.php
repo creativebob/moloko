@@ -25,6 +25,7 @@ class WorkflowStoreRequest extends FormRequest
     {
           return [
               'category_id' => 'required|integer',
+              'processes_type_id' => 'required|integer|exists:processes_types,id',
               'quickly' => 'integer|max:1',
               'kit' => 'integer|max:1',
           ];

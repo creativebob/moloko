@@ -12,13 +12,20 @@
                 />
             <div id="search-result-wrap" v-if=search>
 
-                <ul class="search-result-list">
-
-                    <li v-for="(item, index) in results">
-                        <a :href="'/admin/' + this.entity + '/' + item.id + '/edit'">{{ item.process.name }}</a>
-                    </li>
-
-                </ul>
+                <table class="search-result-list">
+                    <tr v-for="(item, index) in results">
+                        <td class="search-result-name">
+                            <a :href="'/admin/' + this.entity + '/' + item.id + '/edit'"><span>{{ item.process.name }}</span></a><br>
+                            <span class="text-small">{{ item.process.manufacturer.company.name }}</span>
+                        </td>
+                        <td class="search-result-info">
+                            <span v-if="item.process.draft" class="draft">Черновик</span>
+                        </td>
+                        <td class="search-result-id">
+                            {{ item.id }}
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
 

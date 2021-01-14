@@ -3,7 +3,7 @@
 namespace App\Policies;
 
 use App\User;
-use App\ToolsStock as Model;
+use App\Models\System\Stocks\ToolsStock as Model;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Auth;
 use App\Policies\Traits\PoliticTrait;
@@ -35,7 +35,7 @@ class ToolsStockPolicy
     }
 
     public function update(User $user, Model $model)
-    { 
+    {
         $result = $this->getstatus($this->entity_name, $model, 'update', $this->entity_dependence);
         return $result;
     }
@@ -45,12 +45,12 @@ class ToolsStockPolicy
         $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
         return $result;
     }
-    
+
     public function moderator(User $user, Model $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'moderator', $this->entity_dependence);
         return $result;
-    }   
+    }
 
     public function automoderate(User $user, Model $model)
     {
@@ -69,7 +69,7 @@ class ToolsStockPolicy
         $result = $this->getstatus($this->entity_name, $model, 'system', $this->entity_dependence);
         return $result;
     }
-	
+
 	public function god(User $user)
 	{
 		$result = isset(Auth::user()->god);

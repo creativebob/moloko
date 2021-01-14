@@ -74,7 +74,7 @@ trait Processable
 
         $data = $request->input();
         $data['processes_group_id'] = $processes_group->id;
-        $data['processes_type_id'] = $category->processes_type_id;
+        $data['processes_type_id'] = $request->processes_type_id;
 
         if (isset($data['units_category_id'])) {
 
@@ -181,6 +181,11 @@ trait Processable
                     $process->positions()->sync($request->positions);
                 }
 
+                $access = session('access.all_rights.index-impacts-allow');
+                if ($access) {
+                    $process->impacts()->sync($request->impacts);
+                }
+
                  if ($request->has('unit_length_id')) {
                      $unit = Unit::find($request->unit_length_id);
                      $length = $data['length'] * $unit->ratio;
@@ -277,7 +282,7 @@ trait Processable
 
 //        $search = $request->search;
         $items = $this->class::with([
-            'process'
+            'process.manufacturer.company'
         ])
             ->moderatorLimit($answer)
             ->companiesLimit($answer)

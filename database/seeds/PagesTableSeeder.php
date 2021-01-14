@@ -633,6 +633,41 @@ class PagesTableSeeder extends Seeder
                 'display' => true,
             ],
 
+            // Обьекты воздействия
+            [
+                'name' => 'Категории обьектов воздействия',
+                'site_id' => 1,
+                'title' => 'Категории обьектов воздействия',
+                'description' => 'Категории обьектов воздействия',
+                'alias' => 'impacts_categories',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+            [
+                'name' => 'Обьекты воздействия',
+                'site_id' => 1,
+                'title' => 'Обьекты воздействия',
+                'description' => 'Обьекты воздействия',
+                'alias' => 'impacts',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+            [
+                'name' => 'Склады обьектов воздействия',
+                'site_id' => 1,
+                'title' => 'Склады обьектов воздействия',
+                'description' => 'Склады обьектов воздействия',
+                'alias' => 'impacts_stocks',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+
             // Помещения
             [
                 'name' => 'Категории помещений',

@@ -406,6 +406,8 @@ Route::resource('/raws_stocks', 'RawsStockController')
         'update'
     ]);
 
+Route::get('/raws_stocks/search/{search}', 'RawsStockController@search');
+
 
 // ------------------------------------- Категории упаковок -------------------------------------------
 // Текущая добавленная/удаленная категория
@@ -445,6 +447,8 @@ Route::resource('/containers_stocks', 'ContainersStockController')
         'edit',
         'update'
     ]);
+
+Route::get('/containers_stocks/search/{search}', 'ContainersStockController@search');
 
 
 // ------------------------------------- Категории вложений -------------------------------------------
@@ -486,14 +490,16 @@ Route::resource('/attachments_stocks', 'AttachmentsStockController')
         'update'
     ]);
 
+Route::get('/attachments_stocks/search/{search}', 'AttachmentsStockController@search');
+
 
 // ------------------------------------- Категории инструментов -------------------------------------------
 
 // Текущая добавленная/удаленная категория
-Route::any('/tools_categories', 'ToolsCategoryController@index')->middleware('auth');
-Route::match(['get', 'post'], '/tools_categories/{id}/edit', 'ToolsCategoryController@edit')->middleware('auth');
+Route::any('/tools_categories', 'ToolsCategoryController@index');
+Route::match(['get', 'post'], '/tools_categories/{id}/edit', 'ToolsCategoryController@edit');
 // Основные методы
-Route::resource('/tools_categories', 'ToolsCategoryController')->middleware('auth');
+Route::resource('/tools_categories', 'ToolsCategoryController');
 
 // ---------------------------------- Инструменты-------------------------------------------
 
@@ -520,6 +526,47 @@ Route::resource('/tools_stocks', 'ToolsStockController')
         'edit',
         'update'
     ]);
+
+// ------------------------------------- Категории обьектов воздействия-------------------------------------------
+// Текущая добавленная/удаленная категория
+Route::any('/impacts_categories', 'ImpactsCategoryController@index');
+Route::match(['get', 'post'], '/impacts_categories/{id}/edit', 'ImpactsCategoryController@edit');
+// Основные методы
+Route::resource('/impacts_categories', 'ImpactsCategoryController')
+    ->except([
+        'show'
+    ]);
+
+
+// ---------------------------------- Обьекты воздействия -------------------------------------------
+// Архив
+Route::post('/impacts/archive/{id}', 'ImpactController@archive');
+// Просмотр архивных
+Route::get('/impacts/archives', 'ImpactController@archives')
+    ->name('impacts.archives');
+// Основные методы
+Route::resource('/impacts', 'ImpactController')
+    ->except([
+        'show'
+    ]);
+
+// Фото
+//Route::any('/tool/add_photo', 'ToolController@add_photo')->middleware('auth');
+//Route::post('/tool/photos', 'ToolController@photos')->middleware('auth');
+
+Route::any('/impacts_create_mode', 'ToolController@ajax_change_create_mode');
+
+
+// ---------------------------------- Склады обьектов воздействия -------------------------------------------
+// Основные методы
+Route::resource('/impacts_stocks', 'ImpactsStockController')
+    ->only([
+        'index',
+        'edit',
+        'update'
+    ]);
+
+Route::get('/impacts_stocks/search/{search}', 'ImpactsStockController@search');
 
 
 // ---------------------------------- Помещения -------------------------------------------
@@ -619,9 +666,6 @@ Route::resource('/goods_stocks', 'GoodsStockController')
 
 // Поиск на складах
 Route::get('/goods_stocks/search/{search}', 'GoodsStockController@search');
-Route::get('/raws_stocks/search/{search}', 'RawsStockController@search');
-Route::get('/containers_stocks/search/{search}', 'ContainersStockController@search');
-Route::get('/attachments_stocks/search/{search}', 'AttachmentsStockController@search');
 
 
 // ---------------------------------- Группы процессов -------------------------------------------
@@ -691,7 +735,7 @@ Route::resource('/workflows', 'WorkflowController')->except([
     'destroy'
 ]);
 // Поиск
-Route::post('/workflows/search/{text_fragment}', 'WorkflowController@search');
+Route::get('/workflows/search/{search}', 'WorkflowController@search');
 // Архив
 Route::post('/workflows/archive/{id}', 'WorkflowController@archive');
 // Дублирование

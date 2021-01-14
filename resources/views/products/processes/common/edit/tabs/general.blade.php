@@ -49,10 +49,6 @@
                     </div> --}}
                 </div>
 
-                <label>Тип процесса
-                    @include('includes.selects.processes_types', ['processes_type_id' => $process->processes_type_id])
-                </label>
-
                 {{-- Если указана ед. измерения - ШТ. --}}
                 {{-- @if($item->getTable() == 'goods') --}}
                 {{--                                @if($article->group->units_category_id == 6)--}}

@@ -48,7 +48,6 @@ class CreateRawsCategoriesTable extends Migration
 
             $table->timestamps();
             $table->softDeletes();
-
         });
     }
 

@@ -38,6 +38,219 @@ class UpdateController extends Controller
     }
 
     /**
+     * Добавление в развернутую систему сущности категорий обьектов воздействия с правами
+     *
+     * @return string
+     */
+    public function addImpactsEntities()
+    {
+        Page::insert([
+            [
+                'name' => 'Категории обьектов воздействия',
+                'site_id' => 1,
+                'title' => 'Категории обьектов воздействия',
+                'description' => 'Категории обьектов воздействия',
+                'alias' => 'impacts_categories',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+            [
+                'name' => 'Обьекты воздействия',
+                'site_id' => 1,
+                'title' => 'Обьекты воздействия',
+                'description' => 'Обьекты воздействия',
+                'alias' => 'impacts',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+            [
+                'name' => 'Склады обьектов воздействия',
+                'site_id' => 1,
+                'title' => 'Склады обьектов воздействия',
+                'description' => 'Склады обьектов воздействия',
+                'alias' => 'impacts_stocks',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+        ]);
+        echo "Добавлены страницы<br><br>";
+
+        Menu::insert([
+            //  Обьекты воздействия
+            [
+                'name' => 'Обьекты воздействия',
+                'icon' => 'icon-impact',
+                'alias' => null,
+                'tag' => 'impacts',
+                'parent_id' => null,
+                'page_id' => null,
+                'navigation_id' => 1,
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+                'sort' => 9,
+            ],
+        ]);
+
+        echo "Добавлен раздел в сайдбаре<br><br>";
+
+        $pages = Page::get();
+        $menus = Menu::get();
+
+        Menu::insert([
+            [
+                'name' => 'Категории обьектов воздействия',
+                'icon' => null,
+                'alias' => 'admin/impacts_categories',
+                'tag' => 'impacts_categories',
+                'parent_id' => $menus->where('tag', 'impacts')->first()->id,
+                'page_id' => $pages->where('alias', 'impacts_categories')->first()->id,
+                'navigation_id' => 1,
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+                'sort' => null,
+            ],
+            [
+                'name' => 'Обьекты воздействия',
+                'icon' => null,
+                'alias' => 'admin/impacts',
+                'tag' => 'impacts',
+                'parent_id' => $menus->where('tag', 'impacts')->first()->id,
+                'page_id' => $pages->where('alias', 'impacts')->first()->id,
+                'navigation_id' => 1,
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+                'sort' => null,
+            ],
+            [
+                'name' => 'Склады обьектов воздействия',
+                'icon' => null,
+                'alias' => 'admin/impacts_stocks',
+                'tag' => 'impacts_stocks',
+                'parent_id' => $menus->where('tag', 'impacts')->first()->id,
+                'page_id' => $pages->where('alias', 'impacts_stocks')->first()->id,
+                'navigation_id' => 1,
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+                'sort' => 1,
+            ],
+        ]);
+        echo "Добавлены пункты меню<br><br>";
+
+        $pages = Page::get();
+
+        Entity::insert([
+            [
+                'name' => 'Категории обьектов воздействия',
+                'alias' => 'impacts_categories',
+                'model' => 'App\ImpactsCategory',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'metric' => 1,
+                'view_path' => 'products/articles_categories/impacts_categories',
+                'page_id' => $pages->firstWhere('alias', 'impacts_categories')->id,
+            ],
+        ]);
+        Entity::insert([
+            [
+                'name' => 'Обьекты воздействия',
+                'alias' => 'impacts',
+                'model' => 'App\Impact',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('impacts_categories')->value('id'),
+                'view_path' => 'products/articles/impacts',
+                'page_id' => $pages->firstWhere('alias', 'impacts')->id,
+            ],
+        ]);
+
+        Entity::insert([
+            [
+                'name' => 'Склад обьектов воздействия',
+                'alias' => 'impacts_stocks',
+                'model' => 'App\Models\System\Stocks\ImpactsStock',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('impacts')->first(['id'])->id,
+                'view_path' => 'system.pages.cmv_stocks.impacts_stocks',
+                'page_id' => $pages->firstWhere('alias', 'impacts_stocks')->id,
+            ],
+        ]);
+        echo 'Добавлены сущности<br><br>';
+
+        // Наваливание прав
+        $entities = Entity::whereIn('alias', [
+            'impacts_categories',
+            'impacts',
+            'impacts_stocks',
+        ])
+            ->get();
+
+        foreach ($entities as $entity) {
+            // Генерируем права
+            $actions = Action::get();
+            $mass = [];
+
+            foreach ($actions as $action) {
+                $mass[] = ['action_id' => $action->id, 'entity_id' => $entity->id, 'alias_action_entity' => $action->method . '-' . $entity->alias];
+            };
+            DB::table('action_entity')->insert($mass);
+
+            $actionentities = ActionEntity::where('entity_id', $entity->id)->get();
+            $mass = [];
+
+            foreach ($actionentities as $actionentity) {
+
+                $mass[] = ['name' => "Разрешение на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'allow', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-allow'];
+
+                $mass[] = ['name' => "Запрет на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'deny', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-deny'];
+            };
+
+            DB::table('rights')->insert($mass);
+
+            $actionentities = $actionentities->pluck('id')->toArray();
+
+            // Получаем все существующие разрешения (allow)
+            $rights = Right::whereIn('object_entity', $actionentities)->where('directive', 'allow')->get();
+
+            $mass = [];
+            // Генерируем права на полный доступ
+            foreach ($rights as $right) {
+                $mass[] = [
+                    'right_id' => $right->id,
+                    'role_id' => 1,
+                    'system' => 1
+                ];
+            };
+
+            DB::table('right_role')->insert($mass);
+        }
+
+        echo "Добавлены права на сущности<br><br>";
+
+        return "<strong>Добавление сущностей обьектов воздействия (категории, сущность, хранилища) завершено</strong>";
+    }
+
+    /**
      * Добавление в развернутую систему сущности меток заказа с правами
      *
      * @return string

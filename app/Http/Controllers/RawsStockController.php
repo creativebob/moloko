@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\System\Stocks\RawsStock;
-use Illuminate\Http\Request;
 
 class RawsStockController extends Controller
 {
-
     protected $entityAlias;
     protected $entityDependence;
 
@@ -132,5 +130,4 @@ class RawsStockController extends Controller
 
         return response()->json($items);
     }
-
 }

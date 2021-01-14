@@ -35,3 +35,5 @@ Route::get('/add_labels_entity', 'UpdateController@addLabelsEntity');
 Route::get('/update_agents_tables_in_migrations_table', 'UpdateController@updateAgentsTablesInMigrationsTable');
 Route::get('/add_outlet_agent_setting', 'UpdateController@addOutletAgentSetting');
 Route::get('/add_outlet_reserves_setting', 'UpdateController@addOutletReservesSetting');
+
+Route::get('/add_impacts_entities', 'UpdateController@addImpactsEntities');

@@ -51,7 +51,9 @@ class ToolsCategory extends Model
         'seo_description',
         'keywords',
         'parent_id',
-        'photo_id','display',
+        'photo_id',
+
+        'display',
         'system',
         'moderation'
     ];

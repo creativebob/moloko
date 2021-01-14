@@ -25,6 +25,7 @@ class WorkflowController extends Controller
         $this->middleware('auth');
         $this->entityAlias = 'workflows';
         $this->entityDependence = false;
+        $this->class = Workflow::class;
     }
 
     use Processable;
@@ -346,7 +347,13 @@ class WorkflowController extends Controller
         $workflow->load([
             'process' => function ($q) {
                 $q->with([
-                    'unit'
+                    'unit',
+                    'impacts' => function ($q) {
+                        $q->with([
+                            'category',
+                            'article.unit'
+                        ]);
+                    },
                 ]);
             },
             'category' => function ($q) {
