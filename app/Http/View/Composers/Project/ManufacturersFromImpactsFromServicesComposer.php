@@ -8,7 +8,7 @@ class ManufacturersFromImpactsFromServicesComposer
 {
     public function compose(View $view)
     {
-        $manufacturers = collect();
+        $manufacturers = null;
         if ($view->catalogs_services_item) {
             $pricesServices = $view->catalogs_services_item->prices;
             $pricesServices->load([
