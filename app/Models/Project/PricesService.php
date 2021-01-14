@@ -86,4 +86,28 @@ class PricesService extends Model
         return $this->belongsTo('App\Currency');
     }
 
+    // Фильтр
+    public function scopeFilter($query)
+    {
+
+        if (request('brand')) {
+            $manufacturer = request('brand');
+            $query->whereHas('service', function($q) use ($manufacturer) {
+                $q->whereHas('process', function($q) use ($manufacturer) {
+                    $q->whereHas('impacts', function($q) use ($manufacturer) {
+                        $q->whereHas('article', function($q) use ($manufacturer) {
+                            $q->whereHas('manufacturer', function($q) use ($manufacturer) {
+                                $q->whereHas('company', function($q) use ($manufacturer) {
+                                    $q->where('name', $manufacturer);
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        }
+
+        return $query;
+    }
+
 }

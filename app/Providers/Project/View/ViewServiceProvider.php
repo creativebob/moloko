@@ -6,6 +6,7 @@ use App\Http\View\Composers\Project\CatalogsServiceComposer;
 use App\Http\View\Composers\Project\CatalogsGoodsComposer;
 use App\Http\View\Composers\Project\DiscountsForEstimatesComposer;
 use App\Http\View\Composers\Project\DisplayModesComposer;
+use App\Http\View\Composers\Project\ManufacturersFromImpactsFromServicesComposer;
 use App\Http\View\Composers\Project\NavigationByAlignComposer;
 use App\Http\View\Composers\Project\NavigationsComposer;
 use App\Http\View\Composers\Project\PricesGoodsFilterComposer;
@@ -86,6 +87,8 @@ class ViewServiceProvider extends ServiceProvider
         view()->composer('project.composers.display_modes.section', DisplayModesComposer::class);
         view()->composer('project.composers.tools_categories.sidebar_with_items', ToolsCategoriesWithToolsComposer::class);
         view()->composer('project.composers.prices_services.providers', ProvidersComposer::class);
+
+        view()->composer('project.composers.manufacturers.manufacturers_from_impacts_from_services', ManufacturersFromImpactsFromServicesComposer::class);
 
 //        view()->composer('project.composers.estimates.discounts.header_component', DiscountsForEstimatesComposer::class);
     }
