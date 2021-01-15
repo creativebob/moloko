@@ -66,6 +66,9 @@ class CatalogsServicesItem extends Model
 
         'is_discount',
 
+        'video_url',
+        'video',
+
         'display',
         'system',
         'moderation'

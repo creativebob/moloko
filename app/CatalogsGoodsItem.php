@@ -66,6 +66,9 @@ use App\Scopes\Filters\BooklistFilter;
 
             'is_discount',
 
+            'video_url',
+            'video',
+
 			'display',
 			'system',
 			'moderation'
