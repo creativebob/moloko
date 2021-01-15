@@ -193,7 +193,7 @@
         },
         computed: {
             phone() {
-                if (this.director.main_phones.length) {
+               if (this.director.main_phones && this.director.main_phones.length) {
                     return this.director.main_phones[0];
                 } else {
                     return null;

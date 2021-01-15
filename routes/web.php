@@ -1106,8 +1106,7 @@ Route::resource('/manufacturers', 'ManufacturerController')
     ]);
 
 
-// ------------------------------------ Агента ----------------------------------------------------
-
+// ------------------------------------ Агенты ----------------------------------------------------
 Route::get('/agents/get-agents-by-catalog-goods-id/{id}', 'AgentController@getAgentsByCatalogGoodsId');
 // Архив
 Route::post('/agents/archive/{id}', 'AgentController@archive');
@@ -1126,6 +1125,17 @@ Route::post('/agency_schemes/archive/{id}', 'AgencySchemeController@archive');
 Route::resource('/agency_schemes', 'AgencySchemeController')
     ->only([
         'store',
+    ]);
+
+
+// ------------------------------------ Конкуренты ----------------------------------------------------
+// Архив
+Route::post('/competitors/archive/{id}', 'CompetitorController@archive');
+// Основные методы
+Route::resource('/competitors', 'CompetitorController')
+    ->except([
+        'show',
+        'destroy'
     ]);
 
 

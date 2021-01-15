@@ -37,3 +37,6 @@ Route::get('/add_outlet_agent_setting', 'UpdateController@addOutletAgentSetting'
 Route::get('/add_outlet_reserves_setting', 'UpdateController@addOutletReservesSetting');
 
 Route::get('/add_impacts_entities', 'UpdateController@addImpactsEntities');
+
+Route::get('/add_agents_entity', 'UpdateController@addAgentsEntity');
+Route::get('/add_competitors_entity', 'UpdateController@addCompetitorsEntity');

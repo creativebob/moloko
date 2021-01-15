@@ -28,11 +28,7 @@ class Agent extends Model
 {
 
     use Cachable,
-        Archivable,
-        SoftDeletes;
-
-    use Notifiable;
-    use SoftDeletes;
+        Archivable;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;

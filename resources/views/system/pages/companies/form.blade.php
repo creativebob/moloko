@@ -36,6 +36,11 @@
                     <a data-tabs-target="tab-client" href="#tab-client">О клиенте</a>
                 </li>
             @endisset
+            @isset($competitor)
+                <li class="tabs-title">
+                    <a data-tabs-target="tab-competitor" href="#tab-competitor">О конкуренте</a>
+                </li>
+            @endisset
 
             <li class="tabs-title">
                 <a data-tabs-target="tab-details" href="#tab-details">Реквизиты</a>
@@ -158,6 +163,13 @@
         @isset($client)
             <div class="tabs-panel" id="tab-client">
                 @include('system.pages.clients.form')
+            </div>
+        @endisset
+
+        {{-- Конкурент --}}
+        @isset($competitor)
+            <div class="tabs-panel" id="tab-competitor">
+                @include('system.pages.marketings.competitors.form')
             </div>
         @endisset
 

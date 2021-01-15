@@ -14,7 +14,6 @@ use Illuminate\Http\Request;
 
 class AgentController extends Controller
 {
-
     protected $entityAlias;
     protected $entityDependence;
 
@@ -28,11 +27,11 @@ class AgentController extends Controller
         $this->entityDependence = false;
     }
 
-    use Locationable;
-    use Phonable;
-    use Photable;
-    use Companable;
-    use Directorable;
+    use Locationable,
+        Phonable,
+        Photable,
+        Companable,
+        Directorable;
 
     /**
      * Display a listing of the resource.
@@ -289,7 +288,7 @@ class AgentController extends Controller
         $agent = Agent::moderatorLimit($answer)
             ->find($id);
 
-        if (empty($subscriber)) {
+        if (empty($agent)) {
             abort(403, __('errors.not_found'));
         }
 

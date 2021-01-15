@@ -1166,6 +1166,17 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => true,
             ],
+            [
+                'name' => 'Конкуренты',
+                'site_id' => 1,
+                'title' => 'Конкуренты',
+                'description' => 'Конкуренты',
+                'alias' => 'competitors',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
         ]);
     }
 }

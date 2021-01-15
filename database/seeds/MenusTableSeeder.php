@@ -1218,6 +1218,37 @@ Menu::insert([
         'sort' => 5,
     ],
     [
+        'name' => 'Исследования',
+        'icon' => null,
+        'alias' => null,
+        'tag' => 'researches',
+        'parent_id' => $menus->where('tag', 'marketings')->first()->id,
+        'page_id' => null,
+        'navigation_id' => 1,
+        'company_id' => null,
+        'system' => true,
+        'author_id' => 1,
+        'display' => true,
+        'sort' => 6,
+    ],
+
+
+    // Справочники
+    [
+        'name' => 'Компании',
+        'icon' => null,
+        'alias' => 'admin/companies',
+        'tag' => 'companies',
+        'parent_id' => $menus->where('tag', 'guides')->first()->id,
+        'page_id' => $pages->where('alias', 'companies')->first()->id,
+        'navigation_id' => 1,
+        'company_id' => null,
+        'system' => true,
+        'author_id' => 1,
+        'display' => true,
+        'sort' => null,
+    ],
+    [
         'name' => 'Категории шаблонов',
         'icon' => null,
         'alias' => 'admin/templates_categories',
@@ -1244,22 +1275,6 @@ Menu::insert([
         'author_id' => 1,
         'display' => true,
         'sort' => 5,
-    ],
-
-    // Справочники
-    [
-        'name' => 'Компании',
-        'icon' => null,
-        'alias' => 'admin/companies',
-        'tag' => 'companies',
-        'parent_id' => $menus->where('tag', 'guides')->first()->id,
-        'page_id' => $pages->where('alias', 'companies')->first()->id,
-        'navigation_id' => 1,
-        'company_id' => null,
-        'system' => true,
-        'author_id' => 1,
-        'display' => true,
-        'sort' => null,
     ],
 //    [
 //        'name' => 'Пользователи',
@@ -1572,6 +1587,20 @@ Menu::insert([
         'author_id' => 1,
         'display' => true,
         'sort' => 2,
+    ],
+    [
+        'name' => 'Конкуренты',
+        'icon' => null,
+        'alias' => 'admin/competitors',
+        'tag' => 'competitors',
+        'parent_id' => $menus->firstWhere('tag', 'researches')->id,
+        'page_id' => $pages->firstWhere('alias', 'competitors')->id,
+        'navigation_id' => 1,
+        'company_id' => null,
+        'system' => true,
+        'author_id' => 1,
+        'display' => true,
+        'sort' => null,
     ],
 
 ]);

@@ -2,10 +2,12 @@
 
 namespace App\Providers\System;
 
+use App\Agent;
 use App\ArticlesGroup;
 use App\Attachment;
 use App\AttachmentsCategory;
 use App\BusinessCase;
+use App\Competitor;
 use App\Container;
 use App\ContainersCategory;
 use App\Impact;
@@ -28,10 +30,12 @@ use App\Order;
 use App\Outcome;
 use App\OutcomesCategory;
 use App\Outlet;
+use App\Policies\AgentPolicy;
 use App\Policies\ArticlesGroupPolicy;
 use App\Policies\AttachmentPolicy;
 use App\Policies\AttachmentsCategoryPolicy;
 use App\Policies\BusinessCasePolicy;
+use App\Policies\CompetitorPolicy;
 use App\Policies\ContainerPolicy;
 use App\Policies\ContainersCategoryPolicy;
 use App\Policies\DiscountPolicy;
@@ -250,12 +254,15 @@ class AuthServiceProvider extends ServiceProvider
         ExtraRequisite::class => ExtraRequisitePolicy::class,
 
         Supplier::class => SupplierPolicy::class,
-        Application::class => ApplicationPolicy::class,
-
         Manufacturer::class => ManufacturerPolicy::class,
         Vendor::class => VendorPolicy::class,
         Dealer::class => DealerPolicy::class,
         Client::class => ClientPolicy::class,
+        Agent::class => AgentPolicy::class,
+        Competitor::class => CompetitorPolicy::class,
+
+        Application::class => ApplicationPolicy::class,
+
         Bank::class => BankPolicy::class,
         BankAccount::class => BankAccountPolicy::class,
 

@@ -3,7 +3,7 @@
 namespace App\Policies;
 
 use App\User;
-use App\Subscriber as Item;
+use App\Subscriber as Model;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Policies\Traits\PoliticTrait;
 
@@ -21,9 +21,9 @@ class SubscriberPolicy
         return $result;
     }
 
-    public function view(User $user, Item $item)
+    public function view(User $user, Model $model)
     {
-        $result = $this->getstatus($this->entityName, $item, 'view', $this->entityDependence);
+        $result = $this->getstatus($this->entityName, $model, 'view', $this->entityDependence);
         return $result;
     }
 
@@ -33,27 +33,27 @@ class SubscriberPolicy
         return $result;
     }
 
-    public function update(User $user, Item $item)
+    public function update(User $user, Model $model)
     {
-        $result = $this->getstatus($this->entityName, $item, 'update', $this->entityDependence);
+        $result = $this->getstatus($this->entityName, $model, 'update', $this->entityDependence);
         return $result;
     }
 
-    public function delete(User $user, Item $item)
+    public function delete(User $user, Model $model)
     {
-        $result = $this->getstatus($this->entityName, $item, 'delete', $this->entityDependence);
+        $result = $this->getstatus($this->entityName, $model, 'delete', $this->entityDependence);
         return $result;
     }
 
-    public function moderator(User $user, Item $item)
+    public function moderator(User $user, Model $model)
     {
-        $result = $this->getstatus($this->entityName, $item, 'moderator', $this->entityDependence);
+        $result = $this->getstatus($this->entityName, $model, 'moderator', $this->entityDependence);
         return $result;
     }
 
-    public function automoderate(User $user, Item $item)
+    public function automoderate(User $user, Model $model)
     {
-        $result = $this->getstatus($this->entityName, $item, 'automoderate', $this->entityDependence);
+        $result = $this->getstatus($this->entityName, $model, 'automoderate', $this->entityDependence);
         return $result;
     }
 
@@ -63,9 +63,9 @@ class SubscriberPolicy
         return $result;
     }
 
-    public function system(User $user, Item $item)
+    public function system(User $user, Model $model)
     {
-        $result = $this->getstatus($this->entityName, $item, 'system', $this->entityDependence);
+        $result = $this->getstatus($this->entityName, $model, 'system', $this->entityDependence);
         return $result;
     }
 

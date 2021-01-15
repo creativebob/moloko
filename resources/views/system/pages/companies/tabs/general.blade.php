@@ -69,7 +69,7 @@
         <div class="grid-x grid-padding-x">
             <div class="small-12 medium-4 cell">
             </div>
-            @include('system.pages.companies.includes.director', ['director' => optional($company->director)->user, 'item' => optional($company->director)->user ?? auth()->user()])
+            @include('system.pages.companies.includes.director', ['director' => optional($company->director)->user->name == 'Вакансия' ? null : optional($company->director)->user, 'item' => optional($company->director)->user ?? auth()->user()])
         </div>
     </div>
 </div>

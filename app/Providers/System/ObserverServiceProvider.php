@@ -7,6 +7,7 @@ use App\ArticleCode;
 use App\ArticlesGroup;
 use App\Attachment;
 use App\AttachmentsCategory;
+use App\Competitor;
 use App\EstimatesCancelGround;
 use App\Impact;
 use App\ImpactsCategory;
@@ -56,6 +57,7 @@ use App\Observers\System\ArticleCodeObserver;
 use App\Observers\System\ArticlesGroupObserver;
 use App\Observers\System\AttachmentObserver;
 use App\Observers\System\AttachmentsCategoryObserver;
+use App\Observers\System\CompetitorObserver;
 use App\Observers\System\Documents\ConsignmentObserver;
 use App\Observers\System\Documents\ConsignmentsItemObserver;
 use App\Observers\System\Documents\ProductionObserver;
@@ -365,6 +367,7 @@ class ObserverServiceProvider extends ServiceProvider
         Manufacturer::observe(ManufacturerObserver::class);
         Agent::observe(AgentObserver::class);
         AgencyScheme::observe(AgencySchemeObserver::class);
+        Competitor::observe(CompetitorObserver::class);
 
         // Внутренние
         Client::observe(ClientObserver::class);

@@ -936,6 +936,18 @@ class EntitiesTableSeeder extends Seeder
                 'page_id' => $pages->firstWhere('alias', 'agents')->id,
             ],
             [
+                'name' => 'Конкуренты',
+                'alias' => 'competitors',
+                'model' => 'App\Competitor',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('companies')->first(['id'])->id,
+                'view_path' => 'system.pages.marketings.competitors',
+                'page_id' => $pages->firstWhere('alias', 'competitors')->id,
+            ],
+            [
                 'name' => 'Производители',
                 'alias' => 'manufacturers',
                 'model' => 'App\Manufacturer',

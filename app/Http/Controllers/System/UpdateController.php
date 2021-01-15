@@ -38,6 +38,261 @@ class UpdateController extends Controller
     }
 
     /**
+     * Добавление в развернутую систему сущности конкурентов с правами
+     *
+     * @return string
+     */
+    public function addCompetitorsEntity()
+    {
+        Page::insert([
+            [
+                'name' => 'Конкуренты',
+                'site_id' => 1,
+                'title' => 'Конкуренты',
+                'description' => 'Конкуренты',
+                'alias' => 'competitors',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+        ]);
+        echo "Добавлена страница<br><br>";
+
+        $researches = Menu::where('tag', 'researches')
+            ->exists();
+
+        if (!$researches) {
+            $menus = Menu::get();
+
+            Menu::insert([
+                [
+                    'name' => 'Исследования',
+                    'icon' => null,
+                    'alias' => null,
+                    'tag' => 'researches',
+                    'parent_id' => $menus->where('tag', 'marketings')->first()->id,
+                    'page_id' => null,
+                    'navigation_id' => 1,
+                    'company_id' => null,
+                    'system' => true,
+                    'author_id' => 1,
+                    'display' => true,
+                    'sort' => 6,
+                ],
+            ]);
+        }
+
+        $pages = Page::get();
+        $menus = Menu::get();
+
+        Menu::insert([
+            [
+                'name' => 'Конкуренты',
+                'icon' => null,
+                'alias' => 'admin/competitors',
+                'tag' => 'competitors',
+                'parent_id' => $menus->firstWhere('tag', 'researches')->id,
+                'page_id' => $pages->firstWhere('alias', 'competitors')->id,
+                'navigation_id' => 1,
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+                'sort' => null,
+            ],
+        ]);
+        echo "Добавлен пункт меню<br><br>";
+
+        Entity::insert([
+            [
+                'name' => 'Конкуренты',
+                'alias' => 'competitors',
+                'model' => 'App\Competitor',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('companies')->value('id'),
+                'view_path' => 'system.pages.marketings.competitors',
+                'page_id' => $pages->firstWhere('alias', 'competitors')->id,
+            ],
+        ]);
+        echo 'Добавлена сущность<br><br>';
+
+        // Наваливание прав
+        $entities = Entity::where('alias', 'competitors')
+            ->get();
+
+        foreach ($entities as $entity) {
+            // Генерируем права
+            $actions = Action::get();
+            $mass = [];
+
+            foreach ($actions as $action) {
+                $mass[] = ['action_id' => $action->id, 'entity_id' => $entity->id, 'alias_action_entity' => $action->method . '-' . $entity->alias];
+            };
+            DB::table('action_entity')->insert($mass);
+
+            $actionentities = ActionEntity::where('entity_id', $entity->id)->get();
+            $mass = [];
+
+            foreach ($actionentities as $actionentity) {
+
+                $mass[] = ['name' => "Разрешение на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'allow', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-allow'];
+
+                $mass[] = ['name' => "Запрет на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'deny', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-deny'];
+            };
+
+            DB::table('rights')->insert($mass);
+
+            $actionentities = $actionentities->pluck('id')->toArray();
+
+            // Получаем все существующие разрешения (allow)
+            $rights = Right::whereIn('object_entity', $actionentities)->where('directive', 'allow')->get();
+
+            $mass = [];
+            // Генерируем права на полный доступ
+            foreach ($rights as $right) {
+                $mass[] = [
+                    'right_id' => $right->id,
+                    'role_id' => 1,
+                    'system' => 1
+                ];
+            };
+
+            DB::table('right_role')->insert($mass);
+        }
+
+        echo "Добавлены права на сущность<br><br>";
+
+        return "<strong>Добавление сущности меток заказа завершено</strong>";
+    }
+
+    /**
+     * Добавление в развернутую систему сущности агентов с правами
+     *
+     * @return string
+     */
+    public function addAgentsEntity()
+    {
+        $pageData = [
+            'name' => 'Агенты',
+            'site_id' => 1,
+            'title' => 'Агенты',
+            'description' => 'Агенты',
+            'alias' => 'agents',
+            'company_id' => null,
+            'system' => true,
+            'author_id' => 1,
+            'display' => true,
+        ];
+
+        $res = Page::where($pageData)
+            ->exists();
+
+        if (!$res) {
+            Page::insert($pageData);
+            echo "Добавлена страница<br><br>";
+        }
+
+        $pages = Page::get();
+        $menus = Menu::get();
+
+        $menuData = [
+            'name' => 'Агенты',
+            'icon' => null,
+            'alias' => 'admin/agents',
+            'tag' => 'agents',
+            'parent_id' => $menus->where('tag', 'sales')->first()->id,
+            'page_id' => $pages->where('alias', 'agents')->first()->id,
+            'navigation_id' => 1,
+            'company_id' => null,
+            'system' => true,
+            'author_id' => 1,
+            'display' => true,
+            'sort' => 4,
+        ];
+
+        $res = Menu::where($menuData)
+            ->exists();
+
+        if (!$res) {
+            Menu::insert($menuData);
+            echo "Добавлен пункт меню<br><br>";
+        }
+
+        $entityData = [
+            'name' => 'Агенты',
+            'alias' => 'agents',
+            'model' => 'App\Agent',
+            'rights' => true,
+            'system' => true,
+            'author_id' => 1,
+            'site' => 0,
+            'ancestor_id' => Entity::whereAlias('companies')->first(['id'])->id,
+            'view_path' => 'system.pages.sales.agents',
+            'page_id' => $pages->firstWhere('alias', 'agents')->id,
+        ];
+
+        $res = Entity::where($entityData)
+            ->exists();
+
+        if (!$res) {
+            Entity::insert($entityData);
+            echo 'Добавлена сущность<br><br>';
+
+            // Наваливание прав
+            $entities = Entity::where('alias', 'agents')
+                ->get();
+
+            foreach ($entities as $entity) {
+                // Генерируем права
+                $actions = Action::get();
+                $mass = [];
+
+                foreach ($actions as $action) {
+                    $mass[] = ['action_id' => $action->id, 'entity_id' => $entity->id, 'alias_action_entity' => $action->method . '-' . $entity->alias];
+                };
+                DB::table('action_entity')->insert($mass);
+
+                $actionentities = ActionEntity::where('entity_id', $entity->id)->get();
+                $mass = [];
+
+                foreach ($actionentities as $actionentity) {
+
+                    $mass[] = ['name' => "Разрешение на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'allow', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-allow'];
+
+                    $mass[] = ['name' => "Запрет на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'deny', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-deny'];
+                };
+
+                DB::table('rights')->insert($mass);
+
+                $actionentities = $actionentities->pluck('id')->toArray();
+
+                // Получаем все существующие разрешения (allow)
+                $rights = Right::whereIn('object_entity', $actionentities)->where('directive', 'allow')->get();
+
+                $mass = [];
+                // Генерируем права на полный доступ
+                foreach ($rights as $right) {
+                    $mass[] = [
+                        'right_id' => $right->id,
+                        'role_id' => 1,
+                        'system' => 1
+                    ];
+                };
+
+                DB::table('right_role')->insert($mass);
+            }
+
+            echo "Добавлены права на сущность<br><br>";
+        }
+
+        return "<strong>Добавление сущности агентов завершено</strong>";
+    }
+
+    /**
      * Добавление в развернутую систему сущности категорий обьектов воздействия с правами
      *
      * @return string
