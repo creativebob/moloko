@@ -331,6 +331,37 @@ class PricesServiceController extends Controller
         }
     }
 
+    /**
+     * Поиск
+     *
+     * @param $catalogId
+     * @param $search
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function search($catalogId, $search)
+    {
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('index'));
+
+        $results = PricesService::with([
+            'service.process.manufacturer.company'
+        ])
+            ->moderatorLimit($answer)
+            ->companiesLimit($answer)
+            ->authors($answer)
+            ->systemItem($answer) // Фильтр по системным записям
+            ->where('catalogs_service_id', $catalogId)
+            ->whereHas('service', function ($q) use ($search) {
+                $q->whereHas('process', function ($q) use ($search) {
+                    $q->where('name', 'LIKE', '%' . $search . '%');
+                });
+            })
+            ->where('archive', false)
+            ->get();
+
+        return response()->json($results);
+    }
+
 
     // --------------------------------- Ajax ----------------------------------------
 

@@ -41,7 +41,7 @@
     export default {
 
         props: {
-          catalog_id: Number,
+          catalogId: Number,
         },
         data() {
             return {
@@ -74,7 +74,7 @@
                 // console.log('Поиск...');
                 if (this.text.length >= 1) {
                     axios
-                        .get('/admin/catalogs_goods/' + catalog_id + '/prices_goods/search/' + this.text)
+                        .get('/admin/catalogs_goods/' + this.catalogId + '/prices_goods/search/' + this.text)
                         .then(response => {
                             this.results = response.data
                             this.search = (this.results.length > 0)

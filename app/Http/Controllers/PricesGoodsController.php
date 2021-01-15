@@ -152,39 +152,7 @@ class PricesGoodsController extends Controller
         ]);
     }
 
-    public function search($catalogId, $search)
-    {
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('index'));
-
-        $results = $this->class::with([
-            'goods.article.manufacturer.company'
-        ])
-            ->moderatorLimit($answer)
-            ->companiesLimit($answer)
-            ->authors($answer)
-            ->systemItem($answer) // Фильтр по системным записям
-            ->where('catalogs_goods_id', $catalogId)
-            ->whereHas('goods', function ($q) use ($search) {
-                $q->whereHas('article', function ($q) use ($search) {
-                   $q->where('name', 'LIKE', '%' . $search . '%');
-                });
-            })
-            ->where('archive', false)
-            ->get();
-
-            // Модифицируем данные
-            $modified = $results->map(function($value, $key) {
-                $value['total'] = num_format($value['total'], 0);
-                // $value['created_at'] = Carbon::parse($value['created_at']);
-                return $value;
-            });
-
-            $results = $modified->all();
-
-        return response()->json($results);
-    }
 
 
     /**
@@ -366,6 +334,47 @@ class PricesGoodsController extends Controller
         } else {
             abort(403, __('errors.archive'));
         }
+    }
+
+    /**
+     * Поиск
+     *
+     * @param $catalogId
+     * @param $search
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function search($catalogId, $search)
+    {
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('index'));
+
+        $results = $this->class::with([
+            'goods.article.manufacturer.company'
+        ])
+            ->moderatorLimit($answer)
+            ->companiesLimit($answer)
+            ->authors($answer)
+            ->systemItem($answer) // Фильтр по системным записям
+            ->where('catalogs_goods_id', $catalogId)
+            ->whereHas('goods', function ($q) use ($search) {
+                $q->whereHas('article', function ($q) use ($search) {
+                    $q->where('name', 'LIKE', '%' . $search . '%');
+                });
+            })
+            ->where('archive', false)
+            ->get();
+
+        // Модифицируем данные
+        $modified = $results->map(function($value, $key) {
+            $value['total'] = num_format($value['total'], 0);
+            // $value['created_at'] = Carbon::parse($value['created_at']);
+            return $value;
+        });
+
+        $results = $modified->all();
+
+        return response()->json($results);
     }
 
 

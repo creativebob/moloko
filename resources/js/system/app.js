@@ -112,6 +112,8 @@ Vue.component('search-prices-goods-component', require('./components/search/Sear
 Vue.component('search-articles-groups-component', require('./components/search/SearchArticlesGroupsComponent'));
 Vue.component('search-processes-groups-component', require('./components/search/SearchProcessesGroupsComponent'));
 
+Vue.component('search-prices-services-component', require('./components/search/SearchPricesServicesComponent'));
+
 Vue.component('search-estimates-component', require('./components/search/SearchEstimatesComponent'));
 Vue.component('search-client-component', require('./components/search/SearchClientComponent'));
 

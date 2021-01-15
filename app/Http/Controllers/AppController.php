@@ -221,15 +221,19 @@ class AppController extends Controller
     /**
      * Сброс фильтра
      *
+     * @param Request $request
      * @param $alias
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function resetFilter($alias)
+    public function resetFilter(Request $request, $alias)
     {
         $filter = auth()->user()->filters->firstWhere('alias', $alias);
         if ($filter) {
             $filter->delete();
         }
-        return redirect()->route($alias . '.index');
+
+        $params = $request->input();
+        unset($params['_token']);
+        return redirect()->route($alias . '.index', $params);
     }
 }

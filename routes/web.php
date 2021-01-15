@@ -1554,6 +1554,9 @@ Route::prefix('/catalogs_services/{catalogId}')->group(function () {
     Route::any('/prices_services/ajax_store', 'PricesServiceController@ajax_store');
     Route::any('/prices_services_sync', 'PricesServiceController@sync')
         ->name('prices_services.sync');
+
+    Route::any('/prices_services/search/{text}', 'PricesServiceController@search');
+
     Route::any('/prices_services_status', 'PricesServiceController@ajax_status');
     Route::any('/prices_services_hit', 'PricesServiceController@ajax_hit');
     Route::any('/prices_services_new', 'PricesServiceController@ajax_new');

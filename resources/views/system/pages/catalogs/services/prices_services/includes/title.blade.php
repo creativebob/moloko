@@ -20,13 +20,12 @@
             </div>
             <div class="top-bar-right">
 
-                @if (isset($filter))
-                <a class="icon-filter sprite @if ($filter['status'] == 'active') filtration-active @endif"></a>
-                @endif
-
-                <input class="search-field" type="search" id="search_field" name="search_field" placeholder="Поиск" />
-                {{-- <button type="button" class="icon-search sprite button"></button> --}}
-
+                <a class="icon-filter sprite
+                @if(!(count(request()->input()) == 1 && request()->input(['page'])) && count(request()->input())) filtration-active @endif
+                    "></a>
+                <search-prices-services-component
+                    :catalog-id="{{ $catalogServices->id }}"
+                ></search-prices-services-component>
             </div>
 
 
@@ -44,15 +43,16 @@
             <div class="small-12 cell filters fieldset-filters" id="filters">
                 <div class="grid-padding-x">
                     <div class="small-12 cell text-right">
-                        <a href="{{ route('prices_goods.index', ['catalog_id' => $catalogServices->id]) }}"
-                           class="small-link filter-reset">Сбросить</a>
+                        {!! Form::open(['route' => ['reset_filter', [$pageInfo->alias, 'catalogId' => $catalogServices->id]]]) !!}
+                        {!! Form::submit('Сбросить', ['class'=>'small-link filter-reset']) !!}
+                        {!! Form::close() !!}
                     </div>
                 </div>
                 <div class="grid-padding-x">
                     <div class="small-12 cell">
-                        {{ Form::open(['route' => ['prices_services.index', $catalogServices->id], 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
+                        {{ Form::open(['route' => ['prices_services.index', $catalogServices->id], 'data-abide', 'novalidate', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
 
-                        @includeIf('system.pages.catalogs.services.prices_services.includes.filters')
+                        @include('system.pages.catalogs.services.prices_services.includes.filters')
 
                         <div class="small-12 cell text-center">
                             {{ Form::submit('Фильтрация', ['class'=>'button']) }}
@@ -66,18 +66,6 @@
                     </a>
                 </div>
             </div>
-
-            {{-- Дополнительные кнопки приходящие с контроллера --}}
-            <div class="black-button-group small-12 cell">
-                @if(isset($add_buttons))
-                    @foreach($add_buttons as $add_button)
-                        <a class="button tiny hollow right {{ $add_button['class'] }}"
-                           href="{{ $add_button['href'] }}">{{ $add_button['text'] }}</a>
-                    @endforeach
-                @endif
-            </div>
-
-
         </div>
     </div>
 </div>
