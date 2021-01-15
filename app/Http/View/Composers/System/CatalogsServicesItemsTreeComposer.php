@@ -2,11 +2,11 @@
 
 namespace App\Http\View\Composers\System;
 
-use App\CatalogsGoodsItem;
+use App\CatalogsServicesItem;
 
 use Illuminate\View\View;
 
-class CatalogsGoodsItemsTreeComposer
+class CatalogsServicesItemsTreeComposer
 {
 
     /**
@@ -23,18 +23,18 @@ class CatalogsGoodsItemsTreeComposer
 	public function compose(View $view)
 	{
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right('catalogs_goods_item', false, 'index');
+        $answer = operator_right('catalogs_services_item', false, 'index');
 
-        $catalogId = $view->catalogGoods->id;
+        $catalogId = $view->catalogServices->id;
 
-        $catalogsGoodsItems = CatalogsGoodsItem::where('catalogs_goods_id', $catalogId)
+        $catalogsServicesItems = CatalogsServicesItem::where('catalogs_service_id', $catalogId)
             ->moderatorLimit($answer)
             ->companiesLimit($answer)
             ->get();
 
-        $this->catalogsGoodsItemsTree = buildTree($catalogsGoodsItems);
-//        dd($this->catalogsGoodsItemsTree);
+        $this->catalogsServicesItemsTree = buildTree($catalogsServicesItems);
+//        dd($this->catalogsServicesItemsTree);
 
-        return $view->with('catalogsGoodsItemsTree', $this->catalogsGoodsItemsTree);
+        return $view->with('catalogsServicesItemsTree', $this->catalogsServicesItemsTree);
     }
 }

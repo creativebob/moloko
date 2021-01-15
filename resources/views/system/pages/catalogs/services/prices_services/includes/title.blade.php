@@ -40,25 +40,22 @@
         @include('includes.scripts.search-script')
 
         {{-- Блок фильтров --}}
-        @if (isset($filter))
-
-
         <div class="grid-x">
             <div class="small-12 cell filters fieldset-filters" id="filters">
                 <div class="grid-padding-x">
                     <div class="small-12 cell text-right">
-                        {{ link_to(Request::url() . '?filter=disable', 'Сбросить', ['class' => 'small-link filter-reset']) }}
+                        <a href="{{ route('prices_goods.index', ['catalog_id' => $catalogServices->id]) }}"
+                           class="small-link filter-reset">Сбросить</a>
                     </div>
                 </div>
                 <div class="grid-padding-x">
                     <div class="small-12 cell">
-                        {{ Form::open(['url' => Request::url(), 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
+                        {{ Form::open(['route' => ['prices_services.index', $catalogServices->id], 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
 
-                        @includeIf($pageInfo->entity->view_path.'.filters')
+                        @includeIf('system.pages.catalogs.services.prices_services.includes.filters')
 
                         <div class="small-12 cell text-center">
                             {{ Form::submit('Фильтрация', ['class'=>'button']) }}
-                            <input hidden name="filter" value="active">
                         </div>
                         {{ Form::close() }}
                     </div>
@@ -74,14 +71,13 @@
             <div class="black-button-group small-12 cell">
                 @if(isset($add_buttons))
                     @foreach($add_buttons as $add_button)
-                        <a class="button tiny hollow right {{ $add_button['class'] }}" href="{{ $add_button['href'] }}">{{ $add_button['text'] }}</a>
+                        <a class="button tiny hollow right {{ $add_button['class'] }}"
+                           href="{{ $add_button['href'] }}">{{ $add_button['text'] }}</a>
                     @endforeach
                 @endif
             </div>
 
 
         </div>
-
-        @endif
     </div>
 </div>

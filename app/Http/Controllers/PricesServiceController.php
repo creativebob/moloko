@@ -86,6 +86,8 @@ class PricesServiceController extends Controller
             ->withCount('likes')
         // ->moderatorLimit($answer)
          ->companiesLimit($answer)
+            ->filter()
+
         ->booklistFilter($request)
 
 //        ->whereHas('catalogs_item', function($q) use ($request){

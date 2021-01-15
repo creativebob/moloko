@@ -14,6 +14,7 @@ use App\Http\View\Composers\System\CatalogServicesWithPricesComposer;
 use App\Http\View\Composers\System\CatalogsGoodsItemsTreeComposer;
 use App\Http\View\Composers\System\CatalogsGoodsWithFilialsComposer;
 use App\Http\View\Composers\System\CatalogsGoodsWithSchemesComposer;
+use App\Http\View\Composers\System\CatalogsServicesItemsTreeComposer;
 use App\Http\View\Composers\System\CatalogsServicesWithFilialsComposer;
 use App\Http\View\Composers\System\ChannelsComposer;
 use App\Http\View\Composers\System\ChargesComposer;
@@ -560,6 +561,9 @@ class ViewServiceProvider extends ServiceProvider
 
         // Прайсы товаров
         view()->composer('system.pages.catalogs.goods.prices_goods.includes.filters', CatalogsGoodsItemsTreeComposer::class);
+
+        // Прайсы услуг
+        view()->composer('system.pages.catalogs.services.prices_services.includes.filters', CatalogsServicesItemsTreeComposer::class);
 
         // Лиды
         view()->composer('leads.includes.filters', CitiesComposer::class);
