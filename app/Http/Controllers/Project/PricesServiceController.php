@@ -35,6 +35,10 @@ class PricesServiceController extends BaseController
                 'display' => true
             ])
             ->find($id);
+//        dd($price_service);
+        if (empty($price_service)) {
+            abort(404);
+        }
 
         // dd($price_service->service_public->article->containers);
 

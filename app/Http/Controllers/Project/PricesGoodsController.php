@@ -72,7 +72,7 @@ class PricesGoodsController extends BaseController
             ->find($id);
 
         if (empty($price_goods) || $price_goods->catalog->is_access_page == 0) {
-            abort(404, $site->alias);
+            abort(404);
         }
 
         $page->title = $price_goods->goods->article->name;

@@ -439,14 +439,15 @@ class AppController extends BaseController
         $page = $site->pages_public->firstWhere('alias', 'unsubscribe');
 
         $subscriber = Subscriber::find($id);
+        if (empty($subscriber)) {
+            abort(404);
+        }
 
-        if ($subscriber) {
-            if ($subscriber->token == $request->token) {
-                $subscriber->update([
-                    'denied_at' => now(),
-                    'editor_id' => 1
-                ]);
-            }
+        if ($subscriber->token == $request->token) {
+            $subscriber->update([
+                'denied_at' => now(),
+                'editor_id' => 1
+            ]);
         }
 
         return view($site->alias . '.pages.unsubscribe.index', compact('site', 'page'));
