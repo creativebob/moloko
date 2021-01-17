@@ -68,7 +68,7 @@
             </fieldset>
         @endif
 
-        @if($tem->getTable() != 'impacts')
+        @if($item->getTable() != 'impacts')
         <fieldset class="fieldset package-fieldset" id="package-fieldset">
 
             <legend class="checkbox">
