@@ -38,6 +38,8 @@
                     <th class="td-photo">Фото</th>
                     <th class="td-name" data-serversort="name">Название</th>
                     <th class="td-phone">Контактный телефон</th>
+                    <th class="td-designation">Ком. обозначение</th>
+                    <th class="td-site">Сайт</th>
                     <th class="td-description">Коментарий</th>
                     <th class="td-sector">Направление</th>
 
@@ -81,6 +83,10 @@
                             </td>
                             {{-- Если пользователь бог, то показываем для него переключатель на компанию --}}
                             <td class="td-phone">{{ isset($competitor->company->main_phone->phone) ? decorPhone($competitor->company->main_phone->phone) : 'Номер не указан' }}</td>
+
+                            <td class="td-designation">{{ $competitor->company->designation }} </td>
+                            <td class="td-site">{{ optional(optional($competitor->company->domains)->first())->utfDomain }} </td>
+
                             <td class="td-description">{{ $competitor->description ?? '' }} </td>
                             <td class="td-sector">{{ $competitor->company->sector->name ?? ' ... ' }} </td>
 

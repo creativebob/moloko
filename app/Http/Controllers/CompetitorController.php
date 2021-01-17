@@ -52,7 +52,8 @@ class CompetitorController extends Controller
                 $q->with([
                     'location.city',
                     'sector',
-                    'legal_form'
+                    'legal_form',
+                    'domains'
                 ]);
             },
         ])
