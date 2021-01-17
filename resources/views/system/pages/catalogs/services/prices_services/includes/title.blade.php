@@ -34,7 +34,7 @@
             <div class="small-12 cell filters fieldset-filters" id="filters">
                 <div class="grid-padding-x">
                     <div class="small-12 cell text-right">
-                        {!! Form::open(['route' => ['reset_filter', ['alias' => $pageInfo->alias, 'catalogId' => $catalogServices->id]]]) !!}
+                        {!! Form::open(['route' => ['reset_filter', [$pageInfo->alias, 'catalogId' => $catalogServices->id]]]) !!}
                         {!! Form::submit('Сбросить', ['class'=>'small-link filter-reset']) !!}
                         {!! Form::close() !!}
                     </div>
