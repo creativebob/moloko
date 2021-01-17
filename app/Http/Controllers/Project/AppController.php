@@ -112,7 +112,7 @@ class AppController extends BaseController
                 ->first();
 
             // Если не существует страницы с таким алиасом - отдаем 404
-            if (!isset($page)) {
+            if (empty($page)) {
                 abort(404);
             }
 
