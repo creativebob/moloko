@@ -185,7 +185,7 @@ class EntitiesTableSeeder extends Seeder
                 'page_id' => $pages->firstWhere('alias', 'tools_categories')->id,
             ],
             [
-                'name' => 'Категории обьектов воздействия',
+                'name' => 'Категории объектов воздействия',
                 'alias' => 'impacts_categories',
                 'model' => 'App\ImpactsCategory',
                 'rights' => true,
@@ -1104,7 +1104,7 @@ class EntitiesTableSeeder extends Seeder
                 'page_id' => $pages->firstWhere('alias', 'tools')->id,
             ],
             [
-                'name' => 'Обьекты воздействия',
+                'name' => 'Объекты воздействия',
                 'alias' => 'impacts',
                 'model' => 'App\Impact',
                 'rights' => true,
@@ -1447,7 +1447,7 @@ class EntitiesTableSeeder extends Seeder
                 'page_id' => $pages->firstWhere('alias', 'tools_stocks')->id,
             ],
             [
-                'name' => 'Склад обьектов воздействия',
+                'name' => 'Склад объектов воздействия',
                 'alias' => 'impacts_stocks',
                 'model' => 'App\Models\System\Stocks\ImpactsStock',
                 'rights' => true,

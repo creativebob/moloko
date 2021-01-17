@@ -211,7 +211,7 @@ class ImpactController extends Controller
             // Описание ошибки
             $ajax_error = [];
             $ajax_error['title'] = "Обратите внимание!";
-            $ajax_error['text'] = "Для начала необходимо создать категории обьектов воздействия. А уже потом будем добавлять обьекты воздейтсвия. Ок?";
+            $ajax_error['text'] = "Для начала необходимо создать категории объектов воздействия. А уже потом будем добавлять объекты воздейтсвия. Ок?";
             $ajax_error['link'] = "/admin/impacts_categories";
             $ajax_error['title_link'] = "Идем в раздел категорий";
 
@@ -241,7 +241,7 @@ class ImpactController extends Controller
 
         return view('products.articles.common.create.create', [
             'item' => Impact::make(),
-            'title' => 'Добавление обьекта воздействия',
+            'title' => 'Добавление объекта воздействия',
             'entity' => $this->entityAlias,
             'category_entity' => 'impacts_categories',
             'units_category_default' => 6,
@@ -262,7 +262,7 @@ class ImpactController extends Controller
         $this->authorize(getmethod(__FUNCTION__), Impact::class);
 
         logs('operations')
-            ->info('========================================== НАЧИНАЕМ ЗАПИСЬ ОБЬЕКТА ВОЗДЕЙСТВИЯ ==============================================');
+            ->info('========================================== НАЧИНАЕМ ЗАПИСЬ ОБЪЕКТА ВОЗДЕЙСТВИЯ ==============================================');
 
         $impactsCategory = ImpactsCategory::find($request->category_id);
         // dd($impactsCategory->load('groups'));
@@ -283,11 +283,11 @@ class ImpactController extends Controller
                 // Cookie::queue('conditions_goods_category', $goods_category_id, 1440);
 
                 logs('operations')
-                    ->info('Записали обьект воздействия с id: ' . $impact->id);
+                    ->info('Записали объект воздействия с id: ' . $impact->id);
                 logs('operations')
                     ->info('Автор: ' . $impact->author->name . ' id: ' . $impact->author_id . ', компания: ' . $impact->company->name . ', id: ' . $impact->company_id);
                 logs('operations')
-                    ->info('========================================== КОНЕЦ ЗАПИСИ ОБЬЕКТА ВОЗДЕЙСТВИЯ ==============================================
+                    ->info('========================================== КОНЕЦ ЗАПИСИ ОБЪЕКТА ВОЗДЕЙСТВИЯ ==============================================
 
                     ');
 
@@ -354,7 +354,7 @@ class ImpactController extends Controller
         // dd($pageInfo);
 
         return view('products.articles.common.edit.edit', [
-            'title' => 'Редактировать рабочий процесс',
+            'title' => 'Редактировать объект воздействия',
             'item' => $impact,
             'article' => $article,
             'pageInfo' => $pageInfo,

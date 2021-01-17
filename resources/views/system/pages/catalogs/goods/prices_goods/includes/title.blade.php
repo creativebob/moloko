@@ -30,11 +30,6 @@
             </div>
         </div>
 
-        <div id="port-result-search">
-        </div>
-        {{-- Подключаем стандартный ПОИСК --}}
-        @include('includes.scripts.search-script')
-
         {{-- Блок фильтров --}}
         <div class="grid-x">
             <div class="small-12 cell filters fieldset-filters" id="filters">

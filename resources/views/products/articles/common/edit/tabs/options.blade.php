@@ -68,6 +68,7 @@
             </fieldset>
         @endif
 
+        @if($tem->getTable() != 'impacts')
         <fieldset class="fieldset package-fieldset" id="package-fieldset">
 
             <legend class="checkbox">
@@ -97,6 +98,7 @@
                 </div>
             </div>
         </fieldset>
+        @endif
 
         @includeIf('products.articles.' . $item->getTable().'.fieldsets')
 
@@ -150,7 +152,7 @@
     </div>
 
     <div class="cell small-12 medium-6">
-        @if($item->getTable() == 'goods')
+        @if($item->getTable() == 'goods' || $item->getTable() == 'impacts')
             <fieldset class="fieldset-access">
                 <legend>Доп. коды</legend>
                 <article-codes-component

@@ -293,7 +293,7 @@ class UpdateController extends Controller
     }
 
     /**
-     * Добавление в развернутую систему сущности категорий обьектов воздействия с правами
+     * Добавление в развернутую систему сущности категорий объектов воздействия с правами
      *
      * @return string
      */
@@ -301,10 +301,10 @@ class UpdateController extends Controller
     {
         Page::insert([
             [
-                'name' => 'Категории обьектов воздействия',
+                'name' => 'Категории объектов воздействия',
                 'site_id' => 1,
-                'title' => 'Категории обьектов воздействия',
-                'description' => 'Категории обьектов воздействия',
+                'title' => 'Категории объектов воздействия',
+                'description' => 'Категории объектов воздействия',
                 'alias' => 'impacts_categories',
                 'company_id' => null,
                 'system' => true,
@@ -312,10 +312,10 @@ class UpdateController extends Controller
                 'display' => true,
             ],
             [
-                'name' => 'Обьекты воздействия',
+                'name' => 'Объекты воздействия',
                 'site_id' => 1,
-                'title' => 'Обьекты воздействия',
-                'description' => 'Обьекты воздействия',
+                'title' => 'Объекты воздействия',
+                'description' => 'Объекты воздействия',
                 'alias' => 'impacts',
                 'company_id' => null,
                 'system' => true,
@@ -323,10 +323,10 @@ class UpdateController extends Controller
                 'display' => true,
             ],
             [
-                'name' => 'Склады обьектов воздействия',
+                'name' => 'Склады объектов воздействия',
                 'site_id' => 1,
-                'title' => 'Склады обьектов воздействия',
-                'description' => 'Склады обьектов воздействия',
+                'title' => 'Склады объектов воздействия',
+                'description' => 'Склады объектов воздействия',
                 'alias' => 'impacts_stocks',
                 'company_id' => null,
                 'system' => true,
@@ -337,9 +337,9 @@ class UpdateController extends Controller
         echo "Добавлены страницы<br><br>";
 
         Menu::insert([
-            //  Обьекты воздействия
+            //  Объекты воздействия
             [
-                'name' => 'Обьекты воздействия',
+                'name' => 'Объекты воздействия',
                 'icon' => 'icon-impact',
                 'alias' => null,
                 'tag' => 'impacts',
@@ -361,7 +361,7 @@ class UpdateController extends Controller
 
         Menu::insert([
             [
-                'name' => 'Категории обьектов воздействия',
+                'name' => 'Категории объектов воздействия',
                 'icon' => null,
                 'alias' => 'admin/impacts_categories',
                 'tag' => 'impacts_categories',
@@ -375,7 +375,7 @@ class UpdateController extends Controller
                 'sort' => null,
             ],
             [
-                'name' => 'Обьекты воздействия',
+                'name' => 'Объекты воздействия',
                 'icon' => null,
                 'alias' => 'admin/impacts',
                 'tag' => 'impacts',
@@ -389,7 +389,7 @@ class UpdateController extends Controller
                 'sort' => null,
             ],
             [
-                'name' => 'Склады обьектов воздействия',
+                'name' => 'Склады объектов воздействия',
                 'icon' => null,
                 'alias' => 'admin/impacts_stocks',
                 'tag' => 'impacts_stocks',
@@ -409,7 +409,7 @@ class UpdateController extends Controller
 
         Entity::insert([
             [
-                'name' => 'Категории обьектов воздействия',
+                'name' => 'Категории объектов воздействия',
                 'alias' => 'impacts_categories',
                 'model' => 'App\ImpactsCategory',
                 'rights' => true,
@@ -423,7 +423,7 @@ class UpdateController extends Controller
         ]);
         Entity::insert([
             [
-                'name' => 'Обьекты воздействия',
+                'name' => 'Объекты воздействия',
                 'alias' => 'impacts',
                 'model' => 'App\Impact',
                 'rights' => true,
@@ -438,7 +438,7 @@ class UpdateController extends Controller
 
         Entity::insert([
             [
-                'name' => 'Склад обьектов воздействия',
+                'name' => 'Склад объектов воздействия',
                 'alias' => 'impacts_stocks',
                 'model' => 'App\Models\System\Stocks\ImpactsStock',
                 'rights' => true,
@@ -502,7 +502,7 @@ class UpdateController extends Controller
 
         echo "Добавлены права на сущности<br><br>";
 
-        return "<strong>Добавление сущностей обьектов воздействия (категории, сущность, хранилища) завершено</strong>";
+        return "<strong>Добавление сущностей объектов воздействия (категории, сущность, хранилища) завершено</strong>";
     }
 
     /**

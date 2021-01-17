@@ -61,7 +61,7 @@
                 @if($process->processes_type_id == 2)
                     @can('index', App\Impact::class)
                         <li class="tabs-title">
-                            <a data-tabs-target="tab-impacts" href="#tab-impacts">Обьекты воздействия</a>
+                            <a data-tabs-target="tab-impacts" href="#tab-impacts">Объекты воздействия</a>
                         </li>
                     @endcan
                 @endif

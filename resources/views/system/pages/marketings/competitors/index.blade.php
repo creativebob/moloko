@@ -85,7 +85,11 @@
                             <td class="td-phone">{{ isset($competitor->company->main_phone->phone) ? decorPhone($competitor->company->main_phone->phone) : 'Номер не указан' }}</td>
 
                             <td class="td-designation">{{ $competitor->company->designation }} </td>
-                            <td class="td-site">{{ optional(optional($competitor->company->domains)->first())->utfDomain }} </td>
+                            <td class="td-site">
+                                @if($competitor->company->domains->isNotEmpty())
+                                <a href="//{{ $competitor->company->domains->first()->utfDomain }}" target="_blank">{{ $competitor->company->domains->first()->utfDomain }}</a>
+                                @endif
+                            </td>
 
                             <td class="td-description">{{ $competitor->description ?? '' }} </td>
                             <td class="td-sector">{{ $competitor->company->sector->name ?? ' ... ' }} </td>

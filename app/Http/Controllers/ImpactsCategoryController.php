@@ -106,7 +106,7 @@ class ImpactsCategoryController extends Controller
         return view('system.common.categories.create.modal.create', [
             'item' => ImpactsCategory::make(),
             'entity' => $this->entityAlias,
-            'title' => 'Добавление категории обьектов воздействия',
+            'title' => 'Добавление категории объектов воздействия',
             'parent_id' => $request->parent_id,
             'category_id' => $request->category_id,
             'pageInfo' => pageInfo($this->entityAlias),
@@ -184,7 +184,7 @@ class ImpactsCategoryController extends Controller
 
         // dd($goods_category->direction);
         return view('products.articles_categories.common.edit.edit', [
-            'title' => 'Редактирование категории обьектов воздействия',
+            'title' => 'Редактирование категории объектов воздействия',
             'category' => $impactsCategory,
             'pageInfo' => $pageInfo,
             'settings' => $settings,

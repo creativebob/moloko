@@ -348,7 +348,7 @@ class AuthServiceProvider extends ServiceProvider
         Tool::class => ToolPolicy::class,
         ToolsStock::class => ToolsStockPolicy::class,
 
-        // Обьекты воздействия
+        // Объекты воздействия
         ImpactsCategory::class => ImpactsCategoryPolicy::class,
         Impact::class => ImpactPolicy::class,
         ImpactsStock::class => ImpactsStockPolicy::class,

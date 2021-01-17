@@ -228,7 +228,7 @@ class ServicesProductController extends Controller
             $directory = $company_id.'/media/services_products/'.$services_product->id.'/img';
             $name = 'avatar-'.time();
 
-            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
+            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным объектом фото, и результатом записи
             if ($services_product->photo_id) {
                 $array = save_photo($request, $directory, $name, null, $services_product->photo_id, $this->entity_name);
 

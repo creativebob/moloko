@@ -535,7 +535,7 @@ Route::resource('/tools_stocks', 'ToolsStockController')
         'update'
     ]);
 
-// ------------------------------------- Категории обьектов воздействия-------------------------------------------
+// ------------------------------------- Категории объектов воздействия-------------------------------------------
 // Текущая добавленная/удаленная категория
 Route::any('/impacts_categories', 'ImpactsCategoryController@index');
 Route::match(['get', 'post'], '/impacts_categories/{id}/edit', 'ImpactsCategoryController@edit');
@@ -546,7 +546,7 @@ Route::resource('/impacts_categories', 'ImpactsCategoryController')
     ]);
 
 
-// ---------------------------------- Обьекты воздействия -------------------------------------------
+// ---------------------------------- Объекты воздействия -------------------------------------------
 // Архив
 Route::post('/impacts/archive/{id}', 'ImpactController@archive');
 // Просмотр архивных
@@ -565,7 +565,7 @@ Route::resource('/impacts', 'ImpactController')
 Route::any('/impacts_create_mode', 'ToolController@ajax_change_create_mode');
 
 
-// ---------------------------------- Склады обьектов воздействия -------------------------------------------
+// ---------------------------------- Склады объектов воздействия -------------------------------------------
 // Основные методы
 Route::resource('/impacts_stocks', 'ImpactsStockController')
     ->only([

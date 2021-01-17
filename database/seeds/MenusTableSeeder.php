@@ -144,9 +144,9 @@ class MenusTableSeeder extends Seeder
                 'sort' => null,
             ],
 
-            //  Обьекты воздействия
+            //  Объекты воздействия
             [
-                'name' => 'Обьекты воздействия',
+                'name' => 'Объекты воздействия',
                 'icon' => 'icon-impact',
                 'alias' => null,
                 'tag' => 'impacts',
@@ -974,9 +974,9 @@ Menu::insert([
         'sort' => 1,
     ],
 
-    // Обьекты воздействия
+    // Объекты воздействия
     [
-        'name' => 'Категории обьектов воздействия',
+        'name' => 'Категории объектов воздействия',
         'icon' => null,
         'alias' => 'admin/impacts_categories',
         'tag' => 'impacts_categories',
@@ -990,7 +990,7 @@ Menu::insert([
         'sort' => null,
     ],
     [
-        'name' => 'Обьекты воздействия',
+        'name' => 'Объекты воздействия',
         'icon' => null,
         'alias' => 'admin/impacts',
         'tag' => 'impacts',
@@ -1004,7 +1004,7 @@ Menu::insert([
         'sort' => null,
     ],
     [
-        'name' => 'Склады обьектов воздействия',
+        'name' => 'Склады объектов воздействия',
         'icon' => null,
         'alias' => 'admin/impacts_stocks',
         'tag' => 'impacts_stocks',

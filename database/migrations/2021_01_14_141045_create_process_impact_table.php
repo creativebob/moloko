@@ -17,7 +17,7 @@ class CreateProcessImpactTable extends Migration
             $table->bigInteger('process_id')->nullable()->unsigned()->comment('Id процесса');
 //            $table->foreign('process_id')->references('id')->on('processes');
 
-            $table->bigInteger('impact_id')->nullable()->unsigned()->comment('Id обьекта воздействия');
+            $table->bigInteger('impact_id')->nullable()->unsigned()->comment('Id объекта воздействия');
 //            $table->foreign('impact_id')->references('id')->on('impacts');
         });
     }
