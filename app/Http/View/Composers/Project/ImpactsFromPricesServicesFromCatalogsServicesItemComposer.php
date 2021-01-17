@@ -39,7 +39,6 @@ class ImpactsFromPricesServicesFromCatalogsServicesItemComposer
                         }
                     ]);
                 }
-
             ])
             ->whereHas('service', function ($q) {
                 $q->where([
@@ -56,8 +55,8 @@ class ImpactsFromPricesServicesFromCatalogsServicesItemComposer
             ->oldest('sort')
             ->get();
 
-        $pricesServices = $catalogsServicesItem->prices;
+        $pricesServicesWithImpacts = $catalogsServicesItem->prices;
 
-        return $view->with(compact('pricesServices'));
+        return $view->with(compact('pricesServicesWithImpacts'));
     }
 }
