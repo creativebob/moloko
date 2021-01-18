@@ -15,9 +15,9 @@
                     </label>
                 </div>
 
-                {{--                <div class="small-12 medium-6 cell">--}}
-                {{--                    @include('includes.selects.units_categories', ['default' => isset($processesGroup->unit_id) ? $processesGroup->unit->category_id : 6, 'type'=>'article'])--}}
-                {{--                </div>--}}
+                <div class="small-12 medium-6 cell">
+                    @include('includes.selects.units_categories', ['default' => $processesGroup->units_category_id, 'type'=>'process'])
+                </div>
 
                 {{--                <div class="small-12 medium-6 cell">--}}
                 {{--                    @include('includes.selects.units', ['default' => isset($processesGroup->unit_id) ? $processesGroup->unit_id : 26, 'units_category_id' => isset($processesGroup->unit_id) ? $processesGroup->unit->category_id : 6])--}}
@@ -31,12 +31,14 @@
 
                                 @foreach($process->in_services as $item)
                                     <li>
-                                        Услуга: <a href="{{ route('services.edit', $item->id) }}">{{ $item->process->name }}</a>
+                                        Услуга: <a
+                                            href="{{ route('services.edit', $item->id) }}">{{ $item->process->name }}</a>
                                     </li>
                                 @endforeach
                                 @foreach($process->in_workflows as $item)
                                     <li>
-                                        Рабочий процесс: <a href="{{ route('workflows.edit', $item->id) }}">{{ $item->process->name }}</a>
+                                        Рабочий процесс: <a
+                                            href="{{ route('workflows.edit', $item->id) }}">{{ $item->process->name }}</a>
                                     </li>
                                 @endforeach
 

@@ -37,11 +37,6 @@
                 <label
                     for="checkbox-is_controllable_mode"><span>Разрешить смену отображения</span></label>
             </div>
-            <div class="small-12 cell">
-                <label>Выводить меру в качестве основной:
-                    @include('includes.selects.directive_categories', ['item' => $catalogsServicesItem])
-                </label>
-            </div>
             {!! Form::hidden('is_show_subcategory', 0) !!}
             <div class="small-12 cell checkbox">
                 {!! Form::checkbox('is_show_subcategory', 1, $catalogsServicesItem->is_show_subcategory, ['id' => 'checkbox-is_show_subcategory']) !!}

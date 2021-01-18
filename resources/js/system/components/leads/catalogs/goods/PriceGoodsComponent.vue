@@ -34,7 +34,7 @@
                             >{{ price.total_catalogs_item_discount | roundToTwo | level }}</span>
                             <span
                                 v-if="showPoints"
-                                  class="points"
+                                class="points"
                             >({{ price.points | roundToTwo | level }})</span>
                         </div>
                     </div>
@@ -66,62 +66,66 @@
 </template>
 
 <script>
-    export default {
-        props: {
-            price: Object,
-            view: String
+export default {
+    props: {
+        price: Object,
+        view: String
+    },
+    data() {
+        return {
+            stocks: this.price.goods.stocks,
+        }
+    },
+    computed: {
+        showPoints() {
+            const canPaymentPoints = this.$store.getters.HAS_OUTLET_SETTING('payment-point');
+            return this.price.points > 0 && canPaymentPoints;
         },
-        data() {
+        countInStocks() {
+            let count = 0,
+                reserve = 0,
+                free = 0;
+            if (this.price.goods.stocks) {
+                this.price.goods.stocks.forEach(stock => {
+                    count += parseFloat(stock.count);
+                    reserve += parseFloat(stock.reserve);
+                    free += parseFloat(stock.free);
+                })
+            }
             return {
-                stocks: this.price.goods.stocks,
+                count: count,
+                reserve: reserve,
+                free: free
             }
         },
-        computed: {
-            showPoints() {
-                const canPaymentPoints = this.$store.getters.HAS_OUTLET_SETTING('payment-point');
-                return this.price.points > 0 && canPaymentPoints;
-            },
-            countInStocks() {
-                let count = 0,
-                    reserve = 0,
-                    free = 0;
-                if (this.price.goods.stocks) {
-                    this.price.goods.stocks.forEach(stock => {
-                        count += parseFloat(stock.count);
-                        reserve += parseFloat(stock.reserve);
-                        free += parseFloat(stock.free);
-                    })
-                }
-                return {
-                    count: count,
-                    reserve: reserve,
-                    free: free
-                }
-            },
-            countInEstimate() {
-                return this.$store.getters.COUNT_GOODS_ITEM_IN_ESTIMATE(this.price.id);
-            },
+        countInEstimate() {
+            return this.$store.getters.COUNT_GOODS_ITEM_IN_ESTIMATE(this.price.id);
         },
-        methods: {
-            addPriceToEstimate() {
-                this.$store.commit('ADD_GOODS_ITEM_TO_ESTIMATE', this.price);
-            },
-            getPhotoPath(price, format = 'medium') {
+    },
+    methods: {
+        addPriceToEstimate() {
+            this.$store.commit('ADD_GOODS_ITEM_TO_ESTIMATE', this.price);
+        },
+        getPhotoPath(price, format = 'medium') {
+            if (this.price.goods.article.photo) {
                 // Умолчание по формату. Плюс защита от ошибок при указании формата
                 format = (format !== ('small' || 'medium' || 'large')) ? 'medium' : format;
                 return '/storage/' + price.company_id + '/media/articles/' + price.goods.article.id + '/img/' + format + '/' + price.goods.article.photo.name;
-            },
+            } else {
+                return '';
+            }
+        },
+    },
+
+    filters: {
+        roundToTwo: function (value) {
+            return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
         },
 
-        filters: {
-            roundToTwo: function (value) {
-                return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
-            },
-
-            // Создает разделители разрядов в строке с числами
-            level: function (value) {
-                return Number(value).toLocaleString();
-            },
+        // Создает разделители разрядов в строке с числами
+        level: function (value) {
+            return Number(value).toLocaleString();
         },
-    }
+    },
+}
 </script>
