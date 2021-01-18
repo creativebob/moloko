@@ -477,14 +477,14 @@ class ImpactController extends Controller
         $new_impact->article_id = $new_article->id;
         $new_impact->save();
 
-        $impact->load('metrics');
-        if ($impact->metrics->isNotEmpty()) {
-            $metrics_insert = [];
-            foreach ($impact->metrics as $metric) {
-                $metrics_insert[$metric->id]['value'] = $metric->pivot->value;
-            }
-            $res = $new_impact->metrics()->attach($metrics_insert);
-        }
+//        $impact->load('metrics');
+//        if ($impact->metrics->isNotEmpty()) {
+//            $metrics_insert = [];
+//            foreach ($impact->metrics as $metric) {
+//                $metrics_insert[$metric->id]['value'] = $metric->pivot->value;
+//            }
+//            $res = $new_impact->metrics()->attach($metrics_insert);
+//        }
 
         if ($article->kit) {
             $article->load('impacts');
