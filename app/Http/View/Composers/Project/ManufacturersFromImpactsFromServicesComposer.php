@@ -19,7 +19,9 @@ class ManufacturersFromImpactsFromServicesComposer
                 $collect = [];
                 foreach($pricesServices as $priceService) {
                     foreach($priceService->service->process->impacts as $impact) {
-                        $collect[] = $impact->article->manufacturer;
+                        if ($impact->article->manufacturer) {
+                            $collect[] = $impact->article->manufacturer;
+                        }
                     }
                 }
                 $manufacturers = collect($collect)->unique();
