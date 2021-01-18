@@ -547,6 +547,8 @@ Route::resource('/impacts_categories', 'ImpactsCategoryController')
 
 
 // ---------------------------------- Объекты воздействия -------------------------------------------
+// Дублирование
+Route::post('/impacts/replicate/{id}', 'ImpactController@replicate');
 // Архив
 Route::post('/impacts/archive/{id}', 'ImpactController@archive');
 // Просмотр архивных
