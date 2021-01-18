@@ -4,4 +4,3 @@
     :item-items='@json($category->workflows)'
     name="workflows"
 ></processes-presets-component>
-workflows
