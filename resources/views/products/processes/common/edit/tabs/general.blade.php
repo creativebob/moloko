@@ -20,7 +20,7 @@
 
                 <label>Производитель
                     @if ($item->category->manufacturers->isNotEmpty())
-                        {!! Form::select('manufacturer_id', $item->category->manufacturers->pluck('company.name', 'id'), $process->manufacturer_id, [$disabled ? 'disabled' : '']) !!}
+                        {!! Form::select('manufacturer_id', $item->category->manufacturers->pluck('company.name', 'id'), $process->manufacturer_id, [$disabled ? 'disabled' : '', 'placeholder' => 'Любой']) !!}
                     @else
                         @include('includes.selects.manufacturers', ['manufacturer_id' => $process->manufacturer_id, 'item' => $item])
                     @endif

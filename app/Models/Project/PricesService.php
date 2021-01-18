@@ -92,15 +92,16 @@ class PricesService extends Model
 
         if (request('brand')) {
             $manufacturer = request('brand');
-            $query->whereHas('service', function($q) use ($manufacturer) {
-                $q->whereHas('process', function($q) use ($manufacturer) {
-                    $q->whereHas('impacts', function($q) use ($manufacturer) {
-                        $q->whereHas('article', function($q) use ($manufacturer) {
-                            $q->whereHas('manufacturer', function($q) use ($manufacturer) {
-                                $q->whereHas('company', function($q) use ($manufacturer) {
+            $query->whereHas('service', function ($q) use ($manufacturer) {
+                $q->whereHas('process', function ($q) use ($manufacturer) {
+                    $q->whereHas('impacts', function ($q) use ($manufacturer) {
+                        $q->whereHas('article', function ($q) use ($manufacturer) {
+                            $q->whereHas('manufacturer', function ($q) use ($manufacturer) {
+                                $q->whereHas('company', function ($q) use ($manufacturer) {
                                     $q->where('name', $manufacturer);
                                 });
-                            });
+                            })
+                                ->orWhereNull('manufacturer_id');
                         });
                     });
                 });

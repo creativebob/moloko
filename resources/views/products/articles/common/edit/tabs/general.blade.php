@@ -27,7 +27,7 @@
                                 disabled="{{ $disabled }}"
                             ></manufacturers-component>
                         @else
-                            {!! Form::select('manufacturer_id', $item->category->manufacturers->pluck('company.name', 'id'), $article->manufacturer_id, [$disabled ? 'disabled' : '']) !!}
+                            {!! Form::select('manufacturer_id', $item->category->manufacturers->pluck('company.name', 'id'), $article->manufacturer_id, [$disabled ? 'disabled' : '', 'placeholder' => 'Любой']) !!}
                         @endif
                     @else
                         @if($item->getTable() == 'goods')
