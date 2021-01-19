@@ -35,7 +35,7 @@ class Article extends Model
 
     public function codes()
     {
-        return $this->hasMany('App\ArticleCode');
+        return $this->hasMany(ArticleCode::class);
     }
 
     // Товары из которых состоит текущий артикул (Набор товаров)
