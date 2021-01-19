@@ -12,7 +12,7 @@
                                     <source media="(max-width: 1024px)" srcset="{{ $promotion->medium->path }} 1024w" sizes="100vw">
                                     <source media="(max-width: 1280px)" srcset="{{ $promotion->large->path }} 1280w" sizes="100vw">
                                     <source media="(max-width: 2000px)" srcset="{{ $promotion->large_x->path }} 2000w" sizes="200vw">
-                                    <img srcset="{{ $promotion->medium->path }} 1024w" width="1080" height="279">
+                                    <img src="{{ $promotion->medium->path }}" srcset="{{ $promotion->medium->path }} 1024w" sizes="100vw" width="1080" height="279" title="{{ $promotion->medium }}" alt="{{ $promotion->alt }}">
                                 </picture>
                             </a>
                         @else
