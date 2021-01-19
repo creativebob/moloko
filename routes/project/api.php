@@ -24,5 +24,7 @@ Route::group(['prefix' => '/v1',
         ->only([
             'index'
         ]);
+
+    Route::get('/get_prices_from_catalogs_goods_item/{catalogsItemId}', 'PricesGoodsController@getPricesFromCatalogsGoodsItem');
 });
 
