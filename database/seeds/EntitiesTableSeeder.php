@@ -738,6 +738,19 @@ class EntitiesTableSeeder extends Seeder
                 'page_id' => $pages->firstWhere('alias', 'labels')->id,
             ],
 
+            [
+                'name' => 'Плагины',
+                'alias' => 'plugins',
+                'model' => 'App\Plugin',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'metric' => 0,
+                'view_path' => null,
+                'page_id' => null,
+            ],
+
             // TODO - 04.06.19 - Чистка сущностей
             // [
             //     'name' => 'Правила',

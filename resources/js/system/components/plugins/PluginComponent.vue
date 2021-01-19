@@ -15,6 +15,12 @@
                 @focusout="editPlugin = false"
             ></textarea>
         </td>
+        <td class="display">
+            <div
+                :class="'sprite icon-display-' + display"
+                @click="changeDisplay"
+            ></div>
+        </td>
         <td class="td-delete">
             <a
                 @click="openModalRemove"
@@ -39,6 +45,15 @@
                 editPlugin: false
             }
         },
+        computed: {
+	        display() {
+	            if (this.plugin.display == 1) {
+                    return 'show';
+                } else {
+                    return 'hide';
+                }
+            }
+        },
         methods: {
             updatePlugin() {
                 this.editPlugin = false;
@@ -58,6 +73,23 @@
             openModalRemove() {
                 this.$emit('open-modal-remove', this.plugin);
             },
+            changeDisplay() {
+                const action = this.plugin.display == 1 ? 0 : 1;
+                axios
+                    .post('/admin/display', {
+                    id: this.plugin.id,
+                    action: action,
+                    entity_alias: 'plugins'
+                    })
+                    .then(response => {
+                        if (response.data) {
+                            this.plugin.display = action;
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    });
+            }
         },
         directives: {
             focus: {

@@ -39,6 +39,35 @@ class UpdateController extends Controller
     }
 
     /**
+     * Добавление сущности плагинов
+     *
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
+    public function addPluginsEntity()
+    {
+
+        $entity = Entity::where('alias', 'plugins')
+            ->exists();
+
+        if (!$entity) {
+            Entity::insert([
+                'name' => 'Плагины',
+                'alias' => 'plugins',
+                'model' => 'App\Plugin',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'metric' => 0,
+                'view_path' => null,
+                'page_id' => null,
+            ]);
+        }
+
+        return __('msg.ok');
+    }
+
+    /**
      * Обновление секторов
      *
      * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null

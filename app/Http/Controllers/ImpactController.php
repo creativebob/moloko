@@ -23,6 +23,11 @@ class ImpactController extends Controller
         $this->middleware('auth');
         $this->entityAlias = 'impacts';
         $this->entityDependence = false;
+
+        // TODO - 19.01.21 - СТарый код для поиска
+        $this->class = Impact::class;
+        $this->entity_alias = 'impacts';
+        $this->entity_dependence = false;
     }
 
     use Articlable;

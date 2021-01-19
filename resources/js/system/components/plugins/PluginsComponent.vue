@@ -9,6 +9,7 @@
                         <th>Аккаунт</th>
                         <th>Код</th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
 

@@ -43,3 +43,5 @@ Route::get('/add_agents_entity', 'UpdateController@addAgentsEntity');
 Route::get('/add_competitors_entity', 'UpdateController@addCompetitorsEntity');
 
 Route::get('/emails_menus', 'UpdateController@emailsMenus');
+
+Route::get('/add_plugins_entity', 'UpdateController@addPluginsEntity');
