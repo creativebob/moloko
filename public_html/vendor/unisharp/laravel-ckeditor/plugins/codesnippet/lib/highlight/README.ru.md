@@ -90,7 +90,7 @@ require(["highlight.js/build/highlight.pack"], function(hljs){
 какой-нибудь специальный стиль:
 
 ```html
-<script type="text/javascript">
+<script>
   hljs.configure({tabReplace: '    '}); // 4 spaces
   // ... or
   hljs.configure({tabReplace: '<span class="indent">\t</span>'});
