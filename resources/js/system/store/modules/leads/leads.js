@@ -16,7 +16,10 @@ const moduleLead = {
         catalogsServicesIds: [],
 
         estimate: null,
+
         goodsItems: [],
+        needProduction: false,
+
         servicesItems: [],
 
         stock: null,
@@ -182,6 +185,8 @@ const moduleLead = {
         // Товары
         SET_GOODS_ITEMS(state, goodsItems) {
             state.goodsItems = goodsItems;
+
+            this.commit('CHECK_NEED_PRODUCTION');
         },
 
         ADD_GOODS_ITEM_TO_ESTIMATE(state, price) {
@@ -246,6 +251,8 @@ const moduleLead = {
                     if (!found) {
                         state.catalogsGoodsIds.push(price.catalogs_goods_id);
                     }
+
+                    this.commit('CHECK_NEED_PRODUCTION');
                 }
             }
         },
@@ -444,12 +451,25 @@ const moduleLead = {
             }
 
             this.commit('SET_CHANGE');
+
+            this.commit('CHECK_NEED_PRODUCTION');
         },
         UPDATE_GOODS_ITEMS(state) {
             state.goodsItems.forEach(item => {
                 const index = state.goodsItems.findIndex(obj => obj.id === item.id);
                 this.commit('SET_GOODS_ITEM_AGGREGATIONS', index);
             });
+
+            this.commit('CHECK_NEED_PRODUCTION');
+        },
+
+        CHECK_NEED_PRODUCTION(state) {
+            const found = state.goodsItems.find(item => item.goods.is_produced == 1);
+            if (found) {
+                state.needProduction = true;
+            } else {
+                state.needProduction = false;
+            }
         },
 
         // Услуги
@@ -943,7 +963,36 @@ const moduleLead = {
                 .finally(() => (state.loading = false));
         },
 
-        // Продажа сметы
+        /**
+         * Производство сметы
+         *
+         * @param state
+         * @constructor
+         */
+        PRODUCED_ESTIMATE({state}) {
+            state.loading = true;
+            axios
+                .post('/admin/estimates/' + state.estimate.id + '/producing')
+                .then(response => {
+                    if (response.data.success) {
+                        this.commit('SET_ESTIMATE', response.data.estimate);
+                    } else {
+                        console.log(response.data.errors);
+                        state.errors = response.data.errors;
+                    }
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+                .finally(() => (state.loading = false));
+        },
+
+        /**
+         * Продажа сметы
+         *
+         * @param state
+         * @constructor
+         */
         CONDUCTED_ESTIMATE({state}) {
             state.loading = true;
             axios
@@ -962,7 +1011,38 @@ const moduleLead = {
                 .finally(() => (state.loading = false));
         },
 
-        // Продажа сметы
+        /**
+         * Списание сметы
+         *
+         * @param state
+         * @param data
+         * @constructor
+         */
+        DISMISSED_ESTIMATE({state}, data) {
+            state.loading = true;
+            axios
+                .post('/admin/estimates/' + state.estimate.id + '/dismissing', data)
+                .then(response => {
+                    if (response.data.success) {
+                        this.commit('SET_ESTIMATE', response.data.estimate);
+                    } else {
+                        console.log(response.data.errors);
+                        state.errors = response.data.errors;
+                    }
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+                .finally(() => (state.loading = false));
+        },
+
+        /**
+         * Получение торговой точки по id
+         *
+         * @param state
+         * @param id
+         * @constructor
+         */
         GET_OUTLET({state}, id) {
             state.loading = true;
             axios

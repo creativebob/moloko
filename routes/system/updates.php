@@ -13,6 +13,7 @@ Route::get('/roles', 'UpdateController@roles');
 Route::get('/notifications', 'UpdateController@notifications');
 Route::get('/charges', 'UpdateController@charges');
 Route::get('/triggers', 'UpdateController@triggers');
+Route::get('/sectors', 'UpdateController@sectors');
 
 
 // Одноразовые
@@ -35,3 +36,10 @@ Route::get('/add_labels_entity', 'UpdateController@addLabelsEntity');
 Route::get('/update_agents_tables_in_migrations_table', 'UpdateController@updateAgentsTablesInMigrationsTable');
 Route::get('/add_outlet_agent_setting', 'UpdateController@addOutletAgentSetting');
 Route::get('/add_outlet_reserves_setting', 'UpdateController@addOutletReservesSetting');
+
+Route::get('/add_impacts_entities', 'UpdateController@addImpactsEntities');
+
+Route::get('/add_agents_entity', 'UpdateController@addAgentsEntity');
+Route::get('/add_competitors_entity', 'UpdateController@addCompetitorsEntity');
+
+Route::get('/emails_menus', 'UpdateController@emailsMenus');

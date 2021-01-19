@@ -1,5 +1,5 @@
 <div class="grid-x grid-padding-x">
-    <div class="small-12 medium-6 cell">
+    <div class="cell small-12 medium-6">
 
         <fieldset class="fieldset-access">
             <legend>Артикул</legend>
@@ -68,6 +68,7 @@
             </fieldset>
         @endif
 
+        @if($item->getTable() != 'impacts')
         <fieldset class="fieldset package-fieldset" id="package-fieldset">
 
             <legend class="checkbox">
@@ -97,6 +98,7 @@
                 </div>
             </div>
         </fieldset>
+        @endif
 
         @includeIf('products.articles.' . $item->getTable().'.fieldsets')
 
@@ -147,5 +149,17 @@
             {{--                                </label>--}}
         </fieldset>
 
+    </div>
+
+    <div class="cell small-12 medium-6">
+        @if($item->getTable() == 'goods' || $item->getTable() == 'impacts')
+            <fieldset class="fieldset-access">
+                <legend>Доп. коды</legend>
+                <article-codes-component
+                    :article-id="{{ $article->id }}"
+                    :article-codes='@json($article->codes)'
+                ></article-codes-component>
+            </fieldset>
+        @endif
     </div>
 </div>

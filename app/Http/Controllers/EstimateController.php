@@ -6,9 +6,13 @@ use App\Agent;
 use App\Client;
 use App\Company;
 use App\ContractsClient;
+use App\Cost;
+use App\Entity;
+use App\Http\Controllers\System\Traits\Cancelable;
 use App\Models\System\Documents\EstimatesGoodsItem;
 use App\Notification;
 use App\Notifications\System\Telegram;
+use App\Receipt;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\System\Traits\Clientable;
 use App\Http\Controllers\System\Traits\Companable;
@@ -51,7 +55,8 @@ class EstimateController extends Controller
         Companable,
         Reservable,
         Offable,
-        Estimatable;
+        Estimatable,
+        Cancelable;
 
     public function index(Request $request)
     {
@@ -113,14 +118,14 @@ class EstimateController extends Controller
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('index'));
 
         $results = Estimate::with('lead')
-        ->where('number', $search)
+            ->where('number', $search)
             ->orWhereHas('lead', function ($q) use ($search) {
                 $q->where('name', 'LIKE', '%' . $search . '%')
-                ->orWhere('company_name', 'LIKE', '%' . $search . '%')
-                ->orWhereHas('phones', function ($q) use ($search) {
-                    $q->where('phone', $search)
-                    ->orWhere('crop', $search);
-                });
+                    ->orWhere('company_name', 'LIKE', '%' . $search . '%')
+                    ->orWhereHas('phones', function ($q) use ($search) {
+                        $q->where('phone', $search)
+                            ->orWhere('crop', $search);
+                    });
             })
             ->whereNotNull('registered_at')
             ->companiesLimit($answer)
@@ -129,7 +134,7 @@ class EstimateController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-            return response()->json($results);
+        return response()->json($results);
 
     }
 
@@ -141,15 +146,15 @@ class EstimateController extends Controller
         // TODO Попробовать сделать поиск через обращенеи phone(crop)->leads->estimate
 
         $results = Estimate::with('lead')
-        ->where('number', $search)
-        ->orWhereHas('lead', function ($q) use ($search) {
-            $q->whereHas('phones', function ($q) use ($search) {
-                $q->where('crop', $search);
-            });
-        })
+            ->where('number', $search)
+            ->orWhereHas('lead', function ($q) use ($search) {
+                $q->whereHas('phones', function ($q) use ($search) {
+                    $q->where('crop', $search);
+                });
+            })
             ->whereNotNull('registered_at')
-        ->orderBy('created_at', 'desc')
-        ->get();
+            ->orderBy('created_at', 'desc')
+            ->get();
         return response()->json($results);
 
     }
@@ -203,7 +208,6 @@ class EstimateController extends Controller
             }
 
 
-
             logs('documents')->info("========================================== НАЧАЛО РЕГИСТРАЦИИ СМЕТЫ, ID: {$estimate->id} =============================================== ");
 
             // Обновляем смету
@@ -239,7 +243,6 @@ class EstimateController extends Controller
             }
 
 
-
             if (is_null($client->source_id)) {
                 $client->update([
                     'source_id' => $estimate->lead->source_id
@@ -247,7 +250,7 @@ class EstimateController extends Controller
             }
 
             $estimate->lead->update([
-                'client_id' =>  $client->id
+                'client_id' => $client->id
             ]);
 
             $contracts_client = ContractsClient::create([
@@ -285,7 +288,7 @@ class EstimateController extends Controller
         $estimate = Estimate::with([
             'goods_items'
         ])
-        ->find($id);
+            ->find($id);
 
         if ($estimate->registered_at && $estimate->payments->isEmpty()) {
             foreach ($estimate->goods_items as $goodsItem) {
@@ -333,9 +336,399 @@ class EstimateController extends Controller
             'lead.client.contract',
             'discounts'
         ])
-        ->find($id);
+            ->find($id);
 
         return response()->json($estimate);
+    }
+
+    public function reserving($id)
+    {
+
+        $estimate = Estimate::with([
+            'goods_items' => function ($q) {
+                $q->with([
+                    'price',
+                    'product.article',
+                    'document',
+                    'reserve.history'
+                ]);
+            },
+        ])
+            ->find($id);
+//        dd($estimate);
+
+        if (!$estimate->conducted_at) {
+
+            if ($estimate->goods_items->isNotEmpty()) {
+                logs('documents')
+                    ->info('========================================== НАЧАЛО РЕЗЕРВИРОВАНИЯ СМЕТЫ, ID: ' . $estimate->id . ' ==============================================');
+
+                $result = [];
+                foreach ($estimate->goods_items as $item) {
+                    $result[] = $this->reserve($item);
+                }
+
+                logs('documents')
+                    ->info('========================================== КОНЕЦ РЕЗЕРВИРОВАНИЯ СМЕТЫ ==============================================
+
+                ');
+
+                $estimate->load([
+                    'goods_items' => function ($q) {
+                        $q->with([
+                            'product.article',
+                            'stock:id,name',
+                            'price_goods',
+                        ]);
+                    }
+                ]);
+                return response()->json([
+                    'items' => $estimate->goods_items,
+                    'msg' => $result
+                ]);
+            } else {
+                abort(403, 'Смета пуста');
+            }
+        }
+    }
+
+    /**
+     * Снятие резерва со сметы
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function unreserving(Request $request, $id)
+    {
+//        dd($request);
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $estimate = Estimate::with([
+            'goods_items' => function ($q) {
+                $q->with([
+                    'product.article',
+                    'document',
+                    'reserve.history'
+                ]);
+            },
+        ])
+            ->find($id);
+//        dd($estimate);
+
+        if (!$estimate->conducted_at) {
+            // Подключение политики
+//        $this->authorize(getmethod('update'), $lead);
+
+//            $lead = $estimate->lead;
+//            // Отдаем работу по редактировнию лида трейту
+////            $this->updateLead($request, $lead);
+//
+//            $estimate->update([
+//                'stock_id' => $request->stock_id
+//            ]);
+
+            if ($estimate->goods_items->isNotEmpty()) {
+//                            dd('Ща буит');
+
+                logs('documents')
+                    ->info('========================================== НАЧАЛО ОТМЕНЫ РЕЗЕРВИРОВАНИЯ СМЕТЫ, ID: ' . $estimate->id . ' ==============================================');
+
+                $result = [];
+                foreach ($estimate->goods_items as $item) {
+//                    $item->load('document');
+                    $result[] = $this->cancelReserve($item);
+                }
+
+                logs('documents')
+                    ->info('========================================== КОНЕЦ ОТМЕНЫ РЕЗЕРВИРОВАНИЯ СМЕТЫ ==============================================
+
+                ');
+
+                $estimate->load([
+                    'goods_items' => function ($q) {
+                        $q->with([
+                            'product.article',
+                            'reserve',
+                            'stock:id,name'
+                        ]);
+                    }
+                ]);
+                return response()->json([
+                    'items' => $estimate->goods_items,
+                    'msg' => $result
+                ]);
+
+            } else {
+                abort(403, 'Смета пуста');
+            }
+        }
+
+
+    }
+
+    /**
+     * Производство сметы
+     *
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function producing($id)
+    {
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $estimate = Estimate::with([
+            'goods_items' => function ($q) {
+                $q->with([
+                    'price',
+                    'product.article' => function ($q) {
+                        $q->with([
+                            'goods',
+                            'raws',
+                        ]);
+                    },
+                    'document',
+                ]);
+            },
+            'catalogs_goods',
+            'catalogs_services',
+            'discounts'
+        ])
+            ->find($id);
+
+        if (!$estimate->conducted_at) {
+            if ($estimate->goods_items->isNotEmpty()) {
+
+                set_time_limit(0);
+
+                logs('documents')
+                    ->info('========================================== НАЧАЛО ПРОИЗВОДТСВА СМЕТЫ, ID: ' . $estimate->id . ' ==============================================');
+
+                foreach ($estimate->goods_items as $goodsItem) {
+
+                    if ($goodsItem->product->is_produced) {
+                        if ($goodsItem->product->article->kit == 1) {
+
+                        } else {
+                            $compositions = [
+                                'raws'
+                            ];
+
+                            foreach ($compositions as $composition) {
+                                $article = $goodsItem->product->article;
+
+                                if ($article->$composition->isNotEmpty()) {
+                                    foreach ($article->$composition as $item) {
+                                        $this->off($item);
+                                    }
+                                }
+                            }
+
+                            $item = $goodsItem;
+//                        $this->receipt($item);
+
+
+
+                            $modelStorage = Entity::where('alias', 'goods_stocks')
+                                ->value('model');
+
+                            logs('documents')
+                                ->info('=== ПРИХОДОВАНИЕ ' . $item->getTable() . ' ' . $item->id . ' ===');
+                            logs('documents')
+                                ->info("В документе выбран stock с id: {$item->stock_id}");
+
+                            // Акутальный филиал
+                            $stockGeneral = Stock::find($item->stock_id);
+                            $filialId = $stockGeneral->filial_id;
+
+                            // хранилище
+                            $item->load([
+                                'cmv.stocks'
+                            ]);
+                            $storage = $item->cmv->stocks->where('stock_id', $stockGeneral->id)
+                                ->where('filial_id', $stockGeneral->filial_id)
+                                ->where('manufacturer_id', $item->manufacturer_id)
+                                ->first();
+                            if ($storage) {
+                                logs('documents')
+                                    ->info('Существует хранилище ' . $storage->getTable() . ' c id: ' . $storage->id);
+                            } else {
+                                $dataStock = [
+                                    'cmv_id' => $item->goods_id,
+                                    'manufacturer_id' => $item->manufacturer_id,
+                                    'stock_id' => $stockGeneral->id,
+                                    'filial_id' => $stockGeneral->filial_id,
+                                ];
+                                $storage = $modelStorage::create($dataStock);
+
+                                logs('documents')
+                                    ->info('Создано хранилище ' . $storage->getTable() . ' c id: ' . $storage->id);
+                            }
+
+
+                            $stocksCount = $modelStorage::where([
+                                'filial_id' => $filialId,
+                                'cmv_id' => $item->goods_id
+                            ])
+                                ->sum('count');
+
+                            logs('documents')
+                                ->info("Значения count: {$storage->count}, reserve: {$storage->reserve}, free: {$storage->free}, weight: {$storage->weight}, volume: {$storage->volume}");
+
+                            if ($item->cmv->article->package_status == 1) {
+                                $count = $item->count * $item->cmv->article->package_count;
+                                logs('documents')
+                                    ->info('Принимаем в "' . $item->cmv->article->package_abbreviation . '": в количестве ' . $item->count . ', пересчитываем на ' . $item->cmv->article->unit->abbreviation . ' в количестве ' . $count);
+                            } else {
+                                $count = $item->count;
+                                logs('documents')
+                                    ->info('Принимаем в стандартных ' . $item->cmv->article->unit->abbreviation . ' в количестве ' . $count);
+                            }
+
+                            $newCount = $storage->count += $count;
+
+                            $data = [
+                                'count' => $newCount,
+                                'free' => ($newCount > 0) ? ($newCount - $storage->reserve) : 0,
+                                'weight' => $storage->weight += ($item->cmv->article->weight * $count),
+                                'volume' => $storage->volume += ($item->cmv->article->volume * $count),
+                            ];
+                            $storage->update($data);
+
+                            logs('documents')
+                                ->info("Обновлены значения count: {$storage->count}, reserve: {$storage->reserve}, free: {$storage->free}, weight: {$storage->weight}, volume: {$storage->volume}");
+
+                            // Себестоимость
+
+                            if ($item->cmv->article->package_status == 1) {
+                                $cost = $item->cost / $item->cmv->article->package_count;
+                                logs('documents')
+                                    ->info('Принимаем в "' . $item->cmv->article->package_abbreviation . '": в количестве ' . $item->count . ', пересчитываем себестоимость: ' . $cost . ' за 1 ' . $item->cmv->article->unit->abbreviation);
+                            } else {
+                                $cost = $item->cost;
+                                logs('documents')
+                                    ->info('Принимаем в стандартных ' . $item->cmv->article->unit->abbreviation . ' в количестве ' . $count . ', себестоимость: ' . $cost);
+                            }
+
+                            if ($item->cmv->cost) {
+                                $cost_item = $item->cmv->cost;
+//						dd($cost_item);
+
+                                logs('documents')
+                                    ->info('Существует себестоимость c id: ' . $cost_item->id);
+                                logs('documents')
+                                    ->info("Значения min: {$cost_item->min}, max: {$cost_item->max} , average: {$cost_item->average}");
+
+                                $cost_average = $cost_item->average;
+                                if ($stocksCount > 0) {
+                                    $average = (($stocksCount * $cost_average) + ($count * $cost)) / ($stocksCount + $count);
+                                } else {
+                                    $average = $cost;
+                                };
+
+                                if (is_null($cost_item->min) || is_null($cost_item->max)) {
+                                    $data_cost = [
+                                        'min' => $cost,
+                                        'max' => $cost,
+                                        'average' => $cost,
+                                    ];
+
+                                } else {
+                                    $data_cost = [
+                                        'min' => ($cost < $cost_item->min) ? $cost : $cost_item->min,
+                                        'max' => ($cost > $cost_item->max) ? $cost : $cost_item->max,
+                                        'average' => $average
+                                    ];
+                                }
+
+//			dd($data_cost);
+
+                                $cost_item->update($data_cost);
+
+                                logs('documents')
+                                    ->info("Обновлены значения min: {$cost_item->min}, max: {$cost_item->max} , average: {$cost_item->average}");
+
+                            } else {
+                                $data_cost = [
+                                    'cmv_id' => $item->goods_id,
+                                    'cmv_type' => 'App\Goods',
+                                    'manufacturer_id' => $item->manufacturer_id,
+                                    'min' => $cost,
+                                    'max' => $cost,
+                                    'average' => $cost,
+                                    'filial_id' => $filialId,
+                                ];
+//			dd($data_cost);
+
+                                $cost_item = Cost::create($data_cost);
+//			dd($cost_item);
+
+                                logs('documents')
+                                    ->info('Создана себестоимость c id: ' . $cost_item->id);
+                                logs('documents')
+                                    ->info('Значения min: ' . $cost_item->min . ', max: ' . $cost_item->max . ', average: ' . $cost_item->average);
+
+                            }
+
+
+                            $modelDocument = Entity::where('alias', $item->document->getTable())
+                                ->value('model');
+                            $modelDocumentItem = Entity::where('alias', $item->getTable())
+                                ->value('model');
+
+                            $receipt = Receipt::create([
+                                'document_id' => $item->document->id,
+                                'document_type' => $modelDocument,
+
+                                'documents_item_id' => $item->id,
+                                'documents_item_type' => $modelDocumentItem,
+
+                                'cmv_id' => $item->goods_id,
+                                'cmv_type' => 'App\Goods',
+
+                                'storage_id' => $storage->id,
+                                'storage_type' => $modelStorage,
+
+                                'count' => $count,
+
+                                'weight_unit' => $item->cmv->article->weight,
+                                'volume_unit' => $item->cmv->article->volume,
+
+                                'cost_unit' => $cost,
+                                'total' => $count * $cost,
+
+                                'stock_id' => $item->stock_id,
+                            ]);
+
+                            logs('documents')
+                                ->info("Записано поступление с id: {$receipt->id}, count: {$receipt->count}, cost: {$receipt->cost}, amount: {$receipt->amount}");
+
+                            logs('documents')
+                                ->info('=== КОНЕЦ ПРИХОДОВАНИЯ ===
+                            ');
+                        }
+                    }
+                }
+
+                $estimate->update([
+                    'produced_at' => now()
+                ]);
+
+                logs('documents')
+                    ->info('Произведена смета c id: ' . $estimate->id);
+                logs('documents')
+                    ->info('========================================== КОНЕЦ ПРОИЗВОДТСВА СМЕТЫ ==============================================
+
+                ');
+
+
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'estimate' => $estimate
+        ]);
     }
 
     /**
@@ -485,317 +878,72 @@ class EstimateController extends Controller
     }
 
     /**
-     * Производство сметы
-     *
-     * @param Request $request
-     * @param $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function produce(Request $request, $id)
-    {
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $estimate = Estimate::with([
-            'lead',
-            'goods_items' => function ($q) {
-                $q->with([
-                    'price',
-                    'product',
-                    'document'
-                ]);
-            },
-        ])
-            ->find($id);
-
-        if (!$estimate->conducted_at) {
-            // Подключение политики
-//        $this->authorize(getmethod('update'), $lead);
-
-            $lead = $estimate->lead;
-            // Отдаем работу по редактировнию лида трейту
-            $this->updateLead($request, $lead);
-
-            $estimate->update([
-                'stock_id' => $request->stock_id
-            ]);
-
-            if ($estimate->goods_items->isNotEmpty()) {
-                //            dd('Ща буит');
-
-                $stock_general = Stock::find($request->stock_id);
-
-                $leftover = 1;
-                // Если нужна проверка остатка на складах
-                if ($leftover) {
-                    $result = [];
-                    $errors = [];
-
-                    $number = 1;
-
-                    foreach ($estimate->goods_items as $item) {
-
-//                        $entity_document = Entity::where('alias', $item->document->getTable())->first();
-//                        $model_document = $entity_document->model;
-
-//                        if ($item->document->getTable() == 'estimates') {
-//                            $model_document_item = $model_document.'sGoodsItem';
-//                        } else {
-//                            $model_document_item = $model_document.'sItem';
-//                        }
-
-                        // Проверяем позицию сметы
-                        $stock = $item->stock;
-                        $storage = $item->product->stocks->where('stock_id', $stock->id)->where('filial_id', $stock->filial_id)->where('manufacturer_id', $item->product->article->manufacturer_id)->first();
-//                          dd($storage);
-
-                        if ($storage) {
-
-//                            $entity_storage = Entity::where('alias', $storage->getTable())->first();
-//                            $model_storage = $entity_storage->model;
-
-                            // проверяем наличие резерва по позиции
-                            if (optional($item->reserve)->count > 0) {
-                                if ($storage->reserve < $item->reserve->count) {
-                                    $dif = $storage->reserve - $item->reserve->count;
-                                    $errors['msg'][] = "Для зарезервированной позиции \"{$item->product->article->name}\" не хватает в резерве склада {$dif} для продажи";
-                                }
-                                $total = $storage->free - ($item->count - $item->reserve->count);
-                            } else {
-                                $total = $storage->free - $item->count;
-                            }
-
-                            if ($total < 0) {
-                                $errors['msg'][] = "Для позиции \"{$item->product->article->name}\" не хватает {$total} {$item->product->article->unit->abbreviation} для продажи";
-                            } else {
-//                                $result[$item->id][] = [
-//                                    'entity' => $item->getTable(),
-//                                    'id' => $item->id,
-//                                    'model' => $model_document_item,
-//                                    'stock_id' => $storage->id,
-//                                    'stock_model' => $model_storage,
-//                                    'price' => $item->price,
-//                                    'amount' => $item->amount,
-//                                    'count' => $item->count
-//                                ];
-                            }
-                        } else {
-                            $errors['msg'][] = "Для позиции {$number} не существует склада для {$item->product->article->name}";
-                        }
-
-                        $number++;
-                    }
-//	        dd($result);
-
-                    if ($errors) {
-//                dd($errors);
-                        return back()
-                            ->withErrors($errors)
-                            ->withInput();
-                    };
-                }
-
-                logs('documents')
-                    ->info('========================================== НАЧАЛО ПРОИЗВОДТСВА СМЕТЫ, ID: ' . $estimate->id . ' ==============================================');
-
-                $estimate->goods_items->load('document');
-
-                // Если нужна проверка остатка на складах
-//                if ($leftover) {
-//
-//                } else {
-//
-//                }
-
-
-                foreach ($estimate->goods_items as $item) {
-                    $this->off($item);
-                }
-
-                // ОБновляем смету
-                $estimate->load('goods_items');
-
-                if ($estimate->goods_items->isNotEmpty()) {
-
-                    $amount = $estimate->goods_items->sum('amount');
-                    $discount = (($amount * $estimate->discount_percent) / 100);
-                    $total = ($amount - $discount);
-
-                    $data = [
-                        'amount' => $amount,
-                        'discount' => $discount,
-                        'total' => $total,
-                        'is_produced' => true,
-                    ];
-                }
-                $estimate->update($data);
-
-                logs('documents')
-                    ->info('Произведена смета c id: ' . $estimate->id);
-                logs('documents')
-                    ->info('========================================== КОНЕЦ ПРОИЗВОДТСВА СМЕТЫ ==============================================
-
-                ');
-
-                // TODO - 06.02.20 - Временная запись клиента и договора
-                $client = new Client;
-                $client->clientable_id = $estimate->lead->user_id;
-                $client->clientable_type = 'App\User';
-                $client->company_id = $request->user()->company_id;
-                $client->save();
-
-                $estimate->lead->update([
-                   'client_id' =>  $client->id
-                ]);
-
-                $data = [
-                    'client_id' => $client->id,
-                    'date' => now()->format('d.m.Y'),
-                    'amount' => $total,
-                    'debit' => $total,
-                ];
-                $contracts_client = ContractsClient::create($data);
-                $contracts_client->update([
-                    'number' => $contracts_client->id
-                ]);
-
-                return redirect()
-                    ->route('leads.edit', $estimate->lead_id)
-                    ->with(['success' => 'Успешно произведено']);
-
-            } else {
-                return back()
-                    ->withErrors(['msg' => 'Смета пуста'])
-                    ->withInput();
-//                abort(403, 'Смета пуста');
-            }
-        }
-
-//        return redirect()->route('leads.index');
-    }
-
-    public function reserving($id)
-    {
-
-        $estimate = Estimate::with([
-            'goods_items' => function ($q) {
-                $q->with([
-                    'price',
-                    'product.article',
-                    'document',
-                    'reserve.history'
-                ]);
-            },
-        ])
-            ->find($id);
-//        dd($estimate);
-
-        if (!$estimate->conducted_at) {
-
-            if ($estimate->goods_items->isNotEmpty()) {
-                logs('documents')
-                    ->info('========================================== НАЧАЛО РЕЗЕРВИРОВАНИЯ СМЕТЫ, ID: ' . $estimate->id . ' ==============================================');
-
-                $result = [];
-                foreach ($estimate->goods_items as $item) {
-                    $result[] = $this->reserve($item);
-                }
-
-                logs('documents')
-                    ->info('========================================== КОНЕЦ РЕЗЕРВИРОВАНИЯ СМЕТЫ ==============================================
-
-                ');
-
-                $estimate->load([
-                    'goods_items' => function ($q) {
-                        $q->with([
-                            'product.article',
-                            'stock:id,name',
-                            'price_goods',
-                        ]);
-                    }
-                ]);
-                return response()->json([
-                    'items' => $estimate->goods_items,
-                    'msg' => $result
-                ]);
-            } else {
-                abort(403, 'Смета пуста');
-            }
-        }
-    }
-
-    /**
-     * Снятие резерва со сметы
+     * Списание сметы
      *
      * @param Request $request
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function unreserving(Request $request, $id)
+    public function dismissing(Request $request, $id)
     {
-//        dd($request);
 
         // ГЛАВНЫЙ ЗАПРОС:
         $estimate = Estimate::with([
             'goods_items' => function ($q) {
                 $q->with([
-                    'product.article',
-                    'document',
-                    'reserve.history'
+                    'receipt.storage',
+                    'offs' => function ($q) {
+                        $q->with([
+                            'cmv' => function ($q) {
+                                $q->with([
+                                    'cost',
+                                    'stocks',
+                                    'article'
+                                ]);
+                            },
+                            'storage'
+                        ]);
+                    },
+                    'document'
                 ]);
             },
+            'catalogs_goods',
+            'catalogs_services',
+            'discounts'
         ])
             ->find($id);
-//        dd($estimate);
 
-        if (!$estimate->conducted_at) {
-            // Подключение политики
-//        $this->authorize(getmethod('update'), $lead);
+        logs('documents')
+            ->info('========================================== НАЧАЛО СПИСАНИЯ СМЕТЫ, ID: ' . $estimate->id . ' ==============================================');
 
-//            $lead = $estimate->lead;
-//            // Отдаем работу по редактировнию лида трейту
-////            $this->updateLead($request, $lead);
-//
-//            $estimate->update([
-//                'stock_id' => $request->stock_id
-//            ]);
+        if ($estimate->payments->isNotEmpty()) {
 
-            if ($estimate->goods_items->isNotEmpty()) {
-//                            dd('Ща буит');
+        }
 
-                logs('documents')
-                    ->info('========================================== НАЧАЛО ОТМЕНЫ РЕЗЕРВИРОВАНИЯ СМЕТЫ, ID: ' . $estimate->id . ' ==============================================');
+        // Без убытка
+        if ($request->loss == false) {
+            foreach($estimate->goods_items as $item) {
+//                $this->cancelOffs($item);
+//                $this->cancelReceipt($item);
+            }
+        };
 
-                $result = [];
-                foreach ($estimate->goods_items as $item) {
-//                    $item->load('document');
-                    $result[] = $this->cancelReserve($item);
-                }
+        $estimate->update([
+            'is_dismissed' => true,
+            'cancel_ground_id' => $request->estimates_cancel_ground_id
+        ]);
 
-                logs('documents')
-                    ->info('========================================== КОНЕЦ ОТМЕНЫ РЕЗЕРВИРОВАНИЯ СМЕТЫ ==============================================
+        logs('documents')
+            ->info('Списана смета c id: ' . $estimate->id);
+        logs('documents')
+            ->info('========================================== КОНЕЦ СПИСАНИЯ СМЕТЫ ==============================================
 
                 ');
 
-                $estimate->load([
-                    'goods_items' => function ($q) {
-                        $q->with([
-                            'product.article',
-                            'reserve',
-                            'stock:id,name'
-                        ]);
-                    }
-                ]);
-                return response()->json([
-                    'items' => $estimate->goods_items,
-                    'msg' => $result
-                ]);
-
-            } else {
-                abort(403, 'Смета пуста');
-            }
-        }
-
+        return response()->json([
+            'success' => true,
+            'estimate' => $estimate
+        ]);
 
     }
 
@@ -861,7 +1009,7 @@ class EstimateController extends Controller
         ])
             ->find($request->estimate_id);
 
-        foreach($estimate->goods_items as $item) {
+        foreach ($estimate->goods_items as $item) {
             $item->update([
                 'agent_id' => $agent->id,
                 'agency_scheme_id' => $agencyScheme->id,

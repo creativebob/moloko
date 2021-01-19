@@ -436,7 +436,9 @@ class CatalogsGoodsController extends Controller
                             ->select([
                                 'id',
                                 'article_id',
-                                'serial'
+                                'serial',
+                                'is_produced',
+                                'is_ordered'
                             ]);
                     },
                     'currency',

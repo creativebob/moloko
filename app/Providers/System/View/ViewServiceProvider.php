@@ -14,6 +14,7 @@ use App\Http\View\Composers\System\CatalogServicesWithPricesComposer;
 use App\Http\View\Composers\System\CatalogsGoodsItemsTreeComposer;
 use App\Http\View\Composers\System\CatalogsGoodsWithFilialsComposer;
 use App\Http\View\Composers\System\CatalogsGoodsWithSchemesComposer;
+use App\Http\View\Composers\System\CatalogsServicesItemsTreeComposer;
 use App\Http\View\Composers\System\CatalogsServicesWithFilialsComposer;
 use App\Http\View\Composers\System\ChannelsComposer;
 use App\Http\View\Composers\System\ChargesComposer;
@@ -29,6 +30,7 @@ use App\Http\View\Composers\System\EstimatesTotalsComposer;
 use App\Http\View\Composers\System\FilialCatalogsGoodsComposer;
 use App\Http\View\Composers\System\FilialCatalogsServicesComposer;
 use App\Http\View\Composers\System\FilialStaffComposer;
+use App\Http\View\Composers\System\ImpactsCategoriesWithImpactsComposer;
 use App\Http\View\Composers\System\LeadHistoryComposer;
 use App\Http\View\Composers\System\MailingListsComposer;
 use App\Http\View\Composers\System\MailingsComposer;
@@ -465,6 +467,11 @@ class ViewServiceProvider extends ServiceProvider
         ], RelatedComposer::class);
 
         view()->composer([
+//            'products.articles_categories.goods_categories.related.related',
+            'products.processes.services.impacts.impacts'
+        ], ImpactsCategoriesWithImpactsComposer::class);
+
+        view()->composer([
             'products.processes_categories.services_categories.workflows.workflows',
             'products.processes.workflows.workflows.workflows',
             'products.processes.services.workflows.workflows'
@@ -554,6 +561,9 @@ class ViewServiceProvider extends ServiceProvider
 
         // Прайсы товаров
         view()->composer('system.pages.catalogs.goods.prices_goods.includes.filters', CatalogsGoodsItemsTreeComposer::class);
+
+        // Прайсы услуг
+        view()->composer('system.pages.catalogs.services.prices_services.includes.filters', CatalogsServicesItemsTreeComposer::class);
 
         // Лиды
         view()->composer('leads.includes.filters', CitiesComposer::class);

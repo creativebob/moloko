@@ -15,7 +15,7 @@
 
 @section('title-content')
     {{-- Таблица --}}
-    @include('system.pages.catalogs.services.prices_services.includes.title', ['pageInfo' => $pageInfo, 'class' => App\PricesService::class])
+    @include('system.pages.catalogs.services.prices_services.includes.title')
 @endsection
 
 @section('content')

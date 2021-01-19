@@ -272,7 +272,7 @@ class CityController extends Controller
                         // Находим наши области
                         foreach ($regions as $region) {
 
-                            // Если имена областей совпали, заносим в наш обьект с результатами
+                            // Если имена областей совпали, заносим в наш объект с результатами
                             if ($item->region == $region->name) {
 
                                 $vk_cities->items[] = (object) [

@@ -45,6 +45,10 @@ class ToolController extends BaseController
             'article'
         ])
             ->find($id);
+//        dd($tool);
+        if (empty($tool)) {
+            abort(404);
+        }
 
         $site = $this->site;
 

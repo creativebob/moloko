@@ -124,12 +124,18 @@ class CatalogsGoodsItemController extends BaseController
             ->first();
 //        dd($catalogs_goods_item);
 
-        // Проверим, а доступен ли каталог товаров. Если нет, то кидаем ошибку
-        if ($catalogs_goods_item) {
-            return view("{$site->alias}.pages.catalogs_goods_items.index", compact('site',  'page', 'catalogs_goods_item'));
-        } else {
-            abort(403, 'Доступ к прайсу товаров компании ограничен. Согласен, это довольно странно...');
+        if (empty($catalogs_goods_item)) {
+            abort(404);
         }
+
+        return view("{$site->alias}.pages.catalogs_goods_items.index", compact('site',  'page', 'catalogs_goods_item'));
+
+        // Проверим, а доступен ли каталог товаров. Если нет, то кидаем ошибку
+//        if ($catalogs_goods_item) {
+//
+//        } else {
+//            abort(403, 'Доступ к прайсу товаров компании ограничен. Согласен, это довольно странно...');
+//        }
 
 //        // Получаем полный прайс со всеми доступными разделами
 //        $catalog_goods = CatalogsGoods::with([

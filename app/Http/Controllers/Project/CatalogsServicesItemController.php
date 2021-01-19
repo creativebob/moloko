@@ -40,12 +40,11 @@ class CatalogsServicesItemController extends BaseController
             })
             ->display()
             ->first();
-
-        // Проверим, а доступен ли каталог товаров. Если нет, то кидаем ошибку
-        if ($catalogs_services_item) {
-            return view($site->alias.'.pages.catalogs_services_items.index', compact('site',  'page', 'request', 'catalogs_services_item'));
-        } else {
-            abort(403, 'Доступ к прайсу товаров компании ограничен. Согласен, это довольно странно...');
+//        dd($catalogs_services_item);
+        if (empty($catalogs_services_item)) {
+            abort(404);
         }
+
+        return view($site->alias.'.pages.catalogs_services_items.index', compact('site',  'page', 'request', 'catalogs_services_item'));
     }
 }

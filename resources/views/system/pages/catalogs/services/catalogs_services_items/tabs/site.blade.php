@@ -1,5 +1,5 @@
 <div class="grid-x grid-padding-x">
-    <div class="small-12 medium-6 cell">
+    <div class="cell small-12 medium-6">
         <div class="grid-x grid-padding-x">
             <div class="small-12 cell">
                 <label>Название страницы (Title)
@@ -37,11 +37,6 @@
                 <label
                     for="checkbox-is_controllable_mode"><span>Разрешить смену отображения</span></label>
             </div>
-            <div class="small-12 cell">
-                <label>Выводить меру в качестве основной:
-                    @include('includes.selects.directive_categories', ['item' => $catalogsServicesItem])
-                </label>
-            </div>
             {!! Form::hidden('is_show_subcategory', 0) !!}
             <div class="small-12 cell checkbox">
                 {!! Form::checkbox('is_show_subcategory', 1, $catalogsServicesItem->is_show_subcategory, ['id' => 'checkbox-is_show_subcategory']) !!}
@@ -56,17 +51,26 @@
             </div>
         </div>
     </div>
-    <div class="small-12 medium-6 cell">
+    <div class="cell small-12 medium-6">
         <label>Выберите аватар
             {{ Form::file('photo') }}
         </label>
         <div class="text-center">
             <img id="photo" src="{{ getPhotoPath($catalogsServicesItem) }}">
         </div>
+
         <div class="small-6 medium-6 cell">
             <label>Цвет для оформления
                 {!! Form::text('color') !!}
             </label>
         </div>
+
+        <label>Видео
+            {{ Form::text('video_url', $catalogsServicesItem->video_url, []) }}
+        </label>
+
+        <label>Блок видео
+            @include('includes.inputs.textarea', ['name' => 'video'])
+        </label>
     </div>
 </div>

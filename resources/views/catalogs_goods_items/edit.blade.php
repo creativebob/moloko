@@ -122,7 +122,7 @@
                                 <label>Список ключевых слов (Keywords)
                                     @include('includes.inputs.varchar', ['name' => 'keywords'])
                                 </label>
-                            </div>     
+                            </div>
                             <div class="small-6 cell">
                                 <label>Режим отображения
                                     @include('includes.selects.display_modes')
@@ -165,6 +165,14 @@
                                 {!! Form::text('color') !!}
                             </label>
                         </div>
+
+                        <label>Видео
+                            {{ Form::text('video_url', $catalogs_goods_item->video_url, []) }}
+                        </label>
+
+                        <label>Блок видео
+                            @include('includes.inputs.textarea', ['name' => 'video'])
+                        </label>
                     </div>
 
                     {{-- Кнопка --}}

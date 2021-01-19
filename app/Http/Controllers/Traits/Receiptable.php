@@ -15,9 +15,9 @@ trait Receiptable
      * Приходуем пункт документа
      *
      * @param $item
-     * @param int $is_wrong
+     * @param false $isWrong
      */
-    public function receipt($item, $isWrong = 0)
+    public function receipt($item, $isWrong = false)
     {
 
         $modelStorage = Entity::where('alias', $item->entity->alias . '_stocks')

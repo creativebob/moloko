@@ -20,7 +20,7 @@ class CreateDealersTable extends Migration
             $table->foreign('client_id')->references('id')->on('clients');
 
             $table->bigInteger('discount')->nullable()->unsigned()->comment('Скидка дилера');
-            $table->text('dealer')->nullable()->comment('Описание дилера');
+            $table->text('description')->nullable()->comment('Описание дилера');
 
             $table->boolean('archive')->default(0)->comment('Статус архива');
 

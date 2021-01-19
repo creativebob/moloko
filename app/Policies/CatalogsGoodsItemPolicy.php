@@ -46,14 +46,14 @@ class CatalogsGoodsItemPolicy
 
     public function delete(User $user, Model $model)
     {
-
+        if ($model->prices->isNotEmpty()) {
+            return false;
+        }
 
         if ($model->childs->count() > 0) {
             return false;
         }
-
         $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
-
         return $result;
     }
 

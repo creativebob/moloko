@@ -43,6 +43,7 @@ Vue.component('lead-tabs-component', require('./components/leads/tabs/TabsCompon
 Vue.component('payments-component', require('./components/leads/payments/PaymentsComponent'));
 Vue.component('lead-description-component', require('./components/leads/options/DescriptionComponent'));
 Vue.component('lead-labels-component', require('./components/leads/options/LabelsComponent'));
+Vue.component('lead-dismissed-component', require('./components/leads/dismisses/DismissedComponent'));
 
 Vue.component('lead-history-component', require('./components/leads/history/HistoriesComponent'));
 
@@ -61,6 +62,8 @@ Vue.component('manufacturers-component', require('./components/ManufacturersComp
 Vue.component('goods-store-component', require('./components/products/articles/common/GoodsStateComponent'));
 Vue.component('cmv-compositions-component', require('./components/products/articles/compositions/CompositionsComponent'));
 Vue.component('presets-component', require('./components/products/articles/presets/PresetsComponent.vue'));
+
+Vue.component('article-codes-component', require('./components/products/articles/codes/CodesComponent'));
 
 // Услуги
 Vue.component('processes-categories-with-groups-component', require('./components/ProcessesCategoriesWithGroupsComponent.vue'));
@@ -108,6 +111,8 @@ Vue.component('search-processes-component', require('./components/search/SearchP
 Vue.component('search-prices-goods-component', require('./components/search/SearchPricesGoodsComponent'));
 Vue.component('search-articles-groups-component', require('./components/search/SearchArticlesGroupsComponent'));
 Vue.component('search-processes-groups-component', require('./components/search/SearchProcessesGroupsComponent'));
+
+Vue.component('search-prices-services-component', require('./components/search/SearchPricesServicesComponent'));
 
 Vue.component('search-estimates-component', require('./components/search/SearchEstimatesComponent'));
 Vue.component('search-client-component', require('./components/search/SearchClientComponent'));

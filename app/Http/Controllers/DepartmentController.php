@@ -366,12 +366,14 @@ class DepartmentController extends Controller
      */
     public function setCities($department)
     {
-        $department->load('location');
         $cities = request()->cities;
-        if (! in_array($department->location->city_id, $cities)) {
-            $cities[] = $department->location->city_id;
+        if($cities) {
+            $department->load('location');
+            if (! in_array($department->location->city_id, $cities)) {
+                $cities[] = $department->location->city_id;
+            }
+            $department->cities()->sync($cities);
         }
-        $department->cities()->sync($cities);
     }
 
     public function ajax_check(Request $request)

@@ -52,6 +52,9 @@ class CreateCatalogsServicesItemsTable extends Migration
             $table->bigInteger('directive_category_id')->nullable()->unsigned()->comment('Основная мера');
             $table->foreign('directive_category_id')->references('id')->on('units_categories');
 
+            $table->string('video_url')->nullable()->comment('Ссылка на видео');
+            $table->text('video')->nullable()->comment('Видео');
+
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

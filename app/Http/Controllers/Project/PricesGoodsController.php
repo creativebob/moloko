@@ -46,7 +46,7 @@ class PricesGoodsController extends BaseController
             ])
             ->get();
 
-        return view($site->alias.'.pages.prices_goods.index', compact('site',  'page', 'prices_goods'));
+        return view($site->alias . '.pages.prices_goods.index', compact('site', 'page', 'prices_goods'));
     }
 
     /**
@@ -72,12 +72,12 @@ class PricesGoodsController extends BaseController
             ->find($id);
 
         if (empty($price_goods) || $price_goods->catalog->is_access_page == 0) {
-            abort(404, $site->alias);
+            abort(404);
         }
 
         $page->title = $price_goods->goods->article->name;
 
-        return view("{$site->alias}.pages.prices_goods.index", compact('site',  'page', 'price_goods'));
+        return view("{$site->alias}.pages.prices_goods.index", compact('site', 'page', 'price_goods'));
     }
 
     /**
@@ -115,7 +115,7 @@ class PricesGoodsController extends BaseController
             ->whereHas('catalog', function ($q) {
                 $q->where('display', true);
             })
-            ->whereHas('goods', function($q) use ($search) {
+            ->whereHas('goods', function ($q) use ($search) {
                 $q->whereHas('article', function ($q) use ($search) {
                     $q->where([
                         'draft' => false,
@@ -123,7 +123,10 @@ class PricesGoodsController extends BaseController
                     ])
                         ->where(function ($q) use ($search) {
                             $q->where('name', 'LIKE', '%' . $search . '%')
-                                ->orWhere('external', 'LIKE', '%' . $search . '%');
+                                ->orWhere('external', 'LIKE', '%' . $search . '%')
+                                ->orWhereHas('codes', function ($q) use ($search) {
+                                    $q->where('name', 'LIKE', '%' . $search . '%');
+                                });
                         });
                 })
                     ->where([

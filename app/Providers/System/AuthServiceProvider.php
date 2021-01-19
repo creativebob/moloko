@@ -2,12 +2,16 @@
 
 namespace App\Providers\System;
 
+use App\Agent;
 use App\ArticlesGroup;
 use App\Attachment;
 use App\AttachmentsCategory;
 use App\BusinessCase;
+use App\Competitor;
 use App\Container;
 use App\ContainersCategory;
+use App\Impact;
+use App\ImpactsCategory;
 use App\Label;
 use App\Mailing;
 use App\MailingList;
@@ -21,14 +25,17 @@ use App\Domain;
 use App\Models\System\Stocks\GoodsStock;
 use App\Indicator;
 use App\Metric;
+use App\Models\System\Stocks\ImpactsStock;
 use App\Order;
 use App\Outcome;
 use App\OutcomesCategory;
 use App\Outlet;
+use App\Policies\AgentPolicy;
 use App\Policies\ArticlesGroupPolicy;
 use App\Policies\AttachmentPolicy;
 use App\Policies\AttachmentsCategoryPolicy;
 use App\Policies\BusinessCasePolicy;
+use App\Policies\CompetitorPolicy;
 use App\Policies\ContainerPolicy;
 use App\Policies\ContainersCategoryPolicy;
 use App\Policies\DiscountPolicy;
@@ -36,6 +43,8 @@ use App\Policies\DispatchPolicy;
 use App\Policies\Documents\ConsignmentPolicy;
 use App\Policies\Documents\ProductionPolicy;
 use App\Policies\DomainPolicy;
+use App\Policies\ImpactPolicy;
+use App\Policies\ImpactsCategoryPolicy;
 use App\Policies\IndicatorPolicy;
 use App\Policies\LabelPolicy;
 use App\Policies\MailingListPolicy;
@@ -55,6 +64,7 @@ use App\Policies\CompaniesSettingPolicy;
 use App\Policies\Stocks\AttachmentsStockPolicy;
 use App\Policies\Stocks\ContainersStockPolicy;
 use App\Policies\Stocks\GoodsStockPolicy;
+use App\Policies\Stocks\ImpactsStockPolicy;
 use App\Policies\Stocks\RawsStockPolicy;
 use App\Policies\SubscriberPolicy;
 use App\Policies\TemplatePolicy;
@@ -244,12 +254,15 @@ class AuthServiceProvider extends ServiceProvider
         ExtraRequisite::class => ExtraRequisitePolicy::class,
 
         Supplier::class => SupplierPolicy::class,
-        Application::class => ApplicationPolicy::class,
-
         Manufacturer::class => ManufacturerPolicy::class,
         Vendor::class => VendorPolicy::class,
         Dealer::class => DealerPolicy::class,
         Client::class => ClientPolicy::class,
+        Agent::class => AgentPolicy::class,
+        Competitor::class => CompetitorPolicy::class,
+
+        Application::class => ApplicationPolicy::class,
+
         Bank::class => BankPolicy::class,
         BankAccount::class => BankAccountPolicy::class,
 
@@ -310,30 +323,35 @@ class AuthServiceProvider extends ServiceProvider
 
 
         // Товары
-        Goods::class => GoodsPolicy::class,
         GoodsCategory::class => GoodsCategoryPolicy::class,
+        Goods::class => GoodsPolicy::class,
         GoodsStock::class => GoodsStockPolicy::class,
         PricesGoods::class => PricesGoodsPolicy::class,
 
         // Сырье
-        Raw::class => RawPolicy::class,
         RawsCategory::class => RawsCategoryPolicy::class,
+        Raw::class => RawPolicy::class,
         RawsStock::class => RawsStockPolicy::class,
 
         // Упаковка
-        Container::class => ContainerPolicy::class,
         ContainersCategory::class => ContainersCategoryPolicy::class,
+        Container::class => ContainerPolicy::class,
         ContainersStock::class => ContainersStockPolicy::class,
 
         // Вложения
-        Attachment::class => AttachmentPolicy::class,
         AttachmentsCategory::class => AttachmentsCategoryPolicy::class,
+        Attachment::class => AttachmentPolicy::class,
         AttachmentsStock::class => AttachmentsStockPolicy::class,
 
         // Инструменты
-        Tool::class => ToolPolicy::class,
         ToolsCategory::class => ToolsCategoryPolicy::class,
+        Tool::class => ToolPolicy::class,
         ToolsStock::class => ToolsStockPolicy::class,
+
+        // Объекты воздействия
+        ImpactsCategory::class => ImpactsCategoryPolicy::class,
+        Impact::class => ImpactPolicy::class,
+        ImpactsStock::class => ImpactsStockPolicy::class,
 
         // Помещения
         RoomsCategory::class => RoomsCategoryPolicy::class,

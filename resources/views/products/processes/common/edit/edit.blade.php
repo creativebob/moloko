@@ -58,6 +58,14 @@
                     <a data-tabs-target="tab-positions" href="#tab-positions">Должности</a>
                 </li>
 
+                @if($process->processes_type_id == 2)
+                    @can('index', App\Impact::class)
+                        <li class="tabs-title">
+                            <a data-tabs-target="tab-impacts" href="#tab-impacts">Объекты воздействия</a>
+                        </li>
+                    @endcan
+                @endif
+
             </ul>
         </div>
     </div>
@@ -89,30 +97,30 @@
                 </div>
 
                 {{-- Ценообразование --}}
-{{--                <div class="tabs-panel" id="price-rules">--}}
-{{--                    <div class="grid-x grid-padding-x">--}}
-{{--                        <div class="small-12 medium-6 cell">--}}
+                {{--                <div class="tabs-panel" id="price-rules">--}}
+                {{--                    <div class="grid-x grid-padding-x">--}}
+                {{--                        <div class="small-12 medium-6 cell">--}}
 
-{{--                            <fieldset class="fieldset-access">--}}
-{{--                                <legend>Базовые настройки</legend>--}}
+                {{--                            <fieldset class="fieldset-access">--}}
+                {{--                                <legend>Базовые настройки</legend>--}}
 
-{{--                                <div class="grid-x grid-margin-x">--}}
-{{--                                    <div class="small-12 medium-6 cell">--}}
-{{--                                        <label>Себестоимость--}}
-{{--                                            {{ Form::number('cost_default', null) }}--}}
-{{--                                        </label>--}}
-{{--                                    </div>--}}
-{{--                                    <div class="small-12 medium-6 cell">--}}
-{{--                                        <label>Цена за (<span id="unit">{{ $process->unit->abbreviation }}</span>)--}}
-{{--                                            {{ Form::number('price_default', null) }}--}}
-{{--                                        </label>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-{{--                            </fieldset>--}}
+                {{--                                <div class="grid-x grid-margin-x">--}}
+                {{--                                    <div class="small-12 medium-6 cell">--}}
+                {{--                                        <label>Себестоимость--}}
+                {{--                                            {{ Form::number('cost_default', null) }}--}}
+                {{--                                        </label>--}}
+                {{--                                    </div>--}}
+                {{--                                    <div class="small-12 medium-6 cell">--}}
+                {{--                                        <label>Цена за (<span id="unit">{{ $process->unit->abbreviation }}</span>)--}}
+                {{--                                            {{ Form::number('price_default', null) }}--}}
+                {{--                                        </label>--}}
+                {{--                                    </div>--}}
+                {{--                                </div>--}}
+                {{--                            </fieldset>--}}
 
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
+                {{--                        </div>--}}
+                {{--                    </div>--}}
+                {{--                </div>--}}
 
                 @includeIf($pageInfo->entity->view_path . '.tabs_content')
 
@@ -122,6 +130,14 @@
                         @include('products.processes.common.edit.tabs.site')
                     </div>
                 @endcan
+
+                @if($process->processes_type_id == 2)
+                    @can('index', App\Impact::class)
+                        <div class="tabs-panel" id="tab-impacts">
+                            @include('products.processes.services.impacts.impacts')
+                        </div>
+                    @endcan
+                @endif
 
                 {{-- Должности --}}
                 @can('index', App\Position::class)

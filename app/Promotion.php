@@ -32,6 +32,9 @@ class Promotion extends Model
         'end_date',
         'link',
 
+        'alt',
+        'title',
+
         'site_id',
 
         'photo_id',

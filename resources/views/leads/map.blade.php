@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
-    <script type="text/javascript" src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU"></script>
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 </head>
 <body>
     <div id="map" style="width: 1024; height: 840px"></div>
@@ -29,14 +29,14 @@
 
         var coords = $.parseJSON('{!! $coords !!}');
 
-        // alert(coords);       
+        // alert(coords);
 
         // Функция ymaps.ready() будет вызвана, когда
         // загрузятся все компоненты API, а также когда будет готово DOM-дерево.
 
         ymaps.ready(init);
 
-        function init(){ 
+        function init(){
 
             // Создаем и центрируем карту
             var myMap = new ymaps.Map("map", {
@@ -62,7 +62,7 @@
                 }
 
                 myGeoObjects[i] = new ymaps.Placemark(
-                    coords[i]['coords'], 
+                    coords[i]['coords'],
                     {
                         // clusterCaption: '№: ' + coords[i]['info']['order'] + claim,
                         balloonContentHeader: '№: ' + coords[i]['info']['order'] + claim,

@@ -54,6 +54,11 @@ class Process extends Model
         return $this->belongsTo('App\Unit');
     }
 
+    public function impacts()
+    {
+        return $this->belongsToMany('App\Impact', 'process_impact');
+    }
+
 
     // Продолжительность
     public function getLengthTransAttribute($value)

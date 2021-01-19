@@ -26,6 +26,7 @@ class CreateAgentsTable extends Migration
 
             $table->timestamp('archived_at')->nullable()->comment('Архив');
 
+
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
             // $table->foreign('company_id')->references('id')->on('companies');
@@ -41,8 +42,6 @@ class CreateAgentsTable extends Migration
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
 
             $table->timestamps();
-            $table->softDeletes();
-
         });
     }
 

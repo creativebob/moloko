@@ -23,7 +23,7 @@ class CatalogsGoodsItemsTreeComposer
 	public function compose(View $view)
 	{
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right('catalogs_goods', false, 'index');
+        $answer = operator_right('catalogs_goods_item', false, 'index');
 
         $catalogId = $view->catalogGoods->id;
 

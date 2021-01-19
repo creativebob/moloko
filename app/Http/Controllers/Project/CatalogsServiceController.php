@@ -100,6 +100,11 @@ class CatalogsServiceController extends BaseController
             ->where('slug', $catalog_slug)
             ->where(['display' => true])
             ->first();
+//        dd($catalog_services);
+
+        if (empty($catalog_services)) {
+            abort(404);
+        }
 
             // Проверим, а доступен ли каталог товаров. Если нет, то кидаем ошибку
             if (! $catalog_services) {

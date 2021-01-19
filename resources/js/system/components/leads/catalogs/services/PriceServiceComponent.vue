@@ -107,9 +107,13 @@
                 this.$store.commit('ADD_SERVICE_ITEM_TO_ESTIMATE', this.price);
             },
             getPhotoPath(price, format = 'medium') {
-                // Умолчание по формату. Плюс защита от ошибок при указании формата
-                format = (format !== ('small' || 'medium' || 'large')) ? 'medium' : format;
-                return '/storage/' + price.company_id + '/media/processes/' + price.service.process.id + '/img/' + format + '/' + price.service.process.photo.name;
+                if (this.price.service.process.photo) {
+                    // Умолчание по формату. Плюс защита от ошибок при указании формата
+                    format = (format !== ('small' || 'medium' || 'large')) ? 'medium' : format;
+                    return '/storage/' + price.company_id + '/media/processes/' + price.service.process.id + '/img/' + format + '/' + price.service.process.photo.name;
+                } else {
+                    return '';
+                }
             },
         },
 

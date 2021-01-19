@@ -2,46 +2,19 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
+use App\Models\System\BaseModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
-// Scopes для главного запроса
-use App\Scopes\Traits\CompaniesLimitTraitScopes;
-use App\Scopes\Traits\AuthorsTraitScopes;
-use App\Scopes\Traits\SystemItemTraitScopes;
-use App\Scopes\Traits\FilialsTraitScopes;
-use App\Scopes\Traits\TemplateTraitScopes;
-use App\Scopes\Traits\ModeratorLimitTraitScopes;
-use App\Scopes\Traits\SuppliersTraitScopes;
-
-// Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
-// Фильтры
-use App\Scopes\Filters\Filter;
-use App\Scopes\Filters\BooklistFilter;
-
-class PricesGoods extends Model
+class PricesGoods extends BaseModel
 {
     // Включаем кеш
-    use Cachable;
+    use Cachable,
+        SoftDeletes;
 
-    use Notifiable;
-    use SoftDeletes;
+    const ALIAS = 'prices_goods';
+    const DEPENDENCE = true;
 
-    // Включаем Scopes
-    use CompaniesLimitTraitScopes;
-    use AuthorsTraitScopes;
-    use SystemItemTraitScopes;
-    use FilialsTraitScopes;
-    use TemplateTraitScopes;
-    use ModeratorLimitTraitScopes;
-    use SuppliersTraitScopes;
-
-    // Фильтры
-    use Filter;
-    use BooklistFilter;
 
     protected $table = 'prices_goods';
 
@@ -249,8 +222,15 @@ class PricesGoods extends Model
     // Фильтр
     public function scopeFilter($query)
     {
-        if (request('catalogs_goods_items')) {
-            $query->whereIn('catalogs_goods_item_id', request('catalogs_goods_items'));
+
+        $filters = $this->getFilters(self::ALIAS);
+
+        if (isset($filters['catalogs_goods_items'])) {
+            $query->whereIn('catalogs_goods_item_id', $filters['catalogs_goods_items']);
+        }
+
+        if (isset($filters['hit'])) {
+            $query->where('is_hit', $filters['hit']);
         }
     }
 

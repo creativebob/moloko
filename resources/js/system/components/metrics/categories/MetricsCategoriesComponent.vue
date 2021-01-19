@@ -72,8 +72,8 @@
 <script>
 	export default {
         components: {
-            'metric-component': require('./MetricComponent.vue'),
-            'metrics-component': require('./MetricsComponent.vue')
+            'metric-component': require('./MetricComponent'),
+            'metrics-component': require('./MetricsComponent')
         },
 		data() {
 			return {

@@ -20,6 +20,7 @@ use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 // Фильтры
 use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
+
 // use App\Scopes\Filters\DateIntervalFilter;
 
 class Sector extends Model
@@ -41,6 +42,7 @@ class Sector extends Model
     // Фильтры
     use Filter;
     use BooklistFilter;
+
     // use DateIntervalFilter;
 
     protected $dates = ['deleted_at'];
@@ -51,7 +53,8 @@ class Sector extends Model
         'seo_description',
         'parent_id',
         'photo_id',
-'display',
+
+        'display',
         'system',
         'moderation'
     ];
@@ -67,6 +70,7 @@ class Sector extends Model
     {
         return $this->hasMany(Sector::class, 'parent_id');
     }
+
     // Компания
     public function company()
     {

@@ -12,7 +12,8 @@
                 </h2>
 
                 @can('create', $class)
-                    <a class="icon-add sprite top" data-open="modal-create" data-tooltip tabindex="2" title="Добавить позицию"></a>
+                    <a class="icon-add sprite top" data-open="modal-create" data-tooltip tabindex="2"
+                       title="Добавить позицию"></a>
                 @endcan
 
                 @php
@@ -30,10 +31,12 @@
                        tabindex="2" title="Настройка категорий"></a>
                 @endcan
 
-                @can('index', \App\Models\System\Documents\Consignment::class)
-                    <a href="{{ route('consignments.index') }}" class="icon-consignment sprite top" data-tooltip
-                       tabindex="2" title="Накладные"></a>
-                @endcan
+                @if($entity != 'impacts')
+                    @can('index', \App\Models\System\Documents\Consignment::class)
+                        <a href="{{ route('consignments.index') }}" class="icon-consignment sprite top" data-tooltip
+                           tabindex="2" title="Накладные"></a>
+                    @endcan
+                @endif
 
                 @php
                     if ($pageInfo->alias == 'goods') {

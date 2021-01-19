@@ -54,6 +54,10 @@ class PromotionController extends BaseController
 
 	    $promotion = Promotion::with('photo')
 		    ->find($id);
+//        dd($promotion);
+        if (empty($promotion)) {
+            abort(404);
+        }
 
         $site = $this->site;
 

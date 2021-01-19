@@ -33,7 +33,9 @@ class CreateEstimatesTable extends Migration
             $table->string('number')->nullable()->comment('Номер сметы');
 
             $table->boolean('is_main')->default(1)->comment('Главная');
+
             $table->boolean('is_dismissed')->default(0)->comment('Отменено');
+            $table->bigInteger('cancel_ground_id')->nullable()->unsigned()->comment('Id основания списания');
 
             $table->integer('cost')->default(0)->comment('Себестоимость');
             $table->decimal('amount', 10, 2)->default(0)->comment('Сумма');
@@ -72,10 +74,9 @@ class CreateEstimatesTable extends Migration
 
             $table->boolean('draft')->default(0)->unsigned()->comment('Черновик');
 
-            $table->timestamp('registered_at')->nullable()->comment('Оформлено');
+            $table->timestamp('registered_at')->nullable()->comment('Время оформления');
+            $table->timestamp('produced_at')->nullable()->comment('Время производства');
             $table->timestamp('conducted_at')->nullable()->comment('Время проведения');
-
-            $table->boolean('is_produced')->default(0)->comment('Произведено');
 
             $table->integer('external')->nullable()->comment('Внешний id');
 

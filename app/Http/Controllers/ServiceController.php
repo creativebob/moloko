@@ -24,6 +24,7 @@ class ServiceController extends Controller
         $this->middleware('auth');
         $this->entityAlias = 'services';
         $this->entityDependence = false;
+        $this->class = Service::class;
     }
 
     use Processable;
@@ -363,7 +364,13 @@ class ServiceController extends Controller
                             'category',
                             'process.unit'
                         ]);
-                    }
+                    },
+                    'impacts' => function ($q) {
+                        $q->with([
+                            'category',
+                            'article.unit'
+                        ]);
+                    },
                 ]);
             },
             'metrics',

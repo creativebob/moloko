@@ -4,14 +4,14 @@ namespace App\Policies;
 
 use App\Policies\Traits\PoliticTrait;
 use App\User;
-use App\Agent;
+use App\Agent as Model;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class AgentPolicy
 {
-    
+
     use HandlesAuthorization;
     use PoliticTrait;
 
@@ -30,7 +30,7 @@ class AgentPolicy
         return $result;
     }
 
-    public function view(User $user, Agent $model)
+    public function view(User $user, Model $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'view', $this->entity_dependence);
         return $result;
@@ -42,25 +42,25 @@ class AgentPolicy
         return $result;
     }
 
-    public function update(User $user, Agent $model)
-    { 
+    public function update(User $user, Model $model)
+    {
         $result = $this->getstatus($this->entity_name, $model, 'update', $this->entity_dependence);
         return $result;
     }
 
-    public function delete(User $user, Agent $model)
+    public function delete(User $user, Model $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
         return $result;
     }
 
-    public function moderator(User $user, Agent $model)
+    public function moderator(User $user, Model $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'moderator', $this->entity_dependence);
         return $result;
     }
 
-    public function automoderate(User $user, Agent $model)
+    public function automoderate(User $user, Model $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'automoderate', $this->entity_dependence);
         return $result;
@@ -72,15 +72,15 @@ class AgentPolicy
         return $result;
     }
 
-    public function system(User $user, Agent $model)
+    public function system(User $user, Model $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'system', $this->entity_dependence);
         return $result;
     }
-    
+
     public function god(User $user)
     {
         if(Auth::user()->god){return true;} else {return false;};
     }
-      
+
 }

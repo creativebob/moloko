@@ -459,6 +459,11 @@ class Company extends Model
         return $this->hasOne(Domain::class);
     }
 
+    public function domains()
+    {
+        return $this->hasMany(Domain::class);
+    }
+
     public function site()
     {
         return $this->hasOne(Site::class);

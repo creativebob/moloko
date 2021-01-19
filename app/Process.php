@@ -100,7 +100,7 @@ class Process extends BaseModel
     // Производитель
     public function manufacturer()
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Manufacturer::class);
     }
 
     // Альбом
@@ -141,6 +141,11 @@ class Process extends BaseModel
     public function in_workflows()
     {
         return $this->hasMany(Workflow::class, 'process_id');
+    }
+
+    public function impacts()
+    {
+        return $this->belongsToMany(Impact::class, 'process_impact');
     }
 
 

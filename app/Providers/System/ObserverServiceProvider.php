@@ -3,9 +3,14 @@
 namespace App\Providers\System;
 
 use App\AgencyScheme;
+use App\ArticleCode;
 use App\ArticlesGroup;
 use App\Attachment;
 use App\AttachmentsCategory;
+use App\Competitor;
+use App\EstimatesCancelGround;
+use App\Impact;
+use App\ImpactsCategory;
 use App\Label;
 use App\Mailing;
 use App\MailingList;
@@ -31,7 +36,6 @@ use App\CostsHistory;
 use App\Department;
 use App\Direction;
 use App\Discount;
-use App\Dispatch;
 use App\Domain;
 use App\Employee;
 use App\Models\System\Documents\Estimate;
@@ -46,14 +50,21 @@ use App\Manufacturer;
 use App\Agent;
 use App\Menu;
 use App\Metric;
+use App\Models\System\Stocks\ImpactsStock;
+use App\Models\System\Stocks\ToolsStock;
 use App\Observers\System\AgencySchemeObserver;
+use App\Observers\System\ArticleCodeObserver;
 use App\Observers\System\ArticlesGroupObserver;
 use App\Observers\System\AttachmentObserver;
 use App\Observers\System\AttachmentsCategoryObserver;
+use App\Observers\System\CompetitorObserver;
 use App\Observers\System\Documents\ConsignmentObserver;
 use App\Observers\System\Documents\ConsignmentsItemObserver;
 use App\Observers\System\Documents\ProductionObserver;
 use App\Observers\System\Documents\ProductionsItemObserver;
+use App\Observers\System\EstimatesCancelGroundObserver;
+use App\Observers\System\ImpactObserver;
+use App\Observers\System\ImpactsCategoryObserver;
 use App\Observers\System\LabelObserver;
 use App\Observers\System\MailingListObserver;
 use App\Observers\System\MailingObserver;
@@ -76,7 +87,6 @@ use App\Observers\System\CostsHistoryObserver;
 use App\Observers\System\DepartmentObserver;
 use App\Observers\System\DirectionObserver;
 use App\Observers\System\DiscountObserver;
-use App\Observers\System\DispatchObserver;
 use App\Observers\System\DomainObserver;
 use App\Observers\System\EmployeeObserver;
 use App\Observers\System\Documents\EstimateObserver;
@@ -106,6 +116,7 @@ use App\Observers\System\PricesGoodsObserver;
 use App\Observers\System\PricesServicesHistoryObserver;
 use App\Observers\System\ProcessesGroupObserver;
 use App\Observers\System\PromotionObserver;
+use App\Observers\System\Stocks\ImpactsStockObserver;
 use App\Observers\System\Stocks\RawsStockObserver;
 use App\Observers\System\ReceiptObserver;
 use App\Observers\System\RepresentativeObserver;
@@ -115,6 +126,7 @@ use App\Observers\System\RoomsCategoryObserver;
 use App\Observers\System\SectorObserver;
 use App\Observers\System\ServicesCategoryObserver;
 use App\Observers\System\StafferObserver;
+use App\Observers\System\Stocks\ToolsStockObserver;
 use App\Observers\System\SubscriberObserver;
 use App\Observers\System\SupplierObserver;
 use App\Observers\System\TemplateObserver;
@@ -238,9 +250,11 @@ class ObserverServiceProvider extends ServiceProvider
         ToolsCategory::observe(ToolsCategoryObserver::class);
         RoomsCategory::observe(RoomsCategoryObserver::class);
         ExpendablesCategory::observe(ExpendablesCategoryObserver::class);
+        ImpactsCategory::observe(ImpactsCategoryObserver::class);
 
         // Артикулы
         Article::observe(ArticleObserver::class);
+        ArticleCode::observe(ArticleCodeObserver::class);
         ArticlesGroup::observe(ArticlesGroupObserver::class);
         Goods::observe(GoodsObserver::class);
         Raw::observe(RawObserver::class);
@@ -248,6 +262,7 @@ class ObserverServiceProvider extends ServiceProvider
         Attachment::observe(AttachmentObserver::class);
         Tool::observe(ToolObserver::class);
         Room::observe(RoomObserver::class);
+        Impact::observe(ImpactObserver::class);
 
 
         // Категории процессов
@@ -276,6 +291,7 @@ class ObserverServiceProvider extends ServiceProvider
 
         // Сметы
         Estimate::observe(EstimateObserver::class);
+        EstimatesCancelGround::observe(EstimatesCancelGroundObserver::class);
         EstimatesGoodsItem::observe(EstimatesGoodsItemObserver::class);
         EstimatesServicesItem::observe(EstimatesServicesItemObserver::class);
 
@@ -295,6 +311,8 @@ class ObserverServiceProvider extends ServiceProvider
         ContainersStock::observe(ContainersStockObserver::class);
         AttachmentsStock::observe(AttachmentsStockObserver::class);
         GoodsStock::observe(GoodsStockObserver::class);
+        ToolsStock::observe(ToolsStockObserver::class);
+        ImpactsStock::observe(ImpactsStockObserver::class);
 
         Cost::observe(CostObserver::class);
         CostsHistory::observe(CostsHistoryObserver::class);
@@ -349,6 +367,7 @@ class ObserverServiceProvider extends ServiceProvider
         Manufacturer::observe(ManufacturerObserver::class);
         Agent::observe(AgentObserver::class);
         AgencyScheme::observe(AgencySchemeObserver::class);
+        Competitor::observe(CompetitorObserver::class);
 
         // Внутренние
         Client::observe(ClientObserver::class);

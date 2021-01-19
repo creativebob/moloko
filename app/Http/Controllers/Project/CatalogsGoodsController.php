@@ -33,12 +33,10 @@ class CatalogsGoodsController extends BaseController
             ->display()
             ->first();
 //        dd($catalog_goods);
-
-        // Проверим, а доступен ли каталог товаров. Если нет, то кидаем ошибку
-        if ($catalog_goods) {
-            return view($site->alias.'.pages.catalogs_goods.index', compact('site',  'page', 'catalog_goods'));
-        } else {
-            abort(403, 'Доступ к прайсу товаров компании ограничен. Согласен, это довольно странно...');
+        if (empty($catalog_goods)) {
+            abort(404);
         }
+
+        return view($site->alias.'.pages.catalogs_goods.index', compact('site',  'page', 'catalog_goods'));
     }
 }

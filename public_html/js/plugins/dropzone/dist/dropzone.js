@@ -1543,7 +1543,7 @@ var Dropzone = function (_Emitter) {
       });
     }
 
-    // Removes all event listeners and cancels all files in the queue or being processed.
+    // Removes all event listeners and dismisses all files in the queue or being processed.
 
   }, {
     key: "disable",

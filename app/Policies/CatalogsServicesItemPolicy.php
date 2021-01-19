@@ -46,7 +46,9 @@ class CatalogsServicesItemPolicy
 
     public function delete(User $user, Model $model)
     {
-
+        if ($model->prices->isNotEmpty()) {
+            return false;
+        }
 
         if ($model->childs->count() > 0) {
             return false;

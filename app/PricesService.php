@@ -11,6 +11,9 @@ class PricesService extends BaseModel
     use Cachable,
         SoftDeletes;
 
+    const ALIAS = 'prices_services';
+    const DEPENDENCE = true;
+
     protected $fillable = [
         'catalogs_services_item_id',
         'catalogs_service_id',
@@ -250,8 +253,15 @@ class PricesService extends BaseModel
     // Фильтр
     public function scopeFilter($query)
     {
-        if (request('catalogs_services_items')) {
-            $query->whereIn('catalogs_services_item_id', request('catalogs_services_items'));
+
+        $filters = $this->getFilters(self::ALIAS);
+
+        if (isset($filters['catalogs_services_items'])) {
+            $query->whereIn('catalogs_services_item_id', $filters['catalogs_services_items']);
+        }
+
+        if (isset($filters['hit'])) {
+            $query->where('is_hit', $filters['hit']);
         }
 
         return $query;

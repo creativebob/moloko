@@ -8,6 +8,7 @@ use App\CatalogsGoods;
 use App\CatalogsGoodsItem;
 use App\Client;
 use App\Dispatch;
+use App\EstimatesCancelGround;
 use App\Http\Controllers\Controller;
 use App\Models\System\Documents\ConsignmentsItem;
 use App\Models\System\Documents\Estimate;
@@ -64,6 +65,24 @@ class ParserController extends Controller
     public function test()
     {
         dd(__METHOD__);
+    }
+
+    /**
+     * Добавление основании списания для РХ
+     *
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
+    public function setRhCancelGrounds()
+    {
+        EstimatesCancelGround::create([
+            'name' => 'Отказ клиента'
+        ]);
+
+        EstimatesCancelGround::create([
+            'name' => 'Ошибка менеджера'
+        ]);
+
+        return __('msg.ok');
     }
 
     public function updateLeadsOutletId()

@@ -69,6 +69,10 @@ class EstimateController extends BaseController
 			    $q->where('user_id', auth()->user()->id);
 		    })
 		    ->find($id);
+//        dd($estimate);
+        if (empty($estimate)) {
+            abort(404);
+        }
 
         $site = $this->site;
 

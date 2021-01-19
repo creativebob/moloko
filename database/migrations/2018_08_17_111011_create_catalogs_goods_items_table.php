@@ -32,6 +32,9 @@ class CreateCatalogsGoodsItemsTable extends Migration
             $table->bigInteger('photo_id')->nullable()->unsigned()->comment('Id фото (аватар)');
             $table->foreign('photo_id')->references('id')->on('photos');
 
+            $table->string('video_url')->nullable()->comment('Ссылка на видео');
+            $table->text('video')->nullable()->comment('Видео');
+
             $table->string('color', 7)->nullable()->comment('Цвет');
 
             $table->boolean('is_discount')->default(1)->unsigned()->comment('Режим скидок');

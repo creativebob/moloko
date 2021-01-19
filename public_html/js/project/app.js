@@ -30692,7 +30692,7 @@ CancelToken.prototype.throwIfRequested = function throwIfRequested() {
 
 /**
  * Returns an object that contains a new `CancelToken` and a function that, when called,
- * cancels the `CancelToken`.
+ * dismisses the `CancelToken`.
  */
 CancelToken.source = function source() {
   var cancel;

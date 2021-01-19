@@ -360,6 +360,14 @@ Route::post('/ajax_get_workflow', 'WorkflowController@ajax_get_workflow')->middl
 Route::post('/ajax_get_service', 'ServiceController@ajax_get_service')->middleware('auth');
 
 
+// ---------------------------------- Коды артикулов -------------------------------------------
+// Основные методы
+Route::resource('/article_codes', 'ArticleCodeController')
+    ->only([
+        'store',
+        'destroy'
+    ]);
+
 // ---------------------------------- Группы артикулов -------------------------------------------
 // Основные методы
 Route::resource('/articles_groups', 'ArticlesGroupController')->middleware('auth');
@@ -406,6 +414,8 @@ Route::resource('/raws_stocks', 'RawsStockController')
         'update'
     ]);
 
+Route::get('/raws_stocks/search/{search}', 'RawsStockController@search');
+
 
 // ------------------------------------- Категории упаковок -------------------------------------------
 // Текущая добавленная/удаленная категория
@@ -445,6 +455,8 @@ Route::resource('/containers_stocks', 'ContainersStockController')
         'edit',
         'update'
     ]);
+
+Route::get('/containers_stocks/search/{search}', 'ContainersStockController@search');
 
 
 // ------------------------------------- Категории вложений -------------------------------------------
@@ -486,14 +498,16 @@ Route::resource('/attachments_stocks', 'AttachmentsStockController')
         'update'
     ]);
 
+Route::get('/attachments_stocks/search/{search}', 'AttachmentsStockController@search');
+
 
 // ------------------------------------- Категории инструментов -------------------------------------------
 
 // Текущая добавленная/удаленная категория
-Route::any('/tools_categories', 'ToolsCategoryController@index')->middleware('auth');
-Route::match(['get', 'post'], '/tools_categories/{id}/edit', 'ToolsCategoryController@edit')->middleware('auth');
+Route::any('/tools_categories', 'ToolsCategoryController@index');
+Route::match(['get', 'post'], '/tools_categories/{id}/edit', 'ToolsCategoryController@edit');
 // Основные методы
-Route::resource('/tools_categories', 'ToolsCategoryController')->middleware('auth');
+Route::resource('/tools_categories', 'ToolsCategoryController');
 
 // ---------------------------------- Инструменты-------------------------------------------
 
@@ -520,6 +534,49 @@ Route::resource('/tools_stocks', 'ToolsStockController')
         'edit',
         'update'
     ]);
+
+// ------------------------------------- Категории объектов воздействия-------------------------------------------
+// Текущая добавленная/удаленная категория
+Route::any('/impacts_categories', 'ImpactsCategoryController@index');
+Route::match(['get', 'post'], '/impacts_categories/{id}/edit', 'ImpactsCategoryController@edit');
+// Основные методы
+Route::resource('/impacts_categories', 'ImpactsCategoryController')
+    ->except([
+        'show'
+    ]);
+
+
+// ---------------------------------- Объекты воздействия -------------------------------------------
+// Дублирование
+Route::post('/impacts/replicate/{id}', 'ImpactController@replicate');
+// Архив
+Route::post('/impacts/archive/{id}', 'ImpactController@archive');
+// Просмотр архивных
+Route::get('/impacts/archives', 'ImpactController@archives')
+    ->name('impacts.archives');
+// Основные методы
+Route::resource('/impacts', 'ImpactController')
+    ->except([
+        'show'
+    ]);
+
+// Фото
+//Route::any('/tool/add_photo', 'ToolController@add_photo')->middleware('auth');
+//Route::post('/tool/photos', 'ToolController@photos')->middleware('auth');
+
+Route::any('/impacts_create_mode', 'ToolController@ajax_change_create_mode');
+
+
+// ---------------------------------- Склады объектов воздействия -------------------------------------------
+// Основные методы
+Route::resource('/impacts_stocks', 'ImpactsStockController')
+    ->only([
+        'index',
+        'edit',
+        'update'
+    ]);
+
+Route::get('/impacts_stocks/search/{search}', 'ImpactsStockController@search');
 
 
 // ---------------------------------- Помещения -------------------------------------------
@@ -619,9 +676,6 @@ Route::resource('/goods_stocks', 'GoodsStockController')
 
 // Поиск на складах
 Route::get('/goods_stocks/search/{search}', 'GoodsStockController@search');
-Route::get('/raws_stocks/search/{search}', 'RawsStockController@search');
-Route::get('/containers_stocks/search/{search}', 'ContainersStockController@search');
-Route::get('/attachments_stocks/search/{search}', 'AttachmentsStockController@search');
 
 
 // ---------------------------------- Группы процессов -------------------------------------------
@@ -691,7 +745,7 @@ Route::resource('/workflows', 'WorkflowController')->except([
     'destroy'
 ]);
 // Поиск
-Route::post('/workflows/search/{text_fragment}', 'WorkflowController@search');
+Route::get('/workflows/search/{search}', 'WorkflowController@search');
 // Архив
 Route::post('/workflows/archive/{id}', 'WorkflowController@archive');
 // Дублирование
@@ -805,22 +859,25 @@ Route::post('/leads/autofind/{phone}', 'LeadController@ajax_autofind_phone');
 
 
 // --------------------------------------- Расчеты (Сметы) -----------------------------------------------
-
 // Регистрация
 Route::patch('/estimates/{id}/registering', 'EstimateController@registering');
-// Отмена регистрации
 Route::patch('/estimates/{id}/unregistering', 'EstimateController@unregistering');
-// Производство
-Route::patch('/estimates/{id}/produce', 'EstimateController@produce');
-// Продажа
-Route::post('/estimates/{id}/conducting', 'EstimateController@conducting');
 
-// Агент
-Route::post('/estimates/set-agent', 'EstimateController@setAgent');
+// Производство
+Route::post('/estimates/{id}/producing', 'EstimateController@producing');
 
 // Резервирование
 Route::post('/estimates/{id}/reserving', 'EstimateController@reserving');
 Route::post('/estimates/{id}/unreserving', 'EstimateController@unreserving');
+
+// Агент
+Route::post('/estimates/set-agent', 'EstimateController@setAgent');
+
+// Продажа
+Route::post('/estimates/{id}/conducting', 'EstimateController@conducting');
+
+// Списание
+Route::post('/estimates/{id}/dismissing', 'EstimateController@dismissing');
 
 // Основные методы
 Route::resource('/estimates', 'EstimateController');
@@ -1051,8 +1108,7 @@ Route::resource('/manufacturers', 'ManufacturerController')
     ]);
 
 
-// ------------------------------------ Агента ----------------------------------------------------
-
+// ------------------------------------ Агенты ----------------------------------------------------
 Route::get('/agents/get-agents-by-catalog-goods-id/{id}', 'AgentController@getAgentsByCatalogGoodsId');
 // Архив
 Route::post('/agents/archive/{id}', 'AgentController@archive');
@@ -1071,6 +1127,17 @@ Route::post('/agency_schemes/archive/{id}', 'AgencySchemeController@archive');
 Route::resource('/agency_schemes', 'AgencySchemeController')
     ->only([
         'store',
+    ]);
+
+
+// ------------------------------------ Конкуренты ----------------------------------------------------
+// Архив
+Route::post('/competitors/archive/{id}', 'CompetitorController@archive');
+// Основные методы
+Route::resource('/competitors', 'CompetitorController')
+    ->except([
+        'show',
+        'destroy'
     ]);
 
 
@@ -1489,6 +1556,9 @@ Route::prefix('/catalogs_services/{catalogId}')->group(function () {
     Route::any('/prices_services/ajax_store', 'PricesServiceController@ajax_store');
     Route::any('/prices_services_sync', 'PricesServiceController@sync')
         ->name('prices_services.sync');
+
+    Route::any('/prices_services/search/{text}', 'PricesServiceController@search');
+
     Route::any('/prices_services_status', 'PricesServiceController@ajax_status');
     Route::any('/prices_services_hit', 'PricesServiceController@ajax_hit');
     Route::any('/prices_services_new', 'PricesServiceController@ajax_new');
@@ -1643,5 +1713,16 @@ Route::resource('/labels', 'LabelController')
     ]);
 
 
+// --------------------------- Метки заказа -------------------------------------
+Route::post('/estimates_cancel_grounds/get', 'EstimatesCancelGroundController@get');
+// Основные методы
+//Route::resource('/estimates_cancel_grounds', 'EstimatesCancelGroundController')
+//    ->except([
+//        'show',
+//    ]);
+
+
 // ------------------------------------- Отображение сессии -----------------------------------------
-Route::get('/show_session', 'HelpController@show_session')->middleware('auth')->name('help.show_session');
+Route::get('/show_session', 'HelpController@show_session')
+    ->middleware('auth')
+    ->name('help.show_session');

@@ -123,7 +123,7 @@ trait Cancelable
     {
 
         logs('documents')
-            ->info('=== ПЕРЕБИРАЕМ СПИСАНИЯ И ПРИХОДУЕМ ===
+            ->info('=== ОТМЕНЯЕМ СПИСАНИЯ ===
                         ');
 
         foreach ($item->offs as $off) {
@@ -194,7 +194,7 @@ trait Cancelable
         }
 
         logs('documents')
-            ->info('=== КОНЕЦ ПЕРЕБОРА СПИСАНИЯ И ПРИХОДОВАНИЯ===
+            ->info('=== КОНЕЦ ОТМЕНЫ СПИСАНИЙ ===
                         ');
 
     }
