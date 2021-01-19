@@ -22,7 +22,8 @@ class PricesGoodsController extends Controller
             'catalog',
         ])
             ->display()
-            ->filter()
+            ->archive()
+//            ->filter()
             ->where('catalogs_goods_item_id', $catalogsItemId)
             ->oldest('sort')
             ->get();
