@@ -20,6 +20,7 @@ use App\PhotoSetting;
 use App\Position;
 use App\Right;
 use App\Role;
+use App\Sector;
 use App\TemplatesCategory;
 use App\Trigger;
 use App\User;
@@ -35,6 +36,115 @@ class UpdateController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+    }
+
+    /**
+     * Обновление секторов
+     *
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
+    public function sectors()
+    {
+        // Первй раздел
+        $items = [
+            [
+                'name' => 'Сельское хозяйство',
+                'author_id' => 1,
+                'tag' => \Str::slug('Сельское хозяйство'),
+            ],
+        ];
+
+        $count = 0;
+        foreach ($items as $item) {
+            $res = Sector::where($item)
+                ->exists();
+//            dd($res);
+
+            if (!$res) {
+                Sector::insert($item);
+                $count++;
+            }
+        }
+
+        // Вложенные
+        $parentSectors = Sector::whereNull('parent_id')
+            ->get();
+
+        $items = [
+            [
+                'name' => 'Сервис ремонта',
+                'parent_id' => $parentSectors->firstWhere('name', 'Транспорт')->id,
+                'author_id' => 1,
+                'tag' => \Str::slug('Сервис ремонта'),
+                'category_id' => $parentSectors->firstWhere('name', 'Транспорт')->id,
+            ],
+            [
+                'name' => 'Производство и переработка мяса',
+                'parent_id' => $parentSectors->firstWhere('name', 'Сельское хозяйство')->id,
+                'author_id' => 1,
+                'tag' => \Str::slug('Производство и переработка мяса'),
+                'category_id' => $parentSectors->firstWhere('name', 'Сельское хозяйство')->id,
+            ],
+        ];
+
+        foreach ($items as $item) {
+            $res = Sector::where($item)
+                ->exists();
+//            dd($res);
+
+            if (!$res) {
+                Sector::insert($item);
+                $count++;
+            }
+        }
+
+        return __("Добавлено секторов: {$count}");
+    }
+
+    /**
+     * Обновление блока Email Рассылок в меню
+     *
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
+    public function emailsMenus()
+    {
+        $section = Menu::where('tag', 'direct_mail')
+            ->exists();
+
+        if (!$section) {
+            Menu::insert([
+                'name' => 'E-mail рассылки',
+                'icon' => null,
+                'alias' => null,
+                'tag' => 'direct_mail',
+                'parent_id' => Menu::where('tag', 'marketings')->value('id'),
+                'page_id' => null,
+                'navigation_id' => 1,
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+                'sort' => 5,
+            ]);
+
+            $emails = Menu::where('tag', 'direct_mail')
+                ->first();
+
+            $items = [
+                'subscribers',
+                'mailing_lists',
+                'mailings'
+            ];
+
+            foreach ($items as $item) {
+                Menu::where('tag', $item)
+                    ->update([
+                    'parent_id' => $emails->id
+                ]);
+            }
+        }
+
+        return __('msg.ok');
     }
 
     /**

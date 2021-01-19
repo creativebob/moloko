@@ -13,6 +13,7 @@ Route::get('/roles', 'UpdateController@roles');
 Route::get('/notifications', 'UpdateController@notifications');
 Route::get('/charges', 'UpdateController@charges');
 Route::get('/triggers', 'UpdateController@triggers');
+Route::get('/sectors', 'UpdateController@sectors');
 
 
 // Одноразовые
@@ -40,3 +41,5 @@ Route::get('/add_impacts_entities', 'UpdateController@addImpactsEntities');
 
 Route::get('/add_agents_entity', 'UpdateController@addAgentsEntity');
 Route::get('/add_competitors_entity', 'UpdateController@addCompetitorsEntity');
+
+Route::get('/emails_menus', 'UpdateController@emailsMenus');
