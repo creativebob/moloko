@@ -33,7 +33,7 @@
 <li>Ничего нет...</li>
 @endif
 
-<script type="text/javascript">
+<script>
 
 	let services = new Services();
 
