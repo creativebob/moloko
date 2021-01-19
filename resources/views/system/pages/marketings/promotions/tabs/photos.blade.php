@@ -15,6 +15,18 @@
     </div>
 
     <div class="small-12 medium-7 cell">
+        <div class="grid-x grid-padding-x">
+            <div class="cell small-12 medium-6">
+                <label>Alt
+                    @include('includes.inputs.name', ['name' => 'alt'])
+                </label>
+            </div>
+            <div class="cell small-12 medium-6">
+                <label>Title
+                    @include('includes.inputs.name', ['name' => 'title'])
+                </label>
+            </div>
+        </div>
     </div>
 
 </div>
