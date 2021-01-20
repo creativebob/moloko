@@ -13,6 +13,10 @@ class Article extends Model
     use Cachable;
     use SoftDeletes;
 
+    protected $touches = [
+        'cur_goods'
+    ];
+
     protected $with = [
         'photo',
         'unit',
@@ -26,6 +30,11 @@ class Article extends Model
         // TODO - 15.04.20 - Используется на Вкусняшке (пока еще не разведены запросы для пагинации и общей кучи)
         'attachments.article.photo',
     ];
+
+    public function cur_goods()
+    {
+        return $this->hasOne(Goods::class);
+    }
 
     // Группа
     public function group()

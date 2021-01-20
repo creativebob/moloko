@@ -13,6 +13,10 @@ class Goods extends Model
     use Cachable;
     use SoftDeletes;
 
+    protected $touches = [
+        'prices'
+    ];
+
     protected $appends = [
         'rest'
     ];
