@@ -742,7 +742,7 @@ class EntitiesTableSeeder extends Seeder
                 'name' => 'Плагины',
                 'alias' => 'plugins',
                 'model' => 'App\Plugin',
-                'rights' => true,
+                'rights' => false,
                 'system' => true,
                 'author_id' => 1,
                 'site' => 0,
