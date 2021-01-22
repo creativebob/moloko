@@ -13,7 +13,27 @@
 
     // Конфигурация
     CKEDITOR.config.toolbar = [
-    ['Bold', 'Italic', 'NumberedList', 'BulletedList', 'Maximize', 'Source']
+        [
+            'Bold',
+            'Italic',
+            'NumberedList',
+            'BulletedList',
+            'Maximize',
+            'Source',
+
+        ],
+        [
+            'Link'
+        ],
+        [
+            'Cut',
+            'Copy',
+            'Paste',
+            'PasteText',
+            'PasteFromWord',
+            '-',
+            'Undo', 'Redo'
+        ],
     ];
 
 </script>
