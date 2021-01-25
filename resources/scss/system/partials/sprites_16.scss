@@ -97,12 +97,32 @@
     z-index: 50;
 }
 
-.icon-select {
-    background: url(img/password.svg) no-repeat;
+.icon-add-item {
+    margin-top: 9px;
+    margin-bottom: 2px;
+    
+    display: inline-block;
+    vertical-align: middle;
+    width: 20px;
+    height: 20px;
+    background: url(sprites/sprite_16.png) no-repeat;
+    transition: opacity ease 0.3s;
+
+    &:focus {
+        outline: none;
+    }
+
+    background: url(img/add.svg) no-repeat;
     opacity: 1;
     cursor: pointer;
     z-index: 50;
+    background-size: 20px;
 }
+
+.add-item-comp-button{
+    margin-left: 10px;
+}
+
 
 //.icon-found {
 //    background-position: -16px -80px;
