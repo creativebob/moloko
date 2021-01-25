@@ -11,6 +11,11 @@
                     <div class="item-error">Такой альбом уже существует!</div>
                 </label>
 
+                <label class="alias">Алиас
+                    @include('includes.inputs.name', ['name' => 'alias'])
+                    <div class="sprite-input-right find-status" id="alias-check"></div>
+                </label>
+
                 <label class="alias">Слаг
                     @include('includes.inputs.name', ['name' => 'slug', 'check' => true])
                     <div class="sprite-input-right find-status" id="alias-check"></div>

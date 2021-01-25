@@ -13,6 +13,7 @@ class Album extends BaseModel
         'name',
         'description',
         'slug',
+        'alias',
 
         'category_id',
 

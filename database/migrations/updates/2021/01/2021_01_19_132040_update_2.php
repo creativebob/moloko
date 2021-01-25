@@ -22,6 +22,10 @@ class Update2 extends Migration
             $table->string('alt')->nullable()->comment('Alt')->after('photo_id');
         });
 
+        Schema::table('photos', function (Blueprint $table) {
+            $table->string('alt')->nullable()->comment('Alt')->after('description');
+        });
+
     }
 
     /**
@@ -39,6 +43,12 @@ class Update2 extends Migration
         });
 
         Schema::table('news', function (Blueprint $table) {
+            $table->dropColumn([
+                'alt',
+            ]);
+        });
+
+        Schema::table('photos', function (Blueprint $table) {
             $table->dropColumn([
                 'alt',
             ]);
