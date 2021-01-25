@@ -24,7 +24,7 @@ trait Photable
     {
         $request = request();
 
-        if ($request->hasFile('photo'))  {
+        if ($request->hasFile('photo')) {
 
             $image = $request->file('photo');
 
@@ -59,9 +59,9 @@ trait Photable
             }
 
             if ($item->getTable() == 'companies') {
-	            $directory = $item->id . '/media/' . $item->getTable() . '/' . $item->id . '/img';
+                $directory = $item->id . '/media/' . $item->getTable() . '/' . $item->id . '/img';
             } else {
-	            $directory = $item->company_id . '/media/' . $item->getTable() . '/' . $item->id . '/img';
+                $directory = $item->company_id . '/media/' . $item->getTable() . '/' . $item->id . '/img';
             }
 
             if (isset($item->photo_id)) {
@@ -111,18 +111,19 @@ trait Photable
 
             // Сохраняем small, medium и large
             foreach (['small', 'medium', 'large'] as $value) {
-                // $item = Image::make($request->photo)->grab(1200, 795);
-                // $folder = Image::make($request->photo)->widen($settings['img_' . $value . '_width'])->crop($settings['img_' . $value . '_width'], $settings['img_' . $value . '_height']);
-
-
-                // Режим изменения фотографии
                 switch ($crop_mode = $settings['crop_mode']) {
+
+                    // Пропорциональное уменьшение
                     case 1:
-                        $folder = Image::make($request->photo);
+                        $folder = Image::make($request->photo)
+                            ->widen($settings['img_' . $value . '_width'])
+                            ->crop($settings['img_' . $value . '_width'], $settings['img_' . $value . '_height']);
                         break;
 
+                    // Пропорциональная обрезка
                     case 2:
-                        $folder = Image::make($request->photo)->fit($settings['img_' . $value . '_width'], $settings['img_' . $value . '_height']);
+                        $folder = Image::make($request->photo)
+                            ->fit($settings['img_' . $value . '_width'], $settings['img_' . $value . '_height']);
                         break;
                 }
 
@@ -169,6 +170,8 @@ trait Photable
             abort(403, 'Размер (Mb) фотографии высок!');
         }
 
+        $directory = $album->company_id . '/media/albums/' . $album->id . '/img';
+
         $photo = new Photo;
 
         $extension = $image->getClientOriginalExtension();
@@ -184,6 +187,8 @@ trait Photable
         $image_name = 'photo_' . time() . '.' . $extension;
         $photo->name = $image_name;
 
+        $photo->path = "/storage/{$directory}/{$image_name}";
+
         $user = $request->user();
         $photo->company_id = $user->company_id;
         $photo->author_id = hideGod($user);
@@ -193,7 +198,7 @@ trait Photable
         $photo->save();
         // dd('Функция маслает!');
 
-        $directory = $album->company_id . '/media/albums/' . $album->id . '/img';
+
 
         // Сохранияем оригинал
 //        $upload_success = $image->storeAs($directory . '/original', $image_name, 'public');
@@ -254,7 +259,7 @@ trait Photable
     public function replicatePhoto($item, $new_item)
     {
 
-        if (isset($item->photo_id))  {
+        if (isset($item->photo_id)) {
 
             $photo = $item->photo;
             $new_photo = $photo->replicate();
@@ -269,19 +274,19 @@ trait Photable
             $new_directory = $new_item->company_id . '/media/' . $new_item->getTable() . '/' . $new_item->id . '/img';
 
             foreach ([
-                'original',
-                 'small',
-                 'medium',
-                 'large'
-            ] as $value) {
+                         'original',
+                         'small',
+                         'medium',
+                         'large'
+                     ] as $value) {
 
                 Storage::disk('public')
-                    ->copy($directory. '/' . $value . '/' . $photo->name, $new_directory. '/' . $value . '/' . $new_photo->name);
+                    ->copy($directory . '/' . $value . '/' . $photo->name, $new_directory . '/' . $value . '/' . $new_photo->name);
 
             }
 
             Storage::disk('public')
-                ->copy($directory. '/' . $photo->name, $new_directory. '/' . $new_photo->name);
+                ->copy($directory . '/' . $photo->name, $new_directory . '/' . $new_photo->name);
 
             return $new_photo->id;
         } else {
@@ -299,7 +304,7 @@ trait Photable
     public function replicateAlbumWithPhotos($item, $new_item)
     {
 
-        if (isset($item->album_id))  {
+        if (isset($item->album_id)) {
 
             $album = $item->album;
             $new_album = $album->replicate();
@@ -338,12 +343,12 @@ trait Photable
                          ] as $value) {
 
                     Storage::disk('public')
-                        ->copy($directory. '/' . $value . '/' . $photo->name, $new_directory. '/' . $value . '/' . $new_photo->name);
+                        ->copy($directory . '/' . $value . '/' . $photo->name, $new_directory . '/' . $value . '/' . $new_photo->name);
 
                 }
 
                 Storage::disk('public')
-                    ->copy($directory. '/' . $photo->name, $new_directory. '/' . $new_photo->name);
+                    ->copy($directory . '/' . $photo->name, $new_directory . '/' . $new_photo->name);
 
             }
             $new_album->photos()->attach($photos_insert);
@@ -367,7 +372,7 @@ trait Photable
         $settings = PhotoSetting::whereNull('company_id')
             ->first();
 
-        if (! $settings) {
+        if (!$settings) {
             // Умолчания на случай, если нет доступа к базе (Для формирования autoload)
             $settings = [];
             $settings['img_small_width'] = 0;
@@ -470,11 +475,11 @@ trait Photable
 
         if (isset($item->photo_id)) {
 
-        	if ($item->getTable() == 'companies') {
-		        $path = "/storage/" . $item->id . "/media/" . $item->getTable() . "/" . $item->id . "/img/" . $size . "/" . $item->photo->name;
-	        } else {
-		        $path = "/storage/" . $item->company_id . "/media/" . $item->getTable() . "/" . $item->id . "/img/" . $size . "/" . $item->photo->name;
-	        }
+            if ($item->getTable() == 'companies') {
+                $path = "/storage/" . $item->id . "/media/" . $item->getTable() . "/" . $item->id . "/img/" . $size . "/" . $item->photo->name;
+            } else {
+                $path = "/storage/" . $item->company_id . "/media/" . $item->getTable() . "/" . $item->id . "/img/" . $size . "/" . $item->photo->name;
+            }
 
             return $path;
         } else {
@@ -548,7 +553,7 @@ trait Photable
             $width = $params[0];
             $height = $params[1];
 
-            $size = filesize($image)/1024;
+            $size = filesize($image) / 1024;
             // dd($size);
 
 //                $settings = getPhotoSettings($item->getTable());
@@ -584,7 +589,7 @@ trait Photable
 
             $photo->size = number_format($size, 2, '.', '');
 
-            $image_name = $name .'_' . time() . '.' . $extension;
+            $image_name = $name . '_' . time() . '.' . $extension;
             $photo->name = $image_name;
 
             $photo->path = "/storage/{$directory}/{$image_name}";
@@ -603,7 +608,7 @@ trait Photable
 //            dd($res);
 
             return $photo->id;
-        }  else {
+        } else {
             $column = $name . '_id';
             return $item->$column;
         }
@@ -631,7 +636,7 @@ trait Photable
 //            $width = $params[0];
 //            $height = $params[1];
 
-            $size = filesize($image)/1024;
+            $size = filesize($image) / 1024;
             // dd($size);
 
 //                $settings = getPhotoSettings($item->getTable());
@@ -670,7 +675,7 @@ trait Photable
 
             $vector->size = number_format($size, 2, '.', '');
 
-            $image_name = $name .'_' . time() . '.' . $extension;
+            $image_name = $name . '_' . time() . '.' . $extension;
             $vector->name = $image_name;
 
             $vector->path = "/storage/{$directory}/{$image_name}";
@@ -689,7 +694,7 @@ trait Photable
 //            dd($res);
 
             return $vector->id;
-        }  else {
+        } else {
             $column = $name . '_id';
             return $item->$column;
         }

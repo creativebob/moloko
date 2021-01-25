@@ -2,93 +2,83 @@
 
 namespace App\Http\Controllers;
 
-// Модели
 use App\Album;
-use App\AlbumMedia;
-use App\Photo;
-use App\User;
-use App\List_item;
-use App\Booklist;
-use App\AlbumsCategory;
 use App\PhotoSetting;
-use App\Role;
-
-// Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\System\AlbumRequest;
 
-// Общие классы
-use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Str;
-
-// Специфические классы
-use Illuminate\Support\Facades\Storage;
-
 class AlbumController extends Controller
 {
+    protected $entityAlias;
+    protected $entityDependence;
 
-    // Настройки сконтроллера
-    public function __construct(Album $album)
+    /**
+     * AlbumController constructor.
+     */
+    public function __construct()
     {
         $this->middleware('auth');
-        $this->album = $album;
-        $this->class = Album::class;
         $this->model = 'App\Album';
-        $this->entity_alias = with(new $this->class)->getTable();
-        $this->entity_dependence = false;
+        $this->entityAlias = 'albums';
+        $this->entityDependence = false;
     }
 
+    /**
+     * Display a listing of the resource.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function index(Request $request)
     {
-
-        $storage = Str::slug('ker');
         // Включение контроля активного фильтра
-        $filter_url = autoFilter($request, $this->entity_alias);
-        if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
+        $filter_url = autoFilter($request, $this->entityAlias);
+        if (($filter_url != null) && ($request->filter != 'active')) {
+            return Redirect($filter_url);
+        };
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), Album::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
         // dd($answer);
-
-        // -----------------------------------------------------------------------------------------------------------------------------
-        // ГЛАВНЫЙ ЗАПРОС
-        // -----------------------------------------------------------------------------------------------------------------------------
 
         $albums = Album::with([
             'author',
             'company',
             'category'
         ])
-        ->withCount('photos')
+            ->withCount('photos')
 
-        // Старый метод показа с шаблонными
-        ->whereHas('category', function ($query) {
-            $query->whereNotNull('company_id')
-            ->where(function ($query) {
-                $query->orWhere('system', false)->orWhere('system', false);
-            })->orWhere('company_id', null)->where(function ($query) {
-                $query->where('system', false);
-            });
-        })
-
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->systemItem($answer)
-        ->booklistFilter($request)
-        ->filter($request, 'author')
-        ->filter($request, 'company')
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->paginate(30);
+            // Старый метод показа с шаблонными
+            ->whereHas('category', function ($query) {
+                $query->whereNotNull('company_id')
+                    ->where(function ($query) {
+                        $query->orWhere('system', false)
+                            ->orWhere('system', false);
+                    })
+                    ->orWhere('company_id', null)
+                    ->where(function ($query) {
+                        $query->where('system', false);
+                    });
+            })
+            ->moderatorLimit($answer)
+            ->companiesLimit($answer)
+            ->systemItem($answer)
+            ->booklistFilter($request)
+//            ->filter($request, 'author')
+//            ->filter($request, 'company')
+            ->orderBy('moderation', 'desc')
+            ->oldest('sort')
+            ->paginate(30);
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter = setFilter($this->entity_alias, $request, [
+        $filter = setFilter($this->entityAlias, $request, [
             'author',               // Автор записи
             'company',              // Компания
             'booklist'              // Списки пользователя
@@ -97,56 +87,63 @@ class AlbumController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entityAlias);
 
-        return view('albums.index', compact('albums', 'pageInfo', 'filter'));
+        return view('system.pages.marketings.albums.index', compact('albums', 'pageInfo', 'filter'));
     }
 
-
-    public function create(Request $request)
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function create()
     {
-
         // Подключение политики
-        $this->authorize(__FUNCTION__, $this->class);
+        $this->authorize(__FUNCTION__, Album::class);
 
-        return view('albums.create', [
-            'album' => new $this->class,
-            'album_settings' => new PhotoSetting,
-            'pageInfo' => pageInfo($this->entity_alias),
-        ]);
+        $album = Album::make();
+        $album_settings = PhotoSetting::make();
+
+        $pageInfo = pageInfo($this->entityAlias);
+
+        return view('system.pages.marketings.albums.create', compact('album', 'album_settings', 'pageInfo'));
     }
 
-
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param AlbumRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function store(AlbumRequest $request)
     {
-
-        // dd($request);
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $this->authorize(getmethod(__FUNCTION__), Album::class);
 
         $data = $request->input();
-        $album = (new Album())->create($data);
+        $album = Album::create($data);
 
         if ($album) {
             return redirect()->route('albums.index');
-
         } else {
-            abort(403, 'Ошибка записи альбома');
+            abort(403, __('errors.store'));
         }
     }
 
-
-    public function show(Request $request, $id)
+    // TODO - 22.01.21 - Хз работет ли
+    public function show($id)
     {
-
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         $album = Album::moderatorLimit($answer)
-        ->whereAlias($alias)
-        ->first();
+            ->find($id);
+        //        dd($album);
+        if (empty($album)) {
+            abort(403, __('errors.not_found'));
+        }
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $album);
@@ -154,49 +151,73 @@ class AlbumController extends Controller
         $answer_photo = operator_right('photos', false, getmethod('index'));
         // dd($answer_photo);
 
-        $album->load(['author', 'photos' => function ($query) use ($answer_photo){
-            $query->moderatorLimit($answer_photo)
-            ->companiesLimit($answer_photo)
-            ->authors($answer_photo)
-            ->systemItem($answer_photo)
-            ->orderBy('sort', 'asc');
-        }]);
+        $album->load([
+            'author',
+            'photos' => function ($query) use ($answer_photo) {
+                $query->moderatorLimit($answer_photo)
+                    ->companiesLimit($answer_photo)
+                    ->authors($answer_photo)
+                    ->systemItem($answer_photo)
+                    ->orderBy('sort', 'asc');
+            }]);
 
-        return view('albums.show', [
-            'album' => $album,
-            'pageInfo' => pageInfo($this->entity_alias)
-        ]);
+        $pageInfo = pageInfo($this->entityAlias);
+
+        return view('system.pages.marketings.albums.show', compact('album', 'pageInfo'));
     }
 
-
-    public function edit(Request $request, $id)
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function edit($id)
     {
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         $album = Album::with([
             'photo_settings',
         ])
-        ->moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
-        ->find($id);
-        // dd($album);
+            ->moderatorLimit($answer)
+            ->find($id);
+        //        dd($album);
+        if (empty($album)) {
+            abort(403, __('errors.not_found'));
+        }
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $album);
 
-        return view('albums.edit', [
-            'album' => $album,
-            'pageInfo' => pageInfo($this->entity_alias),
-        ]);
+        // Инфо о странице
+        $pageInfo = pageInfo($this->entityAlias);
+
+        return view('system.pages.marketings.albums.edit', compact('album', 'pageInfo'));
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param AlbumRequest $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function update(AlbumRequest $request, $id)
     {
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $album = Album::with('photo_settings')
-        ->moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
-        ->find($id);
-
-        // dd($album);
+            ->moderatorLimit($answer)
+            ->find($id);
+//        dd($album);
+        if (empty($album)) {
+            abort(403, __('errors.not_found'));
+        }
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $album);
@@ -207,36 +228,50 @@ class AlbumController extends Controller
         if ($album) {
             return redirect()->route('albums.index');
         } else {
-            abort(403, 'Ошибка обновления');
+            abort(403, __('errors.update'));
         }
     }
 
-    public function destroy(Request $request, $id)
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function destroy($id)
     {
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
-        $album = Album::with('photos')->moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))->find($id);
-
+        $album = Album::with([
+            'photos'
+        ])
+            ->moderatorLimit($answer)
+            ->find($id);
+        //        dd($album);
+        if (empty($album)) {
+            abort(403, __('errors.not_found'));
+        }
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $album);
 
-        // Удаляем альбом с обновлением
         $album->delete();
 
         if ($album) {
             return redirect()->route('albums.index');
         } else {
-            abort(403, 'Ошибка при удалении альбома');
+            abort(403, __('errors.destroy'));
         }
     }
 
-    public function sections(Request $request, $alias)
+    public function sections($alias)
     {
-
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         $album = Album::moderatorLimit($answer)
-        ->whereAlias($alias)
-        ->first();
+            ->whereAlias($alias)
+            ->first();
 
         // Подключение политики
         $this->authorize(getmethod('show'), $album);
@@ -244,18 +279,21 @@ class AlbumController extends Controller
         $answer_photo = operator_right('photos', false, getmethod('index'));
         // dd($answer_photo);
 
-        $album->load(['author', 'photos' => function ($query) use ($answer_photo){
-            $query->moderatorLimit($answer_photo)
-            ->companiesLimit($answer_photo)
-            ->authors($answer_photo)
-            ->systemItem($answer_photo)
-            ->orderBy('sort', 'asc');
-        }]);
-
-        return view('albums.sections', [
-            'album' => $album,
-            'pageInfo' => pageInfo($this->entity_alias)
+        $album->load([
+            'author',
+            'photos' => function ($query) use ($answer_photo) {
+                $query->moderatorLimit($answer_photo)
+                    ->companiesLimit($answer_photo)
+                    ->authors($answer_photo)
+                    ->systemItem($answer_photo)
+                    ->orderBy('sort', 'asc');
+            }
         ]);
+
+        // Инфо о странице
+        $pageInfo = pageInfo($this->entityAlias);
+
+        return view('system.pages.marketings.albums.sections', compact('album', 'pageInfo'));
     }
 
     // ------------------------------------------- Ajax ---------------------------------------------
@@ -263,25 +301,25 @@ class AlbumController extends Controller
     // Модалка прикрепления альбома
     public function ajax_add(Request $request)
     {
-        return view('news.albums.modal_albums');
+        return view('system.pages.marketings.news.albums.modal_albums');
     }
 
     // Список албомов
     public function ajax_get_select(Request $request)
     {
-        return view('news.albums.select_albums', ['albums_category_id' => $request->albums_category_id]);
+        return view('system.pages.marketings.news.albums.select_albums', ['albums_category_id' => $request->albums_category_id]);
     }
 
     // Список получаем альбом
     public function ajax_get(Request $request)
     {
 
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, 'index');
+        $answer = operator_right($this->entityAlias, $this->entityDependence, 'index');
 
-        $album = Album::moderatorLimit($answer )
-        ->find($request->album_id);
+        $album = Album::moderatorLimit($answer)
+            ->find($request->album_id);
 
-        return view('news.albums.album', compact('album'));
+        return view('system.pages.marketings.news.albums.album', compact('album'));
     }
 
 }

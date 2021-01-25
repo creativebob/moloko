@@ -15,7 +15,7 @@
 
 @section('title-content')
 {{-- Меню --}}
-@include('system.common.categories.index.includes.title_categories', [
+@include('system.common.categories.index.includes.title', [
     'class' => $class,
 ]
 )

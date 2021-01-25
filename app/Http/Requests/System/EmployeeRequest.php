@@ -27,7 +27,7 @@ class EmployeeRequest extends FormRequest
             // TODO - 10.12.20 - Валидация инн
             'inn' => 'nullable|integer|min:12',
 
-            'staffer_id' => 'required|integer|exists:staff,id',
+            'staffer_id' => 'nullable|integer|exists:staff,id',
 
             'employment_date' => 'required|date|after:01.01.1940',
             'dismissal_date' => 'nullable|date|after:01.01.1940',

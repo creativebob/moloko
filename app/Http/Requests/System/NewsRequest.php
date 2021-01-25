@@ -13,7 +13,7 @@ class NewsRequest extends FormRequest
      */
     public function authorize()
     {
-      return true;
+        return true;
     }
 
     /**
@@ -23,22 +23,24 @@ class NewsRequest extends FormRequest
      */
     public function rules()
     {
-      return [
-        'name' => 'string|max:255',
-        'preview' => 'string|nullable',
-        'content' => 'string|nullable',
-        'alias' => 'string|nullable',
-        'slug' => 'string|nullable',
+        return [
+            'name' => 'required|string|max:255',
+            'preview' => 'nullable|string',
+            'content' => 'nullable|string',
 
-        'publish_begin_date' => 'date|after:01.01.2018',
-        'publish_end_date' => 'date|after:01.01.2018|nullable',
+            'alias' => 'nullable|string',
+            'slug' => 'nullable|string',
+            'alt' => 'nullable|string',
 
-        'rubricator_id' => 'integer|nullable',
-        'rubricators_item_id' => 'integer|nullable',
+            'publish_begin_date' => 'required|date|after:01.01.2018',
+            'publish_end_date' => 'nullable|date|after:01.01.2018',
 
-        'display' => 'nullable|integer|max:1',
+            'rubricator_id' => 'required|integer|exists:rubricators,id',
+            'rubricators_item_id' => 'required|integer|exists:rubricators_items,id',
+
+            'display' => 'nullable|integer|max:1',
             'system' => 'nullable|integer|max:1',
             'moderation' => 'nullable|integer|max:1',
-      ];
+        ];
     }
-  }
+}

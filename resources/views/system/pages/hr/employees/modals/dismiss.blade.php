@@ -19,6 +19,10 @@
                 </div>
                 <div class="small-12 medium-6 cell">
                     <label>Дата увольнения
+                        {{--                            <pickmeup-component--}}
+                        {{--                                name="dismissal_date"--}}
+                        {{--                                :required="true"--}}
+                        {{--                            ></pickmeup-component>--}}
                         @include('includes.inputs.date', ['name'=>'dismissal_date', 'required' => true])
                     </label>
                 </div>

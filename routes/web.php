@@ -271,7 +271,10 @@ Route::patch('/update_profile', 'UserController@update_profile')
 // Текущая добавленная/удаленная категория альбомов
 Route::any('/albums_categories', 'AlbumsCategoryController@index');
 // Основные методы
-Route::resource('/albums_categories', 'AlbumsCategoryController');
+Route::resource('/albums_categories', 'AlbumsCategoryController')
+    ->except([
+        'show'
+    ]);
 
 
 // --------------------------------------- Альбомы -----------------------------------------------
@@ -289,7 +292,8 @@ Route::resource('/albums', 'AlbumController');
 Route::post('/albums_check', 'AlbumController@ajax_check');
 
 // Открытие модалки прикрепления альбома
-Route::post('/album_add', 'AlbumController@ajax_add')->name('album.add');
+Route::post('/album_add', 'AlbumController@ajax_add')
+    ->name('album.add');
 // Получение альбомов по категории
 Route::any('/albums_select', 'AlbumController@ajax_get_select');
 // Получение альбома
@@ -297,11 +301,14 @@ Route::any('/album_get', 'AlbumController@ajax_get');
 
 
 // Группа с префиксом
-Route::prefix('/albums/{alias}')->group(function () {
+Route::prefix('/albums/{id}')->group(function () {
 
     // ----------------------------------- Фотографии -----------------------------------------------
 
-    Route::resource('/photos', 'PhotoController');
+    Route::resource('/photos', 'PhotoController')
+        ->except([
+            'show'
+        ]);
     // Загрузка фоток через ajax через dropzone.js
 });
 
@@ -1477,9 +1484,11 @@ Route::prefix('rubricators/{rubricator_id}')->group(function () {
 
 
 // ---------------------------------------- Новости -------------------------------------------
-
 // Основные методы
-Route::resource('/news', 'NewsController');
+Route::resource('/news', 'NewsController')
+    ->except([
+        'show'
+    ]);
 
 
 // ----------------------------------------- Каталоги товаров ------------------------------------------

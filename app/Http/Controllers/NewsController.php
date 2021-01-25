@@ -11,32 +11,36 @@ use Illuminate\Support\Facades\Storage;
 
 class NewsController extends Controller
 {
+    protected $entityAlias;
+    protected $entityDependence;
 
-    // Настройки контроллера
-    public function __construct(News $cur_news)
+    /**
+     * NewsController constructor.
+     */
+    public function __construct()
     {
         $this->middleware('auth');
-        $this->cur_news = $cur_news;
-        $this->class = News::class;
-        $this->model = 'App\News';
-        $this->entity_alias = with(new $this->class)->getTable();
-        $this->entity_dependence = false;
+        $this->entityAlias = 'news';
+        $this->entityDependence = false;
     }
 
     use Photable;
 
+    /**
+     * Display a listing of the resource.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function index(Request $request)
     {
-
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), News::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
-        // -------------------------------------------------------------------------------------------
-        // ГЛАВНЫЙ ЗАПРОС
-        // -------------------------------------------------------------------------------------------
         $news = News::with([
             'author',
             'albums',
@@ -47,7 +51,7 @@ class NewsController extends Controller
         ->authors($answer)
         ->systemItem($answer)
         ->booklistFilter($request)  // Фильтр по спискам
-        ->dateIntervalFilter($request, 'publish_begin_date') // Интервальный фильтр по дате публикации
+//        ->dateIntervalFilter($request, 'publish_begin_date') // Интервальный фильтр по дате публикации
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->orderBy('publish_begin_date', 'desc')
@@ -57,39 +61,41 @@ class NewsController extends Controller
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter = setFilter($this->entity_alias, $request, [
+        $filter = setFilter($this->entityAlias, $request, [
             'date_interval',        // Дата
             'booklist'              // Списки пользователя
         ]);
 
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
-        return view('news.index',[
-            'news' => $news,
-            'pageInfo' => pageInfo($this->entity_alias),
-            'filter' => $filter,
-        ]);
+        // Инфо о странице
+        $pageInfo = pageInfo($this->entityAlias);
+
+        return view('system.pages.marketings.news.index', compact('news', 'pageInfo'));
     }
 
-    public function create(Request $request)
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function create()
     {
-
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), News::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right('rubricators_items', false, 'index');
 
-        // Главный запрос
-        $rubricators_items = RubricatorsItem::moderatorLimit($answer)
+        $rubricatorsItemsCount = RubricatorsItem::moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
         ->template($answer)
-        ->orderBy('sort', 'asc')
-        ->get();
+        ->count();
 
-        if ($rubricators_items->count() == 0){
+        if ($rubricatorsItemsCount == 0){
 
             // Описание ошибки
             $ajax_error = [];
@@ -101,138 +107,133 @@ class NewsController extends Controller
             return view('ajax_error', compact('ajax_error'));
         }
 
-        return view('news.create', [
-            'cur_news' => new $this->class,
-            'pageInfo' => pageInfo($this->entity_alias),
-        ]);
+        $curNews = News::make();
+
+        // Инфо о странице
+        $pageInfo = pageInfo($this->entityAlias);
+
+        return view('system.pages.marketings.news.create', compact('curNews', 'pageInfo'));
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param NewsRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function store(NewsRequest $request)
     {
-
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), News::class);
 
         $data = $request->input();
-        $cur_news = (new News())->create($data);
+        $curNews = News::create($data);
 
-        if ($cur_news) {
-
-            $photo_id = $this->getPhotoId($cur_news);
-            $cur_news->photo_id = $photo_id;
-            $cur_news->save();
+        if ($curNews) {
+            $photoId = $this->getPhotoId($curNews);
+            $curNews->update([
+                'photo_id' => $photoId
+            ]);
 
             return redirect()->route('news.index');
         } else {
-            abort(403, 'Ошибка при записи новости!');
+            abort(403, __('errors.store'));
         }
     }
 
-    public function show(Request $request)
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function edit($id)
     {
-        //
-    }
-
-    public function edit(Request $request, $id)
-    {
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
-        $cur_news = News::with([
+        $curNews = News::with([
             'albums.category',
-            // 'cities',
         ])
         ->moderatorLimit($answer)
         ->find($id);
+        //        dd($curNews);
+        if (empty($curNews)) {
+            abort(403, __('errors.not_found'));
+        }
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $cur_news);
+        $this->authorize(getmethod(__FUNCTION__), $curNews);
 
-        return view('news.edit', [
-            'cur_news' => $cur_news,
-            'pageInfo' => pageInfo($this->entity_alias),
-        ]);
+        // Инфо о странице
+        $pageInfo = pageInfo($this->entityAlias);
+
+        return view('system.pages.marketings.news.edit', compact('curNews', 'pageInfo'));
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param NewsRequest $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function update(NewsRequest $request, $id)
     {
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
-        // ГЛАВНЫЙ ЗАПРОС:
-        $cur_news = News::moderatorLimit($answer)
+        $curNews = News::moderatorLimit($answer)
         ->find($id);
+        //        dd($curNews);
+        if (empty($curNews)) {
+            abort(403, __('errors.not_found'));
+        }
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $cur_news);
+        $this->authorize(getmethod(__FUNCTION__), $curNews);
 
         $data = $request->input();
-        $data['photo_id'] = $this->getPhotoId($cur_news);
-        $cur_news->update($data);
+        $data['photo_id'] = $this->getPhotoId($curNews);
+        $curNews->update($data);
 
-        if ($cur_news) {
-
-            // Когда новость обновилась, смотрим пришедние для нее города и сравниваем с существующими
-            // if (isset($request->cities)) {
-            //     $cur_news->cities()->sync($request->cities);
-            // } else {
-            //     // Если удалили последний город для новости и пришел пустой массив
-            //     $cur_news->cities()->detach();
-            // }
-
+        if ($curNews) {
             return redirect()->route('news.index');
         } else {
-            abort(403, 'Ошибка обновления новости!');
+            abort(403, __('errors.update'));
         }
     }
 
-    public function destroy(Request $request, $id)
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function destroy($id)
     {
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
-        $cur_news = News::moderatorLimit($answer)
+        $curNews = News::moderatorLimit($answer)
         ->find($id);
-        // dd($cur_news);
+        //        dd($curNews);
+        if (empty($curNews)) {
+            abort(403, __('errors.not_found'));
+        }
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $cur_news);
+        $this->authorize(getmethod(__FUNCTION__), $curNews);
+        $curNews->delete();
 
-        $cur_news->editor_id = hideGod($request->user());
-        $cur_news->save();
-
-        // Удаляем связи
-        $cur_news->albums()->detach();
-        $cur_news->photo()->delete();
-        // $cur_news->cities()->detach();
-
-        // Удаляем файлы
-        $directory = $cur_news->company_id.'/media/news/'.$cur_news->id;
-        $del_dir = Storage::disk('public')->deleteDirectory($directory);
-
-        $cur_news->delete();
-
-        if ($cur_news) {
+        if ($curNews) {
             return redirect()->route('news.index');
         } else {
-            abort(403, 'Ошибка при удалении новости');
+            abort(403, __('errors.destroy'));
         }
     }
-
-    // ------------------------------------------- Ajax ---------------------------------------------
-
-    // Проверка наличия в базе
-    // public function ajax_check(Request $request, $alias)
-    // {
-
-    //     // Проверка новости по сайту в нашей базе данных
-    //     $result_count = News::whereAlias($request->alias)
-    //     ->where('id', '!=', $request->id)
-    //     ->count();
-
-    //     return response()->json($result_count);
-    // }
 }

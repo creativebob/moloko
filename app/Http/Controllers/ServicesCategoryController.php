@@ -171,7 +171,10 @@ class ServicesCategoryController extends Controller
         ])
         ->moderatorLimit($answer)
         ->find($id);
-//         dd(isset($servicesCategory->direction));
+//        dd($servicesCategory);
+        if (empty($servicesCategory)) {
+            abort(403, __('errors.not_found'));
+        }
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $servicesCategory);
@@ -213,6 +216,10 @@ class ServicesCategoryController extends Controller
 
         $servicesCategory = ServicesCategory::moderatorLimit($answer)
         ->find($id);
+        //        dd($servicesCategory);
+        if (empty($servicesCategory)) {
+            abort(403, __('errors.not_found'));
+        }
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $servicesCategory);
@@ -264,17 +271,18 @@ class ServicesCategoryController extends Controller
         ])
         ->moderatorLimit($answer)
         ->find($id);
+        //        dd($servicesCategory);
+        if (empty($servicesCategory)) {
+            abort(403, __('errors.not_found'));
+        }
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $servicesCategory);
-
-        $parent_id = $servicesCategory->parent_id;
-
         $servicesCategory->delete();
 
         if ($servicesCategory) {
             // Переадресовываем на index
-            return redirect()->route('services_categories.index', ['id' => $parent_id]);
+            return redirect()->route('services_categories.index', ['id' => $servicesCategory->parent_id]);
         } else {
             $result = [
                 'error_status' => 1,

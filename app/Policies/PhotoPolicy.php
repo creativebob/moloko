@@ -5,7 +5,7 @@ namespace App\Policies;
 use App\Policies\Traits\PoliticTrait;
 use App\User;
 
-use App\Photo;
+use App\Photo as Model;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Auth;
 
@@ -36,7 +36,7 @@ class PhotoPolicy
         return $this->getstatus($this->entity_name, null, 'index', $this->entity_dependence);
     }
 
-    public function view(User $user, Photo $model)
+    public function view(User $user, Model $model)
     {
         return $this->getstatus($this->entity_name, $model, 'view', $this->entity_dependence);
     }
@@ -46,24 +46,22 @@ class PhotoPolicy
         return $this->getstatus($this->entity_name, null, 'create', $this->entity_dependence);
     }
 
-    public function update(User $user, Photo $model)
+    public function update(User $user, Model $model)
     {
         return $this->getstatus($this->entity_name, $model, 'update', $this->entity_dependence);
     }
 
-    public function delete(User $user, Photo $model)
+    public function delete(User $user, Model $model)
     {
-
-
         return $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
     }
 
-    public function moderator(User $user, Photo $model)
+    public function moderator(User $user, Model $model)
     {
         return $this->getstatus($this->entity_name, $model, 'moderator', $this->entity_dependence);
     }
 
-    public function automoderate(User $user, Photo $model)
+    public function automoderate(User $user, Model $model)
     {
         return $this->getstatus($this->entity_name, $model, 'automoderate', $this->entity_dependence);
     }
@@ -73,7 +71,7 @@ class PhotoPolicy
         return $this->getstatus($this->entity_name, null, 'display', $this->entity_dependence);
     }
 
-    public function system(User $user, Photo $model)
+    public function system(User $user, Model $model)
     {
         return $this->getstatus($this->entity_name, $model, 'system', $this->entity_dependence);
     }
