@@ -13,7 +13,7 @@ class AlbumRequest extends FormRequest
      */
     public function authorize()
     {
-      return true;
+        return true;
     }
 
     /**
@@ -23,19 +23,19 @@ class AlbumRequest extends FormRequest
      */
     public function rules()
     {
-      return [
-        'name' => 'required|string|max:255',
-        'category_id' => 'integer|required',
+        return [
+            'name' => 'required|string|max:255',
+            'category_id' => 'required|integer|exists:albums_categories,id',
 
-        'personal' => 'integer|max:1|nullable',
-        'slug' => 'string|max:255|nullable',
+            'personal' => 'integer|max:1|nullable',
+            'slug' => 'string|max:255|nullable',
 
-        'description' => 'string|max:255|nullable',
-        'delay' => 'integer|max:60|nullable',
+            'description' => 'string|max:255|nullable',
+            'delay' => 'integer|max:60|nullable',
 
-        'display' => 'nullable|integer|max:1',
+            'display' => 'nullable|integer|max:1',
             'system' => 'nullable|integer|max:1',
             'moderation' => 'nullable|integer|max:1',
-      ];
+        ];
     }
-  }
+}

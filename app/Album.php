@@ -2,51 +2,25 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
-
-// Scopes для главного запроса
-use App\Scopes\Traits\CompaniesLimitTraitScopes;
-use App\Scopes\Traits\AuthorsTraitScopes;
-use App\Scopes\Traits\SystemItemTraitScopes;
-use App\Scopes\Traits\FilialsTraitScopes;
-use App\Scopes\Traits\TemplateTraitScopes;
-use App\Scopes\Traits\ModeratorLimitTraitScopes;
-
-// Подключаем кеш
+use App\Models\System\BaseModel;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
-// Фильтры
-use App\Scopes\Filters\Filter;
-use App\Scopes\Filters\BooklistFilter;
-// use App\Scopes\Filters\DateIntervalFilter;
-
-class Album extends Model
+class Album extends BaseModel
 {
-
-    // Включаем кеш
     use Cachable;
-
-    use Notifiable;
-
-    // Включаем Scopes
-    use CompaniesLimitTraitScopes;
-    use AuthorsTraitScopes;
-    use SystemItemTraitScopes;
-    use FilialsTraitScopes;
-    use TemplateTraitScopes;
-    use ModeratorLimitTraitScopes;
-
-    // Фильтры
-    use Filter;
-    use BooklistFilter;
-    // use DateIntervalFilter;
 
     protected $fillable = [
         'name',
-        'personal',
-        'slug',
         'description',
+        'slug',
+
+        'category_id',
+
+        'personal',
+
+        'delay',
+
+        'photo_id',
 
         'display',
         'system',
@@ -76,28 +50,4 @@ class Album extends Model
     {
         return $this->morphOne(PhotoSetting::class, 'photo_settings');
     }
-
-    // Компания
-    public function company()
-    {
-        return $this->belongsTo(Company::class);
-    }
-
-    // Автор
-    public function author()
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    // Получаем продукцию
-    // public function photos()
-    // {
-    //   return $this->belongsToMany('App\Photo', 'album_entity', 'album_id', 'entity_id')->where('entity', 'photo');
-    // }
-
-    // Получаем видео
-    // public function videos()
-    // {
-    //     return $this->belongsToMany('App\Video', 'album_media', 'media_id')->where('entity', 'video');
-    // }
 }

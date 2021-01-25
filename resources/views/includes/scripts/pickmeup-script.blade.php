@@ -1,4 +1,4 @@
-{{--<script type="application/javascript" src="/js/plugins/pickmeup/js/jquery.pickmeup.js"></script>--}}
+<script type="application/javascript" src="/js/plugins/pickmeup/js/jquery.pickmeup.js"></script>
 <script>
 
     pickmeup('.date-field', {

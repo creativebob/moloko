@@ -15,16 +15,16 @@ class PhotoRequest extends FormRequest
     {
         return [
             // 'photo' => 'file',
-            'title' => 'string|max:255|nullable',
-            'description' => 'string|nullable',
-            'color' => 'string|max:255|nullable',
-            'link' => 'string|nullable',
+            'title' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'color' => 'nullable|string|max:255',
+            'link' => 'nullable|string',
 
-            'avatar' => 'integer|max:1|nullable',
+            'avatar' => 'nullable|integer|max:1',
 
-            'moderation' => 'integer|max:1|nullable',
-            'system' => 'integer|max:1|nullable',
-            'display' => 'integer|max:1|nullable',
+            'moderation' => 'nullable|integer|max:1',
+            'system' => 'nullable|integer|max:1',
+            'display' => 'nullable|integer|max:1',
         ];
     }
 }

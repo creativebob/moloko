@@ -39,6 +39,7 @@
         "awesome-mask": "^1.1.1",
         "axios": "^0.18.1",
         "ckeditor": "^4.12.1",
+        "dropzone": "^5.7.2",
         "foundation-sites": "6.5.3",
         "inputmask": "^5.0.6-beta.20",
         "jquery": "^3.5.1",

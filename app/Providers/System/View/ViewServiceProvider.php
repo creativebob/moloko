@@ -395,7 +395,7 @@ class ViewServiceProvider extends ServiceProvider
         view()->composer('includes.selects.raws_products', RawsProductsComposer::class);
         view()->composer([
             'includes.selects.albums_categories',
-            'albums.select_albums_categories',
+            'system.pages.marketings.albums.select_albums_categories',
             'news.albums.modal_albums',
         ] , AlbumsCategoriesSelectComposer::class);
         view()->composer([

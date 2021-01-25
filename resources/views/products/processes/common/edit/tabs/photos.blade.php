@@ -22,7 +22,7 @@
         <ul class="grid-x small-up-4 tabs-margin-top" id="photos-list">
 
             @isset($process->album_id)
-                @include('photos.photos', ['album' => $process->album])
+                @include('system.pages.marketings.photos.photos', ['album' => $process->album])
             @endisset
 
         </ul>

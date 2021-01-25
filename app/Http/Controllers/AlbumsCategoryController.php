@@ -10,37 +10,50 @@ use Illuminate\Http\Request;
 
 class AlbumsCategoryController extends Controller
 {
+    protected $entityAlias;
+    protected $entityDependence;
 
-    // Настройки сконтроллера
-    public function __construct(AlbumsCategory $albums_category)
+    /**
+     * AlbumsCategoryController constructor.
+     */
+    public function __construct()
     {
         $this->middleware('auth');
-        $this->albums_category = $albums_category;
-        $this->entity_alias = with(new AlbumsCategory)->getTable();;
-        $this->entity_dependence = false;
-        $this->class = AlbumsCategory::class;
+        $this->entityAlias = with(new AlbumsCategory)->getTable();;
+        $this->entityDependence = false;
         $this->model = 'App\AlbumsCategory';
         $this->type = 'modal';
     }
 
     use Photable;
 
+    /**
+     * Display a listing of the resource.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function index(Request $request)
     {
-
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), AlbumsCategory::class);
 
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
-        $albums_categories = AlbumsCategory::moderatorLimit($answer)
+        $albumsCategories = AlbumsCategory::with([
+            'albums',
+            'childs',
+        ])
+            ->withCount('childs')
+        ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
         ->template($answer)
         ->withCount('albums')
         ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
+        ->orderBy('sort')
         ->get();
 
         // Отдаем Ajax
@@ -48,11 +61,11 @@ class AlbumsCategoryController extends Controller
 
             return view('system.common.categories.index.categories_list',
                 [
-                    'items' => $albums_categories,
-                    'entity' => $this->entity_alias,
+                    'items' => $albumsCategories,
+                    'entity' => $this->entityAlias,
                     'class' => $this->model,
                     'type' => $this->type,
-                    'count' => $albums_categories->count(),
+                    'count' => $albumsCategories->count(),
                     'id' => $request->id,
                     // 'nested' => 'albums_count',
                 ]
@@ -62,128 +75,157 @@ class AlbumsCategoryController extends Controller
         // Отдаем на шаблон
         return view('system.common.categories.index.index',
             [
-                'items' => $albums_categories,
-                'pageInfo' => pageInfo($this->entity_alias),
-                'entity' => $this->entity_alias,
+                'items' => $albumsCategories,
+                'pageInfo' => pageInfo($this->entityAlias),
+                'entity' => $this->entityAlias,
                 'class' => $this->model,
                 'type' => $this->type,
                 'id' => $request->id,
-                // 'nested' => 'albums_count',
-                'filter' => setFilter($this->entity_alias, $request, [
+                 'nested' => 'childs_count',
+                'filter' => setFilter($this->entityAlias, $request, [
                     'booklist'
                 ]),
             ]
         );
     }
 
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function create(Request $request)
     {
-
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), AlbumsCategory::class);
 
         return view('system.common.categories.create.modal.create', [
-            'item' => new $this->class,
-            'entity' => $this->entity_alias,
+            'item' => AlbumsCategory::make(),
+            'entity' => $this->entityAlias,
             'title' => 'Добавление категории альбомов',
             'parent_id' => $request->parent_id,
             'category_id' => $request->category_id
         ]);
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param AlbumsCategoryStoreRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function store(AlbumsCategoryStoreRequest $request)
     {
-
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), AlbumsCategory::class);
 
         $data = $request->input();
-        $albums_category = (new $this->class())->create($data);
+        $albumsCategory = AlbumsCategory::create($data);
 
-        if ($albums_category) {
-
-            // Переадресовываем на index
-            return redirect()->route('albums_categories.index', ['id' => $albums_category->id]);
+        if ($albumsCategory) {
+            return redirect()->route('albums_categories.index', ['id' => $albumsCategory->id]);
         } else {
             $result = [
                 'error_status' => 1,
-                'error_message' => 'Ошибка при записи категории альбомов!'
+                'error_message' => __('errors.store'),
             ];
         }
     }
 
-    public function show($id)
-    {
-        //
-    }
-
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function edit($id)
     {
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
-        $albums_category = AlbumsCategory::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))->find($id);
+        $albumsCategory = AlbumsCategory::moderatorLimit($answer)
+            ->find($id);
+        //        dd($albumsCategory);
+        if (empty($albumsCategory)) {
+            abort(403, __('errors.not_found'));
+        }
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $albums_category);
+        $this->authorize(getmethod(__FUNCTION__), $albumsCategory);
 
-        return view('system.common.categories.edit', [
-            'item' => $albums_category,
-            'entity' => $this->entity_alias,
+        return view('system.common.categories.edit.modal.edit', [
+            'item' => $albumsCategory,
+            'entity' => $this->entityAlias,
             'title' => 'Редактирование категории альбомов',
-            'parent_id' => $albums_category->parent_id,
-            'category_id' => $albums_category->category_id
+            'parent_id' => $albumsCategory->parent_id,
+            'category_id' => $albumsCategory->category_id
         ]);
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param AlbumsCategoryUpdateRequest $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function update(AlbumsCategoryUpdateRequest $request, $id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
-        $albums_category = AlbumsCategory::moderatorLimit($answer)
+        $albumsCategory = AlbumsCategory::moderatorLimit($answer)
             ->find($id);
+        //        dd($albumsCategory);
+        if (empty($albumsCategory)) {
+            abort(403, __('errors.not_found'));
+        }
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $albums_category);
+        $this->authorize(getmethod(__FUNCTION__), $albumsCategory);
 
         $data = $request->input();
-        $data['photo_id'] = $this->getPhotoId($albums_category);
-        $result = $albums_category->update($data);
+        $data['photo_id'] = $this->getPhotoId($albumsCategory);
+        $result = $albumsCategory->update($data);
 
         if ($result) {
-
-            // Переадресовываем на index
-            return redirect()->route('albums_categories.index', ['id' => $albums_category->id]);
+            return redirect()->route('albums_categories.index', ['id' => $albumsCategory->id]);
         } else {
             $result = [
                 'error_status' => 1,
-                'error_message' => 'Ошибка при записи категории альбомов!'
+                'error_message' => abort(403, __('errors.update'))
             ];
         }
     }
 
     public function destroy(Request $request, $id)
     {
-
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
-        $albums_category = $albums_categories_count = AlbumsCategory::with([
+        $albumsCategory = AlbumsCategory::with([
             'childs',
             'albums'
         ])
             ->moderatorLimit($answer)
             ->find($id);
+        //        dd($albumsCategory);
+        if (empty($albumsCategory)) {
+            abort(403, __('errors.not_found'));
+        }
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $albums_category);
+        $this->authorize(getmethod(__FUNCTION__), $albumsCategory);
+        $albumsCategory->delete();
 
-        $parent_id = $albums_category->parent_id;
-
-        $albums_category->delete();
-
-        if ($albums_category) {
+        if ($albumsCategory) {
             // Переадресовываем на index
-            return redirect()->route('albums_categories.index', ['id' => $parent_id]);
+            return redirect()->route('albums_categories.index', ['id' => $albumsCategory->parent_id]);
         } else {
             $result = [
                 'error_status' => 1,

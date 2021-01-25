@@ -28,7 +28,7 @@ class WorkflowsCategoryController extends Controller
     use Photable;
 
     /**
-     * Display a listing of the resource.
+     * oldest
      *
      * @param Request $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -54,7 +54,7 @@ class WorkflowsCategoryController extends Controller
         ->template($answer)
         // ->withCount('products')
         ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
+        ->oldest('sort')
         ->get();
 
         // Отдаем Ajax
@@ -129,7 +129,6 @@ class WorkflowsCategoryController extends Controller
         $workflowsCategory = WorkflowsCategory::create($data);
 
         if ($workflowsCategory) {
-            // Переадресовываем на index
             return redirect()->route('workflows_categories.index', ['id' => $workflowsCategory->id]);
         } else {
             $result = [
@@ -164,6 +163,10 @@ class WorkflowsCategoryController extends Controller
         ])
         ->moderatorLimit($answer)
         ->find($id);
+//        dd($workflowsCategory);
+        if (empty($workflowsCategory)) {
+            abort(403, __('errors.not_found'));
+        }
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $workflowsCategory);
@@ -207,6 +210,10 @@ class WorkflowsCategoryController extends Controller
 
         $workflowsCategory = WorkflowsCategory::moderatorLimit($answer)
         ->find($id);
+        //        dd($workflowsCategory);
+        if (empty($workflowsCategory)) {
+            abort(403, __('errors.not_found'));
+        }
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $workflowsCategory);
@@ -253,17 +260,18 @@ class WorkflowsCategoryController extends Controller
         ])
         ->moderatorLimit($answer)
         ->find($id);
+        //        dd($workflowsCategory);
+        if (empty($workflowsCategory)) {
+            abort(403, __('errors.not_found'));
+        }
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $workflowsCategory);
-
-        $parent_id = $workflowsCategory->parent_id;
-
         $workflowsCategory->delete();
 
         if ($workflowsCategory) {
             // Переадресовываем на index
-            return redirect()->route('workflows_categories.index', ['id' => $parent_id]);
+            return redirect()->route('workflows_categories.index', ['id' => $workflowsCategory->parent_id]);
         } else {
             $result = [
                 'error_status' => 1,

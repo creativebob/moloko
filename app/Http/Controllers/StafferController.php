@@ -181,11 +181,6 @@ class StafferController extends Controller
      */
     public function update(EmployeeRequest $request, $id)
     {
-        // Получаем авторизованного пользователя
-        $user = $request->user();
-
-        // Скрываем бога
-        $user_id = hideGod($user);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, true, getmethod(__FUNCTION__));
@@ -215,21 +210,20 @@ class StafferController extends Controller
         if (isset($staffer->employee)) {
 
             $employee = $staffer->employee;
-            $employment_date = outPickMeUp($request->employment_date);
+            $employment_date = $request->employment_date;
 
             if ($employee->employment_date != $employment_date) {
                 $employee->employment_date = $employment_date;
-                $employee->editor_id = $user_id;
                 $employee->save();
             }
 
-            logs('hr')->info("На staffer: {$staffer->id} назнанчен сотрудник {$user->name}");
+            logs('hr')->info("На staffer: {$staffer->id} назнанчен сотрудник {$staffer->user->name}");
 
         } else {
 
             $staffer->employees()->create([
                 'user_id' => $request->user_id,
-                'employment_date' => outPickMeUp($request->employment_date),
+                'employment_date' => $request->employment_date,
                 'dismissal_date' => null,
             ]);
 
@@ -269,7 +263,7 @@ class StafferController extends Controller
         if (isset($request->dismissal_date)) {
 
 
-            $employee->dismissal_date = outPickMeUp($request->dismissal_date);
+            $employee->dismissal_date = $request->dismissal_date;
             $employee->dismissal_description = $request->dismissal_description;
             $employee->save();
 

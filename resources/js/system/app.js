@@ -158,6 +158,19 @@ Vue.component('filials-with-outlets-component', require('./components/common/sel
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+window.dropzone = require('dropzone');
+// window.dropzone.options.myDropzone = {
+//     paramName: 'photo',
+//     maxFiles: 20,
+//     addRemoveLinks: true,
+//
+//     dictDefaultMessage: "Перетащите сюда фотографии или кликните по этому полю",
+//     dictCancelUpload: "Прервать загрузку",
+//     dictUploadCanceled: "Загрузка прервана",
+//     dictRemoveFile: "Удалить",
+// };
+Vue.prototype.$dropzone = window.dropzone;
+
 window.pickmeup = require('pickmeup');
 
 pickmeup.defaults.locales['ru'] = {

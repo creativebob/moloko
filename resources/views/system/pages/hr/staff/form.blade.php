@@ -26,12 +26,18 @@
                         </div>
                         <div class="small-6 cell">
                             <label>Дата приема
-                                @include('includes.inputs.date', ['value'=>($staffer->employee) ? $staffer->employee->employment_date->format('d.m.Y') : null, 'name'=>'employment_date', 'required' => true])
+                                <pickmeup-component
+                                    name="employment_date"
+                                    value="{{ optional($staffer->employee)->employment_date }}"
+                                    :required="true"
+                                ></pickmeup-component>
                          </label>
                      </div>
                      <div class="small-6 cell">
                         <label>Дата увольнения
-                            @include('includes.inputs.date', ['name'=>'dismissal_date'])
+                            <pickmeup-component
+                                name="dismissal_date"
+                            ></pickmeup-component>
                         </label>
                     </div>
 

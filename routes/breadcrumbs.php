@@ -202,4 +202,25 @@ Breadcrumbs::register('portfolio-section-edit', function ($breadcrumbs, $portfol
     $breadcrumbs->push($item->name);
 });
 
+// Статика для альбомов
+Breadcrumbs::register('album-section-index', function ($breadcrumbs, $album, $pageInfo) {
+    $breadcrumbs->push('Альбомы', route('albums.index'));
+    $breadcrumbs->push($album->name, route('albums.edit', $album->id));
+    $breadcrumbs->push($pageInfo->name, route($pageInfo->alias . '.index', $album->id));
+});
+
+Breadcrumbs::register('album-section-create', function ($breadcrumbs, $album, $pageInfo) {
+    $breadcrumbs->push('Альбомы', route('albums.index'));
+    $breadcrumbs->push($album->name, route('albums.edit', $album->id));
+    $breadcrumbs->push($pageInfo->name, route($pageInfo->alias . '.index', $album->id));
+    $breadcrumbs->push('Добавление');
+});
+
+Breadcrumbs::register('album-section-edit', function ($breadcrumbs, $album, $pageInfo, $item) {
+    $breadcrumbs->push('Альбомы', route('albums.index'));
+    $breadcrumbs->push($album->name, route('albums.edit', $album->id));
+    $breadcrumbs->push($pageInfo->name, route($pageInfo->alias . '.index', $album->id));
+    $breadcrumbs->push($item->name);
+});
+
 
