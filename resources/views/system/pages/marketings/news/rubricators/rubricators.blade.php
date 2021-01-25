@@ -1,12 +1,12 @@
 <div class="grid-x grid-padding-x">
     <div class="small-6 cell">
         <label>Рубрика
-            {!! Form::select('rubricator_id', $rubricators->pluck('name', 'id'), isset($cur_news->rubricator_id) ? $cur_news->rubricator_id : $rubricators->first()->id, ['id' => 'select-rubricators']) !!}
+            {!! Form::select('rubricator_id', $rubricators->pluck('name', 'id'), isset($curNews->rubricator_id) ? $curNews->rubricator_id : $rubricators->first()->id, ['id' => 'select-rubricators']) !!}
         </label>
     </div>
     <div class="small-6 cell">
         <label>Пункт рубрики
-            @include('news.rubricators.select_rubricators_items', ['rubricator_id' => isset($cur_news->rubricator_id) ? $cur_news->rubricator_id : $rubricators->first()->id, 'rubricators_item_id' => $cur_news->rubricators_item_id])
+            @include('system.pages.marketings.news.rubricators.select_rubricators_items', ['rubricator_id' => isset($curNews->rubricator_id) ? $curNews->rubricator_id : $rubricators->first()->id, 'rubricators_item_id' => $curNews->rubricators_item_id])
         </label>
     </div>
 </div>

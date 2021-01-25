@@ -301,13 +301,13 @@ class AlbumController extends Controller
     // Модалка прикрепления альбома
     public function ajax_add(Request $request)
     {
-        return view('news.albums.modal_albums');
+        return view('system.pages.marketings.news.albums.modal_albums');
     }
 
     // Список албомов
     public function ajax_get_select(Request $request)
     {
-        return view('news.albums.select_albums', ['albums_category_id' => $request->albums_category_id]);
+        return view('system.pages.marketings.news.albums.select_albums', ['albums_category_id' => $request->albums_category_id]);
     }
 
     // Список получаем альбом
@@ -319,7 +319,7 @@ class AlbumController extends Controller
         $album = Album::moderatorLimit($answer)
             ->find($request->album_id);
 
-        return view('news.albums.album', compact('album'));
+        return view('system.pages.marketings.news.albums.album', compact('album'));
     }
 
 }

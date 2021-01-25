@@ -9,16 +9,16 @@
     </thead>
     <tbody id="table-albums">
 
-        @forelse ($cur_news->albums as $album)
-        @include('news.albums.album', $album)
+        @forelse ($curNews->albums as $album)
+        @include('system.pages.marketings.news.albums.album', $album)
         @empty
         {{-- <tr>
             <td colspan="3">Нет альбомов</td>
         </tr> --}}
         @endforelse
 
-        {{-- @if (isset($cur_news->albums))
-        @foreach ($cur_news->albums as $album)
+        {{-- @if (isset($curNews->albums))
+        @foreach ($curNews->albums as $album)
         @include('news.albums.tr_album', $album)
         @endforeach
         @endif --}}

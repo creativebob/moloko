@@ -22,11 +22,12 @@ class CreateNewsTable extends Migration
             $table->string('alias')->index()->nullable()->comment('Алиас');
             $table->string('slug')->index()->nullable()->comment('Слаг');
 
-
             $table->text('preview')->nullable()->comment('Превью для новости');
 
             $table->bigInteger('photo_id')->nullable()->unsigned()->comment('Id фото (превью)');
             $table->foreign('photo_id')->references('id')->on('photos');
+
+            $table->string('alt')->nullable()->comment('Alt');
 
             $table->text('content')->nullable()->comment('Контент новости');
 

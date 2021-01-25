@@ -306,9 +306,9 @@ Route::prefix('/albums/{id}')->group(function () {
     // ----------------------------------- Фотографии -----------------------------------------------
 
     Route::resource('/photos', 'PhotoController')
-    ->except([
-        'show'
-    ]);
+        ->except([
+            'show'
+        ]);
     // Загрузка фоток через ajax через dropzone.js
 });
 
@@ -1484,9 +1484,11 @@ Route::prefix('rubricators/{rubricator_id}')->group(function () {
 
 
 // ---------------------------------------- Новости -------------------------------------------
-
 // Основные методы
-Route::resource('/news', 'NewsController');
+Route::resource('/news', 'NewsController')
+    ->except([
+        'show'
+    ]);
 
 
 // ----------------------------------------- Каталоги товаров ------------------------------------------

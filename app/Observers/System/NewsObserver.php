@@ -3,49 +3,82 @@
 namespace App\Observers\System;
 
 use App\News;
+use Illuminate\Support\Facades\Storage;
 
-use Illuminate\Support\Str;
-
-use App\Observers\System\Traits\Commonable;
-
-class NewsObserver
+class NewsObserver extends BaseObserver
 {
-    use Commonable;
-
-    public function creating(News $cur_news)
+    /**
+     * Handle the curNews "creating" event.
+     *
+     * @param News $curNews
+     */
+    public function creating(News $curNews)
     {
-        $this->store($cur_news);
-
+        $this->store($curNews);
     }
 
-    public function created(News $cur_news)
+    /**
+     * Handle the curNews "created" event.
+     *
+     * @param News $curNews
+     */
+    public function created(News $curNews)
     {
-        $this->setSlug($cur_news);
-        $cur_news->save();
+        $this->setNewsSlug($curNews);
+        $curNews->save();
     }
 
-    public function updating(News $cur_news)
+    /**
+     * Handle the curNews "updating" event.
+     *
+     * @param News $curNews
+     */
+    public function updating(News $curNews)
     {
-        $this->update($cur_news);
-        $this->setSlug($cur_news);
+        $this->setNewsSlug($curNews);
+        $this->update($curNews);
     }
 
-    public function deleting(News $cur_news)
+    /**
+     * Handle the curNews "deleting" event.
+     *
+     * @param News $curNews
+     */
+    public function deleting(News $curNews)
     {
-        $this->destroy($cur_news);
+        // Удаляем связи
+        $curNews->albums()->detach();
+        $curNews->photo()->delete();
+
+        // Удаляем файлы
+        $directory = "{$curNews->company_id}/media/news/{$curNews->id}";
+        $del_dir = Storage::disk('public')
+            ->deleteDirectory($directory);
+
+        $this->destroy($curNews);
     }
 
-    public function saved(News $cur_news)
+    /**
+     * Handle the curNews "saved" event.
+     *
+     * @param News $curNews
+     */
+    public function saved(News $curNews)
     {
-        $this->setAlbums($cur_news);
+        $this->setAlbums($curNews);
     }
 
-    protected function setSlug(News $cur_news)
+    /**
+     * Слаг
+     *
+     * @param News $curNews
+     */
+    protected function setNewsSlug(News $curNews)
     {
         // $request = request();
         // dd($request);
 
-        $slug = \Str::slug($cur_news->name);
+        $slug = \Str::slug($curNews->name);
 
          // Получаем из сессии необходимые данные (Функция находиться в Helpers)
          $answer = operator_right('news', false, 'index');
@@ -57,22 +90,25 @@ class NewsObserver
          ->systemItem($answer)
          // ->template($answer)
          ->where('slug', $slug)
-         ->where('id', '!=', $cur_news->id)
+         ->where('id', '!=', $curNews->id)
          ->count();
          // dd($count_news);
 
          if ($count_news) {
-             $slug .= '-'.$cur_news->id;
+             $slug .= '-'.$curNews->id;
          }
         // dd($slug);
-        $cur_news->slug = $slug;
+        $curNews->slug = $slug;
     }
 
-
-    protected function setAlbums(News $cur_news)
+    /**
+     * Связь новости с альбомами
+     *
+     * @param News $curNews
+     */
+    protected function setAlbums(News $curNews)
     {
         $request = request();
-        $cur_news->albums()->sync($request->albums);
+        $curNews->albums()->sync($request->albums);
     }
-
 }

@@ -396,11 +396,11 @@ class ViewServiceProvider extends ServiceProvider
         view()->composer([
             'includes.selects.albums_categories',
             'system.pages.marketings.albums.select_albums_categories',
-            'news.albums.modal_albums',
+            'system.pages.marketings.news.albums.modal_albums',
         ] , AlbumsCategoriesSelectComposer::class);
         view()->composer([
             'includes.selects.albums',
-            'news.albums.select_albums',
+            'system.pages.marketings.news.albums.select_albums',
         ], AlbumsComposer::class);
 
         view()->composer('includes.selects.aligns', AlignsComposer::class);
@@ -495,8 +495,8 @@ class ViewServiceProvider extends ServiceProvider
         view()->composer('includes.selects.templates', TemplatesComposer::class);
         view()->composer('includes.selects.mailing_lists', MailingListsComposer::class);
 
-        view()->composer('news.rubricators.rubricators', RubricatorsComposer::class);
-        view()->composer('news.rubricators.select_rubricators_items', RubricatorsItemsComposer::class);
+        view()->composer('system.pages.marketings.news.rubricators.rubricators', RubricatorsComposer::class);
+        view()->composer('system.pages.marketings.news.rubricators.select_rubricators_items', RubricatorsItemsComposer::class);
 
         view()->composer('layouts.challenges_for_me', ListChallengesComposer::class);
 

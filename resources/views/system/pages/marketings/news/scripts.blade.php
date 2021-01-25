@@ -5,7 +5,7 @@
     // ------------------- Проверка на совпадение имени --------------------------------------
 
     // Берем алиас сайта
-    var cur_news_id = '{{ $cur_news->id }}';
+    var cur_news_id = '{{ $curNews->id }}';
 
     function checkField (check) {
 
