@@ -1379,12 +1379,10 @@ Route::resource('/employees', 'EmployeeController')
     ]);
 
 // Увольнение
-Route::post('/employee_dismiss_modal', 'EmployeeController@ajax_employee_dismiss_modal');
-Route::post('/employee_dismiss', 'EmployeeController@ajax_employee_dismiss');
+Route::post('/employee_dismiss', 'EmployeeController@employeeDismiss');
 
 // Трудоустройство
-Route::post('/employee_employment_modal', 'EmployeeController@ajax_employee_employment_modal');
-Route::post('/employee_employment', 'EmployeeController@ajax_employee_employment');
+Route::post('/employee_employment', 'EmployeeController@employeeEmployment');
 
 
 // ------------------------------------------ Списки -----------------------------------------------

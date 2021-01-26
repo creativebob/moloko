@@ -34,46 +34,6 @@
     @include('includes.scripts.upload-file')
 
     <script>
-        // Открываем модалку для увольнения сотрудника
-        $(document).on('click', '#employee-dismiss', function (event) {
-
-            var employee_id = $(this).attr('data-id');
-            // alert(employee_id);
-
-            $.post("/admin/employee_dismiss_modal", {employee_id: employee_id}, function (html) {
-                $('#modal').html(html);
-                $('#open-dismiss').foundation();
-                $('#open-dismiss').foundation('open');
-            });
-
-        });
-
-        // Отправляем запрос на увольнение сотрудника
-        $(document).on('click', '#submit-dismiss', function (event) {
-            event.preventDefault();
-
-            $(this).prop('disabled', true);
-
-            $.post("/admin/employee_dismiss", $(this).closest('form').serialize(), function (date) {
-
-                let url = '{{ url("admin/employees") }}/';
-                window.location.replace(url);
-            });
-
-        });
-
-        // Открываем модалку для трудоустройства сотрудника
-        $(document).on('click', '#employee-employment', function (event) {
-
-            var user_id = $(this).attr('data-user-id');
-
-            $.post("/admin/employee_employment_modal", {user_id: user_id}, function (html) {
-                $('#modal').html(html);
-                $('#open-employment').foundation();
-                $('#open-employment').foundation('open');
-            });
-
-        });
 
         // Отправляем запрос на трудоустройство сотрудника
         $(document).on('click', '#submit-employment', function (event) {

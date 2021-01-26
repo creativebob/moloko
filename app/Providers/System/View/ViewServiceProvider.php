@@ -30,6 +30,7 @@ use App\Http\View\Composers\System\EstimatesTotalsComposer;
 use App\Http\View\Composers\System\FilialCatalogsGoodsComposer;
 use App\Http\View\Composers\System\FilialCatalogsServicesComposer;
 use App\Http\View\Composers\System\FilialStaffComposer;
+use App\Http\View\Composers\System\Filters\EmploymentHistoryComposer;
 use App\Http\View\Composers\System\ImpactsCategoriesWithImpactsComposer;
 use App\Http\View\Composers\System\LeadHistoryComposer;
 use App\Http\View\Composers\System\MailingListsComposer;
@@ -531,6 +532,7 @@ class ViewServiceProvider extends ServiceProvider
         view()->composer('system.pages.hr.employees.includes.title_active', EmployeesDismissalCountComposer::class);
         view()->composer('system.pages.hr.employees.includes.title_dismissal', EmployeesActiveCountComposer::class);
         view()->composer('system.pages.hr.employees.form', VacanciesComposer::class);
+        view()->composer('system.pages.hr.employees.form', EmploymentHistoryComposer::class);
 
         // Выполненные работы
         view()->composer('system.pages.outcomes.includes.title', ClientsCountComposer::class);

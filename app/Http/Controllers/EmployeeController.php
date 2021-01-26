@@ -280,11 +280,6 @@ class EmployeeController extends Controller
 
         $user = $employee->user;
 
-        $list_user_employees = Employee::with('user')
-            ->moderatorLimit($answer)
-            ->where('user_id', $employee->user_id)
-            ->get();
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $employee);
         $this->authorize(getmethod(__FUNCTION__), $user);
@@ -292,7 +287,7 @@ class EmployeeController extends Controller
         // Инфо о странице
         $pageInfo = pageInfo($this->entityAlias);
 
-        return view('system.pages.hr.employees.edit', compact('employee', 'user', 'pageInfo', 'list_user_employees'));
+        return view('system.pages.hr.employees.edit', compact('employee', 'user', 'pageInfo'));
     }
 
     /**
@@ -531,57 +526,24 @@ class EmployeeController extends Controller
         return view('system.pages.hr.employees.dismissal', compact('employees', 'pageInfo', 'filter'));
     }
 
-    public function ajax_employee_dismiss_modal(Request $request)
-    {
 
+    public function employeeDismiss(Request $request)
+    {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entityAlias, $this->entityDependence, 'update');
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $employee = Employee::with('user', 'staffer')->moderatorLimit($answer)->find($request->employee_id);
-
-        // Подключение политики
-        $this->authorize(getmethod('update'), $employee);
-
-        return view('system.pages.hr.employees.modals.dismiss', compact('employee'));
-    }
-
-    public function ajax_employee_dismiss(Request $request)
-    {
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entityAlias, $this->entityDependence, 'update');
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $employee = Employee::with('user', 'staffer')->moderatorLimit($answer)->find($request->employee_id);
+        $employee = Employee::with('user', 'staffer')
+            ->moderatorLimit($answer)
+            ->find($request->employee_id);
 
         $this->dismiss($employee, $request->dismissal_date, $request->dismissal_description);
 
-        return $employee;
-
+        return redirect()->route('employees.index');
     }
 
-    public function ajax_employee_employment_modal(Request $request)
+    public function employeeEmployment(Request $request)
     {
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_user = operator_right('users', true, 'index');
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_staff = operator_right('staff', true, 'index');
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::moderatorLimit($answer_user)->find($request->user_id);
-
-        $list_empty_staff = Staffer::moderatorLimit($answer_staff)->whereNull('user_id')->get();
-
-        return view('system.pages.hr.employees.modals.employment', compact('user', 'list_empty_staff'));
-    }
-
-    public function ajax_employee_employment(Request $request)
-    {
-
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_user = operator_right('users', true, 'index');
 
@@ -589,13 +551,20 @@ class EmployeeController extends Controller
         // $answer_staff = operator_right('staff',  true, 'index');
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::moderatorLimit($answer_user)->find($request->user_id);
-        $staff = Staffer::with('position', 'department')->find($request->staff_id);
+        $user = User::moderatorLimit($answer_user)
+            ->find($request->user_id);
+
+        $staff = Staffer::with([
+            'position',
+            'department'
+        ])
+            ->find($request->staffer_id);
 
         $new_employee = $this->employment($user, $request->employment_date, $staff);
-        logs('hr')->info('Устроили нового сотрудника');
+        logs('hr')
+            ->info('Устроили нового сотрудника');
 
-        return $new_employee;
+        return redirect()->route('employees.index');
 
     }
 
@@ -628,9 +597,6 @@ class EmployeeController extends Controller
     public function dismiss($employee, $dismissal_date, $dismissal_description)
     {
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entityAlias, $this->entityDependence, 'update');
-
         $staff = $employee->staffer;
         $user = $employee->user;
 
@@ -639,19 +605,22 @@ class EmployeeController extends Controller
         $this->authorize(getmethod('update'), $staff);
         $this->authorize(getmethod('update'), $user);
 
-        $employee->dismissal_date = outPickMeUp($dismissal_date);
+        $employee->dismissal_date = $dismissal_date;
         $employee->dismissal_description = $dismissal_description;
         $employee->save();
 
-        logs('hr')->info('Освобождаем должность');
+        logs('hr')
+            ->info('Освобождаем должность');
         $staff->user_id = null;
         $staff->save();
 
-        logs('hr')->info('Блокируем пользователя');
+        logs('hr')
+            ->info('Блокируем пользователя');
         $user->access_block = 1;
         $user->save();
 
-        logs('hr')->info('Удаляем все его роли');
+        logs('hr')
+            ->info('Удаляем все его роли');
         $user->roles()->detach();
 
         return true;

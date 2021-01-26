@@ -4,12 +4,8 @@ namespace App\Observers\System;
 
 use App\Employee;
 
-use App\Observers\System\Traits\Commonable;
-
-class EmployeeObserver
+class EmployeeObserver extends BaseObserver
 {
-
-    use Commonable;
 
     public function creating(Employee $employee)
     {

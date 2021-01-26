@@ -153,6 +153,8 @@ Vue.component('filials-with-outlets-component', require('./components/common/sel
 
 Vue.component('files-component', require('./components/files/FilesComponent'));
 
+Vue.component('employees-component', require('./components/employees/user/EmployeesComponent'));
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
