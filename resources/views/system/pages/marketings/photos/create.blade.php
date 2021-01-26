@@ -50,8 +50,12 @@
             dictUploadCanceled: "Загрузка прервана",
             dictRemoveFile: "Удалить",
 
+            parallelUploads: 1,
+            uploadMultiple: false,
+
             maxFilesize: imgMaxSize,
             acceptedFiles: '.jpg,.jpeg',
+
             init: function () {
                 this.on("thumbnail", function (file) {
                     if (strictMode == 0) {
