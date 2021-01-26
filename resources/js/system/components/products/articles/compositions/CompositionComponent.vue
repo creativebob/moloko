@@ -43,11 +43,11 @@
             </div>
         </td>
 
-        <td>
+        <td class="td-weight">
             <span>{{ item.totalWeight }}</span>
             <span>гр.</span>
         </td>
-        <td>
+        <td class="td-cost">
             <span>{{ item.totalCost }}</span>
             <span>руб.</span>
         </td>

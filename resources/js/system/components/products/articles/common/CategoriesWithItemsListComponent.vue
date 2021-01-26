@@ -1,6 +1,6 @@
 <template>
-    <div class="grid-x grid-margin-x">
-        <div class="cell small-10">
+    <div class="grid-x add-item-comp">
+        <div class="cell auto add-item-comp-text">
             <label class="input-icon">
                 <input
                     type="text"
@@ -41,21 +41,20 @@
             </table>
         </div>
 
-        <div class="cell small-2">
-            <div class="text-center">
-                <div
-                    class="sprite-input-right sprite-16 icon-select"
-                    :data-toggle="'dropdown-' + name"
-                    @click="clear"
-                ></div>
-            </div>
+        <div class="cell shrink add-item-comp-button">
+            <div
+                class="sprite-input-right icon-add-item"
+                title="Добавить позицию" 
+                :data-toggle="'dropdown-' + name"
+                @click="clear"
+            ></div>
         </div>
         <div
-            class="dropdown-pane"
+            class="dropdown-pane add-item-comp-dropdown"
             :id="'dropdown-' + name"
             data-dropdown
             data-position="bottom"
-            data-alignment="center"
+            data-alignment="right"
             data-close-on-click="true"
         >
 

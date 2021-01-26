@@ -362,6 +362,10 @@ input[type='search'] {
   color: #cacaca;
 }
 
+::-moz-placeholder {
+  color: #cacaca;
+}
+
 ::-ms-input-placeholder {
   color: #cacaca;
 }
@@ -593,6 +597,10 @@ select[multiple] {
 }
 
 .is-invalid-input:not(:focus)::-webkit-input-placeholder {
+  color: #cc4b37;
+}
+
+.is-invalid-input:not(:focus)::-moz-placeholder {
   color: #cc4b37;
 }
 
@@ -9575,11 +9583,29 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   z-index: 50;
 }
 
-.icon-select {
-  background: url(img/password.svg) no-repeat;
+.icon-add-item {
+  margin-top: 9px;
+  margin-bottom: 2px;
+  display: inline-block;
+  vertical-align: middle;
+  width: 20px;
+  height: 20px;
+  background: url(sprites/sprite_16.png) no-repeat;
+  -webkit-transition: opacity ease 0.3s;
+  transition: opacity ease 0.3s;
+  background: url(img/add.svg) no-repeat;
   opacity: 1;
   cursor: pointer;
   z-index: 50;
+  background-size: 20px;
+}
+
+.icon-add-item:focus {
+  outline: none;
+}
+
+.add-item-comp-button {
+  margin-left: 10px;
 }
 
 .one-icon-16 {
@@ -10072,6 +10098,10 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
   background-position: -96px -1474px;
 }
 
+.sidebar .icon-impact {
+  background-position: -96px -1506px;
+}
+
 .sidebar .icon-arrow-forward {
   background-position: -160px -288px;
 }
@@ -10150,6 +10180,10 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
 
 .sidebar .nav > ul > li > .active .icon-room, .sidebar .gen-menu-bot > li > .active .icon-room {
   background-position: -160px -1474px;
+}
+
+.sidebar .nav > ul > li > .active .icon-impact, .sidebar .gen-menu-bot > li > .active .icon-impact {
+  background-position: -160px -1506px;
 }
 
 .sidebar .nav::-webkit-scrollbar {
@@ -10448,7 +10482,7 @@ fieldset legend {
 .wrap-input-table .text-to-placeholder {
   display: inline-block;
   position: absolute;
-  margin-left: 55px;
+  right: 15px;
   margin-top: -26px;
   font-size: 0.9rem;
   color: #000;
@@ -10456,7 +10490,7 @@ fieldset legend {
   -webkit-transition: opacity ease 0.3s;
   transition: opacity ease 0.3s;
   z-index: 9;
-  width: 60px !important;
+  width: auto;
   text-align: right;
 }
 
@@ -14011,6 +14045,8 @@ a#task-toggle {
 }
 
 .table-compositions {
+  font-size: 0.9rem;
+  font-family: SegoeUI;
   border-collapse: separate;
   border-spacing: 0px 4px !important;
 }
@@ -14022,8 +14058,6 @@ a#task-toggle {
 .table-compositions thead tr th {
   background-color: transparent !important;
   border-bottom: 1px solid #000;
-  font-size: 0.9rem;
-  font-family: SegoeUI;
   font-weight: 500;
 }
 
@@ -14039,6 +14073,10 @@ a#task-toggle {
 
 .table-compositions tr:first-child td {
   background-color: #fff;
+}
+
+.table-compositions tbody tr .td-weight {
+  min-width: 80px;
 }
 
 .table-compositions tbody tr .icon-drop {
@@ -14558,4 +14596,8 @@ tr:hover .td-price-status .price_goods-status.hide {
   font-family: PFDinTextCondPro;
   font-size: 1.6rem;
   font-weight: 500;
+}
+
+#cke_content-ckeditor {
+  margin-bottom: 0.9rem;
 }
