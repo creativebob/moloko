@@ -412,8 +412,12 @@ trait Photable
         return $settings;
     }
 
-    // Пишем / удаляем настройки для фоток, принимаем пришедшие данные, и запись, к которой нужно создать / удалить настройки
-    function setSettings($request, $item)
+    /**
+     * Пишем / удаляем настройки для фоток, принимаем пришедшие данные, и запись, к которой нужно создать / удалить настройки
+     *
+     * @param $item
+     */
+    function setPhotoSettings($item)
     {
         // TODO - 29.11.19 - Настройки фоток более не берутся из конфига, сделать запрос
 
@@ -421,22 +425,31 @@ trait Photable
         if (isset($item->photo_settings)) {
             $photo_settings = $item->photo_settings;
         } else {
-            $photo_settings = new PhotoSetting;
+            $photo_settings = PhotoSetting::make();
         }
 
         // Определяем список проверяемых значений
         $settings = [
-            'img_small_width',
-            'img_small_height',
-            'img_medium_width',
-            'img_medium_height',
-            'img_large_width',
-            'img_large_height',
-            'img_formats',
             'img_min_width',
             'img_min_height',
+
+            'img_small_width',
+            'img_small_height',
+
+            'img_medium_width',
+            'img_medium_height',
+
+            'img_large_width',
+            'img_large_height',
+
+            'img_formats',
             'img_max_size',
+
+            'strict_mode',
+            'crop_mode',
         ];
+
+        $request = request();
 
         // Проверяем пришедшие данные
         $count = 0;
@@ -448,20 +461,13 @@ trait Photable
         if ($count > 0) {
 
             // Вытаскиваем умолчания из конфига
-            $config = config('photo_settings');
+            $config = PhotoSetting::first();
             // dd($config);
 
             // Заполняем значения
             foreach ($settings as $setting) {
-                $photo_settings->$setting = isset($request->$setting) ? $request->$setting : $config[$setting];
+                $photo_settings->$setting = isset($request->$setting) ? $request->$setting : $config->$setting;
             }
-
-            // Ставим умолчания
-            $photo_settings->strict_mode = isset($request->strict_mode) ? $request->strict_mode : $config['strict_mode'];
-
-            $user = $request->user();
-            $photo_settings->company_id = $user->company_id;
-            $photo_settings->author_id = hideGod($user);
 
             $item->photo_settings()->save($photo_settings);
         } else {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 // Модели для текущей работы
+use App\Http\Controllers\Traits\Photable;
 use App\User;
 use App\Entity;
 use App\Page;
@@ -30,6 +31,8 @@ class EntityController extends Controller
     // Сущность над которой производит операции контроллер
     protected $entity_name = 'entities';
     protected $entity_dependence = false;
+
+    use Photable;
 
     public function index()
     {
@@ -141,7 +144,7 @@ class EntityController extends Controller
         );
 
         // Настройки фотографий
-        setSettings($request, $entity);
+        $this->setPhotoSettings($entity);
 
         if($request->rights_minus == 0){
 
@@ -261,7 +264,7 @@ class EntityController extends Controller
         $entity->save();
 
         // Настройки фотографий
-        setSettings($request, $entity);
+        $this->setPhotoSettings($entity);
 
         return redirect()->route('entities.index');
     }

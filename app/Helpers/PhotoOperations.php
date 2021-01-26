@@ -349,7 +349,7 @@ function setSettings($request, $item) {
 
         // Вытаскиваем умолчания из конфига
         $config = config('photo_settings');
-        // dd($config);
+//         dd($config);
 
         // Заполняем значения
         foreach ($settings as $setting) {

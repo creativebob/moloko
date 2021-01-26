@@ -71,6 +71,7 @@ use App\Observers\System\LabelObserver;
 use App\Observers\System\MailingListObserver;
 use App\Observers\System\MailingObserver;
 use App\Observers\System\OutletObserver;
+use App\Observers\System\PhotoSettingObserver;
 use App\Observers\System\Stocks\AttachmentsStockObserver;
 use App\Observers\System\BusinessCaseObserver;
 use App\Observers\System\CatalogsGoodsItemObserver;
@@ -144,6 +145,7 @@ use App\Outlet;
 use App\Page;
 use App\Payment;
 use App\Photo;
+use App\PhotoSetting;
 use App\Plugin;
 use App\Portfolio;
 use App\PortfoliosItem;
@@ -357,6 +359,8 @@ class ObserverServiceProvider extends ServiceProvider
         Album::observe(AlbumObserver::class);
         Photo::observe(PhotoObserver::class);
         Vector::observe(VectorObserver::class);
+
+        PhotoSetting::observe(PhotoSettingObserver::class);
 
         // Сектора
         Sector::observe(SectorObserver::class);

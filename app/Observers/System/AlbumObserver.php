@@ -75,18 +75,6 @@ class AlbumObserver extends BaseObserver
         $album->photo_settings()->delete();
     }
 
-    /**
-     * Handle the album "saving" event.
-     *
-     * @param Album $album
-     */
-    public function saving(Album $album)
-    {
-        // Настройки фотографий
-        $request = request();
-        setSettings($request, $album);
-    }
-
 //    protected function setSlug(Album $album)
 //    {
 //        if (empty($album->slug)) {

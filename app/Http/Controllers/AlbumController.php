@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Album;
+use App\Http\Controllers\Traits\Photable;
 use App\PhotoSetting;
 use Illuminate\Http\Request;
 use App\Http\Requests\System\AlbumRequest;
@@ -22,6 +23,8 @@ class AlbumController extends Controller
         $this->entityAlias = 'albums';
         $this->entityDependence = false;
     }
+
+    use Photable;
 
     /**
      * Display a listing of the resource.
@@ -127,6 +130,8 @@ class AlbumController extends Controller
         $album = Album::create($data);
 
         if ($album) {
+            $this->setPhotoSettings($album);
+
             return redirect()->route('albums.index');
         } else {
             abort(403, __('errors.store'));
@@ -226,6 +231,8 @@ class AlbumController extends Controller
         $album->update($data);
 
         if ($album) {
+            $this->setPhotoSettings($album);
+
             return redirect()->route('albums.index');
         } else {
             abort(403, __('errors.update'));

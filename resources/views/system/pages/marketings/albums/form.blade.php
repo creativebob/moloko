@@ -23,7 +23,7 @@
 
     {{-- Настройки фотографий --}}
     <div class="tabs-panel" id="tab-settings">
-        @include('system.pages.marketings.albums.tabs.settings', ['item' => $album])
+        @include('includes.photos_settings.tab', ['item' => $album])
     </div>
 
     <div class="grid-x grid-padding-x">
