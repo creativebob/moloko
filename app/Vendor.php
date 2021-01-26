@@ -42,4 +42,9 @@ class Vendor extends Model
     {
         return $this->company_id == auth()->user()->company_id && $this->archive == false;
     }
+
+    public function files()
+    {
+        return $this->morphToMany(File::class, 'entity', 'file_entities');
+    }
 }

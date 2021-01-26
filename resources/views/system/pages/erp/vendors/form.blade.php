@@ -17,4 +17,14 @@
         </div>
     </div>
 
+    <div class="cell small-12 medium-6 large-7">
+        @can('create', App\File::class)
+            <files-component
+                alias="vendors"
+                :id="{{ $vendor->id }}"
+                :item-files='@json($vendor->files)'
+            ></files-component>
+        @endcan
+    </div>
+
 </div>

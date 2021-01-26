@@ -10,6 +10,7 @@ use App\BusinessCase;
 use App\Competitor;
 use App\Container;
 use App\ContainersCategory;
+use App\File;
 use App\Impact;
 use App\ImpactsCategory;
 use App\Label;
@@ -43,6 +44,7 @@ use App\Policies\DispatchPolicy;
 use App\Policies\Documents\ConsignmentPolicy;
 use App\Policies\Documents\ProductionPolicy;
 use App\Policies\DomainPolicy;
+use App\Policies\FilePolicy;
 use App\Policies\ImpactPolicy;
 use App\Policies\ImpactsCategoryPolicy;
 use App\Policies\IndicatorPolicy;
@@ -397,6 +399,8 @@ class AuthServiceProvider extends ServiceProvider
         Template::class => TemplatePolicy::class,
         Mailing::class => MailingPolicy::class,
         MailingList::class => MailingListPolicy::class,
+
+        File::class => FilePolicy::class,
     ];
 
     public function boot()

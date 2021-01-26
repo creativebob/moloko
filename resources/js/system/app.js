@@ -151,6 +151,8 @@ Vue.component('agents-schemes-component', require('./components/agents/shcemes/S
 
 Vue.component('filials-with-outlets-component', require('./components/common/selects/FilialWithOutlets'));
 
+Vue.component('files-component', require('./components/files/FilesComponent'));
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

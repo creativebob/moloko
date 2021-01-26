@@ -9,6 +9,7 @@ use App\Attachment;
 use App\AttachmentsCategory;
 use App\Competitor;
 use App\EstimatesCancelGround;
+use App\File;
 use App\Impact;
 use App\ImpactsCategory;
 use App\Label;
@@ -63,6 +64,7 @@ use App\Observers\System\Documents\ConsignmentsItemObserver;
 use App\Observers\System\Documents\ProductionObserver;
 use App\Observers\System\Documents\ProductionsItemObserver;
 use App\Observers\System\EstimatesCancelGroundObserver;
+use App\Observers\System\FileObserver;
 use App\Observers\System\ImpactObserver;
 use App\Observers\System\ImpactsCategoryObserver;
 use App\Observers\System\LabelObserver;
@@ -391,8 +393,7 @@ class ObserverServiceProvider extends ServiceProvider
         MailingList::observe(MailingListObserver::class);
 //        Dispatch::observe(DispatchObserver::class);
 
-
-
+        File::observe(FileObserver::class);
     }
 
     /**

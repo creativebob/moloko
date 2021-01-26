@@ -1733,6 +1733,15 @@ Route::post('/estimates_cancel_grounds/get', 'EstimatesCancelGroundController@ge
 //    ]);
 
 
+// --------------------------- Файлы -------------------------------------
+// Основные методы
+Route::resource('/files', 'FileController')
+    ->only([
+        'store',
+        'destroy'
+    ]);
+
+
 // ------------------------------------- Отображение сессии -----------------------------------------
 Route::get('/show_session', 'HelpController@show_session')
     ->middleware('auth')

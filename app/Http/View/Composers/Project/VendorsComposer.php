@@ -10,7 +10,8 @@ class VendorsComposer
 	public function compose(View $view)
 	{
 	    $vendors = Vendor::with([
-            'supplier.company.photo'
+            'supplier.company.photo',
+            'files'
         ])
         ->where([
             'company_id' => $view->site->company_id,

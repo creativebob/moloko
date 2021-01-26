@@ -39,6 +39,81 @@ class UpdateController extends Controller
     }
 
     /**
+     * Добавление сущности файлов
+     *
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
+    public function addFilesEntity()
+    {
+        $entity = Entity::where('alias', 'files')
+            ->exists();
+
+        if (!$entity) {
+            Entity::insert([
+                'name' => 'Файлы',
+                'alias' => 'files',
+                'model' => 'App\File',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'metric' => 0,
+                'view_path' => null,
+                'page_id' => null,
+            ]);
+            echo 'Добавлена сущность<br><br>';
+
+            // Наваливание прав
+            $entities = Entity::where('alias', 'files')
+                ->get();
+
+            foreach ($entities as $entity) {
+                // Генерируем права
+                $actions = Action::get();
+                $mass = [];
+
+                foreach ($actions as $action) {
+                    $mass[] = ['action_id' => $action->id, 'entity_id' => $entity->id, 'alias_action_entity' => $action->method . '-' . $entity->alias];
+                };
+                DB::table('action_entity')->insert($mass);
+
+                $actionentities = ActionEntity::where('entity_id', $entity->id)->get();
+                $mass = [];
+
+                foreach ($actionentities as $actionentity) {
+
+                    $mass[] = ['name' => "Разрешение на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'allow', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-allow'];
+
+                    $mass[] = ['name' => "Запрет на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'deny', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-deny'];
+                };
+
+                DB::table('rights')->insert($mass);
+
+                $actionentities = $actionentities->pluck('id')->toArray();
+
+                // Получаем все существующие разрешения (allow)
+                $rights = Right::whereIn('object_entity', $actionentities)->where('directive', 'allow')->get();
+
+                $mass = [];
+                // Генерируем права на полный доступ
+                foreach ($rights as $right) {
+                    $mass[] = [
+                        'right_id' => $right->id,
+                        'role_id' => 1,
+                        'system' => 1
+                    ];
+                };
+
+                DB::table('right_role')->insert($mass);
+            }
+
+            echo "Добавлены права на сущность<br><br>";
+        }
+
+        return __('msg.ok');
+    }
+
+    /**
      * Добавление сущности плагинов
      *
      * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null

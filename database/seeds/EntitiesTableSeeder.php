@@ -751,6 +751,19 @@ class EntitiesTableSeeder extends Seeder
                 'page_id' => null,
             ],
 
+            [
+                'name' => 'Файлы',
+                'alias' => 'files',
+                'model' => 'App\File',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'metric' => 0,
+                'view_path' => null,
+                'page_id' => null,
+            ],
+
             // TODO - 04.06.19 - Чистка сущностей
             // [
             //     'name' => 'Правила',

@@ -158,7 +158,7 @@ class VendorController extends Controller
 
         logs('companies')->info("Создан продавец. Id: [{$vendor->id}]");
         logs('companies')->info('============ КОНЕЦ СОЗДАНИЯ ПРОДАВЦА ===============
-        
+
         ');
 
         return redirect()->route('vendors.index');
@@ -190,7 +190,8 @@ class VendorController extends Controller
                         ]);
                     }
                 ]);
-            }
+            },
+            'files'
         ])
             ->moderatorLimit($answer)
             ->authors($answer)
@@ -276,7 +277,7 @@ class VendorController extends Controller
 
         logs('companies')->info("Обновлен продавец. Id: [{$vendor->id}]");
         logs('companies')->info('============ КОНЕЦ ОБНОВЛЕНИЯ ПРОДАВЦА ===============
-        
+
         ');
 
         return redirect()->route('vendors.index');
