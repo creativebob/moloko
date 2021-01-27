@@ -47,6 +47,9 @@ class PhotoObserver extends BaseObserver
             ]);
         }
 
+        Storage::disk('public')
+            ->delete($photo->company_id.'/media/albums/'.$photo->album_id.'/img/'.$photo->name);
+
         foreach (['small', 'medium', 'large', 'original'] as $value) {
             Storage::disk('public')
                 ->delete($photo->company_id.'/media/albums/'.$photo->album_id.'/img/' . $value . '/'.$photo->name);

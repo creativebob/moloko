@@ -60,7 +60,7 @@
                     @endif
                     ><label class="label-check" for="check-{{ $album->id }}"></label></td>
                     <td>
-                      <a href="/admin/albums/{{ $album->id }}">
+                      <a href="{{ route('photos.index', $album->id) }}">
                         <img src="{{ getPhotoPath($album, 'small') }}" alt="{{ isset($album->photo_id) ? $album->name : 'Нет фото' }}">
                     </a>
                 </td>

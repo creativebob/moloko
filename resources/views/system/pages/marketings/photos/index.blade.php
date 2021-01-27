@@ -18,7 +18,7 @@
     {{-- Таблица --}}
     @include('includes.title-content', [
         'pageInfo' => $pageInfo,
-        'page_alias' => 'albums/'.$album->id.'/pages',
+        'page_alias' => 'albums/'.$album->id.'/photos',
         'class' => App\Photo::class,
         'type' => 'section-table',
         'name' => $album->name

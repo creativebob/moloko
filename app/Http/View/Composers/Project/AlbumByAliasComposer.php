@@ -13,7 +13,8 @@ class AlbumByAliasComposer
 
         $album = Album::with([
             'photos' => function ($q) {
-                $q->where('display', true);
+                $q->where('display', true)
+                ->oldest('sort');
             }
         ])
             ->where('display', true)
