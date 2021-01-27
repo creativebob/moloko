@@ -119,7 +119,7 @@ class PhotoController extends Controller
             ->find($albumId);
 
             // Cохраняем / обновляем фото
-            $result = $this->savePhotoInAlbum($request, $album);
+            $result = $this->savePhotoInAlbum($album);
 
             $album->photos()->attach($result['photo']->id);
 

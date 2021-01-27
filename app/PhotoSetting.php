@@ -37,6 +37,10 @@ class PhotoSetting extends BaseModel
 
         'strict_mode',
         'crop_mode',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     public function settingable()

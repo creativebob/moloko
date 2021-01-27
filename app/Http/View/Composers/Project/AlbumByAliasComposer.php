@@ -9,10 +9,16 @@ class AlbumByAliasComposer
 {
 	public function compose(View $view)
 	{
+	    $site = $view->site;
+
         $album = Album::with([
-            'photos'
+            'photos' => function ($q) {
+                $q->where('display', true);
+            }
         ])
+            ->where('display', true)
             ->where('alias', $view->albumAlias)
+            ->where('company_id', $site->company_id)
             ->first();
 //        dd($album);
 

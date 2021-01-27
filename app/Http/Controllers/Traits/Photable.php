@@ -92,8 +92,6 @@ trait Photable
 
             $photo->path = "/storage/{$directory}/{$image_name}";
 
-//            $photo->path = "/storage/{$directory}/{$image_name}";
-
             $user = $request->user();
             $photo->company_id = $user->company_id;
             $photo->author_id = hideGod($user);
@@ -143,9 +141,9 @@ trait Photable
     }
 
     // Сохраняем / обновляем фотографию
-    public function savePhotoInAlbum($request, $album)
+    public function savePhotoInAlbum($album)
     {
-
+        $request = request();
 
         $image = $request->file('photo');
 
@@ -156,71 +154,90 @@ trait Photable
         $size = filesize($image) / 1024;
         // dd($size);
 
-        $settings = $this->getPhotoSettings('albums');
+        $settings = $this->getPhotoSettingsFromAlbum($album);
 
         if ($width < $settings['img_min_width']) {
-            abort(403, 'Ширина фотографии мала!');
+            abort(403, 'Ширина изображения должна быть не менее ' . $settings['img_min_width'] . 'px.');
+//                return back()
+//                    ->withErrors(['msg' => 'Ширина фотографии мала!'])
+//                    ->withInput();
         }
 
         if ($height < $settings['img_min_height']) {
-            abort(403, 'Высота фотографии мала!');
+            abort(403, 'Высота изображения должна быть не менее ' . $settings['img_min_height'] . 'px.');
+//                return back()
+//                    ->withErrors(['msg' => 'Высота фотографии мала!'])
+//                    ->withInput();
         }
 
         if ($size > ($settings['img_max_size'] * 1024)) {
-            abort(403, 'Размер (Mb) фотографии высок!');
+            abort(403, 'Размер изображения не должен превышать ' . $settings['img_max_size'] . 'mb.');
+//                return back()
+//                    ->withErrors(['msg' => 'Размер (Mb) фотографии высок!'])
+//                    ->withInput();
         }
 
-        $directory = $album->company_id . '/media/albums/' . $album->id . '/img';
+        $directory = "{$album->company_id}/media/albums/{$album->id}/img";
 
-        $photo = new Photo;
+        $photo = Photo::make();
 
         $extension = $image->getClientOriginalExtension();
+        $need_extension = $settings['store_format'] ?? $extension;
 
-        $photo->extension = $extension;
+        $photo->extension = $need_extension;
 
         $photo->width = $width;
         $photo->height = $height;
 
         $photo->size = number_format($size, 2, '.', '');
 
-        // $photo->album_id = $album_id;
-        $image_name = 'photo_' . time() . '.' . $extension;
+        $image_name = 'photo_' . time() . '.' . $need_extension;
         $photo->name = $image_name;
 
         $photo->path = "/storage/{$directory}/{$image_name}";
+
+        $photo->album_id = $album->id;
 
         $user = $request->user();
         $photo->company_id = $user->company_id;
         $photo->author_id = hideGod($user);
 
-        $photo->album_id = $album->id;
-
         $photo->save();
         // dd('Функция маслает!');
 
-
-
         // Сохранияем оригинал
-//        $upload_success = $image->storeAs($directory . '/original', $image_name, 'public');
-        Storage::disk('public')
-            ->putFileAs($directory . '/original', $image, $image_name);
+        $upload_success = $image->storeAs($directory . '/original', $image_name, 'public');
+
+        $upload_success = Storage::disk('public')
+            ->putFileAs(
+            $directory, $image, $image_name
+        );
         // dd($upload_success);
 
         // Сохраняем small, medium и large
-        foreach ([
-                     'small',
-                     'medium',
-                     'large'
-                 ] as $value) {
+        foreach (['small', 'medium', 'large'] as $value) {
+            switch ($crop_mode = $settings['crop_mode']) {
 
-            Storage::disk('public')
-                ->putFileAs($directory . '/' . $value, $image, $image_name);
+                // Пропорциональное уменьшение
+                case 1:
+                    $folder = Image::make($request->photo)
+                        ->widen($settings['img_' . $value . '_width'])
+                        ->crop($settings['img_' . $value . '_width'], $settings['img_' . $value . '_height']);
+                    break;
 
+                // Пропорциональная обрезка
+                case 2:
+                    $folder = Image::make($request->photo)
+                        ->fit($settings['img_' . $value . '_width'], $settings['img_' . $value . '_height']);
+                    break;
+            }
+
+            $save_path = storage_path('app/public/' . $directory . '/' . $value);
+            if (!file_exists($save_path)) {
+                mkdir($save_path, 0755);
+            }
+            $folder->save(storage_path('app/public/' . $directory . '/' . $value . '/' . $image_name), $settings['quality'], $settings['store_format']);
         }
-
-        $upload_success = Storage::disk('public')->putFileAs(
-            $directory, $image, $image_name
-        );
 
 //        foreach (['small', 'medium', 'large'] as $value) {
 //
@@ -238,8 +255,9 @@ trait Photable
 
 
         if (!isset($album->photo_id)) {
-            $album->photo_id = $photo->id;
-            $album->save();
+            $album->update([
+                'photo_id' => $photo->id
+            ]);
         }
 
         $result = [
@@ -368,26 +386,29 @@ trait Photable
     public function getPhotoSettings($entity_alias)
     {
 
-        // Вытаскиваем настройки из конфига
+        // Вытаскиваем настройки
         $settings = PhotoSetting::whereNull('company_id')
             ->first();
 
         if (!$settings) {
             // Умолчания на случай, если нет доступа к базе (Для формирования autoload)
-            $settings = [];
-            $settings['img_small_width'] = 0;
-            $settings['img_small_height'] = 0;
-            $settings['img_medium_width'] = 0;
-            $settings['img_medium_height'] = 0;
-            $settings['img_large_width'] = 0;
-            $settings['img_large_height'] = 0;
+            $settings = [
+                'img_small_width' => 0,
+                'img_small_height' => 0,
+                'img_medium_width' => 0,
+                'img_medium_height' => 0,
+                'img_large_width' => 0,
+                'img_large_height' => 0,
 
-            $settings['img_formats'] = 0;
-            $settings['strict_mode'] = 0;
+                'crop_mode' => 1,
+                'strict_mode' => 0,
 
-            $settings['img_min_width'] = 0;
-            $settings['img_min_height'] = 0;
-            $settings['img_max_size'] = 0;
+                'img_min_width' => 0,
+                'img_min_height' => 0,
+
+                'img_max_size' => 0,
+                'img_formats' => 0,
+            ];
         }
 
         // dd($settings);
@@ -399,6 +420,54 @@ trait Photable
         // dd($entity);
 
         $get_settings = $entity->photo_settings;
+        if ($get_settings) {
+            foreach ($settings as $key => $value) {
+                // Если есть ключ в пришедших настройках, то переписываем значение
+                if (isset($get_settings->$key)) {
+                    $settings[$key] = $get_settings->$key;
+                }
+            }
+        }
+        // dd($get_settings);
+
+        return $settings;
+    }
+
+    public function getPhotoSettingsFromAlbum($album)
+    {
+
+        // Вытаскиваем настройки
+        $settings = PhotoSetting::whereNull('company_id')
+            ->first();
+
+        if (!$settings) {
+            // Умолчания на случай, если нет доступа к базе (Для формирования autoload)
+            $settings = [
+                'img_small_width' => 0,
+                'img_small_height' => 0,
+                'img_medium_width' => 0,
+                'img_medium_height' => 0,
+                'img_large_width' => 0,
+                'img_large_height' => 0,
+
+                'crop_mode' => 1,
+                'strict_mode' => 0,
+
+                'img_min_width' => 0,
+                'img_min_height' => 0,
+
+                'img_max_size' => 0,
+                'img_formats' => 0,
+            ];
+        }
+
+        // dd($settings);
+
+        $album->load('photo_settings');
+
+        // dd($entity);
+
+        $get_settings = $album->photo_settings;
         if ($get_settings) {
             foreach ($settings as $key => $value) {
                 // Если есть ключ в пришедших настройках, то переписываем значение
