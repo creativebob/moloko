@@ -65,7 +65,7 @@ trait Estimatable
         if ($estimate->services_items->isNotEmpty()) {
             $cost += $estimate->services_items->sum('cost');
             $amount += $estimate->services_items->sum('amount');
-            $total += $estimate->services_items->sum('total');
+            $points += $estimate->services_items->sum('points');
 
             $priceDiscount += $estimate->services_items->sum('price_discount');
             $catalogsItemDiscount += $estimate->services_items->sum('catalogs_item_discount');

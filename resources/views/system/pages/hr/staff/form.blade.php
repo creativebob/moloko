@@ -19,7 +19,6 @@
                         <div class="small-12 cell">
                             <label>Сотрудник:
 
-
                                 @include('includes.selects.staff', ['disabled' => isset($staffer->user_id) ? true : '', 'mode' => isset($staffer->user_id) ? '' : 'vacancies'])
 
                             </label>
@@ -75,4 +74,8 @@
         {{ Form::submit($submitButtonText, ['class'=>'button']) }}
     </div>
 </div>
+
+@push('scripts')
+    @include('includes.scripts.pickmeup-script')
+@endpush
 

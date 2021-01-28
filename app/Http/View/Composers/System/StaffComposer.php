@@ -8,53 +8,57 @@ use Illuminate\View\View;
 
 class StaffComposer
 {
-	public function compose(View $view)
-	{
+    public function compose(View $view)
+    {
 
         // Список пользователей
         $answer = operator_right('users', true, 'index');
 
-        // dd($view->mode);
+//         dd($view->mode);
 
         if (empty($view->mode)) {
 
             $staff = User::moderatorLimit($answer)
-            ->companiesLimit($answer)
-            ->filials($answer)
-            ->authors($answer)
-            ->systemItem($answer)
-            ->whereNull('god')
-            ->has('staff')
-            ->orderBy('second_name')
-            ->get();
+                ->companiesLimit($answer)
+                ->filials($answer)
+                ->authors($answer)
+                ->systemItem($answer)
+                ->whereNull('god')
+                ->has('staff')
+                ->where('site_id', 1)
+                ->orderBy('second_name')
+                ->get();
         } else {
             switch ($view->mode) {
 
                 case 'vacancies':
-                $staff = User::moderatorLimit($answer)
-                ->companiesLimit($answer)
-                ->filials($answer)
-                ->authors($answer)
-                ->systemItem($answer)
-                ->whereNull('god')
-                ->doesntHave('staff')
-                ->orderBy('second_name')
-                ->get();
-                break;
+                    $staff = User::moderatorLimit($answer)
+                        ->companiesLimit($answer)
+                        ->filials($answer)
+                        ->authors($answer)
+                        ->systemItem($answer)
+                        ->whereNull('god')
+                        ->doesntHave('staff')
+                        ->where('site_id', 1)
+                        ->orderBy('second_name')
+                        ->get();
+                    break;
 
                 default:
-                $staff = User::moderatorLimit($answer)
-                ->companiesLimit($answer)
-                ->filials($answer)
-                ->authors($answer)
-                ->systemItem($answer)
-                ->whereNull('god')
-                ->orderBy('second_name')
-                ->get();
+                    $staff = User::moderatorLimit($answer)
+                        ->companiesLimit($answer)
+                        ->filials($answer)
+                        ->authors($answer)
+                        ->systemItem($answer)
+                        ->whereNull('god')
+                        ->where('site_id', 1)
+                        ->orderBy('second_name')
+                        ->get();
 
-                break;
+                    break;
             }
         }
+//        dd($staff);
         return $view->with('staff', $staff);
     }
 }
