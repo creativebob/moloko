@@ -36,6 +36,7 @@ trait Photable
             // dd($size);
 
             $settings = $this->getPhotoSettings($item->getTable());
+//            dd($settings);
 
             if ($width < $settings['img_min_width']) {
                 abort(403, 'Ширина изображения должна быть не менее ' . $settings['img_min_width'] . 'px.');
@@ -210,8 +211,8 @@ trait Photable
 
         $upload_success = Storage::disk('public')
             ->putFileAs(
-            $directory, $image, $image_name
-        );
+                $directory, $image, $image_name
+            );
         // dd($upload_success);
 
         // Сохраняем small, medium и large
@@ -380,103 +381,45 @@ trait Photable
     /**
      * Получаем настройки для фото
      *
-     * @param $entity_alias
+     * @param $entityAlias
      * @return array
      */
-    public function getPhotoSettings($entity_alias)
+    public function getPhotoSettings($entityAlias)
     {
-
-        // Вытаскиваем настройки
-        $settings = PhotoSetting::whereNull('company_id')
-            ->first();
-
-        if (!$settings) {
-            // Умолчания на случай, если нет доступа к базе (Для формирования autoload)
-            $settings = [
-                'img_small_width' => 0,
-                'img_small_height' => 0,
-                'img_medium_width' => 0,
-                'img_medium_height' => 0,
-                'img_large_width' => 0,
-                'img_large_height' => 0,
-
-                'crop_mode' => 1,
-                'strict_mode' => 0,
-
-                'img_min_width' => 0,
-                'img_min_height' => 0,
-
-                'img_max_size' => 0,
-                'img_formats' => 0,
-            ];
-        }
-
-        // dd($settings);
-
         $entity = Entity::with('photo_settings')
-            ->whereAlias($entity_alias)
+            ->where('alias', $entityAlias)
             ->first();
+//        dd($entity);
 
-        // dd($entity);
+        $settings = $entity->photo_settings;
 
-        $get_settings = $entity->photo_settings;
-        if ($get_settings) {
-            foreach ($settings as $key => $value) {
-                // Если есть ключ в пришедших настройках, то переписываем значение
-                if (isset($get_settings->$key)) {
-                    $settings[$key] = $get_settings->$key;
-                }
-            }
+        if (empty($settings)) {
+            $settings = PhotoSetting::whereNull('company_id')
+                ->first();
         }
-        // dd($get_settings);
 
         return $settings;
     }
 
-    public function getPhotoSettingsFromAlbum($album)
+    public function getPhotoSettingsFromAlbum($item)
     {
+        $item->load('photo_settings');
+        $settings = $item->photo_settings;
 
-        // Вытаскиваем настройки
-        $settings = PhotoSetting::whereNull('company_id')
-            ->first();
+        if (empty($settings)) {
+            $entity = Entity::with('photo_settings')
+                ->where('alias', $item->getTable())
+                ->first();
+//        dd($entity);
 
-        if (!$settings) {
-            // Умолчания на случай, если нет доступа к базе (Для формирования autoload)
-            $settings = [
-                'img_small_width' => 0,
-                'img_small_height' => 0,
-                'img_medium_width' => 0,
-                'img_medium_height' => 0,
-                'img_large_width' => 0,
-                'img_large_height' => 0,
+            $settings = $entity->photo_settings;
 
-                'crop_mode' => 1,
-                'strict_mode' => 0,
-
-                'img_min_width' => 0,
-                'img_min_height' => 0,
-
-                'img_max_size' => 0,
-                'img_formats' => 0,
-            ];
-        }
-
-        // dd($settings);
-
-        $album->load('photo_settings');
-
-        // dd($entity);
-
-        $get_settings = $album->photo_settings;
-        if ($get_settings) {
-            foreach ($settings as $key => $value) {
-                // Если есть ключ в пришедших настройках, то переписываем значение
-                if (isset($get_settings->$key)) {
-                    $settings[$key] = $get_settings->$key;
-                }
+            if (empty($settings)) {
+                $settings = PhotoSetting::whereNull('company_id')
+                    ->first();
             }
         }
-        // dd($get_settings);
+//         dd($settings);
 
         return $settings;
     }
@@ -499,6 +442,9 @@ trait Photable
 
         // Определяем список проверяемых значений
         $settings = [
+            'store_format',
+            'quality',
+
             'img_min_width',
             'img_min_height',
 
@@ -544,7 +490,7 @@ trait Photable
         }
     }
 
-    // Путь до аватарки
+// Путь до аватарки
     function getPhotoPath($item, $size = 'medium')
     {
 
@@ -574,7 +520,7 @@ trait Photable
         }
     }
 
-    // Путь до картинки-заглушки экземпляра
+// Путь до картинки-заглушки экземпляра
     function getPhotoPathPlugEntity($item, $size = 'medium')
     {
 
@@ -604,7 +550,7 @@ trait Photable
 
     }
 
-    // Путь до фотки в альбоме
+// Путь до фотки в альбоме
     function getPhotoInAlbumPath($photo, $size = 'medium')
     {
         return "/storage/" . $photo->company_id . "/media/albums/" . $photo->album_id . "/img/" . $size . "/" . $photo->name;
@@ -618,7 +564,8 @@ trait Photable
      * @param string $name
      * @return integer $photo_id
      */
-    public function savePhoto($request, $item, $name = 'photo')
+    public
+    function savePhoto($request, $item, $name = 'photo')
     {
         if ($request->hasFile($name)) {
 
@@ -698,7 +645,8 @@ trait Photable
      * @param string $name
      * @return integer $vector_id
      */
-    public function saveVector($item, $name = 'vector')
+    public
+    function saveVector($item, $name = 'vector')
     {
 
         $request = request();

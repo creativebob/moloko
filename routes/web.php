@@ -323,6 +323,13 @@ Route::patch('/photo_update/{id}', 'PhotoController@ajax_update');
 Route::delete('/photo_delete/{id}', 'PhotoController@ajax_delete');
 
 
+// --------------------------------------- Настройки фотографий -----------------------------------------------
+Route::resource('/photo_settings', 'PhotoSettingController')
+    ->except([
+        'show'
+    ]);
+
+
 // --------------------------------------- Помещения -----------------------------------------------
 // Route::resource('/places', 'PlaceController')->middleware('auth');
 

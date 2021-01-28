@@ -33,7 +33,7 @@ Breadcrumbs::register('create', function ($breadcrumbs, $pageInfo) {
 // });
 Breadcrumbs::register('edit', function ($breadcrumbs, $pageInfo, $name) {
     $breadcrumbs->parent('index', $pageInfo);
-    $breadcrumbs->push($name, url('/'.$pageInfo->alias.'/{id}/edit'));
+    $breadcrumbs->push($name ?? 'Нет названия', url('/'.$pageInfo->alias.'/{id}/edit'));
 });
 
 // index > Смотреть (Show)

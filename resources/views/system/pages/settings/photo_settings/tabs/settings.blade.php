@@ -33,10 +33,10 @@
                 </div>
 
                 <div class="cell small-12 radiobutton">
-                    {{ Form::radio('strict_mode', 0, $photoSetting ? $photoSetting->strict_mode : true, ['id' => 'mode_min']) }}
+                    {{ Form::radio('strict_mode', 0, isset($photoSetting->strict_mode) ? $photoSetting->strict_mode : true, ['id' => 'mode_min']) }}
                     <label for="mode_min"><span>Указаны минимальные размеры</span></label>
 
-                    {{ Form::radio('strict_mode', 1, $photoSetting ? $photoSetting->strict_mode : false, ['id' => 'mode_fix']) }}
+                    {{ Form::radio('strict_mode', 1, isset($photoSetting->strict_mode) ? $photoSetting->strict_mode : false, ['id' => 'mode_fix']) }}
                     <label for="mode_fix"><span>Загружать в строго указанных размерах</span></label>
                 </div>
 
@@ -66,9 +66,20 @@
                     <label>Качество сжатия
                         <digit-component
                             name="quality"
-                            value="{{ $photoSetting ? $photoSetting->quality : 80 }}"
+                            value="{{ isset($photoSetting->quality) ? $photoSetting->quality : 80 }}"
                             :limit-min="1"
                             :limit-max="100"
+                            :decimal-place="0"
+                        ></digit-component>
+                    </label>
+                </div>
+
+                <div class="cell small-12 medium-6">
+                    <label>Размер изображения (кб)
+                        <digit-component
+                            name="img_max_size"
+                            value="{{ isset($photoSetting->img_max_size) ? $photoSetting->img_max_size : 12000 }}"
+                            :limit-min="1"
                             :decimal-place="0"
                         ></digit-component>
                     </label>

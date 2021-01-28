@@ -506,7 +506,7 @@ class EntitiesTableSeeder extends Seeder
                 'site' => 0,
                 'metric' => 0,
                 'view_path' => 'photo_settings',
-                'page_id' => null,
+                'page_id' => $pages->firstWhere('alias', 'photo_settings')->id,
             ],
             [
                 'name' => 'Сметы',

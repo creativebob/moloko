@@ -57,6 +57,17 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => true,
             ],
+            [
+                'name' => 'Настройки фотографий',
+                'site_id' => 1,
+                'title' => 'Настройки фотографий',
+                'description' => 'Настройки фотографий',
+                'alias' => 'photo_settings',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
 
             // ----------------- Основной блок (База) ------------------------
 

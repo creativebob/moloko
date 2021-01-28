@@ -46,3 +46,4 @@ Route::get('/emails_menus', 'UpdateController@emailsMenus');
 
 Route::get('/add_plugins_entity', 'UpdateController@addPluginsEntity');
 Route::get('/add_files_entity', 'UpdateController@addFilesEntity');
+Route::get('/add_photo_settings_entity', 'UpdateController@addPhotoSettingsEntity');

@@ -20,7 +20,7 @@ class CreatePhotoSettingsTable extends Migration
 
             $table->string('name')->nullable()->index()->comment('Название настройки');
             $table->text('description')->nullable()->comment('Описание настройки');
-            
+
             $table->integer('quality')->default(80)->comment('Качество сжатия (общий)');
             $table->string('store_format', 6)->default('jpg')->nullable()->comment('Формат изображния для записи');
 
@@ -38,7 +38,8 @@ class CreatePhotoSettingsTable extends Migration
 
             $table->integer('img_min_width')->nullable()->unsigned()->comment('Минимальная ширина изображения');
             $table->integer('img_min_height')->nullable()->unsigned()->comment('Минимальная высота изображения');
-            $table->integer('img_max_size')->nullable()->unsigned()->comment('Размер изображения');
+
+            $table->integer('img_max_size')->nullable()->comment('Размер изображения');
 
 
             // Общие настройки

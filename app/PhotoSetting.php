@@ -4,10 +4,12 @@ namespace App;
 
 use App\Models\System\BaseModel;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PhotoSetting extends BaseModel
 {
-    use Cachable;
+    use Cachable,
+        SoftDeletes;
 
     protected $dates = [
         'deleted_at'
@@ -17,8 +19,11 @@ class PhotoSetting extends BaseModel
         'name',
         'description',
 
-        'setting_id',
-        'setting_type',
+        'photo_settings_id',
+        'photo_settings_type',
+
+        'store_format',
+        'quality',
 
         'img_min_width',
         'img_min_height',
@@ -43,9 +48,8 @@ class PhotoSetting extends BaseModel
         'moderation'
     ];
 
-    public function settingable()
+    public function entity()
     {
-        return $this->morphTo();
+        return $this->morphTo(null, 'photo_settings_type', 'photo_settings_id');
     }
-
 }

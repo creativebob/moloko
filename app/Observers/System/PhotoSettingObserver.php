@@ -35,4 +35,28 @@ class PhotoSettingObserver extends BaseObserver
     {
         $this->destroy($photoSetting);
     }
+
+    /**
+     * Handle the photoSetting "saving" event.
+     * Если какие то настройки не заполнены, берем их из умолчаний
+     *
+     * @param PhotoSetting $photoSetting
+     */
+    public function saving(PhotoSetting $photoSetting)
+    {
+        $defaultSettings = PhotoSetting::whereNull('company_id')
+            ->first()
+            ->toArray();
+//        dd($defaultSettings);
+
+        if ($defaultSettings) {
+            foreach ($defaultSettings as $setting => $value) {
+                // Если есть ключ в пришедших настройках, то переписываем значение
+                if (is_null($photoSetting->$setting)) {
+                    $photoSetting->$setting = $defaultSettings[$setting];
+                }
+            }
+        }
+//        dd($photoSetting);
+    }
 }

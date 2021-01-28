@@ -1432,6 +1432,20 @@ Menu::insert([
         'display' => true,
         'sort' => null,
     ],
+    [
+        'name' => 'Настройки фотографий',
+        'icon' => null,
+        'alias' => 'admin/photo_settings',
+        'tag' => 'photo_settings',
+        'parent_id' => $menus->where('tag', 'settings')->first()->id,
+        'page_id' => $pages->where('alias', 'photo_settings')->first()->id,
+        'navigation_id' => 1,
+        'company_id' => null,
+        'system' => true,
+        'author_id' => 1,
+        'display' => true,
+        'sort' => null,
+    ],
 
 
     // -------------------------- Непонятные сущности, которые не знаю куда отнести --------------------------------------------

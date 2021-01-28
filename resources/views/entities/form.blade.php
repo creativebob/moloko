@@ -2,7 +2,7 @@
     <div class="small-12 cell">
         <ul class="tabs-list" data-tabs id="tabs">
             <li class="tabs-title is-active"><a href="#settings" aria-selected="true">Информация</a></li>
-            
+
             <li class="tabs-title"><a data-tabs-target="photos_settings" href="#photos_settings">Настройка фотографий</a></li>
         </ul>
     </div>
@@ -79,7 +79,7 @@
 
         {{-- Настройки фотографий --}}
         <div class="tabs-panel" id="photos_settings">
-            @include('includes.photos_settings.tab', ['item' => $entity])
+            @include('system.pages.settings.photo_settings.tabs.settings', ['photoSetting' => $entity->photo_settings])
         </div>
     </div>
 

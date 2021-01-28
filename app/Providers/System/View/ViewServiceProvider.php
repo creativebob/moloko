@@ -26,6 +26,7 @@ use App\Http\View\Composers\System\ClientsCountComposer;
 use App\Http\View\Composers\System\ClientsForSearchComposer;
 use App\Http\View\Composers\System\DepartmentsForUserComposer;
 use App\Http\View\Composers\System\DiscountsForEstimatesComposer;
+use App\Http\View\Composers\System\EntitiesComposer;
 use App\Http\View\Composers\System\EstimatesTotalsComposer;
 use App\Http\View\Composers\System\FilialCatalogsGoodsComposer;
 use App\Http\View\Composers\System\FilialCatalogsServicesComposer;
@@ -412,6 +413,7 @@ class ViewServiceProvider extends ServiceProvider
         view()->composer('includes.selects.directions', DirectionsComposer::class);
 
         view()->composer('includes.selects.entities_statistics', EntitiesStatisticsSelectComposer::class);
+        view()->composer('includes.selects.entities', EntitiesComposer::class);
 
         view()->composer('products.processes.services.prices.catalogs', CatalogsServicesComposer::class);
         view()->composer('products.processes.services.prices.catalogs_items', CatalogsServicesItemsComposer::class);
