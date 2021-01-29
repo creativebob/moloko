@@ -17,6 +17,7 @@ class CreateProcessesTable extends Migration
             $table->bigIncrements('id');
 
             $table->string('name')->nullable()->comment('Имя процесса');
+            $table->string('slug')->nullable()->comment('Слаг');
             $table->text('description')->nullable()->comment('Описание процесса');
 
             $table->bigInteger('processes_group_id')->nullable()->unsigned()->comment('Id группы процесса');

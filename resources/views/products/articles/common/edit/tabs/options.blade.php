@@ -152,6 +152,12 @@
     </div>
 
     <div class="cell small-12 medium-6">
+        <fieldset class="fieldset-access">
+            <label>Слаг
+                {{ Form::text('slug', $article->slug, []) }}
+            </label>
+        </fieldset>
+
         @if($item->getTable() == 'goods' || $item->getTable() == 'impacts')
             <fieldset class="fieldset-access">
                 <legend>Доп. коды</legend>

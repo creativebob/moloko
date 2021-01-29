@@ -17,6 +17,7 @@ class CreateArticlesTable extends Migration
             $table->bigIncrements('id');
 
             $table->string('name')->nullable()->comment('Имя артикула');
+            $table->string('slug')->nullable()->comment('Слаг');
             $table->text('description')->nullable()->comment('Описание артикула');
 
             $table->bigInteger('articles_group_id')->nullable()->unsigned()->comment('Id группы артикула');

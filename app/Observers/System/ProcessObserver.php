@@ -4,30 +4,59 @@ namespace App\Observers\System;
 
 use App\Process;
 
-class ProcessObserver
+class ProcessObserver extends BaseObserver
 {
 
     public function creating(Process $process)
     {
+        $this->store($process);
 
         $process->draft = true;
+    }
 
-        $user = request()->user();
-
-        $process->company_id = $user->company_id;
-        $process->author_id = hideGod($user);
+    public function created(Process $process)
+    {
+        $slug = $this->getProcessSlug($process);
+        $process->update([
+            'slug' => $slug
+        ]);
     }
 
     public function updating(Process $process)
     {
-        $request = request();
-        // dd($request);
+        $this->update($process);
 
-        // Проверки только для черновика
-        // if ($process->getOriginal('draft') == 1) {
+        $slug = $this->getProcessSlug($process);
+        $process->slug = $slug;
+    }
 
-        // }
+    public function getProcessSlug(Process $process)
+    {
+        $slug = null;
+        if (empty($process->slug)) {
+            $slug = \Str::slug($process->name);
 
-        $process->editor_id = hideGod($request->user());
+            $found = Process::where([
+                'company_id' => $process->company_id,
+                'slug' => $slug
+            ])
+                ->exists();
+
+            if ($found) {
+                $slug .= "-{$process->id}";
+            }
+        } else {
+            $slug = $process->slug;
+            $found = Process::where([
+                'company_id' => $process->company_id,
+                'slug' => $slug
+            ])
+                ->exists();
+
+            if ($found) {
+                $slug .= "-{$process->id}";
+            }
+        }
+        return $slug;
     }
 }

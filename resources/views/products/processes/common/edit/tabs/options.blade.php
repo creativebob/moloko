@@ -1,5 +1,5 @@
 <div class="grid-x grid-padding-x">
-    <div class="small-12 medium-6 cell">
+    <div class="cell small-12 medium-6">
 
         <fieldset class="fieldset-access">
             <legend>Артикул</legend>
@@ -132,5 +132,13 @@
             </label>
         </fieldset>
 
+    </div>
+
+    <div class="cell small-12 medium-6">
+        <fieldset class="fieldset-access">
+            <label>Слаг
+                {{ Form::text('slug', $process->slug, []) }}
+            </label>
+        </fieldset>
     </div>
 </div>

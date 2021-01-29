@@ -148,11 +148,18 @@ Route::get('/{page_alias}', 'AppController@dynamic_pages')
 
 
 // Оборудование
-Route::resource('/tools', 'ToolController')
-    ->only([
-        'show'
-    ])
-    ->names('project.tools');
+//Route::resource('/tools', 'ToolController')
+//    ->only([
+//        'show'
+//    ])
+//    ->names('project.tools');
+
+// TODO - 29.01.21 - Костыль для переименования tools в equipment
+Route::get('/equipments/{slug}', 'ToolController@show')
+//    ->only([
+//        'show'
+//    ])
+    ->names('project.equipments.show');
 
 Route::resource('/forms', 'FormController')
     ->only([

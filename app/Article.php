@@ -48,6 +48,8 @@ class Article extends Model
 
     protected $fillable = [
         'name',
+        'slug',
+
         'description',
 
         'articles_group_id',

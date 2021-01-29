@@ -36,15 +36,16 @@ class ToolController extends BaseController
        /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  string  $slug
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($slug)
     {
         $tool = Tool::with([
             'article'
         ])
-            ->find($id);
+            ->where('slug', $slug)
+            ->first();
 //        dd($tool);
         if (empty($tool)) {
             abort(404);
