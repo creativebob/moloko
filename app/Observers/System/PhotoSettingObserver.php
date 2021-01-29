@@ -47,9 +47,6 @@ class PhotoSettingObserver extends BaseObserver
         $defaultSettings = PhotoSetting::whereNull('company_id')
             ->where('system', true)
             ->first([
-                'name',
-                'description',
-
                 'photo_settings_id',
                 'photo_settings_type',
 
