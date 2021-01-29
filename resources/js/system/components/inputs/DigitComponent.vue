@@ -5,6 +5,7 @@
         v-model="count"
         :id="id"
         :class="classes"
+        :placeholder="placeholder"
         :required="required"
         :disabled="disabled"
         @input="input($event.target.value)"
@@ -41,6 +42,10 @@
             },
             classes: {
                 type: String,
+                default: null
+            },
+            placeholder: {
+                type: [String, Number],
                 default: null
             },
             disabled: {

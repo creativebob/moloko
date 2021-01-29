@@ -395,6 +395,7 @@ trait Photable
 
         if (empty($settings)) {
             $settings = PhotoSetting::whereNull('company_id')
+                ->where('system', true)
                 ->first();
         }
 
@@ -416,6 +417,7 @@ trait Photable
 
             if (empty($settings)) {
                 $settings = PhotoSetting::whereNull('company_id')
+                    ->where('system', true)
                     ->first();
             }
         }

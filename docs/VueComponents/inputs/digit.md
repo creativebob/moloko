@@ -19,6 +19,9 @@
 * **classes** - class поля, type: String, default: null
   * **type:** String
   * **default:** null
+ * **placeholder** - placeholder поля
+    * **type:** String
+    * **default:** null
 * **disabled** - disabled поля, type
   * **type:** Boolean
   * **default:** false

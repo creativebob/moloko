@@ -25,10 +25,25 @@ class PhotoSettingRequest extends FormRequest
     {
           return [
               'name' => 'required|string|max:255',
-              'description' => 'required|string',
+              'description' => 'nullable|string',
 
-              'store_format' => 'nullable|string',
+              'store_format' => 'required|string',
               'quality' => 'required|integer',
+
+              'img_min_width' => 'required|integer',
+              'img_min_height' => 'required|integer',
+
+              'img_small_width' => 'required|integer',
+              'img_small_height' => 'required|integer',
+
+              'img_medium_width' => 'required|integer',
+              'img_medium_height' => 'required|integer',
+
+              'img_large_width' => 'required|integer',
+              'img_large_height' => 'required|integer',
+
+              'img_formats' => 'required|string',
+              'img_max_size' => 'required|integer',
 
               'strict_mode' => 'required|integer',
               'crop_mode' => 'required|integer',
