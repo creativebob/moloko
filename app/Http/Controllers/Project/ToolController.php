@@ -35,12 +35,13 @@ class ToolController extends BaseController
 
     /**
      * Display the specified resource.
-     * 
+     *
      * @param $slug
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function show($slug)
     {
+        // TODO - 29.01.21 - Костыль для переименования tools в equipment
         $tool = Tool::with([
             'article'
         ])
