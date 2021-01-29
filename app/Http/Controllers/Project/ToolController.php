@@ -33,18 +33,20 @@ class ToolController extends BaseController
 //        return view($site->alias.'.pages.tools.index', compact('site',  'page'));
     }
 
-       /**
+    /**
      * Display the specified resource.
-     *
-     * @param  string  $slug
-     * @return \Illuminate\Http\Response
+     * 
+     * @param $slug
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function show($slug)
     {
         $tool = Tool::with([
             'article'
         ])
-            ->where('slug', $slug)
+            ->whereHas('article', function ($q) use ($slug) {
+                $q->where('slug', $slug);
+            })
             ->first();
 //        dd($tool);
         if (empty($tool)) {
@@ -54,9 +56,9 @@ class ToolController extends BaseController
         $site = $this->site;
 
         $page = $site->pages_public
-            ->where('alias', 'tool')
+            ->where('alias', 'equipment')
             ->first();
 
-        return view($site->alias.'.pages.tool.index', compact('site',  'page', 'tool'));
+        return view($site->alias . '.pages.equipment.index', compact('site', 'page', 'tool'));
     }
 }
