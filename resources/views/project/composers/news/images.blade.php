@@ -7,7 +7,7 @@
 							@foreach($news_list as $item)
 
 								<li class="cell news-item text-center">
-									<img src="{{ getPhotoPath($item, 'small') }}" alt="" width="100%">
+									<img src="{{ getPhotoPath($item, 'medium') }}" alt="{{ $item->alt }}" width="440" height="292">
 									{!! $item->content !!}
 									<span class="publish_date">{{ $item->publish_begin_date->isoFormat('MMMM YYYY') }}</span>
 								</li>
@@ -18,4 +18,3 @@
 				</div>
 			@endif
 		@endisset
-		

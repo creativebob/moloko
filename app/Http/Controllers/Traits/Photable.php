@@ -112,15 +112,34 @@ trait Photable
             foreach (['small', 'medium', 'large'] as $value) {
                 switch ($crop_mode = $settings['crop_mode']) {
 
-                    // Пропорциональное уменьшение
+                    // Приоритет по ширине, высота пропорционально
                     case 1:
+                        $folder = Image::make($request->photo)
+                            ->widen($settings['img_' . $value . '_width']);
+                        break;
+
+                    // Приоритет по высоте, ширина пропорционально
+                    case 2:
+                        $folder = Image::make($request->photo)
+                            ->heighten($settings['img_' . $value . '_height']);
+                        break;
+
+                    // Приоритет по ширине, отсчечение лишней высоты
+                    case 3:
                         $folder = Image::make($request->photo)
                             ->widen($settings['img_' . $value . '_width'])
                             ->crop($settings['img_' . $value . '_width'], $settings['img_' . $value . '_height']);
                         break;
 
-                    // Пропорциональная обрезка
-                    case 2:
+                    // Приоритет по высоте, отсечение лишней ширины
+                    case 4:
+                        $folder = Image::make($request->photo)
+                            ->heighten($settings['img_' . $value . '_height'])
+                            ->crop($settings['img_' . $value . '_width'], $settings['img_' . $value . '_height']);
+                        break;
+
+                    // Подгонка под пропорцию, отсечение лишней высоты и ширины
+                    case 5:
                         $folder = Image::make($request->photo)
                             ->fit($settings['img_' . $value . '_width'], $settings['img_' . $value . '_height']);
                         break;

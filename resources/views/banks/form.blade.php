@@ -65,13 +65,8 @@
 
           <div class="small-12 medium-6 cell">
             <label>Почта
-<<<<<<< HEAD
-              @include('includes.inputs.email', ['value'=>$bank->self_company->email, 'name'=>'email'])
-            </label>
-=======
               @include('includes.inputs.email', ['value'=>$company->email, 'name'=>'email'])
             </label>
->>>>>>> bc0042d6951d32c1456efdc7dff33d6387619c9b
             <label>Страна
               @php
               $country_id = null;
@@ -84,20 +79,7 @@
         </div>
 
         <div class="small-12 medium-6 cell">
-<<<<<<< HEAD
-          <label class="label-icon">Город
-            @php
-            $city_name = null;
-            $city_id = null;
-            if (isset($bank->self_company->location->city->name)) {
-            $city_name = $bank->self_company->location->city->name;
-            $city_id = $bank->self_company->location->city->id;
-          }
-          @endphp
-          @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required' => true])
-=======
           @include('includes.inputs.city_search', ['city' => isset($company->location->city->name) ? $company->location->city : null, 'id' => 'cityForm', 'required' => true])
->>>>>>> bc0042d6951d32c1456efdc7dff33d6387619c9b
         </label>
         <label>Адрес
           @php

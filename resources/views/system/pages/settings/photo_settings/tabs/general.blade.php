@@ -3,7 +3,7 @@
         <div class="grid-x grid-padding-x">
             <div class="cell small-12 medium-6">
 
-                <label>Название
+                <label>Название настройки
                     @include('includes.inputs.name', ['required' => true])
                     <div class="sprite-input-right find-status" id="alias-check"></div>
                     <div class="item-error">Такой альбом уже существует!</div>
@@ -16,7 +16,7 @@
             </div>
 
             <div class="cell small-12 medium-6">
-                <label>Описание
+                <label>Применять к сущности:
                     @include('includes.selects.entities', ['entityId' => $photoSetting->photo_settings_id])
                 </label>
             </div>
