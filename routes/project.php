@@ -159,7 +159,7 @@ Route::get('/equipments/{slug}', 'ToolController@show')
 //    ->only([
 //        'show'
 //    ])
-    ->names('project.equipments.show');
+    ->name('project.equipments.show');
 
 Route::resource('/forms', 'FormController')
     ->only([
