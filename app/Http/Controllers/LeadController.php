@@ -72,7 +72,6 @@ class LeadController extends Controller
      */
     public function index(Request $request)
     {
-
 //        dd($request);
 
         // Включение контроля активного фильтра

@@ -1535,7 +1535,12 @@ Route::prefix('catalogs_goods/{catalog_id}')->group(function () {
     Route::any('/prices_goods_hit', 'PricesGoodsController@ajax_hit');
     Route::any('/prices_goods_new', 'PricesGoodsController@ajax_new');
 
+    Route::get('/prices_goods/excel-export', 'PricesGoodsController@excelExport')
+        ->name('prices_goods.excelExport');
+
     Route::resource('/prices_goods', 'PricesGoodsController');
+
+
 });
 
 
@@ -1578,6 +1583,10 @@ Route::prefix('/catalogs_services/{catalogId}')->group(function () {
     Route::any('/prices_services_status', 'PricesServiceController@ajax_status');
     Route::any('/prices_services_hit', 'PricesServiceController@ajax_hit');
     Route::any('/prices_services_new', 'PricesServiceController@ajax_new');
+
+    Route::get('/prices_services/excel-export', 'PricesServiceController@excelExport')
+        ->name('prices_services.excelExport');
+
     // Основные методы
     Route::resource('/prices_services', 'PricesServiceController');
 });

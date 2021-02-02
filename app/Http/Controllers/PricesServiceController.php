@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\CatalogsService;
 use App\CatalogsServicesItem;
 use App\Discount;
+use App\Exports\PricesServicesExport;
 use App\Http\Controllers\System\Traits\Discountable;
 use App\PricesService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PricesServiceController extends Controller
 {
@@ -360,6 +362,19 @@ class PricesServiceController extends Controller
             ->get();
 
         return response()->json($results);
+    }
+
+    /**
+     * Выгрузка прайсов услуг в excel (с учетом фильтра)
+     *
+     * @param $catalogId
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    public function excelExport($catalogId)
+    {
+        return Excel::download(new PricesServicesExport($catalogId), 'Услуги.xlsx');
     }
 
 

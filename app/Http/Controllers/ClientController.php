@@ -638,7 +638,7 @@ class ClientController extends Controller
     /**
      * Выгрузка клиенской базы в excel (с учетом фильтра)
      *
-     * @return \Maatwebsite\Excel\BinaryFileResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */

@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\CatalogsGoodsItem;
 use App\Discount;
+use App\Exports\PricesGoodsExport;
 use App\Http\Controllers\System\Traits\Discountable;
 use App\PricesGoods;
 use App\CatalogsGoods;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PricesGoodsController extends Controller
 {
@@ -375,6 +377,19 @@ class PricesGoodsController extends Controller
         $results = $modified->all();
 
         return response()->json($results);
+    }
+
+    /**
+     * Выгрузка прайсов товаров в excel (с учетом фильтра)
+     *
+     * @param $catalogId
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    public function excelExport($catalogId)
+    {
+        return Excel::download(new PricesGoodsExport($catalogId), 'Товары.xlsx');
     }
 
 

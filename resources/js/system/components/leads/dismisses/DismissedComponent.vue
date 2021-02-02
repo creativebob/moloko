@@ -52,7 +52,7 @@ export default {
     },
     computed: {
         isShow() {
-            return this.$store.state.lead.estimate.is_dismissed == 0;
+            return this.$store.state.lead.estimate.is_dismissed == 0 && this.$store.getters.ACTUAL_PAYMENTS.length > 0 && (this.$store.getters.HAS_OUTLET_SETTING('dismiss-with-loss') || this.$store.getters.HAS_OUTLET_SETTING('dismiss-without-loss'));
         }
     },
     methods: {
