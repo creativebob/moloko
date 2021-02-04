@@ -1501,7 +1501,7 @@ Route::resource('/news', 'NewsController')
 Route::any('/catalogs_goods/get_catalogs_by_ids', 'CatalogsGoodsController@getCatalogsByIds');
 Route::any('/catalogs_goods/get_catalogs_for_outlet', 'CatalogsGoodsController@getCatalogsForOutlet');
 
-Route::any('/catalogs_goods/{id}', 'CatalogsGoodsController@get_catalog');
+//Route::any('/catalogs_goods/{id}', 'CatalogsGoodsController@get_catalog');
 // Основные методы
 Route::resource('/catalogs_goods', 'CatalogsGoodsController');
 // Проверка на существование

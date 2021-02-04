@@ -282,9 +282,9 @@ class CatalogsGoodsController extends Controller
             ->companiesLimit($answer_cg)
             ->authors($answer_cg)
             ->filials($answer_cg)
-            ->whereHas('sites', function ($q) {
-                $q->whereId(1);
-            })
+//            ->whereHas('sites', function ($q) {
+//                $q->whereId(1);
+//            })
             ->find($id);
 //         dd($сatalog_goods);
 
