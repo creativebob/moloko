@@ -991,25 +991,34 @@ class EstimateController extends Controller
     public function setAgent(Request $request)
     {
 
-        $catalogId = $request->catalog_goods_id;
+        $catalogGoodsId = $request->catalog_goods_id;
         $agent = Agent::with([
-            'schemes' => function ($q) use ($catalogId) {
-                $q->where('catalog_id', $catalogId);
+            'schemes' => function ($q) use ($catalogGoodsId) {
+                $q->where('catalog_id', $catalogGoodsId);
             }
         ])
-            ->whereHas('schemes', function ($q) use ($catalogId) {
-                $q->where('catalog_id', $catalogId);
+            ->whereHas('schemes', function ($q) use ($catalogGoodsId) {
+                $q->where('catalog_id', $catalogGoodsId);
             })
             ->find($request->agent_id);
 
         $agencyScheme = $agent->schemes->first();
 
         $estimate = Estimate::with([
-            'goods_items'
+            'goods_items',
+            'services_items'
         ])
             ->find($request->estimate_id);
 
         foreach ($estimate->goods_items as $item) {
+            $item->update([
+                'agent_id' => $agent->id,
+                'agency_scheme_id' => $agencyScheme->id,
+                'share_percent' => $agencyScheme->percent_default,
+            ]);
+        }
+
+        foreach ($estimate->services_items as $item) {
             $item->update([
                 'agent_id' => $agent->id,
                 'agency_scheme_id' => $agencyScheme->id,

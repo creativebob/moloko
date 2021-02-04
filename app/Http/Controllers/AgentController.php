@@ -311,13 +311,17 @@ class AgentController extends Controller
     }
 
     /**
-     * Получаем агентов с схемами, подключенными к каталогу товаров
-     * @param $id
+     * Получаем агентов с схемами, подключенными к каталогам товаров и услуг
+     *
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getAgentsByCatalogGoodsId($id)
+    public function getAgentsByCatalogsIds(Request $request)
     {
 //        $answer = operator_right('agents', false, 'index');
+
+        $catalogGoodsId = $request->catalog_goods_id;
+        $catalogServicesId = $request->catalog_services_id;
 
         $agents = Agent::with([
             // TODO - 13.12.20 - Неправильное отношение, правильное agent
@@ -327,11 +331,21 @@ class AgentController extends Controller
 //            ->companiesLimit($answer)
 //            ->authors($answer)
 //            ->systemItem($answer)
-            ->whereHas('schemes', function ($q) use ($id) {
-                $q->where([
-                    'catalog_type' => 'App\CatalogsGoods',
-                    'catalog_id' => $id
-                ]);
+            ->whereHas('schemes', function ($q) use ($catalogGoodsId, $catalogServicesId) {
+                $q->where(function ($q) use ($catalogGoodsId, $catalogServicesId) {
+                    $q->when($catalogGoodsId, function ($q) use ($catalogGoodsId) {
+                        $q->where([
+                            'catalog_type' => 'App\CatalogsGoods',
+                            'catalog_id' => $catalogGoodsId
+                        ]);
+                    })
+                        ->when($catalogServicesId, function ($q) use ($catalogServicesId) {
+                        $q->orWhere([
+                            'catalog_type' => 'App\CatalogsService',
+                            'catalog_id' => $catalogServicesId
+                        ]);
+                    });
+                });
             })
             ->get();
 

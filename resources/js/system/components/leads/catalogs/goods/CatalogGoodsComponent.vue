@@ -18,6 +18,7 @@
                         class="vertical menu selecter-catalog-item"
                         v-drilldown
                         data-back-button='<li class="js-drilldown-back"><a tabindex="0">Назад</a></li>'
+                        data-animate-height="true"
                     >
 
                         <childrens-component

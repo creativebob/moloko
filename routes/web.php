@@ -1125,7 +1125,7 @@ Route::resource('/manufacturers', 'ManufacturerController')
 
 
 // ------------------------------------ Агенты ----------------------------------------------------
-Route::get('/agents/get-agents-by-catalog-goods-id/{id}', 'AgentController@getAgentsByCatalogGoodsId');
+Route::post('/agents/get_agents_by_catalogs_ids', 'AgentController@getAgentsByCatalogsIds');
 // Архив
 Route::post('/agents/archive/{id}', 'AgentController@archive');
 // Основные методы

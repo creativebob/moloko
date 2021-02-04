@@ -14,10 +14,21 @@
     </div>
 
     <div class="cell small-12 medium-6 large-7">
-        <agents-schemes-component
-            :catalogs='@json($catalogsGoods)'
-            :agent-schemes='@json($agent->schemes)'
-        ></agents-schemes-component>
+        <fieldset>
+            <legend>Каталог товаров</legend>
+            <agents-schemes-component
+                :catalogs='@json($catalogsGoods)'
+                :agent-schemes='@json($agent->schemes->where('catalog_type', 'App\CatalogsGoods'))'
+            ></agents-schemes-component>
+        </fieldset>
+
+        <fieldset>
+            <legend>Каталог услуг</legend>
+            <agents-schemes-component
+                :catalogs='@json($catalogsServices)'
+                :agent-schemes='@json($agent->schemes->where('catalog_type', 'App\CatalogsService'))'
+            ></agents-schemes-component>
+        </fieldset>
 
     </div>
 

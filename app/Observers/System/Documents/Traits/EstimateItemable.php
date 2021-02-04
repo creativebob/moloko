@@ -87,28 +87,45 @@ trait EstimateItemable
                 if ($item->share_percent > 0) {
                     $item->share_currency = $item->total / 100 * $item->share_percent;
                     $item->principal_currency = $item->total - $item->share_currency;
+
+                    // Маржа
+                    if ($item->is_manual == 0) {
+                        $totalPrice = $item->price - $item->price_discount_unit - $item->catalogs_item_discount_unit - $item->estimate_discount_unit - $item->client_discount_unit_currency;
+                    } else {
+                        $totalPrice = $item->price - $item->manual_discount_currency;
+                    }
+                    $item->margin_currency_unit = $item->principal_currency / $item->count;
+                    $item->margin_currency = $item->principal_currency;
+
+                    if ($item->total > 0) {
+                        $item->margin_percent_unit = ($item->margin_currency_unit / $totalPrice * 100);
+                        $item->margin_percent = ($item->margin_currency / $item->total * 100);
+                    } else {
+                        $item->margin_percent_unit = ($item->margin_currency_unit * 100);
+                        $item->margin_percent = ($item->margin_currency * 100);
+                    }
                 } else {
                     $item->share_currency = 0;
                     $item->principal_currency = 0;
+
+                    // Маржа
+                    if ($item->is_manual == 0) {
+                        $totalPrice = $item->price - $item->price_discount_unit - $item->catalogs_item_discount_unit - $item->estimate_discount_unit - $item->client_discount_unit_currency;
+                    } else {
+                        $totalPrice = $item->price - $item->manual_discount_currency;
+                    }
+                    $item->margin_currency_unit = $totalPrice - $item->cost_unit;
+                    $item->margin_currency = $item->total - $item->cost;
+
+                    if ($item->total > 0) {
+                        $item->margin_percent_unit = ($item->margin_currency_unit / $totalPrice * 100);
+                        $item->margin_percent = ($item->margin_currency / $item->total * 100);
+                    } else {
+                        $item->margin_percent_unit = ($item->margin_currency_unit * 100);
+                        $item->margin_percent = ($item->margin_currency * 100);
+                    }
                 }
 
-                // Маржа
-                $totalPrice = 0;
-                if ($item->is_manual == 0) {
-                    $totalPrice = $item->price - $item->price_discount_unit - $item->catalogs_item_discount_unit - $item->estimate_discount_unit - $item->client_discount_unit_currency;
-                } else {
-                    $totalPrice = $item->price - $item->manual_discount_currency;
-                }
-                $item->margin_currency_unit = $totalPrice - $item->cost_unit;
-                $item->margin_currency = $item->total - $item->cost;
-
-                if ($item->total > 0) {
-                    $item->margin_percent_unit = ($item->margin_currency_unit / $totalPrice * 100);
-                    $item->margin_percent = ($item->margin_currency / $item->total * 100);
-                } else {
-                    $item->margin_percent_unit = ($item->margin_currency_unit * 100);
-                    $item->margin_percent = ($item->margin_currency * 100);
-                }
                 break;
 
             case (2):
