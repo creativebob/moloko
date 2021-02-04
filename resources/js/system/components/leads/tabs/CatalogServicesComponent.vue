@@ -1,6 +1,6 @@
 <template>
     <li
-        v-if="hasCatalogsServices && userHasOutlet"
+        v-show="hasCatalogsServices && userHasOutlet"
         class="tabs-title"
     >
         <a data-tabs-target="tab-catalog_services" href="#tab-catalog_services" role="tab">Услуги</a>
