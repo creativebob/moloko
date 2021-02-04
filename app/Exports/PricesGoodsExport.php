@@ -2,6 +2,8 @@
 
 namespace App\Exports;
 
+use App\Domain;
+use App\Http\Controllers\Traits\Photable;
 use App\PricesGoods;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -22,7 +24,8 @@ class PricesGoodsExport implements FromCollection, WithTitle, WithHeadings, Shou
         $this->catalogId = $catalogId;
     }
 
-    use Exportable;
+    use Exportable,
+        Photable;
 
     /**
      * Название листа
@@ -44,8 +47,11 @@ class PricesGoodsExport implements FromCollection, WithTitle, WithHeadings, Shou
         return [
             'Id',
             'Название товара',
+            'Название категории',
             'Описание товара',
-            'Имя категории',
+            'Фото',
+            'Популярность',
+            'В наличии',
             'Цена',
             'Цена в РХ',
         ];
@@ -65,7 +71,8 @@ class PricesGoodsExport implements FromCollection, WithTitle, WithHeadings, Shou
             'goods' => function ($q) {
                 $q->with([
                     'category',
-                    'article'
+                    'article.photo',
+                    'stocks'
                 ]);
             },
         ])
@@ -86,6 +93,17 @@ class PricesGoodsExport implements FromCollection, WithTitle, WithHeadings, Shou
             ->oldest('id')
             ->get();
 
+
+        // TODO - 04.02.21 - Костыль с первым доменом (рх)
+        $catalogId = $this->catalogId;
+        $domain = Domain::whereHas('filials', function ($q) use ($catalogId) {
+            $q->whereHas('catalogs_goods', function ($q) use ($catalogId) {
+                $q->where('id', $catalogId);
+            });
+        })
+            ->first();
+//        dd($domain);
+
         $items = [];
         foreach ($pricesGoods as $priceGoods) {
 //            dd($client);
@@ -93,8 +111,13 @@ class PricesGoodsExport implements FromCollection, WithTitle, WithHeadings, Shou
             $array = [
                 'id' => $priceGoods->id,
                 'name' => $priceGoods->goods->article->name,
-                'description' => $priceGoods->goods->article->description,
                 'category_name' => $priceGoods->goods->category->name,
+                'description' => $priceGoods->goods->article->description,
+
+                'photo' => isset($priceGoods->goods->article->photo) ? 'https://' . $domain->domain . $this->getPhotoPath($priceGoods->goods->article) : '',
+                'is_hit' => $priceGoods->is_hit == 1 ? 'Да' : 'Нет',
+                'storage' => $priceGoods->goods->stocks->isNotEmpty() ? $priceGoods->goods->stocks->sum('free') : 'Нет',
+
                 'price' => $priceGoods->price,
                 'points' => $priceGoods->points,
             ];

@@ -2,6 +2,8 @@
 
 namespace App\Exports;
 
+use App\Domain;
+use App\Http\Controllers\Traits\Photable;
 use App\PricesService;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -22,7 +24,8 @@ class PricesServicesExport implements FromCollection, WithTitle, WithHeadings, S
         $this->catalogId = $catalogId;
     }
 
-    use Exportable;
+    use Exportable,
+        Photable;
 
     /**
      * Название листа
@@ -44,8 +47,11 @@ class PricesServicesExport implements FromCollection, WithTitle, WithHeadings, S
         return [
             'Id',
             'Название услуги',
+            'Название категории',
             'Описание услуги',
-            'Имя категории',
+            'Фото',
+            'Популярность',
+//            'В наличии',
             'Цена',
             'Цена в РХ',
         ];
@@ -86,6 +92,16 @@ class PricesServicesExport implements FromCollection, WithTitle, WithHeadings, S
             ->oldest('id')
             ->get();
 
+        // TODO - 04.02.21 - Костыль с первым доменом (рх)
+        $catalogId = $this->catalogId;
+        $domain = Domain::whereHas('filials', function ($q) use ($catalogId) {
+            $q->whereHas('catalogs_services', function ($q) use ($catalogId) {
+                $q->where('id', $catalogId);
+            });
+        })
+            ->first();
+//        dd($domain);
+
         $items = [];
         foreach ($pricesServices as $pricesService) {
 //            dd($client);
@@ -93,8 +109,13 @@ class PricesServicesExport implements FromCollection, WithTitle, WithHeadings, S
             $array = [
                 'id' => $pricesService->id,
                 'name' => $pricesService->service->process->name,
-                'description' => $pricesService->service->process->description,
                 'category_name' => $pricesService->service->category->name,
+                'description' => $pricesService->service->process->description,
+
+                'photo' => isset($pricesService->service->process->photo) ? 'https://' . $domain->domain . $this->getPhotoPath($pricesService->service->process) : '',
+                'is_hit' => $pricesService->is_hit == 1 ? 'Да' : 'Нет',
+//                'storage' => $pricesService->goods->stocks->isNotEmpty() ? $pricesService->goods->stocks->sum('free') : 'Нет',
+
                 'price' => $pricesService->price,
                 'points' => $pricesService->points,
             ];
