@@ -18,7 +18,7 @@
             <legend>Каталог товаров</legend>
             <agents-schemes-component
                 :catalogs='@json($catalogsGoods)'
-                :agent-schemes='@json($agent->schemes->where('catalog_type', 'App\CatalogsGoods'))'
+                :agent-schemes='@json($agent->goodsSchemes)'
             ></agents-schemes-component>
         </fieldset>
 
@@ -26,7 +26,7 @@
             <legend>Каталог услуг</legend>
             <agents-schemes-component
                 :catalogs='@json($catalogsServices)'
-                :agent-schemes='@json($agent->schemes->where('catalog_type', 'App\CatalogsService'))'
+                :agent-schemes='@json($agent->servicesSchemes)'
             ></agents-schemes-component>
         </fieldset>
 

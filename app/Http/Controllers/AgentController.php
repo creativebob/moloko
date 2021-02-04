@@ -179,7 +179,8 @@ class AgentController extends Controller
                     'processes_types'
                 ]);
             },
-            'schemes.catalog'
+            'goodsSchemes.catalog',
+            'servicesSchemes.catalog'
         ])
             ->moderatorLimit($answer)
             ->authors($answer)
