@@ -3,7 +3,6 @@
 namespace App\Http\View\Composers\System;
 
 use App\CatalogsGoods;
-
 use Illuminate\View\View;
 
 class CatalogsGoodsWithSchemesComposer

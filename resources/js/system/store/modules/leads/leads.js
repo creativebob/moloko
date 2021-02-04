@@ -949,6 +949,7 @@ const moduleLead = {
                 .post('/admin/estimates/set-agent', {
                     estimate_id: state.estimate.id,
                     catalog_goods_id: state.catalogGoodsId,
+                    catalog_services_id: state.catalogServicesId,
                     agent_id: state.agent.id,
                 })
                 .then(response => {
