@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Entity;
 use App\Http\Controllers\System\Traits\Cancelable;
 use App\Http\Requests\System\ProductionsItemStoreRequest;
 use App\Http\Requests\System\ProductionsItemUpdateRequest;
@@ -29,6 +30,10 @@ class ProductionsItemController extends Controller
     public function store(ProductionsItemStoreRequest $request)
     {
         $data = $request->input();
+
+        $entity = Entity::find($request->entity_id);
+        $data['cmv_type'] = $entity->model;
+
         $productionsItem = ProductionsItem::create($data);
 
         $productionsItem->load([
@@ -133,7 +138,7 @@ class ProductionsItemController extends Controller
             ->info("Удалена позиция: {$productionsItem->id}");
         logs('documents')
             ->info('========================================== КОНЕЦ ОТМЕНЫ ПОЗИЦИИ НАРЯДА ПРОИЗВОДСТВА ==============================================
-				
+
 				');
         if ($res) {
             return redirect()->route('productions.edit', $productionsItem->document->id);

@@ -26,6 +26,7 @@ class Production extends BaseModel
     protected $fillable = [
         'manufacturer_id',
         'stock_id',
+        'estimate_id',
 
         'name',
         'description',

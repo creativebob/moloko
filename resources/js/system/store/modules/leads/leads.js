@@ -464,12 +464,17 @@ const moduleLead = {
         },
 
         CHECK_NEED_PRODUCTION(state) {
-            const found = state.goodsItems.find(item => item.goods.is_produced == 1);
-            if (found) {
-                state.needProduction = true;
-            } else {
-                state.needProduction = false;
-            }
+            let countNeedProduced = 0,
+                countProduced = 0;
+            state.goodsItems.forEach(item => {
+                if (item.goods.is_produced == 1) {
+                    countNeedProduced++;
+                    if (item.goods.productions_item) {
+                        countProduced++
+                    }
+                }
+            });
+            state.needProduction = (countNeedProduced !== countProduced);
         },
 
         // Услуги
@@ -977,6 +982,8 @@ const moduleLead = {
                 .then(response => {
                     if (response.data.success) {
                         this.commit('SET_ESTIMATE', response.data.estimate);
+
+                        this.commit('SET_GOODS_ITEMS', response.data.estimate.goods_items);
                     } else {
                         console.log(response.data.errors);
                         state.errors = response.data.errors;
@@ -1205,6 +1212,9 @@ const moduleLead = {
         IS_CONDUCTED: state => {
             return state.estimate.conducted_at !== null;
         },
+        IS_DISMISSED: state => {
+            return state.estimate.is_dismissed == 1;
+        },
 
         // Товары
         COUNT_GOODS_ITEM_IN_ESTIMATE: state => id => {
@@ -1218,6 +1228,11 @@ const moduleLead = {
         },
         GOODS_ITEM: state => id => {
             return state.goodsItems.find(item => item.id == id);
+        },
+
+        HAS_PRODUCED_GOODS_ITEM: state => {
+            const found = state.goodsItems.find(item => item.goods.productions_item !== null);
+            return !!found;
         },
 
         // Услуги

@@ -103,7 +103,7 @@
         },
         computed: {
             showStoreComponent() {
-                return this.$store.getters.PAYMENTS_TOTAL < this.$store.getters.ESTIMATE_AGGREGATIONS.estimate.total;
+                return this.$store.getters.PAYMENTS_TOTAL < this.$store.getters.ESTIMATE_AGGREGATIONS.estimate.total && !this.$store.getters.IS_DISMISSED;
             },
             payments() {
                 return this.$store.getters.PAYMENTS;

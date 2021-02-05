@@ -37,6 +37,7 @@ class ProductionsItem extends BaseModel
 
         'description',
         'stock_id',
+        'estimates_goods_item_id',
     ];
 
     public function production()

@@ -3,17 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Agent;
-use App\Client;
 use App\Company;
 use App\ContractsClient;
-use App\Cost;
 use App\Entity;
 use App\Http\Controllers\System\Traits\Cancelable;
-use App\Models\System\Documents\EstimatesGoodsItem;
+use App\Http\Controllers\Traits\Receiptable;
+use App\Models\System\Documents\Production;
+use App\Models\System\Documents\ProductionsItem;
 use App\Notification;
 use App\Notifications\System\Telegram;
-use App\Receipt;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\System\Traits\Clientable;
 use App\Http\Controllers\System\Traits\Companable;
 use App\Http\Controllers\System\Traits\Locationable;
@@ -27,7 +25,6 @@ use App\Http\Requests\System\LeadRequest;
 use App\Models\System\Documents\Estimate;
 use App\Http\Controllers\Traits\LeadControllerTrait;
 use App\Lead;
-use App\Stock;
 use Illuminate\Http\Request;
 
 class EstimateController extends Controller
@@ -55,6 +52,7 @@ class EstimateController extends Controller
         Companable,
         Reservable,
         Offable,
+        Receiptable,
         Estimatable,
         Cancelable;
 
@@ -481,22 +479,28 @@ class EstimateController extends Controller
             'goods_items' => function ($q) {
                 $q->with([
                     'price',
-                    'product.article' => function ($q) {
+                    'product' => function ($q) {
                         $q->with([
-                            'goods',
-                            'raws',
+                            'article' => function ($q) {
+                                $q->with([
+                                    'goods',
+                                    'raws',
+                                ]);
+                            },
                         ]);
                     },
                     'document',
-                ]);
+                ])
+                    ->whereHas('product', function ($q) {
+                        $q->where('is_produced', true);
+                    });
             },
-            'catalogs_goods',
-            'catalogs_services',
-            'discounts'
+
+            'lead.outlet'
         ])
             ->find($id);
 
-        if (!$estimate->conducted_at) {
+        if (!$estimate->conducted_at && !$estimate->produced_at) {
             if ($estimate->goods_items->isNotEmpty()) {
 
                 set_time_limit(0);
@@ -504,226 +508,90 @@ class EstimateController extends Controller
                 logs('documents')
                     ->info('========================================== НАЧАЛО ПРОИЗВОДТСВА СМЕТЫ, ID: ' . $estimate->id . ' ==============================================');
 
+                $production = Production::create([
+                    'stock_id' => $estimate->lead->outlet->stock_id,
+                    'estimate_id' => $estimate->id
+                ]);
+
+                logs('documents')
+                    ->info("Создан наряд на производство. Id: {$production->id}");
+
+                $productionItemsInsert = [];
+
+                $entityId = Entity::where('alias', 'goods')
+                    ->value('id');
                 foreach ($estimate->goods_items as $goodsItem) {
 
                     if ($goodsItem->product->is_produced) {
-                        if ($goodsItem->product->article->kit == 1) {
+                        $productionItemsInsert[] = ProductionsItem::make([
+                            'cmv_type' => 'App\Goods',
+                            'cmv_id' => $goodsItem->goods_id,
 
-                        } else {
-                            $compositions = [
-                                'raws'
-                            ];
+                            'manufacturer_id' => $goodsItem->product->article->manufacturer_id,
+                            'estimates_goods_item_id' => $goodsItem->id,
+                            'stock_id' => $production->stock_id,
+                            'entity_id' => $entityId,
 
-                            foreach ($compositions as $composition) {
-                                $article = $goodsItem->product->article;
-
-                                if ($article->$composition->isNotEmpty()) {
-                                    foreach ($article->$composition as $item) {
-                                        $this->off($item);
-                                    }
-                                }
-                            }
-
-                            $item = $goodsItem;
-//                        $this->receipt($item);
-
-
-
-                            $modelStorage = Entity::where('alias', 'goods_stocks')
-                                ->value('model');
-
-                            logs('documents')
-                                ->info('=== ПРИХОДОВАНИЕ ' . $item->getTable() . ' ' . $item->id . ' ===');
-                            logs('documents')
-                                ->info("В документе выбран stock с id: {$item->stock_id}");
-
-                            // Акутальный филиал
-                            $stockGeneral = Stock::find($item->stock_id);
-                            $filialId = $stockGeneral->filial_id;
-
-                            // хранилище
-                            $item->load([
-                                'cmv.stocks'
-                            ]);
-                            $storage = $item->cmv->stocks->where('stock_id', $stockGeneral->id)
-                                ->where('filial_id', $stockGeneral->filial_id)
-                                ->where('manufacturer_id', $item->manufacturer_id)
-                                ->first();
-                            if ($storage) {
-                                logs('documents')
-                                    ->info('Существует хранилище ' . $storage->getTable() . ' c id: ' . $storage->id);
-                            } else {
-                                $dataStock = [
-                                    'cmv_id' => $item->goods_id,
-                                    'manufacturer_id' => $item->manufacturer_id,
-                                    'stock_id' => $stockGeneral->id,
-                                    'filial_id' => $stockGeneral->filial_id,
-                                ];
-                                $storage = $modelStorage::create($dataStock);
-
-                                logs('documents')
-                                    ->info('Создано хранилище ' . $storage->getTable() . ' c id: ' . $storage->id);
-                            }
-
-
-                            $stocksCount = $modelStorage::where([
-                                'filial_id' => $filialId,
-                                'cmv_id' => $item->goods_id
-                            ])
-                                ->sum('count');
-
-                            logs('documents')
-                                ->info("Значения count: {$storage->count}, reserve: {$storage->reserve}, free: {$storage->free}, weight: {$storage->weight}, volume: {$storage->volume}");
-
-                            if ($item->cmv->article->package_status == 1) {
-                                $count = $item->count * $item->cmv->article->package_count;
-                                logs('documents')
-                                    ->info('Принимаем в "' . $item->cmv->article->package_abbreviation . '": в количестве ' . $item->count . ', пересчитываем на ' . $item->cmv->article->unit->abbreviation . ' в количестве ' . $count);
-                            } else {
-                                $count = $item->count;
-                                logs('documents')
-                                    ->info('Принимаем в стандартных ' . $item->cmv->article->unit->abbreviation . ' в количестве ' . $count);
-                            }
-
-                            $newCount = $storage->count += $count;
-
-                            $data = [
-                                'count' => $newCount,
-                                'free' => ($newCount > 0) ? ($newCount - $storage->reserve) : 0,
-                                'weight' => $storage->weight += ($item->cmv->article->weight * $count),
-                                'volume' => $storage->volume += ($item->cmv->article->volume * $count),
-                            ];
-                            $storage->update($data);
-
-                            logs('documents')
-                                ->info("Обновлены значения count: {$storage->count}, reserve: {$storage->reserve}, free: {$storage->free}, weight: {$storage->weight}, volume: {$storage->volume}");
-
-                            // Себестоимость
-
-                            if ($item->cmv->article->package_status == 1) {
-                                $cost = $item->cost / $item->cmv->article->package_count;
-                                logs('documents')
-                                    ->info('Принимаем в "' . $item->cmv->article->package_abbreviation . '": в количестве ' . $item->count . ', пересчитываем себестоимость: ' . $cost . ' за 1 ' . $item->cmv->article->unit->abbreviation);
-                            } else {
-                                $cost = $item->cost;
-                                logs('documents')
-                                    ->info('Принимаем в стандартных ' . $item->cmv->article->unit->abbreviation . ' в количестве ' . $count . ', себестоимость: ' . $cost);
-                            }
-
-                            if ($item->cmv->cost) {
-                                $cost_item = $item->cmv->cost;
-//						dd($cost_item);
-
-                                logs('documents')
-                                    ->info('Существует себестоимость c id: ' . $cost_item->id);
-                                logs('documents')
-                                    ->info("Значения min: {$cost_item->min}, max: {$cost_item->max} , average: {$cost_item->average}");
-
-                                $cost_average = $cost_item->average;
-                                if ($stocksCount > 0) {
-                                    $average = (($stocksCount * $cost_average) + ($count * $cost)) / ($stocksCount + $count);
-                                } else {
-                                    $average = $cost;
-                                };
-
-                                if (is_null($cost_item->min) || is_null($cost_item->max)) {
-                                    $data_cost = [
-                                        'min' => $cost,
-                                        'max' => $cost,
-                                        'average' => $cost,
-                                    ];
-
-                                } else {
-                                    $data_cost = [
-                                        'min' => ($cost < $cost_item->min) ? $cost : $cost_item->min,
-                                        'max' => ($cost > $cost_item->max) ? $cost : $cost_item->max,
-                                        'average' => $average
-                                    ];
-                                }
-
-//			dd($data_cost);
-
-                                $cost_item->update($data_cost);
-
-                                logs('documents')
-                                    ->info("Обновлены значения min: {$cost_item->min}, max: {$cost_item->max} , average: {$cost_item->average}");
-
-                            } else {
-                                $data_cost = [
-                                    'cmv_id' => $item->goods_id,
-                                    'cmv_type' => 'App\Goods',
-                                    'manufacturer_id' => $item->manufacturer_id,
-                                    'min' => $cost,
-                                    'max' => $cost,
-                                    'average' => $cost,
-                                    'filial_id' => $filialId,
-                                ];
-//			dd($data_cost);
-
-                                $cost_item = Cost::create($data_cost);
-//			dd($cost_item);
-
-                                logs('documents')
-                                    ->info('Создана себестоимость c id: ' . $cost_item->id);
-                                logs('documents')
-                                    ->info('Значения min: ' . $cost_item->min . ', max: ' . $cost_item->max . ', average: ' . $cost_item->average);
-
-                            }
-
-
-                            $modelDocument = Entity::where('alias', $item->document->getTable())
-                                ->value('model');
-                            $modelDocumentItem = Entity::where('alias', $item->getTable())
-                                ->value('model');
-
-                            $receipt = Receipt::create([
-                                'document_id' => $item->document->id,
-                                'document_type' => $modelDocument,
-
-                                'documents_item_id' => $item->id,
-                                'documents_item_type' => $modelDocumentItem,
-
-                                'cmv_id' => $item->goods_id,
-                                'cmv_type' => 'App\Goods',
-
-                                'storage_id' => $storage->id,
-                                'storage_type' => $modelStorage,
-
-                                'count' => $count,
-
-                                'weight_unit' => $item->cmv->article->weight,
-                                'volume_unit' => $item->cmv->article->volume,
-
-                                'cost_unit' => $cost,
-                                'total' => $count * $cost,
-
-                                'stock_id' => $item->stock_id,
-                            ]);
-
-                            logs('documents')
-                                ->info("Записано поступление с id: {$receipt->id}, count: {$receipt->count}, cost: {$receipt->cost}, amount: {$receipt->amount}");
-
-                            logs('documents')
-                                ->info('=== КОНЕЦ ПРИХОДОВАНИЯ ===
-                            ');
-                        }
+                            'count' => $goodsItem->count,
+                        ]);
                     }
                 }
+
+                $production->items()->saveMany($productionItemsInsert);
+                logs('documents')
+                    ->info("Созданы пункты наряда на производство (производимые)");
+
+                $production->load('items');
+                foreach ($production->items as $item) {
+                    // Без проверки остатка
+                    $res = $this->production($item);
+                    $cost = $res['cost'];
+                    $isWrong = $res['is_wrong'];
+                    $amount = $cost * $item->count;
+
+                    $item->update([
+                        'cost' => $cost,
+                        'amount' => $amount,
+                    ]);
+
+                    // Приходование
+                    $this->receipt($item, $isWrong);
+                }
+
+                $production->update([
+                    'conducted_at' => now(),
+                ]);
+                logs('documents')
+                    ->info('Произведен наряд на производство c id: ' . $production->id);
 
                 $estimate->update([
                     'produced_at' => now()
                 ]);
-
                 logs('documents')
                     ->info('Произведена смета c id: ' . $estimate->id);
+
                 logs('documents')
                     ->info('========================================== КОНЕЦ ПРОИЗВОДТСВА СМЕТЫ ==============================================
 
                 ');
-
-
             }
         }
+
+        $estimate->load([
+            'catalogs_goods',
+            'catalogs_services',
+            'discounts',
+            'goods_items' => function ($q) {
+                $q->with([
+                    'goods.article',
+                    'reserve',
+                    'stock:id,name',
+                    'price_goods',
+                    'currency',
+                    'productions_item'
+                ]);
+            },
+        ]);
 
         return response()->json([
             'success' => true,
@@ -922,7 +790,7 @@ class EstimateController extends Controller
 
         // Без убытка
         if ($request->loss == false) {
-            foreach($estimate->goods_items as $item) {
+            foreach ($estimate->goods_items as $item) {
 //                $this->cancelOffs($item);
 //                $this->cancelReceipt($item);
             }

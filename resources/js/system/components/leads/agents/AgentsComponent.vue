@@ -11,7 +11,7 @@
 
         <template v-else>
             <div
-                v-if="!isConducted && agents.length"
+                v-if="!isConducted && !isDismissed && agents.length"
 
                 class="cell small-12 input-group"
             >
@@ -67,8 +67,11 @@ export default {
             return this.$store.state.lead.estimate;
         },
         isConducted() {
-            return this.$store.state.lead.estimate.conducted_at !== null;
+            return this.$store.getters.IS_CONDUCTED;
         },
+        isDismissed() {
+            return this.$store.getters.IS_DISMISSED;
+        }
     },
     watch: {
         agentId() {
