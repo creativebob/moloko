@@ -47,8 +47,11 @@ class LeadObserver
 
         // TODO - 08.12.20 - Долгий путь с затычками (вылечится рабочим местом)
         $outlets = session('access.user_info.outlets');
-        if ($outlets[0]->settings->firstWhere('alias', 'shipment_at-calculate')) {
-            $lead->shipment_at = now()->addSeconds($outlets[0]->extra_time);
+        if ($outlets) {
+            $outlet = $outlets[0];
+            if ($outlet->settings->firstWhere('alias', 'shipment_at-calculate')) {
+                $lead->shipment_at = now()->addSeconds($outlet->extra_time);
+            }
         }
     }
 
