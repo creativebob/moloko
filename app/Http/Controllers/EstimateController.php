@@ -286,18 +286,32 @@ class EstimateController extends Controller
     {
         // ГЛАВНЫЙ ЗАПРОС:
         $estimate = Estimate::with([
-            'goods_items'
+            'goods_items',
+            'services_items'
         ])
             ->find($id);
 
         if ($estimate->registered_at && $estimate->payments->isEmpty()) {
+
             foreach ($estimate->goods_items as $goodsItem) {
                 if (isset($goodsItem->reserve)) {
                     $result = $this->cancelReserve($goodsItem);
                 }
 
-                if ($goodsItem->share_percent > 0) {
+                if ($goodsItem->agency_scheme_id) {
                     $goodsItem->update([
+                        'share_percent' => 0,
+
+                        'agent_id' => null,
+                        'agency_scheme_id' => null,
+                    ]);
+                }
+            }
+
+            foreach ($estimate->services_items as $serviceItem) {
+
+                if ($serviceItem->agency_scheme_id) {
+                    $serviceItem->update([
                         'share_percent' => 0,
 
                         'agent_id' => null,
@@ -311,6 +325,11 @@ class EstimateController extends Controller
 
                 'agent_id' => null,
                 'agency_scheme_id' => null,
+            ]);
+
+            $estimate->load([
+                'goods_items',
+                'services_items'
             ]);
 
             // Аггрегируем значеняи сметы
@@ -334,7 +353,9 @@ class EstimateController extends Controller
             },
             'payments',
             'lead.client.contract',
-            'discounts'
+            'discounts',
+            'catalogs_goods',
+            'catalogs_services',
         ])
             ->find($id);
 
@@ -1050,7 +1071,9 @@ class EstimateController extends Controller
             },
             'discounts',
             'agent.company',
-            'lead'
+            'lead',
+            'catalogs_goods',
+            'catalogs_services',
         ])
             ->find($request->estimate_id);
 

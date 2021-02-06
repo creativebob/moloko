@@ -930,10 +930,9 @@ const moduleLead = {
         UNREGISTER_ESTIMATE({state}) {
             state.loading = true;
             axios
-                .patch('/admin/estimates/' + state.estimate.id + '/unregistering')
+                .post('/admin/estimates/' + state.estimate.id + '/unregistering')
                 .then(response => {
                     this.commit('SET_ESTIMATE', response.data);
-
                     this.commit('SET_AGENT', null);
                 })
                 .catch(error => {

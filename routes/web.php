@@ -877,7 +877,7 @@ Route::post('/leads/autofind/{phone}', 'LeadController@ajax_autofind_phone');
 // --------------------------------------- Расчеты (Сметы) -----------------------------------------------
 // Регистрация
 Route::patch('/estimates/{id}/registering', 'EstimateController@registering');
-Route::patch('/estimates/{id}/unregistering', 'EstimateController@unregistering');
+Route::post('/estimates/{id}/unregistering', 'EstimateController@unregistering');
 
 // Производство
 Route::post('/estimates/{id}/producing', 'EstimateController@producing');
