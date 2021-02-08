@@ -33,6 +33,7 @@ trait Companable
             'country_id' => $request->legal_country_id,
             'city_id' => $request->legal_city_id,
             'address' => $request->legal_address,
+            'zip_code' => $request->legal_zip_code,
         ], [
             'author_id' => 1
         ]);
@@ -107,6 +108,7 @@ trait Companable
             'country_id' => $request->legal_country_id,
             'city_id' => $request->legal_city_id,
             'address' => $request->legal_address,
+            'zip_code' => $request->legal_zip_code,
         ], [
             'author_id' => 1
         ]);
