@@ -6,6 +6,7 @@ use App\Agent;
 use App\Client;
 use App\Company;
 use App\Domain;
+use App\Location;
 use App\Manufacturer;
 use App\Site;
 use App\Supplier;
@@ -27,6 +28,15 @@ trait Companable
         $location = $this->getLocation();
         $data['location_id'] = $location->id;
 //        dd($data);
+
+        $legalLocation = Location::firstOrCreate([
+            'country_id' => $request->legal_country_id,
+            'city_id' => $request->legal_city_id,
+            'address' => $request->legal_address,
+        ], [
+            'author_id' => 1
+        ]);
+        $data['legal_location_id'] = $legalLocation->id;
 
         $company = Company::whereNotNull('inn')
             ->firstOrCreate([
@@ -92,6 +102,15 @@ trait Companable
 
         $location = $this->getLocation();
         $data['location_id'] = $location->id;
+
+        $legalLocation = Location::firstOrCreate([
+            'country_id' => $request->legal_country_id,
+            'city_id' => $request->legal_city_id,
+            'address' => $request->legal_address,
+        ], [
+            'author_id' => 1
+        ]);
+        $data['legal_location_id'] = $legalLocation->id;
 
         $photoId = $this->getPhotoId($company);
         $data['photo_id'] = $photoId;
@@ -217,7 +236,8 @@ trait Companable
 //            }
 
 
-        logs('companies')->info("Обновлена компания. Id: [{$company->id}]");
+        logs('companies')
+            ->info("Обновлена компания. Id: [{$company->id}]");
 
         return $company;
     }

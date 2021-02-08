@@ -19,6 +19,9 @@ class UpdateCompaniesTable extends Migration
             $table->bigInteger('location_id')->nullable()->unsigned()->comment('Адрес компании');
             $table->foreign('location_id')->references('id')->on('locations');
 
+            $table->bigInteger('legal_location_id')->nullable()->unsigned()->comment('Юридический адрес компании');
+            $table->foreign('legal_location_id')->references('id')->on('locations');
+
             $table->bigInteger('legal_form_id')->default(1)->unsigned()->comment('Правовая форма');
             $table->foreign('legal_form_id')->references('id')->on('legal_forms');
 

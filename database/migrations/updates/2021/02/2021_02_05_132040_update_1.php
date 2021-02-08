@@ -20,6 +20,10 @@ class Update1 extends Migration
         Schema::table('productions_items', function (Blueprint $table) {
             $table->bigInteger('estimates_goods_item_id')->unsigned()->nullable()->comment('Id пункта сметы')->after('stock_id');
         });
+
+        Schema::table('companies', function (Blueprint $table) {
+            $table->bigInteger('legal_location_id')->nullable()->unsigned()->comment('Юридический адрес компании')->after('location_id');
+        });
     }
 
     /**
@@ -35,6 +39,10 @@ class Update1 extends Migration
 
         Schema::table('productions_items', function (Blueprint $table) {
             $table->dropColumn('estimates_goods_item_id');
+        });
+
+        Schema::table('companies', function (Blueprint $table) {
+            $table->dropColumn('legal_location_id');
         });
     }
 }

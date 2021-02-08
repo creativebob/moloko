@@ -50,4 +50,19 @@
 
         </div>
     </div>
+
+    <div class="cell small-12 large-7">
+        <div class="grid-x grid-padding-x">
+            <div class="small-12 medium-6 cell">
+                @include('system.common.includes.city_search', ['item' => $company, 'required' => true, 'name' => 'legal_city_id', 'prefix' => 'legal'])
+
+                <label>Адрес
+                    @include('includes.inputs.address', ['value' => optional($company->legal_location)->address, 'name' => 'legal_address'])
+                </label>
+            </div>
+            <div class="small-12 medium-6 cell">
+                @include('includes.selects.countries', ['value' => optional($company->legal_location)->country_id, 'name' => 'legal_country_id'])
+            </div>
+        </div>
+    </div>
 </div>

@@ -93,6 +93,8 @@ class Company extends Model
         'taxation_type_id',
 
         'location_id',
+        'legal_location_id',
+
         'sector_id',
         'legal_form_id',
         'photo_id',
@@ -487,6 +489,11 @@ class Company extends Model
     public function subscriber()
     {
         return $this->morphOne(Subscriber::class, 'subsriberable');
+    }
+
+    public function legal_location()
+    {
+        return $this->belongsTo(Location::class, 'legal_location_id');
     }
 
 }
