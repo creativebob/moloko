@@ -757,24 +757,7 @@ class EstimateController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $estimate = Estimate::with([
-            'goods_items' => function ($q) {
-                $q->with([
-                    'receipt.storage',
-                    'offs' => function ($q) {
-                        $q->with([
-                            'cmv' => function ($q) {
-                                $q->with([
-                                    'cost',
-                                    'stocks',
-                                    'article'
-                                ]);
-                            },
-                            'storage'
-                        ]);
-                    },
-                    'document'
-                ]);
-            },
+            'production',
             'catalogs_goods',
             'catalogs_services',
             'discounts'
@@ -784,15 +767,85 @@ class EstimateController extends Controller
         logs('documents')
             ->info('========================================== НАЧАЛО СПИСАНИЯ СМЕТЫ, ID: ' . $estimate->id . ' ==============================================');
 
+        // Если есть платежи
         if ($estimate->payments->isNotEmpty()) {
 
         }
 
-        // Без убытка
-        if ($request->loss == false) {
-            foreach ($estimate->goods_items as $item) {
-//                $this->cancelOffs($item);
-//                $this->cancelReceipt($item);
+        // Если было производство по смете и списание без убытка
+        if ($request->loss == false && $estimate->production) {
+
+            $production = $estimate->production;
+
+            if (isset($production->conducted_at)) {
+                $production->load([
+                    'items' => function ($q) {
+                        $q->with([
+                            'cmv' => function ($q) {
+                                $q->with([
+                                    'article',
+                                    'cost'
+                                ]);
+                            },
+                            'entity',
+                            'receipt.storage',
+                            'offs' => function ($q) {
+                                $q->with([
+                                    'cmv' => function ($q) {
+                                        $q->with([
+                                            'cost',
+                                            'stocks',
+                                            'article'
+                                        ]);
+                                    },
+                                    'storage'
+                                ]);
+                            },
+                            'document'
+                        ]);
+                    },
+                    'receipts' => function ($q) {
+                        $q->with([
+                            'storage'
+                        ]);
+                    }
+                ]);
+
+//                if ($production->items->isNotEmpty()) {
+//
+//                    foreach ($production->receipts as $receipt) {
+//                        $storage = $receipt->storage;
+//
+//                        if ($storage->free < $receipt->count) {
+//                            return back()
+//                                ->withErrors(['msg' => 'Наряд содержит позиции, в которых на остатках нет нужного количества для возврата!']);
+//                        }
+//                    }
+//                }
+
+                logs('documents')
+                    ->info('========================================== ОТМЕНА НАРЯДА ПРОИЗВОДСТВА ==============================================');
+
+                foreach ($production->items as $item) {
+                    logs('documents')
+                        ->info('=== ПЕРЕБИРАЕМ ПУНКТ ' . $item->getTable() . ' ' . $item->id . ' ===
+                        ');
+                    $this->cancelOffs($item);
+
+                    $this->cancelReceipt($item);
+
+                }
+
+                $production->update([
+                    'conducted_at' => null
+                ]);
+
+                logs('documents')
+                    ->info('Отменен наряд c id: ' . $production->id);
+                logs('documents')
+                    ->info('========================================== КОНЕЦ ОТМЕНЫ НАРЯДА ПРОИЗВОДСТВА ==============================================
+
+				');
             }
         };
 

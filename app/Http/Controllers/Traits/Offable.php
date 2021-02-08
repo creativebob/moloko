@@ -20,136 +20,269 @@ trait Offable
         $cost = 0;
         $isWrong = 0;
 
-        $relationsNames = [
-            'raws',
-            'containers',
-            'attachments'
-        ];
-
         $modelDocument = Entity::where('alias', $item->document->getTable())
             ->value('model');
 
         $modelDocumentItem = Entity::where('alias', $item->getTable())
             ->value('model');
 
-        foreach ($relationsNames as $relationName) {
-            if ($item->cmv->article->$relationName->isNotEmpty()) {
+        $relationsNames = [
+            'raws',
+            'containers',
+            'attachments'
+        ];
 
-                $compositionModel = Entity::where('alias', $relationName)
-                    ->value('model');
+        // Не набор
+        if ($item->cmv->article->kit == 0) {
+            logs('documents')
+                ->info('Производим не набор');
 
-                foreach ($item->cmv->article->$relationName as $composition) {
+            foreach ($relationsNames as $relationName) {
+                if ($item->cmv->article->$relationName->isNotEmpty()) {
 
-                    logs('documents')
-                        ->info('=== СПИСАНИЕ ' . $composition->getTable() . ' ' . $composition->id . ' ===');
-
-                    // Списываем позицию состава
-                    $stockGeneral = Stock::find($item->document->stock_id);
-//                    dd($stock_production);
-
-                    $composition->load([
-                        'stocks'
-                    ]);
-                    $storage = $composition->stocks->where('stock_id', $stockGeneral->id)
-                        ->where('filial_id', $stockGeneral->filial_id)
-                        ->where('manufacturer_id', $composition->article->manufacturer_id)
-                        ->first();
-                    if ($storage) {
-                        logs('documents')
-                            ->info('Существует склад ' . $storage->getTable() . ' c id: ' . $storage->id);
-                    } else {
-                        $dataStock = [
-                            'cmv_id' => $composition->id,
-                            'manufacturer_id' => $composition->article->manufacturer_id,
-                            'stock_id' => $item->document->stock_id,
-                            'filial_id' => $item->document->filial_id,
-                        ];
-                        $modelStorage = Entity::where('alias', $composition->getTable() . '_stocks')
-                            ->value('model');
-
-                        $storage = $modelStorage::create($dataStock);
-
-                        logs('documents')
-                            ->info('Создан склад ' . $storage->getTable() . ' c id: ' . $storage->id);
-
-                        $isWrong = 1;
-                    }
-
-                    logs('documents')
-                        ->info('Значения count: ' . $storage->count . ', weight: ' . $storage->weight . ', volume: ' . $storage->volume);
-
-                    // Получаем себестоимость
-                    $count = $composition->pivot->value;
-
-                    $newCount = $storage->count -= ($composition->portion * $count * $item->count);
-
-                    $data = [
-                        'count' => $newCount,
-                        'free' => $newCount > 0 ? $newCount : 0,
-                        'weight' => $storage->weight -= ($composition->weight * $count * $item->count),
-                        'volume' => $storage->volume -= ($composition->volume * $count * $item->count)
-                    ];
-                    $storage->update($data);
-
-                    logs('documents')
-                        ->info('Обновлены значения count: ' . $storage->count . ', weight: ' . $storage->weight . ', volume: ' . $storage->volume);
-
-                    if ($composition->cost) {
-                        $averageComposition = $composition->cost->average * $composition->portion;
-                        $costComposition = $averageComposition * $count;
-                        $amountComposition = $costComposition * $item->count;
-
-                        logs('documents')
-                            ->info('Существует себестоимость c id: ' . $composition->cost->id);
-                    } else {
-                        $averageComposition = 0;
-                        $costComposition = 0;
-                        $amountComposition = 0;
-
-                        logs('documents')
-                            ->info('Себестоисмости нет, пишем нулевые значения');
-
-                        $isWrong = 1;
-                    }
-
-                    $cost += $costComposition;
-                    logs('documents')
-                        ->info('Высчитываем себстоимость: ' . $count . ' * ' . $averageComposition . ' = ' . $cost);
-//                                dd($composition);
-
-                    $modelStorage = Entity::where('alias', $storage->getTable())
+                    $compositionModel = Entity::where('alias', $relationName)
                         ->value('model');
 
-                    $off = Off::create([
-                        'document_id' => $item->document->id,
-                        'document_type' => $modelDocument,
+                    foreach ($item->cmv->article->$relationName as $composition) {
 
-                        'documents_item_id' => $item->id,
-                        'documents_item_type' => $modelDocumentItem,
+                        logs('documents')
+                            ->info('=== СПИСАНИЕ ' . $composition->getTable() . ' ' . $composition->id . ' ===');
 
-                        'cmv_id' => $composition->id,
-                        'cmv_type' => $compositionModel,
+                        // Списываем позицию состава
+                        $stockGeneral = Stock::find($item->document->stock_id);
+//                    dd($stock_production);
 
-                        'storage_id' => $storage->id,
-                        'storage_type' => $modelStorage,
+                        $composition->load([
+                            'stocks'
+                        ]);
+                        $storage = $composition->stocks->where('stock_id', $stockGeneral->id)
+                            ->where('filial_id', $stockGeneral->filial_id)
+                            ->where('manufacturer_id', $composition->article->manufacturer_id)
+                            ->first();
+                        if ($storage) {
+                            logs('documents')
+                                ->info('Существует склад ' . $storage->getTable() . ' c id: ' . $storage->id);
+                        } else {
+                            $dataStock = [
+                                'cmv_id' => $composition->id,
+                                'manufacturer_id' => $composition->article->manufacturer_id,
+                                'stock_id' => $item->document->stock_id,
+                                'filial_id' => $item->document->filial_id,
+                            ];
+                            $modelStorage = Entity::where('alias', $composition->getTable() . '_stocks')
+                                ->value('model');
 
-                        'count' => $composition->portion * $count * $item->count,
+                            $storage = $modelStorage::create($dataStock);
 
-                        'weight_unit' => $composition->weight,
-                        'volume_unit' => $composition->volume,
+                            logs('documents')
+                                ->info('Создан склад ' . $storage->getTable() . ' c id: ' . $storage->id);
 
-                        'cost_unit' => $costComposition,
-                        'total' => $amountComposition,
+                            $isWrong = 1;
+                        }
 
-                        'stock_id' => $item->document->stock_id,
-                    ]);
+                        logs('documents')
+                            ->info('Значения count: ' . $storage->count . ', weight: ' . $storage->weight . ', volume: ' . $storage->volume);
 
-                    logs('documents')
-                        ->info('Записали списание с id: ' . $off->id . ', count: ' . $off->count . ', cost: ' . $off->cost . ', amount: ' . $off->amount);
+                        // Получаем себестоимость
+                        $count = $composition->pivot->value;
 
-                    logs('documents')
-                        ->info('=== КОНЕЦ СПИСАНИЯ ===
+                        $newCount = $storage->count -= ($composition->portion * $count * $item->count);
+
+                        $data = [
+                            'count' => $newCount,
+                            'free' => $newCount > 0 ? $newCount : 0,
+                            'weight' => $storage->weight -= ($composition->weight * $count * $item->count),
+                            'volume' => $storage->volume -= ($composition->volume * $count * $item->count)
+                        ];
+                        $storage->update($data);
+
+                        logs('documents')
+                            ->info('Обновлены значения count: ' . $storage->count . ', weight: ' . $storage->weight . ', volume: ' . $storage->volume);
+
+                        if ($composition->cost) {
+                            $averageComposition = $composition->cost->average * $composition->portion;
+                            $costComposition = $averageComposition * $count;
+                            $amountComposition = $costComposition * $item->count;
+
+                            logs('documents')
+                                ->info('Существует себестоимость c id: ' . $composition->cost->id);
+                        } else {
+                            $averageComposition = 0;
+                            $costComposition = 0;
+                            $amountComposition = 0;
+
+                            logs('documents')
+                                ->info('Себестоисмости нет, пишем нулевые значения');
+
+                            $isWrong = 1;
+                        }
+
+                        $cost += $costComposition;
+                        logs('documents')
+                            ->info('Высчитываем себстоимость: ' . $count . ' * ' . $averageComposition . ' = ' . $cost);
+//                                dd($composition);
+
+                        $modelStorage = Entity::where('alias', $storage->getTable())
+                            ->value('model');
+
+                        $off = Off::create([
+                            'document_id' => $item->document->id,
+                            'document_type' => $modelDocument,
+
+                            'documents_item_id' => $item->id,
+                            'documents_item_type' => $modelDocumentItem,
+
+                            'cmv_id' => $composition->id,
+                            'cmv_type' => $compositionModel,
+
+                            'storage_id' => $storage->id,
+                            'storage_type' => $modelStorage,
+
+                            'count' => $composition->portion * $count * $item->count,
+
+                            'weight_unit' => $composition->weight,
+                            'volume_unit' => $composition->volume,
+
+                            'cost_unit' => $costComposition,
+                            'total' => $amountComposition,
+
+                            'stock_id' => $item->document->stock_id,
+                        ]);
+
+                        logs('documents')
+                            ->info('Записали списание с id: ' . $off->id . ', count: ' . $off->count . ', cost: ' . $off->cost . ', amount: ' . $off->amount);
+
+                        logs('documents')
+                            ->info('=== КОНЕЦ СПИСАНИЯ ===
                         ');
+                    }
+                }
+            }
+        } else {
+            // Набор
+            logs('documents')
+                ->info('Производим набор');
+            foreach($item->cmv->article->goods as $curGoods) {
+                foreach ($relationsNames as $relationName) {
+                    if ($curGoods->article->$relationName->isNotEmpty()) {
+
+                        $compositionModel = Entity::where('alias', $relationName)
+                            ->value('model');
+
+                        foreach ($item->cmv->article->$relationName as $composition) {
+
+                            logs('documents')
+                                ->info('=== СПИСАНИЕ ' . $composition->getTable() . ' ' . $composition->id . ' ===');
+
+                            // Списываем позицию состава
+                            $stockGeneral = Stock::find($item->document->stock_id);
+//                    dd($stock_production);
+
+                            $composition->load([
+                                'stocks'
+                            ]);
+                            $storage = $composition->stocks->where('stock_id', $stockGeneral->id)
+                                ->where('filial_id', $stockGeneral->filial_id)
+                                ->where('manufacturer_id', $composition->article->manufacturer_id)
+                                ->first();
+                            if ($storage) {
+                                logs('documents')
+                                    ->info('Существует склад ' . $storage->getTable() . ' c id: ' . $storage->id);
+                            } else {
+                                $dataStock = [
+                                    'cmv_id' => $composition->id,
+                                    'manufacturer_id' => $composition->article->manufacturer_id,
+                                    'stock_id' => $item->document->stock_id,
+                                    'filial_id' => $item->document->filial_id,
+                                ];
+                                $modelStorage = Entity::where('alias', $composition->getTable() . '_stocks')
+                                    ->value('model');
+
+                                $storage = $modelStorage::create($dataStock);
+
+                                logs('documents')
+                                    ->info('Создан склад ' . $storage->getTable() . ' c id: ' . $storage->id);
+
+                                $isWrong = 1;
+                            }
+
+                            logs('documents')
+                                ->info('Значения count: ' . $storage->count . ', weight: ' . $storage->weight . ', volume: ' . $storage->volume);
+
+                            // Получаем себестоимость
+                            $count = $composition->pivot->value;
+
+                            $newCount = $storage->count -= ($composition->portion * $count * $item->count);
+
+                            $data = [
+                                'count' => $newCount,
+                                'free' => $newCount > 0 ? $newCount : 0,
+                                'weight' => $storage->weight -= ($composition->weight * $count * $item->count),
+                                'volume' => $storage->volume -= ($composition->volume * $count * $item->count)
+                            ];
+                            $storage->update($data);
+
+                            logs('documents')
+                                ->info('Обновлены значения count: ' . $storage->count . ', weight: ' . $storage->weight . ', volume: ' . $storage->volume);
+
+                            if ($composition->cost) {
+                                $averageComposition = $composition->cost->average * $composition->portion;
+                                $costComposition = $averageComposition * $count;
+                                $amountComposition = $costComposition * $item->count;
+
+                                logs('documents')
+                                    ->info('Существует себестоимость c id: ' . $composition->cost->id);
+                            } else {
+                                $averageComposition = 0;
+                                $costComposition = 0;
+                                $amountComposition = 0;
+
+                                logs('documents')
+                                    ->info('Себестоисмости нет, пишем нулевые значения');
+
+                                $isWrong = 1;
+                            }
+
+                            $cost += $costComposition;
+                            logs('documents')
+                                ->info('Высчитываем себстоимость: ' . $count . ' * ' . $averageComposition . ' = ' . $cost);
+//                                dd($composition);
+
+                            $modelStorage = Entity::where('alias', $storage->getTable())
+                                ->value('model');
+
+                            $off = Off::create([
+                                'document_id' => $item->document->id,
+                                'document_type' => $modelDocument,
+
+                                'documents_item_id' => $item->id,
+                                'documents_item_type' => $modelDocumentItem,
+
+                                'cmv_id' => $composition->id,
+                                'cmv_type' => $compositionModel,
+
+                                'storage_id' => $storage->id,
+                                'storage_type' => $modelStorage,
+
+                                'count' => $composition->portion * $count * $item->count,
+
+                                'weight_unit' => $composition->weight,
+                                'volume_unit' => $composition->volume,
+
+                                'cost_unit' => $costComposition,
+                                'total' => $amountComposition,
+
+                                'stock_id' => $item->document->stock_id,
+                            ]);
+
+                            logs('documents')
+                                ->info('Записали списание с id: ' . $off->id . ', count: ' . $off->count . ', cost: ' . $off->cost . ', amount: ' . $off->amount);
+
+                            logs('documents')
+                                ->info('=== КОНЕЦ СПИСАНИЯ ===
+                        ');
+                        }
+                    }
                 }
             }
         }

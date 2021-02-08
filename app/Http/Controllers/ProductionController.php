@@ -351,6 +351,34 @@ class ProductionController extends Controller
                                                 'cost'
                                             ]);
                                         },
+                                        'goods' => function ($q) {
+                                            $q->with([
+                                                'article' => function ($q) {
+                                                    $q->with([
+                                                        'raws' => function ($q) {
+                                                            $q->with([
+                                                                'cost'
+                                                            ]);
+                                                        },
+                                                        'containers' => function ($q) {
+                                                            $q->with([
+                                                                'cost'
+                                                            ]);
+                                                        },
+                                                        'attachments' => function ($q) {
+                                                            $q->with([
+                                                                'cost'
+                                                            ]);
+                                                        },
+                                                        'goods' => function ($q) {
+                                                            $q->with([
+                                                                'cost'
+                                                            ]);
+                                                        },
+                                                    ]);
+                                                }
+                                            ]);
+                                        },
                                     ]);
                                 }
                             ]);
@@ -653,8 +681,6 @@ class ProductionController extends Controller
                 abort(403, 'Наряд пуст');
             }
         }
-
-
     }
 
     public function reproduced(Request $request, $num)
