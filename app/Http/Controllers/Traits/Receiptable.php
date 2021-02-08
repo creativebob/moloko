@@ -56,7 +56,6 @@ trait Receiptable
                 ->info('Создано хранилище ' . $storage->getTable() . ' c id: ' . $storage->id);
         }
 
-
         $stocksCount = $modelStorage::where([
             'filial_id' => $filialId,
             'cmv_id' => $item->cmv_id

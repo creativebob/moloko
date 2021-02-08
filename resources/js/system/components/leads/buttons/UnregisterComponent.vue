@@ -10,7 +10,7 @@
 export default {
     computed: {
         isShow() {
-            return this.$store.state.lead.estimate.registered_at !== null && this.$store.getters.PAYMENTS_TOTAL == 0;
+            return this.$store.getters.IS_REGISTERED && !this.$store.getters.IS_DISMISSED && this.$store.getters.PAYMENTS_TOTAL == 0;
         },
         userHasOutlet() {
             return this.$store.getters.USER_HAS_OUTLET;

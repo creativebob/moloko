@@ -200,6 +200,11 @@ class Estimate extends BaseModel
         return$this->belongsTo('App\EstimatesCancelGround', 'cancel_ground_id');
     }
 
+    public function production()
+    {
+        return $this->hasOne(Production::class);
+    }
+
 
     /**
      * Фильтр

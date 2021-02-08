@@ -272,7 +272,8 @@ class LeadController extends Controller
                             'reserve',
                             'stock:id,name',
                             'price_goods',
-                            'currency'
+                            'currency',
+                            'productions_item'
                         ]);
                     },
                     'catalogs_goods',
@@ -1198,7 +1199,8 @@ class LeadController extends Controller
                             'reserve',
                             'stock:id,name',
                             'price_goods',
-                            'currency'
+                            'currency',
+                            'productions_item'
                         ]);
                     },
                     'catalogs_goods',
