@@ -4,26 +4,37 @@
         class="grid-x grid-padding-x"
     >
         <div class="cell small-12">
-            <select
-                v-model="estimatesCancelGroundId"
-            >
-                <option
-                    v-for="estimatesCancelGround in estimatesCancelGrounds"
-                    :value="estimatesCancelGround.id"
-                >{{ estimatesCancelGround.name }}</option>
-            </select>
-        </div>
-        <div class="cell small-6 medium-4">
-            <button
-                class="button"
-                @click.prevent="dismissed(true)"
-            >С убытком</button>
-        </div>
-        <div class="cell small-6 medium-4">
-            <button
-                class="button"
-                @click.prevent="dismissed(false)"
-            >Без убытка</button>
+            <fieldset>
+                <legend>Списание</legend>
+                <div class="grid-x grid-padding-x">
+                    <div class="cell small-12">
+                        <select
+                            v-model="estimatesCancelGroundId"
+                        >
+                            <option
+                                v-for="estimatesCancelGround in estimatesCancelGrounds"
+                                :value="estimatesCancelGround.id"
+                            >{{ estimatesCancelGround.name }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="cell small-6 medium-4">
+                        <button
+                            class="button"
+                            @click.prevent="dismissed(1)"
+                        >С убытком
+                        </button>
+                    </div>
+                    <div class="cell small-6 medium-4">
+                        <button
+                            class="button"
+                            @click.prevent="dismissed(0)"
+                        >Без убытка
+                        </button>
+                    </div>
+
+                </div>
+            </fieldset>
         </div>
     </div>
 </template>

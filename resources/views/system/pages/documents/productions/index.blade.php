@@ -32,6 +32,7 @@
                     <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
                     <th class="td-date">Дата</th>
                     <th class="td-number">№</th>
+                    <th class="td-foundation">Основание</th>
                     {{-- <th class="td-number">Номер</th> --}}
                     {{-- <th class="td-supplier-name">Поставщик</th> --}}
                     <th class="td-stock">Склад</th>
@@ -72,6 +73,14 @@
                         <span>{{ isset($production->date) ? $production->date->format('d.m.Y') : null }}</span></a>
                     </td>
                     <td class="td-number">{{ $production->number }}</td>
+
+                    <td class="td-foundation">
+                        @if($production->estimate_id)
+                            Клиентский заказ <a href="{{ route('leads.edit', $production->estimate->lead_id) }}" target="_blank">№{{ $production->estimate->lead_id }}</a>
+                        @else
+                            Внутренний заказ
+                        @endif
+                    </td>
 
                     <td class="td-stock">
                         {{ optional($production->stock)->name }}

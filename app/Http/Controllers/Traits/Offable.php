@@ -29,7 +29,7 @@ trait Offable
         $relationsNames = [
             'raws',
             'containers',
-            'attachments'
+            'attachments',
         ];
 
         // Не набор
@@ -169,8 +169,7 @@ trait Offable
                         $compositionModel = Entity::where('alias', $relationName)
                             ->value('model');
 
-                        foreach ($item->cmv->article->$relationName as $composition) {
-
+                        foreach ($curGoods->article->$relationName as $composition) {
                             logs('documents')
                                 ->info('=== СПИСАНИЕ ' . $composition->getTable() . ' ' . $composition->id . ' ===');
 

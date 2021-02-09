@@ -74,4 +74,9 @@ class Production extends BaseModel
     {
         return $this->morphMany(Receipt::class, 'document');
     }
+
+    public function estimate()
+    {
+        return $this->belongsTo(Estimate::class);
+    }
 }

@@ -469,7 +469,7 @@ const moduleLead = {
             state.goodsItems.forEach(item => {
                 if (item.goods.is_produced == 1) {
                     countNeedProduced++;
-                    if (item.goods.productions_item) {
+                    if (item.productions_item) {
                         countProduced++
                     }
                 }
@@ -1032,6 +1032,9 @@ const moduleLead = {
                 .then(response => {
                     if (response.data.success) {
                         this.commit('SET_ESTIMATE', response.data.estimate);
+
+                        this.commit('SET_GOODS_ITEMS', response.data.goods_items);
+                        this.commit('SET_SERVICES_ITEMS', response.data.services_items);
                     } else {
                         console.log(response.data.errors);
                         state.errors = response.data.errors;
@@ -1213,6 +1216,9 @@ const moduleLead = {
         },
         IS_DISMISSED: state => {
             return state.estimate.is_dismissed == 1;
+        },
+        NEED_PRODUCTION: state => {
+            return state.needProduction;
         },
 
         // Товары

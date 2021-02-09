@@ -25,6 +25,7 @@ use App\Http\Requests\System\LeadRequest;
 use App\Models\System\Documents\Estimate;
 use App\Http\Controllers\Traits\LeadControllerTrait;
 use App\Lead;
+use App\Stock;
 use Illuminate\Http\Request;
 
 class EstimateController extends Controller
@@ -494,7 +495,6 @@ class EstimateController extends Controller
      */
     public function producing($id)
     {
-
         // ГЛАВНЫЙ ЗАПРОС:
         $estimate = Estimate::with([
             'goods_items' => function ($q) {
@@ -523,6 +523,97 @@ class EstimateController extends Controller
 
         if (!$estimate->conducted_at && !$estimate->produced_at) {
             if ($estimate->goods_items->isNotEmpty()) {
+
+                $draft = $estimate->goods_items->firstWhere('goods.article.draft', 1);
+                if ($draft) {
+                    return response()->json([
+                        'success' => true,
+                        'msg' => 'Смета содержит черновые позиции, производство невозможно!'
+                    ]);
+                }
+
+                $archive = $estimate->goods_items->firstWhere('goods.archive', 1);
+                if ($archive) {
+                    return response()->json([
+                        'success' => true,
+                        'msg' => 'Смета содержит архивные позиции, производство невозможно!'
+                    ]);
+                }
+
+                $stockGeneral = Stock::find($estimate->lead->outlet->stock_id);
+
+                // TODO - 08.02.21 - Должна быть настройка
+                $leftover = true;
+                // Если нужна проверка остатка на складах
+                if ($leftover) {
+                    $result = [];
+                    $errors = [];
+
+                    $number = 1;
+
+                    foreach ($estimate->goods_items as $item) {
+
+                        $relations = [
+                            'raws',
+                            'containers',
+                            'attachments'
+                        ];
+
+                        foreach ($relations as $relation_name) {
+                            if ($item->goods->article->$relation_name->isNotEmpty()) {
+
+                                $entity_composition = Entity::where('alias', $relation_name)->first();
+                                $model_composition = $entity_composition->model;
+
+                                $entity_stock = Entity::where('alias', $relation_name . '_stocks')->first();
+                                $model_stock = $entity_stock->model;
+
+                                foreach ($item->goods->article->$relation_name as $composition) {
+
+                                    // Списываем позицию состава
+                                    $stock_composition = $composition->stocks->where('stock_id', $stockGeneral->id)->where('filial_id', $stockGeneral->filial_id)->where('manufacturer_id', $composition->article->manufacturer_id)->first();
+//                          dd($stock_production);
+
+                                    if ($stock_composition) {
+
+                                        $count = $composition->pivot->value;
+                                        $composition_count = $composition->portion * $count * $item->count;
+                                        $total = $stock_composition->count - $composition_count;
+
+                                        if ($total < 0) {
+                                            $errors['msg'][] = 'Для позиции ' . $number . ' не хватает ' . $total . ' ' . $composition->article->unit->abbreviation . ' "' . $composition->article->name . '" для производства';
+                                        } else {
+                                            $result[$item->id][] = [
+                                                'entity' => $composition->getTable(),
+                                                'id' => $composition->id,
+                                                'model' => $model_composition,
+                                                'stock_id' => $stock_composition->id,
+                                                'stock_model' => $model_stock,
+                                                'cost' => $composition->cost->average * $count * $composition->portion,
+                                                'amount' => $composition->portion * $count * $item->count * $composition->cost->average,
+                                                'count' => $composition->portion * $count * $item->count,
+                                                'weight' => $composition->weight * $count * $item->count,
+                                                'volume' => $composition->volume * $count * $item->count
+                                            ];
+                                        }
+                                    } else {
+                                        $errors['msg'][] = 'Для позиции ' . $number . ' не существует склада для ' . $composition->article->name;
+                                    }
+                                }
+                            }
+                        }
+                        $number++;
+                    }
+//	        dd($result);
+
+                    if (!empty($errors)) {
+//                dd($errors);
+                        return response()->json([
+                            'success' => true,
+                            'msg' => $errors
+                        ]);
+                    };
+                }
 
                 set_time_limit(0);
 
@@ -562,7 +653,61 @@ class EstimateController extends Controller
                 logs('documents')
                     ->info("Созданы пункты наряда на производство (производимые)");
 
-                $production->load('items');
+                $production->items->load([
+                    'cmv' => function ($q) {
+                        $q->with([
+                            'article' => function ($q) {
+                                $q->with([
+                                    'raws' => function ($q) {
+                                        $q->with([
+                                            'cost'
+                                        ]);
+                                    },
+                                    'containers' => function ($q) {
+                                        $q->with([
+                                            'cost'
+                                        ]);
+                                    },
+                                    'attachments' => function ($q) {
+                                        $q->with([
+                                            'cost'
+                                        ]);
+                                    },
+                                    'goods' => function ($q) {
+                                        $q->with([
+                                            'article' => function ($q) {
+                                                $q->with([
+                                                    'raws' => function ($q) {
+                                                        $q->with([
+                                                            'cost'
+                                                        ]);
+                                                    },
+                                                    'containers' => function ($q) {
+                                                        $q->with([
+                                                            'cost'
+                                                        ]);
+                                                    },
+                                                    'attachments' => function ($q) {
+                                                        $q->with([
+                                                            'cost'
+                                                        ]);
+                                                    },
+                                                    'goods' => function ($q) {
+                                                        $q->with([
+                                                            'cost'
+                                                        ]);
+                                                    },
+                                                ]);
+                                            }
+                                        ]);
+                                    },
+                                ]);
+                            }
+                        ]);
+                    },
+                ]);
+
+//                $production->load('items');
                 foreach ($production->items as $item) {
                     // Без проверки остатка
                     $res = $this->production($item);
@@ -581,6 +726,8 @@ class EstimateController extends Controller
 
                 $production->update([
                     'conducted_at' => now(),
+                    'number' => $production->id
+
                 ]);
                 logs('documents')
                     ->info('Произведен наряд на производство c id: ' . $production->id);
@@ -775,13 +922,9 @@ class EstimateController extends Controller
      */
     public function dismissing(Request $request, $id)
     {
-
         // ГЛАВНЫЙ ЗАПРОС:
         $estimate = Estimate::with([
             'production',
-            'catalogs_goods',
-            'catalogs_services',
-            'discounts'
         ])
             ->find($id);
 
@@ -794,11 +937,10 @@ class EstimateController extends Controller
         }
 
         // Если было производство по смете и списание без убытка
-        if ($request->loss == false && $estimate->production) {
-
+        if ($request->loss == 0 && $estimate->production) {
             $production = $estimate->production;
-
             if (isset($production->conducted_at)) {
+
                 $production->load([
                     'items' => function ($q) {
                         $q->with([
@@ -855,14 +997,14 @@ class EstimateController extends Controller
 
                     $this->cancelReceipt($item);
 
+                    $item->forceDelete();
+
                 }
 
-                $production->update([
-                    'conducted_at' => null
-                ]);
+                $production->forceDelete();
 
                 logs('documents')
-                    ->info('Отменен наряд c id: ' . $production->id);
+                    ->info('Удален наряд c id: ' . $production->id);
                 logs('documents')
                     ->info('========================================== КОНЕЦ ОТМЕНЫ НАРЯДА ПРОИЗВОДСТВА ==============================================
 
@@ -882,9 +1024,36 @@ class EstimateController extends Controller
 
                 ');
 
+        $estimate->load([
+            'goods_items' => function ($q) {
+                $q->with([
+                    'goods.article',
+                    'reserve',
+                    'stock:id,name',
+                    'price_goods',
+                    'currency'
+                ]);
+            },
+            'services_items' => function ($q) {
+                $q->with([
+                    'product.process',
+                ]);
+            },
+            'payments',
+            'lead.client.contract',
+            'discounts',
+            'catalogs_goods',
+            'catalogs_services',
+        ]);
+
+        $goodsItems = $estimate->goods_items;
+        $servicesItems = $estimate->services_items;
+
         return response()->json([
             'success' => true,
-            'estimate' => $estimate
+            'estimate' => $estimate,
+            'goods_items' => $goodsItems,
+            'services_items' => $servicesItems,
         ]);
 
     }

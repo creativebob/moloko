@@ -50,7 +50,8 @@ class ProductionController extends Controller
         $productions = Production::with([
             'author',
             'items',
-            'stock'
+            'stock',
+            'estimate'
         ])
             ->moderatorLimit($answer)
             ->companiesLimit($answer)
@@ -404,8 +405,6 @@ class ProductionController extends Controller
                         ->withErrors(['msg' => 'Наряд содержит архивные позиции, производство невозможно!']);
                 }
 
-                set_time_limit(0);
-
                 $stockGeneral = Stock::find($production->stock_id);
 
                 // Если нужна проверка остатка на складах
@@ -483,6 +482,8 @@ class ProductionController extends Controller
                             ->withInput();
                     };
                 }
+
+                set_time_limit(0);
 
                 logs('documents')
                     ->info('========================================== НАЧАЛО НАРЯДА ПРОИЗВОДСТВА C ID: ' . $production->id . ' ==============================================');

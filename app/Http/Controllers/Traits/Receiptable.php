@@ -77,12 +77,21 @@ trait Receiptable
 
         $newCount = $storage->count += $count;
 
-        $data = [
-            'count' => $newCount,
-            'free' => ($newCount > 0) ? ($newCount - $storage->reserve) : 0,
-            'weight' => $storage->weight += ($item->cmv->article->weight * $count),
-            'volume' => $storage->volume += ($item->cmv->article->volume * $count),
-        ];
+        if ($item->estimates_goods_item_id) {
+            $data = [
+                'count' => $newCount,
+                'reserve' => $storage->reserve + $count,
+                'weight' => $storage->weight += ($item->cmv->article->weight * $count),
+                'volume' => $storage->volume += ($item->cmv->article->volume * $count),
+            ];
+        } else {
+            $data = [
+                'count' => $newCount,
+                'free' => ($newCount > 0) ? ($newCount - $storage->reserve) : 0,
+                'weight' => $storage->weight += ($item->cmv->article->weight * $count),
+                'volume' => $storage->volume += ($item->cmv->article->volume * $count),
+            ];
+        }
         $storage->update($data);
 
         logs('documents')

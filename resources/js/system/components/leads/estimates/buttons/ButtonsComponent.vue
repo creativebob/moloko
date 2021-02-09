@@ -122,7 +122,7 @@ export default {
         },
 
         showSaleButton() {
-            return this.$store.state.lead.estimate.registered_at !== null && this.$store.state.lead.estimate.conducted_at === null && (this.$store.getters.PAYMENTS_TOTAL >= parseFloat(this.$store.getters.ESTIMATE_AGGREGATIONS.estimate.total));
+            return this.$store.getters.IS_REGISTERED && !this.$store.getters.IS_CONDUCTED && (this.$store.getters.PAYMENTS_TOTAL >= parseFloat(this.$store.getters.ESTIMATE_AGGREGATIONS.estimate.total)) && !this.$store.getters.NEED_PRODUCTION;
         },
         change() {
             return this.$store.state.lead.change;
