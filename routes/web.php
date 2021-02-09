@@ -893,7 +893,7 @@ Route::post('/estimates/set-agent', 'EstimateController@setAgent');
 Route::post('/estimates/{id}/conducting', 'EstimateController@conducting');
 
 // Списание
-Route::any('/estimates/{id}/dismissing', 'EstimateController@dismissing');
+Route::post('/estimates/{id}/dismissing', 'EstimateController@dismissing');
 
 // Основные методы
 Route::resource('/estimates', 'EstimateController');
