@@ -72,6 +72,7 @@ use App\Observers\System\MailingListObserver;
 use App\Observers\System\MailingObserver;
 use App\Observers\System\OutletObserver;
 use App\Observers\System\PhotoSettingObserver;
+use App\Observers\System\ShiftObserver;
 use App\Observers\System\Stocks\AttachmentsStockObserver;
 use App\Observers\System\BusinessCaseObserver;
 use App\Observers\System\CatalogsGoodsItemObserver;
@@ -163,6 +164,7 @@ use App\ReservesHistory;
 use App\RoomsCategory;
 use App\Sector;
 use App\ServicesCategory;
+use App\Shift;
 use App\Staffer;
 use App\Subscriber;
 use App\Supplier;
@@ -236,6 +238,7 @@ class ObserverServiceProvider extends ServiceProvider
         Workplace::observe(WorkplaceObserver::class);
         Lead::observe(LeadObserver::class);
         Label::observe(LabelObserver::class);
+        Shift::observe(ShiftObserver::class);
 
         // HR
         Department::observe(DepartmentObserver::class);

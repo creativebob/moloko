@@ -483,6 +483,20 @@ Menu::insert([
         'display' => true,
         'sort' => 7,
     ],
+    [
+        'name' => 'Смены',
+        'icon' => null,
+        'alias' => 'admin/shifts',
+        'tag' => 'shifts',
+        'parent_id' => $menus->firstWhere('tag', 'sales')->id,
+        'page_id' => $pages->firstWhere('alias', 'shifts')->id,
+        'navigation_id' => 1,
+        'company_id' => null,
+        'system' => true,
+        'author_id' => 1,
+        'display' => true,
+        'sort' => 8,
+    ],
 
     // Товары
     [

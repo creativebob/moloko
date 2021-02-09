@@ -1729,6 +1729,14 @@ Route::resource('/workplaces', 'WorkplaceController')
     ]);
 
 
+// --------------------------- Смены -------------------------------------
+// Основные методы
+Route::resource('/shifts', 'ShiftController')
+    ->only([
+        'index'
+    ]);
+
+
 // --------------------------- Метки заказа -------------------------------------
 Route::post('/labels/get', 'LabelController@get');
 // Основные методы
