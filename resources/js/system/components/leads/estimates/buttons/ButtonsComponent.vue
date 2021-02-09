@@ -118,7 +118,7 @@ export default {
         },
 
         showProductionButton() {
-            return this.$store.state.lead.needProduction && this.$store.state.lead.goodsItems.length > 0 && this.$store.state.lead.estimate.produced_at == null;
+            return this.$store.state.lead.needProduction && this.$store.state.lead.goodsItems.length > 0 && this.$store.state.lead.estimate.production;
         },
 
         showSaleButton() {

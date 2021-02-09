@@ -85,4 +85,9 @@ class ProductionsItem extends BaseModel
         return $this->belongsTo(Manufacturer::class);
     }
 
+    public function estimates_goods_item()
+    {
+        return $this->belongsTo(EstimatesGoodsItem::class);
+    }
+
 }

@@ -51,7 +51,6 @@ class Estimate extends BaseModel
         'draft',
 
         'registered_at',
-        'produced_at',
         'conducted_at',
 
         'is_dismissed',

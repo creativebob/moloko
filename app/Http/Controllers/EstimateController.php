@@ -521,7 +521,7 @@ class EstimateController extends Controller
         ])
             ->find($id);
 
-        if (!$estimate->conducted_at && !$estimate->produced_at) {
+        if (!$estimate->conducted_at && empty($estimate->production)) {
             if ($estimate->goods_items->isNotEmpty()) {
 
                 $draft = $estimate->goods_items->firstWhere('goods.article.draft', 1);
@@ -705,6 +705,7 @@ class EstimateController extends Controller
                             }
                         ]);
                     },
+                    'estimates_goods_item'
                 ]);
 
 //                $production->load('items');
@@ -722,19 +723,20 @@ class EstimateController extends Controller
 
                     // Приходование
                     $this->receipt($item, $isWrong);
+
+                    $result[] = $this->reserve($item->estimates_goods_item);
                 }
 
                 $production->update([
                     'conducted_at' => now(),
                     'number' => $production->id
-
                 ]);
+
+
+
+
                 logs('documents')
                     ->info('Произведен наряд на производство c id: ' . $production->id);
-
-                $estimate->update([
-                    'produced_at' => now()
-                ]);
                 logs('documents')
                     ->info('Произведена смета c id: ' . $estimate->id);
 
@@ -964,7 +966,8 @@ class EstimateController extends Controller
                                     'storage'
                                 ]);
                             },
-                            'document'
+                            'document',
+                            'estimates_goods_item'
                         ]);
                     },
                     'receipts' => function ($q) {
@@ -996,6 +999,8 @@ class EstimateController extends Controller
                     $this->cancelOffs($item);
 
                     $this->cancelReceipt($item);
+
+                    $this->cancelReserve($item->estimates_goods_item);
 
                     $item->forceDelete();
 

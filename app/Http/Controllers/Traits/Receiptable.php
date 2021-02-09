@@ -28,9 +28,9 @@ trait Receiptable
         logs('documents')
             ->info("В документе выбран stock с id: {$item->document->stock_id}");
 
-	    // Акутальный филиал
-	    $stockGeneral = Stock::find($item->document->stock_id);
-	    $filialId = $stockGeneral->filial_id;
+        // Акутальный филиал
+        $stockGeneral = Stock::find($item->document->stock_id);
+        $filialId = $stockGeneral->filial_id;
 
         // хранилище
         $item->load([
@@ -60,7 +60,7 @@ trait Receiptable
             'filial_id' => $filialId,
             'cmv_id' => $item->cmv_id
         ])
-        ->sum('count');
+            ->sum('count');
 
         logs('documents')
             ->info("Значения count: {$storage->count}, reserve: {$storage->reserve}, free: {$storage->free}, weight: {$storage->weight}, volume: {$storage->volume}");
@@ -77,21 +77,12 @@ trait Receiptable
 
         $newCount = $storage->count += $count;
 
-        if ($item->estimates_goods_item_id) {
-            $data = [
-                'count' => $newCount,
-                'reserve' => $storage->reserve + $count,
-                'weight' => $storage->weight += ($item->cmv->article->weight * $count),
-                'volume' => $storage->volume += ($item->cmv->article->volume * $count),
-            ];
-        } else {
-            $data = [
-                'count' => $newCount,
-                'free' => ($newCount > 0) ? ($newCount - $storage->reserve) : 0,
-                'weight' => $storage->weight += ($item->cmv->article->weight * $count),
-                'volume' => $storage->volume += ($item->cmv->article->volume * $count),
-            ];
-        }
+        $data = [
+            'count' => $newCount,
+            'free' => ($newCount > 0) ? ($newCount - $storage->reserve) : 0,
+            'weight' => $storage->weight += ($item->cmv->article->weight * $count),
+            'volume' => $storage->volume += ($item->cmv->article->volume * $count),
+        ];
         $storage->update($data);
 
         logs('documents')
@@ -155,7 +146,7 @@ trait Receiptable
                 'min' => $cost,
                 'max' => $cost,
                 'average' => $cost,
-	            'filial_id' => $filialId,
+                'filial_id' => $filialId,
                 'is_wrong' => $isWrong
             ];
 //			dd($data_cost);

@@ -24,6 +24,10 @@ class Update1 extends Migration
         Schema::table('companies', function (Blueprint $table) {
             $table->bigInteger('legal_location_id')->nullable()->unsigned()->comment('Юридический адрес компании')->after('location_id');
         });
+
+        Schema::table('estimates', function (Blueprint $table) {
+            $table->dropColumn('produced_at');
+        });
     }
 
     /**
@@ -43,6 +47,10 @@ class Update1 extends Migration
 
         Schema::table('companies', function (Blueprint $table) {
             $table->dropColumn('legal_location_id');
+        });
+
+        Schema::table('estimates', function (Blueprint $table) {
+            $table->timestamp('produced_at')->nullable()->comment('Время производства')->after('registered_at');
         });
     }
 }
