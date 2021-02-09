@@ -104,7 +104,9 @@ class EstimatesCancelGroundController extends Controller
         $estimatesCancelGrounds = EstimatesCancelGround::moderatorLimit($answer)
             ->companiesLimit($answer)
 //            ->authors($answer)
+            ->authors($answer)
             ->systemItem($answer)
+            ->template($answer)
             ->toBase()
             ->get([
                 'id',
