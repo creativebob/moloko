@@ -58,7 +58,7 @@ export default {
             return this.payment.canceled_at !== null;
         },
         userHasOutlet() {
-            return this.$store.getters.USER_HAS_OUTLET;
+            return this.$store.getters.USER_HAS_OUTLET && !this.$store.getters.IS_DISMISSED;
         }
     },
     methods: {

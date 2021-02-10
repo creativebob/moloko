@@ -81,4 +81,16 @@ class Agent extends Model
         return $this->belongsToMany(AgencyScheme::class, 'agent_scheme', 'agent_id', 'agency_scheme_id');
     }
 
+    public function goodsSchemes()
+    {
+        return $this->belongsToMany(AgencyScheme::class, 'agent_scheme', 'agent_id', 'agency_scheme_id')
+            ->where('catalog_type', 'App\CatalogsGoods');
+    }
+
+    public function servicesSchemes()
+    {
+        return $this->belongsToMany(AgencyScheme::class, 'agent_scheme', 'agent_id', 'agency_scheme_id')
+            ->where('catalog_type', 'App\CatalogsService');
+    }
+
 }

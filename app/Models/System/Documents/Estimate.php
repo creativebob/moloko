@@ -51,7 +51,6 @@ class Estimate extends BaseModel
         'draft',
 
         'registered_at',
-        'produced_at',
         'conducted_at',
 
         'is_dismissed',
@@ -198,6 +197,11 @@ class Estimate extends BaseModel
     public function cancel_ground()
     {
         return$this->belongsTo('App\EstimatesCancelGround', 'cancel_ground_id');
+    }
+
+    public function production()
+    {
+        return $this->hasOne(Production::class);
     }
 
 

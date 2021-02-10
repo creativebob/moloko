@@ -764,6 +764,19 @@ class EntitiesTableSeeder extends Seeder
                 'page_id' => null,
             ],
 
+            [
+                'name' => 'Смены',
+                'alias' => 'shifts',
+                'model' => 'App\Shift',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'metric' => 0,
+                'view_path' => null,
+                'page_id' => $pages->firstWhere('alias', 'shifts')->id,
+            ],
+
             // TODO - 04.06.19 - Чистка сущностей
             // [
             //     'name' => 'Правила',

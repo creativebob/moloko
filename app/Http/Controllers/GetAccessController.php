@@ -283,14 +283,19 @@ class GetAccessController extends Controller
                 $access['user_info']['workplaces'] = $user->staff->first()->workplaces;
                 if ($workplaces->isNotEmpty()) {
                     $workplaces->load([
-                        'outlet'
+                        'outlet.settings'
                     ]);
                     foreach($workplaces as $workplace) {
-                        $access['user_info']['outlets'][] = (object) [
-                            'id' => $workplace->outlet->id,
-                            'name' => $workplace->outlet->name,
-                            'filial_id' => $workplace->outlet->filial_id,
-                        ];
+                        $outlet = $workplace->outlet;
+                        if ($outlet) {
+                            $access['user_info']['outlets'][] = (object) [
+                                'id' => $outlet->id,
+                                'name' => $outlet->name,
+                                'filial_id' => $outlet->filial_id,
+                                'extra_time' => $outlet->extra_time,
+                                'settings' => $outlet->settings
+                            ];
+                        }
                     }
                 } else {
                     $access['user_info']['outlets'] = null;

@@ -37,6 +37,7 @@ class ProductionsItem extends BaseModel
 
         'description',
         'stock_id',
+        'estimates_goods_item_id',
     ];
 
     public function production()
@@ -82,6 +83,11 @@ class ProductionsItem extends BaseModel
     public function manufacturer()
     {
         return $this->belongsTo(Manufacturer::class);
+    }
+
+    public function estimates_goods_item()
+    {
+        return $this->belongsTo(EstimatesGoodsItem::class);
     }
 
 }

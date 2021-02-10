@@ -877,7 +877,7 @@ Route::post('/leads/autofind/{phone}', 'LeadController@ajax_autofind_phone');
 // --------------------------------------- Расчеты (Сметы) -----------------------------------------------
 // Регистрация
 Route::patch('/estimates/{id}/registering', 'EstimateController@registering');
-Route::patch('/estimates/{id}/unregistering', 'EstimateController@unregistering');
+Route::post('/estimates/{id}/unregistering', 'EstimateController@unregistering');
 
 // Производство
 Route::post('/estimates/{id}/producing', 'EstimateController@producing');
@@ -1125,7 +1125,7 @@ Route::resource('/manufacturers', 'ManufacturerController')
 
 
 // ------------------------------------ Агенты ----------------------------------------------------
-Route::get('/agents/get-agents-by-catalog-goods-id/{id}', 'AgentController@getAgentsByCatalogGoodsId');
+Route::post('/agents/get_agents_by_catalogs_ids', 'AgentController@getAgentsByCatalogsIds');
 // Архив
 Route::post('/agents/archive/{id}', 'AgentController@archive');
 // Основные методы
@@ -1501,7 +1501,7 @@ Route::resource('/news', 'NewsController')
 Route::any('/catalogs_goods/get_catalogs_by_ids', 'CatalogsGoodsController@getCatalogsByIds');
 Route::any('/catalogs_goods/get_catalogs_for_outlet', 'CatalogsGoodsController@getCatalogsForOutlet');
 
-Route::any('/catalogs_goods/{id}', 'CatalogsGoodsController@get_catalog');
+//Route::any('/catalogs_goods/{id}', 'CatalogsGoodsController@get_catalog');
 // Основные методы
 Route::resource('/catalogs_goods', 'CatalogsGoodsController');
 // Проверка на существование
@@ -1535,7 +1535,12 @@ Route::prefix('catalogs_goods/{catalog_id}')->group(function () {
     Route::any('/prices_goods_hit', 'PricesGoodsController@ajax_hit');
     Route::any('/prices_goods_new', 'PricesGoodsController@ajax_new');
 
+    Route::get('/prices_goods/excel-export', 'PricesGoodsController@excelExport')
+        ->name('prices_goods.excelExport');
+
     Route::resource('/prices_goods', 'PricesGoodsController');
+
+
 });
 
 
@@ -1578,6 +1583,10 @@ Route::prefix('/catalogs_services/{catalogId}')->group(function () {
     Route::any('/prices_services_status', 'PricesServiceController@ajax_status');
     Route::any('/prices_services_hit', 'PricesServiceController@ajax_hit');
     Route::any('/prices_services_new', 'PricesServiceController@ajax_new');
+
+    Route::get('/prices_services/excel-export', 'PricesServiceController@excelExport')
+        ->name('prices_services.excelExport');
+
     // Основные методы
     Route::resource('/prices_services', 'PricesServiceController');
 });
@@ -1717,6 +1726,14 @@ Route::resource('/workplaces', 'WorkplaceController')
         'create',
         'show',
         'destroy'
+    ]);
+
+
+// --------------------------- Смены -------------------------------------
+// Основные методы
+Route::resource('/shifts', 'ShiftController')
+    ->only([
+        'index'
     ]);
 
 

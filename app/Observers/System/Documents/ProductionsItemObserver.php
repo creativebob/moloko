@@ -16,10 +16,6 @@ class ProductionsItemObserver extends BaseObserver
      */
     public function creating(ProductionsItem $productionsItem)
     {
-        $request = request();
-        $entity = Entity::find($request->entity_id);
-        $productionsItem->cmv_type = $entity->model;
-
         $this->store($productionsItem);
     }
 

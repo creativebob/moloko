@@ -45,3 +45,6 @@ Route::get('/update_clients_filial', 'ParserController@updateClientsFilial');
 Route::get('/update_leads_outlet_id', 'ParserController@updateLeadsOutletId');
 
 Route::get('/test', 'ParserController@test');
+
+Route::get('/set_articles_slug', 'ParserController@setArticlesSlug');
+Route::get('/set_processes_slug', 'ParserController@setProcessesSlug');

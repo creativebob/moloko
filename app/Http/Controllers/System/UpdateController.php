@@ -39,6 +39,132 @@ class UpdateController extends Controller
     }
 
     /**
+     * Добавление в развернутую систему сущности смен с правами
+     *
+     * @return string
+     */
+    public function addShiftsEntity()
+    {
+        $pageData = [
+            'name' => 'Смены',
+            'site_id' => 1,
+            'title' => 'Смены',
+            'description' => 'Смены',
+            'alias' => 'shifts',
+            'company_id' => null,
+            'system' => true,
+            'author_id' => 1,
+            'display' => true,
+        ];
+
+        $page = Page::where('alias', 'shifts')
+            ->exists();
+
+        if (!$page) {
+            Page::insert($pageData);
+            echo "Добавлена страница<br><br>";
+        }
+
+        $pages = Page::get();
+        $menus = Menu::get();
+
+        $menuData = [
+            'name' => 'Смены',
+            'icon' => null,
+            'alias' => 'admin/shifts',
+            'tag' => 'shifts',
+            'parent_id' => $menus->firstWhere('tag', 'sales')->id,
+            'page_id' => $pages->firstWhere('alias', 'shifts')->id,
+            'navigation_id' => 1,
+            'company_id' => null,
+            'system' => true,
+            'author_id' => 1,
+            'display' => true,
+            'sort' => 8,
+        ];
+
+        $menu = Menu::where('tag', 'shifts')
+            ->exists();
+
+        if (!$menu) {
+            Menu::insert($menuData);
+            echo "Добавлен пункт меню<br><br>";
+        }
+
+        $entityData = [
+            'name' => 'Смены',
+            'alias' => 'shifts',
+            'model' => 'App\Shift',
+            'rights' => true,
+            'system' => true,
+            'author_id' => 1,
+            'site' => 0,
+            'metric' => 0,
+            'view_path' => null,
+            'page_id' => $pages->firstWhere('alias', 'shifts')->id,
+        ];
+
+        $entity = Entity::where('alias', 'shifts')
+            ->exists();
+
+        if (!$entity) {
+            Entity::insert($entityData);
+            echo 'Добавлена сущность<br><br>';
+
+            // Наваливание прав
+            $entities = Entity::where('alias', 'shifts')
+                ->get();
+
+            foreach ($entities as $entity) {
+                // Генерируем права
+                $actions = Action::get();
+                $mass = [];
+
+                foreach ($actions as $action) {
+                    $mass[] = ['action_id' => $action->id, 'entity_id' => $entity->id, 'alias_action_entity' => $action->method . '-' . $entity->alias];
+                };
+                DB::table('action_entity')->insert($mass);
+
+                $actionentities = ActionEntity::where('entity_id', $entity->id)->get();
+                $mass = [];
+
+                foreach ($actionentities as $actionentity) {
+
+                    $mass[] = ['name' => "Разрешение на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'allow', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-allow'];
+
+                    $mass[] = ['name' => "Запрет на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'deny', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-deny'];
+                };
+
+                DB::table('rights')->insert($mass);
+
+                $actionentities = $actionentities->pluck('id')->toArray();
+
+                // Получаем все существующие разрешения (allow)
+                $rights = Right::whereIn('object_entity', $actionentities)->where('directive', 'allow')->get();
+
+                $mass = [];
+                // Генерируем права на полный доступ
+                foreach ($rights as $right) {
+                    $mass[] = [
+                        'right_id' => $right->id,
+                        'role_id' => 1,
+                        'system' => 1
+                    ];
+                };
+
+                DB::table('right_role')->insert($mass);
+            }
+
+            echo "Добавлены права на сущность<br><br>";
+        } else {
+            $entity = Entity::where('alias', 'photo_settings')
+                ->update($entityData);
+        }
+
+        return "<strong>Добавление сущности смен завершено</strong>";
+    }
+
+    /**
      * Добавление в развернутую систему сущности настроек фотографий с правами
      *
      * @return string

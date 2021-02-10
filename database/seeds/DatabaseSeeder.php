@@ -130,5 +130,7 @@ class DatabaseSeeder extends Seeder
         $this->call(TemplatesCategoriesTableSeeder::class);
 
         $this->call(ToolsTypesTableSeeder::class);
+
+        $this->call(EstimatesCancelGroundsTableSeeder::class);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\System;
 
 use App\Action;
 use App\ActionEntity;
+use App\Article;
 use App\CatalogsGoods;
 use App\CatalogsGoodsItem;
 use App\Client;
@@ -33,6 +34,7 @@ use App\PaymentsSign;
 use App\PaymentsType;
 use App\Position;
 use App\PricesGoods;
+use App\Process;
 use App\Reserve;
 use App\Right;
 use App\Role;
@@ -65,6 +67,44 @@ class ParserController extends Controller
     public function test()
     {
         dd(__METHOD__);
+    }
+
+    /**
+     * Проставляем слаг артикулам
+     *
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
+    public function setArticlesSlug()
+    {
+        $articles = Article::whereNull('slug')
+            ->get();
+
+        foreach($articles as $article) {
+            $article->update([
+                'slug' => \Str::slug($article->name),
+            ]);
+        }
+
+        return __('msg.ok');
+    }
+
+    /**
+     * Проставляем слаг процессам
+     *
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
+    public function setProcessesSlug()
+    {
+        $processes = Process::whereNull('slug')
+            ->get();
+
+        foreach($processes as $process) {
+            $process->update([
+                'slug' => \Str::slug($process->name),
+            ]);
+        }
+
+        return __('msg.ok');
     }
 
     /**

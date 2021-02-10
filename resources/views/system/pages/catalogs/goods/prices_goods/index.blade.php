@@ -8,6 +8,10 @@
 
 @section('breadcrumbs', Breadcrumbs::render('prices_goods-index', $catalogGoods, $pageInfo))
 
+@section('exсel')
+    <a href="{{ route('prices_goods.excelExport', $catalogGoods->id, request()->input()) }}" class="button tiny">Выгрузить</a>
+@endsection
+
 @section('content-count')
 	{{-- Количество элементов --}}
 	{{ $prices_goods->isNotEmpty() ? num_format($prices_goods->total(), 0) : 0 }}

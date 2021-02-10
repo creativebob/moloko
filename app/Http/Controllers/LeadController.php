@@ -72,7 +72,6 @@ class LeadController extends Controller
      */
     public function index(Request $request)
     {
-
 //        dd($request);
 
         // Включение контроля активного фильтра
@@ -273,7 +272,8 @@ class LeadController extends Controller
                             'reserve',
                             'stock:id,name',
                             'price_goods',
-                            'currency'
+                            'currency',
+                            'productions_item'
                         ]);
                     },
                     'catalogs_goods',
@@ -1199,7 +1199,8 @@ class LeadController extends Controller
                             'reserve',
                             'stock:id,name',
                             'price_goods',
-                            'currency'
+                            'currency',
+                            'productions_item'
                         ]);
                     },
                     'catalogs_goods',

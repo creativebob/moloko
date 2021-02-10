@@ -11,12 +11,15 @@ class CitySearchComposer
 	public function compose(View $view)
 	{
         $item = $view->item;
+
+        $prefix = $view->prefix ?? null;
+        $relation = $prefix ? "{$prefix}_location" : 'location';
         $item->load([
-            'location' => function ($q) {
+            $relation => function ($q) {
                 $q->with('city:id,name');
             }
             ]);
-        $location = $item->location;
+        $location = $item->$relation;
 
         if (is_null($location)) {
             if (auth()->user()->location) {
@@ -30,6 +33,7 @@ class CitySearchComposer
         } else {
             $city = $location->city;
         }
+
 //        dd($city);
 
         return $view->with(compact('city'));

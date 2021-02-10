@@ -464,12 +464,17 @@ const moduleLead = {
         },
 
         CHECK_NEED_PRODUCTION(state) {
-            const found = state.goodsItems.find(item => item.goods.is_produced == 1);
-            if (found) {
-                state.needProduction = true;
-            } else {
-                state.needProduction = false;
-            }
+            let countNeedProduced = 0,
+                countProduced = 0;
+            state.goodsItems.forEach(item => {
+                if (item.goods.is_produced == 1) {
+                    countNeedProduced++;
+                    if (item.productions_item) {
+                        countProduced++
+                    }
+                }
+            });
+            state.needProduction = (countNeedProduced !== countProduced);
         },
 
         // Услуги
@@ -930,10 +935,9 @@ const moduleLead = {
         UNREGISTER_ESTIMATE({state}) {
             state.loading = true;
             axios
-                .patch('/admin/estimates/' + state.estimate.id + '/unregistering')
+                .post('/admin/estimates/' + state.estimate.id + '/unregistering')
                 .then(response => {
                     this.commit('SET_ESTIMATE', response.data);
-
                     this.commit('SET_AGENT', null);
                 })
                 .catch(error => {
@@ -949,6 +953,7 @@ const moduleLead = {
                 .post('/admin/estimates/set-agent', {
                     estimate_id: state.estimate.id,
                     catalog_goods_id: state.catalogGoodsId,
+                    catalog_services_id: state.catalogServicesId,
                     agent_id: state.agent.id,
                 })
                 .then(response => {
@@ -976,6 +981,8 @@ const moduleLead = {
                 .then(response => {
                     if (response.data.success) {
                         this.commit('SET_ESTIMATE', response.data.estimate);
+
+                        this.commit('SET_GOODS_ITEMS', response.data.estimate.goods_items);
                     } else {
                         console.log(response.data.errors);
                         state.errors = response.data.errors;
@@ -1025,6 +1032,9 @@ const moduleLead = {
                 .then(response => {
                     if (response.data.success) {
                         this.commit('SET_ESTIMATE', response.data.estimate);
+
+                        this.commit('SET_GOODS_ITEMS', response.data.goods_items);
+                        this.commit('SET_SERVICES_ITEMS', response.data.services_items);
                     } else {
                         console.log(response.data.errors);
                         state.errors = response.data.errors;
@@ -1204,6 +1214,12 @@ const moduleLead = {
         IS_CONDUCTED: state => {
             return state.estimate.conducted_at !== null;
         },
+        IS_DISMISSED: state => {
+            return state.estimate.is_dismissed == 1;
+        },
+        NEED_PRODUCTION: state => {
+            return state.needProduction;
+        },
 
         // Товары
         COUNT_GOODS_ITEM_IN_ESTIMATE: state => id => {
@@ -1217,6 +1233,11 @@ const moduleLead = {
         },
         GOODS_ITEM: state => id => {
             return state.goodsItems.find(item => item.id == id);
+        },
+
+        HAS_PRODUCED_GOODS_ITEM: state => {
+            const found = state.goodsItems.find(item => item.goods.productions_item !== null);
+            return !!found;
         },
 
         // Услуги

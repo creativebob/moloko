@@ -11,7 +11,7 @@
 
         <template v-else>
             <div
-                v-if="!isConducted && agents.length"
+                v-if="!isConducted && !isDismissed && agents.length"
 
                 class="cell small-12 input-group"
             >
@@ -37,12 +37,16 @@
 
 <script>
 export default {
-    props: {
-        catalogId: {
-            type: Number,
-            default: null
-        },
-    },
+    // props: {
+    //     catalogGoodsId: {
+    //         type: Number,
+    //         default: null
+    //     },
+    //     catalogServicesId: {
+    //         type: Number,
+    //         default: null
+    //     },
+    // },
     data() {
         return {
             agents: [],
@@ -50,8 +54,11 @@ export default {
         }
     },
     computed: {
-        actualCatalogId() {
+        actualCatalogGoodsId() {
             return this.$store.state.lead.catalogGoodsId;
+        },
+        actualCatalogServicesId() {
+            return this.$store.state.lead.catalogServicesId;
         },
         agent() {
             return this.$store.state.lead.agent;
@@ -60,8 +67,11 @@ export default {
             return this.$store.state.lead.estimate;
         },
         isConducted() {
-            return this.$store.state.lead.estimate.conducted_at !== null;
+            return this.$store.getters.IS_CONDUCTED;
         },
+        isDismissed() {
+            return this.$store.getters.IS_DISMISSED;
+        }
     },
     watch: {
         agentId() {
@@ -70,21 +80,26 @@ export default {
                 this.$store.commit('SET_AGENT', agent);
             }
         },
-        actualCatalogId() {
-            this.getAgents(this.actualCatalogId);
+        actualCatalogGoodsId() {
+            this.getAgents();
         },
+        // actualCatalogServicesId() {
+        //     this.getAgents();
+        // },
     },
-    mounted() {
-        if (this.catalogId) {
-            this.getAgents(this.catalogId);
-        }
-    },
+    // mounted() {
+    //     this.getAgents();
+    // },
     methods: {
-        getAgents(catalogId) {
-            if (!this.agent) {
+        getAgents() {
+            if (!this.agent && (this.actualCatalogGoodsId || this.actualCatalogServicesId)) {
                 axios
-                    .get('/admin/agents/get-agents-by-catalog-goods-id/' + catalogId)
+                    .post('/admin/agents/get_agents_by_catalogs_ids', {
+                        catalog_goods_id: this.actualCatalogGoodsId,
+                        catalog_services_id: this.actualCatalogServicesId,
+                    })
                     .then(response => {
+
                         this.agents = response.data;
                         this.agentId = this.agents.length ? this.agents[0].id : null;
                     })
@@ -93,11 +108,8 @@ export default {
                     });
             }
         },
-        change() {
-
-        },
         update() {
-            this.getAgents(this.catalogId);
+            this.getAgents();
         },
         set() {
             const agent = this.agents.find(obj => obj.id == this.agentId);

@@ -16,6 +16,7 @@ use App\Http\View\Composers\System\CatalogsGoodsWithFilialsComposer;
 use App\Http\View\Composers\System\CatalogsGoodsWithSchemesComposer;
 use App\Http\View\Composers\System\CatalogsServicesItemsTreeComposer;
 use App\Http\View\Composers\System\CatalogsServicesWithFilialsComposer;
+use App\Http\View\Composers\System\CatalogsServicesWithSchemesComposer;
 use App\Http\View\Composers\System\ChannelsComposer;
 use App\Http\View\Composers\System\ChargesComposer;
 use App\Http\View\Composers\System\CitiesComposer;
@@ -260,6 +261,7 @@ class ViewServiceProvider extends ServiceProvider
         view()->composer('includes.selects.agent_types', AgentTypesComposer::class);
         view()->composer('includes.inputs.checker', CheckerComposer::class);
         view()->composer('system.pages.sales.agents.form', CatalogsGoodsWithSchemesComposer::class);
+        view()->composer('system.pages.sales.agents.form', CatalogsServicesWithSchemesComposer::class);
 
         view()->composer('includes.selects.loyalties', LoyaltiesComposer::class);
 

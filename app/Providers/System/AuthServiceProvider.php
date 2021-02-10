@@ -63,6 +63,7 @@ use App\Policies\ProcessesGroupPolicy;
 use App\Policies\PromotionPolicy;
 use App\Policies\SchedulePolicy;
 use App\Policies\CompaniesSettingPolicy;
+use App\Policies\ShiftPolicy;
 use App\Policies\Stocks\AttachmentsStockPolicy;
 use App\Policies\Stocks\ContainersStockPolicy;
 use App\Policies\Stocks\GoodsStockPolicy;
@@ -83,6 +84,7 @@ use App\Models\System\Stocks\RawsStock;
 use App\Schedule;
 use App\CompaniesSetting;
 use App\Models\System\Stocks\ToolsStock;
+use App\Shift;
 use App\Subscriber;
 use App\Template;
 use App\TemplatesCategory;
@@ -375,6 +377,7 @@ class AuthServiceProvider extends ServiceProvider
 
         Outlet::class => OutletPolicy::class,
         Workplace::class => WorkplacePolicy::class,
+        Shift::class => ShiftPolicy::class,
 
         Lead::class => LeadPolicy::class,
         Note::class => NotePolicy::class,

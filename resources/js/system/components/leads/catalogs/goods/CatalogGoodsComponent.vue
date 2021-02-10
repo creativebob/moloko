@@ -18,6 +18,7 @@
                         class="vertical menu selecter-catalog-item"
                         v-drilldown
                         data-back-button='<li class="js-drilldown-back"><a tabindex="0">Назад</a></li>'
+                        data-animate-height="true"
                     >
 
                         <childrens-component
@@ -184,7 +185,10 @@ export default {
             return this.prices.filter(item => {
                 return item.catalogs_goods_id === this.catalogId;
             });
-        }
+        },
+        isDismissed() {
+            return this.$store.getters.IS_DISMISSED;
+        },
     },
     watch: {
         activeOutlet() {
@@ -240,7 +244,9 @@ export default {
             $('#modal-catalogs_goods').foundation('close');
         },
         addPriceToEstimate(price) {
-            this.$store.commit('ADD_GOODS_ITEM_TO_ESTIMATE', price);
+            if (!this.isDismissed) {
+                this.$store.commit('ADD_GOODS_ITEM_TO_ESTIMATE', price);
+            }
         },
         getPhotoPath(price, format) {
 

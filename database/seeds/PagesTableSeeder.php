@@ -1188,6 +1188,18 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => true,
             ],
+
+            [
+                'name' => 'Смены',
+                'site_id' => 1,
+                'title' => 'Смены',
+                'description' => 'Смены',
+                'alias' => 'shifts',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
         ]);
     }
 }

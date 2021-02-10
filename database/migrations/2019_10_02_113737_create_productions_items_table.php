@@ -36,6 +36,9 @@ class CreateProductionsItemsTable extends Migration
             $table->bigInteger('stock_id')->nullable()->unsigned()->comment('ID склада на который приходовать ТМЦ');
             $table->foreign('stock_id')->references('id')->on('stocks');
 
+            $table->bigInteger('estimates_goods_item_id')->unsigned()->nullable()->comment('Id пункта сметы');
+            $table->foreign('estimates_goods_item_id')->references('id')->on('estimates_goods_items');
+
             $table->bigInteger('entity_id')->nullable()->unsigned()->comment('Id сущности ТМЦ');
             $table->foreign('entity_id')->references('id')->on('entities');
 

@@ -26,6 +26,7 @@ class Production extends BaseModel
     protected $fillable = [
         'manufacturer_id',
         'stock_id',
+        'estimate_id',
 
         'name',
         'description',
@@ -72,5 +73,10 @@ class Production extends BaseModel
     public function receipts()
     {
         return $this->morphMany(Receipt::class, 'document');
+    }
+
+    public function estimate()
+    {
+        return $this->belongsTo(Estimate::class);
     }
 }

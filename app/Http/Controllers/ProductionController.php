@@ -50,7 +50,8 @@ class ProductionController extends Controller
         $productions = Production::with([
             'author',
             'items',
-            'stock'
+            'stock',
+            'estimate'
         ])
             ->moderatorLimit($answer)
             ->companiesLimit($answer)
@@ -351,6 +352,34 @@ class ProductionController extends Controller
                                                 'cost'
                                             ]);
                                         },
+                                        'goods' => function ($q) {
+                                            $q->with([
+                                                'article' => function ($q) {
+                                                    $q->with([
+                                                        'raws' => function ($q) {
+                                                            $q->with([
+                                                                'cost'
+                                                            ]);
+                                                        },
+                                                        'containers' => function ($q) {
+                                                            $q->with([
+                                                                'cost'
+                                                            ]);
+                                                        },
+                                                        'attachments' => function ($q) {
+                                                            $q->with([
+                                                                'cost'
+                                                            ]);
+                                                        },
+                                                        'goods' => function ($q) {
+                                                            $q->with([
+                                                                'cost'
+                                                            ]);
+                                                        },
+                                                    ]);
+                                                }
+                                            ]);
+                                        },
                                     ]);
                                 }
                             ]);
@@ -375,8 +404,6 @@ class ProductionController extends Controller
                     return back()
                         ->withErrors(['msg' => 'Наряд содержит архивные позиции, производство невозможно!']);
                 }
-
-                set_time_limit(0);
 
                 $stockGeneral = Stock::find($production->stock_id);
 
@@ -455,6 +482,8 @@ class ProductionController extends Controller
                             ->withInput();
                     };
                 }
+
+                set_time_limit(0);
 
                 logs('documents')
                     ->info('========================================== НАЧАЛО НАРЯДА ПРОИЗВОДСТВА C ID: ' . $production->id . ' ==============================================');
@@ -653,8 +682,6 @@ class ProductionController extends Controller
                 abort(403, 'Наряд пуст');
             }
         }
-
-
     }
 
     public function reproduced(Request $request, $num)

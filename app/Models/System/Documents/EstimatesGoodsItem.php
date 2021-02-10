@@ -8,18 +8,11 @@ use App\Off;
 use App\PricesGoods;
 use App\Receipt;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
 class EstimatesGoodsItem extends BaseModel
 {
     use SoftDeletes;
 //    use Cachable;
-
-//    protected $with = [
-//        'goods.article',
-//        'currency',
-//        'reserve'
-//    ];
 
     protected $dates = [
         'deleted_at'
@@ -168,5 +161,10 @@ class EstimatesGoodsItem extends BaseModel
     public function receipt()
     {
         return $this->morphOne(Receipt::class, 'documents_item');
+    }
+
+    public function productions_item()
+    {
+        return $this->hasOne(ProductionsItem::class);
     }
 }

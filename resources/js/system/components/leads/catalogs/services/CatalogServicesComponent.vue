@@ -184,7 +184,10 @@ export default {
             return this.prices.filter(item => {
                 return item.catalogs_service_id === this.catalogId;
             });
-        }
+        },
+        isDismissed() {
+            return this.$store.getters.IS_DISMISSED;
+        },
     },
     watch: {
         activeOutlet() {
@@ -240,7 +243,9 @@ export default {
             $('#modal-catalogs_services').foundation('close');
         },
         addPriceToEstimate(price) {
-            this.$store.commit('ADD_SERVICE_ITEM_TO_ESTIMATE', price);
+            if (!this.isDismissed) {
+                this.$store.commit('ADD_SERVICE_ITEM_TO_ESTIMATE', price);
+            }
         },
         getPhotoPath(price, format) {
 

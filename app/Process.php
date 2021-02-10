@@ -13,6 +13,8 @@ class Process extends BaseModel
 
     protected $fillable = [
         'name',
+        'slug',
+
         'description',
 
         'processes_group_id',

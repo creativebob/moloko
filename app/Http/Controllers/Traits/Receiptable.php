@@ -28,9 +28,9 @@ trait Receiptable
         logs('documents')
             ->info("В документе выбран stock с id: {$item->document->stock_id}");
 
-	    // Акутальный филиал
-	    $stockGeneral = Stock::find($item->document->stock_id);
-	    $filialId = $stockGeneral->filial_id;
+        // Акутальный филиал
+        $stockGeneral = Stock::find($item->document->stock_id);
+        $filialId = $stockGeneral->filial_id;
 
         // хранилище
         $item->load([
@@ -56,12 +56,11 @@ trait Receiptable
                 ->info('Создано хранилище ' . $storage->getTable() . ' c id: ' . $storage->id);
         }
 
-
         $stocksCount = $modelStorage::where([
             'filial_id' => $filialId,
             'cmv_id' => $item->cmv_id
         ])
-        ->sum('count');
+            ->sum('count');
 
         logs('documents')
             ->info("Значения count: {$storage->count}, reserve: {$storage->reserve}, free: {$storage->free}, weight: {$storage->weight}, volume: {$storage->volume}");
@@ -147,7 +146,7 @@ trait Receiptable
                 'min' => $cost,
                 'max' => $cost,
                 'average' => $cost,
-	            'filial_id' => $filialId,
+                'filial_id' => $filialId,
                 'is_wrong' => $isWrong
             ];
 //			dd($data_cost);

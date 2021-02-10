@@ -46,8 +46,12 @@ class LeadObserver
         $lead->draft = true;
 
         // TODO - 08.12.20 - Долгий путь с затычками (вылечится рабочим местом)
-        if ($user->staff->first()->filial->outlets->first()->settings->firstWhere('alias', 'shipment_at-calculate')) {
-            $lead->shipment_at = now()->addSeconds($user->staff->first()->filial->outlets->first()->extra_time);
+        $outlets = session('access.user_info.outlets');
+        if ($outlets) {
+            $outlet = $outlets[0];
+            if ($outlet->settings->firstWhere('alias', 'shipment_at-calculate')) {
+                $lead->shipment_at = now()->addSeconds($outlet->extra_time);
+            }
         }
     }
 

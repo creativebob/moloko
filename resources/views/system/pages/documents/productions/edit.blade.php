@@ -14,7 +14,7 @@
             <h2 class="header-content">РЕДАКТИРОВАТЬ наряд на производство</h2>
         </div>
         <div class="top-bar-right">
-            @if($production->conducted_at && extra_right('production-cancel'))
+            @if($production->conducted_at && extra_right('production-cancel') && empty($production->estimate_id))
                 <a href="{{ route('productions.cancel', $production->id) }}" class="button">Отменить
                     производство</a>
             @endif
