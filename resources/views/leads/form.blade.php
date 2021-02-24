@@ -27,31 +27,16 @@
     <!-- ЗАКАЗ -->
         <div class="grid-x grid-padding-x">
             <div class="small-12 medium-12 large-12 cell margin-left-15 wrap-tabs-lead">
-                <ul class="tabs-list" data-tabs id="tabs-extra-leads">
 
-                    <li class="tabs-title is-active">
-                        <a href="#tab-estimate" aria-selected="true">Состав заказа</a>
-                    </li>
+                <lead-extra-tabs-component
+                @can ('index', App\Client::class)
+                    :can-index-client="true"
+                @endcan
 
-                    @can ('index', App\Client::class)
-                        <li class="tabs-title">
-                            <a data-tabs-target="content-panel-client" href="#content-panel-client">Карточка клиента</a>
-                        </li>
-                    @endcan
-
-                    {{-- <li class="tabs-title" id="tab-address"><a href="#content-panel-address" aria-selected="true">Адреса</a></li> --}}
-
-                    @if(extra_right('lead-history'))
-                        <li class="tabs-title">
-                            <a data-tabs-target="tab-history" href="#tab-history">История</a>
-                        </li>
-                    @endif
-
-                    <li class="tabs-title">
-                        <a data-tabs-target="tab-options" href="#tab-options">Опции</a>
-                    </li>
-                </ul>
-
+                @if(extra_right('lead-history'))
+                    :can-lead-history="true"
+                @endif
+                ></lead-extra-tabs-component>
 
                 {{-- Контент доп таба --}}
                 <div data-tabs-content="tabs-extra-leads">

@@ -39,6 +39,7 @@ Vue.component('production-component', require('./components/documents/production
 Vue.component('lead-init-component', require('./components/leads/InitComponent'));
 Vue.component('lead-errors-component', require('./components/leads/ErrorsComponent'));
 Vue.component('estimate-component', require('./components/leads/estimates/EstimateComponent'));
+Vue.component('lead-extra-tabs-component', require('./components/leads/tabs/estimate/TabsComponent'));
 Vue.component('lead-tabs-component', require('./components/leads/tabs/TabsComponent'));
 Vue.component('payments-component', require('./components/leads/payments/PaymentsComponent'));
 Vue.component('lead-description-component', require('./components/leads/options/DescriptionComponent'));

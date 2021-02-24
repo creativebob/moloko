@@ -40,17 +40,19 @@ class AggregateEstimatesCommand extends Command
      */
     public function handle()
     {
+        set_time_limit(0);
+
         $this->info(__($this->description));
 
         $estimates = Estimate::with([
             'payments'
         ])
-//            ->where([
-//                'paid' => 0,
-//                'debit' => 0
-//            ])
+            ->where([
+                'paid' => 0,
+                'total' => 0,
+            ])
 //            ->has('payments')
-//            ->limit(10000)
+            ->limit(10000)
 //                ->latest()
             ->get();
 //        dd($estimates);

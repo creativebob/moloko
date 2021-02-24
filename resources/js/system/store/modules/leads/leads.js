@@ -39,6 +39,8 @@ const moduleLead = {
         loading: false,
 
         errors: [],
+
+        needChangeTabToEstimate: false
     },
     mutations: {
         SET_USERS(state, users) {
@@ -180,6 +182,10 @@ const moduleLead = {
             estimate.catalogs_services.forEach(catalog => {
                 state.catalogsServicesIds.push(catalog.id);
             })
+        },
+
+        CHANGE_NEED_CHANGE_TAB_TO_ESTIMATE(state, val = false) {
+            state.needChangeTabToEstimate = val;
         },
 
         // Товары
@@ -757,6 +763,7 @@ const moduleLead = {
         // Изменения
         SET_CHANGE(state) {
             state.change = true;
+            state.needChangeTabToEstimate = true;
         },
 
 
