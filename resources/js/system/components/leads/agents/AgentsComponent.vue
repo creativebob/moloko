@@ -101,6 +101,7 @@ export default {
                     .then(response => {
 
                         this.agents = response.data;
+                        this.$store.commit('SET_COUNT_AGENTS', this.agents.length);
                         this.agentId = this.agents.length ? this.agents[0].id : null;
                     })
                     .catch(error => {

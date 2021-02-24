@@ -25,11 +25,6 @@ class Lead extends BaseModel
 
     // public $timestamps = false;
 
-//    protected $with = [
-//        'location.city',
-//        'main_phones'
-//    ];
-
     protected $dates = [
         'deleted_at',
         'created_at',

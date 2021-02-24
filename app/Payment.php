@@ -13,12 +13,6 @@ class Payment extends BaseModel
         Quietlable;
 //    use Cachable;
 
-    protected $with = [
-        'method',
-        'sign',
-        'currency'
-    ];
-
     protected $dates = [
         'registered_at',
         'canceled_at',

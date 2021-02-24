@@ -350,7 +350,13 @@ class EstimateController extends Controller
                     'product.process',
                 ]);
             },
-            'payments',
+            'payments' => function ($q) {
+                $q->with([
+                    'method',
+                    'sign',
+                    'currency'
+                ]);
+            },
             'lead.client.contract',
             'discounts',
             'catalogs_goods',
@@ -903,7 +909,13 @@ class EstimateController extends Controller
                     'product.process',
                 ]);
             },
-            'payments',
+            'payments' => function ($q) {
+                $q->with([
+                    'method',
+                    'sign',
+                    'currency'
+                ]);
+            },
             'discounts',
             'labels'
         ]);
@@ -1044,7 +1056,13 @@ class EstimateController extends Controller
                     'product.process',
                 ]);
             },
-            'payments',
+            'payments' => function ($q) {
+                $q->with([
+                    'method',
+                    'sign',
+                    'currency'
+                ]);
+            },
             'lead.client.contract',
             'discounts',
             'catalogs_goods',

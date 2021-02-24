@@ -17,13 +17,6 @@ class Estimate extends BaseModel
     const ALIAS = 'estimates';
     const DEPENDENCE = true;
 
-//    protected $with = [
-//        'client',
-//        'payments',
-//        'discounts',
-//        'goods_items'
-//    ];
-
     protected $dates = [
         'deleted_at',
         'date',

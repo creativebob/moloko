@@ -41,7 +41,10 @@ class ClientsForSearchComposer
             $answer = operator_right('users', true, 'index');
 
             $users = User::with([
-                'client.clientable',
+                'client.clientable' => with([
+                    'location',
+                    'main_phones'
+                ]),
                 'organizations.client',
             ])
                 ->where('site_id', '!=', 1)

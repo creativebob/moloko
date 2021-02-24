@@ -116,7 +116,8 @@ class LeadController extends Controller
                     'payments' => function ($q) {
                         $q->with([
                             'method',
-                            'sign'
+                            'sign',
+                            'currency'
                         ]);
                     },
                     'agent.company'
@@ -250,11 +251,28 @@ class LeadController extends Controller
 
         $lead = Lead::with([
             'location.city',
-            'user.client',
-            'organization.client',
+            'user' => function ($q) {
+                $q->with([
+                    'location',
+                    'main_phones',
+                    'client'
+                ]);
+            },
+            'organization' => function ($q) {
+                $q->with([
+                    'location',
+                    'main_phones',
+                    'client'
+                ]);
+            },
             'client' => function ($q) {
                 $q->with([
-                    'clientable',
+                    'clientable' => function ($q) {
+                        $q->with([
+                            'location',
+                            'main_phones'
+                        ]);
+                    },
                     'contract'
                 ]);
             },
@@ -285,7 +303,13 @@ class LeadController extends Controller
                         ]);
                     },
                     'catalogs_services',
-                    'payments',
+                    'payments' => function ($q) {
+                        $q->with([
+                            'method',
+                            'sign',
+                            'currency'
+                        ]);
+                    },
                     'lead.client.contract',
                     'discounts',
                     'agent.company',
@@ -728,7 +752,7 @@ class LeadController extends Controller
             'organization' => function ($q) {
                 $q->with([
                     'main_phones',
-                    'location.city',
+                    'location',
                     'client',
                     'representatives' => function ($q) {
                         $q->with([
@@ -803,8 +827,20 @@ class LeadController extends Controller
 
         $lead = Lead::with([
             'location.city',
-            'user.client',
-            'organization.client',
+            'user' => function ($q) {
+                $q->with([
+                    'location',
+                    'main_phones',
+                    'client'
+                ]);
+            },
+            'organization' => function ($q) {
+                $q->with([
+                    'location',
+                    'main_phones',
+                    'client'
+                ]);
+            },
             'client',
             'main_phones',
             'estimate' => function ($q) {
@@ -825,7 +861,13 @@ class LeadController extends Controller
                             'currency'
                         ]);
                     },
-                    'payments',
+                    'payments' => function ($q) {
+                        $q->with([
+                            'method',
+                            'sign',
+                            'currency'
+                        ]);
+                    },
                     'discounts'
                 ]);
             },
@@ -1212,7 +1254,13 @@ class LeadController extends Controller
                         ]);
                     },
                     'catalogs_services',
-                    'payments',
+                    'payments' => function ($q) {
+                        $q->with([
+                            'method',
+                            'sign',
+                            'currency'
+                        ]);
+                    },
                     'discounts',
                     'labels'
                 ]);
@@ -2013,6 +2061,8 @@ class LeadController extends Controller
         $user = User::with([
             'client.clientable',
             'organizations.client',
+            'location',
+            'main_phones'
         ])
             ->where('site_id', '!=', 1)
             ->whereHas('main_phones', function ($q) use ($phone) {

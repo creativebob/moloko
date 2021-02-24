@@ -54,10 +54,10 @@ class Company extends Model
     use BooklistFilter;
     // use DateIntervalFilter;
 
-    protected $with = [
-        'location.city',
-        'main_phones'
-    ];
+//    protected $with = [
+//        'location',
+//        'main_phones'
+//    ];
 
     protected $model_name = [
         'company'

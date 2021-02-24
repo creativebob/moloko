@@ -29,6 +29,7 @@ const moduleLead = {
         paymentsMethodId: null,
 
         agent: null,
+        countAgents: 0,
 
         userFilials: [],
         userOutlets: [],
@@ -758,6 +759,10 @@ const moduleLead = {
         // Агенты
         SET_AGENT(state, agent) {
             state.agent = agent;
+        },
+
+        SET_COUNT_AGENTS(state, count = 0) {
+            state.countAgents = count;
         },
 
         // Изменения

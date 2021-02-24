@@ -1,6 +1,9 @@
 <template>
-    <ul class="tabs-list" data-tabs id="tabs-extra-leads">
-
+    <ul
+        class="tabs-list"
+        data-tabs
+        id="tabs-extra-leads"
+    >
         <li class="tabs-title is-active">
             <a href="#tab-estimate" aria-selected="true">Состав заказа</a>
         </li>
@@ -46,12 +49,11 @@ export default {
     },
     watch: {
         needChangeTabToEstimate(val) {
-            if(val == true) {
-                $('#tabs-extra-leads').foundation('_handleTabChange', $('#tab-estimate'), historyHandled);
-                // $('#tabs-extra-leads').foundation('_openTab', $('#tab-estimate'));
-                // this.$store.commit('CHANGE_NEED_CHANGE_TAB_TO_ESTIMATE', false);
+            if(val) {
+                this.$store.commit('CHANGE_NEED_CHANGE_TAB_TO_ESTIMATE');
+                $('#tabs-extra-leads').foundation('selectTab', $('#tab-estimate'), false);
             }
         }
-    }
+    },
 }
 </script>
