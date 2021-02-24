@@ -79,7 +79,8 @@ Route::get('/home', 'HomeController@index')
 
 // ----------------------------- Рабочий стол -------------------------------------
 
-Route::get('/dashboard', 'DashboardController@index')->name('dashboard.index');
+Route::get('/dashboard', 'DashboardController@index')
+    ->name('dashboard.index');
 
 
 // -------------------------------------- Директории ---------------------------------------------------
@@ -1733,8 +1734,17 @@ Route::resource('/workplaces', 'WorkplaceController')
 // Основные методы
 Route::resource('/shifts', 'ShiftController')
     ->only([
-        'index'
+        'index',
     ]);
+
+
+// Текущая смена
+Route::get('/shift', 'ShiftController@shift')
+    ->name('shift');
+Route::post('/shift/open', 'ShiftController@open')
+    ->name('shift.open');
+Route::patch('/shift/close/{id}', 'ShiftController@close')
+    ->name('shift.close');
 
 
 // --------------------------- Метки заказа -------------------------------------

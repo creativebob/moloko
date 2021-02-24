@@ -67,6 +67,10 @@ class Estimate extends BaseModel
         'surplus',
         'points',
 
+        'paid',
+        'debit',
+        'payment_type',
+
         'amount',
 
         'price_discount',
@@ -167,6 +171,20 @@ class Estimate extends BaseModel
     {
         return $this->morphMany('App\Payment', 'document')
             ->whereNull('canceled_payment_id');
+    }
+
+    public function cashPayments()
+    {
+        return $this->morphMany('App\Payment', 'document')
+            ->whereNull('canceled_payment_id')
+            ->where('cash', '>', 0);
+    }
+
+    public function electronicallyPayments()
+    {
+        return $this->morphMany('App\Payment', 'document')
+            ->whereNull('canceled_payment_id')
+            ->where('electronically', '>', 0);
     }
 
     public function discounts()

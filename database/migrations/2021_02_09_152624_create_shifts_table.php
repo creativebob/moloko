@@ -27,8 +27,13 @@ class CreateShiftsTable extends Migration
             $table->timestamp('opened_at')->nullable()->comment('Дата и время открытия');
             $table->timestamp('closed_at')->nullable()->comment('Дата и время закрытия');
 
-            $table->decimal('balance_open', 10,2)->default(0)->comment('Баланс на момент открытия>');
+            $table->timestamp('need_closed_at')->nullable()->comment('Обязательное время закрытия');
+
+            $table->decimal('balance_open', 10,2)->default(0)->comment('Баланс на момент открытия');
             $table->decimal('balance_close', 10,2)->default(0)->comment('Баланс на момент закрытия');
+
+            $table->decimal('cash', 10, 2)->default(0)->comment('Сумма наличных платежей');
+            $table->decimal('electronically', 10, 2)->default(0)->comment('Сумма электронных платежей');
 
             $table->boolean('is_opened')->default(0)->comment('Открытие');
             $table->boolean('is_reopened')->default(0)->comment('Переоткрытие');

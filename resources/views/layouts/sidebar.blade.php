@@ -5,11 +5,20 @@
 
         <ul class="vertical menu accordion-menu" data-accordion-menu data-allow-all-closed data-multi-open="false" data-slide-speed="250">
             <li>
-                <a href="/admin/dashboard" data-link="0">
+                <a href="{{ route('dashboard.index') }}" data-link="0">
                     <div class="icon-mcc sprite"></div>
                     <span>ЦУП</span>
                 </a>
             </li>
+
+            @if(session('access.user_info.outlets'))
+            <li>
+                <a href="{{ route('shift') }}" data-link="0">
+                    <div class="icon-shift sprite"></div>
+                    <span>СМЕНА</span>
+                </a>
+            </li>
+            @endif
 
             @foreach ($sidebar as $category)
 

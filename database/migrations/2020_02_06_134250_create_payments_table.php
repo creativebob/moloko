@@ -43,6 +43,9 @@ class CreatePaymentsTable extends Migration
             $table->bigInteger('currency_id')->unsigned()->nullable()->comment('Id валюты');
             $table->foreign('currency_id')->references('id')->on('currencies');
 
+            $table->bigInteger('shift_id')->unsigned()->nullable()->comment('Id смены');
+            $table->foreign('shift_id')->references('id')->on('shifts');
+
             $table->bigInteger('canceled_payment_id')->unsigned()->nullable()->comment('Id отмененного платежа');
             $table->foreign('canceled_payment_id')->references('id')->on('payments');
 
