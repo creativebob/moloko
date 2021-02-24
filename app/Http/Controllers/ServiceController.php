@@ -83,6 +83,9 @@ class ServiceController extends Controller
 //        ->filter($request, 'author_id')
             // ->filter($request, 'services_category_id', 'process.product')
             // ->filter($request, 'services_product_id', 'process')
+
+            ->filter()
+
             ->where('archive', false)
 //        ->select($columns)
             ->orderBy('moderation', 'desc')

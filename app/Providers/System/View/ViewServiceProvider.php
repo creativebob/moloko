@@ -40,6 +40,7 @@ use App\Http\View\Composers\System\MailingListsComposer;
 use App\Http\View\Composers\System\MailingsComposer;
 use App\Http\View\Composers\System\OutletsSettingsCategoriesWithSettingsComposer;
 use App\Http\View\Composers\System\PaymentsMethodsComposer;
+use App\Http\View\Composers\System\ServicesCategoriesTreeComposer;
 use App\Http\View\Composers\System\ServicesCategoriesWithServicesComposer;
 use App\Http\View\Composers\System\SuppliersComposer;
 use App\Http\View\Composers\System\TaxationTypesComposer;
@@ -566,7 +567,14 @@ class ViewServiceProvider extends ServiceProvider
 
         // Товары
         view()->composer('products.articles.goods.includes.filters', GoodsCategoriesTreeComposer::class);
-        view()->composer('products.articles.goods.includes.filters', AuthorsComposer::class);
+
+        // Услуги
+        view()->composer('products.processes.services.includes.filters', ServicesCategoriesTreeComposer::class);
+
+        view()->composer([
+            'products.articles.goods.includes.filters',
+            'products.processes.services.includes.filters',
+            ], AuthorsComposer::class);
 
         // Прайсы товаров
         view()->composer('system.pages.catalogs.goods.prices_goods.includes.filters', CatalogsGoodsItemsTreeComposer::class);

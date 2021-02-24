@@ -2,7 +2,7 @@
 
 @section('title', 'Редактирование прайса услуги')
 
-@section('breadcrumbs', Breadcrumbs::render('prices_goods-index', $catalogServices,  $pageInfo, $priceService))
+@section('breadcrumbs', Breadcrumbs::render('prices_services-index', $catalogServices,  $pageInfo, $priceService))
 
 @section('title-content')
 <div class="top-bar head-content">
