@@ -40,6 +40,7 @@ class ProcessObserver extends BaseObserver
                 'company_id' => $process->company_id,
                 'slug' => $slug
             ])
+                ->where('id', '!=', $process->id)
                 ->exists();
 
             if ($found) {
@@ -51,6 +52,7 @@ class ProcessObserver extends BaseObserver
                 'company_id' => $process->company_id,
                 'slug' => $slug
             ])
+                ->where('id', '!=', $process->id)
                 ->exists();
 
             if ($found) {
