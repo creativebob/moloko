@@ -85,7 +85,8 @@ class Position extends Model
     public function actual_staff()
     {
         return $this->hasMany(Staffer::class)
-            ->where('archive', false);
+            ->where('archive', false)
+            ->whereNotNull('user_id');
     }
 
     public function vacancies()
