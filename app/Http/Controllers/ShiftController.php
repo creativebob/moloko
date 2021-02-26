@@ -172,7 +172,7 @@ class ShiftController extends Controller
 
             $filialShift = $this->openFilialShift($shift);
 
-            return redirect()->route('shift');
+            return redirect()->route('shift', ['date' => $shift->date->format('d.m.Y'), 'outlet_id' => $shift->outlet_id]);
         } else {
             abort(403, __('errors.store'));
         }

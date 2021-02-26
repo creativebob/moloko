@@ -13,9 +13,9 @@
             <div class="grid-x grid-padding-x">
 
                 @if($shift->exists)
-                <div class="cell small-12">
-                    <table>
-                        <tbody>
+                    <div class="cell small-12">
+                        <table>
+                            <tbody>
                             <tr>
                                 <td>Дата</td>
                                 <td>{{ $shift->date->format('d.m.Y') }}</td>
@@ -33,15 +33,18 @@
                                 <td>{{ num_format($shift->cash, 0) }}</td>
                             </tr>
                             <tr>
+                                <td>Безнал</td>
+                                <td>{{ num_format($shift->electronically, 0) }}</td>
+                            </tr>
+                            <tr>
                                 <td>Баланс закрытия</td>
                                 <td>{{ num_format($shift->balance_close, 0) }}</td>
                             </tr>
-                        </tbody>
-                    </table>
-                </div>
-                @endif
-
-                @if(!$shift->exists)
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    @if(request()->get('date', today()->format('d.m.Y')) == today()->format('d.m.Y'))
                         @if(count(session('access.user_info.outlets')) > 1)
                             <div class="cell small-12 medium-6">
                                 <label>Торговая точка
@@ -63,9 +66,10 @@
                             {!! Form::hidden('outlet_id', session('access.user_info.outlets')[0]->id) !!}
                         @endif
 
-                    <div class="cell small-4 align-center">
-                        {{ Form::submit('Открыть', ['class'=>'button']) }}
-                    </div>
+                        <div class="cell small-4 align-center">
+                            {{ Form::submit('Открыть', ['class'=>'button']) }}
+                        </div>
+                    @endif
                 @endif
 
                 @if($shift->exists && empty($shift->closed_at))

@@ -86,6 +86,8 @@ class CreateEstimatesTable extends Migration
 
             $table->boolean('is_create_parse')->default(0)->comment('Создана парсером');
 
+            $table->string('is_need_parse')->default(1)->comment('Нужно парсить');
+
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

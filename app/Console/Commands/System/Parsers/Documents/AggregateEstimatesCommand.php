@@ -47,13 +47,8 @@ class AggregateEstimatesCommand extends Command
         $estimates = Estimate::with([
             'payments'
         ])
-            ->where([
-                'paid' => 0,
-                'total' => 0,
-            ])
-//            ->has('payments')
+            ->where('is_need_parse', true)
             ->limit(10000)
-//                ->latest()
             ->get();
 //        dd($estimates);
 
@@ -89,6 +84,9 @@ class AggregateEstimatesCommand extends Command
                     'payment_type' => $type
                 ]);
             }
+            $estimate->update([
+               'is_need_parse' => false,
+            ]);
             $bar->advance();
         }
 

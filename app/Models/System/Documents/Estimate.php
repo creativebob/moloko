@@ -87,6 +87,8 @@ class Estimate extends BaseModel
         'margin_percent',
         'margin_currency',
 
+        'is_need_parse',
+
 
         'display',
         'system',

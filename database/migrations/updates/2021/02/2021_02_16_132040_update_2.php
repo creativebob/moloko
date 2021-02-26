@@ -21,6 +21,8 @@ class Update2 extends Migration
             $table->decimal('paid', 10, 2)->default(0)->comment('Оплачено всего')->after('points');
             $table->decimal('debit', 10, 2)->default(0)->comment('Долг')->after('paid');
             $table->string('payment_type')->nullable()->comment('Тип платежей')->after('debit');
+
+            $table->string('is_need_parse')->default(1)->comment('Нужно парсить')->after('is_create_parse');
         });
     }
 
@@ -40,6 +42,7 @@ class Update2 extends Migration
                 'paid',
                 'debit',
                 'payment_type',
+                'is_need_parse',
             ]);
         });
     }
