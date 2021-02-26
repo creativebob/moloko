@@ -67,10 +67,8 @@
 
             <div class="del">
                 @can('delete', $staffer)
-                @if (empty($staffer->user) && empty($staffer->system) && isset($staffer->company_id))
-                <div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
-                @endif
-                @endcan
+                <div class="icon-list-delete sprite" data-open="item-archive"></div>
+                 @endcan
             </div>
 
         </div>

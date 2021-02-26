@@ -43,7 +43,7 @@
                     <th class="td-photo">Фото</th>
                     <th class="td-name">Название</th>
                     <th class="td-unit">Ед. измерения</th>
-                    <th class="td-length">Параметры</th>
+                    <th class="td-positions">Должности</th>
                     <th class="td-category">Категория</th>
                     <th class="td-manually">Артикул</th>
                     <th class="td-cost">Себестоимость</th>
@@ -98,14 +98,8 @@
                         {{ $item->process->unit->abbreviation }}
                     </td>
 
-                    <td class="td-length">
-
-                        @if($item->process->length != 0)
-{{--                            <span class="tiny-text">Вес: </span><span title="ПРодолжительность указанная вручную">{{ num_format($item->process->weight_trans, 0) ?? '' }} {{ $item->article->unit_weight->abbreviation ?? $item->article->unit->abbreviation ?? '' }}</span>--}}
-                            <br>
-                        @endif
-
-                        <span class="tiny-text">Состав: </span><span title="Кол-во сырья в составе">{{ $item->process->workflows->count() }}</span>
+                    <td class="td-positions">
+                        {{ $item->process->positions->implode('name', ', ') }}
                     </td>
 
                     <td class="td-category">

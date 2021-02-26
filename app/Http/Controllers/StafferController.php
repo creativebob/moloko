@@ -12,18 +12,17 @@ use Illuminate\Http\Request;
 class StafferController extends Controller
 {
 
+    protected $entityAlias;
+    protected $entityDependence;
+
     /**
      * StafferController constructor
-     * @param Staffer $staffer
      */
-    public function __construct(Staffer $staffer)
+    public function __construct()
     {
         $this->middleware('auth');
-        $this->staffer = $staffer;
-        $this->class = Staffer::class;
-        $this->model = 'App\Staffer';
-        $this->entity_alias = with(new $this->class)->getTable();
-        $this->entity_dependence = true;
+        $this->entityAlias = 'staff';
+        $this->entityDependence = true;
     }
 
     /**
@@ -35,16 +34,17 @@ class StafferController extends Controller
      */
     public function index(Request $request)
     {
-
         // Включение контроля активного фильтра
-        $filter_url = autoFilter($request, $this->entity_alias);
-        if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
+        $filter_url = autoFilter($request, $this->entityAlias);
+        if (($filter_url != null) && ($request->filter != 'active')) {
+            return Redirect($filter_url);
+        };
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), Staffer::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
         // dd($answer);
 
         // -------------------------------------------------------------------------------------------
@@ -65,13 +65,13 @@ class StafferController extends Controller
             ->filials($answer)
             ->authors($answer)
             ->systemItem($answer)
-            ->booklistFilter($request)
-            ->where('archive', false)
-            ->filter($request, 'position_id')
-            ->filter($request, 'department_id')
-            ->dateIntervalFilter($request, 'date_employment')
+//            ->booklistFilter($request)
+//            ->where('archive', false)
+//            ->filter($request, 'position_id')
+//            ->filter($request, 'department_id')
+//            ->dateIntervalFilter($request, 'date_employment')
             ->orderBy('moderation', 'desc')
-            ->orderBy('sort', 'asc')
+            ->oldest('sort')
             ->paginate(30);
 //         dd($staff);
 
@@ -79,7 +79,7 @@ class StafferController extends Controller
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter = setFilter($this->entity_alias, $request, [
+        $filter = setFilter($this->entityAlias, $request, [
             'position',             // Должность
             'department',           // Отдел
             'date_interval',        // Дата
@@ -88,7 +88,69 @@ class StafferController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entityAlias);
+
+        return view('system.pages.hr.staff.index', compact('staff', 'pageInfo', 'filter'));
+    }
+
+    public function archives(Request $request)
+    {
+        // Включение контроля активного фильтра
+        $filter_url = autoFilter($request, $this->entityAlias);
+        if (($filter_url != null) && ($request->filter != 'active')) {
+            return Redirect($filter_url);
+        };
+
+        // Подключение политики
+        $this->authorize(getmethod('index'), Staffer::class);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod('index'));
+        // dd($answer);
+
+        // -------------------------------------------------------------------------------------------
+        // ГЛАВНЫЙ ЗАПРОС
+        // -------------------------------------------------------------------------------------------
+//        $staff = $this->staffer->getIndex($request, $answer);
+        $staff = Staffer::with([
+            'filial',
+            'department',
+            'user.main_phones',
+            'position',
+            'employee',
+            'company.filials',
+            'actual_employees'
+        ])
+            ->moderatorLimit($answer)
+            ->companiesLimit($answer)
+            ->filials($answer)
+            ->authors($answer)
+            ->systemItem($answer)
+//            ->booklistFilter($request)
+//            ->where('archive', false)
+//            ->filter($request, 'position_id')
+//            ->filter($request, 'department_id')
+//            ->dateIntervalFilter($request, 'date_employment')
+            ->orderBy('moderation', 'desc')
+            ->oldest('sort')
+            ->onlyArchived()
+            ->paginate(30);
+//         dd($staff);
+
+        // -----------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
+
+        $filter = setFilter($this->entityAlias, $request, [
+            'position',             // Должность
+            'department',           // Отдел
+            'date_interval',        // Дата
+            'booklist'              // Списки пользователя
+        ]);
+        // Окончание фильтра -----------------------------------------------------------------------------------------
+
+        // Инфо о странице
+        $pageInfo = pageInfo($this->entityAlias);
 
         return view('system.pages.hr.staff.index', compact('staff', 'pageInfo', 'filter'));
     }
@@ -113,18 +175,18 @@ class StafferController extends Controller
     public function store(StafferRequest $request)
     {
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), Staffer::class);
 
         $data = $request->input();
         $staffer = Staffer::create($data);
 
         if ($staffer) {
 
-        // Переадресовываем на index
+            // Переадресовываем на index
 //            return redirect()->route('staff.index');
             return redirect()->route('departments.index', [
                 'id' => $staffer->id,
-                'item' => $this->entity_alias
+                'item' => $this->entityAlias
             ]);
         } else {
             abort(403, 'Ошибка при записи');
@@ -151,7 +213,7 @@ class StafferController extends Controller
     public function edit($id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $staffer = Staffer::with([
@@ -159,14 +221,15 @@ class StafferController extends Controller
             'schedules.worktimes',
             'employee'
         ])
-        ->moderatorLimit($answer)
-        ->find($id);
+            ->withArchived()
+            ->moderatorLimit($answer)
+            ->find($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $staffer);
 
         // Инфо о странице
-        $pageInfo = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entityAlias);
 
         return view('system.pages.hr.staff.edit', compact('staffer', 'pageInfo'));
     }
@@ -183,28 +246,35 @@ class StafferController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, true, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entityAlias, true, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $staffer = Staffer::with([
             'schedules.worktimes',
-            'position' => function($q) {
+            'position' => function ($q) {
                 $q->with([
-                   'roles',
-                   'notifications'
+                    'roles',
+                    'notifications'
                 ]);
             },
             'employee'
         ])
+            ->withArchived()
             ->moderatorLimit($answer)
             ->find($id);
+
+        if ($request->has('is_archive')) {
+            if ($request->is_archive == 0) {
+                $staffer->unarchive();
+            }
+        }
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $staffer);
 
         // TODO - 26.03.20 - Возмножно этот функционал останется только в employees
 
-        logs('hr') ->info("============== ОБНОВЛЕНИЕ {$staffer->getTable()} с id: {$staffer->id} ========");
+        logs('hr')->info("============== ОБНОВЛЕНИЕ {$staffer->getTable()} с id: {$staffer->id} ========");
 
         // Если на должность назначен сотрудник
         if (isset($staffer->employee)) {
@@ -298,17 +368,7 @@ class StafferController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param $id
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
-    /**
-     * Архивация указанного ресурса
+     * Archive the specified resource from storage.
      *
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
@@ -317,30 +377,22 @@ class StafferController extends Controller
     public function archive($id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, 'delete');
+        $answer = operator_right($this->entityAlias, $this->entityDependence, 'delete');
 
         // ГЛАВНЫЙ ЗАПРОС:
         $staffer = Staffer::with([
             'actual_employees'
         ])
-        ->moderatorLimit($answer)
+            ->moderatorLimit($answer)
             ->find($id);
-
-        if ($staffer) {
-            // Подключение политики
-            $this->authorize('delete', $staffer);
-
-            $staffer->archive = true;
-            $staffer->editor_id = hideGod(auth()->user());
-            $staffer->save();
-
-            if ($staffer) {
-                return redirect()->route('staff.index');
-            } else {
-                abort(403, 'Ошибка при архивации');
-            }
-        } else {
-            abort(403, 'Не найдено');
+        if (empty($staffer)) {
+            abort(403, __('errors.not_found'));
         }
+
+        // Подключение политики
+        $this->authorize('delete', $staffer);
+
+        $staffer->archive();
+        return redirect()->route('staff.index');
     }
 }

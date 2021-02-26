@@ -2,50 +2,22 @@
 
 namespace App;
 
+use App\Models\System\BaseModel;
+use App\Models\System\Traits\Archivable;
 use App\Models\System\Traits\Quietlable;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
-
-// Scopes для главного запроса
-use App\Scopes\Traits\CompaniesLimitTraitScopes;
-use App\Scopes\Traits\AuthorsTraitScopes;
-use App\Scopes\Traits\SystemItemTraitScopes;
-use App\Scopes\Traits\FilialsTraitScopes;
-use App\Scopes\Traits\TemplateTraitScopes;
-use App\Scopes\Traits\ModeratorLimitTraitScopes;
-
-// Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
-// Фильтры
-use App\Scopes\Filters\Filter;
-use App\Scopes\Filters\BooklistFilter;
-use App\Scopes\Filters\DateIntervalFilter;
-
-class Staffer extends Model
+class Staffer extends BaseModel
 {
-
-    // Включаем кеш
-    use Cachable;
-    use Quietlable;
-
-    // Включаем Scopes
-    use CompaniesLimitTraitScopes;
-    use AuthorsTraitScopes;
-    use SystemItemTraitScopes;
-    use FilialsTraitScopes;
-    use TemplateTraitScopes;
-    use ModeratorLimitTraitScopes;
-
-    // Фильтры
-    use Filter;
-    use BooklistFilter;
-    use DateIntervalFilter;
+    use Archivable,
+        Cachable,
+        Quietlable;
 
     protected $table = 'staff';
 
     protected $dates = [
-        'deleted_at'
+        'archived_at',
+        'deleted_at',
     ];
 
     protected $fillable = [
@@ -53,6 +25,8 @@ class Staffer extends Model
         'position_id',
         'department_id',
         'filial_id',
+
+        'archived_at',
 
         'display',
         'system',
@@ -155,31 +129,4 @@ class Staffer extends Model
     {
         return $this->belongsToMany(Workplace::class, 'workplace_staffer');
     }
-
-    // --------------------------------------- Запросы -----------------------------------------
-    public function getIndex($request, $answer)
-    {
-        return $this->with([
-            'filial',
-            'department',
-            'user.main_phones',
-            'position',
-            'employee',
-            'company.filials'
-        ])
-            ->moderatorLimit($answer)
-            ->companiesLimit($answer)
-            ->filials($answer)
-            ->authors($answer)
-            ->systemItem($answer)
-            ->booklistFilter($request)
-            ->where('archive', false)
-            ->filter($request, 'position_id')
-            ->filter($request, 'department_id')
-            ->dateIntervalFilter($request, 'date_employment')
-            ->orderBy('moderation', 'desc')
-            ->orderBy('sort', 'asc')
-            ->paginate(30);
-    }
-
 }

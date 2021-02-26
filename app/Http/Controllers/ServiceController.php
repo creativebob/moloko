@@ -62,7 +62,8 @@ class ServiceController extends Controller
             'process' => function ($q) {
                 $q->with([
                     'group',
-                    'photo'
+                    'photo',
+                    'positions'
                 ]);
             },
             'category'
@@ -374,6 +375,7 @@ class ServiceController extends Controller
                             'article.unit'
                         ]);
                     },
+                    'positions',
                 ]);
             },
             'metrics',

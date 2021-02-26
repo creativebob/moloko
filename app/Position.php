@@ -85,7 +85,6 @@ class Position extends Model
     public function actual_staff()
     {
         return $this->hasMany(Staffer::class)
-            ->where('archive', false)
             ->whereNotNull('user_id');
     }
 
@@ -135,5 +134,10 @@ class Position extends Model
     public function widgets()
     {
         return $this->belongsToMany(Widget::class, 'widget_position');
+    }
+
+    public function processes()
+    {
+        return $this->belongsToMany(Process::class, 'process_position');
     }
 }

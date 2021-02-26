@@ -1366,6 +1366,9 @@ Route::post('/positions_list', 'PositionController@positions_list');
 
 // -------------------------------------- Штат компании ---------------------------------------------
 // Архив
+Route::get('/staff/archives', 'StafferController@archives')
+    ->name('staff.archives');
+// Архивация
 Route::post('/staff/archive/{id}', 'StafferController@archive');
 // Основные методы
 Route::resource('/staff', 'StafferController')
