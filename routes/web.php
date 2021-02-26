@@ -375,6 +375,12 @@ Route::post('/ajax_get_workflow', 'WorkflowController@ajax_get_workflow')->middl
 Route::post('/ajax_get_service', 'ServiceController@ajax_get_service')->middleware('auth');
 
 
+// ---------------------------------- Артикулы -------------------------------------------
+Route::any('/articles/get_appointments', 'ArticleController@getAppointments');
+Route::post('/articles/appointment', 'ArticleController@appointment')
+    ->name('articles.appointment');
+
+
 // ---------------------------------- Коды артикулов -------------------------------------------
 // Основные методы
 Route::resource('/article_codes', 'ArticleCodeController')

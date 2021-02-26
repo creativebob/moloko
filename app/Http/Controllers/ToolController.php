@@ -280,7 +280,7 @@ class ToolController extends Controller
 
             $data = $request->input();
             $data['article_id'] = $article->id;
-            $tool = (new Tool())->create($data);
+            $tool = Tool::create($data);
 
             if ($tool) {
 

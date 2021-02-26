@@ -253,6 +253,11 @@ class Article extends Model
         return $this->hasOne(Container::class);
     }
 
+    public function impact()
+    {
+        return $this->hasOne(Impact::class);
+    }
+
     public function attachment()
     {
         return $this->hasOne(Attachment::class);

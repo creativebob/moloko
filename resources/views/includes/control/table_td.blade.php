@@ -4,6 +4,10 @@
         <div title="Клонировать" class="icon-clone black sprite" data-open="modal-replicate"></div>
     @endisset
 
+    @isset($appointment)
+        <div title="Назначить" class="icon-clone black sprite" data-open="modal-appointment"></div>
+    @endisset
+
     {{-- Отображение на сайте --}}
     @can('display', $item)
         @display($item)
