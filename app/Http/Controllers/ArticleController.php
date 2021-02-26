@@ -8,6 +8,12 @@ use Illuminate\Http\Request;
 
 class ArticleController extends Controller
 {
+    /**
+     * Получаем доступные для назанчения сущности ТМЦ с категориями
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getAppointments(Request $request)
     {
         $appointments = [
@@ -64,7 +70,7 @@ class ArticleController extends Controller
             $entities = Entity::with([
                 'ancestor:id,model'
             ])
-            ->whereIn('alias', $aliases)
+                ->whereIn('alias', $aliases)
                 ->get([
                     'name',
                     'alias',
@@ -93,12 +99,32 @@ class ArticleController extends Controller
         return response()->json($data);
     }
 
+    /**
+     * Назначаем ТМЦ
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function appointment(Request $request)
     {
+        $initialModel = Entity::where('alias', $request->initial_entity)
+            ->value('model');
+        $item = $initialModel::select([
+            'id',
+            'price_unit_category_id',
+            'price_unit_id'
+        ])
+        ->find($request->item_id);
+
+        $data['article_id'] = $request->article_id;
+        $data['category_id'] = $request->category_id;
+        $data['price_unit_category_id'] = $item->price_unit_category_id;
+        $data['price_unit_id'] = $item->price_unit_id;
+
         $model = Entity::where('alias', $request->entity)
             ->value('model');
 
-        $model::create($request->input());
+        $item = $model::firstOrCreate($data);
 
         return redirect()->back();
     }

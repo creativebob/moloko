@@ -40,15 +40,6 @@
                             </label>
                         </div>
 
-                        {{-- Чекбокс архива --}}
-                        @if($staffer->archived_at)
-                            {!! Form::hidden('is_archive', 0) !!}
-                            <div class="cell small-12 checkbox">
-                                {!! Form::checkbox('is_archive', 1, $staffer->archived_at, ['id' => 'checkbox-system']) !!}
-                                <label for="checkbox-system"><span>Архиваня запись</span></label>
-                            </div>
-                        @endif
-
                         {{-- Чекбоксы управления --}}
                         @include('includes.control.checkboxes', ['item' => $staffer])
                     </div>

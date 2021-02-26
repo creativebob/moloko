@@ -11,6 +11,16 @@
         name="article_id"
         id="input-appointment-article_id"
     >
+    <input
+        type="hidden"
+        name="item_id"
+        id="input-appointment-item_id"
+    >
+    <input
+        type="hidden"
+        name="initial_entity"
+        id="input-appointment-initial_entity"
+    >
     <div class="grid-x align-center modal-content">
         <div class="small-10 cell inputs">
             <label>Назначение
@@ -49,7 +59,10 @@
                 name = parent.data('name');
 
             $('#appointment-cmv-name').text(name);
+
             $('#input-appointment-article_id').val(articleId);
+            $('#input-appointment-item_id').val(id);
+            $('#input-appointment-initial_entity').val(entity);
 
             $.ajax({
                 url: '/admin/articles/get_appointments',
@@ -91,7 +104,7 @@
             $('#select-categories').val() ? $('#button-add-appointment').attr('disabled', false) : $('#button-add-appointment').attr('disabled', true);
         }
 
-        $(document).on('click', '#button-add-appointment', function () {
+        $(document).on('submit', '#form-appointment', function () {
             $('#button-add-appointment').attr('disabled', true);
         });
 

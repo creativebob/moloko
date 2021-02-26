@@ -1376,6 +1376,8 @@ Route::get('/staff/archives', 'StafferController@archives')
     ->name('staff.archives');
 // Архивация
 Route::post('/staff/archive/{id}', 'StafferController@archive');
+Route::get('/staff/unarchive/{id}', 'StafferController@unarchive')
+    ->name('staff.unarchive');
 // Основные методы
 Route::resource('/staff', 'StafferController')
     ->except([

@@ -152,7 +152,7 @@ class StafferController extends Controller
         // Инфо о странице
         $pageInfo = pageInfo($this->entityAlias);
 
-        return view('system.pages.hr.staff.index', compact('staff', 'pageInfo', 'filter'));
+        return view('system.pages.hr.staff.archive', compact('staff', 'pageInfo', 'filter'));
     }
 
     /**
@@ -262,12 +262,6 @@ class StafferController extends Controller
             ->withArchived()
             ->moderatorLimit($answer)
             ->find($id);
-
-        if ($request->has('is_archive')) {
-            if ($request->is_archive == 0) {
-                $staffer->unarchive();
-            }
-        }
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $staffer);
@@ -381,7 +375,8 @@ class StafferController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $staffer = Staffer::with([
-            'actual_employees'
+            'actual_employees',
+            'position'
         ])
             ->moderatorLimit($answer)
             ->find($id);
@@ -393,6 +388,36 @@ class StafferController extends Controller
         $this->authorize('delete', $staffer);
 
         $staffer->archive();
+
+        $position = $staffer->position;
+        $position->load('staff');
+        if ($position->staff->isEmpty()) {
+            $position->processes()->detach();
+        }
+
+        return redirect()->route('staff.index');
+    }
+
+    /**
+     * Unarchive the specified resource from storage.
+     *
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function unarchive($id)
+    {
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entityAlias, $this->entityDependence, 'delete');
+
+        $staffer = Staffer::onlyArchived()
+        ->moderatorLimit($answer)
+            ->find($id);
+        if (empty($staffer)) {
+            abort(403, __('errors.not_found'));
+        }
+
+        $staffer->unarchive();
         return redirect()->route('staff.index');
     }
 }
