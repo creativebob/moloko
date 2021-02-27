@@ -44,7 +44,7 @@ export default {
             axios
                 .post('/admin/agency_schemes/archive/' + this.item.id)
                 .then(response => {
-                    console.log(response.data);
+                    // console.log(response.data);
                     if (response.data) {
                         this.$emit('remove', this.item.id);
                         $('#modal-scheme-archive').foundation('close');

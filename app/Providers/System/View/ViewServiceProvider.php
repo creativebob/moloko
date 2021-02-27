@@ -39,6 +39,7 @@ use App\Http\View\Composers\System\LeadHistoryComposer;
 use App\Http\View\Composers\System\MailingListsComposer;
 use App\Http\View\Composers\System\MailingsComposer;
 use App\Http\View\Composers\System\OutletsSettingsCategoriesWithSettingsComposer;
+use App\Http\View\Composers\System\PartsComposer;
 use App\Http\View\Composers\System\PaymentsMethodsComposer;
 use App\Http\View\Composers\System\PositionsWithStaffComposer;
 use App\Http\View\Composers\System\ServicesCategoriesTreeComposer;
@@ -475,6 +476,10 @@ class ViewServiceProvider extends ServiceProvider
             'products.articles_categories.goods_categories.related.related',
             'products.articles.goods.related.related'
         ], RelatedComposer::class);
+
+        view()->composer([
+            'products.articles.common.edit.tabs.parts'
+        ], PartsComposer::class);
 
         view()->composer([
 //            'products.articles_categories.goods_categories.related.related',

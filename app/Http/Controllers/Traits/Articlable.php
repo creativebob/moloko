@@ -129,7 +129,6 @@ trait Articlable
      */
     public function updateArticle($request, $item)
     {
-
         $article = $item->article;
         // dd($article);
 
@@ -199,6 +198,8 @@ trait Articlable
 
                 // Если ошибок и совпадений нет, то обновляем артикул
                 $article->update($data);
+
+                $article->parts()->sync($request->parts);
 
                 return $article;
             }

@@ -43,6 +43,12 @@
                 {{-- Табы для сущности --}}
                 @includeIf($pageInfo->entity->view_path . '.tabs')
 
+                @if($article->kit == 0)
+                    <li class="tabs-title">
+                        <a data-tabs-target="tab-parts" href="#tab-parts">Части</a>
+                    </li>
+                @endif
+
                 <li class="tabs-title">
                     <a data-tabs-target="tab-photos" href="#tab-photos">Фотографии</a>
                 </li>
@@ -82,20 +88,24 @@
                     @include('products.articles.common.edit.tabs.general')
                 </div>
 
+                {{-- Табы для сущности --}}
+                @includeIf($pageInfo->entity->view_path . '.tabs_content')
+
+                {{-- Дополнительные опции --}}
+                <div class="tabs-panel" id="tab-parts">
+                    @include('products.articles.common.edit.tabs.parts', ['id' => $item->id])
+                </div>
+
                 {{-- Дополнительные опции --}}
                 <div class="tabs-panel" id="tab-options">
                     @include('products.articles.common.edit.tabs.options')
                 </div>
 
-
-                {{-- Табы для сущности --}}
-                @includeIf($pageInfo->entity->view_path . '.tabs_content')
-
                 {{-- Сайт --}}
                 @can('index', App\Site::class)
-                <div class="tabs-panel" id="tab-site">
-                    @include('products.articles.common.edit.tabs.site')
-                </div>
+                    <div class="tabs-panel" id="tab-site">
+                        @include('products.articles.common.edit.tabs.site')
+                    </div>
                 @endcan
 
                 {{ Form::close() }}

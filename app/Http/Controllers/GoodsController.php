@@ -511,7 +511,20 @@ class GoodsController extends Controller
                             'costs',
                         ]);
                     },
-                    'codes'
+                    'codes',
+                    'parts' => function ($q) {
+                        $q->with([
+                            'cur_goods' => function ($q) {
+                                $q->with([
+                                    'category',
+                                    'unit_for_composition',
+                                    'unit_portion',
+                                    'costs',
+                                    'article.unit',
+                                ]) ;
+                            },
+                        ]);
+                    }
                 ]);
             },
             'metrics',

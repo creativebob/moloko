@@ -44,6 +44,7 @@ class Article extends Model
     // Фильтры
     use Filter;
     use BooklistFilter;
+
     // use DateIntervalFilter;
 
     protected $fillable = [
@@ -268,6 +269,18 @@ class Article extends Model
         return $this->hasMany(ArticleCode::class);
     }
 
+    public function parts()
+    {
+        return $this->belongsToMany(Article::class, 'article_article', 'article_id', 'part_id')
+            ->withPivot([
+                'value',
+                'useful',
+                'waste',
+                'leftover',
+                'leftover_operation_id'
+            ]);
+    }
+
     // Единица измерения
     public function unit()
     {
@@ -291,7 +304,7 @@ class Article extends Model
     {
 
         if (isset($this->unit_id)) {
-            if(isset($this->unit_weight)){
+            if (isset($this->unit_weight)) {
                 $weight = $this->weight / $this->unit_weight->ratio;
             } else {
                 $weight = $this->weight / $this->unit->ratio;
@@ -314,7 +327,7 @@ class Article extends Model
     {
 
         if (isset($this->unit_id)) {
-            if(isset($this->unit_volume)){
+            if (isset($this->unit_volume)) {
                 $volume = $this->volume / $this->unit_volume->ratio;
             } else {
                 $volume = $this->volume / $this->unit->ratio;

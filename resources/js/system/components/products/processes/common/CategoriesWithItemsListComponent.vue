@@ -146,7 +146,7 @@
                 if (this.search) {
                     var $vm = this;
                     this.results.forEach(searchItem => {
-                        console.log($vm.curItems);
+                        // console.log($vm.curItems);
                         let found = $vm.curItems.find(item => item.id == searchItem.id);
                         if (found) {
                             searchItem.add = true;

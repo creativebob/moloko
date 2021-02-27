@@ -63,6 +63,7 @@ Vue.component('manufacturers-component', require('./components/ManufacturersComp
 Vue.component('goods-store-component', require('./components/products/articles/common/GoodsStateComponent'));
 Vue.component('cmv-compositions-component', require('./components/products/articles/compositions/CompositionsComponent'));
 Vue.component('presets-component', require('./components/products/articles/presets/PresetsComponent.vue'));
+Vue.component('parts-component', require('./components/products/articles/parts/PartsComponent'));
 
 Vue.component('article-codes-component', require('./components/products/articles/codes/CodesComponent'));
 

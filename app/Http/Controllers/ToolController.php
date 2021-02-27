@@ -332,6 +332,26 @@ class ToolController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $tool);
 
+        $tool->load([
+            'article' => function ($q) {
+                $q->with([
+                    'unit',
+                    'parts' => function ($q) {
+                        $q->with([
+                            'tool' => function ($q) {
+                                $q->with([
+                                    'category',
+                                    'unit_for_composition',
+                                    'unit_portion',
+                                    'costs',
+                                    'article.unit',
+                                ]) ;
+                            },
+                        ]);
+                    }
+                ]);
+            }
+        ]);
         $article = $tool->article;
         // dd($article);
 
