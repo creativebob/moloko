@@ -82,6 +82,8 @@
                     let relation = $vm.alias;
                     if (relation === 'goods') {
                         relation = 'cur_goods';
+                    } else {
+                        relation = relation.slice(0, -1);
                     }
                     let item = article[relation];
                     item.article.pivot_value = article.pivot.value;

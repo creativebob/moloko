@@ -281,6 +281,18 @@ class Article extends Model
             ]);
     }
 
+    public function owners()
+    {
+        return $this->belongsToMany(Article::class, 'article_article', 'part_id', 'article_id')
+            ->withPivot([
+                'value',
+                'useful',
+                'waste',
+                'leftover',
+                'leftover_operation_id'
+            ]);
+    }
+
     // Единица измерения
     public function unit()
     {
