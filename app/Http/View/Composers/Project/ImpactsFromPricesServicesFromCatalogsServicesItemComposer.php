@@ -37,7 +37,7 @@ class ImpactsFromPricesServicesFromCatalogsServicesItemComposer
                             })
 
                             ->when(request()->brand, function ($q) {
-                                $q->whereHas('article.manufactutrer.company', function ($q) {
+                                $q->whereHas('article.manufacturer.company', function ($q) {
                                     $q->where('name', request()->brand);
                                 });
                             })
