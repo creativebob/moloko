@@ -16,7 +16,10 @@
                 <tr v-for="(item, index) in results">
                     <td class="search-result-name">
                         <a :href="'/admin/' + this.entity + '/' + item.id + '/edit'"><span>{{ item.article.name }}</span></a><br>
-                        <span class="text-small">{{ item.article.manufacturer.company.name }}</span>
+                        <span
+                            v-if="item.article.manufacturer"
+                            class="text-small"
+                        >{{ item.article.manufacturer.company.name }}</span>
                     </td>
                     <td class="search-result-info">
                         <span v-if="item.article.draft" class="draft">Черновик</span>

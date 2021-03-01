@@ -34,7 +34,14 @@ class ImpactsFromPricesServicesFromCatalogsServicesItemComposer
                             ])
                             ->whereHas('article', function ($q) {
                                 $q->where('draft', false);
-                            });
+                            })
+
+                            ->when(request()->brand, function ($q) {
+                                $q->whereHas('article.manufactutrer.company', function ($q) {
+                                    $q->where('name', request()->brand);
+                                });
+                            })
+                        ;
 
                     }
                 ]);

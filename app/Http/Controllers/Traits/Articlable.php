@@ -193,7 +193,7 @@ trait Articlable
                 $data['draft'] = $request->draft;
                 // dd($data);
 
-                $photo_id = $this->getPhotoId($article);
+                $photo_id = $this->getPhotoId($article, $item->getTable());
                 $data['photo_id'] = $photo_id;
 
                 // Если ошибок и совпадений нет, то обновляем артикул

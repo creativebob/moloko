@@ -60,13 +60,6 @@ class Entity extends BaseModel
             ->where('company_id', auth()->user()->company_id);
     }
 
-    public function photo_setting($model)
-    {
-        return $this->hasOne(PhotoSetting::class, 'photo_settings_id')
-            ->where('company_id', auth()->user()->company_id)
-            ->where('photo_settings_type', $model);
-    }
-
     // Предок
     public function ancestor()
     {
