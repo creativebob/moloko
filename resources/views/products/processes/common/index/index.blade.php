@@ -44,6 +44,7 @@
                     <th class="td-name">Название</th>
                     <th class="td-unit">Ед. измерения</th>
                     <th class="td-positions">Должности</th>
+                    <th class="td-impacts">Объекты воздействия</th>
                     <th class="td-category">Категория</th>
                     <th class="td-manually">Артикул</th>
                     <th class="td-cost">Себестоимость</th>
@@ -100,6 +101,10 @@
 
                     <td class="td-positions">
                         {{ $item->process->positions->implode('name', ', ') }}
+                    </td>
+
+                    <td class="td-impacts">
+                        {{ $item->process->impacts->implode('name', ', ') }}
                     </td>
 
                     <td class="td-category">

@@ -63,7 +63,8 @@ class ServiceController extends Controller
                 $q->with([
                     'group',
                     'photo',
-                    'positions'
+                    'positions',
+                    'impacts'
                 ]);
             },
             'category'

@@ -193,7 +193,7 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'metric' => 1,
-                'view_path' => 'products/articles_categories/impacts_categories',
+                'view_path' => 'products.articles_categories.impacts_categories',
                 'page_id' => $pages->firstWhere('alias', 'impacts_categories')->id,
             ],
             [
@@ -205,7 +205,7 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'metric' => 1,
-                'view_path' => 'products/articles_categories/rooms_categories',
+                'view_path' => 'products.articles_categories.rooms_categories',
                 'page_id' => $pages->firstWhere('alias', 'rooms_categories')->id,
             ],
             [
@@ -1091,7 +1091,7 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('goods_categories')->first(['id'])->id,
-                'view_path' => 'products/articles/goods',
+                'view_path' => 'products.articles.goods',
                 'page_id' => $pages->firstWhere('alias', 'goods')->id,
             ],
             [
@@ -1103,7 +1103,7 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('raws_categories')->first(['id'])->id,
-                'view_path' => 'products/articles/raws',
+                'view_path' => 'products.articles.raws',
                 'page_id' => $pages->firstWhere('alias', 'raws')->id,
             ],
             [
@@ -1115,7 +1115,7 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('containers_categories')->first(['id'])->id,
-                'view_path' => 'products/articles/containers',
+                'view_path' => 'products.articles.containers',
                 'page_id' => $pages->firstWhere('alias', 'containers')->id,
             ],
             [
@@ -1127,7 +1127,7 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('attachments_categories')->first(['id'])->id,
-                'view_path' => 'products/articles/attachments',
+                'view_path' => 'products.articles.attachments',
                 'page_id' => $pages->firstWhere('alias', 'attachments')->id,
             ],
             [
@@ -1139,7 +1139,7 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('tools_categories')->first(['id'])->id,
-                'view_path' => 'products/articles/tools',
+                'view_path' => 'products.articles.tools',
                 'page_id' => $pages->firstWhere('alias', 'tools')->id,
             ],
             [
@@ -1151,7 +1151,7 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('impacts_categories')->value('id'),
-                'view_path' => 'products/articles/impacts',
+                'view_path' => 'products.articles.impacts',
                 'page_id' => $pages->firstWhere('alias', 'impacts')->id,
             ],
             [
@@ -1163,7 +1163,7 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('rooms_categories')->first(['id'])->id,
-                'view_path' => 'products/articles/rooms',
+                'view_path' => 'products.articles.rooms',
                 'page_id' => $pages->firstWhere('alias', 'rooms')->id,
             ],
             [
@@ -1175,7 +1175,7 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('services_categories')->first(['id'])->id,
-                'view_path' => 'products/processes/services',
+                'view_path' => 'products.processes.services',
                 'page_id' => $pages->firstWhere('alias', 'services')->id,
             ],
             [
@@ -1187,7 +1187,7 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('workflows_categories')->first(['id'])->id,
-                'view_path' => 'products/processes/workflows',
+                'view_path' => 'products.processes.workflows',
                 'page_id' => $pages->firstWhere('alias', 'workflows')->id,
             ],
             [

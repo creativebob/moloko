@@ -64,7 +64,8 @@ class WorkflowController extends Controller
             'process' => function ($q) {
                 $q->with([
                     'group',
-                    'photo'
+                    'photo',
+                    'impacts'
                 ]);
             },
             'category'

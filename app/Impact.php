@@ -12,6 +12,9 @@ class Impact extends BaseModel
     use SoftDeletes,
         Cmvable;
 
+    const ALIAS = 'impacts';
+    const DEPENDENCE = false;
+
     protected $fillable = [
         'category_id',
         'article_id',
@@ -50,5 +53,17 @@ class Impact extends BaseModel
     {
         $value = $this->article->name;
         return $value;
+    }
+
+    // Фильтр
+    public function scopeFilter($query)
+    {
+        $filters = $this->getFilters(self::ALIAS);
+
+        if (isset($filters['impacts_categories'])) {
+            $query->whereIn('category_id', $filters['impacts_categories']);
+        }
+
+        return $query;
     }
 }

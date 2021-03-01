@@ -222,8 +222,10 @@ class EntityController extends Controller
         //
         // ----------------------------------------------------------------------------------------------
 
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $entity = Entity::moderatorLimit(operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__)))
+        $entity = Entity::moderatorLimit($answer)
         ->find($id);
 
         // Проверяем право на редактирование полученной сущности

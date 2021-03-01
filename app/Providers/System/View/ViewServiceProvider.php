@@ -34,6 +34,7 @@ use App\Http\View\Composers\System\FilialCatalogsGoodsComposer;
 use App\Http\View\Composers\System\FilialCatalogsServicesComposer;
 use App\Http\View\Composers\System\FilialStaffComposer;
 use App\Http\View\Composers\System\Filters\EmploymentHistoryComposer;
+use App\Http\View\Composers\System\ImpactsCategoriesTreeComposer;
 use App\Http\View\Composers\System\ImpactsCategoriesWithImpactsComposer;
 use App\Http\View\Composers\System\LeadHistoryComposer;
 use App\Http\View\Composers\System\MailingListsComposer;
@@ -577,6 +578,9 @@ class ViewServiceProvider extends ServiceProvider
 
         // Товары
         view()->composer('products.articles.goods.includes.filters', GoodsCategoriesTreeComposer::class);
+
+        // Объекты воздействия
+        view()->composer('products.articles.impacts.includes.filters', ImpactsCategoriesTreeComposer::class);
 
         // Услуги
         view()->composer('products.processes.services.includes.filters', ServicesCategoriesTreeComposer::class);

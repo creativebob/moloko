@@ -74,7 +74,9 @@ class ImpactController extends Controller
             ->companiesLimit($answer)
             ->authors($answer)
             ->systemItem($answer) // Фильтр по системным записям
-            ->booklistFilter($request)
+
+                ->filter()
+//            ->booklistFilter($request)
 //        ->filter($request, 'author_id')
             // ->filter($request, 'impacts_category_id', 'article.product')
             // ->filter($request, 'impacts_product_id', 'article')

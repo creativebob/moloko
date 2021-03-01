@@ -109,22 +109,25 @@ class ArticleController extends Controller
     {
         $initialModel = Entity::where('alias', $request->initial_entity)
             ->value('model');
-        $item = $initialModel::select([
-            'id',
-            'price_unit_category_id',
-            'price_unit_id'
-        ])
-        ->find($request->item_id);
+        $initialItem = $initialModel::find($request->item_id);
 
         $data['article_id'] = $request->article_id;
         $data['category_id'] = $request->category_id;
-        $data['price_unit_category_id'] = $item->price_unit_category_id;
-        $data['price_unit_id'] = $item->price_unit_id;
+        $data['price_unit_category_id'] = $initialItem->price_unit_category_id;
+        $data['price_unit_id'] = $initialItem->price_unit_id;
 
         $model = Entity::where('alias', $request->entity)
             ->value('model');
 
         $item = $model::firstOrCreate($data);
+
+        $item->load([
+            'category',
+            'article'
+        ]);
+
+        // Пишем к группе связь с категорией
+        $item->category->groups()->attach($item->article->articles_group_id);
 
         return redirect()->back();
     }

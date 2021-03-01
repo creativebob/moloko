@@ -12,7 +12,7 @@ class CatalogsServicesItemsTreeComposer
     /**
      * Разделы каталога с вложенностью
      */
-    protected $catalogsGoodsItemsTree;
+    protected $catalogsServicesItems;
 
     /**
      * Отдаем разделы каталога на шаблон
