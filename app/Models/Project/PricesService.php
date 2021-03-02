@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class PricesService extends Model
 {
     use Publicable;
-    use Cachable;
+//    use Cachable;
     use SoftDeletes;
 
     protected $with = [
