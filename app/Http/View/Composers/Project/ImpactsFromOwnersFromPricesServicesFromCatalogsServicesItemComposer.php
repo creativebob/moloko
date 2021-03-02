@@ -5,7 +5,7 @@ namespace App\Http\View\Composers\Project;
 use App\Models\Project\PricesService;
 use Illuminate\View\View;
 
-class ImpactsFromPricesServicesFromCatalogsServicesItemComposer
+class ImpactsFromOwnersFromPricesServicesFromCatalogsServicesItemComposer
 {
     public function compose(View $view)
     {
