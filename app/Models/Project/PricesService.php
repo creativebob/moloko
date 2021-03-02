@@ -90,8 +90,8 @@ class PricesService extends Model
     public function scopeFilter($query)
     {
 
-        if (request('brand')) {
-            $manufacturer = request('brand');
+        if (request('part-brand')) {
+            $manufacturer = request('part-brand');
             $query->whereHas('service', function ($q) use ($manufacturer) {
                 $q->whereHas('process', function ($q) use ($manufacturer) {
                     $q->whereHas('impacts', function ($q) use ($manufacturer) {
