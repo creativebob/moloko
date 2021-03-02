@@ -251,6 +251,10 @@ trait Processable
 
         $new_process->save();
 
+        $new_process->update([
+            'slug' => null
+        ]);
+
         if ($new_process) {
 
             $photo_id = $this->replicatePhoto($process, $new_process);

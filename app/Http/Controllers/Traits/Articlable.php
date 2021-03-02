@@ -252,6 +252,10 @@ trait Articlable
 
         $new_article->save();
 
+        $new_article->update([
+            'slug' => null
+        ]);
+
         if ($new_article) {
 
             $photo_id = $this->replicatePhoto($article, $new_article);
