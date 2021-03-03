@@ -5,7 +5,7 @@
     @endisset
 
     @isset($appointment)
-        <div title="Назначить" class="icon-clone black sprite" data-open="modal-appointment"></div>
+        <div title="Новое назначение" class="icon-appointment black sprite" data-open="modal-appointment"></div>
     @endisset
 
     {{-- Отображение на сайте --}}

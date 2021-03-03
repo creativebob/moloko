@@ -154,7 +154,7 @@
                             </td>
                             <td class="td-choice">
                                 {{-- $lead->choice->name ?? '' --}}
-                                {{ $lead->estimate->goods_items->implode('goods.article.name', ', ') }}
+                                {{-- $lead->estimate->goods_items->implode('goods.article.name', ', ') --}}
                             </td>
 
                             <td class="td-badget">

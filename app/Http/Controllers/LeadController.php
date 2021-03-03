@@ -93,7 +93,22 @@ class LeadController extends Controller
         // Проверяем специфические права
         $lead_all_managers = extra_right('lead-all-managers');
 
-        $leads = Lead::with([
+        $leads = Lead::select([
+            'id', 
+            'company_id', 
+            'filial_id', 
+            'draft', 
+            'badget', 
+            'created_at', 
+            'case_number', 
+            'name', 
+            'lead_type_id', 
+            'lead_method_id', 
+            'stage_id', 
+            'location_id', 
+            'manager_id', 
+            'shipment_at'
+        ])->with([
             'choice',
             'lead_type',
             'lead_method',
@@ -104,7 +119,7 @@ class LeadController extends Controller
                 $q->with([
                     'goods_items' => function ($q) {
                         $q->with([
-                            'goods.article',
+                            // 'goods.article',
                             'reserve'
                         ]);
                     },
@@ -126,33 +141,27 @@ class LeadController extends Controller
         ])
 
             // Если есть право смотреть лидов ВСЕХ менеджеров (true), то получаем еще данные менеджеров
-            ->when($lead_all_managers, function ($q) {
-                return $q->with(['manager' => function ($query) {
-                    $query->select('id', 'first_name', 'second_name');
-                }]);
-            })
-            ->withCount(['challenges' => function ($query) {
-                $query->whereNull('status');
-            }])
+            // ->when($lead_all_managers, function ($q) {
+            //     return $q->with(['manager' => function ($query) {
+            //         $query->select('id', 'first_name', 'second_name');
+            //     }]);
+            // })
+            // ->withCount(['challenges' => function ($query) {
+            //     $query->whereNull('status');
+            // }])
             ->manager(auth()->user())
-            ->moderatorLimit($answer)
+            // ->moderatorLimit($answer)
             ->companiesLimit($answer)
             ->filials($answer)
-            // ->authors($answer)
             ->where('draft', false)
-            ->systemItem($answer)
+            // ->systemItem($answer)
             ->filter()
-//        ->filter($request, 'city_id', 'location')
-//        ->filter($request, 'stage_id')
-//        ->filter($request, 'manager_id')
-//        ->filter($request, 'lead_type_id')
-//        ->filter($request, 'lead_method_id')
-//        ->booleanArrayFilter($request, 'challenges_active_count')
-//        ->dateIntervalFilter($request, 'created_at')
-            ->booklistFilter($request)
-            ->latest('created_at')
+            // ->booklistFilter($request)
+            // ->latest('created_at')
+            ->orderByDesc('created_at')
             ->paginate(30);
-//         dd($leads);
+
+            // dd($leads);
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------

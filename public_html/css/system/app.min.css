@@ -362,6 +362,10 @@ input[type='search'] {
   color: #cacaca;
 }
 
+::-moz-placeholder {
+  color: #cacaca;
+}
+
 ::-ms-input-placeholder {
   color: #cacaca;
 }
@@ -593,6 +597,10 @@ select[multiple] {
 }
 
 .is-invalid-input:not(:focus)::-webkit-input-placeholder {
+  color: #cc4b37;
+}
+
+.is-invalid-input:not(:focus)::-moz-placeholder {
   color: #cc4b37;
 }
 
@@ -9768,15 +9776,33 @@ a.icon-list-edit {
   opacity: 1;
 }
 
-tr:hover .icon-display-show, tr:hover .icon-system-unlock, tr:hover .icon-clone {
-  opacity: 0.2;
+.icon-appointment {
+  opacity: 0;
+  -webkit-transition: opacity ease 0.3s;
+  transition: opacity ease 0.3s;
 }
 
-tr:hover .icon-display-show:hover, tr:hover .icon-system-unlock:hover, tr:hover .icon-clone:hover {
+.icon-appointment.black {
+  background-position: -32px -1570px;
+}
+
+.icon-appointment.white {
+  background-position: -96px -1570px;
+}
+
+.icon-appointment:hover {
   opacity: 1;
 }
 
-tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-unlock, tr:hover .icon-system-lock, tr:hover .icon-clone {
+tr:hover .icon-display-show, tr:hover .icon-system-unlock, tr:hover .icon-clone, tr:hover .icon-appointment {
+  opacity: 0.2;
+}
+
+tr:hover .icon-display-show:hover, tr:hover .icon-system-unlock:hover, tr:hover .icon-clone:hover, tr:hover .icon-appointment:hover {
+  opacity: 1;
+}
+
+tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-unlock, tr:hover .icon-system-lock, tr:hover .icon-clone, tr:hover .icon-appointment {
   cursor: pointer;
 }
 
@@ -10094,6 +10120,10 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
   background-position: -96px -1506px;
 }
 
+.sidebar .icon-shift {
+  background-position: -96px -1538px;
+}
+
 .sidebar .icon-arrow-forward {
   background-position: -160px -288px;
 }
@@ -10176,6 +10206,10 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
 
 .sidebar .nav > ul > li > .active .icon-impact, .sidebar .gen-menu-bot > li > .active .icon-impact {
   background-position: -160px -1506px;
+}
+
+.sidebar .nav > ul > li > .active .icon-shift, .sidebar .gen-menu-bot > li > .active .icon-shift {
+  background-position: -160px -1538px;
 }
 
 .sidebar .nav::-webkit-scrollbar {
@@ -13534,6 +13568,10 @@ a#task-toggle {
 
 .content .content-table td.td-unit, .content .content-table th.td-unit {
   max-width: 70px;
+}
+
+.content .content-table td.td-impacts, .content .content-table th.td-impacts {
+  max-width: 200px;
 }
 
 .content .content-table td.td-seo-description {
