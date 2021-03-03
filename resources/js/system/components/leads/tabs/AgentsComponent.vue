@@ -1,6 +1,6 @@
 <template>
     <li
-        v-show="isRegistered && hasAgentSetting && oneCatalog && userHasOutlet"
+        v-show="isRegistered && hasAgentSetting && oneCatalog && userHasOutlet && countAgents"
         class="tabs-title"
     >
         <a data-tabs-target="tab-agents" href="#tab-agents">Агенты</a>
@@ -21,7 +21,10 @@
             },
             userHasOutlet() {
                 return this.$store.getters.USER_HAS_OUTLET;
-            }
+            },
+            countAgents() {
+                return this.$store.state.lead.countAgents > 0;
+            },
         }
     }
 </script>

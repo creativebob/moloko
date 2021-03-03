@@ -72,6 +72,10 @@ class CreateEstimatesTable extends Migration
 
             $table->integer('points')->default(0)->comment('Внутренняя валюта');
 
+            $table->decimal('paid', 10, 2)->default(0)->comment('Оплачено всего');
+            $table->decimal('debit', 10, 2)->default(0)->comment('Долг');
+            $table->string('payment_type')->nullable()->comment('Тип платежей');
+
             $table->boolean('draft')->default(0)->unsigned()->comment('Черновик');
 
             $table->timestamp('registered_at')->nullable()->comment('Время оформления');
@@ -81,6 +85,8 @@ class CreateEstimatesTable extends Migration
             $table->integer('external')->nullable()->comment('Внешний id');
 
             $table->boolean('is_create_parse')->default(0)->comment('Создана парсером');
+
+            $table->string('is_need_parse')->default(1)->comment('Нужно парсить');
 
 
             // Общие настройки

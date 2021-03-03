@@ -38,6 +38,7 @@
 <section id="modal"></section>
 {{-- Модалка удаления ajax --}}
 @include('includes.modals.modal-delete-ajax')
+@include('includes.modals.modal-archive')
 @endsection
 
 @push('scripts')

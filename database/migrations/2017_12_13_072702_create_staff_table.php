@@ -30,7 +30,7 @@ class CreateStaffTable extends Migration
 
             $table->decimal('rate', 10, 2)->nullable()->default(1)->comment('Ставка');
 
-            $table->boolean('archive')->default(0)->unsigned()->comment('Архив');
+            $table->timestamp('archived_at')->nullable()->comment('Архив');
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

@@ -20,7 +20,7 @@ trait Photable
      * @param  $item
      * @return int
      */
-    public function getPhotoId($item)
+    public function getPhotoId($item, $alias = null)
     {
         $request = request();
 
@@ -35,7 +35,7 @@ trait Photable
             $size = filesize($image) / 1024;
             // dd($size);
 
-            $settings = $this->getPhotoSettings($item->getTable());
+            $settings = $this->getPhotoSettings($alias ?? $item->getTable());
 //            dd($settings);
 
             if ($width < $settings['img_min_width']) {

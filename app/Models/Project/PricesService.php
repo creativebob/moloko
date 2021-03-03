@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class PricesService extends Model
 {
     use Publicable;
-    use Cachable;
+//    use Cachable;
     use SoftDeletes;
 
     protected $with = [
@@ -90,8 +90,8 @@ class PricesService extends Model
     public function scopeFilter($query)
     {
 
-        if (request('brand')) {
-            $manufacturer = request('brand');
+        if (request('part-brand')) {
+            $manufacturer = request('part-brand');
             $query->whereHas('service', function ($q) use ($manufacturer) {
                 $q->whereHas('process', function ($q) use ($manufacturer) {
                     $q->whereHas('impacts', function ($q) use ($manufacturer) {
@@ -100,8 +100,26 @@ class PricesService extends Model
                                 $q->whereHas('company', function ($q) use ($manufacturer) {
                                     $q->where('name', $manufacturer);
                                 });
-                            })
-                                ->orWhereNull('manufacturer_id');
+                            })->orWhereNull('manufacturer_id');
+                        });
+                    });
+                });
+            });
+        }
+
+        if (request('car-brand')) {
+            $manufacturer = request('car-brand');
+            $query->whereHas('service', function ($q) use ($manufacturer) {
+                $q->whereHas('process', function ($q) use ($manufacturer) {
+                    $q->whereHas('impacts', function ($q) use ($manufacturer) {
+                        $q->whereHas('article', function ($q) use ($manufacturer) {
+                            $q->whereHas('owners', function ($q) use ($manufacturer) {
+                                $q->whereHas('manufacturer', function ($q) use ($manufacturer) {
+                                    $q->whereHas('company', function ($q) use ($manufacturer) {
+                                        $q->where('name', $manufacturer);
+                                    });
+                                })->orWhereNull('manufacturer_id');
+                            });
                         });
                     });
                 });

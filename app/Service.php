@@ -13,6 +13,9 @@ class Service extends BaseModel
     use SoftDeletes;
     use Processable;
 
+    const ALIAS = 'services';
+    const DEPENDENCE = false;
+
     protected $fillable = [
         'category_id',
         'process_id',
@@ -42,6 +45,25 @@ class Service extends BaseModel
     {
         return $this->hasMany(PricesService::class)
         ->where('archive', false);
+    }
+
+    /**
+     * Фильтр
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeFilter($query)
+    {
+        $filters = $this->getFilters(self::ALIAS);
+
+        if (isset($filters['services_categories'])) {
+            $query->whereIn('category_id', request('services_categories'));
+        }
+
+        if (isset($filters['authors'])) {
+            $query->whereIn('author_id', request('authors'));
+        }
     }
 
 }

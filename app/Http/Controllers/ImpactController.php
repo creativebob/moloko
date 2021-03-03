@@ -24,7 +24,7 @@ class ImpactController extends Controller
         $this->entityAlias = 'impacts';
         $this->entityDependence = false;
 
-        // TODO - 19.01.21 - СТарый код для поиска
+        // TODO - 19.01.21 - Старый код для поиска
         $this->class = Impact::class;
         $this->entity_alias = 'impacts';
         $this->entity_dependence = false;
@@ -74,7 +74,9 @@ class ImpactController extends Controller
             ->companiesLimit($answer)
             ->authors($answer)
             ->systemItem($answer) // Фильтр по системным записям
-            ->booklistFilter($request)
+
+                ->filter()
+//            ->booklistFilter($request)
 //        ->filter($request, 'author_id')
             // ->filter($request, 'impacts_category_id', 'article.product')
             // ->filter($request, 'impacts_product_id', 'article')
@@ -333,7 +335,20 @@ class ImpactController extends Controller
         $impact->load([
             'article' => function ($q) {
                 $q->with([
-                    'unit'
+                    'unit',
+                    'parts' => function ($q) {
+                        $q->with([
+                            'impact' => function ($q) {
+                                $q->with([
+                                    'category',
+                                    'unit_for_composition',
+                                    'unit_portion',
+                                    'costs',
+                                    'article.unit',
+                                ]) ;
+                            },
+                        ]);
+                    }
                 ]);
             },
             'category' => function ($q) {

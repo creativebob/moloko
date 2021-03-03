@@ -13,12 +13,6 @@ class Payment extends BaseModel
         Quietlable;
 //    use Cachable;
 
-    protected $with = [
-        'method',
-        'sign',
-        'currency'
-    ];
-
     protected $dates = [
         'registered_at',
         'canceled_at',
@@ -41,6 +35,7 @@ class Payment extends BaseModel
         'payments_sign_id',
 
         'currency_id',
+        'shift_id',
 
         'canceled_payment_id',
         'canceled_at',
@@ -76,6 +71,11 @@ class Payment extends BaseModel
 //        return $this->belongsTo(PaymentsType::class, 'payments_type_id');
 //    }
 
+    public function document()
+    {
+        return $this->morphTo();
+    }
+
     public function contract()
     {
         return $this->morphTo();
@@ -84,5 +84,10 @@ class Payment extends BaseModel
     public function currency()
     {
         return $this->belongsTo(Currency::class);
+    }
+
+    public function shift()
+    {
+        return $this->belongsTo(Shift::class);
     }
 }

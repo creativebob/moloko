@@ -56,9 +56,9 @@
             </div>
             <div class="top-bar-right">
 
-                @if (isset($filter))
-                    <a class="icon-filter sprite @if ($filter['status'] == 'active') filtration-active @endif"></a>
-                @endif
+                <a class="icon-filter sprite
+                @if(!(count(request()->input()) == 1 && request()->input(['page'])) && count(request()->input())) filtration-active @endif
+                    "></a>
 
                 <search-articles-component alias="{{ $pageInfo->alias }}"></search-articles-component>
 
@@ -72,50 +72,33 @@
         </div>
 
         {{-- Блок фильтров --}}
-        @if (isset($filter))
-
-            <div class="grid-x">
-                <div class="small-12 cell filters fieldset-filters" id="filters">
-                    <div class="grid-padding-x">
-                        <div class="small-12 cell text-right">
-                            {{ link_to(Request::url(), 'Сбросить', ['class' => 'small-link']) }}
-                        </div>
-                    </div>
-                    <div class="grid-padding-x">
-                        <div class="small-12 cell">
-                            {{ Form::open(['url' => Request::url(), 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
-
-                            @includeIf($pageInfo->entity->view_path.'.includes.filters')
-
-                            <div class="small-12 cell text-center">
-                                {{ Form::submit('Фильтрация', ['class'=>'button']) }}
-                                <input hidden name="filter" value="active">
-                            </div>
-                            {{ Form::close() }}
-                        </div>
-                    </div>
-                    <div class="grid-x">
-                        <a class="small-12 cell text-center filter-close">
-                            <button type="button" class="icon-moveup sprite"></button>
-                        </a>
+        <div class="grid-x">
+            <div class="small-12 cell filters fieldset-filters" id="filters">
+                <div class="grid-padding-x">
+                    <div class="small-12 cell text-right">
+                        {!! Form::open(['route' => ['reset_filter', [$pageInfo->alias]]]) !!}
+                        {!! Form::submit('Сбросить', ['class'=>'small-link filter-reset']) !!}
+                        {!! Form::close() !!}
                     </div>
                 </div>
+                <div class="grid-padding-x">
+                    <div class="small-12 cell">
+                        {!! Form::open(['route' => "{$pageInfo->alias}.index", 'data-abide', 'novalidate', 'method' => 'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) !!}
 
-                {{-- Дополнительные кнопки --}}
-                <div class="black-button-group small-12 cell">
-                    @isset($archivesCount)
-                        @if($archivesCount > 0)
-                            <a class="button tiny hollow right dismissed" href="{{ route("{$entity}.archives") }}">Архив: {{ $archivesCount }}</a>
-                        @endif
-                    @else
-                        <a class="button tiny hollow right dismissed" href="{{ route("{$entity}.index") }}">Обычные</a>
-                    @endisset
+                        @includeIf("{$pageInfo->entity->view_path}.includes.filters")
 
+                        <div class="small-12 cell text-center">
+                            {!! Form::submit('Фильтрация', ['class'=>'button']) !!}
+                        </div>
+                        {!! Form::close() !!}
+                    </div>
                 </div>
-
-
+                <div class="grid-x">
+                    <a class="small-12 cell text-center filter-close">
+                        <button type="button" class="icon-moveup sprite"></button>
+                    </a>
+                </div>
             </div>
-
-        @endif
+        </div>
     </div>
 </div>

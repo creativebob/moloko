@@ -570,7 +570,12 @@ class ClientController extends Controller
 
 
         $results = Client::with([
-            'clientable'
+            'clientable' => function ($q) {
+                $q->with([
+                    'location',
+                    'main_phones'
+                ]);
+            }
         ])
             ->companiesLimit($answer)
             ->whereHasMorph('clientable',
@@ -604,7 +609,12 @@ class ClientController extends Controller
 
 
         $client = Client::with([
-            'clientable.location.city'
+            'clientable' => function ($q) {
+                $q->with([
+                    'location',
+                    'main_phones'
+                ]);
+            }
         ])
             ->companiesLimit($answer)
             ->whereHasMorph('clientable',

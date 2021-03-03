@@ -29,6 +29,7 @@ const moduleLead = {
         paymentsMethodId: null,
 
         agent: null,
+        countAgents: 0,
 
         userFilials: [],
         userOutlets: [],
@@ -39,6 +40,8 @@ const moduleLead = {
         loading: false,
 
         errors: [],
+
+        needChangeTabToEstimate: false
     },
     mutations: {
         SET_USERS(state, users) {
@@ -180,6 +183,10 @@ const moduleLead = {
             estimate.catalogs_services.forEach(catalog => {
                 state.catalogsServicesIds.push(catalog.id);
             })
+        },
+
+        CHANGE_NEED_CHANGE_TAB_TO_ESTIMATE(state, val = false) {
+            state.needChangeTabToEstimate = val;
         },
 
         // Товары
@@ -754,9 +761,14 @@ const moduleLead = {
             state.agent = agent;
         },
 
+        SET_COUNT_AGENTS(state, count = 0) {
+            state.countAgents = count;
+        },
+
         // Изменения
         SET_CHANGE(state) {
             state.change = true;
+            state.needChangeTabToEstimate = true;
         },
 
 

@@ -39,6 +39,7 @@ Vue.component('production-component', require('./components/documents/production
 Vue.component('lead-init-component', require('./components/leads/InitComponent'));
 Vue.component('lead-errors-component', require('./components/leads/ErrorsComponent'));
 Vue.component('estimate-component', require('./components/leads/estimates/EstimateComponent'));
+Vue.component('lead-extra-tabs-component', require('./components/leads/tabs/estimate/TabsComponent'));
 Vue.component('lead-tabs-component', require('./components/leads/tabs/TabsComponent'));
 Vue.component('payments-component', require('./components/leads/payments/PaymentsComponent'));
 Vue.component('lead-description-component', require('./components/leads/options/DescriptionComponent'));
@@ -62,6 +63,7 @@ Vue.component('manufacturers-component', require('./components/ManufacturersComp
 Vue.component('goods-store-component', require('./components/products/articles/common/GoodsStateComponent'));
 Vue.component('cmv-compositions-component', require('./components/products/articles/compositions/CompositionsComponent'));
 Vue.component('presets-component', require('./components/products/articles/presets/PresetsComponent.vue'));
+Vue.component('parts-component', require('./components/products/articles/parts/PartsComponent'));
 
 Vue.component('article-codes-component', require('./components/products/articles/codes/CodesComponent'));
 

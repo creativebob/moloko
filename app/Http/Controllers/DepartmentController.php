@@ -89,7 +89,6 @@ class DepartmentController extends Controller
                 ->filials($answer_staff) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
                 ->authors($answer_staff)
                 ->systemItem($answer_staff) // Фильтр по системным записям
-                ->where('archive', false)
                 ->orderBy('moderation', 'desc')
                 ->orderBy('sort', 'asc');
             }

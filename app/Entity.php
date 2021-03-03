@@ -63,7 +63,7 @@ class Entity extends BaseModel
     // Предок
     public function ancestor()
     {
-        return $this->belongsTo(Entity::class, 'ancestor_id');
+        return $this->belongsTo(Entity::class);
     }
 
     // Потомок

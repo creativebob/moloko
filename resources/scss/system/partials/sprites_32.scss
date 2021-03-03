@@ -162,9 +162,27 @@ a.icon-list-edit {
     }
 }
 
+.icon-appointment {
+
+    &.black {
+        background-position: -32px -1570px;
+    }
+
+    &.white {
+        background-position: -96px -1570px;
+    }
+
+    opacity: 0;
+    transition: opacity ease 0.3s;
+
+    &:hover {
+        opacity: 1;
+    }
+}
+
 tr:hover {
 
-    .icon-display-show, .icon-system-unlock, .icon-clone {
+    .icon-display-show, .icon-system-unlock, .icon-clone, .icon-appointment {
 
         opacity: 0.2;
 
@@ -173,7 +191,7 @@ tr:hover {
         }
     }
 
-    .icon-display-show, .icon-display-hide, .icon-system-unlock, .icon-system-lock, .icon-clone {
+    .icon-display-show, .icon-display-hide, .icon-system-unlock, .icon-system-lock, .icon-clone, .icon-appointment {
         cursor: pointer;
     }
     // background-position: -32px -992px;

@@ -52,11 +52,6 @@ class User extends Authenticatable
     use BooklistFilter;
     // use DateIntervalFilter;
 
-    // protected $with = [
-    //     'location',
-    //     'main_phones'
-    // ];
-
     protected $dates = [
         'deleted_at',
         'birthday_date'

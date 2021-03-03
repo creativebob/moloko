@@ -395,7 +395,20 @@ class ContainerController extends Controller
         $container->load([
             'article' => function ($q) {
                 $q->with([
-                    'unit'
+                    'unit',
+                    'parts' => function ($q) {
+                        $q->with([
+                            'container' => function ($q) {
+                                $q->with([
+                                    'category',
+                                    'unit_for_composition',
+                                    'unit_portion',
+                                    'costs',
+                                    'article.unit',
+                                ]) ;
+                            },
+                        ]);
+                    }
                 ]);
             }
         ]);

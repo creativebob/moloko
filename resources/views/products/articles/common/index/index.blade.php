@@ -67,7 +67,7 @@
                 @if($items->isNotEmpty())
 
                 @foreach($items as $item)
-                <tr class="item @if($item->moderation == 1)no-moderation @endif @if($item->article->draft) draft @endif" id="{{ $entity }}-{{ $item->id }}" data-name="{{ $item->article->name }}" data-entity="{{ $entity }}" data-id="{{ $item->id }}">
+                <tr class="item @if($item->moderation == 1)no-moderation @endif @if($item->article->draft) draft @endif" id="{{ $entity }}-{{ $item->id }}" data-name="{{ $item->article->name }}" data-entity="{{ $entity }}" data-id="{{ $item->id }}" data-article_id="{{ $item->article_id }}">
 
                     <td class="td-drop">
                         <div class="sprite icon-drop"></div>
@@ -236,7 +236,7 @@
                     </td>
 
                     {{-- Элементы управления --}}
-                    @include('includes.control.table_td', ['item' => $item, 'replicate' => true])
+                    @include('includes.control.table_td', ['item' => $item, 'replicate' => true, 'appointment' => true])
 
                     <td class="td-archive">
                         <a class="button tiny" href="/admin/draft_article/{{ $item->getTable() }}/{{ $item->id }}">Ч</a>
@@ -278,9 +278,8 @@
         @include('includes.modals.modal-archive')
     @endif
 
-
-
     @include('includes.modals.modal-replicate')
+    @include('includes.modals.modal-cmv-appointment')
 @endsection
 
 @push('scripts')

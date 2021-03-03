@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 class PositionController extends Controller
 {
-    
+
     protected $entityAlias;
     protected $entityDependence;
 
@@ -321,6 +321,7 @@ class PositionController extends Controller
             $position->save();
 
             if ($position) {
+                $position->processes()->detach();
                 return redirect()->route('positions.index');
             } else {
                 abort(403, 'Ошибка при архивации');

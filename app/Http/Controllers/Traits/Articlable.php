@@ -129,7 +129,6 @@ trait Articlable
      */
     public function updateArticle($request, $item)
     {
-
         $article = $item->article;
         // dd($article);
 
@@ -194,11 +193,13 @@ trait Articlable
                 $data['draft'] = $request->draft;
                 // dd($data);
 
-                $photo_id = $this->getPhotoId($article);
+                $photo_id = $this->getPhotoId($article, $item->getTable());
                 $data['photo_id'] = $photo_id;
 
                 // Если ошибок и совпадений нет, то обновляем артикул
                 $article->update($data);
+
+                $article->parts()->sync($request->parts);
 
                 return $article;
             }
@@ -250,6 +251,10 @@ trait Articlable
         $new_article->album_id = null;
 
         $new_article->save();
+
+        $new_article->update([
+            'slug' => null
+        ]);
 
         if ($new_article) {
 

@@ -14,7 +14,7 @@
 		    checkall.onclick = function() {
 		      for(var i=0; i<checkboxes.length; i++) {
 		        checkboxes[i].checked = this.checked;
-		        console.log('Видим клик по главному, ставим его положение всем = ' + this.checked);
+		        // console.log('Видим клик по главному, ставим его положение всем = ' + this.checked);
 		      };
 		    };
 	    };
@@ -35,7 +35,7 @@
 	        var item_entity = parent.attr('id').split('-')[1];
 
 	      	// alert(entity_alias + ' - ' + item_entity);
-	      	
+
 	        // Если есть кнопка группового изменения чекбоксов
 	    	if(checkall != null){
 		        var checkedCount = document.querySelectorAll('input.table-check:checked').length;

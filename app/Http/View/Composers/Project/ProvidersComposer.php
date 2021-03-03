@@ -16,7 +16,7 @@ class ProvidersComposer
             $collect = [];
             foreach($prices_services as $price_service) {
                 foreach($price_service->service->process->positions as $position) {
-                    foreach($position->actual_staff as $staffer) {
+                    foreach($position->actual_staff->where('display', true) as $staffer) {
                         $collect[] = $staffer;
                     }
                 }

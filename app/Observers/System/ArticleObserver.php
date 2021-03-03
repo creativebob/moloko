@@ -132,6 +132,7 @@ class ArticleObserver extends BaseObserver
                 'company_id' => $article->company_id,
                 'slug' => $slug
             ])
+                ->where('id', '!=', $article->id)
                 ->exists();
 
             if ($found) {
@@ -143,6 +144,7 @@ class ArticleObserver extends BaseObserver
                 'company_id' => $article->company_id,
                 'slug' => $slug
             ])
+                ->where('id', '!=', $article->id)
                 ->exists();
 
             if ($found) {

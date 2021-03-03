@@ -79,7 +79,8 @@ Route::get('/home', 'HomeController@index')
 
 // ----------------------------- Рабочий стол -------------------------------------
 
-Route::get('/dashboard', 'DashboardController@index')->name('dashboard.index');
+Route::get('/dashboard', 'DashboardController@index')
+    ->name('dashboard.index');
 
 
 // -------------------------------------- Директории ---------------------------------------------------
@@ -372,6 +373,12 @@ Route::post('/ajax_get_category_workflow', 'WorkflowController@ajax_get_category
 Route::post('/ajax_get_workflow', 'WorkflowController@ajax_get_workflow')->middleware('auth');
 
 Route::post('/ajax_get_service', 'ServiceController@ajax_get_service')->middleware('auth');
+
+
+// ---------------------------------- Артикулы -------------------------------------------
+Route::any('/articles/get_appointments', 'ArticleController@getAppointments');
+Route::post('/articles/appointment', 'ArticleController@appointment')
+    ->name('articles.appointment');
 
 
 // ---------------------------------- Коды артикулов -------------------------------------------
@@ -1365,7 +1372,12 @@ Route::post('/positions_list', 'PositionController@positions_list');
 
 // -------------------------------------- Штат компании ---------------------------------------------
 // Архив
+Route::get('/staff/archives', 'StafferController@archives')
+    ->name('staff.archives');
+// Архивация
 Route::post('/staff/archive/{id}', 'StafferController@archive');
+Route::get('/staff/unarchive/{id}', 'StafferController@unarchive')
+    ->name('staff.unarchive');
 // Основные методы
 Route::resource('/staff', 'StafferController')
     ->except([
@@ -1733,8 +1745,17 @@ Route::resource('/workplaces', 'WorkplaceController')
 // Основные методы
 Route::resource('/shifts', 'ShiftController')
     ->only([
-        'index'
+        'index',
     ]);
+
+
+// Текущая смена
+Route::get('/shift', 'ShiftController@shift')
+    ->name('shift');
+Route::post('/shift/open', 'ShiftController@open')
+    ->name('shift.open');
+Route::patch('/shift/close/{id}', 'ShiftController@close')
+    ->name('shift.close');
 
 
 // --------------------------- Метки заказа -------------------------------------

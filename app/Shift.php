@@ -3,14 +3,21 @@
 namespace App;
 
 use App\Models\System\BaseModel;
+use Carbon\Carbon;
 
 class Shift extends BaseModel
 {
+
+    const ALIAS = 'shifts';
+    const DEPENDENCE = true;
+
     protected $dates = [
         'date',
 
         'opened_at',
         'closed_at',
+
+        'need_closed_at',
     ];
 
     protected $fillable = [
@@ -22,8 +29,13 @@ class Shift extends BaseModel
         'opened_at',
         'closed_at',
 
+        'need_closed_at',
+
         'balance_open',
         'balance_close',
+
+        'cash',
+        'electronically',
 
         'is_opened',
         'is_reopened',
@@ -32,6 +44,11 @@ class Shift extends BaseModel
         'system',
         'moderation'
     ];
+
+//    public function setDateAttribute($value)
+//    {
+//        $this->attributes['date'] = Carbon::createFromFormat('d.m.Y', $value);
+//    }
 
     public function filial()
     {

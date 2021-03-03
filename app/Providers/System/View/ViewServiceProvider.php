@@ -34,13 +34,18 @@ use App\Http\View\Composers\System\FilialCatalogsGoodsComposer;
 use App\Http\View\Composers\System\FilialCatalogsServicesComposer;
 use App\Http\View\Composers\System\FilialStaffComposer;
 use App\Http\View\Composers\System\Filters\EmploymentHistoryComposer;
+use App\Http\View\Composers\System\ImpactsCategoriesTreeComposer;
 use App\Http\View\Composers\System\ImpactsCategoriesWithImpactsComposer;
 use App\Http\View\Composers\System\LeadHistoryComposer;
 use App\Http\View\Composers\System\MailingListsComposer;
 use App\Http\View\Composers\System\MailingsComposer;
 use App\Http\View\Composers\System\OutletsSettingsCategoriesWithSettingsComposer;
+use App\Http\View\Composers\System\PartsComposer;
 use App\Http\View\Composers\System\PaymentsMethodsComposer;
+use App\Http\View\Composers\System\PositionsWithStaffComposer;
+use App\Http\View\Composers\System\ServicesCategoriesTreeComposer;
 use App\Http\View\Composers\System\ServicesCategoriesWithServicesComposer;
+use App\Http\View\Composers\System\StaffArchiveCountComposer;
 use App\Http\View\Composers\System\SuppliersComposer;
 use App\Http\View\Composers\System\TaxationTypesComposer;
 use App\Http\View\Composers\System\TemplatesComposer;
@@ -332,10 +337,9 @@ class ViewServiceProvider extends ServiceProvider
         view()->composer('includes.selects.staff', StaffComposer::class);
         view()->composer('includes.selects.empty_staff', EmptyStaffComposer::class);
 
-        view()->composer([
-            'includes.selects.positions',
-            'includes.lists.positions',
-        ], PositionsComposer::class);
+        view()->composer('includes.selects.positions', PositionsComposer::class);
+
+        view()->composer('includes.lists.positions_with_actual_staff', PositionsWithStaffComposer::class);
         view()->composer([
             'products.common.metrics.properties_list',
             'products.common.metrics.page'
@@ -475,6 +479,10 @@ class ViewServiceProvider extends ServiceProvider
         ], RelatedComposer::class);
 
         view()->composer([
+            'products.articles.common.edit.tabs.parts'
+        ], PartsComposer::class);
+
+        view()->composer([
 //            'products.articles_categories.goods_categories.related.related',
             'products.processes.services.impacts.impacts'
         ], ImpactsCategoriesWithImpactsComposer::class);
@@ -535,6 +543,10 @@ class ViewServiceProvider extends ServiceProvider
         view()->composer('leads.tabs.history', LeadHistoryComposer::class);
         view()->composer('leads.tabs.estimate', DiscountsForEstimatesComposer::class);
 
+        // Штат
+        view()->composer('system.pages.hr.staff.includes.title', StaffArchiveCountComposer::class);
+        view()->composer('system.pages.hr.staff.includes.title_dismissal', EmployeesActiveCountComposer::class);
+
         // Сотрудники
         view()->composer('system.pages.hr.employees.includes.title_active', EmployeesDismissalCountComposer::class);
         view()->composer('system.pages.hr.employees.includes.title_dismissal', EmployeesActiveCountComposer::class);
@@ -566,7 +578,17 @@ class ViewServiceProvider extends ServiceProvider
 
         // Товары
         view()->composer('products.articles.goods.includes.filters', GoodsCategoriesTreeComposer::class);
-        view()->composer('products.articles.goods.includes.filters', AuthorsComposer::class);
+
+        // Объекты воздействия
+        view()->composer('products.articles.impacts.includes.filters', ImpactsCategoriesTreeComposer::class);
+
+        // Услуги
+        view()->composer('products.processes.services.includes.filters', ServicesCategoriesTreeComposer::class);
+
+        view()->composer([
+            'products.articles.goods.includes.filters',
+            'products.processes.services.includes.filters',
+            ], AuthorsComposer::class);
 
         // Прайсы товаров
         view()->composer('system.pages.catalogs.goods.prices_goods.includes.filters', CatalogsGoodsItemsTreeComposer::class);
