@@ -59,6 +59,7 @@ class Menu extends Model
 
         'new_blank',
         'text_hidden',
+        'is_nofollow',
 
         'navigation_id',
         'page_id',

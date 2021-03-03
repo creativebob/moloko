@@ -45,6 +45,7 @@ class CreateMenusTable extends Migration
 
             $table->boolean('new_blank')->default(0)->comment('Новая вкладка');
             $table->boolean('text_hidden')->default(0)->comment('Скрыть текст ссылки');
+            $table->boolean('is_nofollow')->default(0)->comment('Запрет индексации');
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

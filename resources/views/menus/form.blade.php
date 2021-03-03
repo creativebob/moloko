@@ -70,6 +70,12 @@
 						<label for="text_hidden"><span>Показывать только иконку (Текст ссылки скрыть)</span></label>
 					</div>
 
+                    <div class="small-12 cell checkbox">
+                        {!! Form::hidden('is_nofollow', 0) !!}
+                        {!! Form::checkbox('is_nofollow', 1, null, ['id' => 'checkbox-is_nofollow']) !!}
+                        <label for="checkbox-is_nofollow"><span>Запретить индексацию ссылки</span></label>
+                    </div>
+
 					<label>Филиал
 						{!! Form::select('filial_id', $filials->pluck('name', 'id'), $menu->filial_id, ['placeholder' => 'Отображать везде']) !!}
 					</label>

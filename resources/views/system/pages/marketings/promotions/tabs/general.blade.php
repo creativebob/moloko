@@ -12,7 +12,7 @@
         </label>
 
         <label>Ссылка
-            @include('includes.inputs.name', ['name' => 'link', 'value' => $promotion->link])
+            {!! Form::text('link', $promotion->link, ['autocomplete' => 'off']) !!}
         </label>
 
         <div class="grid-x grid-padding-x">
