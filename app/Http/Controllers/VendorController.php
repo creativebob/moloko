@@ -186,7 +186,8 @@ class VendorController extends Controller
                             'schedules.worktimes',
                             'sector',
                             'processes_types',
-                            'manufacturers'
+                            'manufacturers',
+                            'files',
                         ]);
                     }
                 ]);
@@ -264,7 +265,7 @@ class VendorController extends Controller
 
         logs('companies')->info('============ НАЧАЛО ОБНОВЛЕНИЯ ПРОДАВЦА ===============');
 
-        // TODO - 15.09.20 - Должна быть проерка на внешний контроль, так же на шаблоне не должны давать провалиться в компанию
+        // TODO - 15.09.20 - Должна быть проверка на внешний контроль, так же на шаблоне не должны давать провалиться в компанию
         $company = $this->updateCompany($company);
 
         $data = $request->input();

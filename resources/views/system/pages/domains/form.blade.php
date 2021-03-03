@@ -55,6 +55,14 @@
                             <legend>Филиалы</legend>
                             @include('includes.lists.filials')
                         </fieldset>
+
+                        @can('create', App\File::class)
+                            <files-component
+                                alias="{{ $domain->getTable() }}"
+                                :id="{{ $domain->id }}"
+                                :item-files='@json($domain->files)'
+                            ></files-component>
+                        @endcan
                     </div>
 
                     {{-- Чекбоксы управления --}}

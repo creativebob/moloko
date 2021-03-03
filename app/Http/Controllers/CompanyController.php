@@ -196,7 +196,9 @@ class CompanyController extends Controller
 
             'client',
             'supplier',
-            'manufacturer'
+            'manufacturer',
+
+            'files',
         ])
             ->moderatorLimit($answer)
             ->authors($answer)

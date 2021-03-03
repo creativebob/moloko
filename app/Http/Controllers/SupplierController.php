@@ -180,7 +180,8 @@ class SupplierController extends Controller
                     'schedules.worktimes',
                     'sector',
                     'processes_types',
-                    'manufacturers'
+                    'manufacturers',
+                    'files',
                 ]);
             },
             'vendor'

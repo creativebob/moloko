@@ -67,6 +67,27 @@ class FileController extends Controller
     }
 
     /**
+     * Update the specified resource in storage.
+     *
+     * @param FileRequest $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function update(FileRequest $request, $id)
+    {
+        $file = File::find($id);
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $file);
+
+        $data = $request->validated();
+        $file->update($data);
+
+        return response()->json($file);
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param $id

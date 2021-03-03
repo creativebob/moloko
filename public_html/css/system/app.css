@@ -12881,7 +12881,7 @@ a#task-toggle {
   width: 100%;
 }
 
-.reveal .close-modal {
+.reveal .close-modal, .reveal .button-modal-close {
   position: absolute;
   top: 0;
   right: 0;

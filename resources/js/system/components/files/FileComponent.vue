@@ -1,11 +1,28 @@
 <template>
-    <tr>
+    <tr class="item">
+        <td class="td-drop">
+            <div class="sprite icon-drop"></div>
+        </td>
         <td>{{ file.name }}</td>
         <td>
             <a
                 :href="file.path"
                 target="_blank"
             >{{ file.path}}</a>
+        </td>
+        <td class="actions-list">
+            <div
+                class="icon-list-edit sprite"
+                data-open="modal-update-file"
+                @click="update"
+            ></div>
+        </td>
+        <td>
+
+            <display-component
+                :item="file"
+                alias="files"
+            ></display-component>
         </td>
         <td class="td-delete">
             <div
@@ -17,12 +34,17 @@
 </template>
 
 <script>
-
     export default {
+        components: {
+            'display-component': require('../common/DisplayComponent'),
+        },
         props: {
             file: Object,
         },
         methods: {
+            update() {
+                this.$emit('update', this.file)
+            },
             remove() {
                 axios
                     .delete('/admin/files/' + this.file.id, {
@@ -39,13 +61,5 @@
                     });
             },
         },
-        filters: {
-            decimalPlaces(value) {
-                return parseFloat(value).toFixed(2);
-            },
-            decimalLevel: function (value) {
-                return parseFloat(value).toLocaleString();
-            },
-        }
     }
 </script>

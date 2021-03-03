@@ -167,7 +167,8 @@ class ManufacturerController extends Controller
                     'schedules.worktimes',
                     'sector',
                     'processes_types',
-                    'manufacturers'
+                    'manufacturers',
+                    'files',
                 ]);
             },
         ])

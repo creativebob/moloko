@@ -131,7 +131,7 @@ class AppController extends Controller
     	$model = $entity->model;
 
         $i = 1;
-        foreach ($request->$entity_alias as $item) {
+        foreach ($request->input($entity_alias) as $item) {
             $model::where('id', $item)->update(['sort' => $i]);
             $i++;
         }

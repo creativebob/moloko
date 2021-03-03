@@ -95,4 +95,9 @@ class Domain extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function files()
+    {
+        return $this->morphToMany(File::class, 'entity', 'file_entities');
+    }
 }

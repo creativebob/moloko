@@ -172,7 +172,8 @@ class DomainController extends Controller
                     'name',
                     'source_id'
                 ]);
-            }
+            },
+            'files'
         ])
         ->moderatorLimit($answer)
             ->find($id);

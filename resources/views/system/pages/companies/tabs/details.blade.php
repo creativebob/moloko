@@ -75,5 +75,13 @@
                 </fieldset>
             </div>
         </div>
+
+        @can('create', App\File::class)
+            <files-component
+                alias="{{ $company->getTable() }}"
+                :id="{{ $company->id }}"
+                :item-files='@json($company->files)'
+            ></files-component>
+        @endcan
     </div>
 </div>

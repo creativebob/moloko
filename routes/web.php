@@ -1781,6 +1781,7 @@ Route::post('/estimates_cancel_grounds/get', 'EstimatesCancelGroundController@ge
 Route::resource('/files', 'FileController')
     ->only([
         'store',
+        'update',
         'destroy'
     ]);
 

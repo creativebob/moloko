@@ -491,4 +491,9 @@ class Company extends Model
         return $this->belongsTo(Location::class, 'legal_location_id');
     }
 
+    public function files()
+    {
+        return $this->morphToMany(File::class, 'entity', 'file_entities');
+    }
+
 }

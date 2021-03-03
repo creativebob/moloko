@@ -198,7 +198,8 @@ class ClientController extends Controller
                     'schedules.worktimes',
                     'sector',
                     'settings',
-                    'processes_types'
+                    'processes_types',
+                    'files',
                 ]);
             }
         ])
