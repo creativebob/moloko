@@ -36,7 +36,7 @@
                     <th class="td-amount">Сумма</th>
                     <th class="td-discount-currency">Скидка</th>
                     <th class="td-total">Сумма к оплате</th>
-                    <th class="td-payment">Оплачено</th>
+                    {{-- <th class="td-payment">Оплачено</th> --}}
                     @if(extra_right('margin-show'))<th class="td-margin_currency">Маржа</th>@endif
                     @if(extra_right('partner-currency-show'))<th class="td-partner">Доля партнёра</th>@endif
                     @if(extra_right('share-currency-show'))<th class="td-share-currency">Доля агента</th>@endif
@@ -75,14 +75,13 @@
                     {{ $estimate->client->clientable->name ?? 'Имя не указано' }}
                 </a>
                 <br>
-                @isset($estimate->client->clientable->location)
+                @isset($estimate->lead->location)
                     <span class="tiny-text">
-                        {{ $estimate->client->clientable->location->city->name }}, {{ $estimate->client->clientable->location->address }}
+                        {{ $estimate->lead->location->city->name }}, {{ $estimate->lead->location->address }}
                     </span>
                 @endisset
                 <td class="td-phone">
-                    {{ isset($estimate->client->clientable->main_phone->phone) ? decorPhone($estimate->client->clientable->main_phone->phone) : 'Номер не указан' }}
-                    {{-- @if($estimate->client->clientable->email)<br><span class="tiny-text">{{ $estimate->client->clientable->email ?? '' }}</span>@endif --}}
+                    {{ isset($estimate->lead->main_phone->phone) ? decorPhone($estimate->lead->main_phone->phone) : 'Номер не указан' }}
                 </td>
                 <td class="td-amount">{{ num_format($estimate->amount, 0) }}</td>
                 <td class="td-discount-currency">
@@ -98,7 +97,7 @@
 
                 </td>
 
-                <td class="td-payment">{{ num_format($estimate->payments->sum('total'), 0) }}</td>
+                {{-- <td class="td-payment">{{ num_format($estimate->payments->sum('total'), 0) }}</td> --}}
 
                 @if(extra_right('margin-show'))
                   <td class="td-margin_currency">{{ num_format($estimate->margin_currency, 0) }} <sup>{{ num_format($estimate->margin_percent, 0) }}%</sup></td>
