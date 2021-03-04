@@ -11,7 +11,10 @@ class VendorsComposer
 	{
 	    $vendors = Vendor::with([
             'supplier.company.photo',
-            'files'
+            'files' => function ($q) {
+                $q->where('display', true)
+                    ->oldest();
+            }
         ])
         ->where([
             'company_id' => $view->site->company_id,
