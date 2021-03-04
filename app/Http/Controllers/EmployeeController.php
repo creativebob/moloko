@@ -218,6 +218,8 @@ class EmployeeController extends Controller
             'user_id' => $user->id
         ]);
 
+
+
         $this->employment($user, $employee, $staff);
 
 
@@ -575,7 +577,7 @@ class EmployeeController extends Controller
         // Подключение политики
         $this->authorize(getmethod('create'), Employee::class);
         $this->authorize(getmethod('update'), $staff);
-        $this->authorize(getmethod('update'), $user);
+//        $this->authorize(getmethod('update'), $user);
 
 
         logs('hr')->info('Открываем доступ для пользователя');
