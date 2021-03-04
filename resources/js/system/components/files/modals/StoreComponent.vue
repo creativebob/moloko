@@ -117,7 +117,15 @@ export default {
                     .post('/admin/files', fd)
                     .then(response => {
                         $('#modal-add-file-' + this.alias).foundation('close');
-                        this.$emit('add', response.data);
+
+                        let item = response.data;
+                        if (!item.title) {
+                            item.title = null;
+                        }
+                        if (!item.description) {
+                            item.description = null;
+                        }
+                        this.$emit('add', item);
                         this.reset();
                         this.disabledButton = false;
                     })

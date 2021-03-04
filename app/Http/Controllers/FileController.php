@@ -98,14 +98,12 @@ class FileController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
-        $file = File::with([
-            'vendors'
-        ])
+        $file = File::with(File::RELATIONS)
             ->moderatorLimit($answer)
             ->find($id);
         if (empty($file)) {
@@ -115,12 +113,16 @@ class FileController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $file);
 
-        $relations = [
-            'vendors'
-        ];
+        foreach (File::RELATIONS as $relation) {
 
-        foreach ($relations as $relation) {
             if ($file->$relation->isNotEmpty()) {
+
+//                $path = str_replace('/storage/', '', $file->path);
+//                Storage::disk('public')
+//                    ->delete($path);
+//
+//                $file->$relation->detach();
+
                 foreach($file->$relation as $item) {
                     Storage::disk('public')
                         ->delete("{$item->company_id}/files/{$relation}/{$item->id}/{$file->slug}");

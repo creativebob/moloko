@@ -48,11 +48,8 @@
             },
             remove() {
                 axios
-                    .delete('/admin/files/' + this.file.id, {
-
-                    })
+                    .delete('/admin/files/' + this.file.id)
                     .then(response => {
-                        console.log(response.data);
                         if (response.data) {
                             this.$emit('remove', this.file.id);
                         }
