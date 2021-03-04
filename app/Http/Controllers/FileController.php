@@ -52,7 +52,11 @@ class FileController extends Controller
 
             $data['slug'] = Str::slug($request->name) . '-' . time() . '.' . $data['extension'];
 
-            $directory = "{$item->company_id}/files/{$item->getTable()}/{$item->id}";
+            if ($request->alias == 'companies') {
+                $directory = "{$item->id}/files/{$request->alias}/{$item->id}";
+            } else {
+                $directory = "{$item->company_id}/files/{$request->alias}/{$item->id}";
+            }
             $data['path'] = "/storage/{$directory}/{$data['slug']}";
 
             $res = Storage::disk('public')

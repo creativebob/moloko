@@ -1,7 +1,7 @@
 <template>
     <div
         class="reveal"
-        id="modal-update-file"
+        :id="'modal-update-file-' + alias"
         data-reveal
         data-close-on-click="false"
     >
@@ -69,7 +69,8 @@ export default {
         'textarea-component': require('../../inputs/TextareaComponent'),
     },
     props: {
-        item: Object
+        item: Object,
+        alias: String,
     },
     watch: {
         item(item) {
@@ -117,7 +118,7 @@ export default {
                         title: this.title,
                     })
                     .then(response => {
-                        $('#modal-update-file').foundation('close');
+                        $('#modal-update-file-' + this.alias).foundation('close');
                         this.$emit('update', response.data);
                         this.reset();
                         this.disabledButton = false;

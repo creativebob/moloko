@@ -1,7 +1,7 @@
 <template>
     <div
         class="reveal"
-        id="modal-add-file"
+        :id="'modal-add-file-' + alias"
         data-reveal
         data-close-on-click="false"
     >
@@ -110,7 +110,7 @@ export default {
                 axios
                     .post('/admin/files', fd)
                     .then(response => {
-                        $('#modal-add-file').foundation('close');
+                        $('#modal-add-file-' + this.alias).foundation('close');
                         this.$emit('add', response.data);
                         this.reset();
                         this.disabledButton = false;

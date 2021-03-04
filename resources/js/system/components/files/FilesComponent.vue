@@ -3,7 +3,10 @@
         <legend>Загрузка файлов</legend>
         <div class="grid-x">
             <div class="cell small-12">
-                <a class="button" data-open="modal-add-file">Добавить файл</a>
+                <a
+                    class="button"
+                    :data-open="'modal-add-file-' + alias"
+                >Добавить файл</a>
             </div>
 
             <div class="cell small-12">
@@ -29,6 +32,7 @@
                     <file-component
                         v-for="file in files"
                         :file="file"
+                        :alias="alias"
                         :key="file.id"
                         @update="openModalRemove"
                         @remove="remove"
@@ -44,6 +48,7 @@
             ></modal-store-component>
 
             <modal-update-component
+                :alias="alias"
                 :item="updatingItem"
                 @update="update"
             ></modal-update-component>

@@ -13,7 +13,7 @@
         <td class="actions-list">
             <div
                 class="icon-list-edit sprite"
-                data-open="modal-update-file"
+                :data-open="'modal-update-file-' + alias"
                 @click="update"
             ></div>
         </td>
@@ -40,6 +40,7 @@
         },
         props: {
             file: Object,
+            alias: String,
         },
         methods: {
             update() {
