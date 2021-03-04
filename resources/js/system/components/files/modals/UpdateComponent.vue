@@ -49,7 +49,8 @@
                     @click="update"
                     class="button modal-button"
                     :disabled="disabledButton"
-                >Сохранить</button>
+                >Сохранить
+                </button>
             </div>
         </div>
         <div
@@ -74,26 +75,14 @@ export default {
     },
     watch: {
         item(item) {
-            if (item.name !== 'null') {
-                this.name = item.name;
-                this.$refs.nameComponent.update(this.name);
-            } else {
-                this.$refs.nameComponent.update();
-            }
+            this.name = item.name;
+            this.$refs.nameComponent.update(this.name);
 
-            if (item.description !== 'null') {
-                this.description = item.description;
-                this.$refs.descriptionComponent.update(this.description);
-            } else {
-                this.$refs.descriptionComponent.update();
-            }
+            this.description = item.description;
+            this.$refs.descriptionComponent.update(this.description);
 
-            if (item.title !== 'null') {
-                this.title = item.title;
-                this.$refs.titleComponent.update(this.title);
-            } else {
-                this.$refs.titleComponent.update();
-            }
+            this.title = item.title;
+            this.$refs.titleComponent.update(this.title);
         }
     },
     data() {

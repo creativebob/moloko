@@ -103,8 +103,14 @@ export default {
                 fd.append('id', this.id);
 
                 fd.append('name', this.name);
-                fd.append('description', this.description);
-                fd.append('title', this.title);
+
+                if (this.description) {
+                    fd.append('description', this.description);
+                }
+                if (this.title) {
+                    fd.append('title', this.title);
+                }
+
                 fd.append('file', this.file);
 
                 axios
