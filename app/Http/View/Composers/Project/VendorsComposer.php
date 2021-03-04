@@ -13,7 +13,7 @@ class VendorsComposer
             'supplier.company.photo',
             'files' => function ($q) {
                 $q->where('display', true)
-                    ->oldest();
+                    ->oldest('sort');
             }
         ])
         ->where([
