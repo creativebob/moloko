@@ -45,6 +45,7 @@ class Vendor extends Model
 
     public function files()
     {
-        return $this->morphToMany(File::class, 'entity', 'file_entities');
+        return $this->morphToMany(File::class, 'entity', 'file_entities')
+            ->oldest('sort');
     }
 }
