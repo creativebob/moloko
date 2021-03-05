@@ -77,6 +77,17 @@
                     </a>
                 </div>
             </div>
+
+            {{-- Дополнительные кнопки --}}
+            <div class="black-button-group small-12 cell">
+                @isset($archivesCount)
+                    @if($archivesCount > 0)
+                        <a class="button tiny hollow right dismissed" href="{{ route("{$pageInfo->alias}.archives") }}">Архив: {{ $archivesCount }}</a>
+                    @endif
+                @else
+                    <a class="button tiny hollow right dismissed" href="{{ route("{$pageInfo->alias}.index") }}">Обычные</a>
+                @endisset
+            </div>
         </div>
     </div>
 </div>

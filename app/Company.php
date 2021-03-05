@@ -496,5 +496,4 @@ class Company extends Model
         return $this->morphToMany(File::class, 'entity', 'file_entities')
             ->oldest('sort');
     }
-
 }

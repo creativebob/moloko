@@ -215,13 +215,16 @@ class GoodsController extends Controller
             ->authors($answer)
             ->systemItem($answer)
             ->booklistFilter($request)
-            ->filter($request, 'author_id')
+            ->filter()
 
-            ->whereHas('article', function($q) use ($request){
-                $q->filter($request, 'articles_group_id');
-            })
+//            ->filter($request, 'author_id')
+//
+//            ->whereHas('article', function($q) use ($request){
+//                $q->filter($request, 'articles_group_id');
+//            })
+//
+//            ->filter($request, 'category_id')
 
-            ->filter($request, 'category_id')
             // ->filter($request, 'goods_product_id', 'article')
             ->where('archive', true)
 //        ->select($columns)

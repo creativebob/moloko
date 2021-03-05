@@ -129,14 +129,13 @@
                     $vm.checkChildrens(category, categoriesIds);
                     // console.log(categoriesIds);
 
-                    categoriesIds.forEach(categoryId => {
-                        let found = $vm.checkeds.find(checked => checked == categoryId);
-                        if (found) {
-                            $vm.currentItems.push(categoryId) ;
-                        }
-                    });
                 });
-
+                categoriesIds.forEach(categoryId => {
+                    let found = $vm.checkeds.find(checked => checked == categoryId);
+                    if (found) {
+                        $vm.currentItems.push(categoryId) ;
+                    }
+                });
             }
         },
         methods: {

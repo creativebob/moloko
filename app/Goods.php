@@ -2,27 +2,20 @@
 
 namespace App;
 
+use App\Models\System\BaseModel;
 use App\Models\System\Stocks\GoodsStock;
 use App\Models\System\Traits\Cmvable;
-use App\Models\System\Traits\Commonable;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
-// Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
-class Goods extends Model
+class Goods extends BaseModel
 {
+    use SoftDeletes,
+        Cmvable;
+    //    use Cachable;
 
-	// Включаем кеш
-//    use Cachable;
-
-    use Notifiable;
-    use SoftDeletes;
-
-    use Commonable;
-    use Cmvable;
+    const ALIAS = 'goods';
+    const DEPENDENCE = false;
 
     protected $fillable = [
         'article_id',
@@ -41,13 +34,11 @@ class Goods extends Model
         'moderation'
     ];
 
-    // Категория
     public function category()
     {
         return $this->belongsTo(GoodsCategory::class);
     }
 
-    // Склад
     public function stocks()
     {
         return $this->hasMany(GoodsStock::class, 'cmv_id');
@@ -114,6 +105,13 @@ class Goods extends Model
         return $this->belongsToMany(Article::class, 'article_goods', 'goods_id', 'article_id');
     }
 
+    // Метрики
+    public function metrics()
+    {
+        return $this->belongsToMany('App\Metric', 'goods_metric')
+            ->withPivot('value');
+    }
+
     public function getMetricByName($metric_name){
 
         $metric = $this->metrics->where('name', $metric_name)->first();
@@ -145,17 +143,4 @@ class Goods extends Model
             return null;
         }
     }
-
-    // Фильтры
-    public function scopeFilter($query)
-    {
-        if (request('goods_categories')) {
-            $query->whereIn('category_id', request('goods_categories'));
-        }
-
-        if (request('authors')) {
-            $query->whereIn('author_id', request('authors'));
-        }
-    }
-
 }

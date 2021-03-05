@@ -407,7 +407,7 @@ Route::resource('/raws_categories', 'RawsCategoryController');
 // Поиск
 Route::get('/raws/search/{search}', 'RawController@search');
 
-// Просмотр архивных
+// Архивные
 Route::get('/raws/archives', 'RawController@archives')
     ->name('raws.archives');
 
@@ -572,9 +572,9 @@ Route::resource('/impacts_categories', 'ImpactsCategoryController')
 Route::get('/impacts/search/{search}', 'ImpactController@search');
 // Дублирование
 Route::post('/impacts/replicate/{id}', 'ImpactController@replicate');
-// Архив
+// Архивация
 Route::post('/impacts/archive/{id}', 'ImpactController@archive');
-// Просмотр архивных
+// Архивные
 Route::get('/impacts/archives', 'ImpactController@archives')
     ->name('impacts.archives');
 // Основные методы
@@ -736,8 +736,11 @@ Route::resource('/services', 'ServiceController')->except([
 ]);
 // Поиск
 Route::post('/services/search/{text_fragment}', 'ServiceController@search');
-// Архив
+// Архивация
 Route::post('/services/archive/{id}', 'ServiceController@archive');
+// Архивные
+Route::get('/services/archives', 'ServiceController@archives')
+    ->name('services.archives');
 // Дублирование
 Route::post('/services/replicate/{id}', 'ServiceController@replicate');
 // Фотки
@@ -769,8 +772,11 @@ Route::resource('/workflows', 'WorkflowController')->except([
 ]);
 // Поиск
 Route::get('/workflows/search/{search}', 'WorkflowController@search');
-// Архив
+// Архивация
 Route::post('/workflows/archive/{id}', 'WorkflowController@archive');
+// Архивные
+Route::get('/workflows/archives', 'WorkflowController@archives')
+    ->name('workflows.archives');
 // Дублирование
 Route::post('/workflows/replicate/{id}', 'WorkflowController@replicate');
 // Фото

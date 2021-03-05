@@ -2,21 +2,20 @@
 
 namespace App;
 
+use App\Models\System\BaseModel;
 use App\Models\System\Stocks\AttachmentsStock;
 use App\Models\System\Traits\Cmvable;
-use App\Models\System\Traits\Commonable;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
-// Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
-class Attachment extends Model
+class Attachment extends BaseModel
 {
-    use Commonable;
-    use Cmvable;
-    use SoftDeletes;
-//    use Cachable;
+    use SoftDeletes,
+        Cmvable;
+    //    use Cachable;
+
+    const ALIAS = 'attachments';
+    const DEPENDENCE = false;
 
     protected $fillable = [
         'category_id',
@@ -39,10 +38,14 @@ class Attachment extends Model
         'moderation'
     ];
 
-    // Категория
     public function category()
     {
         return $this->belongsTo(AttachmentsCategory::class);
+    }
+
+    public function stocks()
+    {
+        return $this->hasMany(AttachmentsStock::class, 'cmv_id');
     }
 
     // Состоит в составе
@@ -72,9 +75,5 @@ class Attachment extends Model
             });
     }
 
-    // Склад
-    public function stocks()
-    {
-        return $this->hasMany(AttachmentsStock::class, 'cmv_id');
-    }
+
 }

@@ -81,11 +81,14 @@ class RoomController extends Controller
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
+        ->systemItem($answer)
         ->booklistFilter($request)
-        ->filter($request, 'author_id')
+            ->filter()
+
+//        ->filter($request, 'author_id')
         // ->filter($request, 'rooms_category_id', 'article.product')
         // ->filter($request, 'rooms_product_id', 'article')
+
         ->where('archive', false)
 //        ->select($columns)
         ->orderBy('moderation', 'desc')
@@ -172,11 +175,14 @@ class RoomController extends Controller
             ->moderatorLimit($answer)
             ->companiesLimit($answer)
             ->authors($answer)
-            ->systemItem($answer) // Фильтр по системным записям
+            ->systemItem($answer)
             ->booklistFilter($request)
-            ->filter($request, 'author_id')
+            ->filter()
+
+//            ->filter($request, 'author_id')
             // ->filter($request, 'rooms_category_id', 'article.product')
             // ->filter($request, 'rooms_product_id', 'article')
+
             ->where('archive', true)
 //        ->select($columns)
             ->orderBy('moderation', 'desc')

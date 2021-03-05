@@ -25,6 +25,8 @@ use App\Http\View\Composers\System\CitySearchComposer;
 use App\Http\View\Composers\System\ClientsCitiesComposer;
 use App\Http\View\Composers\System\ClientsCountComposer;
 use App\Http\View\Composers\System\ClientsForSearchComposer;
+use App\Http\View\Composers\System\CmvCategoriesTreeComposer;
+use App\Http\View\Composers\System\CmvManufacturersComposer;
 use App\Http\View\Composers\System\DefaultPhotoSettingsComposer;
 use App\Http\View\Composers\System\DepartmentsForUserComposer;
 use App\Http\View\Composers\System\DiscountsForEstimatesComposer;
@@ -43,6 +45,7 @@ use App\Http\View\Composers\System\OutletsSettingsCategoriesWithSettingsComposer
 use App\Http\View\Composers\System\PartsComposer;
 use App\Http\View\Composers\System\PaymentsMethodsComposer;
 use App\Http\View\Composers\System\PositionsWithStaffComposer;
+use App\Http\View\Composers\System\ProcessesArchivesCountComposer;
 use App\Http\View\Composers\System\ServicesCategoriesTreeComposer;
 use App\Http\View\Composers\System\ServicesCategoriesWithServicesComposer;
 use App\Http\View\Composers\System\StaffArchiveCountComposer;
@@ -575,12 +578,16 @@ class ViewServiceProvider extends ServiceProvider
 
         // ТМЦ
         view()->composer('products.articles.common.index.includes.title', CmvArchivesCountComposer::class);
+        view()->composer('products.articles.common.index.includes.filters.manufacturers', CmvManufacturersComposer::class);
 
         // Товары
         view()->composer('products.articles.goods.includes.filters', GoodsCategoriesTreeComposer::class);
 
         // Объекты воздействия
-        view()->composer('products.articles.impacts.includes.filters', ImpactsCategoriesTreeComposer::class);
+        view()->composer('products.articles.common.index.includes.filters', CmvCategoriesTreeComposer::class);
+
+        // Процессы
+        view()->composer('products.processes.common.index.includes.title', ProcessesArchivesCountComposer::class);
 
         // Услуги
         view()->composer('products.processes.services.includes.filters', ServicesCategoriesTreeComposer::class);

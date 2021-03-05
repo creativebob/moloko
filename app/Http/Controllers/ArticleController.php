@@ -74,26 +74,30 @@ class ArticleController extends Controller
                 ->get([
                     'name',
                     'alias',
-                    'ancestor_id'
+                    'ancestor_id',
+                    'model'
                 ]);
 
             foreach ($entities as $entity) {
-                // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-                $answer = operator_right($entity->alias, false, 'index');
+                if (auth()->user()->can('create', $entity->ancestor->model)) {
 
-                $categories = $entity->ancestor->model::moderatorLimit($answer)
-                    ->companiesLimit($answer)
-                    ->get([
-                        'id',
-                        'name'
-                    ]);
+                    // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+                    $answer = operator_right($entity->alias, false, 'index');
+
+                    $categories = $entity->ancestor->model::moderatorLimit($answer)
+                        ->companiesLimit($answer)
+                        ->get([
+                            'id',
+                            'name'
+                        ]);
 
 //                $categoriesTree = buildTree($categories);
-                $data['entities'][] = [
-                    'name' => $entity->name,
-                    'alias' => $entity->alias,
-                    'categories' => $categories,
-                ];
+                    $data['entities'][] = [
+                        'name' => $entity->name,
+                        'alias' => $entity->alias,
+                        'categories' => $categories,
+                    ];
+                }
             }
         }
         return response()->json($data);

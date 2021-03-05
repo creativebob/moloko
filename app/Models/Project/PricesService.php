@@ -100,7 +100,8 @@ class PricesService extends Model
                                 $q->whereHas('company', function ($q) use ($manufacturer) {
                                     $q->where('name', $manufacturer);
                                 });
-                            })->orWhereNull('manufacturer_id');
+                            })
+                                ->orWhereNull('manufacturer_id');
                         });
                     });
                 });
@@ -118,8 +119,9 @@ class PricesService extends Model
                                     $q->whereHas('company', function ($q) use ($manufacturer) {
                                         $q->where('name', $manufacturer);
                                     });
-                                })->orWhereNull('manufacturer_id');
-                            });
+                                });
+                            })
+                                ->orWhereNull('manufacturer_id');
                         });
                     });
                 });

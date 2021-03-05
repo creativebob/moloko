@@ -71,7 +71,7 @@
                     <label :for="'checkbox-' + name + '-' + item.id">
                         <span
                             class="wrap-label-checkboxer"
-                        >{{ item.name }}</span>
+                        >{{ itemName(item) }}</span>
                     </label>
                 </li>
             </ul>
@@ -125,13 +125,13 @@
             }
         },
         methods: {
-            // itemName(item) {
-            //     if (this.relation) {
-            //         return item.[this.relation].name;
-            //     } else {
-            //         return item.name;
-            //     }
-            // },
+            itemName(item) {
+                if (this.relation) {
+                    return item[this.relation].name;
+                } else {
+                    return item.name;
+                }
+            },
             setWidth() {
                 let width = $('.' + this.name + '.checkboxer-wrap').css("width");
                 $('.' + this.name + '.dropdown-pane.checkboxer-pane').css("width", width);

@@ -104,7 +104,7 @@ class ArticlesGroupController extends Controller
         $articles_group = new ArticlesGroup;
         $articles_group->name = $request->name;
         $articles_group->description = $request->description;
-        $articles_group->unit_id = $request->unit_id;
+        $articles_group->units_category_id = $request->units_category_id;
 
         $articles_group->set_status = $request->has('set_status');
 
@@ -145,7 +145,19 @@ class ArticlesGroupController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $articles_group);
 
-        $articles_group->load('unit');
+        $articles_group->load([
+            'articles' => function ($q) {
+                $q->with([
+                    'in_goods',
+                    'in_raws',
+                    'in_containers',
+                    'in_attachments',
+                    'in_impacts',
+                    'in_tools',
+                ]);
+            }
+        ]);
+//        dd($articles_group);
 
         return view('products.articles_groups.edit', [
             'articles_group' => $articles_group,
@@ -164,7 +176,7 @@ class ArticlesGroupController extends Controller
 
         $articles_group->name = $request->name;
         $articles_group->description = $request->description;
-        $articles_group->unit_id = $request->unit_id;
+        $articles_group->units_category_id = $request->units_category_id;
 
         if ($articles_group->articles->count() == 0) {
             $articles_group->set_status = $request->has('set_status');

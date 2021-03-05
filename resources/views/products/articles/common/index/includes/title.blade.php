@@ -85,7 +85,7 @@
                     <div class="small-12 cell">
                         {!! Form::open(['route' => "{$pageInfo->alias}.index", 'data-abide', 'novalidate', 'method' => 'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) !!}
 
-                        @includeIf("{$pageInfo->entity->view_path}.includes.filters")
+                        @include('products.articles.common.index.includes.filters')
 
                         <div class="small-12 cell text-center">
                             {!! Form::submit('Фильтрация', ['class'=>'button']) !!}
@@ -98,6 +98,17 @@
                         <button type="button" class="icon-moveup sprite"></button>
                     </a>
                 </div>
+            </div>
+
+            {{-- Дополнительные кнопки --}}
+            <div class="black-button-group small-12 cell">
+                @isset($archivesCount)
+                    @if($archivesCount > 0)
+                        <a class="button tiny hollow right dismissed" href="{{ route("{$pageInfo->alias}.archives") }}">Архив: {{ $archivesCount }}</a>
+                    @endif
+                @else
+                    <a class="button tiny hollow right dismissed" href="{{ route("{$pageInfo->alias}.index") }}">Обычные</a>
+                @endisset
             </div>
         </div>
     </div>

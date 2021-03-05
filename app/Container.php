@@ -2,25 +2,20 @@
 
 namespace App;
 
+use App\Models\System\BaseModel;
 use App\Models\System\Stocks\ContainersStock;
 use App\Models\System\Traits\Cmvable;
-use App\Models\System\Traits\Commonable;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
-// Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
-class Container extends Model
+class Container extends BaseModel
 {
     // Включаем кеш
 //    use Cachable;
 
     use Notifiable;
     use SoftDeletes;
-
-    use Commonable;
     use Cmvable;
 
     protected $fillable = [

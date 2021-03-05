@@ -2,20 +2,19 @@
 
 namespace App;
 
+use App\Models\System\BaseModel;
 use App\Models\System\Stocks\RawsStock;
 use App\Models\System\Traits\Cmvable;
-use App\Models\System\Traits\Commonable;
-use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Raw extends Model
+class Raw extends BaseModel
 {
+    use SoftDeletes,
+        Cmvable;
+    //    use Cachable;
 
-    use Commonable;
-    use SoftDeletes;
-//    use Cachable;
-    use Cmvable;
+    const ALIAS = 'raws';
+    const DEPENDENCE = false;
 
 //    protected $appends   = [
 //        'cost_portion',
@@ -43,10 +42,14 @@ class Raw extends Model
         'moderation'
     ];
 
-    // Категория
     public function category()
     {
         return $this->belongsTo(RawsCategory::class);
+    }
+
+    public function stocks()
+    {
+        return $this->hasMany(RawsStock::class, 'cmv_id');
     }
 
     // Состоит в составе
@@ -82,11 +85,7 @@ class Raw extends Model
             });
     }
 
-    // Склад
-    public function stocks()
-    {
-        return $this->hasMany(RawsStock::class, 'cmv_id');
-    }
+
 
     public function getNameAttribute()
     {

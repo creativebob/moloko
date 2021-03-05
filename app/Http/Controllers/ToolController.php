@@ -82,9 +82,12 @@ class ToolController extends Controller
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
+        ->systemItem($answer)
+            ->filter()
+
         ->booklistFilter($request)
-        ->filter($request, 'author_id')
+//        ->filter($request, 'author_id')
+
         ->where('archive', false)
 //        ->select($columns)
         ->orderBy('moderation', 'desc')
@@ -163,9 +166,12 @@ class ToolController extends Controller
             ->moderatorLimit($answer)
             ->companiesLimit($answer)
             ->authors($answer)
-            ->systemItem($answer) // Фильтр по системным записям
-            ->booklistFilter($request)
-            ->filter($request, 'author_id')
+            ->systemItem($answer)
+            ->filter()
+
+//            ->booklistFilter($request)
+//            ->filter($request, 'author_id')
+
             ->where('archive', true)
 //        ->select($columns)
             ->orderBy('moderation', 'desc')
@@ -431,10 +437,7 @@ class ToolController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, 'delete');
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $tool = Tool::with([
-            'compositions.goods',
-        ])
-        ->moderatorLimit($answer)
+        $tool = Tool::moderatorLimit($answer)
         ->find($id);
 
         // Подключение политики

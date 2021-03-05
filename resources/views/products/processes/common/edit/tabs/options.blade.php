@@ -102,6 +102,17 @@
 
         <fieldset class="fieldset-access">
             <legend>Доступность</legend>
+
+            {{-- Чекбокс архива --}}
+            {!! Form::hidden('archive', 0) !!}
+            @if ($item->archive == 1)
+
+                <div class="small-12 cell checkbox">
+                    {!! Form::checkbox('archive', 0, $item->archive, ['id' => 'checkbox-archive']) !!}
+                    <label for="checkbox-archive"><span>Вывести из архива</span></label>
+                </div>
+            @endif
+
             {{-- Чекбокс черновика --}}
             {!! Form::hidden('draft', 0) !!}
             {{-- @if ($process->draft) --}}

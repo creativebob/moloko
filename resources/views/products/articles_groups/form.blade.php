@@ -19,16 +19,16 @@
                     @include('includes.selects.units_categories', ['default' => isset($articles_group->unit_id) ? $articles_group->unit->category_id : 6, 'type'=>'article'])
                 </div>
 
-                <div class="small-12 medium-6 cell">
-                    @include('includes.selects.units', ['default' => isset($articles_group->unit_id) ? $articles_group->unit_id : 26, 'units_category_id' => isset($articles_group->unit_id) ? $articles_group->unit->category_id : 6])
-                </div>
+{{--                <div class="small-12 medium-6 cell">--}}
+{{--                    @include('includes.selects.units', ['default' => isset($articles_group->unit_id) ? $articles_group->unit_id : 26, 'units_category_id' => isset($articles_group->unit_id) ? $articles_group->unit->category_id : 6])--}}
+{{--                </div>--}}
 
                 <div class="small-12 cell">
                     <fieldset>
                         <legend>Список артикулов в группе:</legend>
                         <ul>
                             @foreach($articles_group->articles as $article)
-                            
+
                                 @if(!empty($article->in_goods))
                                     @foreach($article->in_goods as $item)
                                         <li>Товар: <a href="/admin/goods/{{ $item->id }}/edit">{{ $item->article->name }}</a></li>
@@ -44,7 +44,25 @@
                                         <li>Упаковка: <a href="/admin/containers/{{ $item->id }}/edit">{{ $item->article->name }}</a></li>
                                     @endforeach
                                 @endif
-                            
+
+                                @if(!empty($article->in_attachments))
+                                    @foreach($article->in_attachments as $item)
+                                        <li>Вложение: <a href="/admin/attachments/{{ $item->id }}/edit">{{ $item->article->name }}</a></li>
+                                    @endforeach
+                                @endif
+
+                                @if(!empty($article->in_impacts))
+                                    @foreach($article->in_impacts as $item)
+                                        <li>Объект воздействия: <a href="/admin/impacts/{{ $item->id }}/edit">{{ $item->article->name }}</a></li>
+                                    @endforeach
+                                @endif
+
+                                @if(!empty($article->in_tools))
+                                    @foreach($article->in_tools as $item)
+                                        <li>Инструмент: <a href="/admin/tools/{{ $item->id }}/edit">{{ $item->article->name }}</a></li>
+                                    @endforeach
+                                @endif
+
                             @endforeach
                         </ul>
                     </fieldset>

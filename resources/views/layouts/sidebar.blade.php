@@ -13,7 +13,7 @@
 
             @if(session('access.user_info.outlets'))
             <li>
-                <a href="{{ route('shift') }}" data-link="0">
+                <a href="{{ route('shift') }}" data-link="01">
                     <div class="icon-shift sprite"></div>
                     <span>СМЕНА</span>
                 </a>

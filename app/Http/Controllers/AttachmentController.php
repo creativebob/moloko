@@ -102,13 +102,15 @@ class AttachmentController extends Controller
             ->authors($answer)
             ->systemItem($answer) // Фильтр по системным записям
             ->booklistFilter($request)
-            ->filter($request, 'author_id')
+            ->filter()
 
-            ->whereHas('article', function($q) use ($request){
-                $q->filter($request, 'articles_group_id');
-            })
-
-            ->filter($request, 'category_id')
+//            ->filter($request, 'author_id')
+//
+//            ->whereHas('article', function($q) use ($request){
+//                $q->filter($request, 'articles_group_id');
+//            })
+//
+//            ->filter($request, 'category_id')
 
             ->where('archive', false)
 //            ->select($columns)
@@ -216,13 +218,15 @@ class AttachmentController extends Controller
             ->authors($answer)
             ->systemItem($answer) // Фильтр по системным записям
             ->booklistFilter($request)
-            ->filter($request, 'author_id')
+            ->filter()
 
-            ->whereHas('article', function($q) use ($request){
-                $q->filter($request, 'articles_group_id');
-            })
-
-            ->filter($request, 'category_id')
+//            ->filter($request, 'author_id')
+//
+//            ->whereHas('article', function($q) use ($request){
+//                $q->filter($request, 'articles_group_id');
+//            })
+//
+//            ->filter($request, 'category_id')
 
             ->where('archive', true)
 //            ->select($columns)

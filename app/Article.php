@@ -196,6 +196,21 @@ class Article extends Model
         return $this->hasMany(Container::class, 'article_id');
     }
 
+    public function in_attachments()
+    {
+        return $this->hasMany(Attachment::class, 'article_id');
+    }
+
+    public function in_impacts()
+    {
+        return $this->hasMany(Impact::class, 'article_id');
+    }
+
+    public function in_tools()
+    {
+        return $this->hasMany(Tool::class, 'article_id');
+    }
+
 
     // Состав (набор)
     // public function set_compositions()

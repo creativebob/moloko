@@ -26,12 +26,7 @@ trait Cmvable
         return $this->belongsTo(Article::class, 'article_id');
     }
 
-    // Метрики
-    public function metrics()
-    {
-        return $this->belongsToMany('App\Metric', 'goods_metric')
-            ->withPivot('value');
-    }
+
 
     // Еденица измерения
     public function unit_for_composition()
@@ -154,4 +149,27 @@ trait Cmvable
 //            return 0;
 //        }
 //    }
+
+    /**
+     * Фильтр
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeFilter($query)
+    {
+        $filters = $this->getFilters(self::ALIAS);
+
+        if (isset($filters['categories'])) {
+            $query->whereIn('category_id', $filters['categories']);
+        }
+
+        if (isset($filters['manufacturers'])) {
+            $query->whereHas('article', function ($q) use ($filters) {
+                $q->whereIn('manufacturer_id', $filters['manufacturers']);
+            });
+        }
+
+        return $query;
+    }
 }

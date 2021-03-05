@@ -73,17 +73,19 @@ class ImpactController extends Controller
             ->moderatorLimit($answer)
             ->companiesLimit($answer)
             ->authors($answer)
-            ->systemItem($answer) // Фильтр по системным записям
-
+            ->systemItem($answer)
                 ->filter()
+
 //            ->booklistFilter($request)
 //        ->filter($request, 'author_id')
             // ->filter($request, 'impacts_category_id', 'article.product')
             // ->filter($request, 'impacts_product_id', 'article')
+
             ->where('archive', false)
 //        ->select($columns)
             ->orderBy('moderation', 'desc')
-            ->oldest('sort')
+//            ->oldest('sort')
+            ->latest('id')
             ->paginate(30);
         // dd($impacts);
 
@@ -148,6 +150,8 @@ class ImpactController extends Controller
             ->authors($answer)
             ->systemItem($answer)
             ->booklistFilter($request)
+            ->filter()
+
 //            ->filter($request, 'author_id')
 //
 //            ->whereHas('article', function($q) use ($request){
@@ -156,6 +160,7 @@ class ImpactController extends Controller
 //
 //            ->filter($request, 'category_id')
             // ->filter($request, 'goods_product_id', 'article')
+
             ->where('archive', true)
 //        ->select($columns)
             ->orderBy('moderation', 'desc')

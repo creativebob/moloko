@@ -11,6 +11,7 @@ class Impact extends BaseModel
 {
     use SoftDeletes,
         Cmvable;
+    //    use Cachable;
 
     const ALIAS = 'impacts';
     const DEPENDENCE = false;
@@ -49,21 +50,15 @@ class Impact extends BaseModel
         return $this->hasMany(ImpactsStock::class, 'cmv_id');
     }
 
+    public function metrics()
+    {
+        return $this->belongsToMany(Metric::class, 'impact_metric')
+            ->withPivot('value');
+    }
+
     public function getNameAttribute()
     {
         $value = $this->article->name;
         return $value;
-    }
-
-    // Фильтр
-    public function scopeFilter($query)
-    {
-        $filters = $this->getFilters(self::ALIAS);
-
-        if (isset($filters['impacts_categories'])) {
-            $query->whereIn('category_id', $filters['impacts_categories']);
-        }
-
-        return $query;
     }
 }

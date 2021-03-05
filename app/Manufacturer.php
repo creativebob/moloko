@@ -98,4 +98,14 @@ class Manufacturer extends Model
     {
         return $this->hasManyThrough('App\Raw', 'App\Article', 'manufacturer_id');
     }
+
+    public function impacts()
+    {
+        return $this->hasManyThrough(Impact::class, 'App\Article', 'manufacturer_id');
+    }
+
+    public function tools()
+    {
+        return $this->hasManyThrough(Tool::class, 'App\Article', 'manufacturer_id');
+    }
 }
