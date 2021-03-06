@@ -16,73 +16,54 @@ class ArticleController extends Controller
      */
     public function getAppointments(Request $request)
     {
-        $appointments = [
-            'raw',
-            'container',
-            'cur_goods',
-            'attachment',
-            'tool',
-            'impact'
-        ];
+
+        $cmvEntities = Entity::with([
+            'ancestor:id,model,alias'
+        ])
+        ->whereHas('type', function ($q) {
+            $q->where('alias', 'cmv');
+        })
+            ->get([
+                'name',
+                'alias',
+                'ancestor_id',
+                'model'
+            ]);
+//        dd($cmvEntities);
+
+        $appointments = [];
+        foreach ($cmvEntities as $cmvEntity) {
+            if ($cmvEntity->alias === 'goods') {
+                $appointments[] = 'cur_goods';
+            } else {
+                $appointments[] = mb_substr($cmvEntity->alias, 0, -1);
+            }
+        }
+//        dd($appointments);
 
         $article = Article::with($appointments)
             ->find($request->id);
 
-        $relations = [];
+        $aliases = [];
         foreach ($appointments as $appointment) {
             if (empty($article->$appointment)) {
-                $relations[] = $appointment;
-            }
-        }
-
-        $data = [];
-
-        if (count($relations) > 0) {
-            $aliases = [];
-            foreach ($relations as $key => $alias) {
-                switch ($alias) {
-                    case('raw'):
-                        $aliases[] = 'raws';
-                        break;
-
-                    case('container'):
-                        $aliases[] = 'containers';
-                        break;
-
-                    case('cur_goods'):
-                        $aliases[] = 'goods';
-                        break;
-
-                    case('attachment'):
-                        $aliases[] = 'attachments';
-                        break;
-
-                    case('tool'):
-                        $aliases[] = 'tools';
-                        break;
-
-                    case('impact'):
-                        $aliases[] = 'impacts';
-                        break;
+                if ($appointment === 'cur_goods') {
+                    $aliases[] = 'goods';
+                } else {
+                    $aliases[] = "{$appointment}s";
                 }
             }
+        }
+//        dd($aliases);
 
-            $entities = Entity::with([
-                'ancestor:id,model'
-            ])
-                ->whereIn('alias', $aliases)
-                ->get([
-                    'name',
-                    'alias',
-                    'ancestor_id',
-                    'model'
-                ]);
-
-            foreach ($entities as $entity) {
+        $data = [];
+        if (count($aliases) > 0) {
+            foreach ($aliases as $alias) {
+                $entity = $cmvEntities->firstWhere('alias', $alias);
                 if (auth()->user()->can('create', $entity->ancestor->model)) {
 
                     // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-                    $answer = operator_right($entity->alias, false, 'index');
+                    $answer = operator_right($entity->ancestor->alias, false, 'index');
 
                     $categories = $entity->ancestor->model::moderatorLimit($answer)
                         ->companiesLimit($answer)

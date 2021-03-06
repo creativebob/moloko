@@ -279,6 +279,11 @@ class Article extends Model
         return $this->hasOne(Attachment::class);
     }
 
+    public function room()
+    {
+        return $this->hasOne(Room::class);
+    }
+
     public function codes()
     {
         return $this->hasMany(ArticleCode::class);

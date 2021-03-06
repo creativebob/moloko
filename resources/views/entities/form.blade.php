@@ -8,7 +8,7 @@
     </div>
 </div>
 
-<div class="grid-x tabs-wrap inputs">
+<div class="grid-x tabs-wrap inputs tabs-margin-top">
 
     <div class="tabs-content" data-tabs-content="tabs">
 

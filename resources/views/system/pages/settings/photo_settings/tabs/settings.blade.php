@@ -17,7 +17,7 @@
                     <label>Ширина
                         <digit-component
                             name="img_min_width"
-                            value="{{ $photoSetting->img_min_width }}"
+                            value="{{ optional($photoSetting)->img_min_width }}"
                             :limit-min="1"
                             :decimal-place="0"
                             placeholder="{{ $defaultPhotoSettings->img_min_width }}"
@@ -34,7 +34,7 @@
                     <label>Высота
                         <digit-component
                             name="img_min_height"
-                            value="{{ $photoSetting->img_min_height }}"
+                            value="{{ optional($photoSetting)->img_min_height }}"
                             :limit-min="1"
                             :decimal-place="0"
                             placeholder="{{ $defaultPhotoSettings->img_min_height }}"
@@ -72,7 +72,7 @@
                     <label>Качество сжатия
                         <digit-component
                             name="quality"
-                            value="{{ $photoSetting->quality }}"
+                            value="{{ optional($photoSetting)->quality }}"
                             :limit-min="1"
                             :limit-max="100"
                             :decimal-place="0"
@@ -86,7 +86,7 @@
                     <label>Размер изображения (кб)
                         <digit-component
                             name="img_max_size"
-                            value="{{ $photoSetting->img_max_size }}"
+                            value="{{ optional($photoSetting)->img_max_size }}"
                             :limit-min="1"
                             :decimal-place="0"
                             placeholder="{{ $defaultPhotoSettings->img_max_size }}"
@@ -108,7 +108,8 @@
                     <label>Форматы
                         @include('includes.inputs.name', [
                             'name' => 'img_formats',
-                            'required' => true
+                            'required' => true,
+                            'value' => isset($photoSetting->img_formats) ? $photoSetting->img_formats : 'jpg,JPG'
                         ]
                         )
                     </label>
@@ -131,7 +132,7 @@
                     <label>Ширина маленького
                         <digit-component
                             name="img_small_width"
-                            value="{{ $photoSetting->img_small_width }}"
+                            value="{{ optional($photoSetting)->img_small_width }}"
                             :limit-min="1"
                             :decimal-place="0"
                             placeholder="{{ $defaultPhotoSettings->img_small_width }}"
@@ -147,7 +148,7 @@
                     <label>Высота маленького
                         <digit-component
                             name="img_small_height"
-                            value="{{ $photoSetting->img_small_height }}"
+                            value="{{ optional($photoSetting)->img_small_height }}"
                             :limit-min="1"
                             :decimal-place="0"
                             placeholder="{{ $defaultPhotoSettings->img_small_height }}"
@@ -165,7 +166,7 @@
                     <label>Ширина среднего
                         <digit-component
                             name="img_medium_width"
-                            value="{{ $photoSetting->img_medium_width }}"
+                            value="{{ optional($photoSetting)->img_medium_width }}"
                             :limit-min="1"
                             :decimal-place="0"
                             placeholder="{{ $defaultPhotoSettings->img_medium_width }}"
@@ -181,7 +182,7 @@
                     <label>Высота среднего
                         <digit-component
                             name="img_medium_height"
-                            value="{{ $photoSetting->img_medium_height }}"
+                            value="{{ optional($photoSetting)->img_medium_height }}"
                             :limit-min="1"
                             :decimal-place="0"
                             placeholder="{{ $defaultPhotoSettings->img_medium_height }}"
@@ -199,7 +200,7 @@
                     <label>Ширина большого
                         <digit-component
                             name="img_large_width"
-                            value="{{ $photoSetting->img_large_width }}"
+                            value="{{ optional($photoSetting)->img_large_width }}"
                             :limit-min="1"
                             :decimal-place="0"
                             placeholder="{{ $defaultPhotoSettings->img_large_width }}"
@@ -215,7 +216,7 @@
                     <label>Высота большого
                         <digit-component
                             name="img_large_height"
-                            value="{{ $photoSetting->img_large_height }}"
+                            value="{{ optional($photoSetting)->img_large_height }}"
                             :limit-min="1"
                             :decimal-place="0"
                             placeholder="{{ $defaultPhotoSettings->img_large_height }}"

@@ -130,16 +130,18 @@ class EntityController extends Controller
         // Вносим сущность в список сущностей, если такой сущности там не зарегистрировано
         $entity = Entity::firstOrCreate(
             [
-                'model' => $request->model
-            ], [
+                'model' => $request->model,
                 'name' => $request->name,
                 'alias' => $request->alias,
+                'view_path' => $request->view_path,
+            ], [
                 'rights' => $request->rights,
                 'author_id' => 1,
                 'system' => 1,
                 'moderation' => 0,
                 'statistic' => $request->has('statistic'),
-                'dependence' => $request->has('dependence')
+                'dependence' => $request->has('dependence'),
+                'entities_type_id' => $request->entities_type_id
             ]
         );
 
@@ -231,6 +233,8 @@ class EntityController extends Controller
         // Проверяем право на редактирование полученной сущности
         $this->authorize(getmethod(__FUNCTION__), $entity);
 
+        $entity->load('photo_settings');
+
         return view('entities.edit', [
             'entity' => $entity,
             'pageInfo' => pageInfo($this->entity_name)
@@ -254,6 +258,8 @@ class EntityController extends Controller
         $entity->alias = $request->alias;
         $entity->view_path = $request->view_path;
         $entity->model = $request->model;
+
+        $entity->entities_type_id = $request->entities_type_id;
 
         // $entity->rights = $request->has('rights');
 

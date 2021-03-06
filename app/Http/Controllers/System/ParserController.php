@@ -9,6 +9,7 @@ use App\CatalogsGoods;
 use App\CatalogsGoodsItem;
 use App\Client;
 use App\Dispatch;
+use App\EntitiesType;
 use App\EstimatesCancelGround;
 use App\Http\Controllers\Controller;
 use App\Models\System\Documents\ConsignmentsItem;
@@ -67,6 +68,63 @@ class ParserController extends Controller
     public function test()
     {
         dd(__METHOD__);
+    }
+
+    /**
+     * Проставляем тип сущностям
+     *
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
+    public function setEntitiesTypes()
+    {
+        $entitiesTypes = EntitiesType::get();
+
+        $cmv = [
+            'goods',
+            'raws',
+            'containers',
+            'attachments',
+            'tools',
+            'impacts',
+            'rooms',
+        ];
+
+        Entity::whereIn('alias', $cmv)
+            ->update([
+                'entities_type_id' => $entitiesTypes->firstWhere('alias', 'cmv')->id
+            ]);
+
+        echo "Проставлен тип: ТМЦ<br><br>";
+
+        $processes = [
+            'services',
+            'workflows',
+        ];
+
+        Entity::whereIn('alias', $processes)
+            ->update([
+                'entities_type_id' => $entitiesTypes->firstWhere('alias', 'process')->id
+            ]);
+
+        echo "Проставлен тип: Процесс<br><br>";
+
+        $site = [
+            'catalogs_goods',
+            'catalogs_services',
+            'rubricators',
+            'navigations',
+            'users',
+            'news',
+        ];
+
+        Entity::whereIn('alias', $site)
+            ->update([
+                'entities_type_id' => $entitiesTypes->firstWhere('alias', 'site')->id
+            ]);
+
+        echo "Проставлен тип: Сайт<br><br>";
+
+        return __('msg.ok');
     }
 
     /**

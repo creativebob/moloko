@@ -31,6 +31,7 @@ use App\Http\View\Composers\System\DefaultPhotoSettingsComposer;
 use App\Http\View\Composers\System\DepartmentsForUserComposer;
 use App\Http\View\Composers\System\DiscountsForEstimatesComposer;
 use App\Http\View\Composers\System\EntitiesComposer;
+use App\Http\View\Composers\System\EntitiesTypesComposer;
 use App\Http\View\Composers\System\EstimatesTotalsComposer;
 use App\Http\View\Composers\System\FilialCatalogsGoodsComposer;
 use App\Http\View\Composers\System\FilialCatalogsServicesComposer;
@@ -564,6 +565,9 @@ class ViewServiceProvider extends ServiceProvider
         view()->composer('system.pages.marketings.discounts.tabs.general', EntitiesForDiscountsComposer::class);
 
         view()->composer('system.prints.check_order', DomainsForFilialComposer::class);
+
+
+        view()->composer('entities.tabs.general', EntitiesTypesComposer::class);
 
 
         // Фильтры

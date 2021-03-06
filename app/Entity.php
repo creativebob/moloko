@@ -22,12 +22,17 @@ class Entity extends BaseModel
         'rights',
 
         'ancestor_id',
-        'author_id',
+        'entities_type_id',
 
         'display',
         'system',
         'moderation'
     ];
+
+    public function type()
+    {
+        return $this->belongsTo(EntitiesType::class, 'entities_type_id');
+    }
 
     public function actions()
     {

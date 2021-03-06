@@ -19,6 +19,9 @@ class CreateEntitiesTable extends Migration
 
             $table->string('view_path')->nullable()->comment('Путь до шаблона отображения');
 
+            $table->bigInteger('entities_type_id')->unsigned()->nullable()->comment('Id типа');
+            $table->foreign('entities_type_id')->references('id')->on('entities_types');
+
             $table->boolean('rights')->default(0)->comment('Права на сущность');
             $table->boolean('validation')->default(0)->comment('Дополнительная валидация страницы');
             $table->boolean('feedback')->default(0)->comment('Добавление отзыва');

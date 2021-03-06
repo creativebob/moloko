@@ -1,4 +1,4 @@
-<div class="small-12 medium-8 large-8 cell tabs-margin-top">
+<div class="small-12 medium-8 large-8 cell">
 
     <div class="grid-x grid-padding-x">
         <div class="small-12 medium-6 cell">
@@ -21,6 +21,13 @@
                 @include('includes.inputs.name', ['value'=>$entity->view_path, 'name'=>'view_path', 'required' => true])
             </label>
         </div>
+
+        <div class="small-12 medium-6 cell">
+            <label>Тип:
+                {!! Form::select('entities_type_id', $entitiesTypes->pluck('name', 'id'), $entity->entities_type_id, ['placeholder' => 'Без типа']) !!}
+            </label>
+        </div>
+
         <div class="small-6 cell radiobutton">Генерировать права?<br>
 
             {{ Form::radio('rights', 1, true, ['id' => 'Yes']) }}
