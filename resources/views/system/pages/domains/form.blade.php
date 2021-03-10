@@ -56,13 +56,7 @@
                             @include('includes.lists.filials')
                         </fieldset>
 
-                        @can('create', App\File::class)
-                            <files-component
-                                alias="{{ $domain->getTable() }}"
-                                :id="{{ $domain->id }}"
-                                :item-files='@json($domain->files)'
-                            ></files-component>
-                        @endcan
+                        @include('system.common.files.files', ['item' => $domain])
                     </div>
 
                     {{-- Чекбоксы управления --}}

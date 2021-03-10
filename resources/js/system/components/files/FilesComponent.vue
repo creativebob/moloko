@@ -71,7 +71,12 @@ export default {
     props: {
         alias: String,
         id: Number,
-        itemFiles: Array
+        itemFiles: {
+            type: Array,
+            default: () => {
+                return [];
+            }
+        }
     },
     data() {
         return {

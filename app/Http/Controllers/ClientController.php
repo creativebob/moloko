@@ -155,6 +155,12 @@ class ClientController extends Controller
 
         if ($request->set_user == 1) {
             $this->getDirector($company, $this->entityAlias);
+
+            // Делаем директора представителем
+            $company->load('actual_director');
+            if ($company->actual_director) {
+                $company->actual_director->user->organizations()->attach($company->id);
+            }
         }
 
         $data = $request->input();

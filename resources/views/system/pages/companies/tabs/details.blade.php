@@ -55,7 +55,7 @@
         <div class="grid-x grid-padding-x">
             <div class="cell small-12">
                 <fieldset>
-                    <legend> Юридический адрес</legend>
+                    <legend>Юридический адрес</legend>
                         <div class="grid-x grid-padding-x">
                             <div class="small-12 medium-6 cell">
                                 @include('system.common.includes.city_search', ['item' => $company, 'required' => true, 'name' => 'legal_city_id', 'prefix' => 'legal'])
@@ -76,12 +76,6 @@
             </div>
         </div>
 
-        @can('create', App\File::class)
-            <files-component
-                alias="{{ $company->getTable() }}"
-                :id="{{ $company->id }}"
-                :item-files='@json($company->files)'
-            ></files-component>
-        @endcan
+        @include('system.common.files.files', ['item' => $company])
     </div>
 </div>

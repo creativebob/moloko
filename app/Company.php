@@ -139,6 +139,17 @@ class Company extends Model
             ->withDefault('Не найден');
     }
 
+    public function actual_director()
+    {
+        return $this->hasOne('App\Staffer')
+            ->whereHas('department', function ($q) {
+                $q->whereNull('parent_id');
+            })
+            ->whereHas('position', function ($q) {
+                $q->where('direction', true);
+            });
+    }
+
     // Получение списка банковских счетов
     public function bank_accounts()
     {
