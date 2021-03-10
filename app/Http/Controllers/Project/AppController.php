@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Project;
 
 use App\Http\Controllers\Project\Traits\Userable;
 use App\Models\Project\Subscriber;
+use App\UsersLogin;
 use Carbon\Carbon;
 use App\Lead;
 use App\PricesGoods;
@@ -196,7 +197,6 @@ class AppController extends BaseController
     // Авторизация пользоваеля сайта через телефон и код СМС
     public function site_user_login(Request $request)
     {
-
         Log::info('Запущена функция авторизации пользователя. Проведем ряд проверок!');
 
         $site = $this->site;
@@ -221,6 +221,11 @@ class AppController extends BaseController
 
                             // Если проверка пройдена - АВТОРИЗУЕМ!
                             Auth::loginUsingId($user->id);
+
+                            auth()->user()->logins()->save(UsersLogin::make([
+                                'logined_at' => now(),
+                                'ip' => request()->ip()
+                            ]));
                             Log::info('Пользователь залогинился ==========================================================');
                             return redirect('estimates');
 

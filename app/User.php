@@ -512,4 +512,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Filter::class);
     }
+
+    public function logins()
+    {
+        return $this->hasMany(UsersLogin::class);
+    }
 }
