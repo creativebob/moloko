@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Entity;
 use App\Policies\Traits\PoliticTrait;
 use App\User;
 use App\Manufacturer;
@@ -11,7 +12,7 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ManufacturerPolicy
 {
-    
+
     use HandlesAuthorization;
     use PoliticTrait;
 
@@ -43,13 +44,28 @@ class ManufacturerPolicy
     }
 
     public function update(User $user, Manufacturer $model)
-    { 
+    {
         $result = $this->getstatus($this->entity_name, $model, 'update', $this->entity_dependence);
         return $result;
     }
 
     public function delete(User $user, Manufacturer $model)
     {
+        $cmvEntities = Entity::whereHas('type', function ($q) {
+            $q->where('alias', 'cmv');
+        })
+            ->get([
+                'alias',
+            ]);
+
+        foreach($cmvEntities->pluck('alias') as $alias) {
+            if ($model->$alias->isNotEmpty()) {
+                if ($model->$alias->firstWhere('archive', false)) {
+                    return false;
+                }
+            }
+        }
+
         $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
         return $result;
     }
@@ -71,16 +87,16 @@ class ManufacturerPolicy
         $result = $this->getstatus($this->entity_name, null, 'display', $this->entity_dependence);
         return $result;
     }
-    
+
     public function system(User $user, Manufacturer $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'system', $this->entity_dependence);
         return $result;
     }
-    
+
     public function god(User $user)
     {
         if(Auth::user()->god){return true;} else {return false;};
     }
-      
+
 }

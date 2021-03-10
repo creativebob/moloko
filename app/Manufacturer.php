@@ -108,4 +108,9 @@ class Manufacturer extends Model
     {
         return $this->hasManyThrough(Tool::class, 'App\Article', 'manufacturer_id');
     }
+
+    public function rooms()
+    {
+        return $this->hasManyThrough(Room::class, 'App\Article', 'manufacturer_id');
+    }
 }
