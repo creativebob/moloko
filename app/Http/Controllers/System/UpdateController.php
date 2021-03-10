@@ -39,6 +39,54 @@ class UpdateController extends Controller
     }
 
     /**
+     * Изменение скидки клиента
+     *
+     * @return string
+     */
+    public function addChangeClientDiscountActions()
+    {
+        $channels = Channel::get();
+        $triggers = Trigger::get();
+
+        $notificationData = [
+            'name' => 'Изменение скидки клиента',
+            'channel_id' => $channels->firstWhere('name', 'Telegram')->id,
+            'trigger_id' => $triggers->firstWhere('alias', 'create-lead-from-project')->id,
+        ];
+//        dd($notificationData);
+
+        $notification = Notification::where($notificationData)
+            ->exists();
+//        dd($notification);
+
+        if (!$notification) {
+            Notification::insert($notificationData);
+
+            $notification = Notification::where($notificationData)
+                ->first();
+            $notification->sites()->attach(1);
+            echo "Добавлено оповещение<br><br>";
+        }
+
+        $chargeData = [
+            'name' => 'Изменение скидки клиента',
+            'description' => null,
+            'alias' => 'change-client-discount',
+            'author_id' => 1,
+        ];
+
+        $charge = Charge::where($chargeData)
+            ->exists();
+
+        if (!$charge) {
+            Charge::insert($chargeData);
+            echo "Добавлено экстра право<br><br>";
+        }
+
+        return "<strong>Добавление действий при изменении скидки клиента завершено</strong>";
+    }
+
+    /**
      * Добавление в развернутую систему сущности смен с правами
      *
      * @return string

@@ -48,3 +48,5 @@ Route::get('/add_plugins_entity', 'UpdateController@addPluginsEntity');
 Route::get('/add_files_entity', 'UpdateController@addFilesEntity');
 Route::get('/add_photo_settings_entity', 'UpdateController@addPhotoSettingsEntity');
 Route::get('/add_shifts_entity', 'UpdateController@addShiftsEntity');
+
+Route::get('/add_change_client_discount_actions', 'UpdateController@addChangeClientDiscountActions');

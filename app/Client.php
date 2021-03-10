@@ -169,6 +169,11 @@ class Client extends BaseModel
             ->whereNull('end_date');
     }
 
+    public function filial()
+    {
+        return $this->belongsTo(Department::class);
+    }
+
 
     /**
      * Фильтр
@@ -303,7 +308,7 @@ class Client extends BaseModel
 
                     if (isset($filters['birthday_date_max'])) {
                         $q->whereDate('birthday_date', '<=', Carbon::createFromFormat('d.m.Y', $filters['birthday_date_max']));
-                    }                   
+                    }
 
                 });
         }

@@ -117,6 +117,12 @@ class ChargesTableSeeder extends Seeder
                 'alias' => 'lead-attribution-show',
                 'author_id' => 1,
             ],
+            [
+                'name' => 'Изменение скидки клиента',
+                'description' => null,
+                'alias' => 'change-client-discount',
+                'author_id' => 1,
+            ],
         ]);
 
 

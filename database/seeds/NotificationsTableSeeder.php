@@ -50,6 +50,11 @@ class NotificationsTableSeeder extends Seeder
                 'channel_id' => $channels->firstWhere('name', 'Telegram')->id,
                 'trigger_id' => $triggers->firstWhere('alias', 'create-lead-from-project')->id,
             ],
+            [
+                'name' => 'Изменение скидки клиента',
+                'channel_id' => $channels->firstWhere('name', 'Telegram')->id,
+                'trigger_id' => $triggers->firstWhere('alias', 'create-lead-from-project')->id,
+            ],
     	]);
     }
 }
