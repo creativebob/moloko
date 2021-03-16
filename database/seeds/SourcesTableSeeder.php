@@ -117,6 +117,13 @@ class SourcesTableSeeder extends Seeder
                 'utm' => 'youtube',
                 'author_id' => 1,
             ],
+            [
+                'name' => 'Email рассылка',
+                'description' => 'Рассылка писем на электронную почту',
+                'domain' => 'gmail.com',
+                'utm' => 'letter',
+                'author_id' => 1,
+            ],
         ]);
     }
 }
