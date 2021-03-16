@@ -22,10 +22,6 @@ class CreateSitesTable extends Migration
 
             $table->string('api_token', 60)->unique()->nullable()->comment('Токен');
 
-            $table->boolean('is_autochange')->default(0)->comment('Авто-смена слайдов');
-            $table->integer('delay')->nullable()->comment('Время задержки');
-
-
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
