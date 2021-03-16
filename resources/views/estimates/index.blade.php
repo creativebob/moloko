@@ -107,18 +107,26 @@
                   <td class="td-partner">
                     @if(isset($estimate->agent))
                       @if($estimate->agent->agent_id != Auth::user()->company_id)
-                      
+
+                          @if($estimate->total > 0)
                         {{ num_format($estimate->share_currency, 0) }} <sup>{{ num_format($estimate->share_currency * 100 / $estimate->total, 0) }}% - Агент</sup><br>
+                              @else
+                                  {{ num_format($estimate->share_currency, 0) }} <sup>{{ num_format($estimate->share_currency * 100, 0) }}% - Агент</sup><br>
+                              @endif
                         <span class="tiny-text">{{ $estimate->agent->company->name_short ?? $estimate->agent->company->name }}</span>
 
                       @else
 
+                              @if($estimate->total > 0)
                         {{ num_format($estimate->principal_currency, 0) }} <sup>{{ num_format($estimate->principal_currency * 100 / $estimate->total, 0) }}% - Принципал</sup><br>
+                              @else
+                                  {{ num_format($estimate->principal_currency, 0) }} <sup>{{ num_format($estimate->principal_currency * 100 / $estimate->total, 0) }}% - Принципал</sup><br>
+                              @endif
                         <span class="tiny-text">{{ $estimate->company->name_short ?? $estimate->company->name }}</span>
 
                       @endif
                     @endif
-                  </td>  
+                  </td>
                 @endif
 
                 @if(extra_right('share-currency-show'))
@@ -140,7 +148,7 @@
                       @endif
                     @endif
                   </td>
-                @endif        
+                @endif
 
               <td class="td-saled">{{ ($estimate->conducted_at) ? 'Чек закрыт' : '' }}</td>
               <td class="td-dissmissed">{{ ($estimate->is_dissmissed == 1) ? 'Списан' : '' }}</td>
@@ -150,7 +158,7 @@
                   @can('delete', $estimate)
                   <a class="icon-delete sprite" data-open="item-delete"></a>
                   @endcan
-                  @endif 
+                  @endif
               </td> --}}
           </tr>
           @endforeach

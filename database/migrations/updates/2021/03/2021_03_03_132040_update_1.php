@@ -20,6 +20,11 @@ class Update1 extends Migration
         Schema::table('entities', function (Blueprint $table) {
             $table->bigInteger('entities_type_id')->unsigned()->nullable()->comment('Id типа')->after('view_path');
         });
+
+        Schema::table('staff', function (Blueprint $table) {
+            $table->dropColumn('archive');
+            $table->timestamp('archived_at')->nullable()->comment('Архив')->after('rate');
+        });
     }
 
     /**
@@ -35,6 +40,11 @@ class Update1 extends Migration
 
         Schema::table('entities', function (Blueprint $table) {
             $table->dropColumn('entities_type_id');
+        });
+
+        Schema::table('staff', function (Blueprint $table) {
+            $table->dropColumn('archived_at');
+            $table->boolean('archive')->default(0)->unsigned()->comment('Статус архива')->after('rate');
         });
     }
 }
