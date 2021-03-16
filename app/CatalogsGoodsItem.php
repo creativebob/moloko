@@ -48,10 +48,6 @@ use App\Scopes\Filters\BooklistFilter;
 		protected $fillable = [
 			'name',
 			'description',
-            'header',
-			'title',
-			'keywords',
-			'seo_description',
 			'parent_id',
 			'photo_id',
 			'catalogs_goods_id',
@@ -63,6 +59,8 @@ use App\Scopes\Filters\BooklistFilter;
             'is_controllable_mode',
             'is_show_subcategory',
             'is_hide_submenu',
+
+            'seo_id',
 
             'is_discount',
 

@@ -10292,6 +10292,10 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
   background-color: yellow;
 }
 
+.ck-editor .ck-editor__main .ck-content {
+  min-height: 8rem;
+}
+
 .text-mini {
   font-size: 0.7rem;
   color: #cccccc;

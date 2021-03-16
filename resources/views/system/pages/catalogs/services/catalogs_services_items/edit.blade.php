@@ -33,6 +33,10 @@
                 @endcan
 
                 <li class="tabs-title">
+                    <a data-tabs-target="tab-seo" href="#tab-seo">Seo</a>
+                </li>
+
+                <li class="tabs-title">
                     <a data-tabs-target="tab-filters" href="#tab-filters">Фильтры</a>
                 </li>
 
@@ -63,6 +67,11 @@
                         @include('system.pages.catalogs.services.catalogs_services_items.tabs.site')
                     </div>
                 @endcan
+
+                {{-- Сайт --}}
+                <div class="tabs-panel" id="tab-seo">
+                    @include('system.pages.catalogs.services.catalogs_services_items.tabs.seo', ['seo' => $catalogsServicesItem->seo])
+                </div>
 
                 {{-- Фильтры --}}
                 <div class="tabs-panel" id="tab-filters">

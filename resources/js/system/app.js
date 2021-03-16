@@ -157,6 +157,8 @@ Vue.component('files-component', require('./components/files/FilesComponent'));
 
 Vue.component('employees-component', require('./components/employees/user/EmployeesComponent'));
 
+Vue.component('seo-component', require('./components/seos/SeoComponent'));
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -189,8 +191,11 @@ pickmeup.defaults.locales['ru'] = {
 
 Vue.prototype.$pickmeup = window.pickmeup;
 
-window.vuetimepicker = require('vue2-timepicker');
-Vue.prototype.$vuetimepicker = window.vuetimepicker;
+// window.vuetimepicker = require('vue2-timepicker');
+// Vue.prototype.$vuetimepicker = window.vuetimepicker;
+
+import CKEditor from '@ckeditor/ckeditor5-vue2';
+Vue.use(CKEditor);
 
 // Vuex хранилище
 import store from './store/index.js';

@@ -50,3 +50,5 @@ Route::get('/set_articles_slug', 'ParserController@setArticlesSlug');
 Route::get('/set_processes_slug', 'ParserController@setProcessesSlug');
 
 Route::get('/set_entities_types', 'ParserController@setEntitiesTypes');
+
+Route::get('/set_seos', 'ParserController@setSeos');

@@ -21,10 +21,6 @@ class CatalogsServicesItem extends BaseModel
 	protected $fillable = [
         'name',
         'description',
-        'header',
-        'title',
-        'keywords',
-        'seo_description',
         'parent_id',
         'photo_id',
 		'catalogs_service_id',
@@ -41,6 +37,8 @@ class CatalogsServicesItem extends BaseModel
 
         'video_url',
         'video',
+
+        'seo_id',
 
         'display',
         'system',
@@ -139,6 +137,11 @@ class CatalogsServicesItem extends BaseModel
     public function directive_category()
     {
         return $this->belongsTo(UnitsCategory::class);
+    }
+
+    public function seo()
+    {
+        return $this->belongsTo(Seo::class);
     }
 
     public function discounts()

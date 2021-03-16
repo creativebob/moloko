@@ -41,10 +41,12 @@ class ClientsForSearchComposer
             $answer = operator_right('users', true, 'index');
 
             $users = User::with([
-                'client.clientable' => with([
-                    'location',
-                    'main_phones'
-                ]),
+                'client.clientable' => function ($q) {
+                    $q->with([
+                        'location',
+                        'main_phones'
+                    ]);
+                },
                 'organizations.client',
             ])
                 ->where('site_id', '!=', 1)
@@ -59,7 +61,12 @@ class ClientsForSearchComposer
             $company->load([
                 'organizations' => function ($q) {
                     $q->with([
-                        'client.clientable',
+                        'client.clientable' => function ($q) {
+                            $q->with([
+                                'location',
+                                'main_phones'
+                            ]);
+                        },
                         'representatives' => function ($q) {
                             $q->with([
                                 'client'

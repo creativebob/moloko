@@ -39,6 +39,7 @@ use App\Process;
 use App\Reserve;
 use App\Right;
 use App\Role;
+use App\Seo;
 use App\Subscriber;
 use App\User;
 use App\Phone;
@@ -68,6 +69,48 @@ class ParserController extends Controller
     public function test()
     {
         dd(__METHOD__);
+    }
+
+    /**
+     * Создаем записи сео для сеозависимых сущностей
+     *
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Translation\Translator|string|null
+     */
+    public function setSeos()
+    {
+        $entitiesAliases = [
+            'catalogs_services_items',
+            'catalogs_goods_items',
+        ];
+
+        $entities = Entity::whereIn('alias', $entitiesAliases)
+            ->get();
+
+        foreach ($entities as $entity) {
+
+            $items = $entity->model::whereNotNull('seo_description')
+                ->orWhereNotNull('title')
+                ->get();
+
+            foreach($items as $item) {
+                if ($entity->alias == 'catalogs_services_items' || $entity->alias == 'catalogs_goods_items') {
+                    $dataSeo = [
+                        'title' => $item->title,
+                        'keywords' => $item->keywords,
+                        'description' => $item->seo_description,
+                        'h1' => $item->header,
+                    ];
+
+                    $seo = Seo::firstOrCreate($dataSeo);
+                    $item->update([
+                        'seo_id' => $seo->id
+                    ]);
+                }
+            }
+
+            echo "Создано СЕО для записей сущности: {$entity->name}<br><br>";
+        }
+        return __('msg.ok');
     }
 
     /**

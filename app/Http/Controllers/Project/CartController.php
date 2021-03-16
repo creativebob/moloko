@@ -358,7 +358,7 @@ class CartController extends BaseController
 
                         logs('leads_from_project')->info("Найдена настройка на приоритет компании, осуществлен поиск первой организации пользователя.");
                     } else {
-                        $client = $client = Client::where([
+                        $client = Client::where([
                             'company_id' => $site->company_id,
                             'clientable_type' => 'App\User',
                             'clientable_id' => $user->id

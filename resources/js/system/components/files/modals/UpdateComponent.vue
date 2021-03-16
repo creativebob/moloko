@@ -54,7 +54,7 @@
             </div>
         </div>
         <div
-            @click="reset"
+
             data-close
             class="icon-close-modal sprite button-modal-close"
             :disabled="disabledButton"
@@ -116,16 +116,6 @@ export default {
                         console.log(error)
                     });
             }
-        },
-        reset() {
-            this.name = null;
-            this.$refs.nameComponent.update();
-
-            this.description = null;
-            this.$refs.descriptionComponent.update();
-
-            this.title = null;
-            this.$refs.titleComponent.update();
         },
     },
 }

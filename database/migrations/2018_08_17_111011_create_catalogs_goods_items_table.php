@@ -20,14 +20,12 @@ class CreateCatalogsGoodsItemsTable extends Migration
             $table->foreign('catalogs_goods_id')->references('id')->on('catalogs_goods');
 
             $table->string('name')->index()->comment('Название');
+            $table->text('description')->nullable()->comment('Описание');
             $table->string('slug')->index()->nullable()->comment('Слаг');
             $table->integer('level')->nullable()->unsigned()->comment('Уровень вложенности');
 
-            $table->string('header')->nullable()->comment('Заголовок');
-            $table->string('title')->nullable()->comment('Название страницы');
-            $table->text('description')->nullable()->comment('Описание');
-            $table->text('seo_description')->nullable()->comment('Описание для сайта');
-            $table->string('keywords')->nullable()->comment('Ключевые слова');
+            $table->bigInteger('seo_id')->nullable()->unsigned()->comment('Id seo');
+            $table->foreign('seo_id')->references('id')->on('seos');
 
             $table->bigInteger('photo_id')->nullable()->unsigned()->comment('Id фото (аватар)');
             $table->foreign('photo_id')->references('id')->on('photos');

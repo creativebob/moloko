@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Entity;
+use App\Http\Controllers\System\Traits\Cmvable;
 use App\Http\Controllers\System\Traits\Companable;
 use App\Http\Controllers\System\Traits\Directorable;
 use App\Http\Controllers\System\Traits\Locationable;
@@ -28,11 +30,12 @@ class ManufacturerController extends Controller
         $this->entityDependence = false;
     }
 
-    use Locationable;
-    use Phonable;
-    use Photable;
-    use Companable;
-    use Directorable;
+    use Locationable,
+        Phonable,
+        Photable,
+        Companable,
+        Directorable,
+        Cmvable;
 
     /**
      * Display a listing of the resource.
@@ -51,13 +54,28 @@ class ManufacturerController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Manufacturer::class);
 
+
+
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         // -------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------------------------
-        $manufacturers = Manufacturer::with('author', 'company.location.country', 'company.sector', 'company.legal_form')
+
+        $cmvAliases = $this->getArrayCmvAliases();
+//        dd($cmvAliases);
+
+        $relations = [
+            'author',
+            'company.location.country',
+            'company.sector',
+            'company.legal_form',
+        ];
+
+        $mergedRelations = array_merge($cmvAliases, $relations);
+
+        $manufacturers = Manufacturer::with($mergedRelations)
             ->companiesLimit($answer)
             ->moderatorLimit($answer)
             ->authors($answer)

@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Entity;
+use App\Http\Controllers\System\Traits\Cmvable;
 use App\Policies\Traits\PoliticTrait;
 use App\User;
 use App\Manufacturer;
@@ -15,6 +16,7 @@ class ManufacturerPolicy
 
     use HandlesAuthorization;
     use PoliticTrait;
+    use Cmvable;
 
     protected $entity_name = 'manufacturers';
     protected $entity_dependence = false;
@@ -51,14 +53,10 @@ class ManufacturerPolicy
 
     public function delete(User $user, Manufacturer $model)
     {
-        $cmvEntities = Entity::whereHas('type', function ($q) {
-            $q->where('alias', 'cmv');
-        })
-            ->get([
-                'alias',
-            ]);
 
-        foreach($cmvEntities->pluck('alias') as $alias) {
+        $cmvAliases = $this->getArrayCmvAliases();
+
+        foreach($cmvAliases as $alias) {
             if ($model->$alias->isNotEmpty()) {
                 if ($model->$alias->firstWhere('archive', false)) {
                     return false;

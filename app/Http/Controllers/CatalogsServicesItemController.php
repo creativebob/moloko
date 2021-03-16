@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\System\Traits\Seoable;
 use App\Http\Controllers\Traits\Photable;
 use App\Http\Requests\System\CatalogsServicesItemUpdateRequest;
 use App\Http\Requests\System\CatalogsServicesItemStoreRequest;
@@ -26,7 +27,8 @@ class CatalogsServicesItemController extends Controller
         $this->type = 'page';
     }
 
-    use Photable;
+    use Photable,
+        Seoable;
 
     /**
      * Display a listing of the resource.
@@ -136,6 +138,8 @@ class CatalogsServicesItemController extends Controller
 
         if ($catalogsServicesItem) {
 
+            $this->updateSeo();
+
             // Переадресовываем на index
             return redirect()->route('catalogs_services_items.index', ['catalogId' => $catalogId, 'id' => $catalogsServicesItem->id]);
 
@@ -171,7 +175,8 @@ class CatalogsServicesItemController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $catalogsServicesItem);
 
         $catalogsServicesItem->load([
-            'discounts'
+            'discounts',
+            'seo.childs.params'
         ]);
 
         $catalogServices = CatalogsService::find($catalogId);
@@ -193,6 +198,7 @@ class CatalogsServicesItemController extends Controller
      */
     public function update(CatalogsServicesItemUpdateRequest $request, $catalogId, $id)
     {
+
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
@@ -246,6 +252,8 @@ class CatalogsServicesItemController extends Controller
                     ]);
                 }
             }
+
+            $this->updateSeo($catalogsServicesItem);
 
             // Переадресовываем на index
             return redirect()->route('catalogs_services_items.index', ['catalogId' => $catalogId, 'id' => $catalogsServicesItem->id]);

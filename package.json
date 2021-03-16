@@ -34,6 +34,7 @@
     },
     "dependencies": {
         "@ckeditor/ckeditor5-build-classic": "^12.4.0",
+        "@ckeditor/ckeditor5-vue2": "^1.0.5",
         "@fancyapps/fancybox": "^3.5.7",
         "ajv": "^6.12.6",
         "awesome-mask": "^1.1.1",
