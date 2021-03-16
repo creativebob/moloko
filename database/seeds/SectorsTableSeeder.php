@@ -286,36 +286,46 @@ class SectorsTableSeeder extends Seeder
                 'name' => 'Фитнес-центр',
                 'parent_id' => 43,
             ],
-
+            // 47
             [
                 'name' => 'Сельское хозяйство',
                 'parent_id' => null,
             ],
-
-        ]);
-
-        $sectors = Sector::whereNull('parent_id')
-            ->get();
-
-        Sector::insert([
+            // 48
             [
                 'name' => 'Сервис ремонта',
-                'parent_id' => $sectors->firstWhere('name', 'Транспорт'),
+                'parent_id' => 3,
             ],
+
             [
-                'name' => 'Производство и переработка мяса',
-                'parent_id' => $sectors->firstWhere('name', 'Сельское хозяйство'),
+                 'name' => 'Производство и переработка мяса',
+                 'parent_id' => 47,
             ],
+
         ]);
 
-        foreach (Sector::get() as $sector) {
-            $tag = Str::slug($sector->name);
-            Sector::where('id', $sector->id)
-                ->update([
-                    'author_id' => 1,
-                    'tag' => $tag,
-                    'category_id' => $sector->parent_id
-                ]);
-        }
+        // $sectors = Sector::whereNull('parent_id')
+        //     ->get();
+
+        // Sector::insert([
+        //     [
+        //         'name' => 'Сервис ремонта',
+        //         'parent_id' => $sectors->firstWhere('name', 'Транспорт'),
+        //     ],
+        //     [
+        //         'name' => 'Производство и переработка мяса',
+        //         'parent_id' => $sectors->firstWhere('name', 'Сельское хозяйство'),
+        //     ],
+        // ]);
+
+        // foreach (Sector::get() as $sector) {
+        //     $tag = Str::slug($sector->name);
+        //     Sector::where('id', $sector->id)
+        //         ->update([
+        //             'author_id' => 1,
+        //             'tag' => $tag,
+        //             'category_id' => $sector->parent_id
+        //         ]);
+        // }
     }
 }
