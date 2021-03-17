@@ -412,7 +412,8 @@ class AttachmentController extends Controller
                                 ]) ;
                             },
                         ]);
-                    }
+                    },
+                    'seo.childs.params',
                 ]);
             }
         ]);

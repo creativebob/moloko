@@ -408,7 +408,8 @@ class ContainerController extends Controller
                                 ]) ;
                             },
                         ]);
-                    }
+                    },
+                    'seo.childs.params',
                 ]);
             }
         ]);

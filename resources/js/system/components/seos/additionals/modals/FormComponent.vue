@@ -99,20 +99,17 @@
                     >
                         <div class="grid-x grid-padding-x align-center modal-content inputs">
                             <div class="cell small-12">
-                                <label>Контент
+                                <label
+                                    :for="'ckeditor-seo-content-' + method"
+                                >Контент</label>
                                     <ckeditor
                                         :editor="editor"
                                         v-model="content"
                                         :config="editorConfig"
                                         ref="contentComponent"
                                         @input="change"
+                                        :id="'ckeditor-seo-content-' + method"
                                     ></ckeditor>
-<!--                                    <textarea-component-->
-<!--                                        v-model="content"-->
-<!--                                        ref="contentComponent"-->
-<!--                                        @change="change"-->
-<!--                                    ></textarea-component>-->
-                                </label>
                             </div>
                         </div>
                     </div>

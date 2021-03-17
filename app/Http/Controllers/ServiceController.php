@@ -377,6 +377,7 @@ class ServiceController extends Controller
                         ]);
                     },
                     'positions',
+                    'seo.childs.params',
                 ]);
             },
             'metrics',

@@ -20,12 +20,17 @@ class CreatePagesTable extends Migration
             $table->foreign('site_id')->references('id')->on('sites');
 
             $table->string('name')->index()->comment('Название страницы');
-            $table->string('title')->nullable()->comment('Title для страницы');
-            $table->string('header')->nullable()->comment('Header для страницы');
             $table->string('subtitle')->nullable()->comment('Подзаголовок для страницы');
             $table->string('alias')->index()->comment('Алиас');
             $table->string('slug')->index()->nullable()->comment('Слаг');
 
+            $table->bigInteger('seo_id')->nullable()->unsigned()->comment('Id seo');
+            $table->foreign('seo_id')
+                ->references('id')
+                ->on('seos');
+
+            $table->string('title')->nullable()->comment('Title для страницы');
+            $table->string('header')->nullable()->comment('Header для страницы');
             $table->text('description')->nullable()->comment('Description для страницы');
             $table->string('keywords')->nullable()->comment('Ключевые слова');
             $table->text('content')->nullable()->comment('Контент страницы');

@@ -50,6 +50,11 @@ class CreateProcessesTable extends Migration
             $table->bigInteger('photo_id')->nullable()->unsigned()->comment('ID аватара');
             $table->foreign('photo_id')->references('id')->on('photos');
 
+            $table->bigInteger('seo_id')->nullable()->unsigned()->comment('Id seo');
+            $table->foreign('seo_id')
+                ->references('id')
+                ->on('seos');
+
             $table->string('video_url')->nullable()->comment('Ссылка на видео');
 
             $table->text('content')->nullable()->comment('Описание');

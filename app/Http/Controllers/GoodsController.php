@@ -527,7 +527,8 @@ class GoodsController extends Controller
                                 ]) ;
                             },
                         ]);
-                    }
+                    },
+                    'seo.childs.params',
                 ]);
             },
             'metrics',

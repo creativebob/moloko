@@ -72,9 +72,7 @@ class Article extends Model
         'video_url',
         'video',
 
-        'content',
-        'seo_description',
-        'keywords',
+        'seo_id',
 
         'package_status',
         'package_name',
@@ -329,6 +327,11 @@ class Article extends Model
     public function unit_volume()
     {
         return $this->belongsTo(Unit::class);
+    }
+
+    public function seo()
+    {
+        return $this->belongsTo(Seo::class);
     }
 
     // Вес

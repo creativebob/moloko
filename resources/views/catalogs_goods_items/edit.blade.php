@@ -35,6 +35,10 @@
             @endcan
 
             <li class="tabs-title">
+                <a data-tabs-target="tab-seo" href="#tab-seo">SEO</a>
+            </li>
+
+            <li class="tabs-title">
                 <a data-tabs-target="tab-filters" href="#tab-filters">Фильтры</a>
             </li>
 
@@ -98,31 +102,31 @@
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 medium-6 cell">
                         <div class="grid-x grid-padding-x">
-                            <div class="small-12 cell">
-                                <label>Заголовок страницы (Title)
-                                    @include('includes.inputs.varchar', ['name' => 'title', 'required' => true])
-                                </label>
-                            </div>
-                            <div class="small-12 cell">
-                                <label>Заголовок (H1)
-                                    @include('includes.inputs.varchar', ['name' => 'header'])
-                                </label>
-                            </div>
+{{--                            <div class="small-12 cell">--}}
+{{--                                <label>Заголовок страницы (Title)--}}
+{{--                                    @include('includes.inputs.varchar', ['name' => 'title', 'required' => true])--}}
+{{--                                </label>--}}
+{{--                            </div>--}}
+{{--                            <div class="small-12 cell">--}}
+{{--                                <label>Заголовок (H1)--}}
+{{--                                    @include('includes.inputs.varchar', ['name' => 'header'])--}}
+{{--                                </label>--}}
+{{--                            </div>--}}
                             <div class="small-12 cell">
                                 <label>Описание для вывода на сайт:
                                     {{ Form::textarea('description', $catalogs_goods_item->description, ['id'=>'content-ckeditor', 'autocomplete'=>'off', 'size' => '10x3']) }}
                                 </label>
                             </div>
-                            <div class="small-12 cell">
-                                <label>Описание для поисковых систем (Description)
-                                    @include('includes.inputs.textarea', ['value' => $catalogs_goods_item->seo_description, 'name' => 'seo_description'])
-                                </label>
-                            </div>
-                            <div class="small-12 cell">
-                                <label>Список ключевых слов (Keywords)
-                                    @include('includes.inputs.varchar', ['name' => 'keywords'])
-                                </label>
-                            </div>
+{{--                            <div class="small-12 cell">--}}
+{{--                                <label>Описание для поисковых систем (Description)--}}
+{{--                                    @include('includes.inputs.textarea', ['value' => $catalogs_goods_item->seo_description, 'name' => 'seo_description'])--}}
+{{--                                </label>--}}
+{{--                            </div>--}}
+{{--                            <div class="small-12 cell">--}}
+{{--                                <label>Список ключевых слов (Keywords)--}}
+{{--                                    @include('includes.inputs.varchar', ['name' => 'keywords'])--}}
+{{--                                </label>--}}
+{{--                            </div>--}}
                             <div class="small-6 cell">
                                 <label>Режим отображения
                                     @include('includes.selects.display_modes')
@@ -182,6 +186,11 @@
                 </div>
             </div>
             @endcan
+
+            {{-- SEO --}}
+            <div class="tabs-panel" id="tab-seo">
+                @include('system.common.tabs.seo', ['seo' => $catalogs_goods_item->seo])
+            </div>
 
             {{-- Фильтры --}}
             <div class="tabs-panel" id="tab-filters">

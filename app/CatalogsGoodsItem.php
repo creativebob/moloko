@@ -173,6 +173,11 @@ use App\Scopes\Filters\BooklistFilter;
             return $this->belongsTo(UnitsCategory::class);
         }
 
+        public function seo()
+        {
+            return $this->belongsTo(Seo::class);
+        }
+
         public function discounts()
         {
             return $this->belongsToMany(Discount::class, 'discount_catalogs_goods_item', 'catalogs_goods_item_id', 'discount_id')

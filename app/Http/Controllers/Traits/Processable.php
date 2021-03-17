@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Traits;
 
+use App\Http\Controllers\System\Traits\Seoable;
 use App\Http\Controllers\Traits\Photable;
 use App\Process;
 use App\ProcessesGroup;
@@ -15,7 +16,8 @@ use Illuminate\Support\Facades\Log;
 
 trait Processable
 {
-    use Photable;
+    use Photable,
+        Seoable;
 
     /**
      * Запись процесса в бд
@@ -199,6 +201,8 @@ trait Processable
 
                 // Если ошибок и совпадений нет, то обновляем процесс
                 $process->update($data);
+
+                $this->updateSeo($process);
 
                 return $process;
             }

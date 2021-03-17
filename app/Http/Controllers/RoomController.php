@@ -353,7 +353,8 @@ class RoomController extends Controller
         $room->load([
             'article' => function ($q) {
                 $q->with([
-                    'unit'
+                    'unit',
+                    'seo.childs.params',
                 ]);
             },
             'location'

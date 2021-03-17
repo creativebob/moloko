@@ -355,6 +355,7 @@ class WorkflowController extends Controller
                             'article.unit'
                         ]);
                     },
+                    'seo.childs.params',
                 ]);
             },
             'category' => function ($q) {

@@ -436,7 +436,8 @@ class RawController extends Controller
                                 ]) ;
                             },
                         ]);
-                    }
+                    },
+                    'seo.childs.params',
                 ]);
             },
             'category' => function ($q) {

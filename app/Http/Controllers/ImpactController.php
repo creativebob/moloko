@@ -353,7 +353,8 @@ class ImpactController extends Controller
                                 ]) ;
                             },
                         ]);
-                    }
+                    },
+                    'seo.childs.params',
                 ]);
             },
             'category' => function ($q) {

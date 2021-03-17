@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 // Подключаем модели
+use App\Http\Controllers\System\Traits\Seoable;
 use App\Http\Controllers\Traits\Photable;
 use App\Page;
 use App\Process;
@@ -32,7 +33,8 @@ class PageController extends Controller
         $this->entity_dependence = false;
     }
 
-    use Photable;
+    use Photable,
+        Seoable;
 
     public function index(Request $request, $site_id)
     {
@@ -124,6 +126,10 @@ class PageController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $page);
 
+        $page->load([
+            'seo.childs.params',
+        ]);
+
         $site = Site::find($site_id);
 
 
@@ -153,6 +159,8 @@ class PageController extends Controller
 
 
         if ($page) {
+
+            $this->updateSeo($page);
 
             // Переадресовываем на index
             return redirect()->route('pages.index', $site_id);

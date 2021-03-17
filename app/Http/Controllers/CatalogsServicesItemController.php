@@ -176,7 +176,7 @@ class CatalogsServicesItemController extends Controller
 
         $catalogsServicesItem->load([
             'discounts',
-            'seo.childs.params'
+            'seo.childs.params',
         ]);
 
         $catalogServices = CatalogsService::find($catalogId);
