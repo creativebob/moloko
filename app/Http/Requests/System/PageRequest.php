@@ -25,7 +25,6 @@ class PageRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'title' => 'string|max:255|required',
             'alias' => 'string|max:255|nullable',
 
             'description' => 'string|nullable',

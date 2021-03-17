@@ -12,6 +12,7 @@ use App\Http\Controllers\Traits\UserControllerTrait;
 use App\Lead;
 use App\LegalForm;
 use App\Models\Project\Estimate;
+use App\Models\Project\Subscriber;
 use App\Phone;
 use App\Source;
 use App\User;
@@ -542,5 +543,37 @@ class FormController extends BaseController
             ");
 
         return redirect()->route('project.success');
+    }
+
+    /**
+     * Оформление подписки
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function subscribe(Request $request)
+    {
+        $data = $request->input();
+        $data['is_self'] = 1;
+        $data['site_id'] = $this->site->id;
+        $data['token'] = $this->getToken(\Str::random(30));
+        $data['company_id'] = $this->site->company_id;
+        $data['author_id'] = 1;
+
+        $subscriber = Subscriber::make($data);
+        $subscriber->save();
+
+        return redirect()->route('project.subscribed');
+    }
+
+    public function getToken($token) {
+        $res = \App\Subscriber::where('token', $token)
+            ->first();
+        if ($res) {
+            $token = \Str::random(30);
+            $this->getToken($token);
+        } else {
+            return $token;
+        }
     }
 }
