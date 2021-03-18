@@ -553,14 +553,28 @@ class FormController extends BaseController
      */
     public function subscribe(Request $request)
     {
-        $data = $request->input();
-        $data['is_self'] = 1;
-        $data['site_id'] = $this->site->id;
-        $data['token'] = $this->getToken(\Str::random(30));
-        $data['company_id'] = $this->site->company_id;
-        $data['author_id'] = 1;
+        $subscriber = Subscriber::where('email', $request->email)
+            ->first();
 
-        $subscriber = Subscriber::make($data);
+        if ($subscriber) {
+            $subscriber->name = $request->name;
+            $subscriber->is_active = 1;
+            $subscriber->denied_at = null;
+        } else {
+            $subscriber = new Subscriber;
+            $subscriber->name = $request->name;
+            $subscriber->email = $request->email;
+            $subscriber->is_self = 1;
+            $subscriber->site_id = $this->site->id;
+            $subscriber->token = $this->getToken(\Str::random(30));
+            $subscriber->company_id = $this->site->company_id;
+            $subscriber->author_id = 1;
+        }
+
+        if (auth()->user()) {
+            $subscriber->subscriberable_id = auth()->user()->id;
+            $subscriber->subscriberable_type = 'App\User';
+        }
         $subscriber->save();
 
         return redirect()->route('project.subscribed');
