@@ -554,10 +554,11 @@ class FormController extends BaseController
     public function subscribe(Request $request)
     {
         $subscriber = Subscriber::where('email', $request->email)
+            ->where('company_id', $this->site->company_id)
             ->first();
 
         if ($subscriber) {
-            $subscriber->name = $request->name;
+            $subscriber->name = $request->get('name', $subscriber->name);
             $subscriber->is_active = 1;
             $subscriber->denied_at = null;
         } else {
@@ -571,9 +572,18 @@ class FormController extends BaseController
             $subscriber->author_id = 1;
         }
 
-        if (auth()->user()) {
-            $subscriber->subscriberable_id = auth()->user()->id;
+        $user = auth()->user();
+
+        if ($user) {
+            $subscriber->subscriberable_id = $user->id;
             $subscriber->subscriberable_type = 'App\User';
+
+            $notification = $user->notifications->firstWhere('id', 4);
+            if (empty($notification)) {
+                $user->notifications()->sync(4);
+            }
+        } else {
+            Cookie::queue('subscribe', true, 60*60*24*365);
         }
         $subscriber->save();
 
