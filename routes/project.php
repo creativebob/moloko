@@ -101,6 +101,8 @@ Route::get('/confirmation', 'AppController@confirmation')
     ->name('project.confirmation');
 Route::post('/success', 'AppController@success')
     ->name('project.success');
+Route::post('/subscribed', 'AppController@subscribed')
+    ->name('project.subscribed');
 
 
 // Генерация access_code и отправка его на телефон пользователя
@@ -166,3 +168,5 @@ Route::resource('/forms', 'FormController')
         'store',
     ])
     ->names('project.forms');
+Route::post('/forms/subscribe', 'FormController@subscribe')
+    ->name('project.forms.subscribe');

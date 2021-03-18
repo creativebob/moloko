@@ -27,7 +27,7 @@ trait Seoable
 
         $data = [];
         foreach($columns as $column) {
-            $data[$column] = $requestSeo[$column] ? $requestSeo[$column] : null;
+            $data[$column] = isset($requestSeo[$column]) ? $requestSeo[$column] : null;
         }
 
         $itemSeo = $item->seo;

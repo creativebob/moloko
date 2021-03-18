@@ -36,9 +36,7 @@ class Process extends BaseModel
 
         'video_url',
 
-        'content',
-        'seo_description',
-        'keywords',
+        'seo_id',
 
         'length',
         'unit_length_id',
@@ -148,6 +146,11 @@ class Process extends BaseModel
     public function impacts()
     {
         return $this->belongsToMany(Impact::class, 'process_impact');
+    }
+
+    public function seo()
+    {
+        return $this->belongsTo(Seo::class);
     }
 
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Traits;
 use App\Article;
 use App\ArticlesGroup;
 use App\Entity;
+use App\Http\Controllers\System\Traits\Seoable;
 use App\Http\Controllers\Traits\Photable;
 use App\Http\Requests\System\ArticleUpdateRequest;
 use App\Unit;
@@ -16,7 +17,8 @@ use Illuminate\Support\Facades\Log;
 
 trait Articlable
 {
-    use Photable;
+    use Photable,
+        Seoable;
 
     /**
      * Запись артикула в бд
@@ -200,6 +202,8 @@ trait Articlable
                 $article->update($data);
 
                 $article->parts()->sync($request->parts);
+
+                $this->updateSeo($article);
 
                 return $article;
             }

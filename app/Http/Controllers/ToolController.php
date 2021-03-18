@@ -354,7 +354,8 @@ class ToolController extends Controller
                                 ]) ;
                             },
                         ]);
-                    }
+                    },
+                    'seo.childs.params',
                 ]);
             }
         ]);

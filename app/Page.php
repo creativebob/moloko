@@ -50,16 +50,14 @@ class Page extends Model
     protected $fillable = [
         'name',
         'site_id',
-        'title',
-        'header',
         'subtitle',
         'description',
-        'keywords',
-        'content',
         'alias',
 
         'video_url',
-        "video",
+        'video',
+
+        'seo_id',
 
         'display',
         'system',
@@ -114,6 +112,11 @@ class Page extends Model
     public function photo()
     {
         return $this->belongsTo(Photo::class);
+    }
+
+    public function seo()
+    {
+        return $this->belongsTo(Seo::class);
     }
 
 }

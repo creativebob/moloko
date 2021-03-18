@@ -81,16 +81,31 @@ class ParserController extends Controller
         $entitiesAliases = [
             'catalogs_services_items',
             'catalogs_goods_items',
+            'pages',
+            'articles',
+            'processes',
         ];
 
         $entities = Entity::whereIn('alias', $entitiesAliases)
             ->get();
 
         foreach ($entities as $entity) {
+            if ($entity->alias == 'articles' || $entity->alias == 'processes') {
+                $items = $entity->model::whereNotNull('seo_description')
+                    ->get();
+            }
 
-            $items = $entity->model::whereNotNull('seo_description')
-                ->orWhereNotNull('title')
-                ->get();
+            if ($entity->alias == 'catalogs_services_items' || $entity->alias == 'catalogs_goods_items') {
+                $items = $entity->model::whereNotNull('seo_description')
+                    ->orWhereNotNull('title')
+                    ->get();
+            }
+
+            if ($entity->alias == 'pages') {
+                $items = $entity->model::whereNotNull('description')
+                    ->orWhereNotNull('title')
+                    ->get();
+            }
 
             foreach($items as $item) {
                 if ($entity->alias == 'catalogs_services_items' || $entity->alias == 'catalogs_goods_items') {
@@ -100,12 +115,30 @@ class ParserController extends Controller
                         'description' => $item->seo_description,
                         'h1' => $item->header,
                     ];
-
-                    $seo = Seo::firstOrCreate($dataSeo);
-                    $item->update([
-                        'seo_id' => $seo->id
-                    ]);
                 }
+
+                if ($entity->alias == 'articles' || $entity->alias == 'processes') {
+                    $dataSeo = [
+                        'content' => $item->content,
+                        'keywords' => $item->keywords,
+                        'description' => $item->seo_description,
+                    ];
+                }
+
+                if ($entity->alias == 'pages') {
+                    $dataSeo = [
+                        'title' => $item->title,
+                        'keywords' => $item->keywords,
+                        'description' => $item->description,
+                        'h1' => $item->header,
+                        'content' => $item->content,
+                    ];
+                }
+
+                $seo = Seo::firstOrCreate($dataSeo);
+                $item->update([
+                    'seo_id' => $seo->id
+                ]);
             }
 
             echo "Создано СЕО для записей сущности: {$entity->name}<br><br>";

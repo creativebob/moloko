@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CatalogsGoods;
+use App\Http\Controllers\System\Traits\Seoable;
 use App\Http\Controllers\Traits\Photable;
 use App\Http\Requests\System\CatalogsGoodsItemUpdateRequest;
 use App\Http\Requests\System\CatalogsGoodsItemStoreRequest;
@@ -28,7 +29,8 @@ class CatalogsGoodsItemController extends Controller
         $this->type = 'page';
     }
 
-    use Photable;
+    use Photable,
+        Seoable;
 
     /**
      * Display a listing of the resource.
@@ -188,7 +190,8 @@ class CatalogsGoodsItemController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $catalogs_goods_item);
         $catalogs_goods_item->load([
-            'discounts'
+            'discounts',
+            'seo.childs.params',
         ]);
 
         $catalog_goods = CatalogsGoods::find($catalog_id);
@@ -261,6 +264,8 @@ class CatalogsGoodsItemController extends Controller
                     ]);
                 }
             }
+
+            $this->updateSeo($catalogsGoodsItem);
 
             // Переадресовываем на index
             return redirect()->route('catalogs_goods_items.index', ['catalog_id' => $catalog_id, 'id' => $catalogsGoodsItem->id]);

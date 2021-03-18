@@ -63,6 +63,10 @@
                     </li>
                 @endcan
 
+                <li class="tabs-title">
+                    <a data-tabs-target="tab-seo" href="#tab-seo">SEO</a>
+                </li>
+
             </ul>
         </div>
     </div>
@@ -107,6 +111,11 @@
                         @include('products.articles.common.edit.tabs.site')
                     </div>
                 @endcan
+
+                {{-- SEO --}}
+                <div class="tabs-panel" id="tab-seo">
+                    @include('system.common.tabs.seo', ['seo' => $article->seo])
+                </div>
 
                 {{ Form::close() }}
 

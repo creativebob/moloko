@@ -16,10 +16,14 @@ class Subscriber extends Model
     protected $fillable = [
         'name',
         'email',
+        'token',
 
         'denied_at',
         'is_self',
 
+        'site_id',
+        'company_id',
+        'author_id',
         'editor_id',
     ];
 }

@@ -55,6 +55,10 @@
                 @endcan
 
                 <li class="tabs-title">
+                    <a data-tabs-target="tab-seo" href="#tab-seo">SEO</a>
+                </li>
+
+                <li class="tabs-title">
                     <a data-tabs-target="tab-positions" href="#tab-positions">Должности</a>
                 </li>
 
@@ -130,6 +134,11 @@
                         @include('products.processes.common.edit.tabs.site')
                     </div>
                 @endcan
+
+                {{-- SEO --}}
+                <div class="tabs-panel" id="tab-seo">
+                    @include('system.common.tabs.seo', ['seo' => $process->seo])
+                </div>
 
                 @if($process->processes_type_id == 2)
                     @can('index', App\Impact::class)

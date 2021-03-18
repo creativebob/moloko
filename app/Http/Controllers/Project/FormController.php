@@ -12,6 +12,7 @@ use App\Http\Controllers\Traits\UserControllerTrait;
 use App\Lead;
 use App\LegalForm;
 use App\Models\Project\Estimate;
+use App\Models\Project\Subscriber;
 use App\Phone;
 use App\Source;
 use App\User;
@@ -542,5 +543,61 @@ class FormController extends BaseController
             ");
 
         return redirect()->route('project.success');
+    }
+
+    /**
+     * Оформление подписки
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function subscribe(Request $request)
+    {
+        $subscriber = Subscriber::where('email', $request->email)
+            ->where('company_id', $this->site->company_id)
+            ->first();
+
+        if ($subscriber) {
+            $subscriber->name = $request->get('name', $subscriber->name);
+            $subscriber->is_active = 1;
+            $subscriber->denied_at = null;
+        } else {
+            $subscriber = new Subscriber;
+            $subscriber->name = $request->name;
+            $subscriber->email = $request->email;
+            $subscriber->is_self = 1;
+            $subscriber->site_id = $this->site->id;
+            $subscriber->token = $this->getToken(\Str::random(30));
+            $subscriber->company_id = $this->site->company_id;
+            $subscriber->author_id = 1;
+        }
+
+        $user = auth()->user();
+
+        if ($user) {
+            $subscriber->subscriberable_id = $user->id;
+            $subscriber->subscriberable_type = 'App\User';
+
+            $notification = $user->notifications->firstWhere('id', 4);
+            if (empty($notification)) {
+                $user->notifications()->sync(4);
+            }
+        } else {
+            Cookie::queue('subscribe', true, 60*60*24*365);
+        }
+        $subscriber->save();
+
+        return redirect()->route('project.subscribed');
+    }
+
+    public function getToken($token) {
+        $res = \App\Subscriber::where('token', $token)
+            ->first();
+        if ($res) {
+            $token = \Str::random(30);
+            $this->getToken($token);
+        } else {
+            return $token;
+        }
     }
 }

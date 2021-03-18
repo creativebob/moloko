@@ -361,6 +361,15 @@ class AppController extends BaseController
         return view($site->alias . '.pages.success.index', compact('site', 'page'));
     }
 
+    public function subscribed(Request $request)
+    {
+
+        $site = $this->site;
+        $page = $site->pages_public->firstWhere('alias', 'subscribed');
+
+        return view($site->alias . '.pages.subscribed.index', compact('site', 'page'));
+    }
+
     public function get_access_code(Request $request)
     {
 

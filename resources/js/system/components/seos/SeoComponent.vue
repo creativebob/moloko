@@ -58,20 +58,15 @@
 
                 </div>
                 <div class="cell small-12">
-                    <label>Контент
+                    <label for="ckeditor-seo-content">Контент</label>
                         <ckeditor
                             :editor="editor"
                             v-model="content"
                             :config="editorConfig"
                             ref="contentComponent"
                             name="seo[content]"
+                            id="ckeditor-seo-content"
                         ></ckeditor>
-<!--                        <textarea-component-->
-<!--                            v-model="content"-->
-<!--                            ref="contentComponent"-->
-<!--                            name="seo[content]"-->
-<!--                        ></textarea-component>-->
-                    </label>
                 </div>
             </div>
         </div>
