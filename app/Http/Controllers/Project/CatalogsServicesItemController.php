@@ -29,7 +29,10 @@ class CatalogsServicesItemController extends BaseController
         $catalogs_services_item = CatalogsServicesItem::with([
             'catalog',
             'prices',
-            'filters.values'
+            'filters.values',
+            'seo' => function ($q) {
+                $q->withCount('childs');
+            }
         ])
             ->where('slug', $slug)
             ->whereHas('catalog', function ($q) use ($site, $catalog_slug) {

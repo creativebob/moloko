@@ -2,6 +2,7 @@
 
 namespace App\Providers\Project\View;
 
+use App\Http\View\Composers\Project\AdditionalsSeosComposer;
 use App\Http\View\Composers\Project\AlbumByAliasComposer;
 use App\Http\View\Composers\Project\CatalogsServiceComposer;
 use App\Http\View\Composers\Project\CatalogsGoodsComposer;
@@ -98,6 +99,8 @@ class ViewServiceProvider extends ServiceProvider
         view()->composer('project.composers.manufacturers.manufacturers_from_owners_impacts_from_services', ManufacturersFromOwnersImpactsFromServicesComposer::class);
 
         view()->composer('project.composers.albums.album_by_alias', AlbumByAliasComposer::class);
+
+        view()->composer('project.layouts.inheads.inhead_with_additionals', AdditionalsSeosComposer::class);
 
 //        view()->composer('project.composers.estimates.discounts.header_component', DiscountsForEstimatesComposer::class);
     }
