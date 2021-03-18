@@ -19,7 +19,7 @@ class Update3 extends Migration
         });
 
         Schema::table('processes', function (Blueprint $table) {
-            $table->bigInteger('seo_id')->nullable()->unsigned()->comment('Id seo')->after('level');
+            $table->bigInteger('seo_id')->nullable()->unsigned()->comment('Id seo')->after('photo_id');
             $table->foreign('seo_id')->references('id')->on('seos');
         });
 
