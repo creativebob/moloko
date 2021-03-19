@@ -24,7 +24,7 @@ class BaseController extends Controller
         $domain = $request->getHost();
 
         $site = Site::with([
-            'pages_public',
+            'pages_public.seo',
             'company',
             'domains.filials.location.city',
             'navigations' => function ($q) {
