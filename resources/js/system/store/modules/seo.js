@@ -17,6 +17,21 @@ const moduleSeo = {
         deletingSeoIndex: null,
 
         disabledButton: false,
+
+        editorConfig: {
+            toolbar: [
+                'Bold',
+                'Italic',
+                'NumberedList',
+                'BulletedList',
+                '|',
+                'Link',
+                '|',
+                'Undo',
+                'Redo'
+            ],
+            language: 'ru',
+        }
     },
     mutations: {
         SET_SEOS(state, seo) {

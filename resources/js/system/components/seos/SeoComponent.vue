@@ -58,14 +58,13 @@
 
                 </div>
                 <div class="cell small-12">
-                    <label for="ckeditor-seo-content">Контент</label>
+                    <label>Контент</label>
                         <ckeditor
                             :editor="editor"
                             v-model="content"
                             :config="editorConfig"
                             ref="contentComponent"
                             name="seo[content]"
-                            id="ckeditor-seo-content"
                         ></ckeditor>
                 </div>
             </div>
@@ -117,16 +116,7 @@ export default {
             is_canonical: this.seo.is_canonical,
 
             editor: ClassicEditor,
-            editorConfig:{
-                // toolbar: [
-                //     'Bold',
-                //     'Italic',
-                //     'NumberedList',
-                //     'BulletedList',
-                //     'Maximize',
-                //     'Source',
-                // ]
-            }
+            editorConfig: this.$store.state.seo.editorConfig,
         }
     },
 }

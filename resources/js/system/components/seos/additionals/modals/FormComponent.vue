@@ -99,17 +99,14 @@
                     >
                         <div class="grid-x grid-padding-x align-center modal-content inputs">
                             <div class="cell small-12">
-                                <label
-                                    :for="'ckeditor-seo-content-' + method"
-                                >Контент</label>
+                                <label>Контент</label>
                                     <ckeditor
                                         :editor="editor"
                                         v-model="content"
                                         :config="editorConfig"
                                         ref="contentComponent"
                                         @input="change"
-                                        :id="'ckeditor-seo-content-' + method"
-                                    ></ckeditor>
+                                       ></ckeditor>
                             </div>
                         </div>
                     </div>
@@ -157,8 +154,7 @@ export default {
             params: [],
 
             editor: ClassicEditor,
-            editorConfig:{
-            }
+            editorConfig: this.$store.state.seo.editorConfig,
         }
     },
 
