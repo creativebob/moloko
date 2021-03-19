@@ -34,12 +34,14 @@
 <script>
 
 export default {
-    props: {
-        item: Object,
-    },
     data() {
         return {
             title: null,
+        }
+    },
+    computed: {
+        item() {
+            return this.$store.state.seo.deletingSeo;
         }
     },
     watch: {
@@ -50,7 +52,7 @@ export default {
     methods: {
         remove() {
             $('#modal-delete-additional-seo').foundation('close');
-            this.$emit('remove');
+            this.$store.commit('DELETE_SEO');
         },
     },
 }

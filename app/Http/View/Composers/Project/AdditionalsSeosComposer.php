@@ -13,11 +13,13 @@ class AdditionalsSeosComposer
         $seo = $view->item->seo;
 	    if ($seo) {
 	        // Если есть параметры и доп сео
-	        if (count(request()->input()) > 0 && $seo->childs_count > 0) {
+            $countRequestInput = count(request()->input();
+;	        if (count(request()->input()) > 0 && $seo->childs_count > 0) {
 
 	            $params = request()->input();
 //	            dd($params);
-                $query = Seo::where('parent_id', $seo->id);
+                $query = Seo::where('parent_id', $seo->id)
+                ->has('params', $countRequestInput);
                     foreach($params as $param => $value) {
                         $query->whereHas('params', function ($q) use ($param, $value) {
                             $q->where([

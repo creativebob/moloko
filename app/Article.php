@@ -86,6 +86,8 @@ class Article extends Model
 
         'photo_id',
 
+        'content',
+
         'unit_id',
         'draft',
 

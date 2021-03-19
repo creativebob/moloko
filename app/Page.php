@@ -59,6 +59,8 @@ class Page extends Model
 
         'seo_id',
 
+        'content',
+
         'display',
         'system',
         'moderation'

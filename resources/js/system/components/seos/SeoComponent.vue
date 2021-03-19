@@ -72,9 +72,7 @@
         </div>
         <div class="cell small-12 medium-6">
 
-            <additional-seos-component
-                :additional-seos="seo.childs"
-            ></additional-seos-component>
+            <additional-seos-component></additional-seos-component>
         </div>
     </div>
 </template>
@@ -104,6 +102,9 @@ export default {
                 };
             }
         }
+    },
+    mounted() {
+        this.$store.commit('SET_SEOS', this.seo);
     },
     data() {
         return {

@@ -35,6 +35,7 @@
                 <button
                     @click="update"
                     class="button modal-button"
+                    :disabled="disabledButton"
                 >Сохранить
                 </button>
             </div>
@@ -53,13 +54,31 @@ export default {
         'form-component': require('./FormComponent'),
     },
     props: {
-        item: Object,
         columns: Array
     },
     data() {
         return {
             data: [],
             errors: [],
+        }
+    },
+    computed: {
+        item() {
+            return this.$store.state.seo.updatingSeo;
+        },
+        disabledButton() {
+            return this.$store.state.seo.disabledButton;
+        },
+    },
+    watch: {
+        disabledButton(val) {
+            const msg = 'SEO с аналогичными параметрами уже существует';
+            if (val) {
+                this.errors.push(msg);
+            } else {
+                let index = this.errors.findIndex(obj => obj === msg);
+                this.errors.splice(index, 1);
+            }
         }
     },
     methods: {
@@ -73,7 +92,7 @@ export default {
                 if (this.item.id) {
                     this.data.id = this.item.id;
                 }
-                this.$emit('update', this.data);
+                this.$store.commit('UPDATE_SEO', this.data);
                 this.reset();
             } else {
                 if (!this.data.title) {

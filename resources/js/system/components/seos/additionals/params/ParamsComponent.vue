@@ -3,6 +3,7 @@
         <legend>Параметры</legend>
 
         <store-component
+            @change="change"
             @add="add"
             ref="storeComponent"
         ></store-component>
@@ -53,6 +54,15 @@ export default {
         }
     },
     methods: {
+        change(param) {
+            let found = false;
+            this.curParams.forEach(curParam => {
+                if (curParam.param == param.param && curParam.value == param.value) {
+                    found = true;
+                }
+            });
+            this.$refs.storeComponent.disableButton(found);
+        },
         add(param) {
             this.curParams.push(param);
             this.$emit('change', this.curParams);

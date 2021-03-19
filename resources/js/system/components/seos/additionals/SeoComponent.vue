@@ -73,10 +73,10 @@
         },
         methods: {
             update() {
-                this.$emit('update', this.index)
+                this.$store.commit('SET_UPDATING_SEO', this.index);
             },
             remove() {
-                this.$emit('remove', this.index);
+                this.$store.commit('SET_DELETING_SEO', this.index);
             },
         },
     }

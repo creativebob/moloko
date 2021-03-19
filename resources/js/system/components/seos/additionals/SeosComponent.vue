@@ -25,30 +25,20 @@
                             :key="index"
                             :index="index"
                             :columns="columns"
-                            @remove="openModalRemove"
-                            @update="openModalUpdate"
                         ></seo-component>
                 </table>
             </div>
 
             <modal-store-component
                 :columns="columns"
-                @add="add"
             ></modal-store-component>
 
             <modal-update-component
                 :columns="columns"
-                :item="updatingItem"
-                @update="update"
             ></modal-update-component>
 
-            <modal-delete-component
-                :item="deletingItem"
-                @remove="remove"
-            ></modal-delete-component>
+            <modal-delete-component></modal-delete-component>
         </div>
-
-
     </fieldset>
 
 </template>
@@ -62,14 +52,6 @@ export default {
         'modal-update-component': require('./modals/UpdateComponent'),
         'modal-delete-component': require('./modals/DeleteComponent'),
     },
-    props: {
-        additionalSeos: {
-            type: Array,
-            default: () => {
-                return [];
-            }
-        }
-    },
     data() {
         return {
             columns: [
@@ -82,39 +64,11 @@ export default {
 
                 'params'
             ],
-            seos: this.additionalSeos,
-
-            updatingItem: {
-                title: null,
-                h1: null,
-                description: null,
-                keywords: null,
-            },
-            updatingItemIndex: null,
-
-            deletingItem: {
-                title: null,
-            },
-            deletingItemIndex: null,
         }
     },
-    methods: {
-        add(seo) {
-            this.seos.push(seo);
-        },
-        openModalUpdate(index) {
-            this.updatingItem = this.seos[index];
-            this.updatingItemIndex = index;
-        },
-        update(seo) {
-            Vue.set(this.seos, this.updatingItemIndex, seo);
-        },
-        openModalRemove(index) {
-            this.deletingItem = this.seos[index];
-            this.deletingItemIndex = index;
-        },
-        remove() {
-            this.seos.splice(this.deletingItemIndex, 1);
+    computed: {
+        seos() {
+            return this.$store.state.seo.additionals;
         },
     }
 }

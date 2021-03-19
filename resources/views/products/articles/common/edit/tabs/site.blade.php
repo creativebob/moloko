@@ -3,15 +3,6 @@
         <label>Описание:
             {{ Form::textarea('content', $article->content, ['id' => 'content-ckeditor', 'autocomplete' => 'off', 'size' => '10x3']) }}
         </label>
-
-        <label>Description
-            @include('includes.inputs.textarea', ['value' => $article->seo_description, 'name' => 'seo_description'])
-        </label>
-
-        <label>Keywords
-            @include('includes.inputs.textarea', ['value' => $article->keywords, 'name' => 'keywords'])
-        </label>
-
     </div>
 </div>
 

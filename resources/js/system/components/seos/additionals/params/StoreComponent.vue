@@ -6,6 +6,7 @@
                     <string-component
                         v-model="param"
                         ref="paramComponent"
+                        @input="change"
                     ></string-component>
                 </label>
             </div>
@@ -14,6 +15,7 @@
                     <string-component
                         v-model="value"
                         ref="valueComponent"
+                        @input="change"
                     ></string-component>
                 </label>
             </div>
@@ -22,6 +24,7 @@
                 <button
                     class="button"
                     @click="add"
+                    :disabled="disabledButton"
                 >Добавить</button>
             </div>
 
@@ -42,6 +45,18 @@ export default {
         }
     },
     methods: {
+        change() {
+            if (this.param && this.value) {
+                // this.disabledButton = true;
+
+                let param = {
+                    param: this.param,
+                    value: this.value,
+                };
+                this.$emit('change', param);
+                // this.disabledButton = false;
+            }
+        },
         add() {
             if (this.param && this.value) {
                 // this.disabledButton = true;
@@ -62,6 +77,9 @@ export default {
             this.value = null;
             this.$refs.valueComponent.update();
         },
+        disableButton(val = false) {
+            this.disabledButton = val;
+        }
     }
 }
 </script>

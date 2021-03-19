@@ -34,6 +34,7 @@
                 <button
                     @click="add"
                     class="button modal-button"
+                    :disabled="disabledButton"
                 >Добавить</button>
             </div>
         </div>
@@ -60,15 +61,32 @@ export default {
             errors: []
         }
     },
+    computed: {
+        disabledButton() {
+            return this.$store.state.seo.disabledButton;
+        }
+    },
+    watch: {
+        disabledButton(val) {
+            const msg = 'SEO с аналогичными параметрами уже существует';
+            if (val) {
+                this.errors.push(msg);
+            } else {
+                let index = this.errors.findIndex(obj => obj === msg);
+                this.errors.splice(index, 1);
+            }
+        }
+    },
     methods: {
         change(data) {
             this.data = data;
+            this.$store.commit('CHECK_PARAMS', this.data);
         },
         add() {
             this.errors = [];
             if (this.data.title && this.data.title.length && this.data.params.length >= 1) {
                 $('#modal-add-additional-seo').foundation('close');
-                this.$emit('add', this.data);
+                this.$store.commit('ADD_SEO', this.data);
                 this.reset();
             } else {
                 if (!this.data.title) {

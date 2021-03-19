@@ -43,6 +43,8 @@ class Process extends BaseModel
 
         'photo_id',
 
+        'content',
+
         'draft',
         'unit_id',
 
