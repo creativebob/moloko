@@ -561,6 +561,7 @@ class FormController extends BaseController
             $subscriber->name = $request->get('name', $subscriber->name);
             $subscriber->is_active = 1;
             $subscriber->denied_at = null;
+            $subscriber->site_id = $this->site->id;
         } else {
             $subscriber = new Subscriber;
             $subscriber->name = $request->name;

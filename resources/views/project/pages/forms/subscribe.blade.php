@@ -1,4 +1,7 @@
-@if(empty(auth()->user()->subscriber) || !auth()->user() || Cookie::get('request') == null)
+@if(
+    (auth()->user() && (empty(auth()->user()->subscriber) || (auth()->user()->subscriber->denied_at || auth()->user()->subscriber->is_active == 0))) ||
+    (!auth()->user() && Cookie::get('subscribe') == null)
+)
 {!! Form::open(['route' => 'project.forms.subscribe', 'data-abide', 'novalidate']) !!}
     <div class="grid-x grid-padding-x align-center wrap-form-call">
         <div class="cell small-12 text-center">
