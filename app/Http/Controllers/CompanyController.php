@@ -185,7 +185,12 @@ class CompanyController extends Controller
         $company = Company::with([
             'main_phones',
             'extra_phones',
-            'director.user.main_phones',
+            'director.user' => function ($q) {
+                $q->with([
+                    'main_phones',
+                    'location',
+                ]);
+            },
             'photo',
             'white',
             'black',

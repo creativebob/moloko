@@ -188,6 +188,12 @@ class VendorController extends Controller
                             'processes_types',
                             'manufacturers',
                             'files',
+                            'director.user' => function ($q) {
+                                $q->with([
+                                    'main_phones',
+                                    'location',
+                                ]);
+                            },
                         ]);
                     }
                 ]);

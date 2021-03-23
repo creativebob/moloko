@@ -41,6 +41,7 @@
             </div>
         </div>
         <div
+            @click="reset"
             data-close
             class="icon-close-modal sprite button-modal-close"
         ></div>
@@ -69,6 +70,9 @@ export default {
         disabledButton() {
             return this.$store.state.seo.disabledButton;
         },
+        success() {
+            return this.data.title && this.data.title.length && this.data.params.length >= 1;
+        }
     },
     watch: {
         disabledButton(val) {
@@ -87,7 +91,7 @@ export default {
         },
         update() {
             this.errors = [];
-            if (this.data.title && this.data.title.length && this.data.params.length >= 1) {
+            if (this.success) {
                 $('#modal-update-additional-seo').foundation('close');
                 if (this.item.id) {
                     this.data.id = this.item.id;

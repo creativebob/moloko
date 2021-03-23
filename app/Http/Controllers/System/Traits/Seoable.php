@@ -53,6 +53,7 @@ trait Seoable
         if ($hasAdditionals) {
 
             foreach($request->additional_seos as $requestAdditionalSeo) {
+
                 $additionalData = [];
                 foreach($columns as $column) {
                     $additionalData[$column] = isset($requestAdditionalSeo[$column]) ? $requestAdditionalSeo[$column] : null;
@@ -67,23 +68,20 @@ trait Seoable
                     $oldAdditionalSeosParamsIds = $additionalSeo->params->pluck('id')->toArray();
                     $additionalSeosParamsIds = [];
 
-                    $params = [];
                     foreach ($requestAdditionalSeo['params'] as $param) {
                         if (isset($param['id'])) {
-                            $additionalSeoParam = $additionalSeo->params->firstWhere('id', $param['id']);
-                            $additionalSeoParam->update($param);
-                            $additionalSeosParamsIds[] = $additionalSeoParam->id;
+//                            $additionalSeoParam = $additionalSeo->params->firstWhere('id', $param['id']);
+//                            $additionalSeoParam->update($param);
+                            $additionalSeosParamsIds[] = $param['id'];
                         } else {
                             $paramData = $param;
                             $paramData['seo_id'] = $additionalSeo->id;
-                            $param = SeosParam::create($param);
+                            $param = SeosParam::create($paramData);
                             $additionalSeosParamsIds[] = $param->id;
                         }
-                        $additionalSeo->params()->saveMany($params);
-
-                        $deleteIds = array_diff($oldAdditionalSeosIds, $additionalSeosIds);
-                        $res = Seo::destroy($deleteIds);
                     }
+                    $deleteParamsIds = array_diff($oldAdditionalSeosParamsIds, $additionalSeosParamsIds);
+                    $res = SeosParam::destroy($deleteParamsIds);
                 } else {
                     $additionalSeo = Seo::create($additionalData);
                     $additionalSeosIds[] = $additionalSeo->id;
@@ -96,10 +94,8 @@ trait Seoable
                 }
             }
         }
-
         $deleteIds = array_diff($oldAdditionalSeosIds, $additionalSeosIds);
         $res = Seo::destroy($deleteIds);
-
 
         // Если нет доп сео и пустые поля - удаляем
         if (!$hasAdditionals) {

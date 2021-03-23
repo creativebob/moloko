@@ -12,7 +12,7 @@ class CreateAccountsTable extends Migration
         Schema::create('accounts', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-//            $table->string('name')->index()->comment('Рабочее имя аккаунта');
+            $table->string('name')->nullable()->comment('Название');
             $table->text('description')->nullable()->comment('Комментарий к аккаунту');
 
             $table->string('login')->comment('Логин');
@@ -24,6 +24,9 @@ class CreateAccountsTable extends Migration
 
             $table->bigInteger('source_service_id')->unsigned()->nullable()->comment('Id источника - внешний сервис');
             $table->foreign('source_service_id')->references('id')->on('source_services');
+
+            $table->string('external_id')->nullable()->comment('Идентификатор (ID)');
+            $table->string('page_public_url')->nullable()->comment('Публичная страница (ссылка)');
 
 
             // Общие настройки

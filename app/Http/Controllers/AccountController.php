@@ -102,6 +102,10 @@ class AccountController extends Controller
         $account->api_token = $request->api_token;
         $account->secret = $request->secret;
 
+        $account->name = $request->name;
+        $account->external_id = $request->external_id;
+        $account->page_public_url = $request->page_public_url;
+
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if($answer['automoderate'] == false){
             $account->moderation = true;
@@ -197,6 +201,10 @@ class AccountController extends Controller
 
         $account->api_token = $request->api_token;
         $account->secret = $request->secret;
+
+        $account->name = $request->name;
+        $account->external_id = $request->external_id;
+        $account->page_public_url = $request->page_public_url;
 
         $account->system = $request->system;
         $account->display = $request->display;

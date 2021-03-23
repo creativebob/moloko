@@ -33,6 +33,10 @@
 
                         <div class="small-12 medium-12 cell">
 
+                            <label>Имя
+                                @include('includes.inputs.name', ['value'=>$account->name])
+                            </label>
+
                             <label>Описание
                               @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$account->description])
                           </label>
@@ -41,9 +45,13 @@
 
 
                     <div class="small-12 medium-6 cell">
-                      <label>Алиас
-                        @include('includes.inputs.alias', ['name'=>'alias', 'value'=>$account->alias])
+                      <label>Идентификатор (ID)
+                          {{ Form::text('external_id', $account->external_id) }}
                     </label>
+
+                        <label>Алиас
+                            @include('includes.inputs.alias', ['name'=>'alias', 'value'=>$account->alias])
+                        </label>
                 </div>
 
 
@@ -74,6 +82,10 @@
             <label>Секрет
                 @include('includes.inputs.text-en', ['name'=>'secret', 'value'=>$account->secret])
             </label>
+
+              <label>Публичная страница (ссылка)
+                  {{ Form::text('page_public_url', $account->page_public_url) }}
+              </label>
         </div>
     </div>
 </div>

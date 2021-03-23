@@ -52,15 +52,18 @@ class Account extends Model
         'company_id',
         'appends',
 
+        'external_id',
+        'page_public_url',
+
         'display',
         'system',
         'moderation'
     ];
 
     // Склеиваем имя
-    public function getNameAttribute($value) {
-        $value = $this->source_service->source->name . '-' . $value = $this->source_service->name;
-        return $value;
+    public function getFullNameAttribute() {
+        $sourceName = $this->source_service->source->name . '-' . $this->source_service->name;
+        return isset($this->name) ? $this->name . ' ' . $sourceName : $sourceName;
     }
 
     // Получаем компанию.

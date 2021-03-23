@@ -34,7 +34,7 @@
             },
             maxlength: {
                 type: Number,
-                default: 40,
+                default: 300,
             },
             id: {
                 type: String,

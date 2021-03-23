@@ -67,7 +67,7 @@
         @if($edit == 1)
         <a href="/admin/accounts/{{ $account->id }}/edit">
           @endif
-          {{ $account->name }}
+          {{ $account->fullName }}
           @if($edit == 1)
       </a>
       @endif

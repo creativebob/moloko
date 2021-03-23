@@ -64,6 +64,9 @@ export default {
     computed: {
         disabledButton() {
             return this.$store.state.seo.disabledButton;
+        },
+        success() {
+            return this.data.title && this.data.title.length && this.data.params.length >= 1;
         }
     },
     watch: {
@@ -84,7 +87,7 @@ export default {
         },
         add() {
             this.errors = [];
-            if (this.data.title && this.data.title.length && this.data.params.length >= 1) {
+            if (this.success) {
                 $('#modal-add-additional-seo').foundation('close');
                 this.$store.commit('ADD_SEO', this.data);
                 this.reset();
