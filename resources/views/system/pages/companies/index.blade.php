@@ -90,15 +90,16 @@
                             <td class="td-address">@if(!empty($company->location->address)){{ $company->location->address }}@endif </td>
                             <td class="td-phone">{{ isset($company->main_phone->phone) ? decorPhone($company->main_phone->phone) : 'Номер не указан' }}</td>
 
-                            @if($company->director->exists)
+                            
                                 <td class="td-user_id">
-                                    @isset($company->director->user)
-                                        <a href="users/{{ $company->director->user->id }}/edit">{{ $company->director->user->name_reverse ?? ' ... ' }}</a>
-                                    @else
-                                        ...
-                                    @endisset
+                                    @if($company->director->exists)
+                                        @isset($company->director->user)
+                                            <a href="users/{{ $company->director->user->id }}/edit">{{ $company->director->user->name_reverse ?? ' ... ' }}</a>
+                                        @else
+                                            ...
+                                        @endisset
+                                    @endif
                                 </td>
-                            @endif
 
                             {{-- Элементы управления --}}
                             @include('includes.control.table-td', ['item' => $company])

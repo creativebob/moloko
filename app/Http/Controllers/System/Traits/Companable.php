@@ -23,27 +23,18 @@ trait Companable
     {
 
         $request = request();
-
         $data = $request->input();
+
         $location = $this->getLocation();
         $data['location_id'] = $location->id;
-//        dd($data);
 
-        $legalLocation = Location::firstOrCreate([
-            'country_id' => $request->legal_country_id,
-            'city_id' => $request->legal_city_id,
-            'address' => $request->legal_address,
-            'zip_code' => $request->legal_zip_code,
-        ], [
-            'author_id' => 1
-        ]);
+        $legalLocation = $this->getLocation($data['legal_country_id'], $data['legal_city_id'], $data['legal_address'], $data['legal_zip_code']);
         $data['legal_location_id'] = $legalLocation->id;
 
         $company = Company::whereNotNull('inn')
             ->firstOrCreate([
                 'inn' => $data['inn']
             ], $data);
-//        dd($company);
 
         if ($company->wasRecentlyCreated) {
             logs('companies')->info("Создана компания. Id: [{$company->id}]");
@@ -96,22 +87,12 @@ trait Companable
     public function updateCompany($company)
     {
         $request = request();
-
-//        $company = update_location($request, $company);
-
         $data = $request->input();
 
         $location = $this->getLocation();
         $data['location_id'] = $location->id;
 
-        $legalLocation = Location::firstOrCreate([
-            'country_id' => $request->legal_country_id,
-            'city_id' => $request->legal_city_id,
-            'address' => $request->legal_address,
-            'zip_code' => $request->legal_zip_code,
-        ], [
-            'author_id' => 1
-        ]);
+        $legalLocation = $this->getLocation($data['legal_country_id'], $data['legal_city_id'], $data['legal_address'], $data['legal_zip_code']);
         $data['legal_location_id'] = $legalLocation->id;
 
         $photoId = $this->getPhotoId($company);

@@ -122,13 +122,7 @@ trait Directorable
                 ])
                 ->count();
 
-            $location = Location::firstOrCreate([
-                'country_id' => 1,
-                'city_id' => $request->user_city_id,
-                'address' => $request->user_address,
-            ], [
-                'author_id' => 1
-            ]);
+            $location = $this->getLocation(null, $request->user_city_id, $request->user_address, null);
 
             $user = User::make([
                 'second_name' => $request->user_second_name,
@@ -185,13 +179,7 @@ trait Directorable
 
         $request = request();
 
-        $location = Location::firstOrCreate([
-            'country_id' => 1,
-            'city_id' => $request->user_city_id,
-            'address' => $request->user_address,
-        ], [
-            'author_id' => 1
-        ]);
+        $location = $this->getLocation(null, $request->user_city_id, $request->user_address, null);
 
         $user->first_name = $request->user_first_name;
         $user->second_name = $request->user_second_name;

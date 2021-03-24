@@ -279,4 +279,10 @@ return [
 
     'vkusnyashka_mailing'  => env('VKUSNYASHKA_MAILING', false),
 
+    'default_country_id' => 1,
+
+    'default_city_id' => 1,
+
+    'dadata_parse_location' => true,
+
 ];

@@ -8,8 +8,8 @@ return [
     |--------------------------------------------------------------------------
     |
     */
-    'token' => env('DADATA_TOKEN', ''),
+    'token' => env('DADATA_TOKEN', '719ce57a44b02fb578bea1ad120a314240c9e2ad'),
 
-    'secret' => env('DADATA_SECRET', ''),
+    'secret' => env('DADATA_SECRET', 'b50300cc6ad4fc35b9627dcbd5c912d8422e8aac'),
 
 ];
