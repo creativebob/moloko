@@ -111,6 +111,7 @@ export default {
             this.errors = [];
             this.data = [];
             this.$refs.formComponent.reset();
+            this.$store.commit('SET_UPDATING_SEO', null);
         }
     },
 }
