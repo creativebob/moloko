@@ -421,7 +421,10 @@ class ViewServiceProvider extends ServiceProvider
         view()->composer('includes.selects.menus', MenusSelectComposer::class);
 
         view()->composer('includes.selects.indicators_categories', IndicatorsCategoriesSelectComposer::class);
-        view()->composer('includes.selects.directions', DirectionsComposer::class);
+        view()->composer([
+            'includes.selects.directions', 
+            'includes.lists.directions'
+        ], DirectionsComposer::class);
 
         view()->composer('includes.selects.entities_statistics', EntitiesStatisticsSelectComposer::class);
         view()->composer('includes.selects.entities', EntitiesComposer::class);
