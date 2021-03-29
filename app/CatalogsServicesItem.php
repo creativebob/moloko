@@ -69,6 +69,12 @@ class CatalogsServicesItem extends BaseModel
 		return $this->hasMany(CatalogsServicesItem::class, 'parent_id');
 	}
 
+    public function children()
+    {
+        return $this->hasMany(CatalogsServicesItem::class, 'parent_id')
+            ->with('children');
+    }
+
     // Главный
     public function category()
     {

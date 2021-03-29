@@ -2,27 +2,18 @@
 
 namespace App\Http\Controllers;
 
-// Модели
 use App\CatalogsGoods;
-
-// Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\System\CatalogsGoodsRequest;
 
-// Транслитерация
-use Illuminate\Support\Str;
-
 class CatalogsGoodsController extends Controller
 {
-
     /**
      * CatalogsGoodsController constructor.
-     * @param CatalogsGoods $catalogs_goods
      */
-    public function __construct(CatalogsGoods $catalogs_goods)
+    public function __construct()
     {
         $this->middleware('auth');
-        $this->catalogs_goods = $catalogs_goods;
         $this->entity_alias = with(new CatalogsGoods)->getTable();;
         $this->entity_dependence = false;
         $this->class = CatalogsGoods::class;
@@ -208,6 +199,99 @@ class CatalogsGoodsController extends Controller
 
         } else {
             abort(403, 'Ошибка при удалении каталога!');
+        }
+    }
+
+    /**
+     * Дублирование
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function replicate(Request $request, $id)
+    {
+        $withPositions = $request->with_positions;
+
+        $catalog = CatalogsGoods::with([
+            'items' => function ($q) use ($withPositions) {
+                $q->whereNull('parent_id')
+                    ->with('children')
+                    ->when($withPositions, function ($q) {
+                        $q->with('prices');
+                    });
+            }
+        ])
+            ->find($id);
+//        dd($catalog);
+
+        $newCatalog = $catalog->replicate();
+        $newCatalog->name = $request->name;
+        $newCatalog->save();
+
+        $newCatalog->update([
+            'display' => false
+        ]);
+
+        $newCatalog->filials()->attach($request->filial_id);
+
+        foreach ($catalog->items as $item) {
+            $newItem = $item->replicate();
+            $newItem->catalogs_goods_id = $newCatalog->id;
+            $newItem->seo_id = null;
+            $newItem->save();
+
+            if ($withPositions) {
+                foreach ($item->prices as $price) {
+                    $newPrice = $price->replicate();
+                    $newPrice->catalogs_goods_id = $newCatalog->id;
+                    $newPrice->catalogs_goods_item_id = $newItem->id;
+                    $newPrice->save();
+                }
+            }
+
+            if (isset($item->children)) {
+                foreach($item->children as $child) {
+                    $this->replicateTree($newItem, $child, $newItem,  $withPositions);
+                }
+            }
+        }
+
+        return redirect()->route('catalogs_goods.index');
+    }
+
+    /**
+     * Воссоздание дерева каталога
+     *
+     * @param $category
+     * @param $item
+     * @param $parent
+     * @param $withPositions
+     */
+    public function replicateTree($category, $item, $parent, $withPositions)
+    {
+        $newItem = $item->replicate();
+        $newItem->catalogs_goods_id = $category->catalogs_goods_id;
+        $newItem->seo_id = null;
+
+        $newItem->parent_id = $parent->id;
+        $newItem->category_id = $category->id;
+
+        $newItem->save();
+
+        if ($withPositions) {
+            $item->load('prices');
+            foreach ($item->prices as $price) {
+                $newPrice = $price->replicate();
+                $newPrice->catalogs_goods_id = $category->catalogs_goods_id;
+                $newPrice->catalogs_goods_item_id = $newItem->id;
+                $newPrice->save();
+            }
+        }
+        if (isset($item->childrens)) {
+            foreach($item->childrens as $children) {
+                $this->replicateTree($category, $children, $newItem, $withPositions);
+            }
         }
     }
 

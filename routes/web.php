@@ -1515,10 +1515,10 @@ Route::resource('/news', 'NewsController')
 
 
 // ----------------------------------------- Каталоги товаров ------------------------------------------
-
 Route::any('/catalogs_goods/get_catalogs_by_ids', 'CatalogsGoodsController@getCatalogsByIds');
 Route::any('/catalogs_goods/get_catalogs_for_outlet', 'CatalogsGoodsController@getCatalogsForOutlet');
-
+// Дублирование
+Route::post('/catalogs_goods/replicate/{id}', 'CatalogsGoodsController@replicate');
 //Route::any('/catalogs_goods/{id}', 'CatalogsGoodsController@get_catalog');
 // Основные методы
 Route::resource('/catalogs_goods', 'CatalogsGoodsController');
@@ -1564,6 +1564,8 @@ Route::prefix('catalogs_goods/{catalog_id}')->group(function () {
 
 // ----------------------------------------- Каталоги услуг ------------------------------------------
 Route::any('/catalogs_services/get_catalogs_for_outlet', 'CatalogsServiceController@getCatalogsForOutlet');
+// Дублирование
+Route::post('/catalogs_services/replicate/{id}', 'CatalogsServiceController@replicate');
 // Основные методы
 Route::resource('/catalogs_services', 'CatalogsServiceController')
     ->except([

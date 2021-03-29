@@ -386,7 +386,8 @@ class ViewServiceProvider extends ServiceProvider
 
         view()->composer([
             'includes.lists.filials',
-            'menus.form'
+            'menus.form',
+            'includes.modals.modal-replicate-catalog'
         ], FilialsComposer::class);
 
          view()->composer('system.pages.marketings.promotions.form', SitesWIthFilialsAndCatalogsComposer::class);

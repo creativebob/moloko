@@ -96,6 +96,12 @@ use App\Scopes\Filters\BooklistFilter;
 			return $this->hasMany(CatalogsGoodsItem::class, 'parent_id');
 		}
 
+        public function children()
+        {
+            return $this->hasMany(CatalogsGoodsItem::class, 'parent_id')
+                ->with('children');
+        }
+
 		// Главный
 		public function category()
 		{

@@ -58,7 +58,11 @@
                 @forelse($catalogsServices as $catalogsService)
 
                     <tr class="item @if($catalogsService->moderation == 1)no-moderation @endif"
-                        id="catalogs_services-{{ $catalogsService->id }}" data-name="{{ $catalogsService->name }}">
+                        id="catalogs_services-{{ $catalogsService->id }}"
+                        data-name="{{ $catalogsService->name }}"
+                        data-entity="catalogs_services"
+                        data-id="{{ $catalogsService->id }}"
+                    >
                         <td class="td-drop">
                             <div class="sprite icon-drop"></div>
                         </td>
@@ -96,7 +100,7 @@
                         <td class="td-author">{{ $catalogsService->author->name}}</td>
 
                         {{-- Элементы управления --}}
-                        @include('includes.control.table-td', ['item' => $catalogsService])
+                        @include('includes.control.table_td', ['item' => $catalogsService, 'replicate' => true])
 
                         <td class="td-delete">
                             @can('delete', $catalogsService)
@@ -123,6 +127,7 @@
 @section('modals')
     {{-- Модалка удаления с refresh --}}
     @include('includes.modals.modal-delete')
+    @include('includes.modals.modal-replicate-catalog')
 @endsection
 
 @push('scripts')

@@ -104,7 +104,7 @@ class StartTableSeeder extends Seeder
                 'system' => false,
                 'author_id' => null,
                 'moderation' => false,
-                'sex' => 1,
+                'gender' => 1,
         	]
         ]);
 

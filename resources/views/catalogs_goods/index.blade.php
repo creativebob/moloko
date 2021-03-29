@@ -60,7 +60,7 @@
 
 	                @forelse($catalogs_goods as $cur_catalogs_goods)
 
-	                <tr class="item @if($cur_catalogs_goods->moderation == 1)no-moderation @endif" id="catalogs_goods-{{ $cur_catalogs_goods->id }}" data-name="{{ $cur_catalogs_goods->name }}">
+	                <tr class="item @if($cur_catalogs_goods->moderation == 1)no-moderation @endif" id="catalogs_goods-{{ $cur_catalogs_goods->id }}" data-name="{{ $cur_catalogs_goods->name }}" data-entity="catalogs_goods" data-id="{{ $cur_catalogs_goods->id }}">
 	                    <td class="td-drop">
 	                        <div class="sprite icon-drop"></div>
 	                    </td>
@@ -95,7 +95,7 @@
 	                    <td class="td-author">{{ $cur_catalogs_goods->author->name}}</td>
 
 	                    {{-- Элементы управления --}}
-	                    @include('includes.control.table-td', ['item' => $cur_catalogs_goods])
+	                    @include('includes.control.table_td', ['item' => $cur_catalogs_goods, 'replicate' => true])
 
 	                    <td class="td-delete">
 	                        @can('delete', $cur_catalogs_goods)
@@ -123,23 +123,18 @@
 @section('modals')
 	{{-- Модалка удаления с refresh --}}
 	@include('includes.modals.modal-delete')
+    @include('includes.modals.modal-replicate-catalog')
 @endsection
 
 @push('scripts')
-
-{{-- Скрипт сортировки --}}
-@include('includes.scripts.sortable-table-script')
-
-{{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
-@include('includes.scripts.tablesorter-script')
-
-{{-- Скрипт отображения на сайте --}}
-@include('includes.scripts.ajax-display')
-
-{{-- Скрипт системной записи --}}
-@include('includes.scripts.ajax-system')
-
-{{-- Скрипт модалки удаления --}}
-@include('includes.scripts.modal-delete-script')
-
+    {{-- Скрипт сортировки --}}
+    @include('includes.scripts.sortable-table-script')
+    {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
+    @include('includes.scripts.tablesorter-script')
+    {{-- Скрипт отображения на сайте --}}
+    @include('includes.scripts.ajax-display')
+    {{-- Скрипт системной записи --}}
+    @include('includes.scripts.ajax-system')
+    {{-- Скрипт модалки удаления --}}
+    @include('includes.scripts.modal-delete-script')
 @endpush

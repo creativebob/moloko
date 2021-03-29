@@ -213,6 +213,99 @@ class CatalogsServiceController extends Controller
         }
     }
 
+    /**
+     * Дублирование
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function replicate(Request $request, $id)
+    {
+        $withPositions = $request->with_positions;
+
+        $catalog = CatalogsService::with([
+            'items' => function ($q) use ($withPositions) {
+                $q->whereNull('parent_id')
+                    ->with('children')
+                    ->when($withPositions, function ($q) {
+                        $q->with('prices');
+                    });
+            }
+        ])
+            ->find($id);
+//        dd($catalog);
+
+        $newCatalog = $catalog->replicate();
+        $newCatalog->name = $request->name;
+        $newCatalog->save();
+
+        $newCatalog->update([
+            'display' => false
+        ]);
+
+        $newCatalog->filials()->attach($request->filial_id);
+
+        foreach ($catalog->items as $item) {
+            $newItem = $item->replicate();
+            $newItem->catalogs_service_id = $newCatalog->id;
+            $newItem->seo_id = null;
+            $newItem->save();
+
+            if ($withPositions) {
+                foreach ($item->prices as $price) {
+                    $newPrice = $price->replicate();
+                    $newPrice->catalogs_service_id = $newCatalog->id;
+                    $newPrice->catalogs_services_item_id = $newItem->id;
+                    $newPrice->save();
+                }
+            }
+
+            if (isset($item->children)) {
+                foreach($item->children as $child) {
+                    $this->replicateTree($newItem, $child, $newItem,  $withPositions);
+                }
+            }
+        }
+
+        return redirect()->route('catalogs_services.index');
+    }
+
+    /**
+     * Воссоздание дерева каталога
+     *
+     * @param $category
+     * @param $item
+     * @param $parent
+     * @param $withPositions
+     */
+    public function replicateTree($category, $item, $parent, $withPositions)
+    {
+        $newItem = $item->replicate();
+        $newItem->catalogs_service_id = $category->catalogs_service_id;
+        $newItem->seo_id = null;
+
+        $newItem->parent_id = $parent->id;
+        $newItem->category_id = $category->id;
+
+        $newItem->save();
+
+        if ($withPositions) {
+            $item->load('prices');
+            foreach ($item->prices as $price) {
+                $newPrice = $price->replicate();
+                $newPrice->catalogs_service_id = $category->catalogs_service_id;
+                $newPrice->catalogs_services_item_id = $newItem->id;
+                $newPrice->save();
+            }
+        }
+        if (isset($item->childrens)) {
+            foreach($item->childrens as $children) {
+                $this->replicateTree($category, $children, $newItem, $withPositions);
+            }
+        }
+    }
+
     // ------------------------------------------------ Ajax -------------------------------------------------
 
     /**
