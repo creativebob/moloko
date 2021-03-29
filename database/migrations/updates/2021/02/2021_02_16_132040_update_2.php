@@ -25,10 +25,10 @@ class Update2 extends Migration
             $table->string('is_need_parse')->default(1)->comment('Нужно парсить')->after('is_create_parse');
         });
 
-        Schema::table('staff', function (Blueprint $table) {
-            $table->dropColumn('archive');
-            $table->timestamp('archived_at')->nullable()->comment('Архив')->after('rate');
-        });
+//        Schema::table('staff', function (Blueprint $table) {
+//            $table->dropColumn('archive');
+//            $table->timestamp('archived_at')->nullable()->comment('Архив')->after('rate');
+//        });
     }
 
     /**
@@ -51,9 +51,9 @@ class Update2 extends Migration
             ]);
         });
 
-        Schema::table('staff', function (Blueprint $table) {
-            $table->dropColumn('archived_at');
-            $table->boolean('archive')->default(0)->unsigned()->comment('Архив')->after('rate');
-        });
+//        Schema::table('staff', function (Blueprint $table) {
+//            $table->dropColumn('archived_at');
+//            $table->boolean('archive')->default(0)->unsigned()->comment('Архив')->after('rate');
+//        });
     }
 }
