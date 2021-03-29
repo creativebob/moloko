@@ -77,6 +77,11 @@
                 <td></td>
             </tr>
             <tr>
+                <td>Промокод:</td>
+                <td>{{ $lead->promocode ?? ''}}</td>
+                <td></td>
+            </tr>
+            <tr>
                 <td>Тип трафика:</td>
                 <td>{{ $lead->medium->name ?? ''}}</td>
                 <td></td>

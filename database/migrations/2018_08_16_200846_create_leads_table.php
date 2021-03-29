@@ -59,7 +59,7 @@ class CreateLeadsTable extends Migration
             $table->string('utm_content')->nullable()->comment('Рекламное объявление');
             $table->string('utm_term')->nullable()->comment('Ключевая фраза');
 
-            $table->string('prom')->nullable()->comment('Продвижение');
+            $table->string('promocode', 30)->nullable()->comment('Промокод');
 
             $table->bigInteger('sector_id')->nullable()->unsigned()->comment('Сектор');
             $table->foreign('sector_id')->references('id')->on('sectors');

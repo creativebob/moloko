@@ -111,7 +111,10 @@ class CatalogsGoodsItemController extends BaseController
 
             'directive_category:id,alias',
             'filters.values',
-            'catalog'
+            'catalog',
+            'seo' => function ($q) {
+                $q->withCount('childs');
+            }
         ])
             ->where('slug', $slug)
             ->whereHas('catalog', function ($q) use ($site, $catalogSlug) {

@@ -34,6 +34,7 @@ class Lead extends BaseModel
     protected $fillable = [
         'name',
         'user_id',
+        'promocode',
 
         'description',
 

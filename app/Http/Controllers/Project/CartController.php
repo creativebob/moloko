@@ -384,6 +384,7 @@ class CartController extends BaseController
             $lead->description = $description;
             $lead->stage_id = $request->stage_id ?? 2;
             $lead->badget = 0;
+            $lead->promocode = $request->promocode;
             $lead->lead_method_id = 2;
             $lead->draft = false;
 
@@ -734,6 +735,10 @@ class CartController extends BaseController
 
             if ($request->has('comment')) {
                 $message .= "Комментарий: {$request->comment}\r\n";
+            }
+
+            if($request->has('promocode')) {
+                $message .= "Промокод: {$request->promocode}\r\n";
             }
 
             if ($request->has('need_delivery')) {

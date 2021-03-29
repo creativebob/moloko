@@ -69,6 +69,7 @@ class Lead extends Model
     protected $fillable = [
         'name',
         'user_id',
+        'promocode',
 
         'company_name',
         'organization_id',

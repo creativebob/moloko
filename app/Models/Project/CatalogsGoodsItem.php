@@ -44,6 +44,12 @@ class CatalogsGoodsItem extends Model
         return $this->belongsTo(CatalogsGoodsItem::class);
     }
 
+    // SEO
+    public function seo()
+    {
+        return $this->belongsTo('App\Seo');
+    } 
+
     // Прайсы
     public function prices()
     {
