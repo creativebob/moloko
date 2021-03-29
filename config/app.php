@@ -283,6 +283,6 @@ return [
 
     'default_city_id' => 1,
 
-    'dadata_parse_location' => true,
+    'dadata_parse_location' => false,
 
 ];

@@ -48,10 +48,10 @@ class CompetitorController extends Controller
 
         $competitors = Competitor::with([
             'author',
+            'directions.category',
             'company' => function ($q) {
                 $q->with([
                     'location.city',
-                    'sector',
                     'legal_form',
                     'domains'
                 ]);
@@ -148,15 +148,14 @@ class CompetitorController extends Controller
                     'location.city',
                     'schedules.worktimes',
                     'sector',
-                    'processes_types'
+                    'processes_types',
                 ]);
-            },
+            },'directions'
         ])
             ->moderatorLimit($answer)
             ->authors($answer)
             ->systemItem($answer)
             ->find($id);
-//        dd($competitor);
 
         if (empty($competitor)) {
             abort(403, __('errors.not_found'));
@@ -228,6 +227,8 @@ class CompetitorController extends Controller
         $data = $request->input();
         $data['description'] = $request->competitor_description;
         $res = $competitor->update($data);
+
+        $competitor->directions()->sync($request->directions);
 
         if (!$res) {
             abort(403, __('errors.update'));

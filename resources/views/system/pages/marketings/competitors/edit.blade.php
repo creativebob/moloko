@@ -15,7 +15,7 @@
 @endsection
 
 @section('content')
-    {!! Form::model($company, ['route' => ['competitors.update', $competitor->id], 'data-abide', 'novalidate', 'files' => 'true']) !!}
+    {!! Form::model($competitor, ['route' => ['competitors.update', $competitor->id], 'data-abide', 'novalidate', 'files' => 'true']) !!}
     @method('PATCH')
     @include('system.pages.companies.form', ['submitButtonText' => 'Редактировать'])
     {!! Form::close() !!}

@@ -24,7 +24,7 @@ class GoodsCategoryObserver
         $this->update($category);
         $this->updateCategory($category);
 
-        $this->checkDirection($category, 'App\GoodsТCategory');
+        $this->checkDirection($category, 'App\GoodsCategory');
     }
 
     public function updated(Category $category)
