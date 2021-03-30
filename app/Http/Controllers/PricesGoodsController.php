@@ -50,17 +50,24 @@ class PricesGoodsController extends Controller
             return Redirect($filter_url);
         }
 
-        $user_filials = session('access.all_rights.index-prices_goods-allow.filials');
-//        $user_filials = session('access.all_rights.index-leads-allow');
-        // dd($request);
+        $catalogGoods = CatalogsGoods::with([
+            'filials'
+        ])
+            ->find($catalogId);
 
-        if (isset($request->filial_id)) {
-            $filial_id = $request->filial_id;
+        if ($request->has('filial_id')) {
+            $filialId = $request->filial_id;
         } else {
-            if (!is_null($user_filials)) {
-                $filial_id = key($user_filials);
+            if ($catalogGoods->filials->isNotEmpty()) {
+                $filialId = $catalogGoods->filials->first()->id;
             } else {
-                $filial_id = null;
+                $user_filials = session('access.all_rights.index-prices_goods-allow.filials');
+
+                if (!is_null($user_filials)) {
+                    $filialId = key($user_filials);
+                } else {
+                    $filialId = null;
+                }
             }
         }
 
@@ -112,7 +119,7 @@ class PricesGoodsController extends Controller
             ->where([
                 'archive' => false,
                 'catalogs_goods_id' => $catalogId,
-                'filial_id' => $filial_id,
+                'filial_id' => $filialId,
             ])
             ->orderBy('sort')
             ->paginate(300);
@@ -134,10 +141,7 @@ class PricesGoodsController extends Controller
         // Инфо о странице
         $pageInfo = pageInfo($this->entity_alias);
 
-        $catalogGoods = CatalogsGoods::with([
-            'filials'
-        ])
-        ->find($catalogId);
+
 
         $pageInfo->title = 'Прайс: ' . $catalogGoods->name;
         $pageInfo->name = 'Прайс: ' . $catalogGoods->name;
@@ -149,7 +153,7 @@ class PricesGoodsController extends Controller
             'entity' => $this->entity_alias,
             'filter' => $filter,
             'nested' => null,
-            'filial_id' => $filial_id,
+            'filial_id' => $filialId,
             'catalogGoods' => $catalogGoods
         ]);
     }
