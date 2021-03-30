@@ -50,6 +50,12 @@
             $('#form-replicate').attr('action', '/admin/' + entity + '/replicate/' + id);
         });
 
+        $(document).on('submit', '#form-replicate', function() {
+            $('.modal-button').each(function () {
+                $(this).prop('disabled', true);
+            })
+        });
+
         $(document).on('click', '#modal-replicate [data-close]', function() {
             $('input[name="name"]').val('');
         });

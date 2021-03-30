@@ -223,6 +223,7 @@ class CatalogsServiceController extends Controller
     public function replicate(Request $request, $id)
     {
         $withPositions = $request->with_positions;
+        $filialId = $request->filial_id;
 
         $catalog = CatalogsService::with([
             'items' => function ($q) use ($withPositions) {
@@ -244,7 +245,7 @@ class CatalogsServiceController extends Controller
             'display' => false
         ]);
 
-        $newCatalog->filials()->attach($request->filial_id);
+        $newCatalog->filials()->attach($filialId);
 
         foreach ($catalog->items as $item) {
             $newItem = $item->replicate();
@@ -257,13 +258,14 @@ class CatalogsServiceController extends Controller
                     $newPrice = $price->replicate();
                     $newPrice->catalogs_service_id = $newCatalog->id;
                     $newPrice->catalogs_services_item_id = $newItem->id;
+                    $newPrice->filial_id = $filialId;
                     $newPrice->save();
                 }
             }
 
             if (isset($item->children)) {
                 foreach($item->children as $child) {
-                    $this->replicateTree($newItem, $child, $newItem,  $withPositions);
+                    $this->replicateTree($child, $newItem, $newItem, $filialId, $withPositions);
                 }
             }
         }
@@ -274,12 +276,13 @@ class CatalogsServiceController extends Controller
     /**
      * Воссоздание дерева каталога
      *
-     * @param $category
      * @param $item
+     * @param $category
      * @param $parent
+     * @param $filialId
      * @param $withPositions
      */
-    public function replicateTree($category, $item, $parent, $withPositions)
+    public function replicateTree($item, $category, $parent, $filialId, $withPositions)
     {
         $newItem = $item->replicate();
         $newItem->catalogs_service_id = $category->catalogs_service_id;
@@ -296,6 +299,7 @@ class CatalogsServiceController extends Controller
                 $newPrice = $price->replicate();
                 $newPrice->catalogs_service_id = $category->catalogs_service_id;
                 $newPrice->catalogs_services_item_id = $newItem->id;
+                $newPrice->filial_id = $filialId;
                 $newPrice->save();
             }
         }

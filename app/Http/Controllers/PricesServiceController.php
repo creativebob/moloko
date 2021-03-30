@@ -51,18 +51,24 @@ class PricesServiceController extends Controller
             return Redirect($filter_url);
         }
 
-        $user_filials = session('access.all_rights.index-prices_services-allow.filials');
-//        $user_filials = session('access.all_rights.index-leads-allow');
+        $catalogServices = CatalogsService::with([
+            'filials'
+        ])
+            ->find($catalogId);
 
-        // dd($request);
-
-        if (isset($request->filial_id)) {
+        if ($request->has('filial_id')) {
             $filialId = $request->filial_id;
         } else {
-            if (!is_null($user_filials)) {
-                $filialId = key($user_filials);
+            if ($catalogServices->filials->isNotEmpty()) {
+                $filialId = $catalogServices->filials->first()->id;
             } else {
-                $filialId = null;
+                $user_filials = session('access.all_rights.index-prices_services-allow.filials');
+
+                if (!is_null($user_filials)) {
+                    $filialId = key($user_filials);
+                } else {
+                    $filialId = null;
+                }
             }
         }
 
@@ -131,11 +137,6 @@ class PricesServiceController extends Controller
 
         // Инфо о странице
         $pageInfo = pageInfo($this->entityAlias);
-
-        $catalogServices = CatalogsService::with([
-            'filials'
-        ])
-            ->find($catalogId);
 
         $pageInfo->title = 'Прайс: ' . $catalogServices->name;
         $pageInfo->name = 'Прайс: ' . $catalogServices->name;

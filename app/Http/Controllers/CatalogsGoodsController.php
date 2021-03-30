@@ -212,6 +212,7 @@ class CatalogsGoodsController extends Controller
     public function replicate(Request $request, $id)
     {
         $withPositions = $request->with_positions;
+        $filialId = $request->filial_id;
 
         $catalog = CatalogsGoods::with([
             'items' => function ($q) use ($withPositions) {
@@ -233,7 +234,7 @@ class CatalogsGoodsController extends Controller
             'display' => false
         ]);
 
-        $newCatalog->filials()->attach($request->filial_id);
+        $newCatalog->filials()->attach($filialId);
 
         foreach ($catalog->items as $item) {
             $newItem = $item->replicate();
@@ -246,13 +247,14 @@ class CatalogsGoodsController extends Controller
                     $newPrice = $price->replicate();
                     $newPrice->catalogs_goods_id = $newCatalog->id;
                     $newPrice->catalogs_goods_item_id = $newItem->id;
+                    $newPrice->filial_id = $filialId;
                     $newPrice->save();
                 }
             }
 
             if (isset($item->children)) {
                 foreach($item->children as $child) {
-                    $this->replicateTree($newItem, $child, $newItem,  $withPositions);
+                    $this->replicateTree($child, $newItem, $newItem, $filialId, $withPositions);
                 }
             }
         }
@@ -263,12 +265,13 @@ class CatalogsGoodsController extends Controller
     /**
      * Воссоздание дерева каталога
      *
-     * @param $category
      * @param $item
+     * @param $category
      * @param $parent
+     * @param $filialId
      * @param $withPositions
      */
-    public function replicateTree($category, $item, $parent, $withPositions)
+    public function replicateTree($item, $category, $parent, $filialId, $withPositions)
     {
         $newItem = $item->replicate();
         $newItem->catalogs_goods_id = $category->catalogs_goods_id;
@@ -285,12 +288,13 @@ class CatalogsGoodsController extends Controller
                 $newPrice = $price->replicate();
                 $newPrice->catalogs_goods_id = $category->catalogs_goods_id;
                 $newPrice->catalogs_goods_item_id = $newItem->id;
+                $newPrice->filial_id = $filialId;
                 $newPrice->save();
             }
         }
         if (isset($item->childrens)) {
             foreach($item->childrens as $children) {
-                $this->replicateTree($category, $children, $newItem, $withPositions);
+                $this->replicateTree($children, $category, $newItem, $filialId, $withPositions);
             }
         }
     }
