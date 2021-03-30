@@ -42,7 +42,7 @@ trait Locationable
         // Можем включить или выключить функцию определения
         // координат локации сервиса Dadata в config файле App
 
-        if(config('app.dadata_parse_location')){
+        if(env('DADATA_PARSE_LOCATION')){
             $resultParse = $this->dadataParseLocation($cityId, $address);
             $latitude = $resultParse->geo_lat;
             $longitude = $resultParse->geo_lon;
@@ -70,7 +70,7 @@ trait Locationable
             if(($location->latitude == null)||($location->longitude == null)){
 
                 // Не хватает данных о координатах, будем парсить есть разрешено настройкой
-                if(config('app.dadata_parse_location')){
+                if(env('DADATA_PARSE_LOCATION')){
                     $resultParse = $this->dadataParseLocation($cityId, $address);
                     $location->latitude = $resultParse->geo_lat;
                     $location->longitude = $resultParse->geo_lon;

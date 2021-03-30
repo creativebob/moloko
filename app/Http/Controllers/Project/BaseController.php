@@ -26,7 +26,10 @@ class BaseController extends Controller
         $site = Site::with([
             'pages_public.seo',
             'company',
-            'domains.filials.location.city',
+            'domains' => function ($q) {
+                $q->with('filials.location.city')
+                ->orderBy('sort');
+            },
             'navigations' => function ($q) {
                 $q->with([
                     'align',

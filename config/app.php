@@ -261,7 +261,8 @@ return [
     ],
 
     // Наши настройки
-     'vk_api_token' => env('VK_API_TOKEN'),
+    'vk_api_token' => env('VK_API_TOKEN'),
+
     // 'telegram_bot_token' => env('TELEGRAM_BOT_TOKEN'),
     'lead_number_logic' => env('LEAD_NUMBER_LOGIC', 'simple'),
 
@@ -283,6 +284,6 @@ return [
 
     'default_city_id' => 1,
 
-    'dadata_parse_location' => false,
+    'dadata_parse_location' => env('DADATA_PARSE_LOCATION', false),
 
 ];
