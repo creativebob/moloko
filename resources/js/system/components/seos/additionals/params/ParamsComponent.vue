@@ -20,7 +20,7 @@
                     </thead>
 
                     <param-component
-                        v-for="(param, index) in curParams"
+                        v-for="(param, index) in params"
                         :param="param"
                         :key="index"
                         :index="index"
@@ -43,20 +43,10 @@ export default {
     props: {
         params: Array
     },
-    data() {
-        return {
-            curParams: this.params,
-        }
-    },
-    watch: {
-        params(val) {
-            this.curParams = val;
-        }
-    },
     methods: {
         change(param) {
             let found = false;
-            this.curParams.forEach(curParam => {
+            this.params.forEach(curParam => {
                 if (curParam.param == param.param && curParam.value == param.value) {
                     found = true;
                 }
@@ -64,12 +54,14 @@ export default {
             this.$refs.storeComponent.disableButton(found);
         },
         add(param) {
-            this.curParams.push(param);
-            this.$emit('change', this.curParams);
+            let params = JSON.parse(JSON.stringify(this.params));
+            params.push(param);
+            this.$emit('change', params);
         },
         remove(index) {
-            this.curParams.splice(index, 1);
-            this.$emit('change', this.curParams);
+            let params = JSON.parse(JSON.stringify(this.params));
+            params.splice(index, 1);
+            this.$emit('change', params);
         },
         reset(l) {
             this.$refs.storeComponent.reset();

@@ -8,17 +8,6 @@
                 class="icon-delete sprite"
             ></div>
         </td>
-
-<!--        <template-->
-<!--            v-for="column in columns"-->
-<!--        >-->
-<!--            <input-->
-<!--                type="hidden"-->
-<!--                :name="'additional_SEOs[' + index + '][' + column + ']'"-->
-<!--                :value="seo[column]"-->
-<!--            >-->
-<!--        </template>-->
-
     </tr>
 </template>
 

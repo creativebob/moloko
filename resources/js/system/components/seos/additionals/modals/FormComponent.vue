@@ -85,7 +85,7 @@
                             </div>
                             <div class="cell small-12">
                                 <params-component
-                                    :params="curParams"
+                                    :params="params"
                                     @change="changeParams"
                                     ref="paramsComponent"
                                 ></params-component>
@@ -171,28 +171,22 @@ export default {
                     this[column] = item[column];
                     this.$refs[column + 'Component'].update(this[column]);
                 }
-            })
+            });
             this.change();
         }
     },
 
-    computed: {
-        curParams() {
-            return this.params;
-        }
-    },
-
     methods: {
+        changeParams(params) {
+            this.params = params;
+            this.change();
+        },
         change() {
             let data = {};
             this.columns.forEach(column => {
                 data[column] = this[column];
             });
             this.$emit('change', data);
-        },
-        changeParams(params) {
-            this.params = params;
-            this.change();
         },
         reset() {
             this.columns.forEach(column => {
