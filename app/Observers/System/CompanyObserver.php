@@ -34,7 +34,7 @@ class CompanyObserver
         $company->author_id = 1;
 
         $legalForm = $this->cleanName($company);
-        $company->legal_form_id = $legalForm->id ?? $request->legal_form_id ?? 1;
+        $company->legal_form_id = $legalForm->id ?? $request->legal_form_id ?? null;
 
         $companiesCount = Company::count();
         if ($companiesCount == 0) {
@@ -43,6 +43,10 @@ class CompanyObserver
             $number = $companiesCount + 1;
         }
         $company->alias = \Str::slug($company->name) . '-' . $number;
+
+        if ($company->name_legal == null) {
+            $company->legal_form_id = null;
+        }
     }
 
     /**
@@ -59,7 +63,11 @@ class CompanyObserver
         }
 
         $legalForm = $this->cleanName($company);
-        $company->legal_form_id = $legalForm->id ?? request()->legal_form_id ?? 1;
+        $company->legal_form_id = $legalForm->id ?? request()->legal_form_id ?? null;
+
+        if ($company->name_legal == null) {
+            $company->legal_form_id = null;
+        }
     }
 
     /**

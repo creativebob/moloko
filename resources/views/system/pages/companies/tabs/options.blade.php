@@ -1,33 +1,9 @@
 <div class="grid-x">
     <div class="cell small-12 large-5">
         <div class="grid-x grid-padding-x">
-
-            <div class="small-6 medium-6 cell">
-                <label>Коммерческое обозначение
-                    @include('includes.inputs.name', ['name' => 'designation'])
-                </label>
-            </div>
-            <div class="small-6 medium-6 cell">
-                <label>Статус по виду деятельности
-                    @include('includes.inputs.name', ['name' => 'prename'])
-                </label>
-            </div>
-
-            <div class="small-12 large-6 cell">
-                <label>Название компании (короткий вариант)
-                    @include('includes.inputs.name', ['value'=>$company->name_short, 'name'=>'name_short'])
-                </label>
-            </div>
-
             <div class="small-12 large-6 cell">
                 <label>Алиас
                     @include('includes.inputs.alias', ['value'=>$company->alias, 'name'=>'alias'])
-                </label>
-            </div>
-
-            <div class="small-12 cell">
-                <label>Слоган
-                    @include('includes.inputs.name', ['name' => 'slogan'])
                 </label>
             </div>
 
@@ -41,6 +17,20 @@
                     ></digit-component>
                 </label>
             </div>
+
+            @if ($company->external_control == 0)
+                <div class="small-12 medium-6 cell">
+                    <label>Система налогообложения
+                        @include('includes.selects.taxation_types', ['placeholder' => 'Не указана'])
+                    </label>
+                </div>
+                <div class="small-12 cell">
+                    <fieldset>
+                        <legend>Валюты</legend>
+                        @include('includes.lists.currencies')
+                    </fieldset>
+                </div>
+            @endif
 
             {{ Form::hidden('external_control', 0) }}
             <div class="small-12 cell checkbox">

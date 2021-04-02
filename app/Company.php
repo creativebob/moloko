@@ -68,6 +68,7 @@ class Company extends Model
         'prename',
         'slogan',
         'name_short',
+        'name_legal',
         'designation',
         'email',
         'alias',
@@ -398,7 +399,6 @@ class Company extends Model
         };
         return $value;
     }
-
 
     public function setFoundationDateAttribute($value)
     {

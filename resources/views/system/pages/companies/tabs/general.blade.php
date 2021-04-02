@@ -1,18 +1,27 @@
 <div class="grid-x">
     <div class="cell small-12 medium-7 large-5">
         <div class="grid-x grid-padding-x">
-            <div class="small-2 medium-2 cell">
-                @include('includes.selects.legal_forms', ['value'=>$company->legal_form_id])
-            </div>
-            <div class="small-10 medium-4 cell">
+
+            <div class="small-12 medium-6 cell">
                 <label>Название компании
                     @include('includes.inputs.name', ['value'=>$company->name, 'required' => true])
                 </label>
             </div>
+
+            <div class="small-12 medium-6 cell">
+
+            </div>
+
+            <div class="small-6 medium-6 cell">
+                <label>Статус по виду деятельности
+                    @include('includes.inputs.name', ['value'=>$company->prename, 'name' => 'prename'])
+                </label>
+            </div>  
+
             <div class="small-12 medium-6 cell">
                 {{-- Селект с секторами (Вид деятельности компании) --}}
-                <label>Вид деятельности компании
-                    @include('includes.selects.sectors_select', ['sector_id' => $company->sector_id])
+                <label>Внутренний классификатор
+                    @include('includes.selects.sectors_select', ['sector_id' => ($company->sector_id != null) ? $company->sector_id : Auth::user()->company->sector_id])
                 </label>
             </div>
 
@@ -21,32 +30,31 @@
                     @include('includes.inputs.phone', ['value' => isset($company->main_phone->phone) ? $company->main_phone->phone : null, 'name'=>'main_phone', 'required' => true])
                 </label>
             </div>
-            <div class="small-12 medium-6 cell" id="extra-phones">
-            @if (count($company->extra_phones) > 0)
-                @foreach ($company->extra_phones as $extra_phone)
-                    @include('includes.extra-phone', ['extra_phone' => $extra_phone])
-                @endforeach
-            @else
-                @include('includes.extra-phone')
-            @endif
-
-            <!-- <span id="add-extra-phone">Добавить номер</span> -->
-            </div>
 
             <div class="small-12 medium-6 cell">
                 <label>Почта
                     @include('includes.inputs.email', ['value' => $company->email, 'name' => 'email'])
                 </label>
+            </div>
 
+            <div class="small-12 medium-6 cell">
+                @include('includes.selects.countries', ['value'=>$company->location ? $company->location->country_id : null])
+            </div>
+
+            <div class="small-12 medium-6 cell">
                 {{-- Город --}}
                 @include('system.common.includes.city_search', ['item' => $company, 'required' => true])
             </div>
 
             <div class="small-12 medium-6 cell">
-                @include('includes.selects.countries', ['value'=>$company->location ? $company->location->country_id : null])
-
                 <label>Адрес
                     @include('includes.inputs.address', ['value' => isset($company->location->address) ? $company->location->address : null, 'name'=>'address'])
+                </label>
+            </div>
+
+            <div class="small-12 medium-3 cell">
+                <label>Почтовый индекс
+                    @include('includes.inputs.zip_code', ['value'=>isset($company->location->zip_code) ? $company->location->zip_code : null, 'name'=>'zip_code'])
                 </label>
             </div>
 
@@ -57,12 +65,6 @@
                     </label>
                 </div>
             @endif
-
-            <div class="small-12 medium-3 cell">
-                <label>Почтовый индекс
-                    @include('includes.inputs.zip_code', ['value'=>isset($company->location->zip_code) ? $company->location->zip_code : null, 'name'=>'zip_code'])
-                </label>
-            </div>
         </div>
     </div>
     <div class="cell small-12 medium-5 large-7 text-left">

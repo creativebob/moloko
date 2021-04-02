@@ -27,7 +27,11 @@ class CompanyRequest extends FormRequest
 
             'name' => 'required|string|max:255',
             // 'alias' => 'string|max:255|alpha|unique:companies',
-             'alias' => 'string|max:255|alpha_dash|nullable',
+            'alias' => 'string|max:255|alpha_dash|nullable',
+
+            // 'name_legal' => 'required_with:legal_form_id',
+            'legal_form_id' => 'required_with:name_legal',
+            'name_legal' => 'required_with:name_short',
 
             'main_phone' => 'string|max:17|required',
             'extra_phones.*' => 'string|max:17|nullable',
@@ -41,7 +45,9 @@ class CompanyRequest extends FormRequest
 
             'account_settlement' => 'string|nullable',
             'account_correspondent' => 'string|nullable',
-            'bank' => 'string|max:255|nullable',
+            'bank_name' => 'string|max:255|nullable|required_with:account_settlement|required_with:account_correspondent',
+            'bic' => 'required_with:bank_name',
+            'bank_name' => 'required_with:bic',
             'inn' => 'max:12|nullable',
             'kpp' => 'max:255|nullable',
 
