@@ -71,8 +71,12 @@
                             @if($edit == 1)
                                 <a href="suppliers/{{ $supplier->id }}/edit">
                                     @endif
-                                    {{ $supplier->company->name }} ({{ $supplier->company->legal_form->name ?? ''
-                                    }})
+                                    {{ $supplier->company->name }} 
+
+                                        @if(($supplier->company->legal_form)&&($supplier->company->name_legal))
+                                            ({{ $supplier->company->legal_form->name}} {{ $supplier->company->name_short ?? $supplier->company->name_legal }})
+                                        @endif
+
                                     @if($edit == 1)
                                 </a>
                             @endif
