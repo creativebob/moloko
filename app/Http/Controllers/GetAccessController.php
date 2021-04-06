@@ -21,6 +21,7 @@ use App\CompaniesSetting;
 // Модели которые отвечают за работу с правами + политики
 use App\Role;
 use App\Policies\UserPolicy;
+use App\UsersLogin;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
 
@@ -34,15 +35,18 @@ use Carbon\Carbon;
 
 class GetAccessController extends Controller
 {
-
     /**
      * Вход в систему
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
     public function enter()
     {
-        return view('layouts.enter');
+        if (auth()->user()) {
+            return redirect()->route('dashboard.index');
+        } else {
+            return view('layouts.enter');
+        }
     }
 
     public function set(Request $request)
@@ -55,8 +59,10 @@ class GetAccessController extends Controller
         // Получаем пользователя в user
         $user = $request->user();
 
-        $user->login_date = now();
-        $user->save();
+        auth()->user()->logins()->save(UsersLogin::make([
+            'logined_at' => now(),
+            'ip' => request()->ip()
+        ]));
 
         if ($user->access_block == 1) {
             abort(403, "Сорян, вам сюда нельзя! Блокировочка!");
@@ -403,7 +409,6 @@ class GetAccessController extends Controller
             if (isset($request->action_array)) {
                 $action_array = $request->action_array;
             };
-
 
             // if((isset($action_method))&&(isset($action_method))){
 
