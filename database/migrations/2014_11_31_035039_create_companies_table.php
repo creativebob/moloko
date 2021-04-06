@@ -14,6 +14,7 @@ class CreateCompaniesTable extends Migration
 
             $table->string('name')->nullable()->index()->comment('Имя компании');
             $table->string('name_short')->nullable()->index()->comment('Короткое имя компании');
+            $table->string('name_legal')->nullable()->index()->comment('Полное юридическое имя');
             $table->string('prename')->nullable()->index()->comment('Статус компании');
             $table->string('slogan')->nullable()->comment('Слоган');
             $table->string('designation')->nullable()->index()->comment('Коммерческое обозначение');

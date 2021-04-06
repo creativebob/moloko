@@ -11,6 +11,7 @@ use App\Agent;
 use App\Company;
 use App\Outlet;
 use Illuminate\Http\Request;
+use App\Http\Requests\System\CompanyRequest;
 
 class AgentController extends Controller
 {
@@ -115,7 +116,7 @@ class AgentController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function store(Request $request)
+    public function store(CompanyRequest $request)
     {
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Agent::class);
@@ -213,7 +214,7 @@ class AgentController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function update(Request $request, $id)
+    public function update(CompanyRequest $request, $id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));

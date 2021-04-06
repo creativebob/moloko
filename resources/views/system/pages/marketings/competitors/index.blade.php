@@ -73,7 +73,10 @@
                             <td class="td-name">
                                 @can('update', $competitor)
                                     <a href="{{ route('competitors.edit', $competitor->id) }}">{{ $competitor->company->name }}
-                                        ({{ $competitor->company->legal_form->name ?? '' }})</a>
+                                        @if(($competitor->company->legal_form)&&($competitor->company->name_legal))
+                                            ({{ $competitor->company->legal_form->name}} {{ $competitor->company->name_short ?? $competitor->company->name_legal }})
+                                        @endif
+                                    </a>
                                 @else
                                     {{ $competitor->company->name }} ({{ $competitor->company->legal_form->name ?? '' }}
                                     )

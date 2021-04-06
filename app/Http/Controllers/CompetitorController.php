@@ -10,6 +10,7 @@ use App\Http\Controllers\System\Traits\Locationable;
 use App\Http\Controllers\System\Traits\Phonable;
 use App\Http\Controllers\Traits\Photable;
 use Illuminate\Http\Request;
+use App\Http\Requests\System\CompanyRequest;
 
 class CompetitorController extends Controller
 {
@@ -61,7 +62,7 @@ class CompetitorController extends Controller
             ->moderatorLimit($answer)
             ->authors($answer)
             ->systemItem($answer)
-            ->oldest('sort')
+            ->orderBy('id', 'desc')
             ->paginate(30);
 //        dd($competitors);
 
@@ -99,7 +100,7 @@ class CompetitorController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function store(Request $request)
+    public function store(CompanyRequest $request)
     {
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Competitor::class);
@@ -118,6 +119,7 @@ class CompetitorController extends Controller
         $data['description'] = $request->competitor_description;
 
         $competitor = Competitor::create($data);
+        $competitor->directions()->sync($request->directions);
 
         $this->setStatuses($company);
 
@@ -182,7 +184,7 @@ class CompetitorController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function update(Request $request, $id)
+    public function update(CompanyRequest $request, $id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
@@ -226,13 +228,15 @@ class CompetitorController extends Controller
         // Обновление информации по клиенту:
         $data = $request->input();
         $data['description'] = $request->competitor_description;
-        $res = $competitor->update($data);
 
-        $competitor->directions()->sync($request->directions);
+        $res = $competitor->update($data);
 
         if (!$res) {
             abort(403, __('errors.update'));
         }
+        
+        $competitor->directions()->sync($request->directions);
+
 
         logs('companies')->info("Обновлен агент. Id: [{$competitor->id}]");
         logs('companies')->info('============ КОНЕЦ ОБНОВЛЕНИЯ КОНКУРЕНТА ===============
