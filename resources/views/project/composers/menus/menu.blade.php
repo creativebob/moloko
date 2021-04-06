@@ -9,6 +9,7 @@
                     class="{{ $menu->icon ?? '' }}"
                     title="{{ $menu->title ?? '' }}"
                     @if($menu->new_blank) target="_blank" @endif
+                    @if($menu->is_nofollow) rel="nofollow" @endif
                     >@if(!$menu->text_hidden) {{ $menu->name }} @endif
                     </a>
                 </li>
