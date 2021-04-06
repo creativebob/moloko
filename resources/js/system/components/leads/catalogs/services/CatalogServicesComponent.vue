@@ -15,6 +15,7 @@
                 <div class="small-12 cell search-in-catalog-panel">
 
                     <ul
+                        id="drilldown-catalog_services"
                         class="vertical menu selecter-catalog-item"
                         v-drilldown
                         data-back-button='<li class="js-drilldown-back"><a tabindex="0">Назад</a></li>'
@@ -220,7 +221,10 @@ export default {
                         }
 
                         this.$store.commit('SET_CATALOG_SERVICES_ID', this.catalogId);
-                        // Foundation.reInit($('.selecter-catalog-item'));
+
+                        setTimeout(function(){
+                            Foundation.reInit($('#drilldown-catalog_services'));
+                        }, 300);
                     })
                     .catch(error => {
                         alert('Ошибка загрузки каталогов услуг, перезагрузите страницу!')

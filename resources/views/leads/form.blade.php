@@ -29,13 +29,13 @@
             <div class="small-12 medium-12 large-12 cell margin-left-15 wrap-tabs-lead">
 
                 <lead-extra-tabs-component
-                @can ('index', App\Client::class)
+                    @can ('index', App\Client::class)
                     :can-index-client="true"
-                @endcan
+                    @endcan
 
-                @if(extra_right('lead-history'))
+                    @if(extra_right('lead-history'))
                     :can-lead-history="true"
-                @endif
+                    @endif
                 ></lead-extra-tabs-component>
 
                 {{-- Контент доп таба --}}
@@ -228,3 +228,21 @@
 {{-- Подключаем ПОИСК обращений и заказов по номеру телефона --}}
 @include('leads.autofind-lead-script')
 @include('includes.scripts.product-to-estimate-script')
+
+@push('scripts')
+    <script>
+        $(document).on('click', '.item-catalog', function () {
+            $('.item-catalog').each(function () {
+                $(this).find('a').removeClass('is-active');
+            })
+            $(this).find('a').addClass('is-active');
+        });
+
+        $(document).on('click', '.is-drilldown-submenu-item', function () {
+            $('.item-catalog').each(function () {
+                $(this).find('a').removeClass('is-active');
+            })
+            $(this).find('a').addClass('is-active');
+        });
+    </script>
+@endpush
