@@ -18,6 +18,7 @@ use App\Goods;
 use App\Http\Controllers\System\Traits\Clientable;
 use App\Http\Controllers\Traits\UserControllerTrait;
 use App\Models\System\Documents\Consignment;
+use App\Models\System\Documents\EstimatesGoodsItem;
 use App\Models\System\Documents\Production;
 use App\Models\System\Documents\ProductionsItem;
 use App\Models\System\Stocks\GoodsStock;
@@ -69,6 +70,13 @@ class ParserController extends Controller
     public function test()
     {
         dd(__METHOD__);
+    }
+
+    public function deleteEgiWithoutPrices()
+    {
+        $res = EstimatesGoodsItem::doesntHave('price')
+            ->delete();
+        dd($res);
     }
 
     /**
