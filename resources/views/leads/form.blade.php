@@ -90,8 +90,10 @@
         {{ method_field('PATCH') }}
         {!! Form::hidden('previous_url', url()->previous()) !!}
         <div class="grid-x tabs-right">
-            <div class="cell small-12">
 
+            <cashbox-component></cashbox-component>
+
+            <div class="cell small-12">
 
                 {{-- <li class="tabs-title"><a href="#content-panel-documents" aria-selected="true">Документы</a></li> --}}
 

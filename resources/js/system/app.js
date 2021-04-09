@@ -87,6 +87,7 @@ Vue.component('select-stocks-component', require('./components/common/selects/Se
 Vue.component('goods-lister-component', require('./components/leads/GoodsListerComponent'));
 Vue.component('button-unregister-component', require('./components/leads/buttons/UnregisterComponent'));
 Vue.component('lead-agents-component', require('./components/leads/agents/AgentsComponent'));
+Vue.component('cashbox-component', require('./components/leads/CashboxComponent'));
 
 // Скидки
 Vue.component('discounts-component', require('./components/common/discounts/DiscountsComponent'));

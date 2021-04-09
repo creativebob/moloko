@@ -76,7 +76,7 @@ class ParserController extends Controller
     {
         $res = EstimatesGoodsItem::doesntHave('price')
             ->delete();
-        
+
         return $res;
     }
 
