@@ -254,6 +254,10 @@ trait Articlable
         $new_article->photo_id = null;
         $new_article->album_id = null;
 
+        $new_article->internal = null;
+        $new_article->manually = null;
+        $new_article->external = null;
+
         $new_article->save();
 
         $new_article->update([

@@ -253,6 +253,10 @@ trait Processable
         $new_process->photo_id = null;
         $new_process->album_id = null;
 
+        $new_process->internal = null;
+        $new_process->manually = null;
+        $new_process->external = null;
+
         $new_process->save();
 
         $new_process->update([

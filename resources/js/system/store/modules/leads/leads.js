@@ -1196,6 +1196,7 @@ const moduleLead = {
 
             return {
                 goods: {
+                    count: state.goodsItems.length,
                     amount: goodsAmount.toFixed(2),
                     total: goodsTotal.toFixed(2),
                     totalPoints: goodsTotalPoints.toFixed(2),
@@ -1203,6 +1204,7 @@ const moduleLead = {
                     itemsDiscount: goodsItemsDiscount.toFixed(2),
                 },
                 services: {
+                    count: state.servicesItems.length,
                     amount: servicesAmount.toFixed(2),
                     total: servicesTotal.toFixed(2),
                     totalPoints: servicesTotalPoints.toFixed(2),
