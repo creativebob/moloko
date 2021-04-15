@@ -39,6 +39,7 @@ class CreateRawsTable extends Migration
             $table->foreign('unit_portion_id')->references('id')->on('units');
 
             $table->integer('portion_count')->nullable()->unsigned()->comment('Количество в порции');
+            $table->decimal('waste_default', 7, 4)->default(0)->comment('Процент отхода сырья по умолчанию');
 
             $table->boolean('archive')->default(0)->unsigned()->comment('Статус архива');
             $table->boolean('serial')->default(0)->unsigned()->comment('Серийный номер');

@@ -104,12 +104,6 @@ class Article extends Model
         return $this->belongsTo(ArticlesGroup::class, 'articles_group_id');
     }
 
-    // Товар
-    // public function goods()
-    // {
-    //     return $this->hasMany(Goods');
-    // }
-
     // Состав
     public function raws()
     {
@@ -119,7 +113,8 @@ class Article extends Model
                 'useful',
                 'waste',
                 'leftover',
-                'leftover_operation_id'
+                'leftover_operation_id',
+                'is_manual_waste'
             ]);
     }
 
@@ -132,7 +127,7 @@ class Article extends Model
                 'useful',
                 'waste',
                 'leftover',
-                'leftover_operation_id'
+                'leftover_operation_id',
             ]);
     }
 
@@ -145,7 +140,7 @@ class Article extends Model
                 'useful',
                 'waste',
                 'leftover',
-                'leftover_operation_id'
+                'leftover_operation_id',
             ]);
     }
 
@@ -161,7 +156,7 @@ class Article extends Model
                 'useful',
                 'waste',
                 'leftover',
-                'leftover_operation_id'
+                'leftover_operation_id',
             ]);
     }
 
@@ -174,7 +169,7 @@ class Article extends Model
                 'useful',
                 'waste',
                 'leftover',
-                'leftover_operation_id'
+                'leftover_operation_id',
             ]);
     }
 

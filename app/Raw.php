@@ -33,6 +33,7 @@ class Raw extends BaseModel
         'portion_abbreviation',
         'unit_portion_id',
         'portion_count',
+        'waste_default',
 
         'archive',
         'serial',

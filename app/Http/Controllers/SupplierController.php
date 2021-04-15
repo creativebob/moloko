@@ -128,7 +128,7 @@ class SupplierController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function store(Request $request)
+    public function store(CompanyRequest $request)
     {
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Supplier::class);
@@ -223,7 +223,7 @@ class SupplierController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function update(Request $request, $id)
+    public function update(CompanyRequest $request, $id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));

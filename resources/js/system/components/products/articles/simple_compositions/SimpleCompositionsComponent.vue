@@ -39,13 +39,6 @@
                             <th>Категория:</th>
                             <th>Продукт:</th>
                             <th>Кол-во:</th>
-
-                            <th>Режим</th>
-                            <th>Процент отхода</th>
-                            <th>Использование:</th>
-<!--                            <th>Остаток:</th>-->
-<!--                            <th>Операция над остатком:</th> -->
-
                             <th>Вес, гр.</th>
                             <th>Объем, л.</th>
                             <th>Стоимость по накладным, руб.</th>
@@ -59,7 +52,7 @@
                         >
 
                             <template v-if="actualItems && actualItems.length">
-                                <composition-component
+                                <simple-composition-component
                                     v-for="(item, index) in actualItems"
                                     :item="item"
                                     :index="index"
@@ -68,14 +61,14 @@
                                     @open-modal="openModal"
                                     :disabled="disabled"
                                     @update="updateItem"
-                                ></composition-component>
+                                ></simple-composition-component>
                             </template>
 
                         </tbody>
 
                         <tfoot>
                             <tr>
-                                <td colspan="7"></td>
+                                <td colspan="4"></td>
                                 <td>
                                     <span>{{ totalWeight }}</span> <span></span>
                                 </td>
@@ -108,7 +101,7 @@
 <script>
     export default {
         components: {
-            'composition-component': require('./CompositionComponent'),
+            'simple-composition-component': require('./SimpleCompositionComponent'),
             'modal-remove-component': require('./ModalRemoveComponent'),
             'categories-list-component': require('../common/CategoriesWithItemsListComponent'),
         },
@@ -150,47 +143,10 @@
             this.curItems.forEach(item => {
 
                 let weight = 0;
-                let uniWeight = 0;
-
                 let volume = 0;
-                let uniVolume = 0;
 
-
-                // Если сырье учитывается в ШТУКАХ -------------------------------
-                if(item.article.unit_id == 32){
-
-                    // Если сгруппировано в порцию
-                    if (item.portion_status) {
-
-                        uniWeight = item.article.weight * item.portion_count;
-                        uniVolume = item.article.volume * item.portion_count;
-
-                    // Без группировки
-                    } else {
-
-                        uniWeight = item.article.weight;
-                        uniVolume = item.article.volume;
-                    }
-
-                // Если сырье учитываеться в ИНЫХ ЕДИНИЦАХ -----------------------
-                } else {
-
-                    // Если сгруппировано в порцию
-                    if (item.portion_status) {
-
-                        uniWeight = item.article.weight * item.portion_count * item.unit_for_composition.ratio / item.article.unit.ratio;
-                        uniVolume = item.article.volume * item.portion_count * item.unit_for_composition.ratio / item.article.unit.ratio;
-
-                    // Без группировки
-                    } else {
-
-                        uniWeight = item.article.weight * item.unit_for_composition.ratio / item.article.unit.ratio;
-                        uniVolume = item.article.volume * item.unit_for_composition.ratio / item.article.unit.ratio;
-                    }
-                }
-
-                weight = parseFloat(uniWeight * item.pivot.useful * 1000).toFixed(2);
-                volume = parseFloat(uniVolume * item.pivot.useful * 1000).toFixed(2);
+                weight = parseFloat(item.article.weight * item.pivot.useful * 1000).toFixed(2);
+                volume = parseFloat(item.article.volume * item.pivot.useful * 1000).toFixed(2);
 
                 totalWeight = parseFloat(totalWeight) + parseFloat(weight);
                 item.totalWeight = weight;
@@ -198,39 +154,17 @@
                 totalVolume = parseFloat(totalVolume) + parseFloat(volume);
                 item.totalVolume = volume;
 
-                // Расчет порции на фронте
-                let portion = 0;
-
-                if (item.portion_status) {
-                    portion = item.article.unit.ratio * item.portion_count * item.unit_portion.ratio;
-                } else {
-                    portion = item.article.unit.ratio;
-                }
-
-                // Рассчитываем себестоимость по накладным и по умолчанию
                 let cost = 0;
                 let costDefault = 0;
 
-                // Если идет в состав порцией
-                if (item.portion_status) {
-
-                    cost = parseFloat(item.cost_portion * item.pivot.value / item.article.unit.ratio).toFixed(2);
-                    costDefault = parseFloat(item.article.cost_default * portion * item.pivot.value / item.article.unit.ratio).toFixed(2);
-
-                // Если идет в состав как есть
-                } else {
-
-                    cost = parseFloat(item.cost_portion * item.pivot.value * item.unit_for_composition.ratio / item.article.unit.ratio).toFixed(2);
-                    costDefault = parseFloat(item.article.cost_default * item.pivot.value * item.unit_for_composition.ratio / item.article.unit.ratio).toFixed(2);
-                  
-                }
+                cost = parseFloat(item.article.cost_default * item.pivot.value * item.article.unit.ratio).toFixed(2);
+                costDefault = parseFloat(item.article.cost_default * item.pivot.value * item.article.unit.ratio).toFixed(2);
 
                 totalCost = parseFloat(totalCost) + parseFloat(cost);
                 item.totalCost = cost;
 
                 totalCostDefault = parseFloat(totalCostDefault) + parseFloat(costDefault);
                 item.totalCostDefault = costDefault;
-
             });
 
             this.totalWeight = totalWeight.toFixed(2);

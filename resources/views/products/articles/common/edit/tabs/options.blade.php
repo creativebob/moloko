@@ -48,11 +48,11 @@
 
         @if(isset($raw))
             <fieldset class="fieldset-access">
-                <legend>Умолчания для сырья</legend>
+                <legend>Настройка умолчаний</legend>
 
                 <div class="grid-x grid-margin-x">
                     <div class="small-12 medium-6 cell">
-                        <label>Еденица измерения
+                        <label>Использовать ед. измерения
                             @include('products.articles.common.edit.select_units', [
                                 'field_name' => 'unit_for_composition_id',
                                 'units_category_id' => $article->unit->category_id,
@@ -62,7 +62,12 @@
                         </label>
                     </div>
                     <div class="small-12 medium-6 cell">
-
+                        <label>Отход, %
+                            <digit-component
+                                name="waste_default"
+                                :value="{{ $item->waste_default }}"
+                            ></digit-component>
+                        </label>
                     </div>
                 </div>
             </fieldset>

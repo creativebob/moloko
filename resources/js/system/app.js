@@ -53,6 +53,7 @@ Vue.component('lister-component', require('./components/common/ListerComponent')
 Vue.component('categorier-component', require('./components/common/categories/CategorierComponent'));
 
 Vue.component('digit-component', require('./components/inputs/DigitComponent'));
+Vue.component('switch-component', require('./components/inputs/SwitchComponent'));
 Vue.component('input-digit-component', require('./components/InputDigitComponent.vue'));
 Vue.component('dropzone-component', require('./components/DropzoneComponent.vue'));
 
@@ -61,7 +62,10 @@ Vue.component('articles-categories-with-groups-component', require('./components
 Vue.component('manufacturers-component', require('./components/ManufacturersComponent.vue'));
 
 Vue.component('goods-store-component', require('./components/products/articles/common/GoodsStateComponent'));
+
 Vue.component('cmv-compositions-component', require('./components/products/articles/compositions/CompositionsComponent'));
+Vue.component('cmv-simple-compositions-component', require('./components/products/articles/simple_compositions/SimpleCompositionsComponent'));
+
 Vue.component('presets-component', require('./components/products/articles/presets/PresetsComponent.vue'));
 Vue.component('parts-component', require('./components/products/articles/parts/PartsComponent'));
 

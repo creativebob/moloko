@@ -98,7 +98,7 @@
 
                         <td class="td-name">
                             @can('update', $priceService)
-                                <a href="{{ route('prices_services.edit', [$catalogServices->id, $priceService->id]) }}">{{ $priceService->service->process->name }}</a>
+                                <a href="{{ route('services.edit', [$priceService->service->id]) }}">{{ $priceService->service->process->name }}</a>
                                 {{--            <a href="{{ route('prices_goods.edit', ['catalog_id' => $priceService->catalog_id, 'id' => $priceService->id]) }}"></a>--}}
                             @else
                                 {{ $priceService->service->process->name }}
@@ -161,7 +161,11 @@
                                 @endswitch
                             @endisset
                         </td>
-                        <td class="td-total">{{ num_format(($priceService->total), 0) }}</td>
+                        <td class="td-total">
+                            <a href="{{ route('prices_services.edit', [$catalogServices->id, $priceService->id]) }}" class="button-price-edit">
+                                {{ num_format(($priceService->total), 0) }}
+                            </a>
+                        </td>
                         {{--    <price-goods-price-component :price="{{ $priceService->price }}"></price-goods-price-component>--}}
                         <td class="td-points">
                             {{--        @include('system.pages.catalogs.goods.prices_goods.price_points')--}}

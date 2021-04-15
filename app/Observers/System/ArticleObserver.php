@@ -44,7 +44,7 @@ class ArticleObserver extends BaseObserver
         $this->update($article);
 
         $request = request();
-        // dd($request);
+        // dd($article->weight);
 
         // Проверки только для черновика
         if ($article->getOriginal('draft') == 1) {
@@ -85,22 +85,32 @@ class ArticleObserver extends BaseObserver
             };
 
             // Если видим, что происходит смена единицы измерения
-            if ($article->unit_id != $unit->id) {
+
+
+            // TODO: 13.04.2021 / Алексей / Проверка ниже выключена, поскольку модель article уже изменена данными из request
+            // и проверить не представляеться возможным. Пока не понял, почему данные уже изменены...
+
+            // dd($article->unit_id);
+            // if ($article->unit_id != $unit->id) {
 
                 // Если работаем с мерой: ВЕС
                 if ($unit->category_id == 2) {
 
-                    $article->weight = $article->weight * $unit->ratio;
+                    // Было так
+                    // $article->weight = $article->weight * $unit->ratio;
+
+                    // Стало так
+                    $article->weight = $unit->ratio;
                     $article->unit_weight_id = $unit->id;
                 }
 
                 // Если работаем с мерой: ОБЪЕМ
                 if ($unit->category_id == 5) {
 
-                    $article->volume = $article->volume * $unit->ratio;
+                    $article->volume = $unit->ratio;
                     $article->unit_volume_id = $unit->id;
                 }
-            }
+            // }
 
 
             // Порции

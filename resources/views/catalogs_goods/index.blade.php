@@ -39,7 +39,7 @@
 	                        <label class="label-check" for="check-all"></label>
 	                    </th>
 	                    <th class="td-name">Название</th>
-	                    <th class="td-alias">Алиас</th>
+	                    <th class="td-slug">Слаг</th>
 	                    <th class="td-description">Описание</th>
 
 	                    @can('index', App\CatalogsGoodsItem::class)
@@ -78,7 +78,7 @@
 	                        @endcan
 
 	                    </td>
-	                    <td class="td-alias">{{ $cur_catalogs_goods->alias }}</td>
+	                    <td class="td-slug">{{ $cur_catalogs_goods->slug }}</td>
 	                    <td class="td-description">{{ $cur_catalogs_goods->description }}</td>
 
 	                    @can('index', App\CatalogsGoodsItem::class)

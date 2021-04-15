@@ -100,7 +100,7 @@
 
     <td class="td-name">
         @can('update', $cur_prices_goods)
-            <a href="prices_goods/{{ $cur_prices_goods->id }}/edit">{{ $cur_prices_goods->goods->article->name }}</a>
+            <a href="/admin/goods/{{ $cur_prices_goods->goods->id }}/edit">{{ $cur_prices_goods->goods->article->name }}</a>
             {{--            <a href="{{ route('prices_goods.edit', ['catalog_id' => $cur_prices_goods->catalog_id, 'id' => $cur_prices_goods->id]) }}"></a>--}}
         @else
             {{ $cur_prices_goods->goods->article->name }}
@@ -109,7 +109,6 @@
         {{-- ({{ link_to_route('goods.index', $cur_prices_goods->articles_count, $parameters = ['prices_service_id' => $cur_prices_goods->id], $attributes = ['class' => 'filter_link light-text', 'title' => 'Перейти на список артикулов']) }}) %5B%5D --}}
 
         <br><span class="tiny-text">{{ $cur_prices_goods->goods->category->name }}</span>
-
     </td>
 
     <td class="td-unit">
@@ -163,7 +162,13 @@
                 @endswitch
             @endisset
     </td>
-    <td class="td-total">{{ num_format(($cur_prices_goods->total), 0) }}</td>
+    <td class="td-total">
+        <a href="prices_goods/{{ $cur_prices_goods->id }}/edit" class="button-price-edit">
+            {{ num_format(($cur_prices_goods->total), 0) }}
+        </a>
+    </td>
+
+
     {{--    <price-goods-price-component :price="{{ $cur_prices_goods->price }}"></price-goods-price-component>--}}
     <td class="td-points">
 {{--        @include('system.pages.catalogs.goods.prices_goods.price_points')--}}

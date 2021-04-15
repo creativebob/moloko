@@ -50,7 +50,8 @@
                     <th class="td-category">Категория</th>
                     {{-- <th class="td-description">Описание</th> --}}
                     <th class="td-manually">Артикул</th>
-                    <th class="td-cost">Себестоимость</th>
+                    <th class="td-cost">Себестоимость заданная<br>вручную</th>
+                    <th class="td-cost">Себестоимость рассчитанная<br>по сырью</th>
                     {{-- <th class="td-author">Автор</th> --}}
 
                     @if($pageInfo->alias == 'goods')
@@ -122,7 +123,16 @@
                             <br>
                         @endif
 
-                        <span class="tiny-text">Состав: </span><span title="Кол-во сырья в составе">{{ $item->article->raws->count() }}</span>
+                        @if($item->article->raws->count() > 0)
+                            <span class="tiny-text">Состав: </span><span title="Кол-во сырья в составе">{{ $item->article->raws->count() }}</span>
+                        @endif
+
+                        @isset($item->waste_default)
+                            @if($item->waste_default > 0)
+                                <span class="tiny-text">Отход: </span><span title="Кол-во сырья в составе">{{  num_format($item->waste_default, 2) }}%</span>
+                            @endif
+                        @endisset
+
                     </td>
 
                     <td class="td-package">
@@ -162,8 +172,12 @@
                         {{ $item->article->manually ?? '' }}
                     </td>
 
-                    <td class="td-cost" title="Себестоимость">
-                        <span>{{ num_format($item->cost_unit, 2) ?? '' }}</span><br>
+                    <td class="td-cost" title="C/Б по умолчанию">
+                        <span @if($item->article->cost_default == 0) class="tiny-text" @endif>{{ num_format($item->article->cost_default, 2) ?? '' }}</span>
+                    </td>
+
+                    <td class="td-cost" title="С/Б расчетная">
+                        <span @if($item->article->cost_unit == 0) class="tiny-text" @endif>{{ num_format($item->cost_unit, 2) ?? '' }}</span><br>
                         @if($item->portion_status)<span>За порцию: </span><span>{{ num_format($item->cost_portion, 2) ?? '' }}</span>@endif
                     </td>
 

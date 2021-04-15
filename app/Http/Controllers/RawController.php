@@ -64,6 +64,7 @@ class RawController extends Controller
             'portion_abbreviation',
             'unit_portion_id',
             'portion_count',
+            'waste_default',
 
             'author_id',
             'company_id',
@@ -178,6 +179,7 @@ class RawController extends Controller
             'portion_abbreviation',
             'unit_portion_id',
             'portion_count',
+            'waste_default',
 
             'author_id',
             'company_id',
@@ -502,6 +504,7 @@ class RawController extends Controller
             $raw->portion_abbreviation = $request->portion_abbreviation;
             $raw->unit_portion_id = $request->unit_portion_id;
             $raw->portion_count = $request->portion_count;
+            $raw->waste_default = $request->waste_default;
 
             $raw->price_unit_id = $request->price_unit_id;
             $raw->price_unit_category_id = $request->price_unit_category_id;
