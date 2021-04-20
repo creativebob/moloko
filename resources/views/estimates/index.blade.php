@@ -51,7 +51,10 @@
 
               @if($estimates->isNotEmpty())
               @foreach($estimates as $estimate)
-              <tr class="item @if($estimate->moderation == 1)no-moderation @endif" id="estimates-{{ $estimate->id }}" data-name="{{ $estimate->name }}">
+              <tr class="item 
+              @if($estimate->moderation == 1)no-moderation @endif
+              @if($estimate->is_dismissed)dismissed @endif
+              " id="estimates-{{ $estimate->id }}" data-name="{{ $estimate->name }}">
                   <td class="td-drop"><div class="sprite icon-drop"></div></td>
                   <td class="td-checkbox checkbox">
 
@@ -151,7 +154,17 @@
                 @endif
 
               <td class="td-saled">{{ ($estimate->conducted_at) ? 'Чек закрыт' : '' }}</td>
-              <td class="td-dissmissed">{{ ($estimate->is_dissmissed == 1) ? 'Списан' : '' }}</td>
+              <td class="td-dissmissed">
+                @if($estimate->conducted_at)
+                    @if($estimate->is_dismissed)
+                        Списан
+                    @else
+                        Чек закрыт
+                    @endif
+                @else
+                    Открыт
+                @endif
+              </td>
 
               {{-- <td class="td-delete">
                   @if ($estimate->system !== 1)

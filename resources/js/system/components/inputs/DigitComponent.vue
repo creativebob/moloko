@@ -32,7 +32,7 @@
                 type: [String, Number],
                 default: 0
             },
-            decimalPlace: {
+            decimalplace: {
                 type: Number,
                 default: 2,
             },
@@ -67,7 +67,7 @@
         },
 		data() {
 			return {
-                count: parseFloat(this.value).toFixed(this.decimalPlace),
+                count: parseFloat(this.value).toFixed(this.decimalplace),
 				// point_status: false,
 				// limit_status: false,
 				// reg_rate: /^(\d+)(\.{1})(\d{3,})$/,
@@ -76,17 +76,17 @@
 			}
 		},
         mounted() {
-            if (this.decimalPlace > 0) {
+            if (this.decimalplace > 0) {
                 this.reg = new RegExp('^[0-9]*(\.[0-9]{0,2})?$');
-                // this.reg = new RegExp('^[\d]+([,\.][\d]{0,' + this.decimalPlace + '})?$');
+                // this.reg = new RegExp('^[\d]+([,\.][\d]{0,' + this.decimalplace + '})?$');
             } else {
                 this.reg = /^\d+$/;
             }
         },
         watch: {
             count(val) {
-                // alert('Результат валидации - ' + parseFloat(val).toFixed(this.decimalPlace).match(this.reg));
-                // this.count = parseFloat(val).toFixed(this.decimalPlace);
+                // alert('Результат валидации - ' + parseFloat(val).toFixed(this.decimalplace).match(this.reg));
+                // this.count = parseFloat(val).toFixed(this.decimalplace);
 
                 // alert(this.count);
 
@@ -100,7 +100,7 @@
         },
 		methods: {
             update(count = 0) {
-                this.count = parseFloat(count).toFixed(this.decimalPlace);
+                this.count = parseFloat(count).toFixed(this.decimalplace);
                 this.blur(this.count);
             },
             getDecimalArray(value) {
@@ -109,7 +109,7 @@
             },
             getZeros() {
                 let zeros = '';
-                for (let i = 0; i < this.decimalPlace; i++) {
+                for (let i = 0; i < this.decimalplace; i++) {
                     zeros += '0';
                 }
                 return zeros;
@@ -124,7 +124,7 @@
                     }
                 }
 
-                this.$emit('focus', parseFloat(this.count).toFixed(this.decimalPlace));
+                this.$emit('focus', parseFloat(this.count).toFixed(this.decimalplace));
 
                 if (this.count == 0) {
                     this.count = '';
@@ -140,10 +140,10 @@
 
                 if (! array[1]) {
                     let count = this.count.toString() + '.' + zeros;
-                    this.count = parseFloat(count).toFixed(this.decimalPlace);
+                    this.count = parseFloat(count).toFixed(this.decimalplace);
                 }
 
-                this.$emit('blur', parseFloat(this.count).toFixed(this.decimalPlace));
+                this.$emit('blur', parseFloat(this.count).toFixed(this.decimalplace));
             },
             // checkInput(event) {
             //     if ( /(([0-9]{1,})?[\.]?[\,]?[0-9]{0,2})/.test( event.target.value )) {
@@ -159,13 +159,13 @@
 			    // let reg = '/^\s*[\d]+([,\.][\d]{0,2}+)?\s*$/';
 			    // let reg = '/^(\\d+)(\\.{1})(\\d{0,2})$/';
                 // value = value.replace(reg, '.');
-                // value = value.toFixed(this.decimalPlace);
+                // value = value.toFixed(this.decimalplace);
                 // this.count_item = value;
-                // this.count = parseFloat(this.count).toFixed(this.decimalPlace);
+                // this.count = parseFloat(this.count).toFixed(this.decimalplace);
 
-                if (value == '') {
-                    value = this.limitMin;
-                }
+                // if (value == '') {
+                //     value = this.limitMin;
+                // }
 
                 if (value != '' && parseFloat(value) > this.limitMax) {
                     value = this.limitMax;
@@ -176,8 +176,11 @@
                     value = this.limitMin;
                     this.count = this.limitMin;
                 }
-                // let reg = '/(([0-9]{1,})?[\\.]?[\\,]?[0-9]{0,' + this.decimalPlace + '})/';
-                // value = value.toString().replace(reg , '');
+
+                let reg = '/(([0-9]{1,})?[\\.]?[\\,]?[0-9]{0,' + this.decimalplace + '})/';
+                value = value.toString().replace(reg , '');
+                this.count = value;
+
                 // console.log(value);
 
                 // this.count = value.toString().replace(reg , '');

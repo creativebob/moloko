@@ -49,7 +49,7 @@
                     <digit-component
                         name="extra_time"
                         :value="{{ $outlet->extraTimeMinutes }}"
-                        :decimal-place="0"
+                        :decimalplace="0"
                     ></digit-component>
                 </label>
 

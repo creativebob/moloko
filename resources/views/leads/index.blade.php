@@ -90,6 +90,7 @@
                             class="item
                             @if($lead->moderation == 1)no-moderation @endif
                             @if($lead->estimate->debt == 0)paid @endif
+                            @if($lead->estimate->is_dismissed)dismissed @endif
                                 stage-{{$lead->stage->id }}
                                 "
                             id="leads-{{ $lead->id }}"
@@ -181,7 +182,15 @@
                             </td> --}}
 
                             <td class="td-status">
-                                @if($lead->estimate->conducted_at) Чек закрыт @else Открыт @endif
+                                @if($lead->estimate->conducted_at)
+                                    @if($lead->estimate->is_dismissed)
+                                        Списан
+                                    @else
+                                        Чек закрыт
+                                    @endif
+                                @else
+                                    Открыт
+                                @endif
                             </td>
 
                             <td class="td-shipment_at">
@@ -210,7 +219,7 @@
                                         @if($lead->estimate->agent->agent_id == \Auth::user()->company_id)
                                             <span class="mark-dark">Получен от: {{ $lead->estimate->company->name_short ?? $lead->estimate->company->name }} </span>
                                         @else
-                                            <span class="mark-dark">Передан агенту: {{ $lead->estimate->agent->company->name_short ?? $lead->estimate->agent->company->name }} </span>
+                                            <span class="mark-dark">&#10150; {{ $lead->estimate->agent->company->name_short ?? $lead->estimate->agent->company->name }} </span>
                                         @endif
                                     @else
                                         @if(!empty($lead->manager->first_name))

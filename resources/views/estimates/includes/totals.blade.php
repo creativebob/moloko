@@ -5,9 +5,13 @@
     <td class="td-name"></td>
     <td class="td-phone"></td>
     <td class="td-amount">{{ num_format($estimatesTotals->amount, 0) }}</td>
-    <td class="td-discount-currency">{{ num_format($estimatesTotals->discount_currency, 0) }}</td>
+    <td class="td-discount-currency">
+        @if($estimatesTotals->discount_currency != 0)
+        {{ num_format($estimatesTotals->discount_currency, 0) }}
+        @endif
+    </td>
     <td class="td-total" title="С вычетом партнерской доли: {{ num_format($estimatesTotals->total - $estimatesTotals->partner_currency, 0) }}">{{ num_format($estimatesTotals->total, 0) }}</td>
-    <td class="td-payment"></td>
+    {{-- <td class="td-payment"></td> --}}
     @if(extra_right('margin-show'))
         <td class="td-margin_currency"></td>
     @endif

@@ -753,3 +753,8 @@ tfoot{
         border-bottom: 1px solid white;
     }
 }
+
+// Оплачено
+.content .content-table tbody tr.dismissed {
+    background-color: $flash-yellow;
+}

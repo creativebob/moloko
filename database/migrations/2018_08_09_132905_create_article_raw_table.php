@@ -27,6 +27,7 @@ class CreateArticleRawTable extends Migration
             $table->decimal('useful', 12, 2)->default(0)->comment('Использование');
             $table->decimal('leftover', 12, 2)->default(0)->comment('Остаток');
             $table->decimal('waste', 12, 2)->default(0)->comment('Отходы');
+            $table->boolean('is_manual_waste')->default(0)->comment('Режим ручного управления отходами');
 
             $table->bigInteger('leftover_operation_id')->nullable()->unsigned()->comment('Id операции над остатком');
             $table->foreign('leftover_operation_id')->references('id')->on('leftover_operations');

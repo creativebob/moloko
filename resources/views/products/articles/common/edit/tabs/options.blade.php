@@ -34,10 +34,15 @@
                     <label>Себестоимость
                         <digit-component
                             name="cost_default"
-                            :value="{{ $article->cost_default }}"
+                            :decimalplace = "0"
+                            :value="{{ $article->cost_default }}" 
+                            decimalplace = "4"
                         ></digit-component>
                     </label>
                 </div>
+
+
+
                 {{--	                                <div class="small-12 medium-6 cell">--}}
                 {{--	                                    <label>Цена за (<span id="unit">{{ ($article->package_status == false) ? $article->group->unit->abbreviation : 'порцию' }}</span>)--}}
                 {{--	                                        {{ Form::number('price_default', null) }}--}}
