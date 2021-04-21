@@ -1,5 +1,8 @@
 <template>
-    <div class="small-12 cell">
+    <div
+        v-if="show"
+        class="cell small-12"
+    >
         <fieldset class="fieldset">
             <legend>Касса</legend>
             <p>Статус:
@@ -16,6 +19,11 @@ export default {
     data() {
         return {
             status: false
+        }
+    },
+    computed: {
+        show() {
+            return this.$store.getters.HAS_OUTLET_SETTING('use-cash-register');
         }
     },
     methods: {
