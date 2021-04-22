@@ -25,6 +25,7 @@ use App\Http\Requests\System\LeadRequest;
 use App\Models\System\Documents\Estimate;
 use App\Http\Controllers\Traits\LeadControllerTrait;
 use App\Lead;
+use App\Payment;
 use App\Stock;
 use Illuminate\Http\Request;
 
@@ -937,6 +938,7 @@ class EstimateController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
         $estimate = Estimate::with([
             'production',
+            'lead.outlet.settings'
         ])
             ->find($id);
 
@@ -946,6 +948,13 @@ class EstimateController extends Controller
         // Если есть платежи
         if ($estimate->payments->isNotEmpty()) {
 
+            if ($estimate->lead->outlet->settings->firstWhere('alias', 'use-cash-register')) {
+
+            } else {
+                // Если тт не работает с кассой
+                $paymentsIds = $estimate->payments->pluck('id');
+                Payment::destroy($paymentsIds);
+            }
         }
 
         // Если было производство по смете и списание без убытка
