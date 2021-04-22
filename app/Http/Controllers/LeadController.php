@@ -94,19 +94,19 @@ class LeadController extends Controller
         $lead_all_managers = extra_right('lead-all-managers');
 
         $leads = Lead::select([
-            'id', 
-            'company_id', 
-            'filial_id', 
-            'draft', 
-            'badget', 
-            'created_at', 
-            'case_number', 
-            'name', 
-            'lead_type_id', 
-            'lead_method_id', 
-            'stage_id', 
-            'location_id', 
-            'manager_id', 
+            'id',
+            'company_id',
+            'filial_id',
+            'draft',
+            'badget',
+            'created_at',
+            'case_number',
+            'name',
+            'lead_type_id',
+            'lead_method_id',
+            'stage_id',
+            'location_id',
+            'manager_id',
             'shipment_at'
         ])->with([
             'choice',
@@ -1234,7 +1234,12 @@ class LeadController extends Controller
             'location.city',
             'user.client',
             'organization.client',
-            'client.contract',
+            'client' => function ($q) {
+                $q->with([
+                    'contract',
+                    'clientable',
+                ]);
+            },
             'main_phones',
             'extra_phones',
             'medium',
