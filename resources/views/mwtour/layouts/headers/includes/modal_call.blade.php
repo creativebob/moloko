@@ -2,7 +2,7 @@
 <div class="reveal" id="modal-call" data-reveal>
     <div class="grid-x align-center">
         <div class="cell small-12 medium-8">
-            @include('viandiesel.pages.common.forms.call')
+            @include('mwtour.pages.common.forms.call')
         </div>
     </div>
 

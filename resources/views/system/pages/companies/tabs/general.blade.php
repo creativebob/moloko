@@ -21,7 +21,7 @@
             <div class="small-12 medium-6 cell">
                 {{-- Селект с секторами (Вид деятельности компании) --}}
                 <label>Внутренний классификатор
-                    @include('includes.selects.sectors_select', ['sector_id' => ($company->sector_id != null) ? $company->sector_id : Auth::user()->company->sector_id])
+                    @include('includes.selects.sectors_select', ['sector_id' => $company->sector_id ?? Auth::user()->company->sector_id ?? null])
                 </label>
             </div>
 

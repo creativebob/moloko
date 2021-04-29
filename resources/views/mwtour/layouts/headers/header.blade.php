@@ -11,7 +11,7 @@
 		<div class="grid-x grid-padding-x text-center">
 			<div class="cell small-12">
 				<button class="button button-modal-call" data-open="modal-call">Записаться на диагностику</button>
-				@include('viandiesel.layouts.headers.includes.modal_call')
+				@include('mwtour.layouts.headers.includes.modal_call')
 			</div>
 			<div class="cell small-12 wrap-schedule" id="schedule">
 				@include('project.composers.worktimes.today')

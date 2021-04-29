@@ -14,7 +14,7 @@
 
 		<link rel="canonical" href="{{ request()->url() }}"/>
 
-		<link rel="stylesheet" href="{{ mix('/css/viandiesel/app.min.css') }}">
+		<link rel="stylesheet" href="{{ mix('/css/mwtour/app.min.css') }}">
 
 		{{-- CSRF Token --}}
 		<meta name="csrf-token" content="{{ csrf_token() }}">
@@ -53,7 +53,7 @@
 			</div>
 		</div>
 
-		<script src="{{ mix('/js/viandiesel/app.js') }}"></script>
+		<script src="{{ mix('/js/mwtour/app.js') }}"></script>
 		<script>
 			// Prevent small screen page refresh sticky bug
 			$(window).on('sticky.zf.unstuckfrom:bottom', function(e) {
