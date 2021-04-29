@@ -34,14 +34,8 @@
 				</div>
 			</div>
 
-			<div class="wrap-navigation">
-				<div class="grid-container">
-					@include('project.composers.navigations.navigation_by_align', ['align' => 'top'])
-				</div>
-			</div>
-
 			<div class="wrap-main">
-				<div class="grid-container" id="wrap-sidebar">
+				<div class="grid-container">
 					@yield('content')
 				</div>
 			</div>

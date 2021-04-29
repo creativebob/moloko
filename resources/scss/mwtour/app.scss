@@ -24,12 +24,297 @@
 // -------------------------- Навигация -------------------------------------
 @import "partials/nav";
 
-// -------------------------- Части -------------------------------------
-@import "partials/partials";
-
 // -------------------------- Меню социальных сетей -------------------------
 @import "partials/social";
 
 // --------------------------- Внешние пакеты -------------------------------
 @import "~slick-carousel/slick/slick";
 @import "~slick-carousel/slick/slick-theme";
+
+
+html, body{
+    height: 100%;
+}
+
+.grid-container{
+    max-width: 1366px;
+    padding: 0;
+}
+
+h1{
+    font-family: Gilroy;
+    font-weight: 600;
+    font-size: 3rem;
+    line-height: 1.2;
+    margin-bottom: 1.2rem;
+}
+
+h2{
+    font-size: 2rem;
+    font-family: Gilroy;
+    font-weight: 500;
+    margin-bottom: 2rem;
+    color: $black;
+}
+
+.h2-second{
+    font-size: 1.2rem;
+    font-family: Gilroy;
+    font-weight: 600;
+    color: $red-wood;
+    margin-bottom: 0rem;
+}
+
+.small-text{
+	font-family: opensans;
+	font-size: 0.8rem;
+	font-weight: 400;
+	color: $gray-dark;
+	letter-spacing: 1px;
+}
+
+h4{
+	font-family: opensans;
+	font-size: 0.9rem;
+	font-weight: 600;
+	color: $black;
+}
+
+
+p, a, span, ul, li, tr, th {
+	font-family: opensans;
+	font-size: 1rem;
+	font-weight: 400;
+}
+
+.button{
+	width: 200px;
+	height: 40px;
+	padding: 11px 20px 9px 20px;
+	box-sizing: border-box;
+	border: 2px solid $blue;
+	text-align: center;
+	border-radius: 28px;
+	color: $black;
+	background-color: $white;
+	letter-spacing: 2px;
+	font-family: Gilroy;
+	font-size: 0.9rem;
+
+	&:hover{
+		background-color: $blue;
+		color: $white;
+		border: 2px solid $blue;
+	}
+}
+
+.wrap-gallery{
+	margin-bottom: 4rem;
+}
+
+.list-tours{
+	li{
+		padding: 0px 2.8rem;
+
+		img{
+			border-radius: 17px;
+		}
+	}
+}
+
+.events-list{
+		padding-top: 3rem;
+	li{
+
+		padding-bottom: 2rem;
+
+		.small-text{
+			display: inline-block;
+			padding-bottom: 1rem;
+		}		
+	}
+
+}
+
+.wrap-extra-info{
+	padding: 0px 2.8rem;
+	background-color: $gray-light;
+	margin-bottom: 3rem;
+}
+
+.wrap-main-content p:first-child{
+	content: url(img/quotation_marks.svg);
+}
+
+.tour-main-block{
+	padding-right: 10rem;
+}
+
+section{
+	margin-bottom: 4rem;
+}
+
+ul {
+    list-style-type: none;
+}
+
+input{
+    outline: none;
+    box-shadow: none !important;
+
+}
+
+input:focus{
+    box-shadow: none;
+}
+
+input[type='text']{
+    padding-bottom: 0.35rem;    
+}
+
+
+header{
+	padding: 40px 0px 10px 0px;
+	border-bottom: 1px solid $black;
+
+}
+
+.block-logo, .block-nav{
+
+}
+
+
+
+/* Slider */
+
+.wrap-slick{
+    padding-bottom: 2rem;
+}
+
+
+.slick-slider
+{
+    position: relative;
+
+    display: block;
+    box-sizing: border-box;
+
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+
+    -webkit-touch-callout: none;
+    -khtml-user-select: none;
+    -ms-touch-action: pan-y;
+        touch-action: pan-y;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.slick-list
+{
+    position: relative;
+
+    display: block;
+    overflow: hidden;
+
+    margin: 0;
+    padding: 0;
+}
+.slick-list:focus
+{
+    outline: none;
+}
+.slick-list.dragging
+{
+    cursor: pointer;
+    cursor: hand;
+}
+
+.slick-slider .slick-track,
+.slick-slider .slick-list
+{
+    -webkit-transform: translate3d(0, 0, 0);
+       -moz-transform: translate3d(0, 0, 0);
+        -ms-transform: translate3d(0, 0, 0);
+         -o-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+}
+
+.slick-track
+{
+    position: relative;
+    top: 0;
+    left: 0;
+
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.slick-track:before,
+.slick-track:after
+{
+    display: table;
+
+    content: '';
+}
+.slick-track:after
+{
+    clear: both;
+}
+.slick-loading .slick-track
+{
+    visibility: hidden;
+}
+
+.slick-slide
+{
+    display: none;
+    float: left;
+
+    height: 100%;
+    min-height: 1px;
+}
+[dir='rtl'] .slick-slide
+{
+    float: right;
+}
+.slick-slide img
+{
+    display: block;
+}
+.slick-slide.slick-loading img
+{
+    display: none;
+}
+.slick-slide.dragging img
+{
+    pointer-events: none;
+}
+.slick-initialized .slick-slide
+{
+    display: block;
+}
+.slick-loading .slick-slide
+{
+    visibility: hidden;
+}
+.slick-vertical .slick-slide
+{
+    display: block;
+
+    height: auto;
+
+    border: 1px solid transparent;
+}
+.slick-arrow.slick-hidden {
+    display: none;
+}
+
+
+
+@include breakpoint(medium up) {
+
+}
+
+

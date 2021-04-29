@@ -10,13 +10,7 @@
     @include('mwtour.layouts.headers.header')
 @endsection
 
-@section('nav')
-    {{-- Навигация --}}
-    @include('project.composers.navigations.navigation_by_align', ['align' => 'top'])
-@endsection
-
 @section('content')
-
     {{-- Основой контент --}}
     @include('mwtour.pages.main.main')
 @endsection

@@ -1,0 +1,41 @@
+// Скрываем стандартный инпут
+input[type=checkbox], input[type=radio] {
+    display:none;
+}
+
+// Убираем от инпута отступы фонды
+[type='checkbox'] + label, [type='radio'] + label {
+    margin: 0;
+}
+
+.checkbox {
+
+    label {
+
+        span {
+            display: inline;
+            vertical-align: middle;
+            margin-left: 0.8rem;
+			font-family: 'segoeui';
+
+        }
+
+        &:before {
+            display: inline-block;
+            vertical-align: middle;
+            width: 16px;
+            height: 16px;
+            background: url(img/icons/svg/checkbox-false.svg) no-repeat;
+            content: '';
+        }
+    }
+
+    .disabled:before {
+        opacity: 0.3;
+        cursor: default;
+    }
+
+    input[type=checkbox]:checked + label:before {
+        background: url(img/icons/svg/checkbox-true.svg) no-repeat;
+    }
+}

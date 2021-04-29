@@ -1,0 +1,50 @@
+
+
+// СЛАЙДЕР (До настройка)
+.slick-dots li button:before {
+    content: "•";
+    font-size: 8px;
+    color: $white;
+}
+
+.slick-dotted.slick-slider {
+    margin-bottom: 0;
+}
+
+.item-slide {
+    padding: 0;
+    margin: 0;
+
+    a {
+        outline: none;
+    }
+}
+
+.slick-dots {
+    bottom: 15px;
+}
+
+.slick-dots li.slick-active button:before {
+    color: $red-wood;
+    opacity: 0.75;
+    font-size: 12px;
+}
+
+.slick-next {
+    right: 15px;
+}
+
+.slick-prev {
+    left: 15px;
+    z-index: 10;
+}
+
+.single-item > .item-slide:nth-child(n+2) {
+    display: none;
+}
+
+
+
+
+
+

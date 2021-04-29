@@ -3,7 +3,7 @@
     <main class="cell small-12">
 
         {{-- Заголовок --}}
-        @include('viandiesel.pages.common.title')
+        @include('mwtour.pages.common.title')
 
         <div class="grid-x grid-padding-x">
 
