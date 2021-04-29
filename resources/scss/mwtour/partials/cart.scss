@@ -1,0 +1,93 @@
+.icon-cart {
+    display: inline-block;
+    vertical-align: middle;
+    width: 32px;
+    height: 32px;
+    background: url(img/icons/svg/cart-icon.svg) 7px 5px no-repeat;
+}
+
+.table-cart {
+    max-width: 800px;
+
+    thead, tbody, tfoot {
+        border: none;
+        background-color: #fff;
+        font-weight: bold;
+    }
+
+    tbody {
+
+        tr {
+            background-color: #fff;
+            border-bottom: none;
+            counter-increment: rowNumber;
+
+            td:first-child::before {
+                content: counter(rowNumber);
+                color: #bebebe;
+            }
+
+            .img-price_goods {
+                border: 1px solid #000;
+            }
+
+            .icon-delete {
+                position: relative;
+                top: 5px;
+                margin: 0px;
+                display: inline-block;
+                width: 28px;
+                height: 32px;
+                border-radius: 3px;
+                cursor: pointer;
+                opacity: 0.6;
+                transition: opacity ease 0.3s;
+                background: url(img/icons/svg/cross-out.svg) 7px 9px no-repeat;
+                background-size: 12px;
+
+                &:hover {
+                    opacity: 1;
+                }
+            }
+
+            .td-img-cart{
+                img{
+                    max-width: 140px;
+                }
+            }
+
+
+        }
+    }
+
+    tfoot {
+
+        tr:first-child {
+            border-top: 2px solid #000;
+            padding-top: 1rem;
+        }
+    }
+}
+
+.form-cart {
+
+
+    .wrap-fields {
+
+        input {
+            border: 1px solid #000;
+        }
+
+        @include breakpoint (medium up){
+            text-align: center;
+        }
+    }
+
+    .wrap-submit {
+
+        .wrap-button-cart {
+            margin-top: 1rem;
+        }
+
+    }
+}

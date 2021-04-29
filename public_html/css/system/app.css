@@ -362,6 +362,10 @@ input[type='search'] {
   color: #cacaca;
 }
 
+::-moz-placeholder {
+  color: #cacaca;
+}
+
 ::-ms-input-placeholder {
   color: #cacaca;
 }
@@ -593,6 +597,10 @@ select[multiple] {
 }
 
 .is-invalid-input:not(:focus)::-webkit-input-placeholder {
+  color: #cc4b37;
+}
+
+.is-invalid-input:not(:focus)::-moz-placeholder {
   color: #cc4b37;
 }
 
@@ -9102,10 +9110,6 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   font-size: .8em;
 }
 
-/*
- * The MIT License
- * Copyright (c) 2012 Matias Meno <m@tias.me>
- */
 @-webkit-keyframes passing-through {
   0% {
     opacity: 0;
@@ -9473,7 +9477,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 }
 
 .dropzone .dz-preview .dz-error-message:after {
-  content: '';
+  content: "";
   position: absolute;
   top: -6px;
   left: 64px;

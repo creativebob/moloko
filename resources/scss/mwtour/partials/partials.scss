@@ -1,0 +1,15 @@
+// Наша команда
+.wrap-staffer {
+    margin-bottom: 1rem;
+
+    .staffer-name{
+        display: block;
+        font-weight: 600;
+    }
+
+    .staffer-position{
+        color: $gray;
+        display: block;
+        font-size: 0.8rem;
+    }
+}

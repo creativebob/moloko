@@ -2,6 +2,9 @@
     "/js/system/app.js": "/js/system/app.js",
     "/css/system/app.css": "/css/system/app.css",
     "/css/system/print.css": "/css/system/print.css",
+    "/css/mwtour/app.css": "/css/mwtour/app.css",
+    "/js/mwtour/app.js": "/js/mwtour/app.js",
     "/css/system/app.min.css": "/css/system/app.min.css",
-    "/css/system/print.min.css": "/css/system/print.min.css"
+    "/css/system/print.min.css": "/css/system/print.min.css",
+    "/css/mwtour/app.min.css": "/css/mwtour/app.min.css"
 }

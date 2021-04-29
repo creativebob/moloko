@@ -1,0 +1,75 @@
+// ---------------------------------- Шрифты -------------------------------------
+
+@font-face{
+  font-family: 'pfd';
+  src: url('./fonts/DinTextCompressedPro/PFDinTextCompPro-Regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+}
+
+@font-face{
+  font-family: 'pfd';
+  src: url('./fonts/DinTextCompressedPro/PFDinTextCompPro-Light.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 300;
+}
+
+@font-face{
+  font-family: 'pfd';
+  src: url('./fonts/DinTextCompressedPro/PFDinTextCompPro-Thin.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 200;
+}
+
+@font-face{
+  font-family: 'pfd';
+  src: url('./fonts/DinTextCompressedPro/PFDinTextCompPro-XThin.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 100;
+}
+
+
+@font-face{
+  font-family: 'segoeui';
+  src: url('./fonts/SegoeUI/SegoeUILight/SegoeUILight.eot');
+  src: url('./fonts/SegoeUI/SegoeUILight/SegoeUILight.eot?#iefix') format('embedded-opentype'),
+  url('./fonts/SegoeUI/SegoeUILight/SegoeUILight.woff') format('woff'),
+  url('./fonts/SegoeUI/SegoeUILight/SegoeUILight.ttf') format('truetype');
+
+  font-style: normal;
+  font-weight: 200;
+}
+
+@font-face{
+  font-family: 'segoeui';
+  src: url('./fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.eot');
+  src: url('./fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.eot?#iefix') format('embedded-opentype'),
+  url('./fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.woff') format('woff'),
+  url('./fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.ttf') format('truetype');
+
+  font-style: normal;
+  font-weight: 400;
+}
+
+@font-face{
+  font-family: 'segoeui';
+  src: url('./fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.eot?#iefix') format('embedded-opentype'),
+  url('./fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.woff') format('woff'),
+  url('./fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: 'bebas';
+  src: url('./fonts/Bebas/BebasNeue-Bold.ttf') format('truetype'),
+  url('./fonts/Bebas/BebasNeue-Bold.otf') format('opentype');
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: 'bebas';
+  src: url('./fonts/Bebas/BebasNeue-Regular.ttf') format('truetype'),
+  url('./fonts/Bebas/BebasNeue-Regular.otf') format('opentype');
+  font-weight: 400;
+}

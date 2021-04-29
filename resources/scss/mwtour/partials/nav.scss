@@ -1,0 +1,93 @@
+// ГЛАВНОЕ МЕНЮ - НАВИГАЦИЯ
+
+.icon-menu {
+    display: inline-block;
+    position: relative;
+    width: 21px;
+    height: 21px;
+    background: url(img/icons/svg/menu.svg) no-repeat;
+    opacity: 0.3;
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+    vertical-align: middle;
+    outline: none;
+
+    &:hover {
+        opacity: 1;
+        outline: none;
+    }
+
+    &::after {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        width: 100%;
+        height: 2px;
+        background: #fefefe;
+        -webkit-box-shadow: 0 7px 0 #fefefe, 0 14px 0 #fefefe;
+        box-shadow: 0 7px 0 #fefefe, 0 14px 0 #fefefe;
+        content: '';
+    }
+}
+
+
+
+    ul.navigation {
+
+        li {
+
+            display: block;
+
+            // @include breakpoint(small only) {
+            //     margin-right: 0;
+            //     margin-bottom: 1rem;
+            //     text-align: center;
+            // }
+
+            // &:last-child {
+            //     margin-right: 0;
+
+            //     @include breakpoint(small only) {
+            //         margin-bottom: 0;
+            //     }
+            // }
+
+            a, span {
+                padding: 0.5rem 0.6rem 0.5rem 0.6rem;
+                line-height: 1.2;
+                text-transform: uppercase;
+                color: $black;
+                font-weight: 500;
+                font-size: 0.9rem;
+            }
+
+            span{
+                border-bottom: 2px transparent solid;                
+            }
+
+        }
+
+        @include breakpoint(small only) {
+
+        }
+
+        .is-active {
+            span {
+                position: relative;
+                top: 2px;
+                padding: 0.4rem 1rem;
+                display: block;
+                border-bottom: 2px $light-blue solid;
+            }
+        }
+    }
+
+    .navigation.top-menu li{
+        margin: 0 15px 0 15px;
+    }
+
+    .navigation.top-menu li:first-child{
+        margin-left: -9px;
+    }
+
