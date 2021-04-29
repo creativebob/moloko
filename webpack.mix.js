@@ -72,8 +72,30 @@ mix
 // ;
 // mix.browserSync('crmsystem.local/admin/test');
 
+// mwtour
+mix.js('resources/js/mwtour/app.js', 'public_html/js/mwtour');
+
+mix.copyDirectory('resources/scss/mwtour/fonts', 'public_html/css/mwtour/fonts');
+mix.copyDirectory('resources/scss/mwtour/img', 'public_html/css/mwtour/img');
+// mix.copyDirectory('resources/scss/project/sprites', 'public_html/css/project/sprites');
+
+mix
+    .sass('resources/scss/mwtour/app.scss', 'public_html/css/mwtour', {
+
+    })
+    .options({
+        processCssUrls: false,
+        // postCss: [
+        // 	require('postcss-css-variables')()
+        // ]
+    })
+    .minify('public_html/css/mwtour/app.css')
+// .sourceMaps()
+;
+// mix.browserSync('crmsystem.local/admin/test');
+
 if (mix.inProduction()) {
-	mix.version();
+    mix.version();
 } else {
-	mix.disableNotifications();
+    mix.disableNotifications();
 }
