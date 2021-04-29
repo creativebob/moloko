@@ -18,6 +18,8 @@ use App\Http\Controllers\System\Traits\Userable;
 use App\Http\Controllers\Traits\Offable;
 use App\Http\Controllers\Traits\Photable;
 use App\Models\System\Documents\EstimatesServicesItem;
+use App\Models\System\Flows\EventsFlow;
+use App\Models\System\Flows\ServicesFlow;
 use App\Outlet;
 use App\Representative;
 use App\Stock;
@@ -125,7 +127,13 @@ class LeadController extends Controller
                     },
                     'services_items' => function ($q) {
                         $q->with([
-                            'service.process',
+                            'service' => function ($q) {
+                                $q->with([
+                                    'process',
+                                    'actualFlows'
+                                ]);
+                            },
+                            'flow',
                         ]);
                     },
                     'payments' => function ($q) {
@@ -306,9 +314,15 @@ class LeadController extends Controller
                     'catalogs_goods',
                     'services_items' => function ($q) {
                         $q->with([
-                            'service.process',
+                            'service' => function ($q) {
+                                $q->with([
+                                    'process',
+                                    'actualFlows'
+                                ]);
+                            },
                             'price_service',
-                            'currency'
+                            'currency',
+                            'flow',
                         ]);
                     },
                     'catalogs_services',
@@ -1134,6 +1148,8 @@ class LeadController extends Controller
                     'margin_currency' => $newServicesItem['margin_currency'],
                     'margin_percent' => $newServicesItem['margin_percent'],
 
+                    'flow_id' => $newServicesItem['flow_id'],
+
                     'sort' => $sort,
                 ];
 
@@ -1202,6 +1218,53 @@ class LeadController extends Controller
                     'amount' => $estimate->total,
                 ]);
 
+                $estimate->load('services_items.service.process');
+
+                if ($estimate->services_items->isNotEmpty()) {
+                    $client = $lead->client;
+
+                    foreach($estimate->services_items as $servicesItem) {
+
+                        // Автоинициация
+                        if ($servicesItem->service->process->is_auto_initiated) {
+                            $data = [
+                                'process_id' => $servicesItem->service_id,
+                                'filial_id' => $estimate->filial_id,
+                                'start_at' => now(),
+                                'finish_at' => now()->addSeconds($servicesItem->service->process->length),
+                                'capacity_min' => 1,
+                                'capacity_max' => 1,
+                            ];
+
+                            $flow = ServicesFlow::create($data);
+
+                            if ($flow->process->process->events->isNotEmpty()) {
+                                $start = $flow->start_at->toString();
+
+                                $data = [
+                                    'filial_id' => $flow->filial_id,
+
+                                    'capacity_min' => $flow->capacity_min,
+                                    'capacity_max' => $flow->capacity_max,
+                                ];
+
+                                foreach ($flow->process->process->events as $event) {
+                                    $data['process_id'] = $event->id;
+                                    $data['start_at'] = Carbon::create($start);
+                                    $data['finish_at'] = Carbon::create($start)->addSeconds($event->process->length);
+
+                                    EventsFlow::create($data);
+
+                                    $start = $data['finish_at']->toString();
+                                }
+                            }
+                        } else {
+                            // Поток выбран в ручную
+                            $client->services_flows()->attach($servicesItem->flow_id);
+                        }
+                    }
+                }
+
                 $estimate->update([
                     'client_id' => $clientId,
                     'registered_at' => now(),
@@ -1262,9 +1325,15 @@ class LeadController extends Controller
                     'catalogs_goods',
                     'services_items' => function ($q) {
                         $q->with([
-                            'service.process',
+                            'service' => function ($q) {
+                                $q->with([
+                                    'process',
+                                    'actualFlows'
+                                ]);
+                            },
                             'price_service',
-                            'currency'
+                            'currency',
+                            'flow',
                         ]);
                     },
                     'catalogs_services',

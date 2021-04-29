@@ -56,8 +56,10 @@ export default {
                 });
         }
     },
-    mounted() {
-        this.getStatus();
+    created() {
+        if (this.show) {
+            this.getStatus();
+        }
     }
 }
 </script>

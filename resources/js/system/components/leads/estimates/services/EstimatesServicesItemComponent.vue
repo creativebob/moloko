@@ -111,9 +111,25 @@
         </td>
 
         <td
-            v-if="isRegistered && !isConducted"
-            class="td-reserve"
-        ></td>
+            class="td-flow"
+        >
+            <template
+                v-if="item.service.process.is_auto_initiated == 0"
+            >
+                <select
+                    v-if="!isRegistered"
+                    @change="changeFlow($event.target.value)"
+                >
+                    <option
+                        v-for="flow in item.service.actual_flows"
+                        :value="flow.id"
+                        :selected="flow.id == item.flow_id"
+                    >{{ flow.start_at | formatDate }} - {{ flow.finish_at | formatDate }}</option>
+                </select>
+                <span v-else>{{ item.flow.start_at | formatDate }} - {{ item.flow.finish_at | formatDate }}</span>
+            </template>
+
+        </td>
 
         <modal-component
             :id="id"
@@ -124,6 +140,8 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
     components: {
         'comment-component': require('./CommentComponent'),
@@ -166,6 +184,15 @@ export default {
     //         this.stockId = this.item.stock_id;
     //     }
     // },
+    created() {
+        if (this.item.service.process.is_auto_initiated == 0) {
+            if (this.item.service.actual_flows.length && !this.item.flow_id) {
+                this.changeFlow(this.item.service.actual_flows[0].id)
+            }
+        } else {
+            this.changeFlow()
+        }
+    },
     computed: {
         item() {
             return this.$store.getters.SERVICE_ITEM(this.id);
@@ -201,6 +228,13 @@ export default {
             };
             this.$store.commit('UPDATE_SERVICE_ITEM_COUNT', data);
             this.$refs.modalCurrencyComponent.reset();
+        },
+        changeFlow(flowId = null) {
+            const data = {
+                id: this.id,
+                flowId: flowId
+            };
+            this.$store.commit('UPDATE_SERVICE_ITEM_FLOW', data);
         },
         update(data) {
             // Обновление из модалки
@@ -248,6 +282,12 @@ export default {
         // Отбраcывает дробную часть в строке с числами
         onlyInteger(value) {
             return Math.floor(value);
+        },
+
+        formatDate: function (value) {
+            if (value) {
+                return moment(String(value)).format('DD.MM.YYYY')
+            }
         },
     },
 }
