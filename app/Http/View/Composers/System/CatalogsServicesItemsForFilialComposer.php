@@ -27,9 +27,14 @@ class CatalogsServicesItemsForFilialComposer
         // dd($catalogs_ids);
 
         $grouped_prices_services = PricesService::with([
-            'service.process',
+            'service' => function ($q) {
+                $q->with([
+                    'process',
+                    'actualFlows'
+                ]);
+            },
             'follower' => function ($q) use ($filial_id) {
-            $q->where('filial_id', $filial_id);
+                $q->where('filial_id', $filial_id);
             }
         ])
         ->where([
