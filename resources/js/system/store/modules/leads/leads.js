@@ -569,6 +569,15 @@ const moduleLead = {
 
             this.commit('SET_SERVICE_ITEM_AGGREGATIONS', index);
         },
+        UPDATE_SERVICE_ITEM_FLOW(state, data) {
+            this.commit('SET_CHANGE');
+            const index = state.servicesItems.findIndex(obj => obj.id === data.id);
+            let item = state.servicesItems[index];
+            item.flow_id = data.flowId;
+            Vue.set(state.servicesItems, index, item);
+
+            this.commit('SET_SERVICE_ITEM_AGGREGATIONS', index);
+        },
         UPDATE_SERVICE_ITEM_IS_MANUAL(state, data) {
             this.commit('SET_CHANGE');
             const index = state.servicesItems.findIndex(obj => obj.id === data.id);

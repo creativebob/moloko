@@ -133,4 +133,9 @@ class EstimatesServicesItem extends BaseModel
         return $this->belongsTo('App\AgencyScheme');
     }
 
+    public function flow()
+    {
+        return $this->belongsTo('App\Models\System\Flows\ServicesFlow');
+    }
+
 }

@@ -4,6 +4,7 @@ namespace App;
 
 use App\Models\System\BaseModel;
 use App\Models\System\Documents\Estimate;
+use App\Models\System\Flows\ServicesFlow;
 use Carbon\Carbon;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -172,6 +173,11 @@ class Client extends BaseModel
     public function filial()
     {
         return $this->belongsTo(Department::class);
+    }
+
+    public function services_flows()
+    {
+        return $this->belongsToMany(ServicesFlow::class);
     }
 
 
