@@ -57,6 +57,9 @@ Vue.component('switch-component', require('./components/inputs/SwitchComponent')
 Vue.component('input-digit-component', require('./components/InputDigitComponent.vue'));
 Vue.component('dropzone-component', require('./components/DropzoneComponent.vue'));
 
+Vue.component('select-categories-component', require('./components/common/selects_categories/SelectCategoriesComponent'));
+Vue.component('select-processes-categories-component', require('./components/common/selects_categories/SelectProcessesCategoriesComponent'));
+
 // ТМЦ
 Vue.component('articles-categories-with-groups-component', require('./components/ArticlesCategoriesWithGroupsComponent.vue'));
 Vue.component('manufacturers-component', require('./components/ManufacturersComponent.vue'));

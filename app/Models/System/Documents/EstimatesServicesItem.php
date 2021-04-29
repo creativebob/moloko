@@ -81,6 +81,8 @@ class EstimatesServicesItem extends BaseModel
         'margin_currency',
         'margin_percent',
 
+        'flow_id',
+
         'sort',
 
         'display',

@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Models\System\BaseModel;
+use App\Models\System\Flows\ServicesFlow;
 use App\Models\System\Traits\Processable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -45,6 +46,17 @@ class Service extends BaseModel
     {
         return $this->hasMany(PricesService::class)
         ->where('archive', false);
+    }
+
+    public function flows()
+    {
+        return $this->hasMany(ServicesFlow::class, 'process_id');
+    }
+
+    public function actualFlows()
+    {
+        return $this->hasMany(ServicesFlow::class, 'process_id')
+            ->whereDate('finish_at', '>=', now());
     }
 
     /**

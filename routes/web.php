@@ -748,6 +748,62 @@ Route::any('/service/add_photo', 'ServiceController@add_photo');
 Route::post('/service/photos', 'ServiceController@photos');
 
 
+// ---------------------------------- Потоки услуг -------------------------------------------
+// Основные методы
+Route::resource('/services_flows', 'ServicesFlowController')
+    ->except([
+        'show',
+        'destroy',
+    ]);
+
+Route::get('/services_flows/search/{search}', 'ServicesFlowController@search');
+
+
+// -------------------------------- Категории событий -------------------------------------------
+
+// Текущая добавленная/удаленная категория
+Route::any('/events_categories', 'EventsCategoryController@index');
+Route::match([
+    'get',
+    'post'
+], '/events_categories/{id}/edit', 'EventsCategoryController@edit');
+// Основные методы
+Route::resource('/events_categories', 'EventsCategoryController')
+    ->except([
+        'show'
+    ]);
+
+
+// ---------------------------------- События -------------------------------------------
+
+Route::get('/events/search/{search}', 'EventController@search');
+// Основные методы
+Route::resource('/events', 'EventController')->except([
+    'show',
+    'destroy'
+]);
+// Поиск
+Route::post('/events/search/{text_fragment}', 'EventController@search');
+// Архивация
+Route::post('/events/archive/{id}', 'EventController@archive');
+// Архивные
+Route::get('/events/archives', 'EventController@archives')
+    ->name('events.archives');
+// Дублирование
+Route::post('/events/replicate/{id}', 'EventController@replicate');
+
+
+// ---------------------------------- Потоки событий -------------------------------------------
+// Основные методы
+Route::resource('/events_flows', 'EventsFlowController')
+    ->except([
+        'show',
+        'destroy',
+    ]);
+
+Route::get('/events_flows/search/{search}', 'EventsFlowController@search');
+
+
 // -------------------------------- Категории рабочих процессов -------------------------------------------
 
 // Текущая добавленная/удаленная категория

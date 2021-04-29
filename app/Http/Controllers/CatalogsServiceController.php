@@ -381,23 +381,21 @@ class CatalogsServiceController extends Controller
                     'catalogs_item.discounts_actual'
                 ])
                     ->whereHas('service', function ($q) {
-                        $q
-//                        ->when($settings->firstWhere('alias', 'sale-for-order'), function ($q) {
-//                        $q->where('is_ordered', true);
-//                    })
-//                    ->when($settings->firstWhere('alias', 'sale-for-production'), function ($q) {
-//                        $q->where('is_produced', true);
-//                    })
-//                    ->when($settings->firstWhere('alias', 'sale-from-stock'), function ($q) {
-//                        $q->whereHas('stocks', function ($q) {
-//                            $q->where('filial_id', auth()->user()->StafferFilialId)
-//                            ->where('free', '>', 0);
-//                        });
-//                    })
-                            ->where('archive', false)
+                        $q->where('archive', false)
                             ->whereHas('process', function ($q) {
-                                $q->where('draft', false);
+                                $q->where('draft', false)
+                                    ->where('is_auto_initiated', true);
                             });
+                    })
+                    ->orWhereHas('service', function ($q) {
+                        $q->where('archive', false)
+                            ->whereHas('process', function ($q) {
+                                $q->where('draft', false)
+                                    ->where('is_auto_initiated', false);
+                            })
+                        ->whereHas('actualFlows', function ($q) {
+                            $q->where('filial_id', request()->filial_id);
+                        });
                     })
                     ->where([
                         'archive' => false,

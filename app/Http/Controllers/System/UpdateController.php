@@ -39,51 +39,416 @@ class UpdateController extends Controller
     }
 
     /**
-     * Изменение скидки клиента
+     * Добавление в развернутую систему сущностей потоков услуг и событий с правами
      *
      * @return string
      */
-    public function addChangeClientDiscountActions()
+    public function addFlowsEntities()
     {
-        $channels = Channel::get();
-        $triggers = Trigger::get();
-
-        $notificationData = [
-            'name' => 'Изменение скидки клиента',
-            'channel_id' => $channels->firstWhere('name', 'Telegram')->id,
-            'trigger_id' => $triggers->firstWhere('alias', 'create-lead-from-project')->id,
-        ];
-//        dd($notificationData);
-
-        $notification = Notification::where($notificationData)
-            ->exists();
-//        dd($notification);
-
-        if (!$notification) {
-            Notification::insert($notificationData);
-
-            $notification = Notification::where($notificationData)
-                ->first();
-            $notification->sites()->attach(1);
-            echo "Добавлено оповещение<br><br>";
-        }
-
-        $chargeData = [
-            'name' => 'Изменение скидки клиента',
-            'description' => null,
-            'alias' => 'change-client-discount',
+        $pageData = [
+            'name' => 'График услуг',
+            'site_id' => 1,
+            'title' => 'График услуг',
+            'description' => 'График услуг',
+            'alias' => 'services_flows',
+            'company_id' => null,
+            'system' => true,
             'author_id' => 1,
+            'display' => true,
         ];
 
-        $charge = Charge::where($chargeData)
+        $page = Page::where('alias', 'services_flows')
             ->exists();
 
-        if (!$charge) {
-            Charge::insert($chargeData);
-            echo "Добавлено экстра право<br><br>";
+        if (!$page) {
+            Page::insert($pageData);
+            echo "Добавлена страница потоков услуг<br><br>";
         }
 
-        return "<strong>Добавление действий при изменении скидки клиента завершено</strong>";
+        $pageData = [
+            'name' => 'График событий',
+            'site_id' => 1,
+            'title' => 'График событий',
+            'description' => 'График событий',
+            'alias' => 'events_flows',
+            'company_id' => null,
+            'system' => true,
+            'author_id' => 1,
+            'display' => true,
+        ];
+
+        $page = Page::where('alias', 'events_flows')
+            ->exists();
+
+        if (!$page) {
+            Page::insert($pageData);
+            echo "Добавлена страница потоков событий<br><br>";
+        }
+
+        $pages = Page::get();
+        $menus = Menu::get();
+
+        $menuData = [
+            'name' => 'График услуг',
+            'icon' => null,
+            'alias' => 'admin/services_flows',
+            'tag' => 'services_flows',
+            'parent_id' => $menus->where('tag', 'services')->first()->id,
+            'page_id' => $pages->where('alias', 'services_flows')->first()->id,
+            'navigation_id' => 1,
+            'company_id' => null,
+            'system' => true,
+            'author_id' => 1,
+            'display' => true,
+            'sort' => 1,
+        ];
+
+        $menu = Menu::where('tag', 'services_flows')
+            ->whereNotNull('alias')
+            ->exists();
+
+        if (!$menu) {
+            Menu::insert($menuData);
+            echo "Добавлен пункт график услуг<br><br>";
+        }
+
+        $menus = Menu::get();
+
+        $menuData = [
+            'name' => 'График событий',
+            'icon' => null,
+            'alias' => 'admin/events_flows',
+            'tag' => 'events_flows',
+            'parent_id' => $menus->where('tag', 'events')->first()->id,
+            'page_id' => $pages->where('alias', 'events_flows')->first()->id,
+            'navigation_id' => 1,
+            'company_id' => null,
+            'system' => true,
+            'author_id' => 1,
+            'display' => true,
+            'sort' => 1,
+        ];
+
+        $menu = Menu::where('tag', 'events_flows')
+            ->whereNotNull('alias')
+            ->exists();
+
+        if (!$menu) {
+            Menu::insert($menuData);
+            echo "Добавлен пункт график событий<br><br>";
+        }
+
+        $entityData = [
+            'name' => 'График услуг',
+            'alias' => 'services_flows',
+            'model' => 'App\Models\System\Flows\ServicesFlow',
+            'rights' => true,
+            'system' => true,
+            'author_id' => 1,
+            'site' => 0,
+            'ancestor_id' => Entity::whereAlias('services')->first(['id'])->id,
+            'view_path' => 'system.pages.process_flows.services_flows',
+            'page_id' => $pages->firstWhere('alias', 'services_flows')->id,
+        ];
+
+        $entity = Entity::where('alias', 'services_flows')
+            ->exists();
+
+        if (!$entity) {
+            Entity::insert($entityData);
+            echo 'Добавлена сущность графика услуг<br><br>';
+        }
+
+        $entityData = [
+            'name' => 'График событий',
+            'alias' => 'events_flows',
+            'model' => 'App\Models\System\Flows\EventsFlow',
+            'rights' => true,
+            'system' => true,
+            'author_id' => 1,
+            'site' => 0,
+            'ancestor_id' => Entity::whereAlias('events')->first(['id'])->id,
+            'view_path' => 'system.pages.process_flows.events_flows',
+            'page_id' => $pages->firstWhere('alias', 'events_flows')->id,
+        ];
+
+        $entity = Entity::where('alias', 'events_flows')
+            ->exists();
+
+        if (!$entity) {
+            Entity::insert($entityData);
+            echo 'Добавлена сущность графика событий<br><br>';
+        }
+
+        // Наваливание прав
+        $entities = Entity::whereIn('alias', [
+            'services_flows',
+            'events_flows',
+        ])
+            ->get();
+
+        foreach ($entities as $entity) {
+            // Генерируем права
+            $actions = Action::get();
+            $mass = [];
+
+            foreach ($actions as $action) {
+                $mass[] = ['action_id' => $action->id, 'entity_id' => $entity->id, 'alias_action_entity' => $action->method . '-' . $entity->alias];
+            };
+            DB::table('action_entity')->insert($mass);
+
+            $actionentities = ActionEntity::where('entity_id', $entity->id)->get();
+            $mass = [];
+
+            foreach ($actionentities as $actionentity) {
+
+                $mass[] = ['name' => "Разрешение на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'allow', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-allow'];
+
+                $mass[] = ['name' => "Запрет на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'deny', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-deny'];
+            };
+
+            DB::table('rights')->insert($mass);
+
+            $actionentities = $actionentities->pluck('id')->toArray();
+
+            // Получаем все существующие разрешения (allow)
+            $rights = Right::whereIn('object_entity', $actionentities)->where('directive', 'allow')->get();
+
+            $mass = [];
+            // Генерируем права на полный доступ
+            foreach ($rights as $right) {
+                $mass[] = [
+                    'right_id' => $right->id,
+                    'role_id' => 1,
+                    'system' => 1
+                ];
+            };
+
+            DB::table('right_role')->insert($mass);
+        }
+
+        echo "Добавлены права на сущность<br><br>";
+
+        return "<strong>Добавление сущности событий завершено</strong>";
+    }
+
+    /**
+     * Добавление в развернутую систему сущностей категорий событий и событий с правами
+     *
+     * @return string
+     */
+    public function addEventsEntities()
+    {
+        $pageData = [
+            'name' => 'Категории событий',
+            'site_id' => 1,
+            'title' => 'Категории событий',
+            'description' => 'Категории событий',
+            'alias' => 'events_categories',
+            'company_id' => null,
+            'system' => true,
+            'author_id' => 1,
+            'display' => true,
+        ];
+
+        $page = Page::where('alias', 'events_categories')
+            ->exists();
+
+        if (!$page) {
+            Page::insert($pageData);
+            echo "Добавлена страница категорий событий<br><br>";
+        }
+
+        $pageData = [
+            'name' => 'События',
+            'site_id' => 1,
+            'title' => 'События',
+            'description' => 'События',
+            'alias' => 'events',
+            'company_id' => null,
+            'system' => true,
+            'author_id' => 1,
+            'display' => true,
+        ];
+
+        $page = Page::where('alias', 'events')
+            ->exists();
+
+        if (!$page) {
+            Page::insert($pageData);
+            echo "Добавлена страница событий<br><br>";
+        }
+
+        $pages = Page::get();
+
+        $menuData = [
+            'name' => 'События',
+            'icon' => 'icon-event',
+            'alias' => null,
+            'tag' => 'events',
+            'parent_id' => null,
+            'page_id' => null,
+            'navigation_id' => 1,
+            'company_id' => null,
+            'system' => true,
+            'author_id' => 1,
+            'display' => true,
+            'sort' => 13,
+        ];
+
+        $menu = Menu::where('tag', 'events')
+            ->whereNull('alias')
+            ->exists();
+
+        if (!$menu) {
+            Menu::insert($menuData);
+            echo "Добавлен раздел меню<br><br>";
+        }
+
+        $menus = Menu::get();
+
+        $menuData = [
+            'name' => 'Категории событий',
+            'icon' => null,
+            'alias' => 'admin/events_categories',
+            'tag' => 'events_categories',
+            'parent_id' => $menus->where('tag', 'events')->first()->id,
+            'page_id' => $pages->where('alias', 'events_categories')->first()->id,
+            'navigation_id' => 1,
+            'company_id' => null,
+            'system' => true,
+            'author_id' => 1,
+            'display' => true,
+            'sort' => 3,
+        ];
+
+        $menu = Menu::where('tag', 'events_categories')
+            ->whereNotNull('alias')
+            ->exists();
+
+        if (!$menu) {
+            Menu::insert($menuData);
+            echo "Добавлен пункт меню (категория)<br><br>";
+        }
+
+        $menus = Menu::get();
+
+        $menuData = [
+            'name' => 'События',
+            'icon' => null,
+            'alias' => 'admin/events',
+            'tag' => 'events',
+            'parent_id' => $menus->where('tag', 'events')->first()->id,
+            'page_id' => $pages->where('alias', 'events')->first()->id,
+            'navigation_id' => 1,
+            'company_id' => null,
+            'system' => true,
+            'author_id' => 1,
+            'display' => true,
+            'sort' => 1,
+        ];
+
+        $menu = Menu::where('tag', 'events')
+            ->whereNotNull('alias')
+            ->exists();
+
+        if (!$menu) {
+            Menu::insert($menuData);
+            echo "Добавлен пункт меню<br><br>";
+        }
+
+        $entityData = [
+            'name' => 'Категории событий',
+            'alias' => 'events_categories',
+            'model' => 'App\EventsCategory',
+            'rights' => true,
+            'system' => true,
+            'author_id' => 1,
+            'site' => 0,
+            'metric' => 1,
+            'view_path' => 'products.processes_categories.events_categories',
+            'page_id' => $pages->firstWhere('alias', 'events_categories')->id,
+        ];
+
+        $entity = Entity::where('alias', 'events_categories')
+            ->exists();
+
+        if (!$entity) {
+            Entity::insert($entityData);
+            echo 'Добавлена сущность категорий<br><br>';
+        }
+
+        $entityData = [
+            'name' => 'События',
+            'alias' => 'events',
+            'model' => 'App\Event',
+            'rights' => true,
+            'system' => true,
+            'author_id' => 1,
+            'site' => 0,
+            'ancestor_id' => Entity::whereAlias('events_categories')->first(['id'])->id,
+            'view_path' => 'products.processes.events',
+            'page_id' => $pages->firstWhere('alias', 'events')->id,
+        ];
+
+        $entity = Entity::where('alias', 'events')
+            ->exists();
+
+        if (!$entity) {
+            Entity::insert($entityData);
+            echo 'Добавлена сущность<br><br>';
+        }
+
+        // Наваливание прав
+        $entities = Entity::whereIn('alias', [
+            'events_categories',
+            'events',
+        ])
+            ->get();
+
+        foreach ($entities as $entity) {
+            // Генерируем права
+            $actions = Action::get();
+            $mass = [];
+
+            foreach ($actions as $action) {
+                $mass[] = ['action_id' => $action->id, 'entity_id' => $entity->id, 'alias_action_entity' => $action->method . '-' . $entity->alias];
+            };
+            DB::table('action_entity')->insert($mass);
+
+            $actionentities = ActionEntity::where('entity_id', $entity->id)->get();
+            $mass = [];
+
+            foreach ($actionentities as $actionentity) {
+
+                $mass[] = ['name' => "Разрешение на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'allow', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-allow'];
+
+                $mass[] = ['name' => "Запрет на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'deny', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-deny'];
+            };
+
+            DB::table('rights')->insert($mass);
+
+            $actionentities = $actionentities->pluck('id')->toArray();
+
+            // Получаем все существующие разрешения (allow)
+            $rights = Right::whereIn('object_entity', $actionentities)->where('directive', 'allow')->get();
+
+            $mass = [];
+            // Генерируем права на полный доступ
+            foreach ($rights as $right) {
+                $mass[] = [
+                    'right_id' => $right->id,
+                    'role_id' => 1,
+                    'system' => 1
+                ];
+            };
+
+            DB::table('right_role')->insert($mass);
+        }
+
+        echo "Добавлены права на сущность<br><br>";
+
+        return "<strong>Добавление сущности событий завершено</strong>";
     }
 
     /**
@@ -210,6 +575,54 @@ class UpdateController extends Controller
         }
 
         return "<strong>Добавление сущности смен завершено</strong>";
+    }
+
+    /**
+     * Изменение скидки клиента
+     *
+     * @return string
+     */
+    public function addChangeClientDiscountActions()
+    {
+        $channels = Channel::get();
+        $triggers = Trigger::get();
+
+        $notificationData = [
+            'name' => 'Изменение скидки клиента',
+            'channel_id' => $channels->firstWhere('name', 'Telegram')->id,
+            'trigger_id' => $triggers->firstWhere('alias', 'create-lead-from-project')->id,
+        ];
+//        dd($notificationData);
+
+        $notification = Notification::where($notificationData)
+            ->exists();
+//        dd($notification);
+
+        if (!$notification) {
+            Notification::insert($notificationData);
+
+            $notification = Notification::where($notificationData)
+                ->first();
+            $notification->sites()->attach(1);
+            echo "Добавлено оповещение<br><br>";
+        }
+
+        $chargeData = [
+            'name' => 'Изменение скидки клиента',
+            'description' => null,
+            'alias' => 'change-client-discount',
+            'author_id' => 1,
+        ];
+
+        $charge = Charge::where($chargeData)
+            ->exists();
+
+        if (!$charge) {
+            Charge::insert($chargeData);
+            echo "Добавлено экстра право<br><br>";
+        }
+
+        return "<strong>Добавление действий при изменении скидки клиента завершено</strong>";
     }
 
     /**

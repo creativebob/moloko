@@ -4,6 +4,14 @@
         :id="'table-' + name + '-' + item.id"
         :data-name="item.process.name"
     >
+        <td class="td-drop">
+            <div class="sprite icon-drop"></div>
+            <input
+                type="hidden"
+                :name="name + '[' + item.id + '][sort]'"
+                :value="index + 1"
+            >
+        </td>
         <td>{{ index + 1 }}</td>
         <td>{{ item.category.name }}</td>
         <td>{{ item.process.name }} <span v-if="item.process.draft == 1" class="mark-draft">Черновик</span></td>
@@ -12,10 +20,12 @@
             <div class="wrap-input-table">
                 <digit-component
                     :name="name + '[' + item.id + '][value]'"
-                    :value="value"
-                    :disabled="disabled"
+                    :value="1"
+                    :disabled="false"
+                    :readonly="true"
                     :id="'input-' + name + '-' + item.id + '-value'"
                     classes="compact"
+                    :decimalplace="0"
                     :required="true"
                     @input="changeValue"
                     ref="valueComponent"
@@ -44,8 +54,8 @@
 <!--        </td>-->
 
         <td>
-            <span>{{ item.totalLength }}</span>
-            <span>гр.</span>
+            <span>{{ item.process.length / item.process.unit_length.ratio }}</span>
+            <span>{{ item.process.unit_length.abbreviation }}</span>
         </td>
 <!--        <td>-->
 <!--            <span>{{ item.totalCost }}</span>-->
@@ -103,13 +113,14 @@
                 }
             },
             cost() {
-                if (this.name == 'attachments' || this.name == 'containers') {
-                    return parseFloat(this.item.cost_unit * this.useful).toFixed(2);
-                } else if (this.name == 'raws') {
-                    return parseFloat(this.item.cost_portion * this.useful).toFixed(2);
-                } else if (this.name == 'services') {
-                    return parseFloat(this.item.process.cost_default * this.useful).toFixed(2);
-                }
+                // if (this.name == 'attachments' || this.name == 'containers') {
+                //     return parseFloat(this.item.cost_unit * this.useful).toFixed(2);
+                // } else if (this.name == 'raws') {
+                //     return parseFloat(this.item.cost_portion * this.useful).toFixed(2);
+                // } else if (this.name == 'services') {
+                //     return parseFloat(this.item.process.cost_default * this.useful).toFixed(2);
+                // }
+                return 0;
             },
         },
         methods: {

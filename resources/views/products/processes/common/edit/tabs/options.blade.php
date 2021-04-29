@@ -103,12 +103,19 @@
         <fieldset class="fieldset-access">
             <legend>Доступность</legend>
 
+            {{-- Автоинициация --}}
+            <div class="small-12 cell checkbox">
+                {!! Form::hidden('is_auto_initiated', 0) !!}
+                {!! Form::checkbox('is_auto_initiated', 1, $process->is_auto_initiated, ['id' => 'checkbox-is_auto_initiated']) !!}
+                <label for="checkbox-is_auto_initiated"><span>Автоинициация</span></label>
+            </div>
+
             {{-- Чекбокс архива --}}
             {!! Form::hidden('archive', 0) !!}
             @if ($item->archive == 1)
 
                 <div class="small-12 cell checkbox">
-                    {!! Form::checkbox('archive', 0, $item->archive, ['id' => 'checkbox-archive']) !!}
+                    {!! Form::checkbox('archive', 1, $item->archive, ['id' => 'checkbox-archive']) !!}
                     <label for="checkbox-archive"><span>Вывести из архива</span></label>
                 </div>
             @endif

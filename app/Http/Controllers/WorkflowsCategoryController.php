@@ -28,7 +28,7 @@ class WorkflowsCategoryController extends Controller
     use Photable;
 
     /**
-     * oldest
+     * Display a listing of the resource.
      *
      * @param Request $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View

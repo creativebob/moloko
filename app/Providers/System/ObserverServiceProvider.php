@@ -9,6 +9,8 @@ use App\Attachment;
 use App\AttachmentsCategory;
 use App\Competitor;
 use App\EstimatesCancelGround;
+use App\Event;
+use App\EventsCategory;
 use App\File;
 use App\Impact;
 use App\ImpactsCategory;
@@ -19,6 +21,8 @@ use App\Models\System\Documents\Consignment;
 use App\Models\System\Documents\ConsignmentsItem;
 use App\Models\System\Documents\Production;
 use App\Models\System\Documents\ProductionsItem;
+use App\Models\System\Flows\EventsFlow;
+use App\Models\System\Flows\ServicesFlow;
 use App\Models\System\Stocks\AttachmentsStock;
 use App\BusinessCase;
 use App\CatalogsGoods;
@@ -64,7 +68,11 @@ use App\Observers\System\Documents\ConsignmentsItemObserver;
 use App\Observers\System\Documents\ProductionObserver;
 use App\Observers\System\Documents\ProductionsItemObserver;
 use App\Observers\System\EstimatesCancelGroundObserver;
+use App\Observers\System\EventObserver;
+use App\Observers\System\EventsCategoryObserver;
 use App\Observers\System\FileObserver;
+use App\Observers\System\Flows\EventsFlowObserver;
+use App\Observers\System\Flows\ServicesFlowObserver;
 use App\Observers\System\ImpactObserver;
 use App\Observers\System\ImpactsCategoryObserver;
 use App\Observers\System\LabelObserver;
@@ -274,12 +282,14 @@ class ObserverServiceProvider extends ServiceProvider
 
         // Категории процессов
         ServicesCategory::observe(ServicesCategoryObserver::class);
+        EventsCategory::observe(EventsCategoryObserver::class);
         WorkflowsCategory::observe(WorkflowsCategoryObserver::class);
 
         // Процессы
         Process::observe(ProcessObserver::class);
         ProcessesGroup::observe(ProcessesGroupObserver::class);
         Service::observe(ServiceObserver::class);
+        Event::observe(EventObserver::class);
         Workflow::observe(WorkflowObserver::class);
 
         // Скидки
@@ -323,6 +333,10 @@ class ObserverServiceProvider extends ServiceProvider
 
         Cost::observe(CostObserver::class);
         CostsHistory::observe(CostsHistoryObserver::class);
+
+        // Потоки
+        EventsFlow::observe(EventsFlowObserver::class);
+        ServicesFlow::observe(ServicesFlowObserver::class);
 
         // Договора
         ContractsClient::observe(ContractsClientObserver::class);

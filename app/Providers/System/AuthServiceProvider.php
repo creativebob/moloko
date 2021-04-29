@@ -10,6 +10,8 @@ use App\BusinessCase;
 use App\Competitor;
 use App\Container;
 use App\ContainersCategory;
+use App\Event;
+use App\EventsCategory;
 use App\File;
 use App\Impact;
 use App\ImpactsCategory;
@@ -18,6 +20,8 @@ use App\Mailing;
 use App\MailingList;
 use App\Models\System\Documents\Consignment;
 use App\Models\System\Documents\Production;
+use App\Models\System\Flows\EventsFlow;
+use App\Models\System\Flows\ServicesFlow;
 use App\Models\System\Stocks\AttachmentsStock;
 use App\Models\System\Stocks\ContainersStock;
 use App\Discount;
@@ -44,7 +48,11 @@ use App\Policies\DispatchPolicy;
 use App\Policies\Documents\ConsignmentPolicy;
 use App\Policies\Documents\ProductionPolicy;
 use App\Policies\DomainPolicy;
+use App\Policies\EventPolicy;
+use App\Policies\EventsCategoryPolicy;
 use App\Policies\FilePolicy;
+use App\Policies\Flows\EventsFlowPolicy;
+use App\Policies\Flows\ServicesFlowPolicy;
 use App\Policies\ImpactPolicy;
 use App\Policies\ImpactsCategoryPolicy;
 use App\Policies\IndicatorPolicy;
@@ -318,8 +326,14 @@ class AuthServiceProvider extends ServiceProvider
         // Услуги
         Service::class => ServicePolicy::class,
         ServicesCategory::class => ServicesCategoryPolicy::class,
+        ServicesFlow::class => ServicesFlowPolicy::class,
 
         PricesService::class => PricesServicePolicy::class,
+
+        // События
+        EventsCategory::class => EventsCategoryPolicy::class,
+        Event::class => EventPolicy::class,
+        EventsFlow::class => EventsFlowPolicy::class,
 
         // Рабочие процессы
         WorkflowsCategory::class => WorkflowsCategoryPolicy::class,

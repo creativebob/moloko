@@ -726,6 +726,52 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => true,
             ],
+            [
+                'name' => 'График услуг',
+                'site_id' => 1,
+                'title' => 'График услуг',
+                'description' => 'График услуг',
+                'alias' => 'services_flows',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+
+            // События
+            [
+                'name' => 'Категории событий',
+                'site_id' => 1,
+                'title' => 'Категории событий',
+                'description' => 'Категории событий',
+                'alias' => 'events_categories',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+            [
+                'name' => 'События',
+                'site_id' => 1,
+                'title' => 'События',
+                'description' => 'События',
+                'alias' => 'events',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+            [
+                'name' => 'График событий',
+                'site_id' => 1,
+                'title' => 'График событий',
+                'description' => 'График событий',
+                'alias' => 'events_flows',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
 
             // Рабочие процессы
             [

@@ -188,6 +188,11 @@ trait Processable
                     $process->impacts()->sync($request->impacts);
                 }
 
+                $access = session('access.all_rights.index-events-allow');
+                if ($access) {
+                    $process->events()->sync($request->events);
+                }
+
                  if ($request->has('unit_length_id')) {
                      $unit = Unit::find($request->unit_length_id);
                      $length = $data['length'] * $unit->ratio;

@@ -10,6 +10,13 @@
                 @keydown.enter.prevent="onEnter"
             >
 
+            <input
+                v-if="name"
+                type="hidden"
+                :name="name"
+                v-model="id"
+            >
+
             <div
                     class="sprite-input-right sprite-16 icon-select"
                     @click="toggleShowCategories()"
@@ -102,7 +109,11 @@
         props: {
             change: Boolean,
             selectCategories: Array,
-            selectCategoriesItems: Array
+            selectCategoriesItems: Array,
+            name: {
+                type: String,
+                default: null
+            },
         },
         data() {
             return {

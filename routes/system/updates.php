@@ -50,3 +50,6 @@ Route::get('/add_photo_settings_entity', 'UpdateController@addPhotoSettingsEntit
 Route::get('/add_shifts_entity', 'UpdateController@addShiftsEntity');
 
 Route::get('/add_change_client_discount_actions', 'UpdateController@addChangeClientDiscountActions');
+
+Route::get('/add-events-entities', 'UpdateController@addEventsEntities');
+Route::get('/add-flows-entities', 'UpdateController@addFlowsEntities');

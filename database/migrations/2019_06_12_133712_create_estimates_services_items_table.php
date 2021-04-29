@@ -103,6 +103,9 @@ class CreateEstimatesServicesItemsTable extends Migration
 
             $table->text('comment')->nullable()->comment('Комментарий');
 
+            $table->bigInteger('flow_id')->unsigned()->nullable()->comment('Id потока');
+//            $table->foreign('flow_id')->references('id')->on('services_flows');
+
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');

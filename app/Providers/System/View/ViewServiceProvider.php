@@ -33,6 +33,7 @@ use App\Http\View\Composers\System\DiscountsForEstimatesComposer;
 use App\Http\View\Composers\System\EntitiesComposer;
 use App\Http\View\Composers\System\EntitiesTypesComposer;
 use App\Http\View\Composers\System\EstimatesTotalsComposer;
+use App\Http\View\Composers\System\EventsCategoriesWithEventsComposer;
 use App\Http\View\Composers\System\FilialCatalogsGoodsComposer;
 use App\Http\View\Composers\System\FilialCatalogsServicesComposer;
 use App\Http\View\Composers\System\FilialStaffComposer;
@@ -47,6 +48,7 @@ use App\Http\View\Composers\System\PartsComposer;
 use App\Http\View\Composers\System\PaymentsMethodsComposer;
 use App\Http\View\Composers\System\PositionsWithStaffComposer;
 use App\Http\View\Composers\System\ProcessesArchivesCountComposer;
+use App\Http\View\Composers\System\ProcessesCategoriesWithItemsComposer;
 use App\Http\View\Composers\System\ServicesCategoriesTreeComposer;
 use App\Http\View\Composers\System\ServicesCategoriesWithServicesComposer;
 use App\Http\View\Composers\System\StaffArchiveCountComposer;
@@ -307,6 +309,8 @@ class ViewServiceProvider extends ServiceProvider
         view()->composer('system.pages.documents.consignments.edit', ArticlesCategoriesWithItemsComposer::class);
         view()->composer('system.pages.documents.productions.edit', ArticlesCategoriesWithItemsComposerForManufacturer::class);
 
+        view()->composer('system.common.flows.tabs.general', ProcessesCategoriesWithItemsComposer::class);
+
         view()->composer(['includes.selects.source_with_source_services'], SourceWithSourceServicesComposer::class);
         view()->composer(['includes.selects.source_services'], SourceServicesComposer::class);
 
@@ -423,7 +427,7 @@ class ViewServiceProvider extends ServiceProvider
 
         view()->composer('includes.selects.indicators_categories', IndicatorsCategoriesSelectComposer::class);
         view()->composer([
-            'includes.selects.directions', 
+            'includes.selects.directions',
             'includes.lists.directions'
         ], DirectionsComposer::class);
 
@@ -504,6 +508,10 @@ class ViewServiceProvider extends ServiceProvider
         view()->composer([
             'products.processes.services.services.services'
         ], ServicesCategoriesWithServicesComposer::class);
+
+        view()->composer([
+            'products.processes.events.events.events'
+        ], EventsCategoriesWithEventsComposer::class);
 
         view()->composer('includes.selects.tmc', TmcComposer::class);
         view()->composer([

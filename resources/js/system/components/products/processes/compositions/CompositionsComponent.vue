@@ -10,7 +10,6 @@
                             <span class="indicator-name">Продолжительность: </span><span class="indicators_total">{{ totalLength }}</span> <span>сек.</span>
                         </div>
                         <div class="cell auto">
-<!--                            <span class="indicator-name">Себестоимость: </span><span class="indicators_total">{{ totalCost }}</span> <span>руб.</span>-->
                         </div>
                     </div>
                 </div>
@@ -35,6 +34,7 @@
 
                         <thead>
                         <tr>
+                            <th></th>
                             <th>п/п</th>
                             <th>Категория:</th>
                             <th>Продукт:</th>
@@ -49,11 +49,12 @@
                         </tr>
                         </thead>
 
-                        <tbody
-                            :id="'table-' + name"
-                        >
-
-                            <template v-if="actualItems && actualItems.length">
+                            <draggable
+                                v-model="actualItems"
+                                tag="tbody"
+                                :id="'table-' + name"
+                                handle=".td-drop"
+                            >
                                 <composition-component
                                     v-for="(item, index) in actualItems"
                                     :item="item"
@@ -64,13 +65,11 @@
                                     :disabled="disabled"
                                     @update="updateItem"
                                 ></composition-component>
-                            </template>
-
-                        </tbody>
+                            </draggable>
 
                         <tfoot>
                             <tr>
-                                <td colspan="4"></td>
+                                <td colspan="5"></td>
                                 <td>
                                     <span>{{ totalLength }}</span> <span>гр.</span>
                                 </td>
@@ -95,11 +94,14 @@
 </template>
 
 <script>
+import draggable from 'vuedraggable'
+
     export default {
         components: {
             'composition-component': require('./CompositionComponent'),
             'modal-remove-component': require('./ModalRemoveComponent'),
             'categories-list-component': require('../common/CategoriesWithItemsListComponent'),
+            draggable,
         },
         props: {
             categories: Array,
@@ -113,7 +115,7 @@
         },
         data() {
             return {
-                curItems: this.itemItems,
+                actualItems: this.itemItems,
                 text: null,
                 search: false,
                 error: false,
@@ -131,29 +133,29 @@
             let totalLength = 0,
                 totalCost = 0;
 
-            this.curItems.forEach(item => {
-                let length = 0;
-                if (this.name == 'goods') {
-                    length = parseFloat(item.process.length * 1000 * item.pivot.useful).toFixed(2);
-                } else {
-                    length = parseFloat(item.length * 1000 * item.pivot.useful).toFixed(2);
-                }
-                totalLength = parseFloat(totalLength) + parseFloat(length);
-                item.totalLength = length;
-
-                let cost = 0;
-                if (this.name == 'attachments' || this.name == 'containers') {
-                    cost = parseFloat(item.cost_unit * item.pivot.useful).toFixed(2);
-                } else if (this.name == 'raws') {
-                    cost = parseFloat(item.cost_portion * item.pivot.useful).toFixed(2);
-                } else if (this.name == 'goods') {
-                    cost = parseFloat(item.process.cost_default * item.pivot.useful).toFixed(2);
-                } else {
-                    cost = parseFloat(item.process.cost_default).toFixed(2);
-                }
-                totalCost = parseFloat(totalCost) + parseFloat(cost);
-                item.totalCost = cost;
-            });
+            // this.actualItems.forEach(item => {
+            //     let length = 0;
+            //     if (this.name == 'goods') {
+            //         length = parseFloat(item.process.length * 1000 * item.pivot.useful).toFixed(2);
+            //     } else {
+            //         length = parseFloat(item.length * 1000 * item.pivot.useful).toFixed(2);
+            //     }
+            //     totalLength = parseFloat(totalLength) + parseFloat(length);
+            //     item.totalLength = length;
+            //
+            //     let cost = 0;
+            //     if (this.name == 'attachments' || this.name == 'containers') {
+            //         cost = parseFloat(item.cost_unit * item.pivot.useful).toFixed(2);
+            //     } else if (this.name == 'raws') {
+            //         cost = parseFloat(item.cost_portion * item.pivot.useful).toFixed(2);
+            //     } else if (this.name == 'goods') {
+            //         cost = parseFloat(item.process.cost_default * item.pivot.useful).toFixed(2);
+            //     } else {
+            //         cost = parseFloat(item.process.cost_default).toFixed(2);
+            //     }
+            //     totalCost = parseFloat(totalCost) + parseFloat(cost);
+            //     item.totalCost = cost;
+            // });
 
             this.totalLength = totalLength.toFixed(2);
             this.totalCost = totalCost.toFixed(2);
@@ -161,9 +163,9 @@
             this.updateStore();
         },
         computed: {
-            actualItems() {
-                return this.curItems;
-            },
+            // actualItems() {
+            //     return this.actualItems;
+            // },
             composition() {
                 return {
                     name: this.name,
@@ -174,14 +176,14 @@
         methods: {
             setTotalLength() {
                 let length = 0;
-                this.curItems.forEach(item => {
+                this.actualItems.forEach(item => {
                     length += parseFloat(item.totalLength);
                 });
                 this.totalLength = length.toFixed(2);
             },
             setTotalCost() {
                 let cost = 0;
-                this.curItems.forEach(item => {
+                this.actualItems.forEach(item => {
                     cost += parseFloat(item.totalCost);
                 });
                 this.totalCost = cost.toFixed(2);
@@ -194,21 +196,21 @@
                 item.totalLength = parseFloat('0').toFixed(2);
                 item.totalCost = parseFloat('0').toFixed(2);
 
-                this.curItems.push(item);
+                this.actualItems.push(item);
                 this.setTotalLength();
                 this.setTotalCost();
                 this.updateStore();
             },
             updateItem(item){
-                let found = this.curItems.find(obj => obj.id == item.id);
+                let found = this.actualItems.find(obj => obj.id == item.id);
                 Vue.set(found, 'item', item);
                 this.setTotalLength();
                 this.setTotalCost();
                 this.updateStore();
             },
             removeItem(id) {
-                let index = this.curItems.findIndex(item => item.id == id);
-                this.curItems.splice(index, 1);
+                let index = this.actualItems.findIndex(item => item.id == id);
+                this.actualItems.splice(index, 1);
                 this.$refs.categoriesListComponent.clear();
                 this.setTotalLength();
                 this.setTotalCost();

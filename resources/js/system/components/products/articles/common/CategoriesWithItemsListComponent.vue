@@ -21,7 +21,7 @@
             <table class="content-table-search table-over">
                 <tbody>
 
-                <template v-if=search>
+                <template v-if="search">
                     <tr v-for="item in results">
                         <td>
                             <span v-if="item.add == true">{{ item.article.name }} (добавлен)</span>

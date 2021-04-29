@@ -23,7 +23,6 @@ class CreateWorkflowsTable extends Migration
             $table->foreign('category_id')->references('id')->on('workflows_categories');
 
             $table->boolean('archive')->default(0)->unsigned()->comment('Статус архива');
-
             $table->boolean('serial')->default(0)->unsigned()->comment('Серийный номер');
 
 

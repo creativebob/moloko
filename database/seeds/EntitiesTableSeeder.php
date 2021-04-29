@@ -133,7 +133,7 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'metric' => 1,
-                'view_path' => 'products/articles_categories/goods_categories',
+                'view_path' => 'products.articles_categories.goods_categories',
                 'page_id' => $pages->firstWhere('alias', 'goods_categories')->id,
             ],
             [
@@ -145,7 +145,7 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'metric' => 1,
-                'view_path' => 'products/articles_categories/raws_categories',
+                'view_path' => 'products.articles_categories.raws_categories',
                 'page_id' => $pages->firstWhere('alias', 'raws_categories')->id,
             ],
             [
@@ -157,7 +157,7 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'metric' => 1,
-                'view_path' => 'products/articles_categories/containers_categories',
+                'view_path' => 'products.articles_categories.containers_categories',
                 'page_id' => $pages->firstWhere('alias', 'containers_categories')->id,
             ],
             [
@@ -169,7 +169,7 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'metric' => 1,
-                'view_path' => 'products/articles_categories/attachments_categories',
+                'view_path' => 'products.articles_categories.attachments_categories',
                 'page_id' => $pages->firstWhere('alias', 'attachments_categories')->id,
             ],
             [
@@ -181,7 +181,7 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'metric' => 1,
-                'view_path' => 'products/articles_categories/tools_categories',
+                'view_path' => 'products.articles_categories.tools_categories',
                 'page_id' => $pages->firstWhere('alias', 'tools_categories')->id,
             ],
             [
@@ -217,7 +217,7 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'metric' => 1,
-                'view_path' => 'products/articles_categories/expendables_categories',
+                'view_path' => 'products.articles_categories.expendables_categories',
                 'page_id' => null,
             ],
             [
@@ -229,8 +229,20 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'metric' => 1,
-                'view_path' => 'products/processes_categories/services_categories',
+                'view_path' => 'products.processes_categories.services_categories',
                 'page_id' => $pages->firstWhere('alias', 'services_categories')->id,
+            ],
+            [
+                'name' => 'Категории событий',
+                'alias' => 'events_categories',
+                'model' => 'App\EventsCategory',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'metric' => 1,
+                'view_path' => 'products.processes_categories.events_categories',
+                'page_id' => $pages->firstWhere('alias', 'events_categories')->id,
             ],
             [
                 'name' => 'Категории рабочих процессов',
@@ -241,7 +253,7 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'metric' => 1,
-                'view_path' => 'products/processes_categories/workflows_categories',
+                'view_path' => 'products.processes_categories.workflows_categories',
                 'page_id' => $pages->firstWhere('alias', 'workflows_categories')->id,
             ],
             [
@@ -1179,6 +1191,18 @@ class EntitiesTableSeeder extends Seeder
                 'page_id' => $pages->firstWhere('alias', 'services')->id,
             ],
             [
+                'name' => 'События',
+                'alias' => 'events',
+                'model' => 'App\Event',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('events_categories')->first(['id'])->id,
+                'view_path' => 'products.processes.events',
+                'page_id' => $pages->firstWhere('alias', 'events')->id,
+            ],
+            [
                 'name' => 'Рабочие процессы',
                 'alias' => 'workflows',
                 'model' => 'App\Workflow',
@@ -1508,6 +1532,32 @@ class EntitiesTableSeeder extends Seeder
                 'ancestor_id' => Entity::whereAlias('portfolios_items')->first(['id'])->id,
                 'view_path' => 'system.pages.business_cases',
                 'page_id' => $pages->firstWhere('alias', 'business_cases')->id,
+            ],
+
+
+            [
+                'name' => 'График услуг',
+                'alias' => 'services_flows',
+                'model' => 'App\Models\System\Flows\ServicesFlow',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('services')->first(['id'])->id,
+                'view_path' => 'system.pages.process_flows.services_flows',
+                'page_id' => $pages->firstWhere('alias', 'services_flows')->id,
+            ],
+            [
+                'name' => 'График событий',
+                'alias' => 'events_flows',
+                'model' => 'App\Models\System\Flows\EventsFlow',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('events')->first(['id'])->id,
+                'view_path' => 'system.pages.process_flows.events_flows',
+                'page_id' => $pages->firstWhere('alias', 'events_flows')->id,
             ],
 
         ]);

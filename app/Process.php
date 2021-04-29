@@ -48,6 +48,8 @@ class Process extends BaseModel
         'draft',
         'unit_id',
 
+        'is_auto_initiated',
+
         'display',
         'system',
         'moderation'
@@ -91,6 +93,16 @@ class Process extends BaseModel
 //                'value',
 //            ])
             ;
+    }
+
+    public function events()
+    {
+        return $this->belongsToMany(Event::class, 'process_event')
+            ->withPivot([
+                'value',
+                'sort'
+            ])
+            ->oldest('process_event.sort');
     }
 
     // Состав (набор)

@@ -76,6 +76,8 @@ class CreateProcessesTable extends Migration
             // $table->integer('metrics_count')->nullable()->unsigned()->index()->comment('Количество метрик у артикула');
             // $table->integer('compositions_count')->nullable()->unsigned()->index()->comment('Количество составов у артикула');
 
+            $table->boolean('is_auto_initiated')->default(1)->comment('Автоинициация');
+
             $table->boolean('draft')->default(0)->unsigned()->comment('Статус черновика');
 
             // Общие настройки

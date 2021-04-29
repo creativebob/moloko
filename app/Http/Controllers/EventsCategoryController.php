@@ -1,0 +1,282 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\EventsCategory;
+use App\Http\Controllers\Traits\Photable;
+use App\Http\Requests\System\EventsCategoryStoreRequest;
+use App\Http\Requests\System\EventsCategoryUpdateRequest;
+use Illuminate\Http\Request;
+
+class EventsCategoryController extends Controller
+{
+    protected $entityAlias;
+    protected $entityDependence;
+
+    /**
+     * EventsCategoryController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->model = 'App\EventsCategory';
+        $this->entityAlias = 'events_categories';
+        $this->entityDependence = false;
+        $this->type = 'page';
+    }
+
+    use Photable;
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function index(Request $request)
+    {
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), EventsCategory::class);
+
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
+
+        $eventsCategories = EventsCategory::with([
+            'events',
+            'childs',
+            'groups'
+        ])
+            ->withCount('childs')
+            ->moderatorLimit($answer)
+            ->companiesLimit($answer)
+            ->authors($answer)
+            ->systemItem($answer)
+            ->template($answer)
+            // ->withCount('products')
+            ->orderBy('moderation', 'desc')
+            ->oldest('sort')
+            ->get();
+
+        // Отдаем Ajax
+        if ($request->ajax()) {
+
+            return view('system.common.categories.index.categories_list',
+                [
+                    'items' => $eventsCategories,
+                    'entity' => $this->entityAlias,
+                    'class' => $this->model,
+                    'type' => $this->type,
+                    'count' => $eventsCategories->count(),
+                    'id' => $request->id,
+                    'nested' => 'childs_count',
+                    // 'nested' => 'events_products_count',
+                ]
+            );
+        }
+
+        // Отдаем на шаблон
+        return view('system.common.categories.index.index',
+            [
+                'items' => $eventsCategories,
+                'pageInfo' => pageInfo($this->entityAlias),
+                'entity' => $this->entityAlias,
+                'class' => $this->model,
+                'type' => $this->type,
+                'id' => $request->id,
+                'nested' => 'childs_count',
+                'filter' => setFilter($this->entityAlias, $request, [
+                    'booklist'
+                ]),
+            ]
+        );
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function create(Request $request)
+    {
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), EventsCategory::class);
+
+        return view('system.common.categories.create.modal.create', [
+            'item' => EventsCategory::make(),
+            'entity' => $this->entityAlias,
+            'title' => 'Добавление категории событий',
+            'parent_id' => $request->parent_id,
+            'category_id' => $request->category_id,
+            'pageInfo' => pageInfo($this->entityAlias),
+        ]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param EventsCategoryStoreRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function store(EventsCategoryStoreRequest $request)
+    {
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), EventsCategory::class);
+
+        $data = $request->input();
+        $eventsCategory = EventsCategory::create($data);
+
+        if ($eventsCategory) {
+            return redirect()->route('events_categories.index', ['id' => $eventsCategory->id]);
+        } else {
+            $result = [
+                'error_status' => 1,
+                'error_message' => __('errors.store'),
+            ];
+        }
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function edit(Request $request, $id)
+    {
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $eventsCategory = EventsCategory::with([
+            'manufacturers',
+            'metrics' => function ($q) {
+                $q->with([
+                    'unit',
+                    'values'
+                ]);
+            },
+        ])
+            ->moderatorLimit($answer)
+            ->find($id);
+//        dd($eventsCategory);
+        if (empty($eventsCategory)) {
+            abort(403, __('errors.not_found'));
+        }
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $eventsCategory);
+        // dd($eventsCategory_metrics);
+
+        // Инфо о странице
+        $pageInfo = pageInfo($this->entityAlias);
+
+        $settings = $this->getPhotoSettings($this->entityAlias);
+
+        // При добавлении метрики отдаем ajax новый список свойст и метрик
+        if ($request->ajax()) {
+            return view('products.common.metrics.properties_list', [
+                'category' => $eventsCategory,
+                'pageInfo' => $pageInfo,
+            ]);
+        }
+
+        // dd($goods_category->direction);
+        return view('products.processes_categories.common.edit.edit', [
+            'title' => 'Редактирование категории событий',
+            'category' => $eventsCategory,
+            'pageInfo' => $pageInfo,
+            'settings' => $settings,
+            'entity' => $this->entityAlias,
+        ]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param EventsCategoryUpdateRequest $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function update(EventsCategoryUpdateRequest $request, $id)
+    {
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
+
+        $eventsCategory = EventsCategory::moderatorLimit($answer)
+            ->find($id);
+        //        dd($eventsCategory);
+        if (empty($eventsCategory)) {
+            abort(403, __('errors.not_found'));
+        }
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $eventsCategory);
+
+        $data = $request->input();
+        $data['photo_id'] = $this->getPhotoId($eventsCategory);
+        $result = $eventsCategory->update($data);
+
+        if ($result) {
+
+            $eventsCategory->manufacturers()->sync($request->manufacturers);
+
+            $metrics = session('access.all_rights.index-metrics-allow');
+            if ($metrics) {
+                $eventsCategory->metrics()->sync($request->metrics);
+            }
+
+            // Переадресовываем на index
+            return redirect()->route('events_categories.index', ['id' => $eventsCategory->id]);
+        } else {
+            $result = [
+                'error_status' => 1,
+                'error_message' => __('errors.update')
+            ];
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function destroy($id)
+    {
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $eventsCategory = EventsCategory::with([
+            'childs',
+            'events'
+        ])
+            ->moderatorLimit($answer)
+            ->find($id);
+        //        dd($eventsCategory);
+        if (empty($eventsCategory)) {
+            abort(403, __('errors.not_found'));
+        }
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $eventsCategory);
+        $eventsCategory->delete();
+
+        if ($eventsCategory) {
+            // Переадресовываем на index
+            return redirect()->route('events_categories.index', ['id' => $eventsCategory->parent_id]);
+        } else {
+            $result = [
+                'error_status' => 1,
+                'error_message' => __('errors.destroy')
+            ];
+        }
+    }
+}

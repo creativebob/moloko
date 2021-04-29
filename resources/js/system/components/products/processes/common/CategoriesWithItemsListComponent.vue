@@ -1,6 +1,6 @@
 <template>
-    <div class="grid-x grid-margin-x">
-        <div class="cell small-10">
+    <div class="grid-x add-item-comp">
+        <div class="cell auto add-item-comp-text">
             <label class="input-icon">
                 <input
                     type="text"
@@ -21,14 +21,14 @@
             <table class="content-table-search table-over">
                 <tbody>
 
-                <template v-if=search>
+                <template v-if="search">
                     <tr v-for="item in results">
                         <td>
-                            <span v-if="item.add == true">{{ item.article.name }} (добавлен)</span>
+                            <span v-if="item.add == true">{{ item.process.name }} (добавлен)</span>
                             <a
                                 v-else
                                 @click="addFromSearch(item.id)"
-                            >{{ item.article.name }}</a>
+                            >{{ item.process.name }}</a>
                         </td>
                     </tr>
                 </template>
@@ -41,17 +41,18 @@
             </table>
         </div>
 
-        <div class="cell small-2">
+        <div class="cell shrink add-item-comp-button">
             <div class="text-center">
                 <div
-                    class="sprite-input-right sprite-16 icon-select"
+                    class="sprite-input-right icon-add-item"
+                    title="Добавить позицию"
                     :data-toggle="'dropdown-' + name"
                     @click="clear"
                 ></div>
             </div>
         </div>
         <div
-            class="dropdown-pane"
+            class="dropdown-pane add-item-comp-dropdown"
             :id="'dropdown-' + name"
             data-dropdown
             data-position="bottom"
@@ -138,7 +139,7 @@
             check() {
                 if (this.text.length >= 2) {
                     this.results = this.items.filter(item => {
-                        return item.article.name.toLowerCase().includes(this.text.toLowerCase());
+                        return item.process.name.toLowerCase().includes(this.text.toLowerCase());
                     });
                 }
 

@@ -376,6 +376,17 @@ class ServiceController extends Controller
                             'article.unit'
                         ]);
                     },
+                    'events' => function ($q) {
+                        $q->with([
+                            'category',
+                            'process' => function ($q) {
+                                $q->with([
+                                    'unit',
+                                    'unit_length'
+                                ]);
+                            }
+                        ]);
+                    },
                     'positions',
                     'seo.childs.params',
                 ]);
