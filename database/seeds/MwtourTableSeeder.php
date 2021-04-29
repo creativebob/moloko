@@ -88,7 +88,7 @@ class MwtourTableSeeder extends Seeder
                 'access_block' => 0,
                 'filial_id' => 1,
                 'company_id' => 1,
-                'sex' => 1,
+                'gender' => 1,
             ],
         ]);
 
