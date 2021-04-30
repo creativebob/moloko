@@ -30,7 +30,7 @@ class ServicesFlowsComposer
             'display' => true,
             'filial_id' => $view->site->filial->id
         ])
-            ->oldest('sort')
+            ->oldest('start_at')
             ->get();
        // dd($staff);
 
