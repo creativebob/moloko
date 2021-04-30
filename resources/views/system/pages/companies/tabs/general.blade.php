@@ -16,12 +16,12 @@
                 <label>Статус по виду деятельности
                     @include('includes.inputs.name', ['value'=>$company->prename, 'name' => 'prename'])
                 </label>
-            </div>  
+            </div>
 
             <div class="small-12 medium-6 cell">
                 {{-- Селект с секторами (Вид деятельности компании) --}}
                 <label>Внутренний классификатор
-                    @include('includes.selects.sectors_select', ['sector_id' => ($company->sector_id != null) ? $company->sector_id : Auth::user()->company->sector_id])
+                    @include('includes.selects.sectors_select', ['sector_id' => $company->sector_id ?? optional(Auth::user()->company)->sector_id])
                 </label>
             </div>
 

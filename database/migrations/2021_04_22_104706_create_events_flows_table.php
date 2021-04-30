@@ -33,6 +33,9 @@ class CreateEventsFlowsTable extends Migration
             $table->bigInteger('manufacturer_id')->nullable()->unsigned()->comment('Id производителя');
 //            $table->foreign('manufacturer_id')->references('id')->on('manufacturers');
 
+            $table->bigInteger('initiator_id')->nullable()->unsigned()->comment('Id инициатора');
+//            $table->foreign('initiator_id')->references('id')->on('services_flows');
+
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

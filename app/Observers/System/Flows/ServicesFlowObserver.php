@@ -28,6 +28,8 @@ class ServicesFlowObserver extends ProcessFlowObserver
 
                 'capacity_min' => $flow->capacity_min,
                 'capacity_max' => $flow->capacity_max,
+
+                'initiator_id' => $flow->id,
             ];
 
             foreach ($flow->process->process->events as $event) {

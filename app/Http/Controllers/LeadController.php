@@ -1234,10 +1234,16 @@ class LeadController extends Controller
                                 'finish_at' => now()->addSeconds($servicesItem->service->process->length),
                                 'capacity_min' => 1,
                                 'capacity_max' => 1,
+                                'initiator_id' => $servicesItem->id,
                             ];
 
                             $flow = ServicesFlow::create($data);
 
+                            $servicesItem->update([
+                               'flow_id' =>  $flow->id
+                            ]);
+
+                            $client->services_flows()->attach($flow->flow_id);
                         } else {
                             // Поток выбран в ручную
                             $client->services_flows()->attach($servicesItem->flow_id);
