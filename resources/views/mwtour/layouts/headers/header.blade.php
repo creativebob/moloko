@@ -6,7 +6,7 @@
 
 		<div class="cell small-6 block-nav align-right">
 		    {{-- Навигация --}}
-		    @include('project.composers.navigations.navigation_by_align', ['align' => 'right'])
+		    @include('project.composers.navigations.navigation_by_align', ['align' => 'top'])
 		</div>
 	</div>
 </header>

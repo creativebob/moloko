@@ -13,7 +13,7 @@
 
 @section('content')
     {{-- Основой контент --}}
-    @include('mwtour.pages.tour.main')
+    @include('mwtour.pages.services_flow.main')
 @endsection
 
 @section('footer')
