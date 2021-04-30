@@ -2,6 +2,7 @@
 
 namespace App\Models\System\Flows;
 
+use App\Client;
 use App\Service;
 
 class ServicesFlow extends ProcessFlow
@@ -17,5 +18,10 @@ class ServicesFlow extends ProcessFlow
     public function events()
     {
         return $this->hasMany(EventsFlow::class, 'initiator_id');
+    }
+
+    public function clients()
+    {
+        return $this->belongsToMany(Client::class);
     }
 }
