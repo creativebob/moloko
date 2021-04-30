@@ -16,6 +16,7 @@ use App\Http\View\Composers\Project\NavigationByAlignComposer;
 use App\Http\View\Composers\Project\NavigationsComposer;
 use App\Http\View\Composers\Project\PricesGoodsFilterComposer;
 use App\Http\View\Composers\Project\ProvidersComposer;
+use App\Http\View\Composers\Project\ServicesFlowsComposer;
 use App\Http\View\Composers\Project\StaffComposer;
 use App\Http\View\Composers\Project\ClientsCompaniesListComposer;
 use App\Http\View\Composers\Project\ManufacturersListComposer;
@@ -66,6 +67,9 @@ class ViewServiceProvider extends ServiceProvider
             'project.composers.staff.section',
             'project.composers.staff.list',
         ], StaffComposer::class);
+
+
+        view()->composer('project.composers.services_flows.section', ServicesFlowsComposer::class);
 
         view()->composer('project.composers.schedules.worktime_filial_today', WorktimeFilialTodayComposer::class);
         view()->composer('project.composers.worktimes.today', WorktimeTodayComposer::class);
