@@ -13,4 +13,9 @@ class ServicesFlow extends ProcessFlow
     {
         return $this->belongsTo(Service::class);
     }
+
+    public function events()
+    {
+        return $this->hasMany(EventsFlow::class, 'initiator_id');
+    }
 }

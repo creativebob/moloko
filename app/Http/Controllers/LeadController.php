@@ -1234,30 +1234,16 @@ class LeadController extends Controller
                                 'finish_at' => now()->addSeconds($servicesItem->service->process->length),
                                 'capacity_min' => 1,
                                 'capacity_max' => 1,
+                                'initiator_id' => $servicesItem->id,
                             ];
 
                             $flow = ServicesFlow::create($data);
 
-                            if ($flow->process->process->events->isNotEmpty()) {
-                                $start = $flow->start_at->toString();
+                            $servicesItem->update([
+                               'flow_id' =>  $flow->id
+                            ]);
 
-                                $data = [
-                                    'filial_id' => $flow->filial_id,
-
-                                    'capacity_min' => $flow->capacity_min,
-                                    'capacity_max' => $flow->capacity_max,
-                                ];
-
-                                foreach ($flow->process->process->events as $event) {
-                                    $data['process_id'] = $event->id;
-                                    $data['start_at'] = Carbon::create($start);
-                                    $data['finish_at'] = Carbon::create($start)->addSeconds($event->process->length);
-
-                                    EventsFlow::create($data);
-
-                                    $start = $data['finish_at']->toString();
-                                }
-                            }
+                            $client->services_flows()->attach($flow->flow_id);
                         } else {
                             // Поток выбран в ручную
                             $client->services_flows()->attach($servicesItem->flow_id);
