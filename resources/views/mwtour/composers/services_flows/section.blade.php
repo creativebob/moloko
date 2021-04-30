@@ -5,7 +5,15 @@
             <h2>{{ $serviceFlow->process->process->name }}</h2>
             <span>{{ $serviceFlow->start_at->format('d F') }} - {{ $serviceFlow->finish_at->format('d F') }}</span>
             <div class="wrap-service-photo">
-                <img src="/img/mwtour/services/1.jpg" class="service_photo" alt="" title="">
+                <img src="{{ getPhotoPathPlugEntity($serviceFlow->process) }}"
+                     alt="{{ $serviceFlow->process->process->name }}"
+                     title=""
+                     @if(isset($serviceFlow->process->process->photo))
+                     width="440"
+                     height="292"
+                    @endif
+                     class="service_photo"
+                >
                 <div class="wrap-service-duration">
                     <span>{{ $serviceFlow->start_at->diffInDays($serviceFlow->finish_at) }}</span>
                     <div>дней</div>
