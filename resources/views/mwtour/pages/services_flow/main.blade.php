@@ -1,7 +1,7 @@
 <div class="grid-x">
 	<main class="cell small-12 main-content">
 		<h1>{{ $serviceFlow->process->process->name }}</h1>
-		<span>5 дней</span><span>5 дней</span>
+		<span>{{ $serviceFlow->start_at->diffInDays($serviceFlow->finish_at) }} дней</span> <span>{{ $serviceFlow->start_at->diffInDays($serviceFlow->finish_at->subDay()) }} ночей</span>
 
 		<div class="grid-x">
 			<div class="cell small-8 tour-main-block">
@@ -28,8 +28,8 @@
 				<ul class="events-list">
                     @foreach($serviceFlow->events as $eventFlow)
 					<li>
-						<h2 class="h2-second">День 1</h2>
-						<span class="small-text">{{ $eventFlow->start_at->format('d') }} июня, понедельник</span>
+						<h2 class="h2-second">День {{ $loop->index + 1 }}</h2>
+						<span class="small-text">{{ $eventFlow->start_at->format('d F, l') }}</span>
                         {!! $eventFlow->process->process->content !!}
 					</li>
                     @endforeach
