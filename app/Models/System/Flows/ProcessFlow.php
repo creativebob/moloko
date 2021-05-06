@@ -35,6 +35,8 @@ class ProcessFlow extends BaseModel
 
         'capacity_min',
         'capacity_max',
+
+        'initiator_id'
     ];
 
     public function filial()

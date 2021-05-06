@@ -78,6 +78,9 @@ Route::resource('/cart', 'CartController')
     ])
     ->names('project.cart');
 
+Route::post('/order', 'CartController@order')
+    ->name('project.order');
+
 Route::resource('/estimates', 'EstimateController')
     ->only([
         'index',
@@ -144,11 +147,6 @@ Route::resource('/favorites_goods', 'FavoritesGoodsController')
     ])
     ->names('project.favorites_goods');
 
-
-Route::get('/{page_alias}', 'AppController@dynamic_pages')
-    ->name('project.dynamic_pages');
-
-
 // Оборудование
 //Route::resource('/tools', 'ToolController')
 //    ->only([
@@ -170,3 +168,10 @@ Route::resource('/forms', 'FormController')
     ->names('project.forms');
 Route::post('/forms/subscribe', 'FormController@subscribe')
     ->name('project.forms.subscribe');
+
+// TODO - 30.04.21 - Костыль для переименования services_flows в tours
+Route::get('/tours/{slug}', 'ServicesFlowController@show')
+    ->name('project.tours.show');
+
+Route::get('/{page_alias}', 'AppController@dynamic_pages')
+    ->name('project.dynamic_pages');

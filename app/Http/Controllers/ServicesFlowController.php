@@ -109,30 +109,6 @@ class ServicesFlowController extends Controller
 
         $flow = ServicesFlow::create($data);
 
-        // Автоинициация событий
-        $flow->load('process.process.events');
-
-        if ($flow->process->process->events->isNotEmpty()) {
-            $start = $flow->start_at->toString();
-
-            $data = [
-                'filial_id' => $flow->filial_id,
-
-                'capacity_min' => $flow->capacity_min,
-                'capacity_max' => $flow->capacity_max,
-            ];
-
-            foreach ($flow->process->process->events as $event) {
-                $data['process_id'] = $event->id;
-                $data['start_at'] = Carbon::create($start);
-                $data['finish_at'] = Carbon::create($start)->addSeconds($event->process->length);
-
-                EventsFlow::create($data);
-
-                $start = $data['finish_at']->toString();
-            }
-        }
-
         if ($flow) {
             return redirect()->route('services_flows.index');
         } else {

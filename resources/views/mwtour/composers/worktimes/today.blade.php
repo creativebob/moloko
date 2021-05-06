@@ -1,1 +1,0 @@
-Сегодня: <span>{{ $worktime }}</span>
