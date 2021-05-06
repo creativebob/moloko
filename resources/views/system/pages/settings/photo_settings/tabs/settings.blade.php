@@ -19,15 +19,10 @@
                             name="img_min_width"
                             value="{{ optional($photoSetting)->img_min_width }}"
                             :limit-min="1"
-                            :decimal-place="0"
+                            :decimalplace="0"
                             placeholder="{{ $defaultPhotoSettings->img_min_width }}"
                             :required="true"
                         ></digit-component>
-                        {{--                        @include('includes.inputs.digit', [--}}
-                        {{--                            'name' => 'img_min_width',--}}
-                        {{--                            'pattern' => '[0-9\W\s]{0,4}'--}}
-                        {{--                        ]--}}
-                        {{--                        )--}}
                     </label>
                 </div>
                 <div class="cell small-12 medium-6">
@@ -36,25 +31,12 @@
                             name="img_min_height"
                             value="{{ optional($photoSetting)->img_min_height }}"
                             :limit-min="1"
-                            :decimal-place="0"
+                            :decimalplace="0"
                             placeholder="{{ $defaultPhotoSettings->img_min_height }}"
                             :required="true"
                         ></digit-component>
-                        {{--                        @include('includes.inputs.digit', [--}}
-                        {{--                            'name' => 'img_min_height',--}}
-                        {{--                            'pattern' => '[0-9\W\s]{0,4}'--}}
-                        {{--                        ]--}}
-                        {{--                        )--}}
                     </label>
                 </div>
-
-                {{--                <div class="cell small-12 radiobutton">--}}
-                {{--                    {{ Form::radio('strict_mode', 0, isset($photoSetting->strict_mode) ? $photoSetting->strict_mode : true, ['id' => 'mode_min']) }}--}}
-                {{--                    <label for="mode_min"><span>Указаны минимальные размеры</span></label>--}}
-
-                {{--                    {{ Form::radio('strict_mode', 1, isset($photoSetting->strict_mode) ? $photoSetting->strict_mode : false, ['id' => 'mode_fix']) }}--}}
-                {{--                    <label for="mode_fix"><span>Загружать в строго указанных размерах</span></label>--}}
-                {{--                </div>--}}
 
                 <div class="cell small-12 medium-6">
                     <label>Размеры
@@ -75,7 +57,7 @@
                             value="{{ optional($photoSetting)->quality }}"
                             :limit-min="1"
                             :limit-max="100"
-                            :decimal-place="0"
+                            :decimalplace="0"
                             placeholder="{{ $defaultPhotoSettings->quality }}"
                             :required="true"
                         ></digit-component>
@@ -88,7 +70,7 @@
                             name="img_max_size"
                             value="{{ optional($photoSetting)->img_max_size }}"
                             :limit-min="1"
-                            :decimal-place="0"
+                            :decimalplace="0"
                             placeholder="{{ $defaultPhotoSettings->img_max_size }}"
                             :required="true"
                         ></digit-component>
@@ -134,14 +116,10 @@
                             name="img_small_width"
                             value="{{ optional($photoSetting)->img_small_width }}"
                             :limit-min="1"
-                            :decimal-place="0"
+                            :decimalplace="0"
                             placeholder="{{ $defaultPhotoSettings->img_small_width }}"
                             :required="true"
                         ></digit-component>
-                        {{--                        @include('includes.inputs.digit', [--}}
-                        {{--                            'name' => 'img_small_width',--}}
-                        {{--                        ]--}}
-                        {{--                        )--}}
                     </label>
                 </div>
                 <div class="small-12 medium-6 cell">
@@ -150,14 +128,10 @@
                             name="img_small_height"
                             value="{{ optional($photoSetting)->img_small_height }}"
                             :limit-min="1"
-                            :decimal-place="0"
+                            :decimalplace="0"
                             placeholder="{{ $defaultPhotoSettings->img_small_height }}"
                             :required="true"
                         ></digit-component>
-                        {{--                        @include('includes.inputs.digit', [--}}
-                        {{--                            'name' => 'img_small_height',--}}
-                        {{--                        ]--}}
-                        {{--                        )--}}
                     </label>
                 </div>
             </div>
@@ -168,14 +142,10 @@
                             name="img_medium_width"
                             value="{{ optional($photoSetting)->img_medium_width }}"
                             :limit-min="1"
-                            :decimal-place="0"
+                            :decimalplace="0"
                             placeholder="{{ $defaultPhotoSettings->img_medium_width }}"
                             :required="true"
                         ></digit-component>
-                        {{--                        @include('includes.inputs.digit', [--}}
-                        {{--                            'name' => 'img_medium_width',--}}
-                        {{--                        ]--}}
-                        {{--                        )--}}
                     </label>
                 </div>
                 <div class="small-12 medium-6 cell">
@@ -184,14 +154,10 @@
                             name="img_medium_height"
                             value="{{ optional($photoSetting)->img_medium_height }}"
                             :limit-min="1"
-                            :decimal-place="0"
+                            :decimalplace="0"
                             placeholder="{{ $defaultPhotoSettings->img_medium_height }}"
                             :required="true"
                         ></digit-component>
-                        {{--                        @include('includes.inputs.digit', [--}}
-                        {{--                            'name' => 'img_medium_height',--}}
-                        {{--                        ]--}}
-                        {{--                        )--}}
                     </label>
                 </div>
             </div>
@@ -202,14 +168,10 @@
                             name="img_large_width"
                             value="{{ optional($photoSetting)->img_large_width }}"
                             :limit-min="1"
-                            :decimal-place="0"
+                            :decimalplace="0"
                             placeholder="{{ $defaultPhotoSettings->img_large_width }}"
                             :required="true"
                         ></digit-component>
-                        {{--                        @include('includes.inputs.digit', [--}}
-                        {{--                            'name' => 'img_large_width',--}}
-                        {{--                        ]--}}
-                        {{--                        )--}}
                     </label>
                 </div>
                 <div class="small-12 medium-6 cell">
@@ -218,14 +180,10 @@
                             name="img_large_height"
                             value="{{ optional($photoSetting)->img_large_height }}"
                             :limit-min="1"
-                            :decimal-place="0"
+                            :decimalplace="0"
                             placeholder="{{ $defaultPhotoSettings->img_large_height }}"
                             :required="true"
                         ></digit-component>
-                        {{--                        @include('includes.inputs.digit', [--}}
-                        {{--                            'name' => 'img_large_height',--}}
-                        {{--                        ]--}}
-                        {{--                        )--}}
                     </label>
                 </div>
 
