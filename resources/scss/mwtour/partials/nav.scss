@@ -84,10 +84,13 @@
     }
 
     .navigation.top-menu li{
-        margin: 0 15px 0 15px;
+        margin: 0 0px 0 0px;
     }
 
     .navigation.top-menu li:first-child{
         margin-left: -9px;
     }
 
+    .navigation.right-menu{
+        box-align: right;
+    }

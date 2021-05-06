@@ -6,17 +6,23 @@
 		<div class="grid-x">
 			<div class="cell small-8 tour-main-block">
 
-				<div class="grid-x wrap-gallery">
-					<div class="cell small-8">
-						<img src="/img/mwtour/tours/1.jpg">
+				<div class="grid-x wrap-gallery gallery">
+					<div class="cell small-8 wrap-one-photo">
+						<a data-fancybox="gallery" href="/img/mwtour/tours/1.jpg">
+							<img src="/img/mwtour/tours/1.jpg">
+						</a>
 					</div>
 					<div class="cell small-4">
 						<div class="grid-x">
-							<div class="cell small-12">
-								<img src="/img/mwtour/tours/2.jpg">
+							<div class="cell small-12 wrap-second-photo">
+								<a data-fancybox="gallery" href="/img/mwtour/tours/2.jpg">
+									<img src="/img/mwtour/tours/2.jpg">
+								</a>
 							</div>
-							<div class="cell small-12">
-								<img src="/img/mwtour/tours/3.jpg">
+							<div class="cell small-12 wrap-third-photo">
+								<a data-fancybox="gallery" href="/img/mwtour/tours/3.jpg">
+									<img src="/img/mwtour/tours/3.jpg">
+								</a>
 							</div>
 						</div>
 					</div>
@@ -49,8 +55,38 @@
 				<div class="grid-x">
 
 					<div class="cell small-12 wrap-extra-info">
-				    	<span>13 500 руб./чел.</span>
-				    	<a href="#" class="button">Бронировать</a>				
+				    	<span class="price">13 500 руб./чел.</span>
+				    	<div class="wrap-button-center">
+				    		<a href="#" class="button" data-open="modal-call">Бронировать</a>
+				    	</div>
+
+				    	@include('mwtour.layouts.headers.includes.modal_call')
+
+				    	<ul class="list-extra-info">
+				    		<li>
+					    		<span class="h4">Уровень: </span>
+					    		<span>Лёгкий</span>
+					    	</li>
+					    	<li>
+						    	<h4>В стоимость включено:</h4>
+						    	<ul>
+						    		<li>Двухразовое питание</li>
+									<li>Трансфер</li>
+									<li>Проживание</li>
+									<li>Снаряжение</li>
+						    	</ul>
+					    	</li>
+					    	<li>
+					    		<h4>Проживание:</h4>
+					    		<p>Комфортные деревянные домики с холодильником, чайником и мягкими кроватями</p>
+					    	</li>
+					    	<li>
+					    		<h4>Дата и место отправления:</h4>
+					    		<span>Иркутск, Автовокзал</span>
+					    		<span>18 мая 2021, 08:30</span>
+					    	</li>
+				    	</ul>
+
 					</div>
 
 					<div class="cell small-12 wrap-extra-info">

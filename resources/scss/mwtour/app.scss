@@ -37,8 +37,8 @@ html, body{
 }
 
 .grid-container{
-    max-width: 1366px;
-    padding: 0;
+    max-width: 1300px;
+    padding: 0 18px;
 }
 
 h1{
@@ -53,7 +53,7 @@ h2{
     font-size: 2rem;
     font-family: Gilroy;
     font-weight: 500;
-    margin-bottom: 2rem;
+    margin-bottom: 0rem;
     color: $black;
 }
 
@@ -73,18 +73,30 @@ h2{
 	letter-spacing: 1px;
 }
 
-h4{
+h4, .h4{
 	font-family: opensans;
 	font-size: 0.9rem;
-	font-weight: 600;
+	font-weight: bold;
 	color: $black;
+	letter-spacing: 0px;
 }
 
 
-p, a, span, ul, li, tr, th {
+p, a, tr, th, input, label {
 	font-family: opensans;
 	font-size: 1rem;
 	font-weight: 400;
+}
+
+.list-social-network{
+	li {
+		margin: 0;
+	}
+}
+
+.wrap-phone{
+	padding-top: 1.1rem;
+	text-align: right;
 }
 
 .button{
@@ -113,13 +125,106 @@ p, a, span, ul, li, tr, th {
 }
 
 .list-tours{
+	margin-left: 0;
 	li{
-		padding: 0px 2.8rem;
+
+		.wrap-item{
+			margin-left: auto;
+			margin-right: auto;
+			max-width: 530px;
+			padding: 0 1rem;
+			box-sizing: border-box;
+		}
+
+		margin: 0px 0px;
 
 		img{
 			border-radius: 17px;
 		}
+
+		padding-bottom: 2rem;
 	}
+}
+
+.wrap-button-right{
+	text-align: right;
+}
+
+.wrap-button-center{
+	text-align: center;
+}
+
+.price{
+	display: inline-block;
+	width: 100%;
+	text-align: center;
+	font-size: 1.2rem;
+	font-weight: 500;
+	font-family: gilroy;
+	padding-bottom: 1rem;
+	color: $green-yellow;
+}
+
+.data-date{
+	padding: 10px 30px;
+	color: $red-wood;
+	font-family: Gilroy;
+	font-weight: 500;
+	text-decoration: uppercase;
+	font-size: 0.8rem;
+	letter-spacing: 1px;
+	display: inline-block;
+	width: 100%;
+	background: url(img/icons/svg/calendar.svg) no-repeat 0px 11px;
+	background-size: 16px 16px;
+	margin-bottom: 0.8rem;
+}
+
+.wrap-service-photo{
+	position: relative;
+	padding-bottom: 1rem;
+}
+
+.wrap-participant{
+	text-align: center;
+	font-size: 0.8rem;
+	padding-bottom: 1rem;
+	color: $gray-dark;
+
+	.count-participants{
+		color: $black;
+		font-weight: 500;
+	}
+}
+
+.wrap-service-duration{
+	padding-top: 12px;
+	position: absolute;
+	top: 0px;
+	left: 75%;
+	width: 80px;
+	height: 76px;
+	background-color: $white;
+	text-align: center;
+	box-sizing: border-box;
+	line-height: 0.9;
+}
+
+.count-day-tour{
+	display: inline-block;
+	width: 100%;
+	font-family: Gilroy;
+	font-size: 2.6rem;
+	color: $red-wood;
+	font-weight: 600;
+}
+
+.desc-day-tour{
+	display: inline-block;
+	width: 100%;
+	font-family: opensans;
+	font-size: 1rem;
+	text-decoration: lowercase;
 }
 
 .events-list{
@@ -137,9 +242,19 @@ p, a, span, ul, li, tr, th {
 }
 
 .wrap-extra-info{
-	padding: 0px 2.8rem;
+	padding: 2rem 2.8rem;
 	background-color: $gray-light;
 	margin-bottom: 3rem;
+	font-size: 0.9rem;
+
+	p{
+		font-size: 0.9rem;
+	}
+
+	.list-extra-info > li{
+		padding: 0px 0px 2rem 0px;
+	}
+
 }
 
 .wrap-main-content p:first-child{
@@ -148,6 +263,46 @@ p, a, span, ul, li, tr, th {
 
 .tour-main-block{
 	padding-right: 10rem;
+}
+
+.tabs-panel{
+	padding-top: 2rem;
+	padding-left: 0;
+	padding-right: 0;
+}
+
+.tab-profile{
+	li{
+		width: 200px;
+		box-sizing: border-box;
+		border: none;
+		border-bottom: 5px solid $gray-light;
+
+		a{
+			text-align: center;
+			letter-spacing: 1px;
+			color: $gray-dark;
+			font-family: Gilroy;
+			font-size: 0.9rem;
+			text-transform: uppercase;
+			font-weight: 400;
+			background: none;
+		}
+
+		&.is-active{
+			border-bottom: 5px solid $red-wood;
+
+			a{
+				color: $black;
+				font-weight: 500;
+			}
+		}
+
+		& a:hover{
+			background-color: $gray-light;
+			color: $black;
+		}
+	}
 }
 
 section{
@@ -169,7 +324,15 @@ input:focus{
 }
 
 input[type='text']{
-    padding-bottom: 0.35rem;    
+    padding-bottom: 0.35rem;
+    padding-left: 1rem;  
+}
+
+label{
+	font-size: 0.8rem;
+	color: $gray-dark;
+    // padding-left: 1rem;
+	font-family: opensans;
 }
 
 
@@ -183,7 +346,10 @@ header{
 
 }
 
-
+.wrap-submit-button{
+	padding-top: 2rem;
+	text-align: right;
+}
 
 /* Slider */
 
@@ -191,6 +357,14 @@ header{
     padding-bottom: 2rem;
 }
 
+.my-tours-list{
+	margin: 0rem 0rem;
+
+	img{
+		border-radius: 17px;
+	}
+
+}
 
 .slick-slider
 {
@@ -311,10 +485,23 @@ header{
     display: none;
 }
 
-
-
 @include breakpoint(medium up) {
+	.fields-column{
+		padding-right: 3rem;
+	}
 
+	.wrap-my-tour-img{
+		padding-right: 130px;
+	}
 }
 
+.wrap-one-photo{
+	border-right: 2px solid white;
+	overflow: hidden;
+}
+
+.wrap-second-photo{
+	border-bottom: 2px solid white;
+	overflow: hidden;
+}
 
