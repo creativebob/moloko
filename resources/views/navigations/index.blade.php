@@ -141,7 +141,7 @@
                     <td class="td-navigations_category">{{-- $navigation->category->name --}}</td>
 
                     <td class="td-tree">
-                        {{ link_to_route('menus.index', 'Дерево', $parameters = ['site_id' => $site_id, 'navigation_id' => $navigation->id], $attributes = ['class' => 'button']) }}
+                        {{ link_to_route('menus.index', '', $parameters = ['site_id' => $site_id, 'navigation_id' => $navigation->id], $attributes = ['class' => 'icon-category sprite']) }}
                     </td>
 
                     <td class="td-alias">{{ $navigation->alias }}</td>
