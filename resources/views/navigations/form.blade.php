@@ -23,7 +23,7 @@
 
                 <div class="small-6 cell">
                     <label>Имя CSS класса
-                        @include('includes.inputs.alias', ['name' => 'css_class'])
+                        @include('includes.inputs.text-en-space', ['name' => 'css_class'])
                     </label>
                 </div>
 
