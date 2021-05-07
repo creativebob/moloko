@@ -38,6 +38,7 @@
         li {
 
             display: block;
+            margin: 0 0.2rem;
 
             // @include breakpoint(small only) {
             //     margin-right: 0;
@@ -53,13 +54,13 @@
             //     }
             // }
 
-            a, span {
-                padding: 0.5rem 0.6rem 0.5rem 0.6rem;
+            a, span, .profile-link {
+                font-family: Gilroy;
+                font-size: 1.1rem;
+                padding: 0.5rem 2rem 0.3rem 2rem;
                 line-height: 1.2;
-                text-transform: uppercase;
                 color: $black;
-                font-weight: 500;
-                font-size: 0.9rem;
+                font-weight: 400;
             }
 
             span{
@@ -75,10 +76,11 @@
         .is-active {
             span {
                 position: relative;
+                background-color: $blue;
+                border-radius: 20px;
+                color: $white;
                 top: 2px;
-                padding: 0.4rem 1rem;
                 display: block;
-                border-bottom: 2px $blue solid;
             }
         }
     }

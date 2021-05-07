@@ -8423,15 +8423,16 @@ input[type=checkbox], input[type=radio] {
 
 ul.navigation li {
   display: block;
+  margin: 0 0.2rem;
 }
 
-ul.navigation li a, ul.navigation li span {
-  padding: 0.5rem 0.6rem 0.5rem 0.6rem;
+ul.navigation li a, ul.navigation li span, ul.navigation li .profile-link {
+  font-family: Gilroy;
+  font-size: 1.1rem;
+  padding: 0.5rem 2rem 0.3rem 2rem;
   line-height: 1.2;
-  text-transform: uppercase;
   color: #0a0a0a;
-  font-weight: 500;
-  font-size: 0.9rem;
+  font-weight: 400;
 }
 
 ul.navigation li span {
@@ -8440,10 +8441,11 @@ ul.navigation li span {
 
 ul.navigation .is-active span {
   position: relative;
+  background-color: #0066C5;
+  border-radius: 20px;
+  color: #fefefe;
   top: 2px;
-  padding: 0.4rem 1rem;
   display: block;
-  border-bottom: 2px #0066C5 solid;
 }
 
 .navigation.top-menu li {
