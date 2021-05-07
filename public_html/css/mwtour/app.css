@@ -8448,6 +8448,10 @@ ul.navigation .is-active span {
   display: block;
 }
 
+.wrap-profile-link ul {
+  margin: 5px 0 0 0;
+}
+
 .navigation.top-menu li {
   margin: 0 0px 0 0px;
 }
@@ -8845,13 +8849,31 @@ p, a, tr, th, input, label {
   font-weight: 400;
 }
 
-.list-social-network li {
+.menu.list-social li {
   margin: 0;
+}
+
+.menu.list-social li a {
+  padding: 0;
+  margin: 0 0.3rem;
 }
 
 .wrap-phone {
   padding-top: 1.1rem;
   text-align: right;
+  padding-bottom: 2rem;
+}
+
+.wrap-phone a {
+  color: #0a0a0a;
+  font-family: Gilroy;
+  font-weight: 500;
+  font-size: 1.2rem;
+}
+
+.wrap-social {
+  padding-top: 0.8rem;
+  padding-bottom: 2rem;
 }
 
 .button {

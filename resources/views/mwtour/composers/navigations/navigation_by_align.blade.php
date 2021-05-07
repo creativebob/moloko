@@ -1,5 +1,5 @@
 @isset($navigation)
-    <ul class="cell menu medium-horizontal {{ $align }}-menu navigation" >
+    <ul class="cell menu medium-horizontal {{ $align }}-menu navigation {{ $navigation->css_class }}" >
         @foreach($navigation->menus as $menu)
             @if(isset($menu->alias))
                 <li>

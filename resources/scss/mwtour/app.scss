@@ -88,16 +88,36 @@ p, a, tr, th, input, label {
 	font-weight: 400;
 }
 
-.list-social-network{
+.menu.list-social{
 	li {
 		margin: 0;
+
+		a{
+			padding: 0;
+			margin: 0 0.3rem;
+		}
 	}
 }
 
-.wrap-phone{
+.wrap-phone {
 	padding-top: 1.1rem;
 	text-align: right;
+	padding-bottom: 2rem;
+
+
+	a {
+		color: $black;
+		font-family: Gilroy;
+		font-weight: 500;
+		font-size: 1.2rem;	
+	}
 }
+
+.wrap-social{
+	padding-top: 0.8rem;
+	padding-bottom: 2rem;
+}
+
 
 .button{
 	width: 200px;
