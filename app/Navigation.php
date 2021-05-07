@@ -48,6 +48,7 @@ class Navigation extends Model
     protected $fillable = [
         'name',
         'alias',
+        'css_class',
         'site_id',
         'company_id',
         'navigations_category_id',

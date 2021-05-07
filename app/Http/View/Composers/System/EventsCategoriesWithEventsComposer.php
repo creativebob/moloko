@@ -55,14 +55,10 @@ class EventsCategoriesWithEventsComposer
             ->get();
 //        dd($eventsCategories);
 
-        $events = [];
+        $events = collect();
         foreach($eventsCategories as $eventsCategory) {
-            foreach ($eventsCategory->events as $item) {
-//                $item->category = $relatedCategory;
-                $events[] = $item;
-            }
+            $events->push($eventsCategory->events);
         };
-        $events = collect($events);
 
         return $view->with(compact('eventsCategories', 'events'));
     }

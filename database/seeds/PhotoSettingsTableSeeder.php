@@ -38,6 +38,7 @@ class PhotoSettingsTableSeeder extends Seeder
                 'img_min_height' => 150,
                 'img_max_size' => 12000,
 
+                'system' => true,
                 'author_id' => 1,
         	],
         ]);
