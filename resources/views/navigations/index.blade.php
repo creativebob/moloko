@@ -99,6 +99,8 @@
                     <th class="td-align">Расположение</th>
                     <th class="td-navigations_category">Категория</th>
                     <th class="td-tree">Дерево</th>
+                    <th class="td-alias">Алиас</th>
+                    <th class="td-css-class">Имя CSS класса</th>
                     <th class="td-control"></th>
                     <th class="td-delete"></th>
                 </tr>
@@ -141,6 +143,9 @@
                     <td class="td-tree">
                         {{ link_to_route('menus.index', 'Дерево', $parameters = ['site_id' => $site_id, 'navigation_id' => $navigation->id], $attributes = ['class' => 'button']) }}
                     </td>
+
+                    <td class="td-alias">{{ $navigation->alias }}</td>
+                    <td class="td-css-class">{{ $navigation->css_class }}</td>
 
                     {{-- Элементы управления --}}
                     @include('includes.control.table_td', ['item' => $navigation])

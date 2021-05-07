@@ -9,10 +9,21 @@
                         @include('includes.inputs.name', ['required' => true])
                     </label>
                 </div>
-
                 <div class="small-6 cell">
                     <label>Расположение
                         @include('includes.selects.aligns')
+                    </label>
+                </div>
+
+                <div class="small-6 cell">
+                    <label>Алиас
+                        @include('includes.inputs.alias', ['name' => 'alias'])
+                    </label>
+                </div>
+
+                <div class="small-6 cell">
+                    <label>Имя CSS класса
+                        @include('includes.inputs.alias', ['name' => 'css_class'])
                     </label>
                 </div>
 

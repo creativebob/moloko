@@ -85,7 +85,8 @@ class NavigationController extends Controller
         $navigation->name = get_first_letter($request->name);
 
         $navigation->site_id = $site_id;
-
+        $navigation->alias = $request->alias;
+        $navigation->css_class = $request->css_class;
         $navigation->align_id = $request->align_id;
 
         // $navigation->navigations_category_id = $request->navigations_category_id;
@@ -163,7 +164,8 @@ class NavigationController extends Controller
 
         // Делаем заглавной первую букву
         $navigation->name = get_first_letter($request->name);
-
+        $navigation->alias = $request->alias;
+        $navigation->css_class = $request->css_class;
         $navigation->align_id = $request->align_id;
 
         // $navigation->navigations_category_id = $request->navigations_category_id;

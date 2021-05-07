@@ -18,6 +18,7 @@ class CreateNavigationsTable extends Migration
 
             $table->string('name')->nullable()->comment('Имя категории меню');
             $table->string('alias')->nullable()->comment('Алиас категории меню');
+            $table->string('css_class')->nullable()->comment('Имя класса для CSS');
 
             $table->bigInteger('site_id')->unsigned()->nullable()->comment('Id сайта');
             $table->foreign('site_id')->references('id')->on('sites');
