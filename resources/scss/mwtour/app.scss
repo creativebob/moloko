@@ -41,7 +41,43 @@ html, body{
     padding: 0 18px;
 }
 
+.wrap-footer {
+	padding: 4rem 0;
+	background-color: $black-light;
+
+    span, a{
+		color: $white;
+		font-family: opensans;
+		font-size: 0.9rem;    	
+    }
+
+	.color-gray{
+		color: $gray-dark;
+		font-size: 0.8rem;
+	}
+
+	.studio-info, .studio-info a{
+		font-size: 0.8rem;	
+	}
+
+	.color-red{
+		color: #ff5c5c;
+	}
+
+	.footer-studio{
+		text-align: right;
+	}
+}
+
+@include breakpoint(small down) {
+	.wrap-footer .footer-studio{
+		margin-top: 1rem;
+		text-align: center;
+	}
+}
+
 h1{
+	text-align: center;
     font-family: Gilroy;
     font-weight: 600;
     font-size: 3rem;
@@ -49,12 +85,62 @@ h1{
     margin-bottom: 1.2rem;
 }
 
+.subtitle{
+	display: block;
+    font-family: Gilroy;
+    font-weight: 600;
+    font-size: 2.5rem;
+    line-height: 1.2;
+    margin-bottom: 1.2rem;
+}
+
 h2{
+    font-size: 2rem;
+    font-family: Gilroy;
+    font-weight: 400;
+    margin-bottom: 0rem;
+    color: $black;
+}
+
+h3{
     font-size: 2rem;
     font-family: Gilroy;
     font-weight: 500;
     margin-bottom: 0rem;
     color: $black;
+}
+
+.wrap-main-content .subtitle + p::before{
+	position: relative;
+	content: '';
+	margin-left: -60px;
+	top: 30px;
+	display: block;
+	width: 50px;
+	height: 50px;
+	background: url(img/icons/svg/quotation_marks.svg) no-repeat;
+}
+
+.text-slogan::after{
+	position: relative;
+	content: '';
+	left: 230px;
+	top: -10px;
+	display: block;
+	width: 50px;
+	height: 50px;
+	background: url(img/icons/svg/quotation_marks.svg) no-repeat;
+}
+
+.wrap-main-content .subtitle + p{
+	margin-left: 60px;
+}
+
+.text-slogan{
+	margin-left: 60px;
+	font-family: opensans;
+	font-size: 1rem;
+	font-weight: 400;	
 }
 
 .h2-second{
@@ -88,6 +174,20 @@ p, a, tr, th, input, label {
 	font-weight: 400;
 }
 
+.wrap-img-header{
+	width: 420px;
+	position: relative;
+
+	img{
+		width: 412px;
+		position: absolute;
+		top: -65px;
+		left: -205px;
+		z-index: -1000;
+	}
+
+}
+
 .menu.list-social{
 	li {
 		margin: 0;
@@ -114,8 +214,9 @@ p, a, tr, th, input, label {
 }
 
 .wrap-social{
-	padding-top: 0.8rem;
+	padding-top: 0.9rem;
 	padding-bottom: 2rem;
+	padding-right: 2rem;
 }
 
 
@@ -277,8 +378,20 @@ p, a, tr, th, input, label {
 
 }
 
-.wrap-main-content p:first-child{
-	content: url(img/quotation_marks.svg);
+.wrap-main-content, .wrap-team{
+	padding-top: 8rem;
+}
+
+.wrap-main-content{
+	padding-left: 13.45rem;
+	padding-right: calc(13.45rem/2);
+}
+
+@include breakpoint(small down) {
+	.wrap-main-content{
+		padding-left: 0;
+		padding-right: 0;
+	}
 }
 
 .tour-main-block{
@@ -290,6 +403,64 @@ p, a, tr, th, input, label {
 	padding-left: 0;
 	padding-right: 0;
 }
+
+.list-staffers{
+	margin-left: 0;
+}
+
+.wrap-staffer{
+
+	text-align: center;
+	margin: 0rem;
+	padding: 0 0 2rem 0;
+	box-sizing: border-box;
+
+	span{
+		color: $gray-dark;
+		font-size: 0.8rem;
+		font-family: opensans;
+		letter-spacing: 0.5px;
+		line-height: 1;
+	}
+
+	.wrap-photo{
+		margin-left: auto;
+		margin-right: auto;
+		width: 118px;
+		height: 118px;
+		border-radius: 50%;
+		border: 1px solid $gray-dark;
+	}
+
+	img{
+		border-radius: 64px;
+		padding: 4px;
+	}
+}
+
+.wrap-extra-info{
+
+	border-radius: 5px;
+
+	ul{
+		margin-left: 0;
+	}
+	.wrap-staffer{
+
+		padding: 0;
+		margin-right: 6px;
+
+		.wrap-photo{
+
+			width: 80px;
+			height: 80px;
+			border: 1px solid $gray-light;
+
+		}
+	}	
+}
+
+
 
 .tab-profile{
 	li{
@@ -358,8 +529,11 @@ label{
 
 header{
 	padding: 40px 0px 10px 0px;
-	border-bottom: 1px solid $black;
+}
 
+.main-header, header.simple{
+	padding-bottom: 1rem;
+	border-bottom: 1px solid $black;	
 }
 
 .block-logo, .block-nav{
@@ -383,7 +557,6 @@ header{
 	img{
 		border-radius: 17px;
 	}
-
 }
 
 .slick-slider
@@ -525,3 +698,26 @@ header{
 	overflow: hidden;
 }
 
+.wrap-third-photo{
+
+}
+
+
+// МОДАЛЬНОЕ ОКНО - ЛОГИН
+
+.reveal{
+	border: 1px solid $white;
+	border-radius: 7px;	
+}
+
+.login-modal, .wrap-form-call{
+
+	text-align: center;
+	padding: 3rem 4rem 1rem;
+
+	input[type='text']{
+		max-width: 300px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+}

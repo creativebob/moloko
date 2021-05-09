@@ -1,4 +1,7 @@
-			<div class="reveal" id="open-modal-login" data-reveal>
+			{!! Form::open(['route' => 'project.site_user_login', 'data-abide', 'novalidate', 'id'=>'login-form']) !!}
+
+			<div class="reveal login-modal" id="open-modal-login" data-reveal>
+			
 				<noindex>
 					<h4>Вход <br><span>в личный кабинет</span></h4>
 
@@ -13,7 +16,7 @@
 					@endphp
 
 					<div class="grid-x">
-						{!! Form::open(['route' => 'project.site_user_login', 'data-abide', 'novalidate', 'id'=>'login-form']) !!}
+						
 							<div class="cell small-12 removable-phone-block">
 								<div class="grid-x">
 									<div class="cell small-12 text-center">
@@ -37,13 +40,15 @@
 									</div>
 								</div>
 							</div>
-						{!! Form::close() !!}
+						
 					</div>
 					<button class="close-button" data-close aria-label="Close modal" type="button">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</noindex>
 			</div>
+
+			{!! Form::close() !!}
 
 			@push('scripts')
 			    @include('includes.scripts.inputs-mask')

@@ -1,7 +1,7 @@
 <div class="grid-x">
 	<main class="cell small-12 main-content">
-		<h1>Байкальский трип</h1>
-		<span>5 дней</span><span>5 дней</span>
+		<h1>{{ $serviceFlow->process->process->name }}</h1>
+		<span>{{ $serviceFlow->start_at->diffInDays($serviceFlow->finish_at) }} дней</span> <span>{{ $serviceFlow->start_at->diffInDays($serviceFlow->finish_at->subDay()) }} ночей</span>
 
 		<div class="grid-x">
 			<div class="cell small-8 tour-main-block">
@@ -28,34 +28,27 @@
 					</div>
 				</div>
 
-				<p>Лагерь находится в уютной красивой бухте на берегу Байкала, прямо у воды Малого моря в месте под названием "Хужир-Нугэ". От Иркутска до лагеря 260 километров в сторону деревни Сарма (Ольхонский район).</p>
+                {!! $serviceFlow->process->process->content !!}
 
-				<p>Бухта "Хужир-Нугэ" является археологическим памятником - здесь найдены стоянки древних людей-курыкан. В нашей бухте почти всё лето солнечно, здесь чистая тёплая вода (+20 – +24 градусов), защищённая от волнений мысами, большой песчаный пляж.</p>
-
+                @if ($serviceFlow->events->isNotEmpty())
 				<ul class="events-list">
+                    @foreach($serviceFlow->events as $eventFlow)
 					<li>
-						<h2 class="h2-second">День 1</h2>
-						<span class="small-text">13 июня, понедельник</span>
-						<p>Лагерь находится в уютной красивой бухте на берегу Байкала, прямо у воды Малого моря в месте под названием "Хужир-Нугэ". От Иркутска до лагеря 260 километров в сторону деревни Сарма (Ольхонский район). </p>
+						<h2 class="h2-second">День {{ $loop->index + 1 }}</h2>
+						<span class="small-text">{{ $eventFlow->start_at->format('d F, l') }}</span>
+                        {!! $eventFlow->process->process->content !!}
 					</li>
-					<li>
-						<h2 class="h2-second">День 2</h2>
-						<span class="small-text">13 июня, понедельник</span>
-						<p>Лагерь находится в уютной красивой бухте на берегу Байкала, прямо у воды Малого моря в месте под названием "Хужир-Нугэ". От Иркутска до лагеря 260 километров в сторону деревни Сарма (Ольхонский район). </p>
-					</li>
-					<li>
-						<h2 class="h2-second">День 3</h2>
-						<span class="small-text">13 июня, понедельник</span>
-						<p>Лагерь находится в уютной красивой бухте на берегу Байкала, прямо у воды Малого моря в месте под названием "Хужир-Нугэ". От Иркутска до лагеря 260 километров в сторону деревни Сарма (Ольхонский район). </p>
-					</li>
+                    @endforeach
 				</ul>
+                @endif
+
 			</div>
 
 			<div class="cell small-4 tour-extra-block">
 				<div class="grid-x">
 
 					<div class="cell small-12 wrap-extra-info">
-				    	<span class="price">13 500 руб./чел.</span>
+				    	<span class="price">{{ num_format($serviceFlow->process->prices->first()->price, 0) }}  руб./чел.</span>
 				    	<div class="wrap-button-center">
 				    		<a href="#" class="button" data-open="modal-call">Бронировать</a>
 				    	</div>
@@ -89,13 +82,28 @@
 
 					</div>
 
+                    @if($serviceFlow->process->process->positions->isNotEmpty())
 					<div class="cell small-12 wrap-extra-info">
 						<h4>Команда тура</h4>
-						<ul>
-							<li></li>
+						<ul class="grid-x grid-padding-x small-up-1 align-center" data-equalizer data-equalize-by-row="true">
+                            @foreach($serviceFlow->process->process->positions as $position)
+                                <li class="cell text-center wrap-staffer" data-equalizer-watch>
+                                    <div class="wrap-photo">
+                                        <img src="{{ getPhotoPath($position->staff->first()->user) }}"
+                                             alt="{{ $position->name ?? '' }}"
+                                             width="440"
+                                             height="292"
+                                        >
+                                    </div>
+
+                                    <span class="staffer-name">{{ $position->staff->first()->user->name }}</span>
+                                    <span class="staffer-position">{{ $position->name }}</span>
+                                </li>
+                                @endforeach
 						</ul>
-			
 					</div>
+                    @endif
+                    
 				</div>				
 			</div>
 

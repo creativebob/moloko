@@ -56,10 +56,15 @@
             a, span, .profile-link {
                 font-family: Gilroy;
                 font-size: 1.1rem;
-                padding: 0.5rem 2rem 0.3rem 2rem;
+                padding: 0.4rem 2rem 0.3rem 2rem;
                 line-height: 1.2;
                 color: $black;
                 font-weight: 400;
+                border-radius: 20px;
+            }
+
+            a:hover{
+                background-color: $gray-light;
             }
 
             span{
@@ -76,9 +81,8 @@
             span {
                 position: relative;
                 background-color: $blue;
-                border-radius: 20px;
                 color: $white;
-                top: 2px;
+                top: 1px;
                 display: block;
             }
         }
@@ -86,6 +90,11 @@
 
     .wrap-profile-link ul {
         margin: 5px 0 0 0;
+
+        a.profile-link {
+            padding: 7px 2rem;
+            height: 32px;
+        }
     }
 
     .navigation.top-menu li{

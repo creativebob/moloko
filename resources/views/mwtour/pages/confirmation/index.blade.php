@@ -7,7 +7,7 @@
 
 @section('header')
     {{-- Сайдбар услуг --}}
-    @include('mwtour.layouts.headers.header')
+    @include('mwtour.layouts.headers.header-simple')
 @endsection
 
 @section('content')

@@ -7,14 +7,13 @@
 
 @section('header')
     {{-- Сайдбар услуг --}}
-    @include('mwtour.layouts.headers.header-simple')
+    @include('mwtour.layouts.headers.header')
 @endsection
 
 @section('content')
 
     {{-- Основой контент --}}
-    @include('mwtour.pages.success.main')
-
+    @include('mwtour.pages.tour.main')
 @endsection
 
 @section('footer')

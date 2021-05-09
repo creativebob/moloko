@@ -1,7 +1,8 @@
 {!! Form::open(['route' => 'project.forms.store', 'data-abide', 'novalidate',]) !!}
-<div class="grid-x grid-padding-x align-center wrap-form-call">
-    <div class="cell small-12 text-center">
-        <h2>Бронировать тур</h2>
+
+<div class="grid-x align-center wrap-form-call">
+    <div class="cell small-12 text-center"> 
+        <h4>Бронировать тур</h4>
         <label>
             @auth
                 {!! Form::text('first_name', auth()->user()->first_name, ['placeholder' => 'Ваше имя']) !!}
@@ -22,6 +23,7 @@
         {!! Form::submit('Отправить!', ['class' => 'button']) !!}
     </div>
 </div>
+
 {!! Form::close() !!}
 
 @push('scripts')
