@@ -173,11 +173,11 @@
 					    	</li>
 					    	<li>
 					    		<h4>Место отправления:</h4>
-					    		<span><span class="icon geopoint"></span>Иркутск, Автовокзал</span>
+					    		<span><span class="icon icon-geopoint"></span>Иркутск, Автовокзал</span>
 					    	</li>
 					    	<li>
 					    		<h4>Дата и время:</h4>
-					    		<span><span class="icon clock"></span>{{ $serviceFlow->start_at->format('d F') }}, {{ $serviceFlow->start_at->format('H:i') }}</span>
+					    		<span><span class="icon icon-clock"></span>{{ $serviceFlow->start_at->format('d F') }}, {{ $serviceFlow->start_at->format('H:i') }}</span>
 					    	</li>
 				    	</ul>
 
