@@ -8,7 +8,7 @@
                     :select-categories='@json($categoriesTree)'
                     :select-categories-items='@json($items)'
                     @isset($flow->process)
-                        :item="{{ $flow->process }}"
+                    :item="{{ $flow->process }}"
                     @endisset
                 ></select-processes-categories-component>
             </div>
@@ -30,30 +30,24 @@
                         </label>
                     </div>
                 </div>
-            </div>
 
-            <div class="cell medium-6">
-                <div class="grid-x">
-                    <div class="grid-x grid-margin-x">
-                        <div class="cell medium-6">
-                            <label>Дата окончания
-                                <pickmeup-component
-                                    name="finish_date"
-                                    value="{{ optional($flow->finish_at)->format('Y-m-d') }}"
-                                    :required="true"
-                                ></pickmeup-component>
-                            </label>
-                        </div>
-                        <div class="cell medium-6">
-                            <label>Время окончания:
-                                @include('includes.inputs.time', ['name' => 'finish_time', 'placeholder' => true, 'value' => optional($flow->finish_at)->format('H:i'), 'required' => null])
-                            </label>
-                        </div>
+                <div class="grid-x grid-margin-x">
+                    <div class="cell medium-6">
+                        <label>Дата окончания
+                            <pickmeup-component
+                                name="finish_date"
+                                value="{{ optional($flow->finish_at)->format('Y-m-d') }}"
+                                :required="true"
+                            ></pickmeup-component>
+                        </label>
+                    </div>
+                    <div class="cell medium-6">
+                        <label>Время окончания:
+                            @include('includes.inputs.time', ['name' => 'finish_time', 'placeholder' => true, 'value' => optional($flow->finish_at)->format('H:i'), 'required' => null])
+                        </label>
                     </div>
                 </div>
-            </div>
 
-            <div class="cell medium-6">
                 <div class="grid-x grid-margin-x">
                     <div class="cell medium-6">
                         <label>Минимум человек
@@ -78,6 +72,16 @@
                         </label>
                     </div>
                 </div>
+            </div>
+
+            <div class="cell medium-6">
+                @include('system.common.includes.city_search', ['item' => $flow])
+                <label>Адрес
+                    @include('includes.inputs.address', ['value' => optional($flow->location)->address, 'name' => 'address'])
+                </label>
+                <label>Почтовый индекс
+                    @include('includes.inputs.zip_code', ['value'=>optional($flow->location)->zip_code, 'name' => 'zip_code'])
+                </label>
             </div>
 
             <div class="cell medium-6">

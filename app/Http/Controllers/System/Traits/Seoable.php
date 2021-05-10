@@ -102,10 +102,10 @@ trait Seoable
             $values = array_filter($data);
 
             if (count($values) == 0) {
-                $seo->delete();
                 $item->update([
                     'seo_id' => null
                 ]);
+                $seo->delete();
             }
         }
     }

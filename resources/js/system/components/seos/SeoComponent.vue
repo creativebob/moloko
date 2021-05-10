@@ -65,6 +65,7 @@
                             :config="editorConfig"
                             ref="contentComponent"
                             name="seo[content]"
+                            tag-name="textarea"
                         ></ckeditor>
                 </div>
             </div>

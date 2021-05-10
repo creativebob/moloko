@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\System\Traits\Locationable;
 use App\Http\Controllers\System\Traits\Timestampable;
 use App\Http\Requests\System\FlowRequest;
 use App\Models\System\Flows\EventsFlow;
@@ -30,7 +31,8 @@ class ServicesFlowController extends Controller
         $this->class = ServicesFlow::class;
     }
 
-    use Timestampable;
+    use Timestampable,
+        Locationable;
 
     /**
      * Display a listing of the resource.
@@ -107,6 +109,9 @@ class ServicesFlowController extends Controller
         $data['start_at'] = $this->getTimestamp('start', true);
         $data['finish_at'] = $this->getTimestamp('finish', true);
 
+        $location = $this->getLocation();
+        $data['location_id'] = $location->id;
+
         $flow = ServicesFlow::create($data);
 
         if ($flow) {
@@ -176,6 +181,9 @@ class ServicesFlowController extends Controller
         $data = $request->input();
         $data['start_at'] = $this->getTimestamp('start', true);
         $data['finish_at'] = $this->getTimestamp('finish', true);
+
+        $location = $this->getLocation();
+        $data['location_id'] = $location->id;
 
         $res = $flow->update($data);
 
