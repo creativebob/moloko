@@ -7,9 +7,9 @@
                     <li class="tabs-title is-active">
                         <a href="#tab-general" aria-selected="true">Информация</a>
                     </li>
-{{--                    <li class="tabs-title">--}}
-{{--                        <a href="#tab-receipt" aria-selected="true">Поступления</a>--}}
-{{--                    </li>--}}
+                    <li class="tabs-title">
+                        <a href="#tab-staff" aria-selected="true">Сотрудники</a>
+                    </li>
 
                 </ul>
             </div>
@@ -21,6 +21,10 @@
 
                     <div class="tabs-panel is-active" id="tab-general">
                         @include('system.common.flows.tabs.general', ['autoInitiated' => false])
+                    </div>
+
+                    <div class="tabs-panel" id="tab-staff">
+                        @include('system.common.flows.tabs.staff')
                     </div>
 
                     <div class="grid-x grid-padding-x">

@@ -25,7 +25,9 @@ class CreateCatalogsGoodsItemsTable extends Migration
             $table->integer('level')->nullable()->unsigned()->comment('Уровень вложенности');
 
             $table->bigInteger('seo_id')->nullable()->unsigned()->comment('Id seo');
-//            $table->foreign('seo_id')->references('id')->on('seos');
+            $table->foreign('seo_id')
+                ->references('id')
+                ->on('seos');
 
             $table->bigInteger('photo_id')->nullable()->unsigned()->comment('Id фото (аватар)');
             $table->foreign('photo_id')->references('id')->on('photos');
