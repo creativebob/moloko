@@ -5,12 +5,14 @@ namespace App\Models\System\Flows;
 use App\Department;
 use App\Manufacturer;
 use App\Models\System\BaseModel;
+use App\Models\System\Traits\Locationable;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProcessFlow extends BaseModel
 {
-    use SoftDeletes;
+    use SoftDeletes,
+        Locationable;
 //    use Cachable;
 
     protected $dates = [
@@ -36,7 +38,9 @@ class ProcessFlow extends BaseModel
         'capacity_min',
         'capacity_max',
 
-        'initiator_id'
+        'initiator_id',
+
+        'location_id'
     ];
 
     public function filial()

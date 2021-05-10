@@ -57,7 +57,7 @@ class EventsCategoriesWithEventsComposer
 
         $events = collect();
         foreach($eventsCategories as $eventsCategory) {
-            $events->push($eventsCategory->events);
+            $events = $events->merge($eventsCategory->events);
         };
 
         return $view->with(compact('eventsCategories', 'events'));

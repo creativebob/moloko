@@ -36,6 +36,9 @@ class CreateServicesFlowsTable extends Migration
             $table->bigInteger('initiator_id')->nullable()->unsigned()->comment('Id инициатора');
 //            $table->foreign('initiator_id')->references('id')->on('estimates_services_items');
 
+            $table->bigInteger('location_id')->nullable()->unsigned()->comment('Id локации');
+//            $table->foreign('location_id')->references('id')->on('locations');
+
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

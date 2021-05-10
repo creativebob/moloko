@@ -23,6 +23,16 @@
                 <a href="/admin/{{ $pageInfo->alias}}_categories" class="icon-category sprite top" data-tooltip tabindex="2" title="Настройка категорий"></a>
                 @endcan
 
+                @php
+                    $array = explode('\\', $pageInfo->entity->model);
+                    $name = end($array);
+                    $class = 'App\Models\System\Flows\\' . $name . 'sFlow';
+                @endphp
+
+                @can('index', $class)
+                    <a href="/admin/{{ $pageInfo->alias}}_flows" class="icon-flow sprite top" data-tooltip tabindex="2" title="График"></a>
+                @endcan
+
 {{--                @can('index', $class)--}}
 {{--                <a href="/admin/{{ $pageInfo->alias}}_graphs" class="icon-stock sprite top" data-tooltip tabindex="2" title="График"></a>--}}
 {{--                @endcan--}}

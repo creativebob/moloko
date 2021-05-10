@@ -25,9 +25,9 @@ class CreatePagesTable extends Migration
             $table->string('slug')->index()->nullable()->comment('Слаг');
 
             $table->bigInteger('seo_id')->nullable()->unsigned()->comment('Id seo');
-//            $table->foreign('seo_id')
-//                ->references('id')
-//                ->on('seos');
+            $table->foreign('seo_id')
+                ->references('id')
+                ->on('seos');
 
             $table->string('title')->nullable()->comment('Title для страницы');
             $table->string('header')->nullable()->comment('Header для страницы');

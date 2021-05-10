@@ -218,7 +218,6 @@ trait Companable
 //                }
 //            }
 
-
         logs('companies')
             ->info("Обновлена компания. Id: [{$company->id}]");
 
