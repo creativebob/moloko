@@ -4,7 +4,7 @@
 
         <li class="cell small-12">
             <div class="wrap-item">
-                <h3>{{ $serviceFlow->process->process->name }}</h3>
+                <h2>{{ $serviceFlow->process->process->name }}</h2>
                 <span class="data-date">{{ $serviceFlow->start_at->format('d F') }} - {{ $serviceFlow->finish_at->format('d F') }}</span>
                 <div class="wrap-service-photo">
                     <img src="{{ getPhotoPathPlugEntity($serviceFlow->process) }}"
@@ -26,7 +26,7 @@
                     <span class="count-participants">{{ $serviceFlow->clients->count() }}</span> из <span>{{ $serviceFlow->capacity_max }}</span>
                 </div>
                 <p class="service-content">{!! $serviceFlow->process->process->description !!}</p>
-                <div class="wrap-button">
+                <div class="wrap-button-right">
                     <a href="{{ route('project.tours.show', $serviceFlow->process->process->slug) }}" title="" class="button blue">Ознакомиться</a>
                 </div>
             </div>

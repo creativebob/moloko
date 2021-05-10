@@ -20,7 +20,7 @@
 
         {{-- Туры --}}
 
-        <h1>{{ $page->seo->h1 ?? $page->name }}</h1>
+        <h1 class="text-center h1-main-page">{{ $page->seo->h1 ?? $page->name }}</h1>
         @include('project.composers.services_flows.section')
 
         {{-- Форма подписки --}}

@@ -23,4 +23,8 @@
 
 @push('scripts')
     <script src="/js/plugins/fancybox/dist/jquery.fancybox.min.js"></script>
+    <script type="text/javascript">
+        foundation.core.js;
+        foundation.accordion.js;
+    </script>
 @endpush

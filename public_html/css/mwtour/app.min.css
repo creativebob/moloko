@@ -8533,6 +8533,40 @@ ul.navigation .is-active span {
   background-size: 16px;
 }
 
+ul.breadcrumbs {
+  padding-top: 1rem;
+}
+
+ul.breadcrumbs li {
+  color: #898989;
+  font-family: opensans;
+}
+
+ul.breadcrumbs li a, ul.breadcrumbs li span {
+  font-size: 0.7rem;
+  font-family: opensans;
+}
+
+.icon {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+}
+
+.clock {
+  width: 19px;
+  height: 19px;
+  background: url(img/icons/svg/clock.svg) no-repeat;
+  margin-right: 0.6rem;
+}
+
+.geopoint {
+  width: 20px;
+  height: 20px;
+  background: url(img/icons/svg/geopoint.svg) no-repeat 3px 0px;
+  margin-right: 0.6rem;
+}
+
 /* Slider */
 .slick-slider {
   position: relative;
@@ -8840,20 +8874,29 @@ html, body {
   text-align: right;
 }
 
-@media screen and (max-width: 39.99875em) {
-  .wrap-footer .footer-studio {
-    margin-top: 1rem;
-    text-align: center;
-  }
-}
-
 h1 {
-  text-align: center;
   font-family: Gilroy;
   font-weight: 600;
   font-size: 3rem;
   line-height: 1.2;
   margin-bottom: 1.2rem;
+}
+
+@media screen and (max-width: 39.99875em) {
+  .wrap-footer .footer-studio {
+    margin-top: 1rem;
+    text-align: center;
+  }
+  h1 {
+    text-align: center;
+  }
+  .gallery img {
+    border: 1px solid #fefefe;
+  }
+}
+
+.h1-main-page {
+  margin-bottom: 3rem;
 }
 
 .subtitle {
@@ -8865,20 +8908,55 @@ h1 {
   margin-bottom: 1.2rem;
 }
 
-h2 {
-  font-size: 2rem;
+h3 {
+  font-size: 1rem;
   font-family: Gilroy;
   font-weight: 400;
   margin-bottom: 0rem;
   color: #0a0a0a;
 }
 
-h3 {
+h2 {
   font-size: 2rem;
   font-family: Gilroy;
   font-weight: 500;
   margin-bottom: 0rem;
   color: #0a0a0a;
+}
+
+.h2-tour {
+  font-weight: 500;
+  font-size: 1.4rem;
+  padding-bottom: 1rem;
+  line-height: 1.2;
+}
+
+a {
+  color: #0066C5;
+}
+
+.wrap-text-content {
+  padding-bottom: 2rem;
+}
+
+.accordion .accordion-item.is-active .accordion-title {
+  background-color: #F8F8F8;
+}
+
+.accordion .accordion-item .accordion-title {
+  font-family: opensans;
+  color: #0a0a0a;
+  font-size: 0.9rem;
+  border: none;
+  border-bottom: 1px dotted #CCCCCC;
+}
+
+.accordion .accordion-item .accordion-title:hover, .accordion .accordion-item .accordion-title:visited {
+  background-color: #F8F8F8;
+}
+
+.accordion .accordion-item .accordion-content {
+  border: none;
 }
 
 .wrap-main-content .subtitle + p::before {
@@ -9145,6 +9223,10 @@ p, a, tr, th, input, label {
   padding: 0px 0px 2rem 0px;
 }
 
+.wrap-extra-info .wrap-button-center {
+  margin-bottom: 3rem;
+}
+
 .wrap-main-content, .wrap-team {
   padding-top: 8rem;
 }
@@ -9162,7 +9244,13 @@ p, a, tr, th, input, label {
 }
 
 .tour-main-block {
-  padding-right: 10rem;
+  padding-right: 1rem;
+}
+
+@media screen and (min-width: 64em) {
+  .tour-main-block {
+    padding-right: 10rem;
+  }
 }
 
 .tabs-panel {
@@ -9205,6 +9293,11 @@ p, a, tr, th, input, label {
   padding: 4px;
 }
 
+.tour-extra-block {
+  min-width: 200px;
+  max-width: 420px;
+}
+
 .wrap-extra-info {
   border-radius: 5px;
 }
@@ -9222,6 +9315,12 @@ p, a, tr, th, input, label {
   width: 80px;
   height: 80px;
   border: 1px solid #F8F8F8;
+}
+
+@media screen and (min-width: 40em) and (max-width: 63.99875em) {
+  .wrap-ei {
+    width: 300px !important;
+  }
 }
 
 .tab-profile li {
@@ -9449,4 +9548,14 @@ header {
   max-width: 300px;
   margin-left: auto;
   margin-right: auto;
+}
+
+.wrap-form-subscribe > div {
+  max-width: 400px;
+}
+
+.select-service-flow {
+  font-family: opensans;
+  padding-left: 1rem;
+  font-size: 0.9rem;
 }

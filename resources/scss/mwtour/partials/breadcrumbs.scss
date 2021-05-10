@@ -1,0 +1,17 @@
+ul.breadcrumbs{
+
+    padding-top: 1rem;
+
+    li{
+
+        color: $gray-dark;
+        font-family: opensans;
+
+        a, span{
+            font-size: 0.7rem;
+            font-family: opensans;
+        }
+    }
+}
+
+

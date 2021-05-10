@@ -27,6 +27,12 @@
 // -------------------------- Меню социальных сетей -------------------------
 @import "partials/social";
 
+// -------------------------- Хлебные крошки -------------------------
+@import "partials/breadcrumbs";
+
+// -------------------------- Иконки -------------------------
+@import "partials/icons";
+
 // --------------------------- Внешние пакеты -------------------------------
 @import "~slick-carousel/slick/slick";
 @import "~slick-carousel/slick/slick-theme";
@@ -69,20 +75,33 @@ html, body{
 	}
 }
 
-@include breakpoint(small down) {
-	.wrap-footer .footer-studio{
-		margin-top: 1rem;
-		text-align: center;
-	}
-}
-
 h1{
-	text-align: center;
     font-family: Gilroy;
     font-weight: 600;
     font-size: 3rem;
     line-height: 1.2;
     margin-bottom: 1.2rem;
+}
+
+@include breakpoint(small down) {
+	.wrap-footer .footer-studio{
+		margin-top: 1rem;
+		text-align: center;
+	}
+
+	h1{
+		text-align: center;
+	}
+
+	.gallery{
+		img{
+			border: 1px solid $white;
+		}
+	}
+}
+
+.h1-main-page{
+	margin-bottom: 3rem;
 }
 
 .subtitle{
@@ -94,21 +113,67 @@ h1{
     margin-bottom: 1.2rem;
 }
 
-h2{
-    font-size: 2rem;
+h3{
+    font-size: 1rem;
     font-family: Gilroy;
     font-weight: 400;
     margin-bottom: 0rem;
     color: $black;
 }
 
-h3{
+h2{
     font-size: 2rem;
     font-family: Gilroy;
     font-weight: 500;
     margin-bottom: 0rem;
     color: $black;
 }
+
+.h2-tour{
+	font-weight: 500;
+	font-size: 1.4rem;
+	padding-bottom: 1rem;
+	line-height: 1.2;
+}
+
+a{
+	color: $blue;
+}
+
+.wrap-text-content{
+	padding-bottom: 2rem;
+}
+
+.accordion{
+
+	.accordion-item{
+
+		&.is-active .accordion-title{
+			background-color: $gray-light;
+		}	
+
+		.accordion-title{
+			font-family: opensans;
+			color: $black;
+			font-size: 0.9rem;
+			border: none;
+			border-bottom: 1px dotted $gray;
+
+			&:hover, &:visited{
+				background-color: $gray-light;
+			}
+
+
+		}
+
+		.accordion-content{
+			border: none;
+		}		
+	}
+
+
+}
+
 
 .wrap-main-content .subtitle + p::before{
 	position: relative;
@@ -376,6 +441,10 @@ p, a, tr, th, input, label {
 		padding: 0px 0px 2rem 0px;
 	}
 
+	.wrap-button-center{
+		margin-bottom: 3rem;
+	}
+
 }
 
 .wrap-main-content, .wrap-team{
@@ -395,7 +464,13 @@ p, a, tr, th, input, label {
 }
 
 .tour-main-block{
-	padding-right: 10rem;
+	padding-right: 1rem;
+}
+
+@include breakpoint(large up) {
+	.tour-main-block{
+		padding-right: 10rem;
+	}
 }
 
 .tabs-panel{
@@ -438,6 +513,13 @@ p, a, tr, th, input, label {
 	}
 }
 
+.tour-extra-block{
+	min-width: 200px;
+	max-width: 420px;
+}
+
+
+
 .wrap-extra-info{
 
 	border-radius: 5px;
@@ -460,6 +542,11 @@ p, a, tr, th, input, label {
 	}	
 }
 
+@include breakpoint(medium only) {
+	.wrap-ei{
+		width: 300px !important;
+	}
+}
 
 
 .tab-profile{
@@ -720,4 +807,14 @@ header{
 		margin-left: auto;
 		margin-right: auto;
 	}
+}
+
+.wrap-form-subscribe > div{
+	max-width: 400px;
+}
+
+.select-service-flow{
+	font-family: opensans;
+	padding-left: 1rem;
+	font-size: 0.9rem;
 }
