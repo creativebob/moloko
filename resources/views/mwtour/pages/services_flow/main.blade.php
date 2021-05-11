@@ -137,7 +137,9 @@
 			<div class="cell small-12 medium-shrink tour-extra-block">
 				<div class="grid-x wrap-ei">
 					<div class="cell small-12 wrap-extra-info">
+                        @if($serviceFlow->process->prices->isNotEmpty())
 				    	<span class="price">{{ num_format($serviceFlow->process->prices->first()->price, 0) }}  руб./чел.</span>
+                        @endif
 
 				    	<label>Выберите дату тура:
 					    	<select class="select-service-flow">
@@ -204,8 +206,8 @@
 						</ul>
 					</div>
                     @endif
-                    
-				</div>				
+
+				</div>
 			</div>
 		</div>
 
