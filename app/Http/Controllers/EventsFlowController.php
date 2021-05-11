@@ -107,6 +107,9 @@ class EventsFlowController extends Controller
         $this->authorize(getmethod(__FUNCTION__), EventsFlow::class);
 
         $data = $request->input();
+        $data['start_at'] = $this->getTimestamp('start', true);
+        $data['finish_at'] = $this->getTimestamp('finish', true);
+        
         $flow = EventsFlow::create($data);
 
         if ($flow) {
