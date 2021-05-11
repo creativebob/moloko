@@ -10,6 +10,7 @@
                     @isset($flow->process)
                     :item="{{ $flow->process }}"
                     @endisset
+                    :disabled="true"
                 ></select-processes-categories-component>
             </div>
 
