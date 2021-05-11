@@ -108,6 +108,9 @@ class ServicesFlowController extends Controller
         $this->authorize(getmethod(__FUNCTION__), ServicesFlow::class);
 
         $data = $request->input();
+        $data['start_at'] = $this->getTimestamp('start', true);
+        $data['finish_at'] = $this->getTimestamp('finish', true);
+
         $flow = ServicesFlow::create($data);
 
         if ($flow) {
