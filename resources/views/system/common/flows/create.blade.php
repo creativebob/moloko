@@ -95,3 +95,7 @@
     {{ Form::close() }}
     <div data-close class="icon-close-modal sprite close-modal add-item"></div>
 </div>
+
+@push('scripts')
+    @include('includes.scripts.inputs-mask')
+@endpush
