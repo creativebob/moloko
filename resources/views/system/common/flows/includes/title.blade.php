@@ -11,7 +11,8 @@
                 </h2>
 
                 @can('create', $class)
-                    <a href="{{ route("{$pageInfo->alias}.create") }}" class="icon-add sprite top" data-tooltip tabindex="2" title="Добавить позицию"></a>
+                    <a class="icon-add sprite top" data-open="modal-create" data-tooltip tabindex="2"
+                       title="Добавить позицию"></a>
                 @endcan
             </div>
 

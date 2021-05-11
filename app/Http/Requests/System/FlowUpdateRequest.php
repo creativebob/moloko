@@ -5,7 +5,7 @@ namespace App\Http\Requests\System;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 
-class FlowRequest extends FormRequest
+class FlowUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,9 +25,6 @@ class FlowRequest extends FormRequest
     public function rules()
     {
         return [
-            'process_id' => 'required|integer|exists:processes,id',
-            'filial_id' => 'required|integer|exists:departments,id',
-
             'start_date' => 'required|date|date_format:d.m.Y|after:01.01.2018',
             'start_time' => 'required',
 
