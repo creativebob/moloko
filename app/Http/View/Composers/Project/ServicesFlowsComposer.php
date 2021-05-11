@@ -30,6 +30,8 @@ class ServicesFlowsComposer
             'display' => true,
             'filial_id' => $view->site->filial->id
         ])
+            ->whereNotNull('start_at')
+            ->whereNotNull('finish_at')
             ->oldest('start_at')
             ->get();
        // dd($staff);
