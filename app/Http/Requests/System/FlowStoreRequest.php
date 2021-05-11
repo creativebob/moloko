@@ -27,6 +27,15 @@ class FlowStoreRequest extends FormRequest
         return [
             'process_id' => 'required|integer|exists:processes,id',
             'filial_id' => 'required|integer|exists:departments,id',
+
+            'start_date' => 'required|date|date_format:d.m.Y|after:01.01.2018',
+            'start_time' => 'required',
+
+            'finish_date' => 'required|date|date_format:d.m.Y|after:01.01.2018',
+            'finish_time' => 'required',
+
+            'capacity_min' => 'required|integer',
+            'capacity_max' => 'required|integer',
         ];
     }
 

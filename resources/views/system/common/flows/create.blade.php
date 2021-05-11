@@ -18,6 +18,59 @@
                 </div>
 
                 <div class="cell small-12">
+                    <div class="grid-x grid-margin-x">
+                        <div class="cell medium-6">
+                            <label>Дата начала
+                                <pickmeup-component
+                                    name="start_date"
+                                    :required="true"
+                                ></pickmeup-component>
+                            </label>
+                        </div>
+                        <div class="cell medium-6">
+                            <label>Время начала:
+                                @include('includes.inputs.time', ['name' => 'start_time', 'placeholder' => true, 'required' => null])
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="grid-x grid-margin-x">
+                        <div class="cell medium-6">
+                            <label>Дата окончания
+                                <pickmeup-component
+                                    name="finish_date"
+                                     :required="true"
+                                ></pickmeup-component>
+                            </label>
+                        </div>
+                        <div class="cell medium-6">
+                            <label>Время окончания:
+                                @include('includes.inputs.time', ['name' => 'finish_time', 'placeholder' => true, 'required' => null])
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="grid-x grid-margin-x">
+                        <div class="cell medium-6">
+                            <label>Минимум человек
+                                <digit-component
+                                    name="capacity_min"
+                                    :decimalplace="0"
+                                ></digit-component>
+                            </label>
+                        </div>
+                        <div class="cell medium-6">
+                            <label>Максимум человек
+                                <digit-component
+                                    name="capacity_max"
+                                    :decimalplace="0"
+                                ></digit-component>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cell small-12">
                     @if(session("access.all_rights.index-{$pageInfo->alias}-allow.filials_for_user")->count() > 1)
                         <label>Филиал:
                             {!! Form::select('filial_id', session("access.all_rights.index-{$pageInfo->alias}-allow.filials_for_user")->pluck('name', 'id'), $flow->filial_id) !!}
