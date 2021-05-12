@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('inhead')
-    @include('includes.scripts.dropzone-inhead')
+{{--    @include('includes.scripts.dropzone-inhead')--}}
     @include('includes.scripts.fancybox-inhead')
     @include('includes.scripts.sortable-inhead')
 
@@ -185,12 +185,12 @@
     @include('includes.scripts.upload-file')
     @include('includes.scripts.ckeditor')
 
-    @include('includes.scripts.dropzone', [
-        'settings' => $settings,
-        'item_id' => $process->id,
-        'item_entity' => 'processes'
-    ]
-    )
+{{--    @include('includes.scripts.dropzone', [--}}
+{{--        'settings' => $settings,--}}
+{{--        'item_id' => $process->id,--}}
+{{--        'item_entity' => 'processes'--}}
+{{--    ]--}}
+{{--    )--}}
 
     {{-- Проверка поля на существование --}}
     @include('includes.scripts.check', [

@@ -251,7 +251,6 @@ class PhotoController extends Controller
     // Сохраняем фото через dropzone
     public function ajax_store(Request $request)
     {
-
         // Подключение политики
         // $this->authorize(getmethod('store'), Photo::class);
 
@@ -284,8 +283,9 @@ class PhotoController extends Controller
                 $item->save();
             }
 
+
             // Cохраняем / обновляем фото
-            $result = $this->savePhotoInAlbum($request, $album);
+            $result = $this->savePhotoInAlbum($album);
 
             $album->photos()->attach($result['photo']->id);
 
