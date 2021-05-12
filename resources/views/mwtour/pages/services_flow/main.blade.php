@@ -19,7 +19,7 @@
                 {{-- Фотографии для блока ниже выдергиваем точечно: первая, вторая и третья. Ссылки на остальные будем грузить в следующий блок --}}
                 @isset($serviceFlow->process->process->album)
                     <div class="grid-x wrap-gallery gallery">
-                        @foreach($serviceFlow->process->process->album->photos->take(3) as $photo)
+                        @foreach($serviceFlow->process->process->album->photos as $photo)
                             @if($loop->first)
                                 <div class="cell small-12 medium-8 wrap-one-photo">
                                     <a data-fancybox="gallery" href="{{ getPhotoInAlbumPath($photo) }}">
@@ -27,27 +27,26 @@
                                     </a>
                                 </div>
                                 <div class="cell small-12 medium-4">
-                                    @endif
+                                    <div class="grid-x">
+                                        @endif
 
-                                    @if($loop->iteration == 2 || $loop->iteration == 3)
-                                        <div class="grid-x">
-                                            @if($loop->iteration == 2)
-                                                <div class="cell small-6 medium-12 wrap-second-photo">
-                                                    <a data-fancybox="gallery" href="{{ getPhotoInAlbumPath($photo) }}">
-                                                        <img src="{{ getPhotoInAlbumPath($photo) }}">
-                                                    </a>
-                                                </div>
-                                            @endif
-                                            @if($loop->iteration == 3)
-                                                <div class="cell small-6 medium-12 wrap-third-photo">
-                                                    <a data-fancybox="gallery" href="{{ getPhotoInAlbumPath($photo) }}">
-                                                        <img src="{{ getPhotoInAlbumPath($photo) }}">
-                                                    </a>
-                                                </div>
-                                            @endif
-                                        </div>
-                                    @endif
-                                    @if($loop->iteration == 3)
+                                        @if($loop->iteration == 2)
+                                            <div class="cell small-6 medium-12 wrap-second-photo">
+                                                <a data-fancybox="gallery" href="{{ getPhotoInAlbumPath($photo) }}">
+                                                    <img src="{{ getPhotoInAlbumPath($photo) }}">
+                                                </a>
+                                            </div>
+                                        @endif
+                                        @if($loop->iteration == 3)
+                                            <div class="cell small-6 medium-12 wrap-third-photo">
+                                                <a data-fancybox="gallery" href="{{ getPhotoInAlbumPath($photo) }}">
+                                                    <img src="{{ getPhotoInAlbumPath($photo) }}">
+                                                </a>
+                                            </div>
+                                        @endif
+
+                                        @if($loop->iteration == 3)
+                                    </div>
                                 </div>
                             @endif
 
