@@ -153,7 +153,7 @@
 				    		<a href="#" class="button" data-open="modal-call">Бронировать</a>
 				    	</div>
 
-				    	@include('mwtour.layouts.headers.includes.modal_call')
+				    	@include('mwtour.layouts.headers.includes.modal_call', ['flowId' => $serviceFlow->id])
 
 				    	<ul class="list-extra-info">
 				    		<li>
