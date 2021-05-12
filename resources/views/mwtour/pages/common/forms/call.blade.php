@@ -1,7 +1,7 @@
-{!! Form::open(['route' => 'project.forms.store', 'data-abide', 'novalidate',]) !!}
+{!! Form::open(['route' => 'project.order', 'data-abide', 'novalidate',]) !!}
 
 <div class="grid-x align-center wrap-form-call">
-    <div class="cell small-12 text-center"> 
+    <div class="cell small-12 text-center">
         <h4>Бронировать тур</h4>
         <label>
             @auth
@@ -18,7 +18,7 @@
             @endauth
             <span class="form-error">Введите все символы телефонного номера!</span>
         </label>
-        {!! Form::hidden('message', $msg ?? 'Заказ звонка с сайта!') !!}
+        {!! Form::hidden('flow_id', $flowId) !!}
 
         {!! Form::submit('Отправить!', ['class' => 'button']) !!}
     </div>

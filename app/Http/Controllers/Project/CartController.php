@@ -433,8 +433,10 @@ class CartController extends BaseController
         }
 
         // TODO - 10.12.20 - Авторасчет времени отгрузки (Доработка)
-        if ($this->site->filial->outlets->first()->settings->firstWhere('alias', 'shipment_at-calculate')) {
-            $lead->shipment_at = now()->addSeconds($this->site->filial->outlets->first()->extra_time);
+        if ($this->site->filial->outlets->first()) {
+            if ($this->site->filial->outlets->first()->settings->firstWhere('alias', 'shipment_at-calculate')) {
+                $lead->shipment_at = now()->addSeconds($this->site->filial->outlets->first()->extra_time);
+            }
         }
 
         $lead->saveQuietly();
@@ -948,7 +950,6 @@ class CartController extends BaseController
 
     public function order(Request $request)
     {
-
         $data = $this->storeLead();
         $lead = $data['lead'];
         $client = $data['client'];
@@ -966,7 +967,7 @@ class CartController extends BaseController
         ]);
 
         $flow = ServicesFlow::with([
-            'service' => function ($q) {
+            'process' => function ($q) {
                 $q->with([
                     'process',
                     'prices'
@@ -976,7 +977,7 @@ class CartController extends BaseController
             ->find($request->flow_id);
 
         // TODO - 30.04.2021 - Заглушка, прайсов может быть несколько
-        $priceService = $flow->service->prices->first();
+        $priceService = $flow->process->prices->first();
 
         $data = [
             'estimate_id' => $estimate->id,
@@ -1028,7 +1029,22 @@ class CartController extends BaseController
 
         $this->sendMessage($message, $lead);
 
-        return redirect()->route('project.order');
+        // Пишем в сессию пользователю данные нового лида
 
+        // Создаем массив для хранения данных заказа
+        $confirmation = [];
+
+        // Сохраняем в него лида
+        $confirmation['lead'] = $lead;
+        // $confirmation['...'] = Что-нибудь еше, если будет необходимо...
+
+        // Пишем в сессию
+        session(['confirmation' => $confirmation]);
+
+        logs('leads_from_project')->info("============== Создан лид с сайта ===============================
+
+            ");
+
+        return redirect()->route('project.confirmation');
     }
 }

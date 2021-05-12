@@ -1,6 +1,8 @@
 <template>
     <div>
-        <label id="" class="input-icon">
+        <template v-if="disabled">{{ item.process.name }}</template>
+        <tempalte v-else>
+        <label class="input-icon">
             <input
                 type="text"
                 v-model="text"
@@ -95,8 +97,9 @@
 
             </tbody>
         </table>
-     </div>
+        </tempalte>
 
+     </div>
 </template>
 
 <script>
@@ -118,6 +121,10 @@
                         }
                     };
                 }
+            },
+            disabled: {
+                type: Boolean,
+                default: false
             }
         },
         data() {

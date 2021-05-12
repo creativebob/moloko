@@ -114,6 +114,11 @@
 @endsection
 
 @section('modals')
+    @php
+        $arr = explode('_', $pageInfo->alias);
+        $processAlias = $arr[0];
+    @endphp
+    @include('system.common.flows.create', ['autoInitiated' => false, 'processAlias' => $processAlias])
 {{-- Модалка удаления с refresh --}}
 @include('includes.modals.modal-delete')
 
@@ -137,5 +142,25 @@
 {{-- Скрипт модалки удаления --}}
 @include('includes.scripts.modal-delete-script')
 @include('includes.scripts.delete-ajax-script')
+
+    <script>
+        // ----------- Добавление -------------
+
+        // Название сущности
+        var entity = '{{ $pageInfo->alias }}';
+
+        // Открываем модалку
+        $(document).on('click', '[data-open="modal-create"]', function() {
+            $.get('/admin/' + entity + '/create', function(html){
+                $('#modal').html(html).foundation();
+                $('#modal-create').foundation('open');
+            });
+        });
+
+        // Закрываем модалку
+        $(document).on('click', '.add-item', function() {
+            $('.reveal-overlay').remove();
+        });
+    </script>
 
 @endpush

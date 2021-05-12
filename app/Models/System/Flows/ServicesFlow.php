@@ -4,6 +4,7 @@ namespace App\Models\System\Flows;
 
 use App\Client;
 use App\Service;
+use App\Staffer;
 
 class ServicesFlow extends ProcessFlow
 {
@@ -23,5 +24,10 @@ class ServicesFlow extends ProcessFlow
     public function clients()
     {
         return $this->belongsToMany(Client::class);
+    }
+
+    public function staff()
+    {
+        return $this->belongsToMany(Staffer::class, 'services_flow_staffer');
     }
 }

@@ -309,7 +309,10 @@ class ViewServiceProvider extends ServiceProvider
         view()->composer('system.pages.documents.consignments.edit', ArticlesCategoriesWithItemsComposer::class);
         view()->composer('system.pages.documents.productions.edit', ArticlesCategoriesWithItemsComposerForManufacturer::class);
 
-        view()->composer('system.common.flows.tabs.general', ProcessesCategoriesWithItemsComposer::class);
+        view()->composer([
+            'system.common.flows.create',
+            'system.common.flows.tabs.general',
+        ], ProcessesCategoriesWithItemsComposer::class);
 
         view()->composer(['includes.selects.source_with_source_services'], SourceWithSourceServicesComposer::class);
         view()->composer(['includes.selects.source_services'], SourceServicesComposer::class);

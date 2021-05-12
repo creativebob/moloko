@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\System\Traits\Locationable;
 use App\Http\Controllers\System\Traits\Timestampable;
-use App\Http\Requests\System\FlowRequest;
+use App\Http\Requests\System\FlowUpdateRequest;
+use App\Http\Requests\System\FlowStoreRequest;
 use App\Models\System\Flows\EventsFlow;
 use App\Process;
 use Illuminate\Http\Request;
@@ -86,6 +87,7 @@ class EventsFlowController extends Controller
 
         return view('system.common.flows.create', [
             'flow' => EventsFlow::make(),
+            'title' => 'Добавление потока событий',
             'pageInfo' => pageInfo($this->entityAlias),
             'class' => $this->class,
             'processAlias' => 'events'
@@ -95,11 +97,11 @@ class EventsFlowController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param FlowRequest $request
+     * @param FlowStoreRequest $request
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function store(FlowRequest $request)
+    public function store(FlowStoreRequest $request)
     {
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), EventsFlow::class);
@@ -107,14 +109,11 @@ class EventsFlowController extends Controller
         $data = $request->input();
         $data['start_at'] = $this->getTimestamp('start', true);
         $data['finish_at'] = $this->getTimestamp('finish', true);
-
-        $location = $this->getLocation();
-        $data['location_id'] = $location->id;
-
+        
         $flow = EventsFlow::create($data);
 
         if ($flow) {
-            return redirect()->route('events_flows.index');
+            return redirect()->route('events_flows.edit', $flow->id);
         } else {
             abort(403, __('errors.store'));
         }
@@ -133,7 +132,7 @@ class EventsFlowController extends Controller
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         $flow = EventsFlow::with([
-            'process.process',
+            'process.process.positions.staff.user',
         ])
             ->moderatorLimit($answer)
             ->authors($answer)
@@ -146,23 +145,29 @@ class EventsFlowController extends Controller
 
         $this->authorize(getmethod(__FUNCTION__), $flow);
 
+        $staff = collect();
+        foreach($flow->process->process->positions as $position) {
+            $staff = $staff->merge($position->staff);
+        }
+
         return view('system.common.flows.edit', [
             'flow' => $flow,
             'pageInfo' => pageInfo($this->entityAlias),
             'class' => $this->class,
-            'processAlias' => 'events'
+            'processAlias' => 'events',
+            'staff' => $staff,
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param FlowRequest $request
+     * @param FlowUpdateRequest $request
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function update(FlowRequest $request, $id)
+    public function update(FlowUpdateRequest $request, $id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
@@ -187,6 +192,8 @@ class EventsFlowController extends Controller
         $res = $flow->update($data);
 
         if ($res) {
+            $flow->staff()->sync($request->staff);
+
             return redirect()->route('events_flows.index');
         } else {
             abort(403, __('errors.update'));

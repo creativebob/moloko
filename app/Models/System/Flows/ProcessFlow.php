@@ -6,7 +6,6 @@ use App\Department;
 use App\Manufacturer;
 use App\Models\System\BaseModel;
 use App\Models\System\Traits\Locationable;
-use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProcessFlow extends BaseModel
@@ -52,11 +51,6 @@ class ProcessFlow extends BaseModel
     {
         return $this->belongsTo(Manufacturer::class);
     }
-
-//    public function reserves()
-//    {
-//        return $this->morphMany(Reserve::class, 'storage');
-//    }
 
     public function scopeFilter($query)
     {

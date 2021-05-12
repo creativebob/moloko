@@ -3,6 +3,7 @@
 namespace App\Models\System\Flows;
 
 use App\Event;
+use App\Staffer;
 
 class EventsFlow extends ProcessFlow
 {
@@ -12,5 +13,10 @@ class EventsFlow extends ProcessFlow
     public function process()
     {
         return $this->belongsTo(Event::class);
+    }
+
+    public function staff()
+    {
+        return $this->belongsToMany(Staffer::class, 'events_flow_staffer');
     }
 }

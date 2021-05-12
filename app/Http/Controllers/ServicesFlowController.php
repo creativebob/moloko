@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\System\Traits\Locationable;
 use App\Http\Controllers\System\Traits\Timestampable;
-use App\Http\Requests\System\FlowRequest;
+use App\Http\Requests\System\FlowUpdateRequest;
+use App\Http\Requests\System\FlowStoreRequest;
 use App\Models\System\Flows\EventsFlow;
 use App\Models\System\Flows\ServicesFlow;
 use App\Process;
@@ -86,7 +87,8 @@ class ServicesFlowController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         return view('system.common.flows.create', [
-            'flow' => ServicesFlow::make(),
+            'item' => ServicesFlow::make(),
+            'title' => 'Добавление потока услуг',
             'pageInfo' => pageInfo($this->entityAlias),
             'class' => $this->class,
             'processAlias' => 'services'
@@ -96,11 +98,11 @@ class ServicesFlowController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param FlowRequest $request
+     * @param FlowStoreRequest $request
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function store(FlowRequest $request)
+    public function store(FlowStoreRequest $request)
     {
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), ServicesFlow::class);
@@ -109,13 +111,10 @@ class ServicesFlowController extends Controller
         $data['start_at'] = $this->getTimestamp('start', true);
         $data['finish_at'] = $this->getTimestamp('finish', true);
 
-        $location = $this->getLocation();
-        $data['location_id'] = $location->id;
-
         $flow = ServicesFlow::create($data);
 
         if ($flow) {
-            return redirect()->route('services_flows.index');
+            return redirect()->route('services_flows.edit', $flow->id);
         } else {
             abort(403, __('errors.store'));
         }
@@ -134,7 +133,7 @@ class ServicesFlowController extends Controller
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
 
         $flow = ServicesFlow::with([
-            'process.process',
+            'process.process.positions.staff.user',
         ])
             ->moderatorLimit($answer)
             ->authors($answer)
@@ -147,23 +146,29 @@ class ServicesFlowController extends Controller
 
         $this->authorize(getmethod(__FUNCTION__), $flow);
 
+        $staff = collect();
+        foreach($flow->process->process->positions as $position) {
+            $staff = $staff->merge($position->staff);
+        }
+
         return view('system.common.flows.edit', [
             'flow' => $flow,
             'pageInfo' => pageInfo($this->entityAlias),
             'class' => $this->class,
-            'processAlias' => 'services'
+            'processAlias' => 'services',
+            'staff' => $staff,
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param FlowRequest $request
+     * @param FlowUpdateRequest $request
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function update(FlowRequest $request, $id)
+    public function update(FlowUpdateRequest $request, $id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
@@ -188,6 +193,8 @@ class ServicesFlowController extends Controller
         $res = $flow->update($data);
 
         if ($res) {
+            $flow->staff()->sync($request->staff);
+
             return redirect()->route('services_flows.index');
         } else {
             abort(403, __('errors.update'));
