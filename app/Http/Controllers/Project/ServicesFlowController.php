@@ -26,7 +26,12 @@ class ServicesFlowController extends BaseController
         $serviceFlow = ServicesFlow::with([
             'process' => function ($q) {
                 $q->with([
-                    'process.photo',
+                    'process' => function ($q) {
+                        $q->with([
+                            'photo',
+                            'album.photos'
+                        ]);
+                    },
                     'prices.service.process.positions' => function ($q) {
                         $q->where('display', true);
                     }
