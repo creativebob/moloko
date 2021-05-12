@@ -185,12 +185,12 @@
     @include('includes.scripts.upload-file')
     @include('includes.scripts.ckeditor')
 
-{{--    @include('includes.scripts.dropzone', [--}}
-{{--        'settings' => $settings,--}}
-{{--        'item_id' => $process->id,--}}
-{{--        'item_entity' => 'processes'--}}
-{{--    ]--}}
-{{--    )--}}
+    @include('includes.scripts.dropzone', [
+        'settings' => $settings,
+        'item_id' => $process->id,
+        'item_entity' => 'processes'
+    ]
+    )
 
     {{-- Проверка поля на существование --}}
     @include('includes.scripts.check', [

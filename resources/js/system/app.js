@@ -175,16 +175,16 @@ Vue.component('seo-component', require('./components/seos/SeoComponent'));
  */
 
 window.dropzone = require('dropzone');
-window.dropzone.options.myDropzone = {
-    paramName: 'photo',
-    maxFiles: 20,
-    addRemoveLinks: true,
-
-    dictDefaultMessage: "Перетащите сюда фотографии или кликните по этому полю",
-    dictCancelUpload: "Прервать загрузку",
-    dictUploadCanceled: "Загрузка прервана",
-    dictRemoveFile: "Удалить",
-};
+// window.dropzone.options.myDropzone = {
+//     paramName: 'photo',
+//     maxFiles: 20,
+//     addRemoveLinks: true,
+//
+//     dictDefaultMessage: "Перетащите сюда фотографии или кликните по этому полю",
+//     dictCancelUpload: "Прервать загрузку",
+//     dictUploadCanceled: "Загрузка прервана",
+//     dictRemoveFile: "Удалить",
+// };
 Vue.prototype.$dropzone = window.dropzone;
 
 window.pickmeup = require('pickmeup');
