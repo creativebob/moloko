@@ -245,7 +245,7 @@ class PhotoController extends Controller
 
         $album = $item->album;
 
-        return view('photos.photos', compact('album'));
+        return view('system.pages.marketings.photos.photos', compact('album'));
     }
 
     // Сохраняем фото через dropzone
