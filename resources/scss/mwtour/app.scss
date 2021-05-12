@@ -242,7 +242,7 @@ a{
     font-family: Gilroy;
     font-weight: 600;
     color: $red-wood;
-    margin-bottom: 0rem;
+    margin-bottom: 0.2rem;
 }
 
 .small-text{
@@ -256,7 +256,7 @@ a{
 h4, .h4{
 	font-family: opensans;
 	font-size: 0.9rem;
-	font-weight: 500;
+	font-weight: 600;
 	color: $black;
 	letter-spacing: 0px;
 }
@@ -440,7 +440,7 @@ p, a, tr, th, input, label {
 }
 
 .events-list{
-		padding-top: 3rem;
+		padding-top: 0rem;
 	li{
 
 		padding-bottom: 2rem;
@@ -448,7 +448,8 @@ p, a, tr, th, input, label {
 		.small-text{
 			display: inline-block;
 			padding-bottom: 1rem;
-		}		
+		}
+
 	}
 
 }
@@ -956,4 +957,40 @@ span.staffer-name{
 
 .wrap-form-subscribe{
 	margin-bottom: 2rem;
+}
+
+.accordion.events-list{
+	li{
+		a{
+			padding-right: 3rem;
+			padding-left: 1rem;
+
+		}
+		
+		.accordion-content{
+			padding-left: 3rem;
+
+			p{
+				font-size: 0.9rem;		
+			}
+		}
+
+		.accordion-title{
+			padding-bottom: 1rem;
+		}
+
+		padding-bottom: 0rem;
+
+		&.is-active a{
+			border-bottom: none;
+		}
+
+		&:last-child a{
+			border-bottom: none;
+		}
+	}
+}
+
+.accordion.gear{
+	padding-bottom: 2rem;
 }

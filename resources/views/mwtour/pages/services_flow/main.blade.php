@@ -55,12 +55,17 @@
                 		<h2 class="h2-tour">Программа тура:</h2>
 
 		                @if ($serviceFlow->events->isNotEmpty())
-						<ul class="events-list">
+						<ul class="accordion events-list" data-accordion data-allow-all-closed="true">
 		                    @foreach($serviceFlow->events as $eventFlow)
-							<li>
-								<h2 class="h2-second">День {{ $loop->index + 1 }}</h2>
-								<span class="small-text">{{ $eventFlow->start_at->format('d F, l') }}</span>
-		                        {!! $eventFlow->process->process->content !!}
+							<li class="accordion-item" data-accordion-item>
+								<a href="#" class="accordion-title">
+									<h2 class="h2-second">День {{ $loop->index + 1 }}</h2>
+									<span class="small-text">{{ $eventFlow->start_at->format('d F, l') }}</span>
+									<p>{{ $eventFlow->process->process->description }}</p>
+								</a>
+								<div class="accordion-content" data-tab-content>
+		                        	{!! $eventFlow->process->process->content !!}
+		                        </div>
 							</li>
 		                    @endforeach
 						</ul>
@@ -70,7 +75,7 @@
 
                 <h2 class="h2-tour">Список рекомендованной одежды и снаряжения:</h2>
 
-				<ul class="accordion" data-accordion data-allow-all-closed="true">
+				<ul class="accordion gear" data-accordion data-allow-all-closed="true">
 				  <li class="accordion-item" data-accordion-item>
 				    <a href="#" class="accordion-title">Одежда</a>
 				    <div class="accordion-content" data-tab-content>
@@ -163,15 +168,33 @@
 					    	<li>
 						    	<h4>В стоимость включено:</h4>
 						    	<ul>
-						    		<li>Двухразовое питание</li>
-									<li>Трансфер</li>
-									<li>Проживание</li>
-									<li>Снаряжение</li>
+
+									<li>Трансфер по всем локациям программы</li>
+									<li>Прокат снаряжения</li>
+									<li>Билеты на посещение национального парка</li>
+									<li>Аренда sup-бордов/байдарок или катамаранов</li>
+									<li>Питание в кафе во время дороги туда и обратно</li>
+									<li>Проживание по программе в местах ночлега</li>
+									<li>Медицинская аптечка – групповая</li>
+									<li>Трехразовое питание</li>
+									<li>Экскурсия на катере</li>
+									<li>Баня по-байкальски</li>
+									<li>Работа гида – организатора</li>
+									<li>Организаторские сборы и сопровождение 24/7</li>
+
+						    	</ul>
+					    	</li>
+					    	<li>
+						    	<h4>В стоимость не включено:</h4>
+						    	<ul>
+						    		<li>Трансфер до Иркутска и обратно</li>
+									<li>Проживание в Иркутске в гостиницах или хостеле, но мы модем помочь вам с размещением и выборов гостиницы</li>
+									<li>Катание на квадроциклах и велосипедах</li>
 						    	</ul>
 					    	</li>
 					    	<li>
 					    		<h4>Проживание:</h4>
-					    		<p>Комфортные деревянные домики с холодильником, чайником и мягкими кроватями</p>
+					    		<p>На протяжении всей программы ночуем на туристических базах. Размещение в 3-х, 6-ти местных номерах. Тёплый душ, туалет на территории.</p>
 					    	</li>
 					    	<li>
 					    		<h4>Место отправления:</h4>

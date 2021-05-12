@@ -17,7 +17,7 @@
                         class="service_photo"
                     >
                     <div class="wrap-service-duration">
-                        <span class="count-day-tour">{{ $serviceFlow->start_at->diffInDays($serviceFlow->finish_at) }}</span>
+                        <span class="count-day-tour">{{ $serviceFlow->start_at->diffInDays($serviceFlow->finish_at) + 1 }}</span>
                         <span class="desc-day-tour">дней</span>
                     </div>
                 </div>
