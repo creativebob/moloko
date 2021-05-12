@@ -199,6 +199,8 @@ trait Photable
 
         $directory = "{$album->company_id}/media/albums/{$album->id}/img";
 
+
+
         $photo = Photo::make();
 
         $extension = $image->getClientOriginalExtension();
@@ -278,22 +280,7 @@ trait Photable
             $folder->save(storage_path('app/public/' . $directory . '/' . $value . '/' . $image_name), $settings['quality'], $settings['store_format']);
         }
 
-//        foreach (['small', 'medium', 'large'] as $value) {
-//
-//            $res = Storage::disk('public')->putFileAs(
-//                $directory, $image, $image_name
-//            );
-//            // $item = Image::make($request->photo)->grab(1200, 795);
-//            $folder = Image::make($request->photo)->widen($settings['img_' . $value . '_width']);
-//            $save_path = storage_path('app/public/' . $directory . '/' . $value);
-//            if (!file_exists($save_path)) {
-//                mkdir($save_path, 0755);
-//            }
-//            $folder->save(storage_path('app/public/' . $directory . '/' . $value . '/' . $image_name));
-//        }
-
-
-        if (!isset($album->photo_id)) {
+        if (empty($album->photo_id)) {
             $album->update([
                 'photo_id' => $photo->id
             ]);
@@ -433,7 +420,7 @@ trait Photable
 
         if (empty($settings)) {
             $settings = PhotoSetting::whereNull('company_id')
-                ->where('system', true)
+//                ->where('system', true)
                 ->first();
         }
 
@@ -455,7 +442,7 @@ trait Photable
 
             if (empty($settings)) {
                 $settings = PhotoSetting::whereNull('company_id')
-                    ->where('system', true)
+//                    ->where('system', true)
                     ->first();
             }
         }
