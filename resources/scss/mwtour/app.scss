@@ -149,7 +149,8 @@ a{
 	.accordion-item{
 
 		&.is-active .accordion-title{
-			background-color: $gray-light;
+			background-color: $black;
+			font-weight: 500;
 		}	
 
 		.accordion-title{
@@ -168,6 +169,15 @@ a{
 
 		.accordion-content{
 			border: none;
+
+			ul{
+				list-style-type: disc;
+
+				li{
+					font-size: 0.9rem;
+					padding: 5px 0px;
+				}
+			}
 		}		
 	}
 
@@ -456,12 +466,7 @@ p, a, tr, th, input, label {
 	padding-right: calc(13.45rem/2);
 }
 
-@include breakpoint(small down) {
-	.wrap-main-content{
-		padding-left: 0;
-		padding-right: 0;
-	}
-}
+
 
 .tour-main-block{
 	padding-right: 1rem;
@@ -469,7 +474,24 @@ p, a, tr, th, input, label {
 
 @include breakpoint(large up) {
 	.tour-main-block{
+		padding-right: 4rem;
+	}
+}
+
+@include breakpoint(1366) {
+	.tour-main-block{
 		padding-right: 10rem;
+	}
+}
+
+@include breakpoint(small down) {
+	.wrap-main-content{
+		padding-left: 0;
+		padding-right: 0;
+	}
+
+	.tour-main-block{
+		padding-right: 0rem;
 	}
 }
 
@@ -513,12 +535,12 @@ p, a, tr, th, input, label {
 	}
 }
 
-.tour-extra-block{
-	min-width: 200px;
-	max-width: 420px;
+@include breakpoint(medium up) {
+	.tour-extra-block{
+		min-width: 200px;
+		max-width: 420px;
+	}
 }
-
-
 
 .wrap-extra-info{
 
@@ -547,7 +569,6 @@ p, a, tr, th, input, label {
 		width: 300px !important;
 	}
 }
-
 
 .tab-profile{
 	li{

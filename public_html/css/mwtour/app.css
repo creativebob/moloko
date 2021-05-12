@@ -8522,17 +8522,6 @@ ul.navigation .is-active span {
   height: 16px;
 }
 
-.icon-email {
-  background: url(img/icons/svg/email-green.svg) no-repeat 0px 0px;
-  background-size: 16px;
-  margin: 0 8px 0 0;
-}
-
-.icon-location {
-  background: url(img/icons/svg/location-pointer-green-light.svg) no-repeat 0px 0px;
-  background-size: 16px;
-}
-
 ul.breadcrumbs {
   padding-top: 1rem;
 }
@@ -8553,18 +8542,26 @@ ul.breadcrumbs li a, ul.breadcrumbs li span {
   height: 32px;
 }
 
-.clock {
+.icon-clock {
   width: 19px;
   height: 19px;
   background: url(img/icons/svg/clock.svg) no-repeat;
   margin-right: 0.6rem;
 }
 
-.geopoint {
+.icon-geopoint {
   width: 20px;
   height: 20px;
   background: url(img/icons/svg/geopoint.svg) no-repeat 3px 0px;
   margin-right: 0.6rem;
+}
+
+.icon-email {
+  width: 16px;
+  height: 16px;
+  background: url(img/icons/svg/email-green.svg) no-repeat 0px 0px;
+  background-size: 16px;
+  margin: 0 8px 0 0;
 }
 
 /* Slider */
@@ -8940,7 +8937,8 @@ a {
 }
 
 .accordion .accordion-item.is-active .accordion-title {
-  background-color: #F8F8F8;
+  background-color: #0a0a0a;
+  font-weight: 500;
 }
 
 .accordion .accordion-item .accordion-title {
@@ -8957,6 +8955,15 @@ a {
 
 .accordion .accordion-item .accordion-content {
   border: none;
+}
+
+.accordion .accordion-item .accordion-content ul {
+  list-style-type: disc;
+}
+
+.accordion .accordion-item .accordion-content ul li {
+  font-size: 0.9rem;
+  padding: 5px 0px;
 }
 
 .wrap-main-content .subtitle + p::before {
@@ -9236,20 +9243,29 @@ p, a, tr, th, input, label {
   padding-right: calc(13.45rem/2);
 }
 
-@media screen and (max-width: 39.99875em) {
-  .wrap-main-content {
-    padding-left: 0;
-    padding-right: 0;
-  }
-}
-
 .tour-main-block {
   padding-right: 1rem;
 }
 
 @media screen and (min-width: 64em) {
   .tour-main-block {
+    padding-right: 4rem;
+  }
+}
+
+@media screen and (min-width: 85.375em) {
+  .tour-main-block {
     padding-right: 10rem;
+  }
+}
+
+@media screen and (max-width: 39.99875em) {
+  .wrap-main-content {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .tour-main-block {
+    padding-right: 0rem;
   }
 }
 
@@ -9293,9 +9309,11 @@ p, a, tr, th, input, label {
   padding: 4px;
 }
 
-.tour-extra-block {
-  min-width: 200px;
-  max-width: 420px;
+@media screen and (min-width: 40em) {
+  .tour-extra-block {
+    min-width: 200px;
+    max-width: 420px;
+  }
 }
 
 .wrap-extra-info {
