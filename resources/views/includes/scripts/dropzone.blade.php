@@ -5,7 +5,7 @@
         paramName: 'photo',
         maxFilesize: '{{ $settings['img_max_size'] }}',
         maxFiles: 20,
-        acceptedFiles: '{{ $settings['img_formats'] }}',
+        {{--acceptedFiles: '{{ $settings['img_formats'] }}',--}}
         addRemoveLinks: true,
         init: function() {
             this.on("success", function(file, responseText) {

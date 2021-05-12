@@ -2,6 +2,14 @@
 
     <div class="small-12 medium-7 cell">
 
+{{--        <dropzone-component--}}
+{{--            :item-id="{{ $process->id }}"--}}
+{{--            entity="processes"--}}
+{{--            :settings="{{ $settings }}"--}}
+{{--        >--}}
+{{--            @csrf--}}
+{{--        </dropzone-component>--}}
+
         {!!  Form::open([
             'route' => 'photos.ajax_store',
             'data-abide',

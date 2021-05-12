@@ -1,4 +1,5 @@
 <div class="grid-x">
+
 	<main class="cell small-12 main-content">
 
 		<nav aria-label="Вы здесь:" role="navigation">
@@ -11,41 +12,53 @@
 		</nav>
 
 		<h1>{{ $serviceFlow->process->process->name }}</h1>
-		<span>{{ $serviceFlow->start_at->diffInDays($serviceFlow->finish_at) }} дней</span> <span>{{ $serviceFlow->start_at->diffInDays($serviceFlow->finish_at->subDay()) }} ночей</span>
+		<span>{{ $serviceFlow->start_at->diffInDays($serviceFlow->finish_at) + 1 }} дней</span> / <span>{{ $serviceFlow->start_at->diffInDays($serviceFlow->finish_at) }} ночей</span>
 
 		<div class="grid-x">
 			<div class="cell small-12 medium-auto tour-main-block">
 
 				{{-- Фотографии для блока ниже выдергиваем точечно: первая, вторая и третья. Ссылки на остальные будем грузить в следующий блок --}}
+                @isset($serviceFlow->process->process->album)
+                    <div class="grid-x wrap-gallery gallery">
 
-				<div class="grid-x wrap-gallery gallery">
-					<div class="cell small-12 medium-8 wrap-one-photo">
-						<a data-fancybox="gallery" href="/img/mwtour/tours/1.jpg">
-							<img src="/img/mwtour/tours/1.jpg">
-						</a>
-					</div>
-					<div class="cell small-12 medium-4">
-						<div class="grid-x">
-							<div class="cell small-6 medium-12 wrap-second-photo">
-								<a data-fancybox="gallery" href="/img/mwtour/tours/2.jpg">
-									<img src="/img/mwtour/tours/1.jpg">
-								</a>
-							</div>
-							<div class="cell small-6 medium-12 wrap-third-photo">
-								<a data-fancybox="gallery" href="/img/mwtour/tours/3.jpg">
-									<img src="/img/mwtour/tours/1.jpg">
-								</a>
-							</div>
-						</div>
-					</div>
+                                <div class="cell small-12 medium-8 wrap-one-photo">
+                            		@if($serviceFlow->process->process->album->photos->get(0))
+	                                    <a data-fancybox="gallery" href="{{ getPhotoInAlbumPath($serviceFlow->process->process->album->photos->get(0), 'large') }}">
+	                                        <img src="{{ getPhotoInAlbumPath($serviceFlow->process->process->album->photos->get(0), 'large') }}">
+	                                    </a>
+                                    @endif
+                                </div>
+                                <div class="cell small-12 medium-4">
+                                    <div class="grid-x">
 
-					{{-- А здесь циклом формируем ссылки на фото начиная с четвертой, если такие есть (Они не отображаються, просмотреть можно только через FancyBox) --}}
+                                        <div class="cell small-6 medium-12 wrap-second-photo">
+											@if($serviceFlow->process->process->album->photos->get(1))
+	                                            <a data-fancybox="gallery" href="{{ getPhotoInAlbumPath($serviceFlow->process->process->album->photos->get(1), 'large') }}">
+	                                                <img src="{{ getPhotoInAlbumPath($serviceFlow->process->process->album->photos->get(1)) }}">
+	                                            </a>
+											@endif
+                                        </div>
+                                    
+                                        <div class="cell small-6 medium-12 wrap-third-photo">
+											@if($serviceFlow->process->process->album->photos->get(2))
+	                                            <a data-fancybox="gallery" href="{{ getPhotoInAlbumPath($serviceFlow->process->process->album->photos->get(2), 'large') }}">
+	                                                <img src="{{ getPhotoInAlbumPath($serviceFlow->process->process->album->photos->get(2)) }}">
+	                                            </a>
+											@endif
+                                        </div>
+                                    </div>
 
-					<a data-fancybox="gallery" href="/img/mwtour/tours/2.jpg"></a>
-					<a data-fancybox="gallery" href="/img/mwtour/tours/2.jpg"></a>
-					<a data-fancybox="gallery" href="/img/mwtour/tours/3.jpg"></a>
-
-				</div>
+		                            {{-- А здесь циклом формируем ссылки на фото начиная с четвертой, если такие есть (Они не отображаються, просмотреть можно только через FancyBox) --}}
+                        
+	                        		@foreach($serviceFlow->process->process->album->photos as $photo)
+			                            @if($loop->iteration > 3)
+			                                <a data-fancybox="gallery" href="{{ getPhotoInAlbumPath($photo) }}"></a>
+			                            @endif
+			                     	@endforeach                                       
+                                </div>
+                        	
+                    </div>
+                @endisset
 
 				<div class="grid-x">
 					<div class="cell small-12 wrap-text-content">
@@ -142,8 +155,9 @@
 			<div class="cell small-12 medium-shrink tour-extra-block">
 				<div class="grid-x wrap-ei">
 					<div class="cell small-12 wrap-extra-info">
+
                         @if($serviceFlow->process->prices->isNotEmpty())
-				    	<span class="price">{{ num_format($serviceFlow->process->prices->first()->price, 0) }}  руб./чел.</span>
+                            <span class="price">{{ num_format($serviceFlow->process->prices->first()->price, 0) }}  руб./чел.</span>
                         @endif
 
 				    	<label>Выберите дату тура:
@@ -209,30 +223,31 @@
 					</div>
 
                     @if($serviceFlow->process->process->positions->isNotEmpty())
-					<div class="cell small-12 wrap-extra-info">
-						<h4>Команда тура</h4>
-						<ul class="grid-x grid-padding-x small-up-4 align-left" data-equalizer data-equalize-by-row="true">
-                            @foreach($serviceFlow->process->process->positions as $position)
-                                <li class="cell text-center wrap-staffer" data-equalizer-watch>
-                                    <div class="wrap-photo">
-                                        <img src="{{ getPhotoPath($position->staff->first()->user) }}"
-                                             alt="{{ $position->name ?? '' }}"
-                                             width="440"
-                                             height="292"
-                                        >
-                                    </div>
+                        <div class="cell small-12 wrap-extra-info">
+                            <h4>Команда тура</h4>
+                            <ul class="grid-x grid-padding-x small-up-4 align-left" data-equalizer
+                                data-equalize-by-row="true">
+                                @foreach($serviceFlow->process->process->positions as $position)
+                                    <li class="cell text-center wrap-staffer" data-equalizer-watch>
+                                        <div class="wrap-photo">
+                                            <img src="{{ getPhotoPath($position->staff->first()->user) }}"
+                                                 alt="{{ $position->name ?? '' }}"
+                                                 width="440"
+                                                 height="292"
+                                            >
+                                        </div>
 
-                                    {{-- <span class="staffer-name">{{ $position->staff->first()->user->name }}</span>
-                                    <span class="staffer-position">{{ $position->name }}</span> --}}
-                                </li>
-                            @endforeach
-						</ul>
-					</div>
+                                        {{-- <span class="staffer-name">{{ $position->staff->first()->user->name }}</span>
+                                        <span class="staffer-position">{{ $position->name }}</span> --}}
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
                     @endif
 
-				</div>
-			</div>
-		</div>
+                </div>
+            </div>
+        </div>
 
-	</main>
+    </main>
 </div>
