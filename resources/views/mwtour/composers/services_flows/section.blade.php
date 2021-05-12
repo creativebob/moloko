@@ -26,7 +26,7 @@
                     <span class="count-participants">{{ $serviceFlow->clients->count() }}</span> из <span>{{ $serviceFlow->capacity_max }}</span>
                 </div>
                 <p class="service-content">{!! $serviceFlow->process->process->description !!}</p>
-                <div class="wrap-button-right">
+                <div class="wrap-button">
                     <a href="{{ route('project.tours.show', $serviceFlow->process->process->slug) }}" title="" class="button blue">Ознакомиться</a>
                 </div>
             </div>

@@ -38,6 +38,25 @@
 @import "~slick-carousel/slick/slick-theme";
 
 
+.wrap-header {
+    flex: 0 0 auto;
+    // overflow: hidden;
+}
+
+.wrap-main {
+    flex: 1 0 auto;
+}
+
+.wrap-footer {
+    flex: 0 0 auto;
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
 html, body{
     height: 100%;
 }
@@ -48,7 +67,7 @@ html, body{
 }
 
 .wrap-footer {
-	padding: 4rem 0;
+	padding: 2rem 0;
 	background-color: $black-light;
 
     span, a{
@@ -237,7 +256,7 @@ a{
 h4, .h4{
 	font-family: opensans;
 	font-size: 0.9rem;
-	font-weight: bold;
+	font-weight: 500;
 	color: $black;
 	letter-spacing: 0px;
 }
@@ -289,11 +308,8 @@ p, a, tr, th, input, label {
 }
 
 .wrap-social{
-	padding-top: 0.9rem;
-	padding-bottom: 2rem;
-	padding-right: 2rem;
+	padding: 0.9rem 2rem 2rem 0rem;
 }
-
 
 .button{
 	width: 200px;
@@ -342,7 +358,7 @@ p, a, tr, th, input, label {
 	}
 }
 
-.wrap-button-right{
+.wrap-button{
 	text-align: right;
 }
 
@@ -486,6 +502,7 @@ p, a, tr, th, input, label {
 
 @include breakpoint(small down) {
 	.wrap-main-content{
+		padding-top: 2rem;
 		padding-left: 0;
 		padding-right: 0;
 	}
@@ -493,6 +510,11 @@ p, a, tr, th, input, label {
 	.tour-main-block{
 		padding-right: 0rem;
 	}
+
+	.wrap-main-content, .wrap-team{
+		padding-top: 2rem;
+	}
+
 }
 
 .tabs-panel{
@@ -513,6 +535,7 @@ p, a, tr, th, input, label {
 	box-sizing: border-box;
 
 	span{
+		display: inline;
 		color: $gray-dark;
 		font-size: 0.8rem;
 		font-family: opensans;
@@ -561,8 +584,11 @@ p, a, tr, th, input, label {
 			border: 1px solid $gray-light;
 
 		}
+
+
 	}	
 }
+
 
 @include breakpoint(medium only) {
 	.wrap-ei{
@@ -838,4 +864,96 @@ header{
 	font-family: opensans;
 	padding-left: 1rem;
 	font-size: 0.9rem;
+}
+
+
+@include breakpoint(small down) {
+
+	.wrap-phone, .list-social{
+		text-align: center;
+	}
+
+	.wrap-social{
+		padding: 1rem 0;
+	}
+
+	.block-logo{
+
+		text-align: center;
+		margin-bottom: 1rem;
+
+	}
+
+	.wrap-img-header{
+
+		img{
+			top: -65px;
+			left: 30px;
+		}
+		
+		height: 260px;
+
+	}
+
+	.navigation{
+		justify-content: center;
+
+		li{
+			margin: 1rem 0;
+			text-align: center;
+		}
+	}
+
+
+	.wrap-button{
+		text-align: center;
+	}
+
+}
+
+@include breakpoint(medium only){
+
+	.wrap-phone {
+		padding: 0.2rem 0rem 1rem 0rem;
+	}
+
+	.block-logo{
+		padding-left: 200px;
+		margin-top: 1.4rem;
+	}
+
+	.wrap-img-header{
+
+		img{
+
+			top: -65px;
+			left: -100px;
+
+		}
+		
+
+	}
+
+	.wrap-social{
+		padding: 0.9rem 0rem 1rem 0rem;
+	}
+
+	.list-social li:last-child a{
+		margin-right: 0;
+	}
+
+}
+
+span.staffer-name, span.staffer-position{
+	line-height: 1.4;
+	display: inline-block;
+
+}
+
+span.staffer-name{
+	color: $black;
+}
+
+.wrap-form-subscribe{
+	margin-bottom: 2rem;
 }

@@ -32,79 +32,86 @@
 }
 
 
+ul.navigation {
+
+    li {
+
+        display: block;
+        margin: 0 0.2rem;
+
+        // @include breakpoint(small only) {
+        //     margin-right: 0;
+        //     margin-bottom: 1rem;
+        //     text-align: center;
+        // }
+
+        // &:last-child {
+        //     margin-right: 0;
+
+        //     @include breakpoint(small only) {
+        //         margin-bottom: 0;
+        //     }
+        // }
+
+        a, span, .profile-link {
+            font-family: Gilroy;
+            font-size: 1.1rem;
+            padding: 0.4rem 2rem 0.3rem 2rem;
+            line-height: 1.2;
+            color: $black;
+            font-weight: 400;
+            border-radius: 20px;
+        }
+
+        a:hover{
+            background-color: $gray-light;
+        }
+
+        span{
+            border-bottom: 2px transparent solid;                
+        }
+
+    }
+
+    @include breakpoint(small only) {
+
+    }
+
+    .is-active {
+        span {
+            position: relative;
+            background-color: $blue;
+            color: $white;
+            top: 1px;
+            display: block;
+        }
+    }
+}
+
+.wrap-profile-link ul {
+    margin: 5px 0 0 0;
+
+    a.profile-link {
+        padding: 7px 2rem;
+        height: 32px;
+    }
+}
+
+.navigation.top-menu li{
+    margin: 0 0px 0 0px;
+}
+
+.navigation.right-menu{
+    box-align: right;
+}
+
+@include breakpoint(medium only){
     ul.navigation {
 
         li {
-
-            display: block;
-            margin: 0 0.2rem;
-
-            // @include breakpoint(small only) {
-            //     margin-right: 0;
-            //     margin-bottom: 1rem;
-            //     text-align: center;
-            // }
-
-            // &:last-child {
-            //     margin-right: 0;
-
-            //     @include breakpoint(small only) {
-            //         margin-bottom: 0;
-            //     }
-            // }
-
             a, span, .profile-link {
-                font-family: Gilroy;
-                font-size: 1.1rem;
-                padding: 0.4rem 2rem 0.3rem 2rem;
-                line-height: 1.2;
-                color: $black;
-                font-weight: 400;
-                border-radius: 20px;
-            }
-
-            a:hover{
-                background-color: $gray-light;
-            }
-
-            span{
-                border-bottom: 2px transparent solid;                
-            }
-
-        }
-
-        @include breakpoint(small only) {
-
-        }
-
-        .is-active {
-            span {
-                position: relative;
-                background-color: $blue;
-                color: $white;
-                top: 1px;
-                display: block;
+                padding: 0.4rem 1.5rem 0.3rem 1.5rem;
             }
         }
-    }
-
-    .wrap-profile-link ul {
-        margin: 5px 0 0 0;
-
-        a.profile-link {
-            padding: 7px 2rem;
-            height: 32px;
-        }
-    }
-
-    .navigation.top-menu li{
-        margin: 0 0px 0 0px;
-    }
-
-    .navigation.top-menu li:first-child{
-        margin-left: -9px;
-    }
-
-    .navigation.right-menu{
-        box-align: right;
-    }
+    } 
+}
