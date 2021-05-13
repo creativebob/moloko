@@ -15,7 +15,7 @@
 
                     @if (session('confirmation'))
                         <p>Отлично, мы получили ваш заказ: №{{ session('confirmation')['lead']->id }} от {{ session('confirmation')['lead']->created_at->format('d.m.Y') }} года<br>
-                            Сумма вашего заказа: {{ num_format(session('confirmation')['lead']->estimate->total, 0) }} руб.
+                            Сумма вашего заказа: {{ num_format(session('confirmation')['lead']->badget, 0) }} руб.
                         </p>
                     @endif
                 </div>

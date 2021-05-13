@@ -1,6 +1,10 @@
 
 @if($serviceFlow->process->prices->isNotEmpty())
-    <span class="price">{{ num_format($serviceFlow->process->prices->first()->price, 0) }}  ₽ / чел.</span>
+    @if($serviceFlow->process->prices->first()->is_show_price == 1 && $serviceFlow->process->prices->first()->total_catalogs_item_discount != $serviceFlow->process->prices->first()->price)
+        <span class="price old-price">{{ num_format($serviceFlow->process->prices->first()->price, 0) }} ₽</span>
+        <span class="discount-description">{{ $serviceFlow->process->prices->first()->discount_price->description }}</span>
+    @endif
+    <span class="price">{{ num_format($serviceFlow->process->prices->first()->total_catalogs_item_discount, 0) }}  ₽ / чел.</span>
 @endif
 
 <label>Выберите дату тура:

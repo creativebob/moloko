@@ -3,7 +3,7 @@
 	<div class="grid-x">
 		<div class="cell small-12 medium-2">
 			<div class="wrap-img-header">
-				<img src="/img/mwtour/header-picture.jpg">
+				<img src="/img/mwtour/header-picture-2.jpg">
 			</div>
 		</div>
 		<div class="cell small-12 medium-10 main-header">

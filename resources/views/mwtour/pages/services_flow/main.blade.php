@@ -210,7 +210,7 @@
 					    	</li>
 					    	<li>
 					    		<h4>Место отправления:</h4>
-					    		<span><span class="icon icon-geopoint"></span>Иркутск, Автовокзал</span>
+					    		<span><span class="icon icon-geopoint"></span>{{ $serviceFlow->location->city->name }}</span>
 					    	</li>
 					    	<li>
 					    		<h4>Дата и время:</h4>
@@ -220,23 +220,22 @@
 
 					</div>
 
-                    @if($serviceFlow->process->process->positions->isNotEmpty())
+                    @if($serviceFlow->staff->isNotEmpty())
                         <div class="cell small-12 wrap-extra-info">
                             <h4>Команда тура</h4>
-                            <ul class="grid-x grid-padding-x small-up-4 align-left" data-equalizer
-                                data-equalize-by-row="true">
-                                @foreach($serviceFlow->process->process->positions as $position)
+                            <ul class="grid-x grid-padding-x small-up-3 align-left" data-equalizer data-equalize-by-row="true">
+                                @foreach($serviceFlow->staff as $staffer)
                                     <li class="cell text-center wrap-staffer" data-equalizer-watch>
                                         <div class="wrap-photo">
-                                            <img src="{{ getPhotoPath($position->staff->first()->user) }}"
-                                                 alt="{{ $position->name ?? '' }}"
+                                            <img src="{{ getPhotoPath($staffer->user) }}"
+                                                 alt="{{ $staffer->position->name ?? '' }}"
                                                  width="440"
                                                  height="292"
                                             >
                                         </div>
 
-                                        {{-- <span class="staffer-name">{{ $position->staff->first()->user->name }}</span>
-                                        <span class="staffer-position">{{ $position->name }}</span> --}}
+                                        <span class="staffer-name">{{ $staffer->user->name }}</span>
+                                        <span class="staffer-position">{{ $staffer->position->name }}</span>
                                     </li>
                                 @endforeach
                             </ul>

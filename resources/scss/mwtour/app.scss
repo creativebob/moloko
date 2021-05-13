@@ -629,7 +629,6 @@ p, a, tr, th, input, label {
 	.wrap-staffer{
 
 		padding: 0;
-		margin-right: 6px;
 
 		.wrap-photo{
 
@@ -1192,4 +1191,21 @@ span.staffer-name{
 		margin-left: 40px;
 	}
 
+}
+
+.old-price{
+	color: $black;
+	text-decoration: line-through;
+	font-size: 1.6rem;
+	padding-bottom: 0rem;
+}
+
+.discount-description{
+	font-family: opensans;
+	font-size: 0.8rem;
+	color: $gray-dark;
+	display: inline-block;
+	text-align: center;
+	padding: 0 2rem;
+	margin: 0rem 0 1rem 0;
 }
