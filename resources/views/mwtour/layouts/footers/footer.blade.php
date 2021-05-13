@@ -15,7 +15,7 @@
 		@endisset
 
 		@isset($site->company->location->city)
-			<span>{{ $site->company->location->zip_code ?? '' }}, {{ $site->company->location->city->name  ?? '' }}, {{ $site->company->location->address ?? '' }}</span>
+			<span>{{ $site->company->location->city->name  ?? '' }}, {{ $site->company->location->address ?? '' }}</span>
 			<br>
 		@endisset
 

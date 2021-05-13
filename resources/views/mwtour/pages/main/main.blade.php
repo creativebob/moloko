@@ -24,7 +24,7 @@
         @include('project.composers.services_flows.section')
 
         {{-- Форма подписки --}}
-        @include('project.pages.forms.subscribe', ['title' => 'С вас подписка!'])
+        @include('project.pages.forms.subscribe', ['title' => 'Подпишись на оповещения о новых турах!'])
 
     </main>
 </div>

@@ -15,7 +15,8 @@
 				<div class="grid-x">
 					<div class="cell small-12">
 						<ul class="my-tours-list">
-							<li>
+
+							{{-- <li>
 								<div class="grid-x">
 					                <div class="small-12 medium-5 wrap-my-tour-img cell">
 					                	<img src="/img/mwtour/services/1.jpg" class="service_photo" alt="" title="">
@@ -26,7 +27,8 @@
 										<span>Стартуем </span><span>15 июля 2021</span>
 					                </div>
 					            </div>					
-							</li>
+							</li> --}}
+
 						</ul>
 					</div>
 					<div class="cell small-12">

@@ -1,11 +1,11 @@
 @if ($servicesFlows->isNotEmpty())
-    <ul class="grid-x grid-margin-x small-up-1 medium-up-1 large-up-2 list-tours">
+    <ul class="grid-x small-up-1 medium-up-1 large-up-2 list-tours">
         @foreach($servicesFlows as $serviceFlow)
 
         <li class="cell small-12">
             <div class="wrap-item">
                 <h2>{{ $serviceFlow->process->process->name }}</h2>
-                <span class="data-date">{{ $serviceFlow->start_at->format('d F') }} - {{ $serviceFlow->finish_at->format('d F') }}</span>
+                <span class="data-date">{{ $serviceFlow->start_at->translatedFormat('j F') }} - {{ $serviceFlow->finish_at->translatedFormat('j F') }}</span>
                 <div class="wrap-service-photo">
                     <img src="{{ getPhotoPathPlugEntity($serviceFlow->process) }}"
                         alt="{{ $serviceFlow->process->process->name }}"

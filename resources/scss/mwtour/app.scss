@@ -38,6 +38,10 @@
 @import "~slick-carousel/slick/slick-theme";
 
 
+main.main-content{
+	padding-bottom: 2rem;
+}
+
 .wrap-header {
     flex: 0 0 auto;
     // overflow: hidden;
@@ -203,7 +207,6 @@ a{
 
 }
 
-
 .wrap-main-content .subtitle + p::before{
 	position: relative;
 	content: '';
@@ -271,6 +274,7 @@ p, a, tr, th, input, label {
 .wrap-img-header{
 	width: 420px;
 	position: relative;
+	box-sizing: border-box;
 
 	img{
 		width: 412px;
@@ -316,16 +320,22 @@ p, a, tr, th, input, label {
 	height: 40px;
 	padding: 11px 20px 9px 20px;
 	box-sizing: border-box;
-	border: 2px solid $blue;
+	border: 2px solid $white;
 	text-align: center;
 	border-radius: 28px;
-	color: $black;
-	background-color: $white;
+	color: $white;
+	background-color: $blue;
 	letter-spacing: 2px;
 	font-family: Gilroy;
 	font-size: 0.9rem;
 
 	&:hover{
+		background-color: $blue;
+		color: $white;
+		border: 2px solid $blue;
+	}
+
+	&:vizited{
 		background-color: $blue;
 		color: $white;
 		border: 2px solid $blue;
@@ -358,6 +368,27 @@ p, a, tr, th, input, label {
 	}
 }
 
+.wrap-one-photo{
+	position: relative;
+}
+
+.wrap-count-photo{
+	width: fit-content;
+	position: absolute;
+	bottom: 2rem;
+
+	span{
+		display: inline-block;
+		padding: 0.2rem 1rem 0.2rem 2rem;
+		border-radius: 2px;
+		background-color: rgba(255,255,255,0.15);
+		color: $white;
+		font-family: Gilroy;
+	}
+}
+
+
+
 .wrap-button{
 	text-align: right;
 }
@@ -383,7 +414,7 @@ p, a, tr, th, input, label {
 	font-family: Gilroy;
 	font-weight: 500;
 	text-decoration: uppercase;
-	font-size: 0.8rem;
+	font-size: 0.9rem;
 	letter-spacing: 1px;
 	display: inline-block;
 	width: 100%;
@@ -464,8 +495,29 @@ p, a, tr, th, input, label {
 		font-size: 0.9rem;
 	}
 
+
+	.list-extra-info li ul{
+		// list-style-type: disc;
+
+		padding-left: 1rem;
+
+		li{
+			padding: 0.4rem 0;
+		}
+	}
+
 	.list-extra-info > li{
 		padding: 0px 0px 2rem 0px;
+	}
+
+	.list-extra-info li{
+
+		p{
+			padding-left: 1rem;
+		}
+
+		font-family: opensans;
+		line-height: 1.4;
 	}
 
 	.wrap-button-center{
@@ -526,6 +578,7 @@ p, a, tr, th, input, label {
 
 .list-staffers{
 	margin-left: 0;
+	max-width: 604px;
 }
 
 .wrap-staffer{
@@ -679,6 +732,13 @@ header{
 	padding-top: 2rem;
 	text-align: right;
 }
+
+.wrap-count-day{
+	padding: 0rem 0rem 1rem 0rem;
+	font-family: Gilroy;
+}
+
+
 
 /* Slider */
 
@@ -885,15 +945,14 @@ header{
 
 	}
 
+	.main-header{
+		margin-top: 235px;
+	}
+
 	.wrap-img-header{
-
-		img{
-			top: -65px;
-			left: 30px;
-		}
-		
+		position: absolute;
 		height: 260px;
-
+		margin-left: 200px;
 	}
 
 	.navigation{
@@ -910,9 +969,20 @@ header{
 		text-align: center;
 	}
 
+	.list-staffers{
+		max-width: 402px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
 }
 
 @include breakpoint(medium only){
+
+	.list-staffers{
+		margin-left: auto;
+		margin-right: auto;
+	}
 
 	.wrap-phone {
 		padding: 0.2rem 0rem 1rem 0rem;
@@ -993,4 +1063,133 @@ span.staffer-name{
 
 .accordion.gear{
 	padding-bottom: 2rem;
+}
+
+
+// МОБИЛЫ
+
+@media screen and (min-width: 0px) and (max-width: 640px){
+
+	main.main-content{
+		padding: 0 0 2rem 0;
+	}
+
+	.list-tours{
+
+		li {
+
+			.wrap-item{
+				padding: 0;
+			}
+
+			img{
+				border-radius: 10px;
+			}
+
+		}
+
+	}
+
+	.wrap-img-header{
+		box-sizing: border-box;
+		width: 100%;
+		margin: 0;
+		left: 0px;
+
+		img{
+			margin-left: 200px;
+		}
+	}
+
+	.wrap-staffer{
+
+		span{
+			display: inline;
+			color: $gray-dark;
+			font-size: 0.8rem;
+			font-family: opensans;
+			letter-spacing: 0.5px;
+			line-height: 1;
+		}
+
+		.wrap-photo{
+			width: 98px;
+			height: 98px;
+		}
+
+		img{
+			border-radius: 64px;
+			padding: 4px;
+		}
+	}
+
+	.wrap-count-day{
+		padding: 0rem 0rem 1rem 0rem;
+		font-family: Gilroy;
+		text-align: center;
+		font-weight: 500;
+		color: $red-wood;
+	}
+
+}
+
+@media screen and (min-width: 412px) and (max-width: 640px){
+
+	.wrap-service-duration {
+	    padding-top: 10px;
+	    width: 65px;
+	    height: 65px;
+
+		.count-day-tour{
+			font-size: 2rem;
+		}
+
+		.desc-day-tour{
+			font-size: 0.9rem;
+		}
+	}
+
+}
+
+@media screen and (min-width: 0px) and (max-width: 411px){
+
+	.wrap-service-duration {
+	    padding-top: 10px;
+	    width: 55px;
+	    height: 60px;
+
+		.count-day-tour{
+			font-size: 2rem;
+		}
+
+		.desc-day-tour{
+			font-size: 0.8rem;
+		}
+	}
+
+	.wrap-main-content .subtitle + p::before{
+		margin-left: -40px;
+		top: 30px;
+		width: 40px;
+		height: 40px;
+		background: url(img/icons/svg/quotation_marks.svg) no-repeat;
+		background-size: 60%;
+	}
+
+	.text-slogan::after{
+		position: relative;
+		content: '';
+		left: 230px;
+		top: -10px;
+		display: block;
+		width: 40px;
+		height: 40px;
+		background: url(img/icons/svg/quotation_marks.svg) no-repeat;
+		background-size: 60%;
+	}
+
+	.wrap-main-content .subtitle + p, .text-slogan{
+		margin-left: 40px;
+	}
+
 }

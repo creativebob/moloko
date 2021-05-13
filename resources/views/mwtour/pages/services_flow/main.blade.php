@@ -12,8 +12,9 @@
 		</nav>
 
 		<h1>{{ $serviceFlow->process->process->name }}</h1>
-		<span>{{ $serviceFlow->start_at->diffInDays($serviceFlow->finish_at) + 1 }} дней</span> / <span>{{ $serviceFlow->start_at->diffInDays($serviceFlow->finish_at) }} ночей</span>
-
+		<div class="wrap-count-day">
+			<span>{{ $serviceFlow->start_at->diffInDays($serviceFlow->finish_at) + 1 }} дней</span> | <span>{{ $serviceFlow->start_at->diffInDays($serviceFlow->finish_at) }} ночей</span>
+		</div>
 		<div class="grid-x">
 			<div class="cell small-12 medium-auto tour-main-block">
 
@@ -26,6 +27,13 @@
 	                                    <a data-fancybox="gallery" href="{{ getPhotoInAlbumPath($serviceFlow->process->process->album->photos->get(0), 'large') }}">
 	                                        <img src="{{ getPhotoInAlbumPath($serviceFlow->process->process->album->photos->get(0), 'large') }}">
 	                                    </a>
+	                                    @if($serviceFlow->process->process->album->photos->count() > 3)
+	                                    	<div class="wrap-count-photo">
+	                                    		<a data-fancybox="gallery" href="{{ getPhotoInAlbumPath($serviceFlow->process->process->album->photos->get(0), 'large') }}">
+	                                    			<span>{{ $serviceFlow->process->process->album->photos->count() }} фото</span>
+	                                    		</a>
+	                                    	</div>
+	                                    @endif
                                     @endif
                                 </div>
                                 <div class="cell small-12 medium-4">
@@ -73,7 +81,7 @@
 							<li class="accordion-item" data-accordion-item>
 								<a href="#" class="accordion-title">
 									<h2 class="h2-second">День {{ $loop->index + 1 }}</h2>
-									<span class="small-text">{{ $eventFlow->start_at->format('d F, l') }}</span>
+									<span class="small-text">{{ $eventFlow->start_at->translatedFormat('j F, l') }}</span>
 									<p>{{ $eventFlow->process->process->description }}</p>
 								</a>
 								<div class="accordion-content" data-tab-content>
@@ -156,23 +164,13 @@
 				<div class="grid-x wrap-ei">
 					<div class="cell small-12 wrap-extra-info">
 
-                        @if($serviceFlow->process->prices->isNotEmpty())
-                            <span class="price">{{ num_format($serviceFlow->process->prices->first()->price, 0) }}  руб./чел.</span>
-                        @endif
+						<div class="grid-x">
+							<div class="cell small-12">
+								@include('mwtour.pages.services_flow.includes.price')
+							</div>
+						</div>
 
-				    	<label>Выберите дату тура:
-					    	<select class="select-service-flow">
-					    		<option>12 мая - 20 мая</option>
-					    		<option>01 июнь - 18 июнь</option>
-					    		<option>27 июль - 03 июль</option>
-					    	</select>
-					    </label>
-
-				    	<div class="wrap-button-center">
-				    		<a href="#" class="button" data-open="modal-call">Бронировать</a>
-				    	</div>
-
-				    	@include('mwtour.layouts.headers.includes.modal_call', ['flowId' => $serviceFlow->id])
+						@include('mwtour.layouts.headers.includes.modal_call', ['flowId' => $serviceFlow->id])
 
 				    	<ul class="list-extra-info">
 				    		<li>
@@ -216,7 +214,7 @@
 					    	</li>
 					    	<li>
 					    		<h4>Дата и время:</h4>
-					    		<span><span class="icon icon-clock"></span>{{ $serviceFlow->start_at->format('d F') }}, {{ $serviceFlow->start_at->format('H:i') }}</span>
+					    		<span><span class="icon icon-clock"></span>{{ $serviceFlow->start_at->translatedFormat('j F') }}, {{ $serviceFlow->start_at->format('H:i') }}</span>
 					    	</li>
 				    	</ul>
 
@@ -248,6 +246,12 @@
                 </div>
             </div>
         </div>
+
+        <div class="grid-x show-for-small-only">
+			<div class="cell small-12">
+				@include('mwtour.pages.services_flow.includes.price')
+			</div>
+		</div>
 
     </main>
 </div>
