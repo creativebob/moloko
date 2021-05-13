@@ -32,7 +32,7 @@
 
                 <p class="service-content">{!! $service->process->description !!}</p>
                 <div class="wrap-button">
-                    <a href="{{ route('project.tours.show', $service->process->slug) }}" title="" class="button blue">Ознакомиться</a>
+                    <a href="{{ route('project.tours.show', [$service->process->slug, 'flow_id' => $service->actualFlows->first()->id]) }}" title="" class="button blue">Ознакомиться</a>
                 </div>
             </div>
         </li>
