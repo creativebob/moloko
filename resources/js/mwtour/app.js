@@ -34,6 +34,8 @@ Vue.component('cart-form-component', require('./components/cart/CartFormComponen
 Vue.component('prices-goods-component', require('./components/prices/goods/PricesGoodsComponent'));
 Vue.component('search-component', require('./components/prices/goods/SearchComponent'));
 
+Vue.component('pickmeup-component', require('../common/components/PickmeupComponent'));
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

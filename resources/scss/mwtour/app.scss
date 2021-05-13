@@ -37,6 +37,9 @@
 @import "~slick-carousel/slick/slick";
 @import "~slick-carousel/slick/slick-theme";
 
+// ------------------------ Pickmeup ----------------------------------------
+@import "./partials/pickmeup";
+
 
 main.main-content{
 	padding-bottom: 2rem;
@@ -77,7 +80,7 @@ html, body{
     span, a{
 		color: $white;
 		font-family: opensans;
-		font-size: 0.9rem;    	
+		font-size: 0.9rem;
     }
 
 	.color-gray{
@@ -86,7 +89,7 @@ html, body{
 	}
 
 	.studio-info, .studio-info a{
-		font-size: 0.8rem;	
+		font-size: 0.8rem;
 	}
 
 	.color-red{
@@ -174,7 +177,7 @@ a{
 		&.is-active .accordion-title{
 			background-color: $black;
 			font-weight: 500;
-		}	
+		}
 
 		.accordion-title{
 			font-family: opensans;
@@ -201,7 +204,7 @@ a{
 					padding: 5px 0px;
 				}
 			}
-		}		
+		}
 	}
 
 
@@ -237,7 +240,7 @@ a{
 	margin-left: 60px;
 	font-family: opensans;
 	font-size: 1rem;
-	font-weight: 400;	
+	font-weight: 400;
 }
 
 .h2-second{
@@ -307,7 +310,7 @@ p, a, tr, th, input, label {
 		color: $black;
 		font-family: Gilroy;
 		font-weight: 500;
-		font-size: 1.2rem;	
+		font-size: 1.2rem;
 	}
 }
 
@@ -335,7 +338,7 @@ p, a, tr, th, input, label {
 		border: 2px solid $blue;
 	}
 
-	&:vizited{
+	&:visited{
 		background-color: $blue;
 		color: $white;
 		border: 2px solid $blue;
@@ -640,7 +643,7 @@ p, a, tr, th, input, label {
 		}
 
 
-	}	
+	}
 }
 
 
@@ -704,7 +707,7 @@ input:focus{
 
 input[type='text']{
     padding-bottom: 0.35rem;
-    padding-left: 1rem;  
+    padding-left: 1rem;
 }
 
 label{
@@ -721,7 +724,7 @@ header{
 
 .main-header, header.simple{
 	padding-bottom: 1rem;
-	border-bottom: 1px solid $black;	
+	border-bottom: 1px solid $black;
 }
 
 .block-logo, .block-nav{
@@ -902,7 +905,7 @@ header{
 
 .reveal{
 	border: 1px solid $white;
-	border-radius: 7px;	
+	border-radius: 7px;
 }
 
 .login-modal, .wrap-form-call{
@@ -1001,7 +1004,7 @@ header{
 			left: -100px;
 
 		}
-		
+
 
 	}
 
@@ -1036,12 +1039,12 @@ span.staffer-name{
 			padding-left: 1rem;
 
 		}
-		
+
 		.accordion-content{
 			padding-left: 3rem;
 
 			p{
-				font-size: 0.9rem;		
+				font-size: 0.9rem;
 			}
 		}
 
