@@ -21,7 +21,7 @@
         {{-- Туры --}}
 
         <h1 class="text-center h1-main-page">{{ $page->seo->h1 ?? $page->name }}</h1>
-        @include('project.composers.services_flows.section')
+        @include('project.composers.services.section')
 
         {{-- Форма подписки --}}
         @include('project.pages.forms.subscribe', ['title' => 'Подпишись на оповещения о новых турах!'])
