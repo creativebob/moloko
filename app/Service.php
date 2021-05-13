@@ -56,7 +56,8 @@ class Service extends BaseModel
     public function actualFlows()
     {
         return $this->hasMany(ServicesFlow::class, 'process_id')
-            ->whereDate('finish_at', '>=', now());
+            ->whereDate('start_at', '>', now())
+            ->oldest('start_at');
     }
 
     /**
