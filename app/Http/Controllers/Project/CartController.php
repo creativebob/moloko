@@ -24,6 +24,7 @@ use App\Phone;
 use App\Source;
 use App\Stock;
 use App\User;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Http\Request;
 use Telegram;
@@ -480,7 +481,7 @@ class CartController extends BaseController
         // Аггрегируем значения сметы
         $estimate->load([
             'goods_items.price_goods',
-            'services_items',
+            'services_items.price_service',
         ]);
 
         $cost = 0;
@@ -499,7 +500,8 @@ class CartController extends BaseController
 
         $count = 0;
 
-        $catalogsFoodsIds = [];
+        $catalogsGoodsIds = [];
+        $catalogsServicesIds = [];
 
         if ($estimate->goods_items->isNotEmpty()) {
             $cost += $estimate->goods_items->sum('cost');
@@ -519,14 +521,29 @@ class CartController extends BaseController
             $count += $estimate->goods_items->sum('count');
 
             $groupedGoodsItems = $estimate->goods_items->groupBy('price_goods.catalogs_goods_id');
-            $catalogsFoodsIds = $groupedGoodsItems->keys();
+            $catalogsGoodsIds = $groupedGoodsItems->keys();
         }
 
-//        if ($estimate->services_items->isNotEmpty()) {
-//            $cost += $estimate->services_items->sum('cost');
-//            $amount += $estimate->services_items->sum('amount');
-//            $total += $estimate->services_items->sum('total');
-//        }
+        if ($estimate->services_items->isNotEmpty()) {
+            $cost += $estimate->services_items->sum('cost');
+            $amount += $estimate->services_items->sum('amount');
+            $points += $estimate->services_items->sum('points');
+
+            $priceDiscount += $estimate->services_items->sum('price_discount');
+            $catalogsItemDiscount += $estimate->services_items->sum('catalogs_item_discount');
+            $estimateDiscount += $estimate->services_items->sum('estimate_discount');
+            $clientDiscount += $estimate->services_items->sum('client_discount_currency');
+            $manualDiscount += $estimate->services_items->sum('manual_discount_currency');
+
+            $total += $estimate->services_items->sum('total');
+            $totalPoints += $estimate->services_items->sum('total_points');
+            $totalBonuses += $estimate->services_items->sum('total_bonuses');
+
+            $count += $estimate->services_items->sum('count');
+
+            $groupedServicesItems = $estimate->services_items->groupBy('price_service.catalogs_service_id');
+            $catalogsServicesIds = $groupedServicesItems->keys();
+        }
 
         // Скидки
         $discountCurrency = 0;
@@ -566,7 +583,8 @@ class CartController extends BaseController
 
         $estimate->save();
 
-        $estimate->catalogs_goods()->sync($catalogsFoodsIds);
+        $estimate->catalogs_goods()->sync($catalogsGoodsIds);
+        $estimate->catalogs_services()->sync($catalogsServicesIds);
 
         return $total;
 
@@ -978,6 +996,7 @@ class CartController extends BaseController
 
         // TODO - 30.04.2021 - Заглушка, прайсов может быть несколько
         $priceService = $flow->process->prices->first();
+//        dd($priceService);
 
         $data = [
             'estimate_id' => $estimate->id,
@@ -1045,6 +1064,6 @@ class CartController extends BaseController
 
             ");
 
-        return redirect()->route('project.confirmation');
+        return redirect()->route('project.success');
     }
 }
