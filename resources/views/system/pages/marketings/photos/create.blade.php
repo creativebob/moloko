@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-{{--@section('inhead')--}}
-{{--    @include('includes.scripts.dropzone-inhead')--}}
-{{--@endsection--}}
+@section('inhead')
+    @include('includes.scripts.dropzone-inhead')
+@endsection
 
 @section('title', 'Новая фотография')
 
