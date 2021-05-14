@@ -16,18 +16,33 @@
                     <div class="cell small-12">
                         <ul class="my-tours-list">
 
-                            {{-- <li>
-                                <div class="grid-x">
-                                    <div class="small-12 medium-5 wrap-my-tour-img cell">
-                                        <img src="/img/mwtour/services/1.jpg" class="service_photo" alt="" title="">
-                                    </div>
-                                    <div class="small-12 cell medium-7 wrap-my-tour-info">
-                                        <span>Бронь №</span><span>000388</span>
-                                        <h2>Байкальский трип</h2>
-                                        <span>Стартуем </span><span>15 июля 2021</span>
-                                    </div>
-                                </div>
-                            </li> --}}
+
+                            @if($user->client)
+                                @if($user->client->estimates->isNotEmpty())
+                                    @foreach($user->client->estimates as $estimate)
+                                        <li>
+                                            <div class="grid-x">
+                                                <div class="small-12 medium-5 wrap-my-tour-img cell">
+                                                    <img src="{{ getPhotoPathPlugEntity($estimate->services_items->first()->service) }}"
+                                                         alt="{{ $estimate->services_items->first()->service->process->name }}"
+                                                         title=""
+                                                         @if(isset($estimate->services_items->first()->service->process->photo))
+                                                         width="530"
+                                                         height="246"
+                                                         @endif
+                                                         class="service_photo"
+                                                    >
+                                                </div>
+                                                <div class="small-12 cell medium-7 wrap-my-tour-info">
+                                                    <span>Бронь №</span><span>{{ $estimate->number }}</span>
+                                                    <h2>{{ $estimate->services_items->first()->service->process->name }}</h2>
+                                                    <span>Стартуем </span><span>{{ $estimate->services_items->first()->flow->start_at->translatedFormat('j F Y') }}</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    @endforeach
+                                @endif
+                            @endif
 
                         </ul>
                     </div>
