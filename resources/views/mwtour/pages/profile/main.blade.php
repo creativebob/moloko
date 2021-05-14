@@ -29,6 +29,7 @@
                         <label>Телефон
                             <input type="text" value="{{ decorPhone($user->main_phone->phone) }}" readonly>
                         </label>
+
                     </div>
                     <div class="cell small-12">
                         <label>Почта

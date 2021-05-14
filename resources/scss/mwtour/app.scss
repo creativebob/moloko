@@ -102,7 +102,7 @@ html, body{
 }
 
 .wrap-video-block{
-	padding: 1rem 0;
+	padding: 1rem 0 2rem 0;
 }
 
 h1{
@@ -777,6 +777,16 @@ header{
 }
 
 .my-tours-list{
+
+	.wrap-my-tour-img{
+		padding: 0rem 2rem 0rem 0rem;	
+	}
+
+	li{
+		padding: 1rem 0rem;
+		border-bottom: 1px dashed $gray-dark;
+	}
+
 	margin: 0rem 0rem;
 
 	img{
@@ -906,10 +916,6 @@ header{
 @include breakpoint(medium up) {
 	.fields-column{
 		padding-right: 3rem;
-	}
-
-	.wrap-my-tour-img{
-		padding-right: 130px;
 	}
 }
 
@@ -1169,6 +1175,21 @@ span.staffer-name{
 		color: $red-wood;
 	}
 
+	.my-tours-list{
+
+		.wrap-my-tour-img{
+			padding: 0rem 0rem 1rem 0rem;	
+		}
+
+		li{
+			padding: 1rem 1rem;
+		}
+
+		img{
+
+		}
+	}
+
 }
 
 @media screen and (min-width: 412px) and (max-width: 640px){
@@ -1358,6 +1379,11 @@ span.staffer-name{
 
 .wrap-logo-bank{
 	img{
-		padding: 1rem 2rem;
+		width: 200px;
+		padding: 0rem 2rem;
 	}
+}
+
+.wrap-bank-text{
+	padding: 0.6rem 0;
 }

@@ -1,70 +1,77 @@
 <div class="grid-x">
 
-	<main class="cell small-12 main-content">
+    <main class="cell small-12 main-content">
 
-		<nav aria-label="Вы здесь:" role="navigation">
-		  <ul class="breadcrumbs">
-		    <li><a href="/">Наши туры</a></li>
-		    <li class="gray-dark">
-		      <span class="show-for-sr">Current: </span> {{ $serviceFlow->process->process->name }}
-		    </li>
-		  </ul>
-		</nav>
+        <nav aria-label="Вы здесь:" role="navigation">
+            <ul class="breadcrumbs">
+                <li><a href="/">Наши туры</a></li>
+                <li class="gray-dark">
+                    <span class="show-for-sr">Current: </span> {{ $serviceFlow->process->process->name }}
+                </li>
+            </ul>
+        </nav>
 
-		<h1>{{ $serviceFlow->process->process->name }}</h1>
-		<div class="wrap-count-day">
-			<span>{{ $serviceFlow->start_at->diffInDays($serviceFlow->finish_at) + 1 }} дней</span> | <span>{{ $serviceFlow->start_at->diffInDays($serviceFlow->finish_at) }} ночей</span>
-		</div>
-		<div class="grid-x">
-			<div class="cell small-12 medium-auto tour-main-block">
+        <h1>{{ $serviceFlow->process->process->name }}</h1>
+        <div class="wrap-count-day">
+            <span>{{ $serviceFlow->start_at->diffInDays($serviceFlow->finish_at) + 1 }} дней</span> | <span>{{ $serviceFlow->start_at->diffInDays($serviceFlow->finish_at) }} ночей</span>
+        </div>
+        <div class="grid-x">
+            <div class="cell small-12 medium-auto tour-main-block">
 
-				{{-- Фотографии для блока ниже выдергиваем точечно: первая, вторая и третья. Ссылки на остальные будем грузить в следующий блок --}}
+                {{-- Фотографии для блока ниже выдергиваем точечно: первая, вторая и третья. Ссылки на остальные будем грузить в следующий блок --}}
                 @isset($serviceFlow->process->process->album)
                     <div class="grid-x wrap-gallery gallery">
 
-                                <div class="cell small-12 medium-8 wrap-one-photo">
-                            		@if($serviceFlow->process->process->album->photos->get(0))
-	                                    <a data-fancybox="gallery" href="{{ getPhotoInAlbumPath($serviceFlow->process->process->album->photos->get(0), 'large') }}">
-	                                        <img src="{{ getPhotoInAlbumPath($serviceFlow->process->process->album->photos->get(0), 'large') }}">
-	                                    </a>
-	                                    @if($serviceFlow->process->process->album->photos->count() > 3)
-	                                    	<div class="wrap-count-photo">
-	                                    		<a data-fancybox="gallery" href="{{ getPhotoInAlbumPath($serviceFlow->process->process->album->photos->get(0), 'large') }}">
-	                                    			<span>{{ $serviceFlow->process->process->album->photos->count() }} фото</span>
-	                                    		</a>
-	                                    	</div>
-	                                    @endif
+                        <div class="cell small-12 medium-8 wrap-one-photo">
+                            @if($serviceFlow->process->process->album->photos->get(0))
+                                <a data-fancybox="gallery"
+                                   href="{{ getPhotoInAlbumPath($serviceFlow->process->process->album->photos->get(0), 'large') }}">
+                                    <img
+                                        src="{{ getPhotoInAlbumPath($serviceFlow->process->process->album->photos->get(0), 'large') }}">
+                                </a>
+                                @if($serviceFlow->process->process->album->photos->count() > 3)
+                                    <div class="wrap-count-photo">
+                                        <a data-fancybox="gallery"
+                                           href="{{ getPhotoInAlbumPath($serviceFlow->process->process->album->photos->get(0), 'large') }}">
+                                            <span>{{ $serviceFlow->process->process->album->photos->count() }} фото</span>
+                                        </a>
+                                    </div>
+                                @endif
+                            @endif
+                        </div>
+                        <div class="cell small-12 medium-4">
+                            <div class="grid-x">
+
+                                <div class="cell small-6 medium-12 wrap-second-photo">
+                                    @if($serviceFlow->process->process->album->photos->get(1))
+                                        <a data-fancybox="gallery"
+                                           href="{{ getPhotoInAlbumPath($serviceFlow->process->process->album->photos->get(1), 'large') }}">
+                                            <img
+                                                src="{{ getPhotoInAlbumPath($serviceFlow->process->process->album->photos->get(1)) }}">
+                                        </a>
                                     @endif
                                 </div>
-                                <div class="cell small-12 medium-4">
-                                    <div class="grid-x">
 
-                                        <div class="cell small-6 medium-12 wrap-second-photo">
-											@if($serviceFlow->process->process->album->photos->get(1))
-	                                            <a data-fancybox="gallery" href="{{ getPhotoInAlbumPath($serviceFlow->process->process->album->photos->get(1), 'large') }}">
-	                                                <img src="{{ getPhotoInAlbumPath($serviceFlow->process->process->album->photos->get(1)) }}">
-	                                            </a>
-											@endif
-                                        </div>
-                                    
-                                        <div class="cell small-6 medium-12 wrap-third-photo">
-											@if($serviceFlow->process->process->album->photos->get(2))
-	                                            <a data-fancybox="gallery" href="{{ getPhotoInAlbumPath($serviceFlow->process->process->album->photos->get(2), 'large') }}">
-	                                                <img src="{{ getPhotoInAlbumPath($serviceFlow->process->process->album->photos->get(2)) }}">
-	                                            </a>
-											@endif
-                                        </div>
-                                    </div>
-
-		                            {{-- А здесь циклом формируем ссылки на фото начиная с четвертой, если такие есть (Они не отображаються, просмотреть можно только через FancyBox) --}}
-                        
-	                        		@foreach($serviceFlow->process->process->album->photos as $photo)
-			                            @if($loop->iteration > 3)
-			                                <a data-fancybox="gallery" href="{{ getPhotoInAlbumPath($photo) }}"></a>
-			                            @endif
-			                     	@endforeach                                       
+                                <div class="cell small-6 medium-12 wrap-third-photo">
+                                    @if($serviceFlow->process->process->album->photos->get(2))
+                                        <a data-fancybox="gallery"
+                                           href="{{ getPhotoInAlbumPath($serviceFlow->process->process->album->photos->get(2), 'large') }}">
+                                            <img
+                                                src="{{ getPhotoInAlbumPath($serviceFlow->process->process->album->photos->get(2)) }}">
+                                        </a>
+                                    @endif
                                 </div>
-                        	
+                            </div>
+
+                            {{-- А здесь циклом формируем ссылки на фото начиная с четвертой, если такие есть (Они не отображаються, просмотреть можно только через FancyBox) --}}
+
+                            @foreach($serviceFlow->process->process->album->photos as $photo)
+                                @if($loop->iteration > 3)
+                                    <a data-fancybox="gallery" href="{{ getPhotoInAlbumPath($photo) }}"></a>
+                                @endif
+                            @endforeach
+                        </div>
+
                     </div>
                 @endisset
 
@@ -101,16 +108,15 @@
 	                @endif
 		        </div>
 
-		        @if($serviceFlow->process->video)
+		        @if($serviceFlow->process->process->video)
 		            <div class="cell small-12 wrap-video-block">
 		                <div class="video-wrap">
-		                    {!! $serviceFlow->process->video !!}
+		                    {!! $serviceFlow->process->process->video !!}
 		                </div>
 		            </div>
 		        @endif
 
                 <h2 class="h2-tour">Список рекомендованной одежды и снаряжения:</h2>
-
 				<ul class="accordion gear" data-accordion data-allow-all-closed="true">
 				  <li class="accordion-item" data-accordion-item>
 				    <a href="#" class="accordion-title">Одежда</a>
@@ -188,10 +194,14 @@
 						@include('mwtour.layouts.headers.includes.modal_call', ['flowId' => $serviceFlow->id])
 
 				    	<ul class="list-extra-info">
-				    		<li>
-					    		<span class="h4">Уровень: </span><span class="">Лёгкий</span>
-					    		<span>{{ $serviceFlow->process->process->metrics }}</span>
-					    	</li>
+                            @if($serviceFlow->process->metrics->isNotEmpty())
+                                @if($serviceFlow->process->metrics->firstWhere('alias', 'level'))
+                                    <li>
+                                        <span class="h4">{{ $serviceFlow->process->metrics->firstWhere('alias', 'level')->name }}: </span>
+                                        <span class="">{{ $serviceFlow->process->metrics->firstWhere('alias', 'level')->values->firstWhere('id', $serviceFlow->process->metrics->firstWhere('alias', 'level')->pivot->value)->value }}</span>
+                                    </li>
+                                @endif
+                            @endif
 					    	<li>
 					    		<h4>Дата и время:</h4>
 					    		<span><span class="icon icon-clock"></span>{{ $serviceFlow->start_at->translatedFormat('j F') }}, {{ $serviceFlow->start_at->format('H:i') }}</span>
@@ -297,10 +307,10 @@
         </div>
 
         <div class="grid-x show-for-small-only">
-			<div class="cell small-12">
-				@include('mwtour.pages.services_flow.includes.price')
-			</div>
-		</div>
+            <div class="cell small-12">
+                @include('mwtour.pages.services_flow.includes.price')
+            </div>
+        </div>
 
         {{-- <section class="grid-x grid-padding-x align-center">
             <div class="cell small-12 large-8">

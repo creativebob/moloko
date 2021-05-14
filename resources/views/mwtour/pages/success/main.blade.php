@@ -24,7 +24,7 @@
                         <div class="cell small-6 medium-4 wrap-logo-bank">
                             <img src="../img/{{ $site->alias }}/tinkoff-bank.jpg">
                         </div>
-                        <div class="cell small-6 medium-8">
+                        <div class="cell small-6 medium-8 wrap-bank-text">
                             <p>Выполните оплату по номеру карты:<br><span class="phone-for-payment">5536 9139 2690 4703</span></p>
                             <p>Получатель: Шаталина Наталья Сергеевна<br>
                             В сообщении просто укажите: <span class="text-strong">Заказ №{{ session('confirmation')['lead']->id }}</span>
@@ -32,7 +32,7 @@
                         </div>
                         <div class="cell small-12">
                         @auth
-                            <p>Отслеживать события по вашему заказу вы можете в <a href="/profile">личном кабинете</a>.</p>
+                            <p>Отслеживать события по вашему заказу вы можете в <a href="/orders">личном кабинете</a>.</p>
                         @else
                             <p>Отслеживать события по вашему заказу вы можете в <a href="#" data-open="open-modal-login">личном кабинете</a>.</p>
                         @endauth

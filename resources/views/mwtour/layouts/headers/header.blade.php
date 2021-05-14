@@ -30,7 +30,7 @@
 						    @include('project.composers.navigations.navigation_by_align', ['align' => 'right'])
 						</div>
 						<div class="cell small-12 medium-shrink wrap-profile-link">
-							<ul class="navigation">
+							<ul class="navigation main-menu">
 								<li>
 									@auth
 										<a href="/profile" class="profile-link">Личный кабинет</a>

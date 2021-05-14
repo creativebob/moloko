@@ -23,52 +23,7 @@
         <h1 class="text-center h1-main-page">{{ $page->seo->h1 ?? $page->name }}</h1>
         @include('project.composers.services.section')
 
-        {{-- @include('project.composers.albums.album_by_alias', ['albumAlias' => 'main-album']) --}}
-
-        <ul class="grid-x small-up-3 medium-up-4 large-up-6 album-list gallery">
-            <li class="cell">
-                <a data-fancybox="gallery" href="/img/mwtour/album/1.jpg">
-                    <img src="/img/mwtour/album/1.jpg"
-                         class="thumbnail" width="300" height="199" alt="">
-                    <span class="tool-search"></span>
-                </a>
-            </li>
-            <li class="cell">
-                <a data-fancybox="gallery" href="/img/mwtour/album/1.jpg">
-                    <img src="/img/mwtour/album/2.jpg"
-                         class="thumbnail" width="300" height="199" alt="">
-                    <span class="tool-search"></span>
-                </a>
-            </li>
-            <li class="cell">
-                <a data-fancybox="gallery" href="/img/mwtour/album/1.jpg">
-                    <img src="/img/mwtour/album/3.jpg"
-                         class="thumbnail" width="300" height="199" alt="">
-                    <span class="tool-search"></span>
-                </a>
-            </li>
-            <li class="cell">
-                <a data-fancybox="gallery" href="/img/mwtour/album/1.jpg">
-                    <img src="/img/mwtour/album/4.jpg"
-                         class="thumbnail" width="300" height="199" alt="">
-                    <span class="tool-search"></span>
-                </a>
-            </li>
-            <li class="cell">
-                <a data-fancybox="gallery" href="/img/mwtour/album/1.jpg">
-                    <img src="/img/mwtour/album/5.jpg"
-                         class="thumbnail" width="300" height="199" alt="">
-                    <span class="tool-search"></span>
-                </a>
-            </li>
-            <li class="cell">
-                <a data-fancybox="gallery" href="/img/mwtour/album/1.jpg">
-                    <img src="/img/mwtour/album/6.jpg"
-                         class="thumbnail" width="300" height="199" alt="">
-                    <span class="tool-search"></span>
-                </a>
-            </li>
-        </ul>
+        @include('project.composers.albums.album_by_alias', ['albumAlias' => 'main-album'])
 
         {{-- Форма подписки --}}
         @include('project.pages.forms.subscribe', ['title' => 'Подпишись на оповещения о новых турах!'])

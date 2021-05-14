@@ -56,6 +56,7 @@ class CreateProcessesTable extends Migration
                 ->on('seos');
 
             $table->string('video_url')->nullable()->comment('Ссылка на видео');
+            $table->text('video')->nullable()->comment('Код вставки видео');
 
             $table->text('content')->nullable()->comment('Описание');
             $table->text('seo_description')->nullable()->comment('Описание для сайта');

@@ -175,10 +175,9 @@
 
 .dropzone {
   min-height: 150px;
-  border: 1px solid rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(0, 0, 0, 0.3);
   background: white;
-  padding: 1rem;
-   }
+  padding: 20px 20px; }
   .dropzone.dz-clickable {
     cursor: pointer; }
     .dropzone.dz-clickable * {
@@ -194,6 +193,14 @@
   .dropzone .dz-message {
     text-align: center;
     margin: 2em 0; }
+    .dropzone .dz-message .dz-button {
+      background: none;
+      color: inherit;
+      border: none;
+      padding: 0;
+      font: inherit;
+      cursor: pointer;
+      outline: inherit; }
   .dropzone .dz-preview {
     position: relative;
     display: inline-block;
@@ -219,7 +226,6 @@
         -o-transition: opacity 0.2s linear;
         transition: opacity 0.2s linear; }
     .dropzone .dz-preview .dz-remove {
-      margin-top: 10px;
       font-size: 14px;
       text-align: center;
       display: block;
@@ -358,7 +364,6 @@
       opacity: 1;
       pointer-events: auto; }
     .dropzone .dz-preview .dz-error-message {
-      top: 160px !important;
       pointer-events: none;
       z-index: 1000;
       position: absolute;
@@ -372,6 +377,7 @@
       transition: opacity 0.3s ease;
       border-radius: 8px;
       font-size: 13px;
+      top: 130px;
       left: -10px;
       width: 140px;
       background: #be2626;

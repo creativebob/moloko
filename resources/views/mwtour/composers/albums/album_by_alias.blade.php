@@ -1,5 +1,5 @@
 @isset($album)
-    <ul class="grid-x small-up-2 medium-up-2 large-up-3 album-list gallery">
+    <ul class="grid-x small-up-3 medium-up-4 large-up-6 album-list gallery">
         @foreach($album->photos as $photo)
             <li class="cell">
                 <a data-fancybox="gallery" href="{{ getPhotoInAlbumPath($photo, 'large') }}">

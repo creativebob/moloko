@@ -1,22 +1,13 @@
 <div class="grid-x grid-padding-x">
 
     <div class="small-12 medium-7 cell">
-
-{{--        <dropzone-component--}}
-{{--            :item-id="{{ $process->id }}"--}}
-{{--            entity="processes"--}}
-{{--            :settings="{{ $settings }}"--}}
-{{--        >--}}
-{{--            @csrf--}}
-{{--        </dropzone-component>--}}
-
         {!!  Form::open([
             'route' => 'photos.ajax_store',
             'data-abide',
             'novalidate',
             'files' => 'true',
             'class' => 'dropzone',
-            'id' => 'my-dropzone'
+            'id' => 'dropzone'
         ]
         ) !!}
 
@@ -42,3 +33,18 @@
 
     </div>
 </div>
+
+@push('scripts')
+    <script>
+        $(document).on('click', '#photos-list .delete', function () {
+            $.ajax({
+                url: '/admin/photo_delete/' + $(this).data('id'),
+                type: "DELETE",
+                success: function (html) {
+                    // alert(html);
+                    $('#photos-list').html(html);
+                }
+            });
+        });
+    </script>
+@endpush
