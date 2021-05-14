@@ -21,7 +21,7 @@
 @section('content')
     <div class="grid-x grid-padding-x">
         <div class="small-12 cell">
-            {!! Form::open(['route' => ['photos.store', $album->id], 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) !!}
+            {!! Form::open(['route' => ['photos.store', $album->id], 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'dropzone']) !!}
             {!! Form::close() !!}
         </div>
     </div>
@@ -40,7 +40,7 @@
             imgMinWidth = parseInt({{ $settings['img_min_width'] }}),
             imgMinHeight = parseInt({{ $settings['img_min_height'] }});
 
-        window.dropzone.options.myDropzone = {
+        Dropzone.options.dropzone = {
             paramName: 'photo',
             maxFiles: 20,
             addRemoveLinks: true,
@@ -91,8 +91,6 @@
                 };
             }
         }
-
-        console.log(window.dropzone.options.myDropzone);
     </script>
 @endpush
 

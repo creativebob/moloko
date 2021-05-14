@@ -366,7 +366,7 @@ class PhotoController extends Controller
 
         $album->load('photos');
         if ($photo) {
-            return view('photos.photos', compact('album'));
+            return view('system.pages.marketings.photos.photos', compact('album'));
         } else {
             abort(403, 'Ошибка при удалении фотографии');
         }
