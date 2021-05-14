@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('inhead')
-{{--    @include('includes.scripts.dropzone-inhead')--}}
+    @include('includes.scripts.dropzone-inhead')
     @include('includes.scripts.fancybox-inhead')
     @include('includes.scripts.sortable-inhead')
 

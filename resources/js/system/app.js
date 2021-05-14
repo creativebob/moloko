@@ -55,7 +55,7 @@ Vue.component('categorier-component', require('./components/common/categories/Ca
 Vue.component('digit-component', require('./components/inputs/DigitComponent'));
 Vue.component('switch-component', require('./components/inputs/SwitchComponent'));
 Vue.component('input-digit-component', require('./components/InputDigitComponent.vue'));
-Vue.component('dropzone-component', require('./components/DropzoneComponent.vue'));
+// Vue.component('dropzone-component', require('./components/DropzoneComponent.vue'));
 
 Vue.component('select-categories-component', require('./components/common/selects_categories/SelectCategoriesComponent'));
 Vue.component('select-processes-categories-component', require('./components/common/selects_categories/SelectProcessesCategoriesComponent'));
@@ -174,7 +174,7 @@ Vue.component('seo-component', require('./components/seos/SeoComponent'));
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-window.dropzone = require('dropzone');
+// window.dropzone = require('dropzone');
 // window.dropzone.options.myDropzone = {
 //     paramName: 'photo',
 //     maxFiles: 20,
@@ -185,7 +185,7 @@ window.dropzone = require('dropzone');
 //     dictUploadCanceled: "Загрузка прервана",
 //     dictRemoveFile: "Удалить",
 // };
-Vue.prototype.$dropzone = window.dropzone;
+// Vue.prototype.$dropzone = window.dropzone;
 
 window.pickmeup = require('pickmeup');
 
