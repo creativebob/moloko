@@ -8914,6 +8914,10 @@ ul.breadcrumbs li a, ul.breadcrumbs li span {
   display: none;
 }
 
+a, button {
+  outline: none;
+}
+
 main.main-content {
   padding-bottom: 2rem;
 }
@@ -9984,9 +9988,6 @@ span.staffer-name {
 }
 
 @media screen and (min-width: 0px) and (max-width: 411px) {
-  .grid-container {
-    padding: 0 12px;
-  }
   .wrap-service-duration {
     padding-top: 10px;
     width: 55px;
