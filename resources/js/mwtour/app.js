@@ -7,11 +7,11 @@
 require('../common/foundation');
 
 import Vue from 'vue';
-import Vuex from 'vuex';
+// import Vuex from 'vuex';
 window.Vue = Vue;
-window.Vuex = Vuex;
+// window.Vuex = Vuex;
 
-Vue.use(Vuex);
+// Vue.use(Vuex);
 
 /**
  * The following block of code may be used to automatically register your
@@ -26,13 +26,13 @@ Vue.use(Vuex);
 
 
 // Корзина
-Vue.component('cart-header-component', require('./components/cart/HeaderComponent.vue'));
-Vue.component('cart-component', require('./components/cart/CartComponent.vue'));
-Vue.component('cart-form-component', require('./components/cart/CartFormComponent'));
+// Vue.component('cart-header-component', require('./components/cart/HeaderComponent.vue'));
+// Vue.component('cart-component', require('./components/cart/CartComponent.vue'));
+// Vue.component('cart-form-component', require('./components/cart/CartFormComponent'));
 
 // Товары
-Vue.component('prices-goods-component', require('./components/prices/goods/PricesGoodsComponent'));
-Vue.component('search-component', require('./components/prices/goods/SearchComponent'));
+// Vue.component('prices-goods-component', require('./components/prices/goods/PricesGoodsComponent'));
+// Vue.component('search-component', require('./components/prices/goods/SearchComponent'));
 
 Vue.component('pickmeup-component', require('../common/components/PickmeupComponent'));
 
@@ -55,11 +55,11 @@ pickmeup.defaults.locales['ru'] = {
 Vue.prototype.$pickmeup = window.pickmeup;
 
 // Vuex хранилище
-import store from './store/index';
+// import store from './store/index';
 
 const app = new Vue({
     el: '#app',
-    store: new Vuex.Store(store)
+    // store: new Vuex.Store(store)
 });
 
 // Включаем пакет слайдера Slick
