@@ -7,7 +7,7 @@
             'novalidate',
             'files' => 'true',
             'class' => 'dropzone',
-            'id' => 'my-dropzone'
+            'id' => 'dropzone'
         ]
         ) !!}
 
@@ -33,3 +33,18 @@
 
     </div>
 </div>
+
+@push('scripts')
+    <script>
+        $(document).on('click', '#photos-list .delete', function () {
+            $.ajax({
+                url: '/admin/photo_delete/' + $(this).data('id'),
+                type: "DELETE",
+                success: function (html) {
+                    // alert(html);
+                    $('#photos-list').html(html);
+                }
+            });
+        });
+    </script>
+@endpush
