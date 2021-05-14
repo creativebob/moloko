@@ -180,7 +180,7 @@ a{
 	.accordion-item{
 
 		&.is-active .accordion-title{
-			background-color: $black;
+			background-color: $gray-light;
 			font-weight: 500;
 		}
 
@@ -1132,6 +1132,12 @@ span.staffer-name{
 
 		}
 
+	}
+
+	.accordion.events-list li .accordion-content{
+		padding-left: 1rem;
+		padding-right: 0;
+		padding-bottom: 1rem;
 	}
 
 	.wrap-img-header{

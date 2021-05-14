@@ -9055,7 +9055,7 @@ a {
 }
 
 .accordion .accordion-item.is-active .accordion-title {
-  background-color: #0a0a0a;
+  background-color: #F8F8F8;
   font-weight: 500;
 }
 
@@ -9903,6 +9903,11 @@ span.staffer-name {
   }
   .list-tours li img {
     border-radius: 10px;
+  }
+  .accordion.events-list li .accordion-content {
+    padding-left: 1rem;
+    padding-right: 0;
+    padding-bottom: 1rem;
   }
   .wrap-img-header {
     -webkit-box-sizing: border-box;
