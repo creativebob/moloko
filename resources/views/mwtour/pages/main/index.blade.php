@@ -2,6 +2,7 @@
 
 @section('inhead')
     {{-- Вставка в head --}}
+    <link  href="/js/plugins/fancybox/dist/jquery.fancybox.min.css" rel="stylesheet">
     @include('mwtour.layouts.inheads.inhead')
 @endsection
 

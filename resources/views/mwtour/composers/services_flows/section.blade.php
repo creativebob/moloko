@@ -27,7 +27,7 @@
                 </div>
                 <p class="service-content">{!! $serviceFlow->process->process->description !!}</p>
                 <div class="wrap-button">
-                    <a href="{{ route('project.tours.show', $serviceFlow->process->process->slug) }}" title="" class="button blue">Ознакомиться</a>
+                    <a href="{{ route('project.tours.show', $serviceFlow->process->process->slug) }}" title="" class="button blue contur">Ознакомиться</a>
                 </div>
             </div>
         </li>

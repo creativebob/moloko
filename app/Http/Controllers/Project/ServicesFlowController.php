@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Project;
 
 use App\Models\System\Flows\ServicesFlow;
+use Illuminate\Http\Request;
 
 class ServicesFlowController extends BaseController
 {
@@ -20,7 +21,7 @@ class ServicesFlowController extends BaseController
      * @param $slug
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function show($slug)
+    public function show(Request $request, $slug)
     {
         // TODO - 30.04.21 - Костыль для переименования services_flows в tours
         $serviceFlow = ServicesFlow::with([
@@ -34,14 +35,19 @@ class ServicesFlowController extends BaseController
                     },
                     'prices.service.process.positions' => function ($q) {
                         $q->where('display', true);
-                    }
+                    },
+                    'actualFlows',
                 ]);
             },
+
         ])
             ->whereHas('process', function ($q) use ($slug) {
                 $q->whereHas('process', function ($q) use ($slug) {
                     $q->where('slug', $slug);
                 });
+            })
+            ->when($request->has('flow_id'), function ($q) use ($request) {
+                $q->where('id', $request->flow_id);
             })
             ->first();
 //        dd($serviceFlow);

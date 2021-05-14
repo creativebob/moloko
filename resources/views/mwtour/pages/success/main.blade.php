@@ -14,47 +14,33 @@
                     {!! $page->content !!}
 
                     @if (session('confirmation'))
-                        <p>Отлично, мы получили ваш заказ: №{{ session('confirmation')['lead']->id }} от {{ session('confirmation')['lead']->created_at->format('d.m.Y') }} года<br>
+                        <h2 class="h2-tour">Отлично, мы получили ваш заказ: №{{ session('confirmation')['lead']->id }} от {{ session('confirmation')['lead']->created_at->format('d.m.Y') }} года<h2>
+                        <p>
                             Сумма вашего заказа: {{ num_format(session('confirmation')['lead']->badget, 0) }} руб.
                         </p>
                     @endif
-                </div>
 
-                <div class="cell small-12 medium-6">
-                    <ul class="tabs" data-tabs id="payment-tabs"  data-match-height="true">
-                        <li class="tabs-title is-active"><a href="#panel1" aria-selected="true">Сбербанк Онлайн</a></li>
-                        <li class="tabs-title"><a data-tabs-target="panel2" href="#panel2">Оплата по счету</a></li>
-                    </ul>
-
-                    <div class="tabs-content-payment" data-tabs-content="payment-tabs">
-                        <div class="tabs-panel is-active" id="panel1">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <img src="../img/{{ $site->alias }}/sb.png">
-                                    </td>
-                                    <td>
-                                        <p>Выполните оплату по номеру телефона:<br><span class="phone-for-payment">8 (964) 653-42-00</span></p>
-                                        <p>Получатель: Травникова Мария Константиновна<br>
-                                        В сообщении просто укажите: <span class="text-strong">Заказ №{{-- session('confirmation')['lead']->id --}}</span>
-                                        </p>
-                                    </td>
-                                </tr>
-                            </table>
+                    <div class="grid-x">
+                        <div class="cell small-6 medium-4 wrap-logo-bank">
+                            <img src="../img/{{ $site->alias }}/tinkoff-bank.jpg">
                         </div>
-                        <div class="tabs-panel" id="panel2">
-
-                            {{-- Подключаем банковские реквизиты --}}
-                            @include('project.composers.company.details', ['company' => $site->company])
-
+                        <div class="cell small-6 medium-8">
+                            <p>Выполните оплату по номеру карты:<br><span class="phone-for-payment">5536 9139 2690 4703</span></p>
+                            <p>Получатель: Шаталина Наталья Сергеевна<br>
+                            В сообщении просто укажите: <span class="text-strong">Заказ №{{ session('confirmation')['lead']->id }}</span>
+                            </p>
                         </div>
+                        <div class="cell small-12">
+                        @auth
+                            <p>Отслеживать события по вашему заказу вы можете в <a href="/profile">личном кабинете</a>.</p>
+                        @else
+                            <p>Отслеживать события по вашему заказу вы можете в <a href="#" data-open="open-modal-login">личном кабинете</a>.</p>
+                        @endauth
+                        </div>
+
                     </div>
-                    @auth
-                        <p>Отслеживать события по вашему заказу вы можете в <a href="/profile">личном кабинете</a>.</p>
-                    @else
-                        <p>Отслеживать события по вашему заказу вы можете в <a href="#" data-open="open-modal-login">личном кабинете</a>.</p>
-                    @endauth
                 </div>
+
             </div>
         </div>
     </div>
