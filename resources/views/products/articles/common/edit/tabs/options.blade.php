@@ -35,7 +35,7 @@
                         <digit-component
                             name="cost_default"
                             :decimalplace = "0"
-                            :value="{{ $article->cost_default }}" 
+                            :value="{{ $article->cost_default }}"
                             decimalplace = "4"
                         ></digit-component>
                     </label>
@@ -154,9 +154,9 @@
                 {{ Form::text('video_url', $article->video_url, []) }}
             </label>
 
-            {{--                                <label>Видео--}}
-            {{--                                    @include('includes.inputs.textarea', ['name' => 'video', 'value' => $article->video])--}}
-            {{--                                </label>--}}
+            <label>Блок видео
+                @include('includes.inputs.textarea', ['name' => 'video'])
+            </label>
         </fieldset>
 
     </div>

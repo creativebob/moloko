@@ -35,6 +35,7 @@ class Process extends BaseModel
         'price_rule_id',
 
         'video_url',
+        'video',
 
         'seo_id',
 

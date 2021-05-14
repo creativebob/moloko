@@ -148,6 +148,10 @@
             <label>Видео
                 {{ Form::text('video_url', $process->video_url, []) }}
             </label>
+
+            <label>Блок видео
+                @include('includes.inputs.textarea', ['name' => 'video'])
+            </label>
         </fieldset>
 
     </div>
