@@ -8988,6 +8988,22 @@ html, body {
   padding: 1rem 0 2rem 0;
 }
 
+.video-wrap {
+  position: relative;
+  padding-bottom: 56.25%;
+  padding-top: 30px;
+  height: 0;
+  overflow: hidden;
+}
+
+.video-wrap iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
 h1 {
   font-family: Gilroy;
   font-weight: 600;
@@ -9436,6 +9452,9 @@ p, a, tr, th, input, label {
 }
 
 @media screen and (max-width: 39.99875em) {
+  .wrap-extra-info {
+    padding: 2rem 1.4rem;
+  }
   .wrap-main-content {
     padding-top: 2rem;
     padding-left: 0;
@@ -9965,6 +9984,9 @@ span.staffer-name {
 }
 
 @media screen and (min-width: 0px) and (max-width: 411px) {
+  .grid-container {
+    padding: 0 12px;
+  }
   .wrap-service-duration {
     padding-top: 10px;
     width: 55px;

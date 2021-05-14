@@ -9,15 +9,17 @@
                 <span class="data-date">{{ $service->actualFlows->first()->start_at->translatedFormat('j F') }} - {{ $service->actualFlows->first()->finish_at->translatedFormat('j F') }}</span>
 
                 <div class="wrap-service-photo">
-                    <img src="{{ getPhotoPathPlugEntity($service) }}"
-                        alt="{{ $service->process->name }}"
-                        title=""
-                        @if(isset($service->process->photo))
-                        width="530"
-                        height="246"
-                        @endif
-                        class="service_photo"
-                    >
+                    <a href="{{ route('project.tours.show', [$service->process->slug, 'flow_id' => $service->actualFlows->first()->id]) }}" title="">
+                        <img src="{{ getPhotoPathPlugEntity($service) }}"
+                            alt="{{ $service->process->name }}"
+                            title=""
+                            @if(isset($service->process->photo))
+                            width="530"
+                            height="246"
+                            @endif
+                            class="service_photo"
+                        >
+                    </a>
                     <div class="wrap-service-duration">
                         <span class="count-day-tour">{{ $service->actualFlows->first()->start_at->diffInDays($service->actualFlows->first()->finish_at) + 1 }}</span>
                         <span class="desc-day-tour">дней</span>

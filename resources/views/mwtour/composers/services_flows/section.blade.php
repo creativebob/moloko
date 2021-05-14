@@ -7,15 +7,17 @@
                 <h2>{{ $serviceFlow->process->process->name }}</h2>
                 <span class="data-date">{{ $serviceFlow->start_at->translatedFormat('j F') }} - {{ $serviceFlow->finish_at->translatedFormat('j F') }}</span>
                 <div class="wrap-service-photo">
-                    <img src="{{ getPhotoPathPlugEntity($serviceFlow->process) }}"
-                        alt="{{ $serviceFlow->process->process->name }}"
-                        title=""
-                        @if(isset($serviceFlow->process->process->photo))
-                        width="530"
-                        height="246"
-                        @endif
-                        class="service_photo"
-                    >
+                    <a href="{{ route('project.tours.show', $serviceFlow->process->process->slug) }}" title="">
+                        <img src="{{ getPhotoPathPlugEntity($serviceFlow->process) }}"
+                            alt="{{ $serviceFlow->process->process->name }}"
+                            title=""
+                            @if(isset($serviceFlow->process->process->photo))
+                            width="530"
+                            height="246"
+                            @endif
+                            class="service_photo"
+                        >
+                    </a>
                     <div class="wrap-service-duration">
                         <span class="count-day-tour">{{ $serviceFlow->start_at->diffInDays($serviceFlow->finish_at) + 1 }}</span>
                         <span class="desc-day-tour">дней</span>
