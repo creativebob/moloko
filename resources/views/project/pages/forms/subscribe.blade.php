@@ -5,6 +5,7 @@
 {!! Form::open(['route' => 'project.forms.subscribe', 'data-abide', 'novalidate']) !!}
     <div class="grid-x grid-padding-x align-center wrap-form-subscribe">
         <div class="cell small-12 text-center">
+            <span class="wrap-img-email"></span>
             <h2>{{ $title ?? 'Подпишитесь на нашу рассылку' }}</h2>
             <label>
                 {!! Form::text('name', null, ['placeholder' => 'Имя']) !!}

@@ -41,8 +41,14 @@
                         <input type="checkbox" class="table-check-all" name="" id="check-all">
                         <label class="label-check" for="check-all"></label>
                     </th>
+                    <th class="td-date">Дата начала</th>
+                    <th class="td-date">Дата завершения</th>
                     <th class="td-name">Название</th>
-                    <th class="td-manufacturer">Производитель</th>
+                    <th class="td-capacity-min">Min кол-во</th>
+                    <th class="td-capacity-max">Max кол-во</th>
+                    <th class="td-capacity-fact">Фактическое кол-во</th>
+                    <th class="td-staff">Сотрудники</th>
+                    <th class="td-manufacturer">Исполнитель</th>
                     <th class="td-company">Компания</th>
                 </tr>
 
@@ -68,6 +74,15 @@
                         <label class="label-check" for="check-{{ $flow->id }}"></label>
                     </td>
 
+                    <td class="td-date">
+                        <span>{{ $flow->start_at->format('d.m.Y') }}</span><br>
+                        <span class="tiny-text">{{ $flow->start_at->format('H:i') }}</span>
+                    </td>
+
+                    <td class="td-date">
+                        <span>{{ $flow->finish_at->format('d.m.Y') }}</span><br>
+                        <span class="tiny-text">{{ $flow->finish_at->format('H:i') }}</span>
+                    </td>
 
                     <td class="td-name" title="ID ТМЦ: {{ $flow->process->id }}">
                         @can('update', $flow)
@@ -76,6 +91,18 @@
                             {{ $flow->process->process->name }}
                             @endcan
                         <br><span class="tiny-text">{{ $flow->process->category->name }}</span>
+                    </td>
+                    <td class="td-capacity-min">
+                        {{ $flow->capacity_min ?? '' }}
+                    </td>
+                    <td class="td-capacity-max">
+                        {{ $flow->capacity_max ?? '' }}
+                    </td>
+                    <td class="td-capacity-fact">
+                        {{ optional($flow->clients)->count() ?? '' }}
+                    </td>
+                    <td class="td-staff">
+                        {{ $flow->staff->implode('user.name', ', ') ?? '' }}
                     </td>
                     <td class="td-manufacturer">
                         {{ $flow->manufacturer->company->name ?? '' }}
