@@ -16,7 +16,7 @@
                     <div class="cell small-6 medium-auto wrap-bank-text">
                         <p>Выполните оплату по номеру карты:<br><span class="phone-for-payment">5536 9139 2690 4703</span></p>
                         <p>Получатель: Шаталина Наталья Сергеевна<br>
-                        В сообщении просто укажите: <span class="text-strong">Заказ №{{ session('confirmation')['lead']->id }}</span>
+                        В сообщении просто укажите номер вашего заказа.</span>
                         </p>
                     </div>
                 </div>

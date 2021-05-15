@@ -9248,6 +9248,15 @@ p, a, tr, th, input, label {
   border: 2px solid #0066C5;
 }
 
+.button.fill-blue {
+  background-color: #0066C5 !important;
+  color: #fefefe;
+}
+
+.button.fill-blue:hover {
+  background-color: #0377E2 !important;
+}
+
 .wrap-gallery {
   margin-bottom: 4rem;
 }
@@ -9319,8 +9328,7 @@ p, a, tr, th, input, label {
   color: #C54100;
   font-family: Gilroy;
   font-weight: 500;
-  -webkit-text-decoration: uppercase;
-          text-decoration: uppercase;
+  text-transform: uppercase;
   font-size: 0.9rem;
   letter-spacing: 1px;
   display: inline-block;
@@ -9927,6 +9935,9 @@ span.staffer-name {
   .list-tours li img {
     border-radius: 10px;
   }
+  ul.navigation.main-menu li {
+    margin-top: 0.6rem;
+  }
   .accordion.events-list li .accordion-content {
     padding-left: 1rem;
     padding-right: 0;
@@ -9970,6 +9981,12 @@ span.staffer-name {
   }
   .my-tours-list li {
     padding: 1rem 1rem;
+  }
+  .wrap-phone {
+    padding: 0.2rem 0rem 0rem 0rem;
+  }
+  .wrap-footer-logo {
+    margin: 1.2rem 0 1rem 0;
   }
 }
 

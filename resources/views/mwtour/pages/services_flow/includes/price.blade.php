@@ -20,7 +20,7 @@
 </label>
 
 <div class="wrap-button-center">
-    <a href="#" class="button" data-open="modal-call" id="button-order">Бронировать</a>
+    <a href="#" class="button fill-blue" data-open="modal-call" id="button-order">Бронировать</a>
 </div>
 
 @push('scripts')

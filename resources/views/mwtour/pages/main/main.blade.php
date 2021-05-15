@@ -23,6 +23,16 @@
         <h1 class="text-center h1-main-page">{{ $page->seo->h1 ?? $page->name }}</h1>
         @include('project.composers.services.section')
 
+        {{-- @if($page->video)
+            <div class="grid-x">
+                <div class="cell small-12 wrap-video-block">
+                    <div class="video-wrap">
+                        {!! $page->video !!}
+                    </div>
+                </div>
+            </div>
+        @endif --}}
+
         @include('project.composers.albums.album_by_alias', ['albumAlias' => 'main-album'])
 
         {{-- Форма подписки --}}
