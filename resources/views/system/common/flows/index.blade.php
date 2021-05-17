@@ -64,7 +64,7 @@
 
                         <tr
                             class="item @if($flow->moderation == 1)no-moderation @endif @if($flow->process->archive == 1) archive-cmv @endif"
-                            id="flows-{{ $flow->id }}"
+                            id="{{ $pageInfo->alias }}-{{ $flow->id }}"
                             data-name="{{ $flow->process->process->name }}"
                         >
                             <td class="td-drop">

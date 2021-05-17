@@ -753,7 +753,6 @@ Route::post('/service/photos', 'ServiceController@photos');
 Route::resource('/services_flows', 'ServicesFlowController')
     ->except([
         'show',
-        'destroy',
     ]);
 
 Route::get('/services_flows/search/{search}', 'ServicesFlowController@search');
@@ -798,7 +797,6 @@ Route::post('/events/replicate/{id}', 'EventController@replicate');
 Route::resource('/events_flows', 'EventsFlowController')
     ->except([
         'show',
-        'destroy',
     ]);
 
 Route::get('/events_flows/search/{search}', 'EventsFlowController@search');

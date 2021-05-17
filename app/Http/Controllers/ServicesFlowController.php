@@ -200,4 +200,30 @@ class ServicesFlowController extends Controller
             abort(403, __('errors.update'));
         }
     }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function destroy($id)
+    {
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entityAlias, $this->entityDependence, getmethod(__FUNCTION__));
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $flow = ServicesFlow::moderatorLimit($answer)
+            ->find($id);
+        if (empty($flow)) {
+            abort(403, __('errors.not_found'));
+        }
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $flow);
+
+        $flow->delete();
+        return redirect()->route('services_flows.index');
+    }
 }
