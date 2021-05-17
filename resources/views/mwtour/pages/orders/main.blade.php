@@ -8,7 +8,7 @@
         <div class="grid-x">
             <div class="cell small-12">
 
-            @if(Auth::user()->userLeads->isNotEmpty())
+            @if($leads->isNotEmpty())
                 <div class="grid-x">
                     <div class="cell small-6 medium-shrink wrap-logo-bank">
                         <img src="../img/{{ $site->alias }}/tinkoff-bank.jpg">
@@ -16,13 +16,13 @@
                     <div class="cell small-6 medium-auto wrap-bank-text">
                         <p>Выполните оплату по номеру карты:<br><span class="phone-for-payment">5536 9139 2690 4703</span></p>
                         <p>Получатель: Шаталина Наталья Сергеевна<br>
-                        В сообщении просто укажите номер вашего заказа.</span>
+                        В сообщении просто укажите номер вашего заказа.
                         </p>
                     </div>
                 </div>
 
                 <ul class="my-tours-list">
-                        @foreach(Auth::user()->userLeads as $lead)
+                        @foreach($leads as $lead)
                             <li>
                                 <div class="grid-x">
                                     <div class="small-12 medium-4 wrap-my-tour-img cell">
@@ -73,7 +73,7 @@
                             </li>
                         @endforeach
                     </ul>
-                @endif                
+                @endif
             </div>
             <div class="cell small-12">
 
