@@ -31,6 +31,6 @@ class OrderController extends BaseController
             ->where('alias', 'orders')
             ->first();
 
-        return view($site->alias.'.pages.estimates.index', compact('site',  'page', 'leads'));
+        return view($site->alias.'.pages.orders.index', compact('site',  'page', 'leads'));
     }
 }
