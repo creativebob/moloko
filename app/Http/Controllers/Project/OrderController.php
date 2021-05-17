@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\Project;
 
-use App\Models\Project\Estimate;
 
-class OrdersController extends BaseController
+class OrderController extends BaseController
 {
     /**
      * EstimateController constructor.
