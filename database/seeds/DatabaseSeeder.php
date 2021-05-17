@@ -111,7 +111,14 @@ class DatabaseSeeder extends Seeder
         $this->call([
             PaymentsMethodsTableSeeder::class,
             PaymentsSignsTableSeeder::class,
-            PaymentsTypesTableSeeder::class
+            PaymentsTypesTableSeeder::class,
+            TaxationTypesTableSeeder::class,
+        ]);
+
+        // Торговые точки
+        $this->call([
+            OutletsSettingsCategoriesTableSeeder::class,
+            OutletsSettingsTableSeeder::class,
         ]);
 
         // Справочные сиды: фамилии и имена

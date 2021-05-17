@@ -42,6 +42,14 @@ class ServicesFlowPolicy
 
     public function delete(User $user, Model $model)
     {
+        if ($model->clients->isNotEmpty()) {
+            return false;
+        }
+
+        if ($model->process->process->is_auto_initiated) {
+            return false;
+        }
+
         $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
         return $result;
     }

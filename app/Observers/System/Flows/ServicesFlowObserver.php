@@ -49,4 +49,16 @@ class ServicesFlowObserver extends ProcessFlowObserver
         $this->update($flow);
         $this->setManufacturer($flow);
     }
+
+    public function deleting(Flow $flow)
+    {
+        $this->destroy($flow);
+    }
+
+    public function deleted(Flow $flow)
+    {
+        if ($flow->events->isNotEmpty()) {
+            $flow->events()->delete();
+        }
+    }
 }
