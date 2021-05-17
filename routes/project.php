@@ -81,7 +81,7 @@ Route::resource('/cart', 'CartController')
 Route::post('/order', 'CartController@order')
     ->name('project.order');
 
-Route::resource('/orders', 'OrdersController')
+Route::resource('/orders', 'OrderController')
     ->only([
         'index',
     ])
