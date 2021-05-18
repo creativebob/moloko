@@ -137,9 +137,6 @@ class CatalogsServicesItemController extends Controller
         $catalogsServicesItem = CatalogsServicesItem::create($data);
 
         if ($catalogsServicesItem) {
-
-            $this->updateSeo();
-
             // Переадресовываем на index
             return redirect()->route('catalogs_services_items.index', ['catalogId' => $catalogId, 'id' => $catalogsServicesItem->id]);
 
