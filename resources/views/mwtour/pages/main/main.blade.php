@@ -35,6 +35,9 @@
 
         @include('project.composers.albums.album_by_alias', ['albumAlias' => 'main-album'])
 
+        {{-- Отзывы --}}
+{{--        @include('project.composers.feedbacks.section')--}}
+
         {{-- Форма подписки --}}
         @include('project.pages.forms.subscribe', ['title' => 'Подпишись на оповещения о новых турах!'])
 
