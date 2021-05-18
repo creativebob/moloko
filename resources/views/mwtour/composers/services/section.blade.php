@@ -14,12 +14,11 @@
                         </span>
                 </button>
                 <ul class="dropdown-pane list-date" data-close-on-click="true" data-position="bottom" data-alignment="left" id="dropdown-{{$service->id}}" data-dropdown data-auto-focus="true">
-                    <li>
-                        <a href="{{ route('project.tours.show', [$service->process->slug, 'flow_id' => $service->actualFlows->first()->id]) }}">{{ $service->actualFlows->first()->start_at->translatedFormat('j F') }} - {{ $service->actualFlows->first()->finish_at->translatedFormat('j F') }}</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('project.tours.show', [$service->process->slug, 'flow_id' => $service->actualFlows->first()->id]) }}">{{ $service->actualFlows->first()->start_at->translatedFormat('j F') }} - {{ $service->actualFlows->first()->finish_at->translatedFormat('j F') }}</a>
-                    </li>
+                    @foreach($service->actualFlows as $actualFlow)
+                        <li>
+                            <a href="{{ route('project.tours.show', [$service->process->slug, 'flow_id' => $actualFlow->id]) }}">{{ $actualFlow->start_at->translatedFormat('j F') }} - {{ $actualFlow->finish_at->translatedFormat('j F') }}</a>
+                        </li>
+                    @endforeach
                 </ul>
                 <div class="wrap-service-photo">
                     <a href="{{ route('project.tours.show', [$service->process->slug, 'flow_id' => $service->actualFlows->first()->id]) }}" title="">
