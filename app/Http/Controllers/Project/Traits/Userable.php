@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Project\Traits;
 
 use Illuminate\Support\Facades\Cookie;
 
-use App\User;
+use App\Models\Project\User;
 use App\Phone;
 
 use Illuminate\Http\Request;
@@ -47,7 +47,7 @@ trait Userable
 
             return $user;
         } else {
-            
+
             abort(403, 'Ошибка при создании пользователя по номеру телефона!');
         }
     }
