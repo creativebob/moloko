@@ -227,8 +227,13 @@ class AppController extends BaseController
                                 'ip' => request()->ip()
                             ]));
                             Log::info('Пользователь залогинился ==========================================================');
-                            return redirect('estimates');
 
+                            // TODO - 18.05.2021 - Костыль на редиреат на Magic World Tour
+                            if ($site->domain->domain == 'mw-tour.ru') {
+                                return redirect()->route('project.orders.index');
+                            } else {
+                                return redirect('estimates');
+                            }
                         } else {
                             abort(403, 'Код устарел или введен с ошибками');
                         }
