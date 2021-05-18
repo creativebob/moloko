@@ -18,4 +18,9 @@ class EventsFlowObserver extends ProcessFlowObserver
         $this->update($flow);
         $this->setManufacturer($flow);
     }
+
+    public function deleting(Flow $flow)
+    {
+        $this->destroy($flow);
+    }
 }
