@@ -20,9 +20,9 @@
 
 @section('content')
 
-  {{ Form::model($feedback, ['url' => '/admin/feedback/'.$feedback->id, 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
+  {{ Form::model($feedback, ['url' => '/admin/feedbacks/'.$feedback->id, 'data-abide', 'novalidate', 'class' => 'form-check-city', 'files' => true]) }}
   {{ method_field('PATCH') }}
-    @include('feedback.form', ['submitButtonText' => 'Редактировать отзыв', 'param'=>''])
+    @include('feedbacks.form', ['submitButtonText' => 'Редактировать отзыв', 'param'=>''])
   {{ Form::close() }}
 
 @endsection
@@ -31,7 +31,7 @@
   @include('includes.scripts.cities-list')
   @include('includes.scripts.inputs-mask')
   @include('includes.scripts.pickmeup-script')
-  @include('feedback.scripts')
+  @include('feedbacks.scripts')
   @endpush
 
 

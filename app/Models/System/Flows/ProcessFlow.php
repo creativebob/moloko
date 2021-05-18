@@ -19,6 +19,7 @@ class ProcessFlow extends BaseModel
         'finish_at',
         'started_at',
         'finished_at',
+        'canceled_at',
 
         'deleted_at',
     ];
@@ -33,6 +34,7 @@ class ProcessFlow extends BaseModel
         'finish_at',
         'started_at',
         'finished_at',
+        'canceled_at',
 
         'capacity_min',
         'capacity_max',

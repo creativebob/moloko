@@ -1081,7 +1081,7 @@ Route::resource('campaigns', 'CampaignController');
 // --------------------------------------- Отзывы -----------------------------------------------
 
 // Основные методы
-Route::resource('/feedback', 'FeedbackController')->middleware('auth');
+Route::resource('/feedbacks', 'FeedbackController')->middleware('auth');
 
 
 // --------------------------------------- Расходы -----------------------------------------------

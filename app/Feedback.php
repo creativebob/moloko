@@ -47,7 +47,14 @@ class Feedback extends Model
     use DateIntervalFilter;
 
     protected $table = 'feedbacks';
-    protected $dates = ['created_at', 'updated_at', 'deleted_at', 'call_date'];
+
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'deleted_at',
+        'call_date'
+    ];
+
     protected $fillable = [
         'body',
         'author_id',
@@ -74,5 +81,10 @@ class Feedback extends Model
     public function site()
     {
         return $this->belongsTo('App\Site');
+    }
+
+    public function photo()
+    {
+        return $this->belongsTo('App\Photo');
     }
 }

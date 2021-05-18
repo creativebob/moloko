@@ -20,8 +20,8 @@
 
 @section('content')
 
-  {{ Form::open(['url' => '/admin/feedback', 'data-abide', 'novalidate', 'class' => '']) }}
-    @include('feedback.form', ['submitButtonText' => 'Добавить отзыв', 'param' => ''])
+  {{ Form::open(['url' => '/admin/feedbacks', 'data-abide', 'novalidate', 'class' => '', 'files' => true]) }}
+    @include('feedbacks.form', ['submitButtonText' => 'Добавить отзыв', 'param' => ''])
   {{ Form::close() }}
 
 @endsection
@@ -30,7 +30,7 @@
   @include('includes.scripts.cities-list')
   @include('includes.scripts.inputs-mask')
   @include('includes.scripts.pickmeup-script')
-  @include('feedback.scripts')
+  @include('feedbacks.scripts')
   @endpush
 
 

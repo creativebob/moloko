@@ -39,6 +39,42 @@ class UpdateController extends Controller
     }
 
     /**
+     * Добавление пункта меню - отзывы в развернутую систему
+     *
+     * @return string
+     */
+    public function addFeedbacksToMenu()
+    {
+        $menus = Menu::get();
+
+        $menuData = [
+            'name' => 'Отзывы',
+            'icon' => null,
+            'alias' => null,
+            'tag' => 'feedbacks',
+            'parent_id' => $menus->where('tag', 'marketings')->first()->id,
+            'page_id' => null,
+            'navigation_id' => 1,
+            'company_id' => null,
+            'system' => true,
+            'author_id' => 1,
+            'display' => true,
+            'sort' => 7,
+        ];
+
+        $menu = Page::where('alias', 'services_flows')
+            ->exists();
+
+        if (!$menu) {
+            Page::insert($menuData);
+            echo "Добавлен пункт меню - отзывы<br><br>";
+        }
+
+        return "<strong>Добавление пункта меню - отзывы завершено</strong>";
+
+    }
+
+    /**
      * Добавление в развернутую систему сущностей потоков услуг и событий с правами
      *
      * @return string

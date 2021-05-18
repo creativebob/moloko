@@ -15,7 +15,7 @@ class FeedbackPolicy
     use HandlesAuthorization;
     use PoliticTrait;
 
-    protected $entity_name = 'feedback';
+    protected $entity_name = 'feedbacks';
     protected $entity_dependence = false;
 
     public function index(User $user)
@@ -37,7 +37,7 @@ class FeedbackPolicy
     }
 
     public function update(User $user, Feedback $model)
-    { 
+    {
         $result = $this->getstatus($this->entity_name, $model, 'update', $this->entity_dependence);
         return $result;
     }
@@ -47,7 +47,7 @@ class FeedbackPolicy
         $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
         return $result;
     }
-    
+
     public function moderator(User $user, Feedback $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'moderator', $this->entity_dependence);
@@ -71,7 +71,7 @@ class FeedbackPolicy
         $result = $this->getstatus($this->entity_name, $model, 'system', $this->entity_dependence);
         return $result;
     }
-    
+
     public function god(User $user)
     {
         if(Auth::user()->god){return true;} else {return false;};
