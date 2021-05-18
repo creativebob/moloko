@@ -1319,6 +1319,20 @@ Menu::insert([
         'display' => true,
         'sort' => 6,
     ],
+    [
+        'name' => 'Отзывы',
+        'icon' => null,
+        'alias' => null,
+        'tag' => 'feedbacks',
+        'parent_id' => $menus->where('tag', 'marketings')->first()->id,
+        'page_id' => null,
+        'navigation_id' => 1,
+        'company_id' => null,
+        'system' => true,
+        'author_id' => 1,
+        'display' => true,
+        'sort' => 7,
+    ],
 
 
     // Справочники

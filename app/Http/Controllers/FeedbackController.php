@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Feedback;
+use App\Http\Controllers\Traits\Photable;
 use Illuminate\Http\Request;
 use App\Http\Requests\System\FeedbackRequest;
 use Carbon\Carbon;
@@ -10,8 +11,10 @@ use Carbon\Carbon;
 class FeedbackController extends Controller
 {
 
+    use Photable;
+
     // Сущность над которой производит операции контроллер
-    protected $entity_name = 'feedback';
+    protected $entity_name = 'feedbacks';
     protected $entity_dependence = false;
 
     public function index(Request $request)
@@ -34,12 +37,13 @@ class FeedbackController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------------------------------------
 
-        $feedback = Feedback::moderatorLimit($answer)
+        $feedbacks = Feedback::moderatorLimit($answer)
         // ->filter($request, 'places_type_id', 'places_types')
-        ->booklistFilter($request)
+//        ->booklistFilter($request)
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);
+//        dd($feedbacks);
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
@@ -54,7 +58,7 @@ class FeedbackController extends Controller
         // Инфо о странице
         $pageInfo = pageInfo($this->entity_name);
 
-        return view('feedback.index', compact('feedback', 'pageInfo', 'filter', 'user'));
+        return view('feedbacks.index', compact('feedbacks', 'pageInfo', 'filter', 'user'));
     }
 
     public function create(Request $request)
@@ -68,7 +72,7 @@ class FeedbackController extends Controller
         // Инфо о странице
         $pageInfo = pageInfo($this->entity_name);
 
-        return view('feedback.create', compact('feedback', 'pageInfo'));
+        return view('feedbacks.create', compact('feedback', 'pageInfo'));
     }
 
     public function store(FeedbackRequest $request)
@@ -89,6 +93,8 @@ class FeedbackController extends Controller
         $feedback->body = $request->body;
         $feedback->call_date = outPickMeUp($request->call_date);
 
+        $feedback->photo_id = $this->getPhotoId($feedback);
+
         if($user->company_id != null){
             $feedback->company_id = $user->company_id;
         } else {
@@ -103,34 +109,12 @@ class FeedbackController extends Controller
         };
 
         $feedback->save();
-        return redirect('/admin/feedback');
+
+        $feedback->photo_id = $this->getPhotoId($feedback);
+        $feedback->save();
+
+        return redirect('/admin/feedbacks');
     }
-
-
-    public function show($id)
-    {
-
-        // Получаем авторизованного пользователя
-        $user = $request->user();
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $place = Place::moderatorLimit($answer)->find($id);
-
-        // Подключение политики
-        $this->authorize('update', $role);
-
-        $role->name = $request->name;
-        $role->description = $request->description;
-
-        $role->save();
-
-        return redirect('/admin/roles');
-
-    }
-
 
     public function edit(Request $request, $id)
     {
@@ -147,7 +131,7 @@ class FeedbackController extends Controller
         // Инфо о странице
         $pageInfo = pageInfo($this->entity_name);
 
-        return view('feedback.edit', compact('feedback', 'pageInfo'));
+        return view('feedbacks.edit', compact('feedback', 'pageInfo'));
     }
 
 
@@ -176,7 +160,9 @@ class FeedbackController extends Controller
         $feedback->call_date = outPickMeUp($request->call_date);
 
         // Модерируем
-        if($answer['automoderate']){$feedback->moderation = null;};
+        if($answer['automoderate']){$feedback->moderation = false;};
+
+        $feedback->photo_id = $this->getPhotoId($feedback);
 
         $feedback->save();
 
@@ -187,7 +173,7 @@ class FeedbackController extends Controller
             abort(403, 'Ошибка записи отзыва!');
         };
 
-        return redirect('/admin/feedback');
+        return redirect('/admin/feedbacks');
 
     }
 
@@ -206,7 +192,7 @@ class FeedbackController extends Controller
         // Удаляем пользователя с обновлением
         $feedback = Feedback::moderatorLimit($answer)->where('id', $id)->delete();
 
-        if($feedback) {return redirect('/admin/feedback');} else {abort(403,'Что-то пошло не так!');};
+        if($feedback) {return redirect('/admin/feedbacks');} else {abort(403,'Что-то пошло не так!');};
     }
 
     // Сортировка

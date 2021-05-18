@@ -8,6 +8,7 @@ use App\Http\View\Composers\Project\CatalogsServiceComposer;
 use App\Http\View\Composers\Project\CatalogsGoodsComposer;
 use App\Http\View\Composers\Project\DiscountsForEstimatesComposer;
 use App\Http\View\Composers\Project\DisplayModesComposer;
+use App\Http\View\Composers\Project\FeedbacksComposer;
 use App\Http\View\Composers\Project\ImpactsFromOwnersFromPricesServicesFromCatalogsServicesItemComposer;
 use App\Http\View\Composers\Project\ImpactsFromPricesServicesFromCatalogsServicesItemComposer;
 use App\Http\View\Composers\Project\ManufacturersFromImpactsFromServicesComposer;
@@ -106,6 +107,8 @@ class ViewServiceProvider extends ServiceProvider
         view()->composer('project.composers.albums.album_by_alias', AlbumByAliasComposer::class);
 
         view()->composer('project.layouts.inheads.inhead_with_additionals', AdditionalsSeosComposer::class);
+
+        view()->composer('project.composers.feedbacks.section', FeedbacksComposer::class);
 
 //        view()->composer('project.composers.estimates.discounts.header_component', DiscountsForEstimatesComposer::class);
     }

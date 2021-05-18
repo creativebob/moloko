@@ -45,6 +45,8 @@
                             </label>
                         </div>
 
+                        <photo-upload-component :photo='@json($feedback->photo)'></photo-upload-component>
+
                     </div>
 
                     <div class="grid-x grid-padding-x">

@@ -29,6 +29,9 @@ class CreateFeedbacksTable extends Migration
 
             $table->date('call_date')->nullable()->comment('Дата обращения');
 
+            $table->bigInteger('photo_id')->nullable()->unsigned()->comment('ID аватара');
+            $table->foreign('photo_id')->references('id')->on('photos');
+
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

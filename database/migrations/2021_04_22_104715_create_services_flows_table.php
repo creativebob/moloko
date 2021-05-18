@@ -27,6 +27,8 @@ class CreateServicesFlowsTable extends Migration
             $table->timestamp('started_at')->nullable()->comment('Дата фактического начала');
             $table->timestamp('finished_at')->nullable()->comment('Дата фактического окончания');
 
+            $table->timestamp('canceled_at')->nullable()->comment('Время отмены');
+
             $table->integer('capacity_min')->default(0)->comment('Необходимо людей');
             $table->integer('capacity_max')->default(0)->comment('Максимум людей');
 
