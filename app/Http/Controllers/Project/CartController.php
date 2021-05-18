@@ -1046,6 +1046,37 @@ class CartController extends BaseController
         $phone = cleanPhone($request->main_phone);
         $message .= "Тел: " . decorPhone($phone) . "\r\n";
 
+        $count = 0;
+        if ($estimate->services_items->isNotEmpty()) {
+            $estimate->services_items->load([
+                'service.process'
+            ]);
+
+            $message .= "\r\nСостав заказа:\r\n";
+            $num = 1;
+            foreach ($estimate->services_items as $item) {
+                $message .= $num . ' - ' . $item->service->process->name . ": " . num_format($item->count, 0) .
+                    ' ' . $item->service->process->unit->abbreviation . " (" . num_format($item->total, 0) . " руб.) \r\n";
+                $num++;
+                $count += $item->count;
+            }
+            $message .= "\r\n";
+        }
+
+        $message .= "Кол-во услуг: " . num_format($count, 0) . "\r\n";
+        $message .= "Сумма заказа: " . num_format($estimate->amount, 0) . ' руб.' . "\r\n";
+
+        if ($estimate->discount_currency > 0) {
+            $message .= "Сумма со скидкой: " . num_format($estimate->total, 0) . ' руб.' . "\r\n";
+            $message .= "Скидка: " . num_format($estimate->discount_currency, 0) . ' руб.' . "\r\n";
+        }
+        $message .= "\r\n";
+
+        // Маржа
+        $message .= ($estimate->margin_currency < 0) ? "Убыток: " : "Маржинальность: ";
+        $message .= num_format($estimate->margin_currency, 0) . " руб. (" . round($estimate->margin_percent, 2) . "%)\r\n";
+        $message .= "\r\n";
+
         $this->sendMessage($message, $lead);
 
         // Пишем в сессию пользователю данные нового лида
