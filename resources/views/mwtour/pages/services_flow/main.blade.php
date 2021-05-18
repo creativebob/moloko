@@ -87,7 +87,7 @@
 		                    @foreach($serviceFlow->events as $eventFlow)
 							<li class="accordion-item" data-accordion-item>
 								<a href="#" class="accordion-title">
-									<h2 class="h2-second">День {{ $loop->index + 1 }}</h2>
+									<h2 class="h2-second">День {{ $loop->index + 1 }}<span class="arrow"></span></h2>
 									<span class="small-text">{{ $eventFlow->start_at->translatedFormat('j F, l') }}</span>
 									<p>{{ $eventFlow->process->process->description }}</p>
 								</a>
@@ -241,7 +241,7 @@
                                 @endforeach
                             </ul>
 
-                            {{-- @if($serviceFlow->clients->count() >= $serviceFlow->capacity_min) --}}
+                            @if($serviceFlow->clients->count() >= $serviceFlow->capacity_min)
 		                        <hr>
 		                        <div class="participants">
 		                        	<h3>Участники:</h3>
@@ -251,7 +251,7 @@
 		                            	<span class="max-participants">{{ $serviceFlow->capacity_max }}</span>
 		                            </span>
 		                        </div>
-		                    {{-- @endif --}}
+		                    @endif
 
 		                    <div class="wrap-recruiting">
 

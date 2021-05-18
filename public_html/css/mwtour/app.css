@@ -8236,7 +8236,7 @@ html.is-reveal-open body {
 
 @font-face {
   font-family: 'Gilroy';
-  src: url("./fonts/Gilroy/gilroy-semibold.ttf") format("truetype");
+  src: url("./fonts/Gilroy/gilroy-medium.ttf") format("truetype");
   font-style: normal;
   font-weight: 500;
 }
@@ -9280,16 +9280,81 @@ p, a, tr, th, input, label {
 }
 
 .list-tours li .wrap-item {
+  position: relative;
   margin-left: auto;
   margin-right: auto;
   max-width: 530px;
-  padding: 0 1rem;
+  padding: 0;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
 }
 
+.list-tours li .wrap-item .arrow-dropdown {
+  opacity: 0.3;
+  width: 18px;
+  height: 18px;
+  position: absolute;
+  left: 200px;
+  display: inline-block;
+  background-size: 18px;
+  background: url(img/icons/svg/down.svg) no-repeat 0px 0px;
+}
+
+.list-tours li .wrap-item button span.change-date {
+  display: none;
+}
+
+.list-tours li .wrap-item button:hover .arrow-dropdown {
+  opacity: 1;
+}
+
+.list-tours li .wrap-item button[aria-expanded=true] span.first-date {
+  display: none;
+}
+
+.list-tours li .wrap-item button[aria-expanded=true] span.change-date {
+  display: inline;
+}
+
+.list-tours li .wrap-item button[aria-expanded=true] .arrow-dropdown {
+  background: url(img/icons/svg/up.svg) no-repeat 0px 0px;
+  margin-top: 1px;
+}
+
 .list-tours li img {
   border-radius: 17px;
+}
+
+.list-tours .dropdown-pane.list-date {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  width: 100%;
+  border: none;
+  border-left: 1px solid #898989;
+  border-right: 1px solid #898989;
+  padding: 0;
+  margin-left: 0;
+  padding-bottom: 1rem;
+}
+
+.list-tours .dropdown-pane.list-date li {
+  padding: 0;
+}
+
+.list-tours .dropdown-pane.list-date li a {
+  padding: 10px 30px;
+  color: #C54100;
+  font-family: Gilroy;
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  display: inline-block;
+  width: 100%;
+}
+
+.list-tours .dropdown-pane.list-date li a:hover {
+  background-color: #F8F8F8;
 }
 
 .wrap-one-photo {
@@ -9332,6 +9397,11 @@ p, a, tr, th, input, label {
   color: #04C500;
 }
 
+.drop-date-button {
+  width: 100%;
+  text-align: left;
+}
+
 .data-date {
   padding: 10px 30px;
   color: #C54100;
@@ -9342,9 +9412,21 @@ p, a, tr, th, input, label {
   letter-spacing: 1px;
   display: inline-block;
   width: 100%;
-  background: url(img/icons/svg/calendar.svg) no-repeat 0px 11px;
+  background: url(img/icons/svg/calendar.svg) no-repeat 0px 9px;
   background-size: 16px 16px;
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.4rem;
+}
+
+.data-date .change-date {
+  font-size: 0.9rem;
+  color: #898989;
+  letter-spacing: 0px;
+  text-transform: none;
+  font-weight: 400;
+}
+
+.drop-date-button:hover .change-date {
+  color: #0a0a0a;
 }
 
 .wrap-service-photo {
@@ -9407,6 +9489,24 @@ p, a, tr, th, input, label {
 .events-list li .small-text {
   display: inline-block;
   padding-bottom: 1rem;
+}
+
+.events-list .arrow {
+  display: inline-block;
+  opacity: 0.3;
+  margin-top: 1px;
+  width: 18px;
+  height: 18px;
+  position: relative;
+  display: inline-block;
+  background-size: 18px;
+  background: url(img/icons/svg/down.svg) no-repeat 0px 0px;
+  margin-left: 1rem;
+  top: 6px;
+}
+
+.events-list .accordion-item.is-active .arrow {
+  background: url(img/icons/svg/up.svg) no-repeat 0px 0px;
 }
 
 .wrap-extra-info {

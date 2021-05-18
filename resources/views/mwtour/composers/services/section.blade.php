@@ -6,8 +6,21 @@
             <div class="wrap-item">
                 <h2>{{ $service->process->name }}</h2>
 
-                <span class="data-date">{{ $service->actualFlows->first()->start_at->translatedFormat('j F') }} - {{ $service->actualFlows->first()->finish_at->translatedFormat('j F') }}</span>
-
+                <button type="button" data-toggle="dropdown-{{$service->id}}" class="drop-date-button">
+                        <span class="data-date">
+                            <span class="first-date">{{ $service->actualFlows->first()->start_at->translatedFormat('j F') }} - {{ $service->actualFlows->first()->finish_at->translatedFormat('j F') }}</span>
+                            <span class="change-date">Выберите дату тура:</span>
+                            <span class="arrow-dropdown"></span>
+                        </span>
+                </button>
+                <ul class="dropdown-pane list-date" data-close-on-click="true" data-position="bottom" data-alignment="left" id="dropdown-{{$service->id}}" data-dropdown data-auto-focus="true">
+                    <li>
+                        <a href="{{ route('project.tours.show', [$service->process->slug, 'flow_id' => $service->actualFlows->first()->id]) }}">{{ $service->actualFlows->first()->start_at->translatedFormat('j F') }} - {{ $service->actualFlows->first()->finish_at->translatedFormat('j F') }}</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('project.tours.show', [$service->process->slug, 'flow_id' => $service->actualFlows->first()->id]) }}">{{ $service->actualFlows->first()->start_at->translatedFormat('j F') }} - {{ $service->actualFlows->first()->finish_at->translatedFormat('j F') }}</a>
+                    </li>
+                </ul>
                 <div class="wrap-service-photo">
                     <a href="{{ route('project.tours.show', [$service->process->slug, 'flow_id' => $service->actualFlows->first()->id]) }}" title="">
                         <img src="{{ getPhotoPathPlugEntity($service) }}"

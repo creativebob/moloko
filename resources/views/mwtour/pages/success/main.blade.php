@@ -37,7 +37,6 @@
                             <p>Отслеживать события по вашему заказу вы можете в <a href="#" data-open="open-modal-login">личном кабинете</a>.</p>
                         @endauth
                         </div>
-
                     </div>
                 </div>
 

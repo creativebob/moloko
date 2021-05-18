@@ -8,7 +8,7 @@
         <div class="grid-x grid-padding-x">
             <div class="cell small-12 medium-6 page-content">
                 {!! $page->content !!}
-                <p>Вы подписаны!</p>
+                <h2>Вы подписаны!</h2>
             </div>
         </div>
     </main>

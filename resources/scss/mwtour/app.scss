@@ -201,7 +201,7 @@ a{
 
 		&.is-active .accordion-title{
 			background-color: $gray-light;
-			font-weight: 500;
+			font-weight: 500;	
 		}
 
 		.accordion-title{
@@ -223,8 +223,6 @@ a{
 					font-size: 0.9rem;
 				}
 			}
-
-
 		}
 
 		.accordion-content{
@@ -395,14 +393,50 @@ p, a, tr, th, input, label {
 
 .list-tours{
 	margin-left: 0;
-	li{
 
+	li{
 		.wrap-item{
+			position: relative;
 			margin-left: auto;
 			margin-right: auto;
 			max-width: 530px;
-			padding: 0 1rem;
+			padding: 0;
 			box-sizing: border-box;
+
+			.arrow-dropdown{
+				opacity: 0.3;
+				width: 18px;
+				height: 18px;
+				position: absolute;
+				left: 200px;
+				display: inline-block;
+				background-size: 18px;
+				background: url(img/icons/svg/down.svg) no-repeat 0px 0px;						
+			}
+
+			button span.change-date{
+				display: none;
+			}
+
+			button:hover .arrow-dropdown{
+				opacity: 1;
+			}
+
+			button[aria-expanded=true] {
+
+					span.first-date{
+						display: none;
+					}
+
+					span.change-date{
+						display: inline;
+					}
+
+					.arrow-dropdown{
+						background: url(img/icons/svg/up.svg) no-repeat 0px 0px;
+						margin-top: 1px;
+					}
+				}
 		}
 
 		margin: 0px 0px;
@@ -412,7 +446,50 @@ p, a, tr, th, input, label {
 		}
 
 		padding-bottom: 2rem;
+
+
+
+
 	}
+
+
+	.dropdown-pane.list-date{
+
+		box-sizing: border-box;
+		width: 100%;
+		border: none;
+		border-left: 1px solid $gray-dark;
+		border-right: 1px solid $gray-dark;
+		padding: 0;
+		margin-left: 0;
+
+		padding-bottom: 1rem;
+
+
+		li{
+			padding: 0;
+
+			a {
+
+				padding: 10px 30px;
+				color: $red-wood;
+				font-family: Gilroy;
+				font-weight: 500;
+				text-transform: uppercase;
+				font-size: 0.9rem;
+				letter-spacing: 1px;
+				display: inline-block;
+				width: 100%;
+
+				&:hover{
+					background-color: $gray-light;
+				}
+			}
+		}
+	}
+
+
+
 }
 
 .wrap-one-photo{
@@ -455,6 +532,11 @@ p, a, tr, th, input, label {
 	color: $green-yellow;
 }
 
+.drop-date-button{
+	width: 100%;
+	text-align: left;
+}
+
 .data-date{
 	padding: 10px 30px;
 	color: $red-wood;
@@ -465,9 +547,24 @@ p, a, tr, th, input, label {
 	letter-spacing: 1px;
 	display: inline-block;
 	width: 100%;
-	background: url(img/icons/svg/calendar.svg) no-repeat 0px 11px;
+	background: url(img/icons/svg/calendar.svg) no-repeat 0px 9px;
 	background-size: 16px 16px;
-	margin-bottom: 0.8rem;
+	margin-bottom: 0.4rem;
+
+	.change-date{
+		font-size: 0.9rem;
+		color: $gray-dark;
+		letter-spacing: 0px;
+		text-transform: none;
+		font-weight: 400;
+	}
+
+}
+
+.drop-date-button:hover{
+	.change-date{
+		color: $black;	
+	}
 }
 
 .wrap-service-photo{
@@ -528,6 +625,26 @@ p, a, tr, th, input, label {
 			padding-bottom: 1rem;
 		}
 
+	}
+
+	.arrow{
+		display: inline-block;
+		opacity: 0.3;
+		margin-top: 1px;
+		width: 18px;
+		height: 18px;
+		position: relative;
+		display: inline-block;
+		background-size: 18px;
+		background: url(img/icons/svg/down.svg) no-repeat 0px 0px;
+		margin-left: 1rem;
+		top: 6px;
+	}
+
+	.accordion-item.is-active{
+		.arrow{
+			background: url(img/icons/svg/up.svg) no-repeat 0px 0px;			
+		}
 	}
 
 }
@@ -1439,3 +1556,4 @@ span.staffer-name{
 .wrap-bank-text{
 	padding: 0.6rem 0;
 }
+
