@@ -1,4 +1,4 @@
-			{!! Form::open(['route' => 'project.site_user_login', 'data-abide', 'novalidate', 'id'=>'login-form']) !!}
+
 
 			<div class="reveal login-modal" id="open-modal-login" data-reveal>
 					<h4>Вход <br><span>в личный кабинет</span></h4>
@@ -13,8 +13,9 @@
 						}
 					@endphp
 
+                {!! Form::open(['route' => 'project.site_user_login', 'data-abide', 'novalidate', 'id'=>'login-form']) !!}
 					<div class="grid-x">
-						
+
 							<div class="cell small-12 removable-phone-block">
 								<div class="grid-x">
 									<div class="cell small-12 text-center">
@@ -38,14 +39,16 @@
 									</div>
 								</div>
 							</div>
-						
+
 					</div>
+
+                {!! Form::close() !!}
 					<button class="close-button" data-close aria-label="Close modal" type="button">
 						<span aria-hidden="true">&times;</span>
 					</button>
 			</div>
 
-			{!! Form::close() !!}
+
 
 			@push('scripts')
 			    @include('includes.scripts.inputs-mask')
@@ -103,7 +106,8 @@
 			        }
 
 			        $('#submit-access-code').click(function() {
-						$('#login-form').submit();
+
+						// $('#login-form').submit();
 					});
 
 			        $(document).on('keydown', '#access_code', function(event) {
