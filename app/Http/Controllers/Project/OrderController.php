@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Project;
 
 
+use App\Lead;
+
 class OrderController extends BaseController
 {
     /**
@@ -22,8 +24,16 @@ class OrderController extends BaseController
      */
     public function index()
     {
-        $user = auth()->user();
-        $leads = $user->userLeads;
+        $leads = Lead::with([
+            'estimate.services_items' => function ($q) {
+                $q->with([
+                    'service.process.photo',
+                    'flow'
+                ]);
+            }
+        ])
+            ->where('user_id', auth()->id())
+            ->get();
 
         $site = $this->site;
 
