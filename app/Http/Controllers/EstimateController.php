@@ -938,7 +938,18 @@ class EstimateController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
         $estimate = Estimate::with([
             'production',
-            'lead.outlet.settings'
+            'lead.outlet.settings',
+            'services_items' => function ($q) {
+                $q->with([
+                    'flow' => function ($q) {
+                        $q->with([
+                           'process.process' ,
+                            'clients'
+                        ]);
+                    },
+                ]);
+            },
+            'client',
         ])
             ->find($id);
 
@@ -949,7 +960,7 @@ class EstimateController extends Controller
         if ($estimate->payments->isNotEmpty()) {
 
             if ($estimate->lead->outlet->settings->firstWhere('alias', 'use-cash-register')) {
-
+                // TODO - 19.05.2021 - Списание платежей если есть касса
             } else {
                 // Если тт не работает с кассой
                 $paymentsIds = $estimate->payments->pluck('id');
@@ -1036,6 +1047,20 @@ class EstimateController extends Controller
             }
         };
 
+        if ($estimate->services_items->isNotEmpty()) {
+            $flowIds = [];
+            foreach($estimate->services_items as $servicesItem) {
+                if ($servicesItem->flow->process->process->is_auto_initiated) {
+                    $servicesItem->flow->update([
+                        'canceled_at' => now()
+                    ]);
+                } else {
+                    $flowIds[] = $servicesItem->flow->id;
+                }
+            }
+            $estimate->client->services_flows()->detach($flowIds);
+        }
+
         $estimate->update([
             'is_dismissed' => true,
             'cancel_ground_id' => $request->estimates_cancel_ground_id
@@ -1060,7 +1085,10 @@ class EstimateController extends Controller
             },
             'services_items' => function ($q) {
                 $q->with([
-                    'product.process',
+                    'service.process',
+                    'price_service',
+                    'currency',
+                    'flow',
                 ]);
             },
             'payments' => function ($q) {

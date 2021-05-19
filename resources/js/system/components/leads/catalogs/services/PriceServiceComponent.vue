@@ -1,6 +1,6 @@
 <template>
     <li
-        :class="[{ priority : price.is_priority}, { hit : price.is_hit}, { new : price.is_new }]"
+        :class="[{ priority : price.is_priority}, { hit : price.is_hit}, { new : price.is_new }, {full : fullFLow}]"
     >
         <a
             @click="addPriceToEstimate"
@@ -101,6 +101,9 @@
             countInEstimate() {
                 return this.$store.getters.COUNT_SERVICE_ITEM_IN_ESTIMATE(this.price.id);
             },
+            fullFLow() {
+                return this.price.service.process.is_auto_initiated == 0 && !this.price.service.actual_flows.length;
+            }
         },
         methods: {
             addPriceToEstimate() {
