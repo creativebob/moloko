@@ -490,7 +490,7 @@ const moduleLead = {
         },
 
         ADD_SERVICE_ITEM_TO_ESTIMATE(state, price) {
-            if (!state.estimate.registered_at) {
+            if (!state.estimate.registered_at && (price.service.actual_flows.length && price.service.process.is_auto_initiated == 0)) {
                 this.commit('SET_CHANGE');
 
                 // TODO - 25.09.20 - Нужна будет проверка на серийность

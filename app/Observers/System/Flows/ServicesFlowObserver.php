@@ -48,6 +48,12 @@ class ServicesFlowObserver extends ProcessFlowObserver
     {
         $this->update($flow);
         $this->setManufacturer($flow);
+
+        if ($flow->isDirty('canceled_at')) {
+            $flow->events()->update([
+                'canceled_at' => $flow->canceled_at
+            ]);
+        }
     }
 
     public function deleting(Flow $flow)
@@ -57,8 +63,6 @@ class ServicesFlowObserver extends ProcessFlowObserver
 
     public function deleted(Flow $flow)
     {
-        if ($flow->events->isNotEmpty()) {
-            $flow->events()->delete();
-        }
+        $flow->events()->delete();
     }
 }

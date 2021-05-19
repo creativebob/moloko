@@ -365,9 +365,11 @@ class CatalogsServiceController extends Controller
                                         'photo_id',
                                         'manufacturer_id',
                                         'draft',
-                                        'cost_default'
+                                        'cost_default',
+                                        'is_auto_initiated',
                                     ]);
                             },
+                            'actualFlows.clients',
                         ])
                             ->where('archive', false)
                             ->select([
@@ -435,6 +437,16 @@ class CatalogsServiceController extends Controller
         $catalogsServicesPrices = [];
         foreach ($catalogsServices as $catalogServices) {
             $catalogsServicesItems = array_merge($catalogsServicesItems, buildTreeArray($catalogServices->items));
+
+            foreach($catalogServices->prices as $price) {
+                if ($price->service->process->is_auto_initiated == 0) {
+                    foreach($price->service->actualFlows as $key => $flow) {
+                        if ($flow->clients->count() >= $flow->capacity_max) {
+                            $price->service->actualFlows->forget($key);
+                        }
+                    }
+                }
+            }
 
             $catalogsServicesPrices = array_merge($catalogsServicesPrices, $catalogServices->prices->setAppends([
                 'totalWithDiscounts',
