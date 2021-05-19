@@ -114,7 +114,13 @@ class AppController extends BaseController
 
             // Если не существует страницы с таким алиасом - отдаем 404
             if (empty($page)) {
-                abort(404);
+                $errorPagePath = $site->alias . '/errors/404';
+                if (view()->exists($errorPagePath)) {
+                    $msg = 'Страница не найдена';
+                    return response()->view($errorPagePath, compact('site', 'msg'), 404);
+                } else {
+                    abort(404);
+                }
             }
 
             // Формируем путь до view которая предположительно должна существовать
