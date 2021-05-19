@@ -1,4 +1,4 @@
-@extends('project.layouts.app')
+@extends('mwtour.layouts.app')
 
 @section('title')
 <title>Ошибка | Воротная компания "Марс"</title>
@@ -7,10 +7,10 @@
 
 @section('content')
 <div class="wrap-main grid-x">
-	
+
 	<main class="cell small-12 medium-9 large-9 main-cont">
 
-      <h2>{{ $error_message }}</h2>
+      <h2>{{ $msg }}</h2>
 
   </main>
 	<h2></h2>
