@@ -127,7 +127,6 @@
 							<li>Плащ-дождевик – 1 шт</li>
 							<li>Свитер и\или кофта флисовая – 1 шт</li>
 							<li>Футболки – 3 шт</li>
-							<li>Термобелье - 1 комплект</li>
 							<li>Брюки из ветрозащитной ткани – 1 шт</li>
 							<li>Брюки повседневные – 1-2 шт</li>
 							<li>Шорты – 1 шт</li>
@@ -154,12 +153,11 @@
 				    <div class="accordion-content" data-tab-content>
 				    	<ul>
 						<li>Паспорт</li>
-						<li>Деньги</li>
+						<li>Наличные денежные средства</li>
 						<li>Термос - очень пригодится</li>
 						<li>Индивидуальная аптечка</li>
-						<li>Солнцезащитный крем</li>
 						<li>Предметы личной гигиены</li>
-						<li>Банное</li>
+						<li>Полотенце</li>
 						<li>Очки солнцезащитные</li>
 
 				    	</ul>
@@ -278,25 +276,28 @@
 							<div class="tabs-content" data-tabs-content="example-tabs">
 								<div class="tabs-panel is-active" id="panel1">
 									<ul>
-										<li>Трансфер по всем локациям программы</li>
-										<li>Прокат снаряжения</li>
-										<li>Билеты на посещение национального парка</li>
-										<li>Аренда sup-бордов/байдарок или катамаранов</li>
-										<li>Питание в кафе во время дороги туда и обратно</li>
-										<li>Проживание по программе в местах ночлега</li>
-										<li>Медицинская аптечка – групповая</li>
-										<li>Трехразовое питание</li>
-										<li>Экскурсия на катере</li>
-										<li>Баня по-байкальски</li>
-										<li>Работа гида – организатора</li>
-										<li>Организаторские сборы и сопровождение 24/7</li>
+			                            @if($serviceFlow->process->metrics->isNotEmpty())
+			                                @if($serviceFlow->process->metrics->firstWhere('alias', 'include'))
+			                                	@foreach($serviceFlow->process->metrics->firstWhere('alias', 'include')->values as $value)
+				                                    <li>
+				                                        <span class="">{{ $value->value }}</span>
+				                                    </li>                                		
+			                                	@endforeach
+			                                @endif
+			                            @endif
 									</ul>
 								</div>
 								<div class="tabs-panel" id="panel2">
 									<ul>
-										<li>Трансфер до Иркутска и обратно</li>
-										<li>Проживание в Иркутске в гостиницах или хостеле, но мы модем помочь вам с размещением и выборов гостиницы</li>
-										<li>Катание на квадроциклах и велосипедах</li>
+			                            @if($serviceFlow->process->metrics->isNotEmpty())
+			                                @if($serviceFlow->process->metrics->firstWhere('alias', 'no-include'))
+			                                	@foreach($serviceFlow->process->metrics->firstWhere('alias', 'no-include')->values as $value)
+				                                    <li>
+				                                        <span class="">{{ $value->value }}</span>
+				                                    </li>                                		
+			                                	@endforeach
+			                                @endif
+			                            @endif
 									</ul>
 								</div>
 							</div>

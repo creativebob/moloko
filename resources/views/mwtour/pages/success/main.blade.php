@@ -21,7 +21,8 @@
                     @endif
 
                     <div class="grid-x">
-                        <div class="cell small-6 medium-4 wrap-logo-bank">
+                         
+                        {{-- <div class="cell small-6 medium-4 wrap-logo-bank">
                             <img src="../img/{{ $site->alias }}/tinkoff-bank.jpg">
                         </div>
                         <div class="cell small-6 medium-8 wrap-bank-text">
@@ -29,12 +30,12 @@
                             <p>Получатель: Шаталина Наталья Сергеевна<br>
                             В сообщении просто укажите: <span class="text-strong">Заказ №{{ session('confirmation')['lead']->id }}</span>
                             </p>
-                        </div>
+                        </div> --}} 
                         <div class="cell small-12">
                         @auth
-                            <p>Отслеживать события по вашему заказу вы можете в <a href="/orders">личном кабинете</a>.</p>
+                            <p>Перейдите в <a href="/orders">личный кабинет</a>, заполните профиль и выполните предоплату тура.</p>
                         @else
-                            <p>Отслеживать события по вашему заказу вы можете в <a href="#" data-open="open-modal-login">личном кабинете</a>.</p>
+                            <p>Перейдите в <a href="#" data-open="open-modal-login">личный кабинет</a>, заполните профиль и выполните предоплату тура.</p>
                         @endauth
                         </div>
                     </div>
