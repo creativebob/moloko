@@ -96,7 +96,7 @@
 
 		                        	@if(isset($eventFlow->process->process->photo))
 		                                <div class="wrap-event-photo">
-		                       				<img src="{{ getPhotoPathPlugEntity($eventFlow->process) }}" alt="{{ $eventFlow->process->process->name }}" 
+		                       				<img src="{{ getPhotoPathPlugEntity($eventFlow->process) }}" alt="{{ $eventFlow->process->process->name }}"
 		                       				title="" @if(isset($eventFlow->process->process->photo)) width="530" height="246" @endif class="service_photo">
 		                                </div>
                                     @endif
@@ -208,7 +208,7 @@
 					    		<h4>Место отправления:</h4>
 					    		<span><span class="icon icon-geopoint"></span>
 					    		{{ $serviceFlow->location->city->name}}@if($serviceFlow->location->address), {{ $serviceFlow->location->address }}@endif</span>
-					    	</li>				    	
+					    	</li>
 					    	<li>
 					    		<h4>Проживание:</h4>
 					    		<p>На протяжении всей программы ночуем на туристических базах. Размещение в 3-х, 6-ти местных номерах. Тёплый душ, туалет на территории.</p>
@@ -258,7 +258,7 @@
 		                    	@else
 		                    		<span class="recruiting-status finish">Набор завершён</span>
 		                    	@endif
-	                       		<img src="{{ getPhotoPathPlugEntity($serviceFlow->process) }}" alt="{{ $serviceFlow->process->process->name }}" 
+	                       		<img src="{{ getPhotoPathPlugEntity($serviceFlow->process) }}" alt="{{ $serviceFlow->process->process->name }}"
 	                       		title="" @if(isset($serviceFlow->process->process->photo)) width="530" height="246" @endif class="service_photo">
 		                	</div>
 
@@ -278,10 +278,16 @@
 									<ul>
 			                            @if($serviceFlow->process->metrics->isNotEmpty())
 			                                @if($serviceFlow->process->metrics->firstWhere('alias', 'include'))
+                                                @php
+                                                    $processIncludeValues = explode(',', $serviceFlow->process->metrics->firstWhere('alias', 'include')->pivot->value);
+                                                @endphp
+
 			                                	@foreach($serviceFlow->process->metrics->firstWhere('alias', 'include')->values as $value)
+                                                    @if(in_array($value->id, $processIncludeValues))
 				                                    <li>
 				                                        <span class="">{{ $value->value }}</span>
-				                                    </li>                                		
+				                                    </li>
+                                                    @endif
 			                                	@endforeach
 			                                @endif
 			                            @endif
@@ -291,10 +297,15 @@
 									<ul>
 			                            @if($serviceFlow->process->metrics->isNotEmpty())
 			                                @if($serviceFlow->process->metrics->firstWhere('alias', 'no-include'))
+                                                @php
+                                                    $processNoIncludeValues = explode(',', $serviceFlow->process->metrics->firstWhere('alias', 'no-include')->pivot->value);
+                                                @endphp
 			                                	@foreach($serviceFlow->process->metrics->firstWhere('alias', 'no-include')->values as $value)
+                                                    @if(in_array($value->id, $processNoIncludeValues))
 				                                    <li>
 				                                        <span class="">{{ $value->value }}</span>
-				                                    </li>                                		
+				                                    </li>
+                                                    @endif
 			                                	@endforeach
 			                                @endif
 			                            @endif
