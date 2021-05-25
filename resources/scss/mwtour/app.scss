@@ -45,6 +45,10 @@ a, button{
 	outline: none;
 }
 
+a {
+	color: $blue;
+}
+
 main.main-content{
 	padding-bottom: 2rem;
 }
@@ -395,6 +399,9 @@ p, a, tr, th, input, label {
 	margin-left: 0;
 
 	li{
+
+		border-bottom: 1px dashed #ddd;
+
 		.wrap-item{
 			position: relative;
 			margin-left: auto;
@@ -463,7 +470,7 @@ p, a, tr, th, input, label {
 		padding: 0;
 		margin-left: 0;
 
-		padding-bottom: 1rem;
+		padding-bottom: 0;
 
 
 		li{
@@ -826,7 +833,7 @@ ul.tab-profile{
 	padding-bottom: 3rem;
 
 	li{
-		width: 200px;
+		max-width: 200px;
 		box-sizing: border-box;
 		border: none;
 		border-bottom: 5px solid $gray-light;
@@ -844,7 +851,7 @@ ul.tab-profile{
 			text-transform: uppercase;
 			font-weight: 400;
 			background: none;
-			padding: 1.6rem 0rem 1rem 0rem;
+			padding: 1.6rem 2rem 1rem 2rem;
 		}
 
 		&.is-active{
@@ -1357,6 +1364,19 @@ span.staffer-name{
 
 	.wrap-footer-logo{
 		margin: 1.2rem 0 1rem 0;
+	}
+
+	ul.tab-profile{
+
+		li{
+			a, span{
+				padding: 1rem;
+			}
+		}
+	}
+
+	.wrap-submit-button{
+		text-align: center;
 	}
 
 }

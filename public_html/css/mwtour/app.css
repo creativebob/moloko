@@ -8927,6 +8927,10 @@ a, button {
   outline: none;
 }
 
+a {
+  color: #0066C5;
+}
+
 main.main-content {
   padding-bottom: 2rem;
 }
@@ -9275,6 +9279,7 @@ p, a, tr, th, input, label {
 }
 
 .list-tours li {
+  border-bottom: 1px dashed #ddd;
   margin: 0px 0px;
   padding-bottom: 2rem;
 }
@@ -9334,7 +9339,7 @@ p, a, tr, th, input, label {
   border-right: 1px solid #898989;
   padding: 0;
   margin-left: 0;
-  padding-bottom: 1rem;
+  padding-bottom: 0;
 }
 
 .list-tours .dropdown-pane.list-date li {
@@ -9667,7 +9672,7 @@ ul.tab-profile {
 }
 
 ul.tab-profile li {
-  width: 200px;
+  max-width: 200px;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   border: none;
@@ -9687,7 +9692,7 @@ ul.tab-profile li a, ul.tab-profile li span {
   text-transform: uppercase;
   font-weight: 400;
   background: none;
-  padding: 1.6rem 0rem 1rem 0rem;
+  padding: 1.6rem 2rem 1rem 2rem;
 }
 
 ul.tab-profile li.is-active {
@@ -10096,6 +10101,12 @@ span.staffer-name {
   }
   .wrap-footer-logo {
     margin: 1.2rem 0 1rem 0;
+  }
+  ul.tab-profile li a, ul.tab-profile li span {
+    padding: 1rem;
+  }
+  .wrap-submit-button {
+    text-align: center;
   }
 }
 
